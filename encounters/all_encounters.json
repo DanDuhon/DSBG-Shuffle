@@ -1,0 +1,2624 @@
+{
+	"A Trusty Ally": {
+		"name": "A Trusty Ally",
+		"expansion": "The Tomb of Giants",
+		"level": 3,
+		"tiles": {
+			"1": [
+				26,
+				29,
+				26,
+				12
+			],
+			"2": [
+				29,
+				29,
+				28
+			]
+		}
+	},
+	"Abandoned and Forgotten": {
+		"name": "Abandoned and Forgotten",
+		"expansion": "The Painted World of Ariamis",
+		"level": 2,
+		"tiles": {
+			"1": [],
+			"2": []
+		}
+	},
+	"Abandoned Storeroom": {
+		"name": "Abandoned Storeroom",
+		"expansion": "The Tomb of Giants",
+		"level": 1,
+		"tiles": {
+			"1": [
+				12
+			]
+		}
+	},
+	"Abandoned Tower": {
+		"name": "Abandoned Tower",
+		"expansion": "Darkroot",
+		"level": 3,
+		"tiles": {
+			"1": [
+				7,
+				21,
+				21,
+				32,
+				21
+			]
+		}
+	},
+	"Altar of Bones": {
+		"name": "Altar of Bones",
+		"expansion": "The Tomb of Giants",
+		"level": 2,
+		"tiles": {
+			"1": [
+				29,
+				11
+			],
+			"2": [
+				29,
+				26,
+				12
+			]
+		}
+	},
+	"Ash Gardens": {
+		"name": "Ash Gardens",
+		"expansion": "Dark Souls The Board Game",
+		"level": 1,
+		"tiles": {
+			"1": [
+				24,
+				5
+			]
+		}
+	},
+	"Ashen Hollow": {
+		"name": "Ashen Hollow",
+		"expansion": "Dark Souls The Board Game",
+		"level": 1,
+		"tiles": {
+			"1": [
+				5,
+				13,
+				13
+			]
+		}
+	},
+	"Asylum's North Hall": {
+		"name": "Asylum's North Hall",
+		"expansion": "Asylum Demon",
+		"level": 4,
+		"tiles": {
+			"1": [
+				32,
+				25,
+				21,
+				10,
+				21,
+				10,
+				32,
+				25
+			]
+		}
+	},
+	"Base of Cardinal Tower": {
+		"name": "Base of Cardinal Tower",
+		"expansion": "The Last Giant",
+		"level": 4,
+		"tiles": {
+			"1": [
+				25,
+				10,
+				25,
+				0,
+				0,
+				25,
+				0,
+				14,
+				10
+			]
+		}
+	},
+	"Black Bog": {
+		"name": "Black Bog",
+		"expansion": "Darkroot",
+		"level": 2,
+		"tiles": {
+			"1": [
+				7,
+				23,
+				7,
+				21
+			]
+		}
+	},
+	"Black Dungeon": {
+		"name": "Black Dungeon",
+		"expansion": "Dark Souls The Board Game",
+		"level": 2,
+		"tiles": {
+			"1": [
+				26,
+				26,
+				24,
+				26
+			]
+		}
+	},
+	"Blackroot Well": {
+		"name": "Blackroot Well",
+		"expansion": "Darkroot",
+		"level": 1,
+		"tiles": {
+			"1": [
+				7,
+				21,
+				21
+			]
+		}
+	},
+	"Blazing Furnace": {
+		"name": "Blazing Furnace",
+		"expansion": "Old Iron King",
+		"level": 4,
+		"tiles": {
+			"1": [
+				1,
+				2,
+				10,
+				10,
+				14,
+				33
+			]
+		}
+	},
+	"Blazing Plaza": {
+		"name": "Blazing Plaza",
+		"expansion": "Iron Keep",
+		"level": 1,
+		"tiles": {
+			"1": [
+				2,
+				5,
+				5
+			]
+		}
+	},
+	"Boggy Hollow": {
+		"name": "Boggy Hollow",
+		"expansion": "Darkroot",
+		"level": 2,
+		"tiles": {
+			"1": [
+				31,
+				16
+			]
+		}
+	},
+	"Brass Sanctum": {
+		"name": "Brass Sanctum",
+		"expansion": "Iron Keep",
+		"level": 2,
+		"tiles": {
+			"1": [
+				1,
+				0,
+				0
+			]
+		}
+	},
+	"Bridge Too Far": {
+		"name": "Bridge Too Far",
+		"expansion": "The Tomb of Giants",
+		"level": 1,
+		"tiles": {
+			"1": [
+				29,
+				26,
+				29
+			]
+		}
+	},
+	"Bronze Spire": {
+		"name": "Bronze Spire",
+		"expansion": "Iron Keep",
+		"level": 2,
+		"tiles": {
+			"1": [
+				0,
+				14
+			]
+		}
+	},
+	"Broken Passageway": {
+		"name": "Broken Passageway",
+		"expansion": "Dark Souls The Board Game",
+		"level": 1,
+		"tiles": {
+			"1": [
+				26,
+				13,
+				13
+			]
+		}
+	},
+	"Brume Tower": {
+		"name": "Brume Tower",
+		"expansion": "Executioner Chariot",
+		"level": 4,
+		"tiles": {
+			"1": [
+				9,
+				3,
+				33,
+				14
+			]
+		}
+	},
+	"Burned Gardens": {
+		"name": "Burned Gardens",
+		"expansion": "Dark Souls The Board Game",
+		"level": 2,
+		"tiles": {
+			"1": [
+				15,
+				26,
+				26
+			]
+		}
+	},
+	"Burning Hold": {
+		"name": "Burning Hold",
+		"expansion": "Iron Keep",
+		"level": 1,
+		"tiles": {
+			"1": [
+				0,
+				13,
+				5
+			]
+		}
+	},
+	"Burning Swamp": {
+		"name": "Burning Swamp",
+		"expansion": "Iron Keep",
+		"level": 1,
+		"tiles": {
+			"1": [
+				13,
+				5,
+				10
+			]
+		}
+	},
+	"Castle Aflame": {
+		"name": "Castle Aflame",
+		"expansion": "Iron Keep",
+		"level": 3,
+		"tiles": {
+			"1": [
+				2,
+				14,
+				0,
+				1
+			]
+		}
+	},
+	"Cells of the Dead": {
+		"name": "Cells of the Dead",
+		"expansion": "Asylum Demon",
+		"level": 4,
+		"tiles": {
+			"1": [
+				14,
+				26,
+				5,
+				26,
+				5,
+				5,
+				14
+			]
+		}
+	},
+	"Cemetery of Ash": {
+		"name": "Cemetery of Ash",
+		"expansion": "Dark Souls The Board Game",
+		"level": 3,
+		"tiles": {
+			"1": [
+				15,
+				24,
+				24,
+				15,
+				26,
+				26
+			]
+		}
+	},
+	"Central Irithyll": {
+		"name": "Central Irithyll",
+		"expansion": "Dark Souls The Board Game",
+		"level": 3,
+		"tiles": {
+			"1": [
+				15,
+				22,
+				15
+			]
+		}
+	},
+	"Central Plaza": {
+		"name": "Central Plaza",
+		"expansion": "The Painted World of Ariamis",
+		"level": 3,
+		"tiles": {
+			"1": [
+				20,
+				20,
+				20
+			],
+			"2": [
+				8,
+				8
+			],
+			"3": [
+				30,
+				30,
+				6
+			]
+		}
+	},
+	"Charred Keep": {
+		"name": "Charred Keep",
+		"expansion": "Iron Keep",
+		"level": 1,
+		"tiles": {
+			"1": [
+				13,
+				5,
+				13,
+				0
+			]
+		}
+	},
+	"Cloak and Feathers": {
+		"name": "Cloak and Feathers",
+		"expansion": "The Painted World of Ariamis",
+		"level": 1,
+		"tiles": {
+			"1": [
+				6
+			]
+		}
+	},
+	"Cold Snap": {
+		"name": "Cold Snap",
+		"expansion": "The Painted World of Ariamis",
+		"level": 2,
+		"tiles": {
+			"1": [
+				30,
+				30
+			],
+			"2": [
+				20,
+				8,
+				20
+			]
+		}
+	},
+	"Corpselight Fens": {
+		"name": "Corpselight Fens",
+		"expansion": "Darkroot",
+		"level": 3,
+		"tiles": {
+			"1": [
+				32,
+				7,
+				31,
+				7
+			]
+		}
+	},
+	"Corrupted Crypt": {
+		"name": "Corrupted Crypt",
+		"expansion": "Executioner Chariot",
+		"level": 3,
+		"tiles": {
+			"1": [
+				9,
+				3,
+				15,
+				5
+			]
+		}
+	},
+	"Corrupted Hovel": {
+		"name": "Corrupted Hovel",
+		"expansion": "The Painted World of Ariamis",
+		"level": 2,
+		"tiles": {
+			"1": [
+				30,
+				8,
+				20,
+				8
+			]
+		}
+	},
+	"Corvian Host": {
+		"name": "Corvian Host",
+		"expansion": "The Painted World of Ariamis",
+		"level": 3,
+		"tiles": {
+			"1": [
+				20,
+				20,
+				6
+			],
+			"2": [
+				20,
+				20,
+				6
+			],
+			"3": []
+		}
+	},
+	"Courtyard of Lothric": {
+		"name": "Courtyard of Lothric",
+		"expansion": "Vordt of the Boreal Valley",
+		"level": 4,
+		"tiles": {
+			"1": [
+				15,
+				5,
+				10,
+				26,
+				25,
+				15,
+				5,
+				10,
+				34
+			]
+		}
+	},
+	"Cursed Cavern": {
+		"name": "Cursed Cavern",
+		"expansion": "The Four Kings",
+		"level": 4,
+		"tiles": {
+			"1": [
+				15,
+				24,
+				15,
+				24,
+				22,
+				5,
+				22,
+				5
+			]
+		}
+	},
+	"Dark Hollow": {
+		"name": "Dark Hollow",
+		"expansion": "Dark Souls The Board Game",
+		"level": 1,
+		"tiles": {
+			"1": [
+				15
+			]
+		}
+	},
+	"Dark Resurrection": {
+		"name": "Dark Resurrection",
+		"expansion": "The Tomb of Giants",
+		"level": 1,
+		"tiles": {
+			"1": [
+				29,
+				18
+			],
+			"2": [
+				29,
+				29,
+				18
+			]
+		}
+	},
+	"Dark Woods": {
+		"name": "Dark Woods",
+		"expansion": "Darkroot",
+		"level": 3,
+		"tiles": {
+			"1": [
+				31,
+				31,
+				32
+			]
+		}
+	},
+	"Darkened Chamber": {
+		"name": "Darkened Chamber",
+		"expansion": "Gaping Dragon",
+		"level": 4,
+		"tiles": {
+			"1": [
+				32,
+				16,
+				7,
+				32,
+				17,
+				7
+			]
+		}
+	},
+	"Death's Precipice": {
+		"name": "Death's Precipice",
+		"expansion": "The Tomb of Giants",
+		"level": 3,
+		"tiles": {
+			"1": [
+				26,
+				29,
+				29
+			],
+			"2": [
+				11,
+				12
+			],
+			"3": [
+				11,
+				12,
+				28
+			]
+		}
+	},
+	"Deathly Freeze": {
+		"name": "Deathly Freeze",
+		"expansion": "The Painted World of Ariamis",
+		"level": 3,
+		"tiles": {
+			"1": [
+				30,
+				30,
+				8,
+				20
+			],
+			"2": [
+				4,
+				4,
+				8
+			]
+		}
+	},
+	"Deathly Magic": {
+		"name": "Deathly Magic",
+		"expansion": "The Tomb of Giants",
+		"level": 1,
+		"tiles": {
+			"1": [
+				29,
+				29,
+				18
+			]
+		}
+	},
+	"Demon Ruins": {
+		"name": "Demon Ruins",
+		"expansion": "Dark Souls The Board Game",
+		"level": 2,
+		"tiles": {
+			"1": [
+				24,
+				26,
+				15
+			]
+		}
+	},
+	"Demon's Antechamber": {
+		"name": "Demon's Antechamber",
+		"expansion": "Asylum Demon",
+		"level": 4,
+		"tiles": {
+			"1": [
+				15,
+				13,
+				13,
+				24,
+				5,
+				5,
+				22,
+				5,
+				15,
+				13
+			]
+		}
+	},
+	"Desecrated Church": {
+		"name": "Desecrated Church",
+		"expansion": "Dark Souls The Board Game",
+		"level": 3,
+		"tiles": {
+			"1": [
+				26,
+				26,
+				24,
+				15,
+				26,
+				24
+			]
+		}
+	},
+	"Desolate Cemetery": {
+		"name": "Desolate Cemetery",
+		"expansion": "Executioner Chariot",
+		"level": 3,
+		"tiles": {
+			"1": [
+				9,
+				26,
+				9,
+				3
+			]
+		}
+	},
+	"Desolate Hinterland": {
+		"name": "Desolate Hinterland",
+		"expansion": "Darkroot",
+		"level": 3,
+		"tiles": {
+			"1": [
+				32,
+				17,
+				16
+			]
+		}
+	},
+	"Dilapidated Bridge": {
+		"name": "Dilapidated Bridge",
+		"expansion": "Dark Souls The Board Game",
+		"level": 3,
+		"tiles": {
+			"1": [
+				15,
+				13,
+				5,
+				15,
+				13,
+				5
+			]
+		}
+	},
+	"Distant Tower": {
+		"name": "Distant Tower",
+		"expansion": "The Painted World of Ariamis",
+		"level": 2,
+		"tiles": {
+			"1": [
+				20,
+				20,
+				30
+			],
+			"2": [
+				4,
+				4
+			],
+			"3": [
+				6
+			]
+		}
+	},
+	"Dragon Shrine": {
+		"name": "Dragon Shrine",
+		"expansion": "Guardian Dragon",
+		"level": 4,
+		"tiles": {
+			"1": [
+				22,
+				5,
+				13,
+				13,
+				13,
+				26,
+				26,
+				26,
+				5,
+				5
+			]
+		}
+	},
+	"Draconic Decay": {
+		"name": "Draconic Decay",
+		"expansion": "The Painted World of Ariamis",
+		"level": 3,
+		"tiles": {
+			"1": [
+				4
+			],
+			"2": [
+				4,
+				8
+			],
+			"3": [
+				6,
+				20,
+				20
+			]
+		}
+	},
+	"Edge of the Abyss": {
+		"name": "Edge of the Abyss",
+		"expansion": "The Four Kings",
+		"level": 4,
+		"tiles": {
+			"1": [
+				22,
+				13,
+				15,
+				5,
+				5,
+				24,
+				24,
+				26,
+				26
+			]
+		}
+	},
+	"Empty Crypt": {
+		"name": "Empty Crypt",
+		"expansion": "Dark Souls The Board Game",
+		"level": 3,
+		"tiles": {
+			"1": [
+				22,
+				22
+			]
+		}
+	},
+	"Entryway of the Chasm": {
+		"name": "Entryway of the Chasm",
+		"expansion": "Manus, Father of the Abyss",
+		"level": 4,
+		"tiles": {
+			"1": [
+				26,
+				24,
+				26,
+				24,
+				26,
+				24,
+				5,
+				15,
+				15
+			]
+		}
+	},
+	"Eye of the Storm": {
+		"name": "Eye of the Storm",
+		"expansion": "The Painted World of Ariamis",
+		"level": 3,
+		"tiles": {
+			"1": [
+				20,
+				20
+			],
+			"2": [
+				20,
+				20,
+				8
+			],
+			"3": []
+		}
+	},
+	"Far From the Sun": {
+		"name": "Far From the Sun",
+		"expansion": "The Tomb of Giants",
+		"level": 2,
+		"tiles": {
+			"1": [
+				29,
+				12
+			],
+			"2": [
+				29,
+				18,
+				29
+			]
+		}
+	},
+	"Fearful Woods": {
+		"name": "Fearful Woods",
+		"expansion": "Darkroot",
+		"level": 1,
+		"tiles": {
+			"1": [
+				21,
+				23,
+				16
+			]
+		}
+	},
+	"Flaming Passageway": {
+		"name": "Flaming Passageway",
+		"expansion": "Iron Keep",
+		"level": 1,
+		"tiles": {
+			"1": [
+				0,
+				2
+			]
+		}
+	},
+	"Forest of Fallen Giants": {
+		"name": "Forest of Fallen Giants",
+		"expansion": "The Last Giant",
+		"level": 4,
+		"tiles": {
+			"1": [
+				26,
+				15,
+				5,
+				13,
+				5,
+				22,
+				26,
+				15
+			]
+		}
+	},
+	"Forgotten Gorge": {
+		"name": "Forgotten Gorge",
+		"expansion": "Dark Souls The Board Game",
+		"level": 2,
+		"tiles": {
+			"1": [
+				13,
+				13,
+				24,
+				13,
+				24
+			]
+		}
+	},
+	"Forsaken Depths": {
+		"name": "Forsaken Depths",
+		"expansion": "Dark Souls The Board Game",
+		"level": 1,
+		"tiles": {
+			"1": [
+				13,
+				5,
+				13,
+				5
+			]
+		}
+	},
+	"Fortress Gates": {
+		"name": "Fortress Gates",
+		"expansion": "Old Iron King",
+		"level": 4,
+		"tiles": {
+			"1": [
+				33,
+				0,
+				2,
+				1,
+				14
+			]
+		}
+	},
+	"Frozen Sentries": {
+		"name": "Frozen Sentries",
+		"expansion": "The Painted World of Ariamis",
+		"level": 1,
+		"tiles": {
+			"1": [
+				20,
+				20
+			]
+		}
+	},
+	"Frozen Revolutions": {
+		"name": "Frozen Revolutions",
+		"expansion": "The Painted World of Ariamis",
+		"level": 3,
+		"tiles": {
+			"1": [
+				30,
+				30,
+				20,
+				20
+			],
+			"2": [
+				20,
+				20
+			],
+			"3": [
+				4,
+				4
+			]
+		}
+	},
+	"Furnace Room": {
+		"name": "Furnace Room",
+		"expansion": "Iron Keep",
+		"level": 1,
+		"tiles": {
+			"1": [
+				2,
+				5,
+				0
+			]
+		}
+	},
+	"Gallery of the Hidden Warrior": {
+		"name": "Gallery of the Hidden Warrior",
+		"expansion": "Explorers",
+		"level": 3,
+		"tiles": {
+			"1": [
+				25,
+				25,
+				24,
+				25,
+				24,
+				24
+			]
+		}
+	},
+	"Gate of Peril": {
+		"name": "Gate of Peril",
+		"expansion": "Executioner Chariot",
+		"level": 4,
+		"tiles": {
+			"1": [
+				3,
+				31,
+				9,
+				13,
+				9,
+				13,
+				7
+			]
+		}
+	},
+	"Ghostly Keep": {
+		"name": "Ghostly Keep",
+		"expansion": "Dark Souls The Board Game",
+		"level": 1,
+		"tiles": {
+			"1": [
+				13,
+				13,
+				5
+			]
+		}
+	},
+	"Giant's Coffin": {
+		"name": "Giant's Coffin",
+		"expansion": "The Tomb of Giants",
+		"level": 3,
+		"tiles": {
+			"1": [
+				12,
+				11
+			],
+			"2": [
+				11,
+				12
+			]
+		}
+	},
+	"Giant's Keep": {
+		"name": "Giant's Keep",
+		"expansion": "Explorers",
+		"level": 3,
+		"tiles": {
+			"1": [
+				25,
+				26,
+				24,
+				26,
+				25
+			]
+		}
+	},
+	"Gnashing Beaks": {
+		"name": "Gnashing Beaks",
+		"expansion": "The Painted World of Ariamis",
+		"level": 2,
+		"tiles": {
+			"1": [
+				30,
+				30
+			],
+			"2": [
+				6
+			]
+		}
+	},
+	"Gough's Perch": {
+		"name": "Gough's Perch",
+		"expansion": "Black Dragon Kalameet",
+		"level": 4,
+		"tiles": {
+			"1": [
+				15,
+				5,
+				32,
+				21,
+				32,
+				5,
+				15,
+				21
+			]
+		}
+	},
+	"Grave Matters": {
+		"name": "Grave Matters",
+		"expansion": "The Tomb of Giants",
+		"level": 1,
+		"tiles": {
+			"1": [
+				29,
+				26,
+				29,
+				26
+			]
+		}
+	},
+	"Great Stone Bridge": {
+		"name": "Great Stone Bridge",
+		"expansion": "Black Dragon Kalameet",
+		"level": 4,
+		"tiles": {
+			"1": [
+				22,
+				26,
+				5,
+				26,
+				5,
+				22,
+				5
+			]
+		}
+	},
+	"Guarded Path": {
+		"name": "Guarded Path",
+		"expansion": "Vordt of the Boreal Valley",
+		"level": 4,
+		"tiles": {
+			"1": [
+				22,
+				13,
+				13,
+				13,
+				22,
+				24,
+				5,
+				5
+			]
+		}
+	},
+	"Hall of Wraiths": {
+		"name": "Hall of Wraiths",
+		"expansion": "The Four Kings",
+		"level": 4,
+		"tiles": {
+			"1": [
+				32,
+				32,
+				10,
+				25,
+				17,
+				16
+			]
+		}
+	},
+	"Halls of the Forsworn": {
+		"name": "Halls of the Forsworn",
+		"expansion": "Explorers",
+		"level": 1,
+		"tiles": {
+			"1": [
+				15,
+				10,
+				13
+			]
+		}
+	},
+	"Haunted Ruins": {
+		"name": "Haunted Ruins",
+		"expansion": "Darkroot",
+		"level": 2,
+		"tiles": {
+			"1": [
+				32,
+				7
+			]
+		}
+	},
+	"Hidden Chamber": {
+		"name": "Hidden Chamber",
+		"expansion": "Explorers",
+		"level": 3,
+		"tiles": {
+			"1": [
+				22,
+				10,
+				10,
+				5,
+				15
+			]
+		}
+	},
+	"High Wall of Lothric": {
+		"name": "High Wall of Lothric",
+		"expansion": "Dark Souls The Board Game",
+		"level": 2,
+		"tiles": {
+			"1": [
+				15,
+				13,
+				13,
+				5
+			]
+		}
+	},
+	"Hollow Cave": {
+		"name": "Hollow Cave",
+		"expansion": "Dark Souls The Board Game",
+		"level": 1,
+		"tiles": {
+			"1": [
+				13,
+				13,
+				13
+			]
+		}
+	},
+	"Hollowed Threshold": {
+		"name": "Hollowed Threshold",
+		"expansion": "Iron Keep",
+		"level": 3,
+		"tiles": {
+			"1": [
+				0,
+				1,
+				0,
+				0,
+				1
+			]
+		}
+	},
+	"Honour Guard": {
+		"name": "Honour Guard",
+		"expansion": "The Tomb of Giants",
+		"level": 3,
+		"tiles": {
+			"1": [
+				29,
+				26,
+				29,
+				29,
+				26
+			]
+		}
+	},
+	"Huntsman's Copse": {
+		"name": "Huntsman's Copse",
+		"expansion": "Executioner Chariot",
+		"level": 4,
+		"tiles": {
+			"1": [
+				3,
+				3,
+				5,
+				9,
+				13
+			]
+		}
+	},
+	"Hydra Lake": {
+		"name": "Hydra Lake",
+		"expansion": "Darkroot",
+		"level": 3,
+		"tiles": {
+			"1": [
+				17,
+				7,
+				16,
+				32
+			]
+		}
+	},
+	"In Deep Water": {
+		"name": "In Deep Water",
+		"expansion": "The Tomb of Giants",
+		"level": 2,
+		"tiles": {
+			"1": [
+				11,
+				29,
+				29,
+				29
+			]
+		}
+	},
+	"Inhospitable Ground": {
+		"name": "Inhospitable Ground",
+		"expansion": "The Painted World of Ariamis",
+		"level": 2,
+		"tiles": {
+			"1": [
+				30,
+				8
+			],
+			"2": [
+				19
+			]
+		}
+	},
+	"Iron Depths": {
+		"name": "Iron Depths",
+		"expansion": "Iron Keep",
+		"level": 2,
+		"tiles": {
+			"1": [
+				0,
+				0,
+				1
+			]
+		}
+	},
+	"Ironhearth Hall": {
+		"name": "Ironhearth Hall",
+		"expansion": "Old Iron King",
+		"level": 4,
+		"tiles": {
+			"1": [
+				26,
+				22,
+				5,
+				5,
+				15,
+				13,
+				13,
+				15,
+				24,
+				24
+			]
+		}
+	},
+	"Lakeview Refuge": {
+		"name": "Lakeview Refuge",
+		"expansion": "The Tomb of Giants",
+		"level": 3,
+		"tiles": {
+			"1": [
+				18,
+				29,
+				29
+			],
+			"2": [
+				26,
+				26
+			],
+			"3": [
+				18,
+				11,
+				12
+			]
+		}
+	},
+	"Last Rites": {
+		"name": "Last Rites",
+		"expansion": "The Tomb of Giants",
+		"level": 1,
+		"tiles": {
+			"1": [
+				29,
+				29
+			]
+		}
+	},
+	"Last Shred of Light": {
+		"name": "Last Shred of Light",
+		"expansion": "The Tomb of Giants",
+		"level": 3,
+		"tiles": {
+			"1": [
+				28,
+				29,
+				26
+			],
+			"2": [
+				11
+			]
+		}
+	},
+	"Lava Path": {
+		"name": "Lava Path",
+		"expansion": "Old Iron King",
+		"level": 4,
+		"tiles": {
+			"1": [
+				26,
+				5,
+				26,
+				5,
+				5,
+				22,
+				22
+			]
+		}
+	},
+	"Leafy Grotto": {
+		"name": "Leafy Grotto",
+		"expansion": "Darkroot",
+		"level": 1,
+		"tiles": {
+			"1": [
+				23,
+				21,
+				7
+			]
+		}
+	},
+	"Lightless Passage": {
+		"name": "Lightless Passage",
+		"expansion": "Dark Souls The Board Game",
+		"level": 2,
+		"tiles": {
+			"1": [
+				15,
+				13,
+				13,
+				13
+			]
+		}
+	},
+	"Lost Chapel": {
+		"name": "Lost Chapel",
+		"expansion": "The Tomb of Giants",
+		"level": 2,
+		"tiles": {
+			"1": [
+				29,
+				29,
+				18
+			],
+			"2": [
+				26,
+				26,
+				18,
+				29
+			],
+			"3": [
+				28
+			]
+		}
+	},
+	"Lost Grotto": {
+		"name": "Lost Grotto",
+		"expansion": "Explorers",
+		"level": 2,
+		"tiles": {
+			"1": [
+				25,
+				24,
+				25
+			]
+		}
+	},
+	"Lost Labyrinth": {
+		"name": "Lost Labyrinth",
+		"expansion": "Dark Souls The Board Game",
+		"level": 2,
+		"tiles": {
+			"1": [
+				15,
+				15
+			]
+		}
+	},
+	"Lost Shrine": {
+		"name": "Lost Shrine",
+		"expansion": "Dark Souls The Board Game",
+		"level": 3,
+		"tiles": {
+			"1": [
+				26,
+				26,
+				24,
+				26,
+				24,
+				24
+			]
+		}
+	},
+	"Lothric Castle": {
+		"name": "Lothric Castle",
+		"expansion": "Explorers",
+		"level": 1,
+		"tiles": {
+			"1": [
+				13,
+				10,
+				10
+			]
+		}
+	},
+	"Manor Foregarden": {
+		"name": "Manor Foregarden",
+		"expansion": "Guardian Dragon",
+		"level": 4,
+		"tiles": {
+			"1": [
+				32,
+				14,
+				7,
+				7,
+				32,
+				14
+			]
+		}
+	},
+	"Maze of the Dead": {
+		"name": "Maze of the Dead",
+		"expansion": "The Tomb of Giants",
+		"level": 2,
+		"tiles": {
+			"1": [
+				29,
+				18
+			],
+			"2": [
+				28
+			],
+			"3": [
+				26,
+				29,
+				29
+			]
+		}
+	},
+	"Mausoleum Ruins": {
+		"name": "Mausoleum Ruins",
+		"expansion": "Executioner Chariot",
+		"level": 2,
+		"tiles": {
+			"1": [
+				15,
+				9,
+				5,
+				5
+			]
+		}
+	},
+	"Melting Gallery": {
+		"name": "Melting Gallery",
+		"expansion": "Iron Keep",
+		"level": 3,
+		"tiles": {
+			"1": [
+				1,
+				1,
+				1
+			]
+		}
+	},
+	"Misty Burial Site": {
+		"name": "Misty Burial Site",
+		"expansion": "Executioner Chariot",
+		"level": 2,
+		"tiles": {
+			"1": [
+				5,
+				26,
+				13,
+				9
+			]
+		}
+	},
+	"Misty Woods": {
+		"name": "Misty Woods",
+		"expansion": "Darkroot",
+		"level": 1,
+		"tiles": {
+			"1": [
+				23,
+				23,
+				21
+			]
+		}
+	},
+	"Monstrous Maw": {
+		"name": "Monstrous Maw",
+		"expansion": "The Painted World of Ariamis",
+		"level": 2,
+		"tiles": {
+			"1": [
+				30
+			]
+		}
+	},
+	"Murky Roots": {
+		"name": "Murky Roots",
+		"expansion": "Darkroot",
+		"level": 2,
+		"tiles": {
+			"1": [
+				17,
+				16
+			]
+		}
+	},
+	"New Londo Ruins": {
+		"name": "New Londo Ruins",
+		"expansion": "The Four Kings",
+		"level": 4,
+		"tiles": {
+			"1": [
+				1,
+				5,
+				5,
+				14,
+				14,
+				2,
+				0
+			]
+		}
+	},
+	"No Safe Haven": {
+		"name": "No Safe Haven",
+		"expansion": "The Painted World of Ariamis",
+		"level": 1,
+		"tiles": {
+			"1": [
+				30,
+				30
+			],
+			"2": [
+				8
+			]
+		}
+	},
+	"Outskirts of Blighttown": {
+		"name": "Outskirts of Blighttown",
+		"expansion": "Gaping Dragon",
+		"level": 4,
+		"tiles": {
+			"1": [
+				22,
+				24,
+				22,
+				24,
+				15,
+				5,
+				15,
+				5
+			]
+		}
+	},
+	"Overgrown Caves": {
+		"name": "Overgrown Caves",
+		"expansion": "Darkroot",
+		"level": 1,
+		"tiles": {
+			"1": [
+				16,
+				7
+			]
+		}
+	},
+	"Painted Passage": {
+		"name": "Painted Passage",
+		"expansion": "The Painted World of Ariamis",
+		"level": 1,
+		"tiles": {
+			"1": [
+				30,
+				30,
+				20
+			]
+		}
+	},
+	"Perilous Crossing": {
+		"name": "Perilous Crossing",
+		"expansion": "Black Dragon Kalameet",
+		"level": 4,
+		"tiles": {
+			"1": [
+				15,
+				5,
+				26,
+				26,
+				24,
+				15,
+				5,
+				26,
+				24,
+				24
+			]
+		}
+	},
+	"Perished Depths": {
+		"name": "Perished Depths",
+		"expansion": "Dark Souls The Board Game",
+		"level": 3,
+		"tiles": {
+			"1": [
+				22,
+				13,
+				13,
+				5,
+				5
+			]
+		}
+	},
+	"Pit of the Dead": {
+		"name": "Pit of the Dead",
+		"expansion": "Dark Souls The Board Game",
+		"level": 3,
+		"tiles": {
+			"1": [
+				22,
+				22,
+				24
+			]
+		}
+	},
+	"Pitch Black": {
+		"name": "Pitch Black",
+		"expansion": "The Tomb of Giants",
+		"level": 2,
+		"tiles": {
+			"1": [
+				26,
+				18,
+				29
+			],
+			"2": [
+				29,
+				29,
+				18
+			]
+		}
+	},
+	"Prison Tower": {
+		"name": "Prison Tower",
+		"expansion": "Dark Souls The Board Game",
+		"level": 2,
+		"tiles": {
+			"1": [
+				26,
+				24,
+				26
+			]
+		}
+	},
+	"Profane Shrine": {
+		"name": "Profane Shrine",
+		"expansion": "Dark Souls The Board Game",
+		"level": 3,
+		"tiles": {
+			"1": [
+				26,
+				26,
+				26,
+				15,
+				13,
+				13
+			]
+		}
+	},
+	"Promised Respite": {
+		"name": "Promised Respite",
+		"expansion": "The Painted World of Ariamis",
+		"level": 1,
+		"tiles": {
+			"1": [
+				20,
+				30
+			],
+			"2": [
+				30,
+				8
+			]
+		}
+	},
+	"Puppet Master": {
+		"name": "Puppet Master",
+		"expansion": "The Tomb of Giants",
+		"level": 1,
+		"tiles": {
+			"1": [
+				12,
+				18
+			]
+		}
+	},
+	"Pyre of Souls": {
+		"name": "Pyre of Souls",
+		"expansion": "Iron Keep",
+		"level": 2,
+		"tiles": {
+			"1": [
+				14,
+				5
+			]
+		}
+	},
+	"Quiet Graveyard": {
+		"name": "Quiet Graveyard",
+		"expansion": "Executioner Chariot",
+		"level": 1,
+		"tiles": {
+			"1": [
+				9,
+				24,
+				13
+			]
+		}
+	},
+	"Rain of Filth": {
+		"name": "Rain of Filth",
+		"expansion": "The Tomb of Giants",
+		"level": 1,
+		"tiles": {
+			"1": [
+				27,
+				27
+			]
+		}
+	},
+	"Refuge of Silence": {
+		"name": "Refuge of Silence",
+		"expansion": "Explorers",
+		"level": 3,
+		"tiles": {
+			"1": [
+				15,
+				25,
+				10,
+				15,
+				25,
+				10
+			]
+		}
+	},
+	"Research Library": {
+		"name": "Research Library",
+		"expansion": "Guardian Dragon",
+		"level": 4,
+		"tiles": {
+			"1": [
+				26,
+				26,
+				10,
+				25,
+				5,
+				25,
+				5,
+				26,
+				24,
+				24
+			]
+		}
+	},
+	"Roll Out": {
+		"name": "Roll Out",
+		"expansion": "The Painted World of Ariamis",
+		"level": 1,
+		"tiles": {
+			"1": [
+				4,
+				4
+			]
+		}
+	},
+	"Royal Woods Passage": {
+		"name": "Royal Woods Passage",
+		"expansion": "Black Dragon Kalameet",
+		"level": 4,
+		"tiles": {
+			"1": [
+				31,
+				21,
+				0,
+				1,
+				31,
+				21,
+				0,
+				21
+			]
+		}
+	},
+	"Ruined Keep": {
+		"name": "Ruined Keep",
+		"expansion": "Dark Souls The Board Game",
+		"level": 1,
+		"tiles": {
+			"1": [
+				5,
+				13,
+				5
+			]
+		}
+	},
+	"Ruined Walkway": {
+		"name": "Ruined Walkway",
+		"expansion": "Manus, Father of the Abyss",
+		"level": 4,
+		"tiles": {
+			"1": [
+				32,
+				32,
+				1,
+				0,
+				1
+			]
+		}
+	},
+	"Scarlet Battlement": {
+		"name": "Scarlet Battlement",
+		"expansion": "Explorers",
+		"level": 3,
+		"tiles": {
+			"1": [
+				15,
+				10,
+				13,
+				15,
+				25,
+				10
+			]
+		}
+	},
+	"Scholars' Hall": {
+		"name": "Scholars' Hall",
+		"expansion": "Guardian Dragon",
+		"level": 4,
+		"tiles": {
+			"1": [
+				15,
+				5,
+				22,
+				13,
+				22,
+				13,
+				15,
+				5
+			]
+		}
+	},
+	"Searing Hallway": {
+		"name": "Searing Hallway",
+		"expansion": "Iron Keep",
+		"level": 2,
+		"tiles": {
+			"1": [
+				14,
+				2
+			]
+		}
+	},
+	"Sentinel's Wrath": {
+		"name": "Sentinel's Wrath",
+		"expansion": "Dark Souls The Board Game",
+		"level": 2,
+		"tiles": {
+			"1": [
+				22
+			]
+		}
+	},
+	"Sewers of Lordran": {
+		"name": "Sewers of Lordran",
+		"expansion": "Gaping Dragon",
+		"level": 4,
+		"tiles": {
+			"1": [
+				15,
+				5,
+				5,
+				34,
+				15,
+				10,
+				10,
+				25,
+				24
+			]
+		}
+	},
+	"Shadow of the Abyss": {
+		"name": "Shadow of the Abyss",
+		"expansion": "Manus, Father of the Abyss",
+		"level": 4,
+		"tiles": {
+			"1": [
+				32,
+				15,
+				16,
+				15,
+				32,
+				31
+			]
+		}
+	},
+	"Shattered Cell": {
+		"name": "Shattered Cell",
+		"expansion": "Asylum Demon",
+		"level": 4,
+		"tiles": {
+			"1": [
+				15,
+				13,
+				26,
+				24,
+				5,
+				26,
+				24,
+				5,
+				15,
+				13,
+				13
+			]
+		}
+	},
+	"Shattered Dungeon": {
+		"name": "Shattered Dungeon",
+		"expansion": "Dark Souls The Board Game",
+		"level": 1,
+		"tiles": {
+			"1": [
+				13,
+				5,
+				5
+			]
+		}
+	},
+	"Shrine of the Torch": {
+		"name": "Shrine of the Torch",
+		"expansion": "Iron Keep",
+		"level": 3,
+		"tiles": {
+			"1": [
+				2,
+				2,
+				1,
+				0,
+				0
+			]
+		}
+	},
+	"Silent Pathway": {
+		"name": "Silent Pathway",
+		"expansion": "Executioner Chariot",
+		"level": 1,
+		"tiles": {
+			"1": [
+				9,
+				13,
+				5
+			]
+		}
+	},
+	"Silent Tombs": {
+		"name": "Silent Tombs",
+		"expansion": "Dark Souls The Board Game",
+		"level": 3,
+		"tiles": {
+			"1": [
+				15,
+				26,
+				26,
+				15,
+				24
+			]
+		}
+	},
+	"Skeletal Spokes": {
+		"name": "Skeletal Spokes",
+		"expansion": "The Painted World of Ariamis",
+		"level": 2,
+		"tiles": {
+			"1": [
+				8,
+				8
+			],
+			"2": [
+				4,
+				4
+			]
+		}
+	},
+	"Skeleton Overlord": {
+		"name": "Skeleton Overlord",
+		"expansion": "The Tomb of Giants",
+		"level": 3,
+		"tiles": {
+			"1": [
+				12
+			]
+		}
+	},
+	"Skittering Frenzy": {
+		"name": "Skittering Frenzy",
+		"expansion": "The Painted World of Ariamis",
+		"level": 1,
+		"tiles": {
+			"1": [
+				30,
+				30
+			]
+		}
+	},
+	"Smoking Gallery": {
+		"name": "Smoking Gallery",
+		"expansion": "Iron Keep",
+		"level": 3,
+		"tiles": {
+			"1": [
+				2,
+				2,
+				2,
+				0,
+				1
+			]
+		}
+	},
+	"Smouldering Labyrinth": {
+		"name": "Smouldering Labyrinth",
+		"expansion": "Iron Keep",
+		"level": 2,
+		"tiles": {
+			"1": [
+				1,
+				0,
+				2
+			]
+		}
+	},
+	"Snowblind": {
+		"name": "Snowblind",
+		"expansion": "The Painted World of Ariamis",
+		"level": 2,
+		"tiles": {
+			"1": [
+				20,
+				4
+			],
+			"2": [
+				20,
+				6
+			]
+		}
+	},
+	"Sodden Mire": {
+		"name": "Sodden Mire",
+		"expansion": "Darkroot",
+		"level": 3,
+		"tiles": {
+			"1": [
+				7,
+				21,
+				7,
+				21,
+				22
+			]
+		}
+	},
+	"Spirit Tomb": {
+		"name": "Spirit Tomb",
+		"expansion": "Explorers",
+		"level": 2,
+		"tiles": {
+			"1": [
+				26,
+				25,
+				24
+			]
+		}
+	},
+	"Stone Hollow": {
+		"name": "Stone Hollow",
+		"expansion": "Darkroot",
+		"level": 2,
+		"tiles": {
+			"1": [
+				21,
+				23,
+				31
+			]
+		}
+	},
+	"Sunken Stairwell": {
+		"name": "Sunken Stairwell",
+		"expansion": "Explorers",
+		"level": 2,
+		"tiles": {
+			"1": [
+				24,
+				26,
+				25
+			]
+		}
+	},
+	"Sunrise Pass": {
+		"name": "Sunrise Pass",
+		"expansion": "Dark Souls The Board Game",
+		"level": 2,
+		"tiles": {
+			"1": [
+				26,
+				26,
+				15
+			]
+		}
+	},
+	"Sweltering Sanctum": {
+		"name": "Sweltering Sanctum",
+		"expansion": "Iron Keep",
+		"level": 3,
+		"tiles": {
+			"1": [
+				14,
+				14,
+				0
+			]
+		}
+	},
+	"Temple of the Deeps": {
+		"name": "Temple of the Deeps",
+		"expansion": "Dark Souls The Board Game",
+		"level": 2,
+		"tiles": {
+			"1": [
+				13,
+				13,
+				5,
+				13,
+				5
+			]
+		}
+	},
+	"The Abandoned Chest": {
+		"name": "The Abandoned Chest",
+		"expansion": "The Tomb of Giants",
+		"level": 2,
+		"tiles": {
+			"1": [
+				29,
+				29
+			],
+			"2": [
+				26,
+				18
+			]
+		}
+	},
+	"The Beast From the Depths": {
+		"name": "The Beast From the Depths",
+		"expansion": "The Tomb of Giants",
+		"level": 1,
+		"tiles": {
+			"1": [
+				28
+			]
+		}
+	},
+	"The Castle Grounds": {
+		"name": "The Castle Grounds",
+		"expansion": "Vordt of the Boreal Valley",
+		"level": 4,
+		"tiles": {
+			"1": [
+				1,
+				2,
+				1,
+				2,
+				1,
+				2,
+				0,
+				0
+			]
+		}
+	},
+	"The Deeps": {
+		"name": "The Deeps",
+		"expansion": "Dark Souls The Board Game",
+		"level": 1,
+		"tiles": {
+			"1": [
+				26,
+				13,
+				5
+			]
+		}
+	},
+	"The Depths": {
+		"name": "The Depths",
+		"expansion": "Gaping Dragon",
+		"level": 4,
+		"tiles": {
+			"1": [
+				26,
+				5,
+				5,
+				15,
+				24,
+				26,
+				26,
+				5,
+				15,
+				24
+			]
+		}
+	},
+	"The Desecrated Grave": {
+		"name": "The Desecrated Grave",
+		"expansion": "Manus, Father of the Abyss",
+		"level": 4,
+		"tiles": {
+			"1": [
+				15,
+				15,
+				5,
+				5,
+				22,
+				22
+			]
+		}
+	},
+	"The Dog's Domain": {
+		"name": "The Dog's Domain",
+		"expansion": "Vordt of the Boreal Valley",
+		"level": 4,
+		"tiles": {
+			"1": [
+				15,
+				26,
+				24,
+				15,
+				26,
+				22,
+				5,
+				5
+			]
+		}
+	},
+	"The First Bastion": {
+		"name": "The First Bastion",
+		"expansion": "The Painted World of Ariamis",
+		"level": 1,
+		"tiles": {
+			"1": [
+				30
+			]
+		}
+	},
+	"The Forgotten": {
+		"name": "The Forgotten",
+		"expansion": "Dark Souls The Board Game",
+		"level": 1,
+		"tiles": {
+			"1": [
+				13,
+				13,
+				24
+			]
+		}
+	},
+	"The Last Bastion": {
+		"name": "The Last Bastion",
+		"expansion": "The Painted World of Ariamis",
+		"level": 3,
+		"tiles": {
+			"1": [
+				19,
+				6
+			]
+		}
+	},
+	"The Locked Grave": {
+		"name": "The Locked Grave",
+		"expansion": "The Tomb of Giants",
+		"level": 3,
+		"tiles": {
+			"1": [
+				11,
+				29
+			],
+			"2": [
+				12,
+				18
+			],
+			"3": [
+				11,
+				26,
+				26
+			]
+		}
+	},
+	"The Mass Grave": {
+		"name": "The Mass Grave",
+		"expansion": "The Tomb of Giants",
+		"level": 2,
+		"tiles": {
+			"1": [
+				12
+			],
+			"2": [
+				29,
+				29,
+				12
+			]
+		}
+	},
+	"The Petrified Fallen": {
+		"name": "The Petrified Fallen",
+		"expansion": "The Last Giant",
+		"level": 4,
+		"tiles": {
+			"1": [
+				31,
+				21,
+				17,
+				16,
+				7,
+				31,
+				21
+			]
+		}
+	},
+	"The Skeleton Ball": {
+		"name": "The Skeleton Ball",
+		"expansion": "The Tomb of Giants",
+		"level": 3,
+		"tiles": {
+			"1": [
+				18,
+				11
+			],
+			"2": [
+				26,
+				12
+			],
+			"3": [
+				11,
+				18,
+				29,
+				29
+			]
+		}
+	},
+	"The Void Pit": {
+		"name": "The Void Pit",
+		"expansion": "Explorers",
+		"level": 2,
+		"tiles": {
+			"1": [
+				10,
+				10,
+				15,
+				10
+			]
+		}
+	},
+	"Threshold Bridge": {
+		"name": "Threshold Bridge",
+		"expansion": "Iron Keep",
+		"level": 1,
+		"tiles": {
+			"1": [
+				0,
+				13,
+				5
+			]
+		}
+	},
+	"Trecherous Tower": {
+		"name": "Trecherous Tower",
+		"expansion": "The Painted World of Ariamis",
+		"level": 3,
+		"tiles": {
+			"1": [
+				20,
+				20
+			],
+			"2": [],
+			"3": []
+		}
+	},
+	"Undead Purgatory": {
+		"name": "Undead Purgatory",
+		"expansion": "Executioner Chariot",
+		"level": 4,
+		"tiles": {
+			"1": [
+				9,
+				5,
+				3,
+				22,
+				26
+			]
+		}
+	},
+	"Unhallowed Caves": {
+		"name": "Unhallowed Caves",
+		"expansion": "Explorers",
+		"level": 2,
+		"tiles": {
+			"1": [
+				25,
+				25,
+				10
+			]
+		}
+	},
+	"Unholy Tunnels": {
+		"name": "Unholy Tunnels",
+		"expansion": "Explorers",
+		"level": 1,
+		"tiles": {
+			"1": [
+				25,
+				13,
+				10
+			]
+		}
+	},
+	"Unlighted Chamber": {
+		"name": "Unlighted Chamber",
+		"expansion": "Dark Souls The Board Game",
+		"level": 1,
+		"tiles": {
+			"1": [
+				13,
+				5,
+				26
+			]
+		}
+	},
+	"Unseen Scurrying": {
+		"name": "Unseen Scurrying",
+		"expansion": "The Painted World of Ariamis",
+		"level": 1,
+		"tiles": {
+			"1": [
+				30,
+				30
+			]
+		}
+	},
+	"Untended Graves": {
+		"name": "Untended Graves",
+		"expansion": "Dark Souls The Board Game",
+		"level": 3,
+		"tiles": {
+			"1": [
+				24,
+				24,
+				22,
+				26
+			]
+		}
+	},
+	"Urns of the Fallen": {
+		"name": "Urns of the Fallen",
+		"expansion": "The Tomb of Giants",
+		"level": 2,
+		"tiles": {
+			"1": [
+				26,
+				29,
+				29
+			],
+			"2": [
+				26,
+				29
+			]
+		}
+	},
+	"Velka's Chosen": {
+		"name": "Velka's Chosen",
+		"expansion": "The Painted World of Ariamis",
+		"level": 3,
+		"tiles": {
+			"1": [
+				8,
+				8
+			],
+			"2": [
+				6,
+				30,
+				30
+			]
+		}
+	},
+	"Wanderers Wood": {
+		"name": "Wanderers Wood",
+		"expansion": "The Last Giant",
+		"level": 4,
+		"tiles": {
+			"1": [
+				22,
+				5,
+				5,
+				13,
+				5,
+				13,
+				13,
+				22
+			]
+		}
+	},
+	"Weathered Peak": {
+		"name": "Weathered Peak",
+		"expansion": "Dark Souls The Board Game",
+		"level": 2,
+		"tiles": {
+			"1": [
+				26,
+				26,
+				5,
+				24,
+				13
+			]
+		}
+	},
+	"Wicked Vault": {
+		"name": "Wicked Vault",
+		"expansion": "Explorers",
+		"level": 1,
+		"tiles": {
+			"1": [
+				25,
+				10
+			]
+		}
+	},
+	"Wild Glades": {
+		"name": "Wild Glades",
+		"expansion": "Darkroot",
+		"level": 1,
+		"tiles": {
+			"1": [
+				21,
+				23,
+				21
+			]
+		}
+	},
+	"Withered Thicket": {
+		"name": "Withered Thicket",
+		"expansion": "Darkroot",
+		"level": 2,
+		"tiles": {
+			"1": [
+				17,
+				16,
+				21
+			]
+		}
+	},
+	"Wretched Gardens": {
+		"name": "Wretched Gardens",
+		"expansion": "Dark Souls The Board Game",
+		"level": 3,
+		"tiles": {
+			"1": [
+				22,
+				24,
+				15
+			]
+		}
+	}
+}
