@@ -23,7 +23,7 @@ A: No, and I don't intend to support that.  Calculating enemy strength and gener
 
 Q: Are you going to create a version for Mac/Linux/Android/iPhone?
 
-A: I'd like to, but I don't have any of experience with that sort of thing (this project is my only experience making a Windows app and I'm not even going to take much credit for that, thanks to auto-py-to-exe).  So.. eventually?  Feel free to contribute!
+A: I'd like to, but I don't have any of experience with that sort of thing (this project is my only experience making a Windows app and I'm not even going to take much credit for that, thanks to auto-py-to-exe).  So.. eventually?  Feel free to contribute!  A workaround for Mac/Linux is if you have Python 3 installed, you can just run the enemy_swapper.py script and that should work.  You may have to install the Pillow module.
 
 
 Q: Why are some encounters missing from the list?
