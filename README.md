@@ -16,9 +16,9 @@ The idea behind this program is to provide backwards and forwards compatibility 
 
 Yes, as time allows.  The lion's share of work is done, but new enemies will have to be analyzed and the new encounter design tends to need some custom code to do correctly.
 
-### Are you going to support the Dark Souls Forbidden Lore Library content?
+### Are you going to support the fan-made content?
 
-Yes, as time allows.  I'm going to prioritize official content, and I'm not going to keep on top of additions to the Library so please create an issue for things you want added!
+Yes, as time allows.  However, I don't really have time to scour the internet to find it.  If you know of some great fan-made content you want to see added, [open an issue!](https://github.com/DanDuhon/DSBG-Shuffle/issues)
 
 ### Can we add custom enemies/encounters ourselves?
 
