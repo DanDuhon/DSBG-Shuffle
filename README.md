@@ -52,4 +52,4 @@ Damage divided by toughness is the overall enemy strength.  This is what is used
 
 Q: Why isn't the code for the above answer in this repo?
 
-A: Because it's not necessary for the displaying of encounters and enemies.  They're definitely related but I'm trying to limit this program to just what is necessary.  That said, per a suggestion I'm going to link another repo that contains the code used to generate the enemy strength and encounter combinations.
+A: Because it's here: https://github.com/DanDuhon/DSBG-Encounters
