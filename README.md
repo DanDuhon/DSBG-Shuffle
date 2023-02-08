@@ -5,6 +5,10 @@ The idea behind this program is to provide backwards and forwards compatibility 
 
 
 
+How to run/Installation
+Click the green "Code" button, then click "Download ZIP".  Inside the zip file is a folder called "DSBG-Shuffle-main".  Unzip this folder anywhere you want, open the folder, and run "Dark Souls The Board Game Enemy Shuffler.exe" inside it.  There isn't an installer, you just run the .exe.
+
+
 FAQ
 
 Q: Are you going to support future expansions/core sets?
@@ -48,4 +52,4 @@ Damage divided by toughness is the overall enemy strength.  This is what is used
 
 Q: Why isn't the code for the above answer in this repo?
 
-A: Because it's not necessary for the displaying of encounters and enemies.  They're definitely related but I'm trying to limit this program to just what is necessary.
+A: Because it's not necessary for the displaying of encounters and enemies.  They're definitely related but I'm trying to limit this program to just what is necessary.  That said, per a suggestion I'm going to link another repo that contains the code used to generate the enemy strength and encounter combinations.
