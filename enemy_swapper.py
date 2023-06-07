@@ -70,6 +70,56 @@ try:
         raise
 
 
+    class CreateToolTip(object):
+        def __init__(self, widget, text="widget info"):
+            self.waittime = 500     #miliseconds
+            self.wraplength = 180   #pixels
+            self.widget = widget
+            self.text = text
+            self.widget.bind("<Enter>", self.enter)
+            self.widget.bind("<Leave>", self.leave)
+            self.widget.bind("<ButtonPress>", self.leave)
+            self.id = None
+            self.tw = None
+
+        def enter(self, event=None):
+            self.schedule()
+
+        def leave(self, event=None):
+            self.unschedule()
+            self.hidetip()
+
+        def schedule(self):
+            self.unschedule()
+            self.id = self.widget.after(self.waittime, self.showtip)
+
+        def unschedule(self):
+            id = self.id
+            self.id = None
+            if id:
+                self.widget.after_cancel(id)
+
+        def showtip(self, event=None):
+            x = y = 0
+            x, y, cx, cy = self.widget.bbox("insert")
+            x += self.widget.winfo_rootx() + 25
+            y += self.widget.winfo_rooty() + 20
+            # creates a toplevel window
+            self.tw = tk.Toplevel(self.widget)
+            # Leaves only the label and removes the app window
+            self.tw.wm_overrideredirect(True)
+            self.tw.wm_geometry("+%d+%d" % (x, y))
+            label = ttk.Label(self.tw, text=self.text, font=(font, 12), justify="left", relief="solid", borderwidth=1, wraplength = self.wraplength)
+            label.pack(ipadx=1)
+            #label.place(relx=0, rely=0)
+
+        def hidetip(self):
+            tw = self.tw
+            self.tw= None
+            if tw:
+                tw.destroy()
+
+
     class HelpWindow(object):
         def __init__(self, master):
             try:
@@ -249,6 +299,16 @@ try:
                 self.create_menu()
                 self.set_bindings_buttons_menus(True)
 
+                self.specialRuleText = {
+                    "snowstorm": "At the start of each character's turn, that character suffers Frostbite unless they have the torch token on their dashboard or are on the same node as the torch token or a character with the torch token on their dashboard.",
+                    "bitterCold": "If a character has a Frostbite token at the end of their turn, they suffer 1 damage.",
+                    "barrage": "At the end of each character's turn, that character must make a defense roll using only their dodge dice. If no dodge symbols are rolled, the character suffers 2 damage and Stagger.",
+                    "hidden": "After declaring an attack, players must discard a die of their choice before rolling. If the attacks only has a single die already, ignore this rule.",
+                    "poisonMist": "During setup, place trap tokens on the tile indicated in brackets using the normal trap placement rules. Then, reveal the tokens, replacing each token with a value with a poison cloud token.",
+                    "eerie": "During setup, take five blank trap tokens and five trap tokens with values on them, and place a random token face down on each of the highlighted nodes.\nIf a character moves onto a node with a token, flip the token. If the token is blank, place it to one side. If the token has a damage value, instead of resolving it normally, spawn an enemy corresponding to the value shown, then discard the token.",
+                    "trial": "Trials offer an extra objective providing additional rewards if completed. This is shown in brackets, either in writing, or as a number of turns in which the characters must complete the encounter's main objective. Completing trial objectives is not mandatory to complete an encounter."
+                }
+
                 self.deathlyFreezeTarget = None
 
                 for enemy in allEnemies:
@@ -266,6 +326,8 @@ try:
                 self.repeatAction = self.create_image("repeat_action.png", "condition")
                 self.push = self.create_image("push.png", "condition")
                 self.eerie = self.create_image("eerie.png", "eerie")
+
+                self.poisonMist = ImageTk.PhotoImage(self.create_image("poison_mist.png", "poisonMist"))
                 
                 self.selected = None
                 self.newEnemies = []
@@ -651,6 +713,8 @@ try:
                     image = Image.open(imagePath).resize((13, 13), Image.Resampling.LANCZOS)
                 elif imageType == "eerie":
                     image = Image.open(imagePath).resize((94, 100), Image.Resampling.LANCZOS)
+                elif imageType == "poisonMist":
+                    image = Image.open(imagePath).resize((60, 15), Image.Resampling.LANCZOS)
 
                 adapter.debug("\tEnd of create_image", caller=calframe[1][3])
                 
@@ -854,6 +918,14 @@ try:
                 self.encounter.image = self.encounterPhotoImage
                 self.encounter.config(image=self.encounterPhotoImage)
                 self.encounter.bind("<Button 1>", self.shuffle_enemies)
+
+                if self.selected["name"] == "No Safe Haven":
+                    self.no_safe_haven_special_rules()
+
+                testImg = ImageTk.PhotoImage(Image.open(baseFolder + "\\images\\poison_mist.png").resize((60, 15), Image.Resampling.LANCZOS))
+                test = tk.Label(self.encounterFrame, image=testImg, borderwidth=0, highlightthickness=0)
+                test.place(x=144, y=195)
+                button1_ttp = CreateToolTip(test, "During setup, place trap tokens on the tile indicated in brackets using the normal trap placement rules. Then, reveal the tokens, replacing each token with a value with a poison cloud token.")
 
                 adapter.debug("\tEnd of shuffle_enemies", caller=calframe[1][3])
             except Exception as e:
@@ -1389,6 +1461,22 @@ try:
                 imageWithText.text((30, 150), "Kill the " + self.newTiles[2][0][0] + (" (and resulting Hollows)" if self.newTiles[2][0][0] == "Phalanx" else "") + " starting on tile two", "black", font)
 
                 adapter.debug("\tEnd of no_safe_haven", caller=calframe[1][3])
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
+        def no_safe_haven_special_rules(self):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of no_safe_haven_special_rules", caller=calframe[1][3])
+
+                specialRule = tk.Label(self.encounterFrame, image=self.poisonMist, borderwidth=0, highlightthickness=0)
+                specialRule.place(x=144, y=195)
+                tooltip = CreateToolTip(specialRule, self.specialRuleText["poisonMist"])
+
+                adapter.debug("\tEnd of no_safe_haven_special_rules", caller=calframe[1][3])
             except Exception as e:
                 adapter.exception(e)
                 raise
