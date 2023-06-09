@@ -144,7 +144,14 @@ try:
                 helpText += "If you try to shuffle the enemies and nothing happens,\n"
                 helpText += "there's probably only one combination available!\n"
                 helpText += "Many encounters with a single enemy have no alternatives,\n"
-                helpText += "even with all enemy expansions activated."
+                helpText += "even with all enemy expansions activated.\n\n"
+                helpText += "Mousing over keywords (in bold and italics) will display the\n"
+                helpText += "rules for that keyword.\n\n"
+                helpText += "In the Campaign tab, you can build your own campaign by adding\n"
+                helpText += "encounters to it. You can also save and load campaigns.\n"
+                helpText += "You may only have one of each encounter name, but there are\n"
+                helpText += "no restrictions beyond that. Encounters added to a campaign\n"
+                helpText += "are frozen so you cannot shuffle the enemies."
                 self.helpTextLabel = ttk.Label(self.helpTextFrame, text=helpText)
                 self.helpTextLabel.grid()
 
@@ -410,14 +417,20 @@ try:
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of delete_encounter_from_campaign", caller=calframe[1][3])
                 
-                encounter = self.treeviewCampaign.focus()
-                if not encounter:
+                if not self.treeviewCampaign.selection():
                     adapter.debug("End of delete_encounter_from_campaign (nothing done)")
                     return
 
-                encounterToRemove = self.treeviewCampaign.item(encounter)
-                self.campaign = [e for e in self.campaign if e[0] != encounterToRemove["values"][0]]
-                self.treeviewCampaign.delete(self.treeviewCampaign.selection()[0])
+                self.campaign = [e for e in self.campaign if e[0] not in set([self.treeviewCampaign.item(e)["values"][0] for e in self.treeviewCampaign.selection()])]
+                self.campaign = sorted(self.campaign, key=lambda x: x[1])
+
+                self.treeviewCampaign.pack_forget()
+                self.treeviewCampaign.destroy()
+                self.create_campaign_treeview()
+
+                for item in self.campaign:
+                    self.treeviewCampaign.insert(parent="", values=(item[0], item[1]), index="end")
+
                 self.encounter.config(image="")
 
                 adapter.debug("End of delete_encounter_from_campaign")
@@ -490,13 +503,18 @@ try:
                 self.encounter.unbind("<Button 1>")
 
                 tree = event.widget
-                if tree.selection():
-                    campaignEncounter = [e for e in self.campaign if e[0] == tree.item(tree.selection())["values"][0]]
-                    if campaignEncounter:
-                        self.encounterImage = campaignEncounter[0][2]
-                        self.encounterPhotoImage = ImageTk.PhotoImage(self.encounterImage)
-                        self.encounter.image = self.encounterPhotoImage
-                        self.encounter.config(image=self.encounterPhotoImage)
+                if len(tree.selection()) != 1:
+                    adapter.debug("End of load_campaign_encounter (not updating image)")
+                    return
+                
+                campaignEncounter = [e for e in self.campaign if e[0] == tree.item(tree.selection())["values"][0]]
+                if campaignEncounter:
+                    self.encounterImage = campaignEncounter[0][2]
+                    self.encounterPhotoImage = ImageTk.PhotoImage(self.encounterImage)
+                    self.encounter.image = self.encounterPhotoImage
+                    self.encounter.config(image=self.encounterPhotoImage)
+
+                self.apply_tooltips()
 
                 adapter.debug("End of load_campaign_encounter")
             except Exception as e:
@@ -539,7 +557,7 @@ try:
                 
                 self.paned = ttk.PanedWindow(self)
                 self.paned.grid_rowconfigure(index=0, weight=1)
-                self.paned.grid(row=1, column=0, pady=(5, 5), sticky="nsew", columnspan=4)
+                self.paned.grid(row=1, column=0, pady=(5, 5), padx=(5, 5), sticky="nsew", columnspan=4)
                 
                 self.pane = ttk.Frame(self.paned, padding=5)
                 self.pane.grid_rowconfigure(index=0, weight=1)
@@ -645,7 +663,7 @@ try:
                 
                 self.treeviewCampaign = ttk.Treeview(
                     self.campaignTabTreeviewFrame,
-                    selectmode="browse",
+                    selectmode="extended",
                     columns=("Name", "Level"),
                     yscrollcommand=self.scrollbarTreeviewCampaign.set,
                     height=29 if root.winfo_screenheight() > 1000 else 20,
@@ -661,6 +679,7 @@ try:
                 self.treeviewCampaign.heading("#2", text="Level", anchor="w")
                 
                 self.treeviewCampaign.bind("<<TreeviewSelect>>", self.load_campaign_encounter)
+                self.treeviewCampaign.bind("<Control-a>", lambda *args: self.treeviewCampaign.selection_add(self.treeviewCampaign.get_children()))
 
                 adapter.debug("End of create_campaign_treeview")
             except Exception as e:
@@ -992,15 +1011,6 @@ try:
                 else:
                     encounterName = encounter
 
-                if hasattr(self, "keyword0") and self.keyword0.winfo_exists():
-                    self.keyword0.destroy()
-                if hasattr(self, "keyword1") and self.keyword1.winfo_exists():
-                    self.keyword1.destroy()
-                if hasattr(self, "keyword2") and self.keyword2.winfo_exists():
-                    self.keyword2.destroy()
-                if hasattr(self, "keyword3") and self.keyword3.winfo_exists():
-                    self.keyword3.destroy()
-
                 if encounters[encounterName] == self.selected:
                     self.shuffle_enemies()
                     self.treeviewEncounters.bind("<<TreeviewSelect>>", self.load_encounter)
@@ -1161,77 +1171,107 @@ try:
                 self.encounter.config(image=self.encounterPhotoImage)
                 self.encounter.bind("<Button 1>", self.shuffle_enemies)
 
-                # Now that the image is created, add tooltips for self.keywords.
-                if self.selected["name"] == "A Trusty Ally":
-                    self.a_trusty_ally_tooltips()
-                elif self.selected["name"] == "Abandoned and Forgotten":
-                    self.abandoned_and_forgotten_tooltips()
-                elif self.selected["name"] == "Altar of Bones":
-                    self.altar_of_bones_tooltips()
-                elif self.selected["name"] == "Central Plaza":
-                    self.central_plaza_tooltips()
-                elif self.selected["name"] == "Cold Snap":
-                    self.cold_snap_tooltips()
-                elif self.selected["name"] == "Corrupted Hovel":
-                    self.corrupted_hovel_tooltips()
-                elif self.selected["name"] == "Corvian Host":
-                    self.corvian_host_tooltips()
-                elif self.selected["name"] == "Dark Resurrection":
-                    self.dark_resurrection_tooltips()
-                elif self.selected["name"] == "Deathly Freeze":
-                    self.deathly_freeze_tooltips()
-                elif self.selected["name"] == "Distant Tower":
-                    self.distant_tower_tooltips()
-                elif self.selected["name"] == "Eye of the Storm":
-                    self.eye_of_the_storm_tooltips()
-                elif self.selected["name"] == "Far From the Sun":
-                    self.far_from_the_sun_tooltips()
-                elif self.selected["name"] == "Frozen Sentries":
-                    self.frozen_sentries_tooltips()
-                elif self.selected["name"] == "Frozen Revolutions":
-                    self.frozen_revolutions_tooltips()
-                elif self.selected["name"] == "Gnashing Beaks":
-                    self.gnashing_beaks_tooltips()
-                elif self.selected["name"] == "Giant's Coffin":
-                    self.giants_coffin_tooltips()
-                elif self.selected["name"] == "In Deep Water":
-                    self.in_deep_water_tooltips()
-                elif self.selected["name"] == "Inhospitable Ground":
-                    self.inhospitable_ground_tooltips()
-                elif self.selected["name"] == "Lakeview Refuge":
-                    self.lakeview_refuge_tooltips()
-                elif self.selected["name"] == "Last Rites":
-                    self.last_rites_tooltips()
-                elif self.selected["name"] == "Last Shred of Light":
-                    self.last_shred_of_light_tooltips()
-                elif self.selected["name"] == "No Safe Haven":
-                    self.no_safe_haven_tooltips()
-                elif self.selected["name"] == "Painted Passage":
-                    self.painted_passage_tooltips()
-                elif self.selected["name"] == "Pitch Black":
-                    self.pitch_black_tooltips()
-                elif self.selected["name"] == "Promised Respite":
-                    self.promised_respite_tooltips()
-                elif self.selected["name"] == "Skeleton Overlord":
-                    self.skeleton_overlord_tooltips()
-                elif self.selected["name"] == "Snowblind":
-                    self.snowblind_tooltips()
-                elif self.selected["name"] == "The Beast From the Depths":
-                    self.the_beast_from_the_depths_tooltips()
-                elif self.selected["name"] == "The First Bastion":
-                    self.the_first_bastion_tooltips()
-                elif self.selected["name"] == "The Last Bastion":
-                    self.the_last_bastion_tooltips()
-                elif self.selected["name"] == "The Locked Grave":
-                    self.the_locked_grave_tooltips()
-                elif self.selected["name"] == "The Mass Grave":
-                    self.the_mass_grave_tooltips()
-                elif self.selected["name"] == "Trecherous Tower":
-                    self.trecherous_tower_tooltips()
-                elif self.selected["name"] == "Unseen Scurrying":
-                    self.unseen_scurrying_tooltips()
+                self.apply_tooltips()
 
                 adapter.debug("\tEnd of shuffle_enemies", caller=calframe[1][3])
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
+        def apply_tooltips(self):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of apply_tooltips", caller=calframe[1][3])
+
+                if hasattr(self, "keyword0") and self.keyword0.winfo_exists():
+                    self.keyword0.destroy()
+                if hasattr(self, "keyword1") and self.keyword1.winfo_exists():
+                    self.keyword1.destroy()
+                if hasattr(self, "keyword2") and self.keyword2.winfo_exists():
+                    self.keyword2.destroy()
+                if hasattr(self, "keyword3") and self.keyword3.winfo_exists():
+                    self.keyword3.destroy()
+
+                if self.selected:
+                    encounter = self.selected["name"]
+                elif self.treeviewCampaign.focus():
+                    encounter = self.treeviewCampaign.item(self.treeviewCampaign.focus())["values"][0]
+                else:
+                    adapter.debug("\tEnd of apply_tooltips (removed tooltips only)", caller=calframe[1][3])
+                    return
+
+                if encounter == "A Trusty Ally":
+                    self.a_trusty_ally_tooltips()
+                elif encounter == "Abandoned and Forgotten":
+                    self.abandoned_and_forgotten_tooltips()
+                elif encounter == "Altar of Bones":
+                    self.altar_of_bones_tooltips()
+                elif encounter == "Central Plaza":
+                    self.central_plaza_tooltips()
+                elif encounter == "Cold Snap":
+                    self.cold_snap_tooltips()
+                elif encounter == "Corrupted Hovel":
+                    self.corrupted_hovel_tooltips()
+                elif encounter == "Corvian Host":
+                    self.corvian_host_tooltips()
+                elif encounter == "Dark Resurrection":
+                    self.dark_resurrection_tooltips()
+                elif encounter == "Deathly Freeze":
+                    self.deathly_freeze_tooltips()
+                elif encounter == "Distant Tower":
+                    self.distant_tower_tooltips()
+                elif encounter == "Eye of the Storm":
+                    self.eye_of_the_storm_tooltips()
+                elif encounter == "Far From the Sun":
+                    self.far_from_the_sun_tooltips()
+                elif encounter == "Frozen Sentries":
+                    self.frozen_sentries_tooltips()
+                elif encounter == "Frozen Revolutions":
+                    self.frozen_revolutions_tooltips()
+                elif encounter == "Gnashing Beaks":
+                    self.gnashing_beaks_tooltips()
+                elif encounter == "Giant's Coffin":
+                    self.giants_coffin_tooltips()
+                elif encounter == "In Deep Water":
+                    self.in_deep_water_tooltips()
+                elif encounter == "Inhospitable Ground":
+                    self.inhospitable_ground_tooltips()
+                elif encounter == "Lakeview Refuge":
+                    self.lakeview_refuge_tooltips()
+                elif encounter == "Last Rites":
+                    self.last_rites_tooltips()
+                elif encounter == "Last Shred of Light":
+                    self.last_shred_of_light_tooltips()
+                elif encounter == "No Safe Haven":
+                    self.no_safe_haven_tooltips()
+                elif encounter == "Painted Passage":
+                    self.painted_passage_tooltips()
+                elif encounter == "Pitch Black":
+                    self.pitch_black_tooltips()
+                elif encounter == "Promised Respite":
+                    self.promised_respite_tooltips()
+                elif encounter == "Skeleton Overlord":
+                    self.skeleton_overlord_tooltips()
+                elif encounter == "Snowblind":
+                    self.snowblind_tooltips()
+                elif encounter == "The Beast From the Depths":
+                    self.the_beast_from_the_depths_tooltips()
+                elif encounter == "The First Bastion":
+                    self.the_first_bastion_tooltips()
+                elif encounter == "The Last Bastion":
+                    self.the_last_bastion_tooltips()
+                elif encounter == "The Locked Grave":
+                    self.the_locked_grave_tooltips()
+                elif encounter == "The Mass Grave":
+                    self.the_mass_grave_tooltips()
+                elif encounter == "Trecherous Tower":
+                    self.trecherous_tower_tooltips()
+                elif encounter == "Unseen Scurrying":
+                    self.unseen_scurrying_tooltips()
+
+                adapter.debug("\tEnd of apply_tooltips", caller=calframe[1][3])
             except Exception as e:
                 adapter.exception(e)
                 raise
