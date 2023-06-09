@@ -70,6 +70,55 @@ try:
         raise
 
 
+    class CreateToolTip(object):
+        def __init__(self, widget, text="widget info"):
+            self.waittime = 500     #miliseconds
+            self.wraplength = 225   #pixels
+            self.widget = widget
+            self.text = text
+            self.widget.bind("<Enter>", self.enter)
+            self.widget.bind("<Leave>", self.leave)
+            self.widget.bind("<ButtonPress>", self.leave)
+            self.id = None
+            self.tw = None
+
+        def enter(self, event=None):
+            self.schedule()
+
+        def leave(self, event=None):
+            self.unschedule()
+            self.hidetip()
+
+        def schedule(self):
+            self.unschedule()
+            self.id = self.widget.after(self.waittime, self.showtip)
+
+        def unschedule(self):
+            id = self.id
+            self.id = None
+            if id:
+                self.widget.after_cancel(id)
+
+        def showtip(self, event=None):
+            x = y = 0
+            x, y, cx, cy = self.widget.bbox("insert")
+            x += self.widget.winfo_rootx() + 25
+            y += self.widget.winfo_rooty() + 20
+            # creates a toplevel window
+            self.tw = tk.Toplevel(self.widget)
+            # Leaves only the label and removes the app window
+            self.tw.wm_overrideredirect(True)
+            self.tw.wm_geometry("+%d+%d" % (x, y))
+            label = ttk.Label(self.tw, text=self.text, font=(font, 12), justify="left", relief="solid", borderwidth=1, wraplength = self.wraplength)
+            label.pack(ipadx=1)
+
+        def hidetip(self):
+            tw = self.tw
+            self.tw= None
+            if tw:
+                tw.destroy()
+
+
     class HelpWindow(object):
         def __init__(self, master):
             try:
@@ -249,6 +298,20 @@ try:
                 self.create_menu()
                 self.set_bindings_buttons_menus(True)
 
+                self.keywordText = {
+                    "snowstorm": "At the start of each character's turn, that character suffers Frostbite unless they have the torch token on their dashboard or are on the same node as the torch token or a character with the torch token on their dashboard.",
+                    "bitterCold": "If a character has a Frostbite token at the end of their turn, they suffer 1 damage.",
+                    "barrage": "At the end of each character's turn, that character must make a defense roll using only their dodge dice.\n\nIf no dodge symbols are rolled, the character suffers 2 damage and Stagger.",
+                    "hidden": "After declaring an attack, players must discard a die of their choice before rolling.\n\nIf the attacks only has a single die already, ignore this rule.",
+                    "poisonMist": "During setup, place trap tokens on the tile indicated in brackets using the normal trap placement rules.\n\nThen, reveal the tokens, replacing each token with a value with a poison cloud token.",
+                    "eerieTooltip": "During setup, take five blank trap tokens and five trap tokens with values on them, and place a random token face down on each of the highlighted nodes.\n\nIf a character moves onto a node with a token, flip the token.\n\nIf the token is blank, place it to one side.\n\nIf the token has a damage value, instead of resolving it normally, spawn an enemy corresponding to the value shown, then discard the token.",
+                    "trial": "Trials offer an extra objective providing additional rewards if completed.\n\nThis is shown in parentheses, either in writing, or as a number of turns in which the characters must complete the encounter's main objective.\n\nCompleting trial objectives is not mandatory to complete an encounter.",
+                    "onslaught": "Each tile begins the encounter as active (all enemies on active tiles act on their turn).",
+                    "darkness": "During this encounter, characters can only attack enemies on the same or an adjacent node.",
+                    "timer": "If the timer marker reaches the value shown in brackets, resolve the effect listed.",
+                    "respawn": "Place additional models using the enemies and enemy nodes shown on the encounter card.\n\nWhen respawning, if there are insufficient enemy models (because some enemy models are already in play), place as many enemies as possible, then place an enemy token for each missing enemy on the node it would spawn on.\n\nAs soon as the corresponding model becomes available, replace the token with the model."
+                }
+
                 self.deathlyFreezeTarget = None
 
                 for enemy in allEnemies:
@@ -266,6 +329,17 @@ try:
                 self.repeatAction = self.create_image("repeat_action.png", "condition")
                 self.push = self.create_image("push.png", "condition")
                 self.eerie = self.create_image("eerie.png", "eerie")
+
+                self.poisonMist = ImageTk.PhotoImage(self.create_image("poison_mist.png", "poisonMist"))
+                self.darkness = ImageTk.PhotoImage(self.create_image("darkness.png", "darkness"))
+                self.trial = ImageTk.PhotoImage(self.create_image("trial.png", "trial"))
+                self.timer = ImageTk.PhotoImage(self.create_image("timer.png", "timer"))
+                self.onslaught = ImageTk.PhotoImage(self.create_image("onslaught.png", "onslaught"))
+                self.snowstorm = ImageTk.PhotoImage(self.create_image("snowstorm.png", "snowstorm"))
+                self.hidden = ImageTk.PhotoImage(self.create_image("hidden.png", "hidden"))
+                self.bitterCold = ImageTk.PhotoImage(self.create_image("bitter_cold.png", "bitterCold"))
+                self.eerieTooltip = ImageTk.PhotoImage(self.create_image("eerie_tooltip.png", "eerieTooltip"))
+                self.barrage = ImageTk.PhotoImage(self.create_image("barrage.png", "barrage"))
                 
                 self.selected = None
                 self.newEnemies = []
@@ -651,6 +725,26 @@ try:
                     image = Image.open(imagePath).resize((13, 13), Image.Resampling.LANCZOS)
                 elif imageType == "eerie":
                     image = Image.open(imagePath).resize((94, 100), Image.Resampling.LANCZOS)
+                elif imageType == "poisonMist":
+                    image = Image.open(imagePath).resize((60, 15), Image.Resampling.LANCZOS)
+                elif imageType == "darkness":
+                    image = Image.open(imagePath).resize((45, 11), Image.Resampling.LANCZOS)
+                elif imageType == "trial":
+                    image = Image.open(imagePath).resize((28, 11), Image.Resampling.LANCZOS)
+                elif imageType == "timer":
+                    image = Image.open(imagePath).resize((30, 11), Image.Resampling.LANCZOS)
+                elif imageType == "onslaught":
+                    image = Image.open(imagePath).resize((48, 14), Image.Resampling.LANCZOS)
+                elif imageType == "snowstorm":
+                    image = Image.open(imagePath).resize((54, 11), Image.Resampling.LANCZOS)
+                elif imageType == "hidden":
+                    image = Image.open(imagePath).resize((37, 12), Image.Resampling.LANCZOS)
+                elif imageType == "bitterCold":
+                    image = Image.open(imagePath).resize((50, 11), Image.Resampling.LANCZOS)
+                elif imageType == "eerieTooltip":
+                    image = Image.open(imagePath).resize((29, 11), Image.Resampling.LANCZOS)
+                elif imageType == "barrage":
+                    image = Image.open(imagePath).resize((40, 14), Image.Resampling.LANCZOS)
 
                 adapter.debug("\tEnd of create_image", caller=calframe[1][3])
                 
@@ -695,6 +789,15 @@ try:
                     encounterName = tree.item(tree.selection())["text"]
                 else:
                     encounterName = encounter
+
+                if hasattr(self, "keyword0") and self.keyword0.winfo_exists():
+                    self.keyword0.destroy()
+                if hasattr(self, "keyword1") and self.keyword1.winfo_exists():
+                    self.keyword1.destroy()
+                if hasattr(self, "keyword2") and self.keyword2.winfo_exists():
+                    self.keyword2.destroy()
+                if hasattr(self, "keyword3") and self.keyword3.winfo_exists():
+                    self.keyword3.destroy()
 
                 if encounters[encounterName] == self.selected:
                     self.shuffle_enemies()
@@ -855,7 +958,93 @@ try:
                 self.encounter.config(image=self.encounterPhotoImage)
                 self.encounter.bind("<Button 1>", self.shuffle_enemies)
 
+                # Now that the image is created, add tooltips for self.keywords.
+                if self.selected["name"] == "A Trusty Ally":
+                    self.a_trusty_ally_tooltips()
+                elif self.selected["name"] == "Abandoned and Forgotten":
+                    self.abandoned_and_forgotten_tooltips()
+                elif self.selected["name"] == "Altar of Bones":
+                    self.altar_of_bones_tooltips()
+                elif self.selected["name"] == "Central Plaza":
+                    self.central_plaza_tooltips()
+                elif self.selected["name"] == "Cold Snap":
+                    self.cold_snap_tooltips()
+                elif self.selected["name"] == "Corrupted Hovel":
+                    self.corrupted_hovel_tooltips()
+                elif self.selected["name"] == "Corvian Host":
+                    self.corvian_host_tooltips()
+                elif self.selected["name"] == "Dark Resurrection":
+                    self.dark_resurrection_tooltips()
+                elif self.selected["name"] == "Deathly Freeze":
+                    self.deathly_freeze_tooltips()
+                elif self.selected["name"] == "Distant Tower":
+                    self.distant_tower_tooltips()
+                elif self.selected["name"] == "Eye of the Storm":
+                    self.eye_of_the_storm_tooltips()
+                elif self.selected["name"] == "Far From the Sun":
+                    self.far_from_the_sun_tooltips()
+                elif self.selected["name"] == "Frozen Sentries":
+                    self.frozen_sentries_tooltips()
+                elif self.selected["name"] == "Frozen Revolutions":
+                    self.frozen_revolutions_tooltips()
+                elif self.selected["name"] == "Gnashing Beaks":
+                    self.gnashing_beaks_tooltips()
+                elif self.selected["name"] == "Giant's Coffin":
+                    self.giants_coffin_tooltips()
+                elif self.selected["name"] == "In Deep Water":
+                    self.in_deep_water_tooltips()
+                elif self.selected["name"] == "Inhospitable Ground":
+                    self.inhospitable_ground_tooltips()
+                elif self.selected["name"] == "Lakeview Refuge":
+                    self.lakeview_refuge_tooltips()
+                elif self.selected["name"] == "Last Rites":
+                    self.last_rites_tooltips()
+                elif self.selected["name"] == "Last Shred of Light":
+                    self.last_shred_of_light_tooltips()
+                elif self.selected["name"] == "No Safe Haven":
+                    self.no_safe_haven_tooltips()
+                elif self.selected["name"] == "Painted Passage":
+                    self.painted_passage_tooltips()
+                elif self.selected["name"] == "Pitch Black":
+                    self.pitch_black_tooltips()
+                elif self.selected["name"] == "Promised Respite":
+                    self.promised_respite_tooltips()
+                elif self.selected["name"] == "Skeleton Overlord":
+                    self.skeleton_overlord_tooltips()
+                elif self.selected["name"] == "Snowblind":
+                    self.snowblind_tooltips()
+                elif self.selected["name"] == "The Beast From the Depths":
+                    self.the_beast_from_the_depths_tooltips()
+                elif self.selected["name"] == "The First Bastion":
+                    self.the_first_bastion_tooltips()
+                elif self.selected["name"] == "The Last Bastion":
+                    self.the_last_bastion_tooltips()
+                elif self.selected["name"] == "The Locked Grave":
+                    self.the_locked_grave_tooltips()
+                elif self.selected["name"] == "The Mass Grave":
+                    self.the_mass_grave_tooltips()
+                elif self.selected["name"] == "Trecherous Tower":
+                    self.trecherous_tower_tooltips()
+                elif self.selected["name"] == "Unseen Scurrying":
+                    self.unseen_scurrying_tooltips()
+
                 adapter.debug("\tEnd of shuffle_enemies", caller=calframe[1][3])
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
+        def a_trusty_ally_tooltips(self):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of giants_coffin_tooltips", caller=calframe[1][3])
+
+                self.keyword0 = tk.Label(self.encounterFrame, image=self.onslaught, borderwidth=0, highlightthickness=0)
+                self.keyword0.place(x=148, y=197)
+                tooltip0 =  CreateToolTip(self.keyword0, self.keywordText["onslaught"])
+
+                adapter.debug("\tEnd of giants_coffin_tooltips", caller=calframe[1][3])
             except Exception as e:
                 adapter.exception(e)
                 raise
@@ -889,6 +1078,54 @@ try:
                 raise
 
 
+        def abandoned_and_forgotten_tooltips(self):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of abandoned_and_forgotten_tooltips", caller=calframe[1][3])
+
+                self.keyword0 = tk.Label(self.encounterFrame, image=self.eerieTooltip, borderwidth=0, highlightthickness=0)
+                self.keyword0.place(x=146, y=197)
+                tooltip0 =  CreateToolTip(self.keyword0, self.keywordText["eerieTooltip"])
+
+                adapter.debug("\tEnd of abandoned_and_forgotten_tooltips", caller=calframe[1][3])
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
+        def altar_of_bones_tooltips(self):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of altar_of_bones_tooltips", caller=calframe[1][3])
+
+                self.keyword0 = tk.Label(self.encounterFrame, image=self.timer, borderwidth=0, highlightthickness=0)
+                self.keyword0.place(x=149, y=197)
+                tooltip0 =  CreateToolTip(self.keyword0, self.keywordText["timer"])
+
+                adapter.debug("\tEnd of altar_of_bones_tooltips", caller=calframe[1][3])
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
+        def central_plaza_tooltips(self):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of central_plaza_tooltips", caller=calframe[1][3])
+
+                self.keyword0 = tk.Label(self.encounterFrame, image=self.barrage, borderwidth=0, highlightthickness=0)
+                self.keyword0.place(x=146, y=198)
+                tooltip0 =  CreateToolTip(self.keyword0, self.keywordText["barrage"])
+
+                adapter.debug("\tEnd of central_plaza_tooltips", caller=calframe[1][3])
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
         def cloak_and_feathers(self):
             try:
                 curframe = inspect.currentframe()
@@ -913,7 +1150,7 @@ try:
                 coldSnapTarget = self.newTiles[2][0][1]
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
-                imageWithText.text((145, 230), "Trial: Kill the " + coldSnapTarget + (" (and resulting Hollows)" if coldSnapTarget == "Phalanx" else ""), "black", fontItalics)
+                imageWithText.text((145, 230), "Trial  (Kill the " + coldSnapTarget + (" and resulting Hollows)" if coldSnapTarget == "Phalanx" else ")"), "black", fontItalics)
                 if enemiesDict[coldSnapTarget].health == 1 and (enemiesDict[coldSnapTarget].armor < 2 or enemiesDict[coldSnapTarget].resist < 2):
                     text = "Increase the " + coldSnapTarget
                     text += "'s\n"
@@ -926,6 +1163,50 @@ try:
                     imageWithText.text((145, 245), text, "black", font)
 
                 adapter.debug("\tEnd of cold_snap", caller=calframe[1][3])
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
+        def cold_snap_tooltips(self):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of cold_snap_tooltips", caller=calframe[1][3])
+
+                self.keyword0 = tk.Label(self.encounterFrame, image=self.snowstorm, borderwidth=0, highlightthickness=0)
+                self.keyword0.place(x=147, y=197)
+                tooltip0 =  CreateToolTip(self.keyword0, self.keywordText["snowstorm"])
+
+                self.keyword1 = tk.Label(self.encounterFrame, image=self.bitterCold, borderwidth=0, highlightthickness=0)
+                self.keyword1.place(x=146, y=215)
+                tooltip1 =  CreateToolTip(self.keyword1, self.keywordText["bitterCold"])
+
+                self.keyword2 = tk.Label(self.encounterFrame, image=self.trial, borderwidth=0, highlightthickness=0)
+                self.keyword2.place(x=146, y=233)
+                tooltip2 =  CreateToolTip(self.keyword2, self.keywordText["trial"])
+
+                adapter.debug("\tEnd of cold_snap_tooltips", caller=calframe[1][3])
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
+        def corrupted_hovel_tooltips(self):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of corrupted_hovel_tooltips", caller=calframe[1][3])
+
+                self.keyword0 = tk.Label(self.encounterFrame, image=self.poisonMist, borderwidth=0, highlightthickness=0)
+                self.keyword0.place(x=145, y=197)
+                tooltip0 =  CreateToolTip(self.keyword0, self.keywordText["poisonMist"])
+
+                self.keyword1 = tk.Label(self.encounterFrame, image=self.trial, borderwidth=0, highlightthickness=0)
+                self.keyword1.place(x=146, y=214.5)
+                tooltip1 =  CreateToolTip(self.keyword1, self.keywordText["trial"])
+
+                adapter.debug("\tEnd of corrupted_hovel_tooltips", caller=calframe[1][3])
             except Exception as e:
                 adapter.exception(e)
                 raise
@@ -950,13 +1231,29 @@ try:
                 if enemiesDict[corvianHostTarget].armor + enemiesDict[corvianHostTarget].resist <= 3:
                     text += "Increase " + corvianHostTarget + "s' "
                     text += ("block, resistance, and\ndamage values by 1" if corvianHostTarget in {"Skeleton Soldier", "Falchion Skeleton"} else "block and resistance\nvalues by 1 and their attacks gain     .")
-                    self.encounterImage.paste(im=self.bleed, box=(280, 292), mask=self.bleed)
+                    self.encounterImage.paste(im=self.bleed, box=(280, 294), mask=self.bleed)
                 else:
                     text += corvianHostTarget + "\nattacks gain     ."
-                    self.encounterImage.paste(im=self.bleed, box=(194, 292), mask=self.bleed)
-                imageWithText.text((145, 205), text, "black", fontSmall)
+                    self.encounterImage.paste(im=self.bleed, box=(194, 294), mask=self.bleed)
+                imageWithText.text((145, 207), text, "black", fontSmall)
 
                 adapter.debug("\tEnd of corvian_host", caller=calframe[1][3])
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
+        def corvian_host_tooltips(self):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of corvian_host_tooltips", caller=calframe[1][3])
+
+                self.keyword0 = tk.Label(self.encounterFrame, image=self.poisonMist, borderwidth=0, highlightthickness=0)
+                self.keyword0.place(x=142, y=194.5)
+                tooltip0 =  CreateToolTip(self.keyword0, self.keywordText["poisonMist"])
+
+                adapter.debug("\tEnd of corvian_host_tooltips", caller=calframe[1][3])
             except Exception as e:
                 adapter.exception(e)
                 raise
@@ -980,6 +1277,22 @@ try:
                 raise
 
 
+        def dark_resurrection_tooltips(self):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of dark_resurrection_tooltips", caller=calframe[1][3])
+
+                self.keyword0 = tk.Label(self.encounterFrame, image=self.darkness, borderwidth=0, highlightthickness=0)
+                self.keyword0.place(x=147, y=197.5)
+                tooltip0 =  CreateToolTip(self.keyword0, self.keywordText["darkness"])
+
+                adapter.debug("\tEnd of dark_resurrection_tooltips", caller=calframe[1][3])
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
         def deathly_freeze(self):
             try:
                 curframe = inspect.currentframe()
@@ -997,6 +1310,26 @@ try:
                 imageWithText.text((145, 235), deathlyFreezeTarget + " attacks\ngain      and      .", "black", font)
 
                 adapter.debug("\tEnd of deathly_freeze", caller=calframe[1][3])
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
+        def deathly_freeze_tooltips(self):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of deathly_freeze_tooltips", caller=calframe[1][3])
+
+                self.keyword0 = tk.Label(self.encounterFrame, image=self.snowstorm, borderwidth=0, highlightthickness=0)
+                self.keyword0.place(x=145, y=197)
+                tooltip0 =  CreateToolTip(self.keyword0, self.keywordText["snowstorm"])
+
+                self.keyword1 = tk.Label(self.encounterFrame, image=self.bitterCold, borderwidth=0, highlightthickness=0)
+                self.keyword1.place(x=144.5, y=214.5)
+                tooltip1 =  CreateToolTip(self.keyword1, self.keywordText["bitterCold"])
+
+                adapter.debug("\tEnd of deathly_freeze_tooltips", caller=calframe[1][3])
             except Exception as e:
                 adapter.exception(e)
                 raise
@@ -1032,9 +1365,29 @@ try:
                 adapter.debug("Start of distant_tower", caller=calframe[1][3])
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
-                imageWithText.text((145, 214), "Trial: Kill the " + self.newTiles[3][0][0] + (" (and resulting Hollows)" if self.newTiles[3][0][0] == "Phalanx" else ""), "black", fontItalics)
+                imageWithText.text((145, 214), "Trial  (Kill the " + self.newTiles[3][0][0] + (" and resulting Hollows)" if self.newTiles[3][0][0] == "Phalanx" else ")"), "black", fontItalics)
 
                 adapter.debug("\tEnd of distant_tower", caller=calframe[1][3])
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
+        def distant_tower_tooltips(self):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of distant_tower_tooltips", caller=calframe[1][3])
+
+                self.keyword0 = tk.Label(self.encounterFrame, image=self.barrage, borderwidth=0, highlightthickness=0)
+                self.keyword0.place(x=146, y=198)
+                tooltip0 =  CreateToolTip(self.keyword0, self.keywordText["barrage"])
+
+                self.keyword1 = tk.Label(self.encounterFrame, image=self.trial, borderwidth=0, highlightthickness=0)
+                self.keyword1.place(x=146, y=217)
+                tooltip1 =  CreateToolTip(self.keyword1, self.keywordText["trial"])
+
+                adapter.debug("\tEnd of distant_tower_tooltips", caller=calframe[1][3])
             except Exception as e:
                 adapter.exception(e)
                 raise
@@ -1084,6 +1437,38 @@ try:
                 raise
 
 
+        def eye_of_the_storm_tooltips(self):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of eye_of_the_storm_tooltips", caller=calframe[1][3])
+
+                self.keyword0 = tk.Label(self.encounterFrame, image=self.hidden, borderwidth=0, highlightthickness=0)
+                self.keyword0.place(x=146.5, y=198)
+                tooltip0 =  CreateToolTip(self.keyword0, self.keywordText["hidden"])
+
+                adapter.debug("\tEnd of eye_of_the_storm_tooltips", caller=calframe[1][3])
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
+        def far_from_the_sun_tooltips(self):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of far_from_the_sun_tooltips", caller=calframe[1][3])
+
+                self.keyword0 = tk.Label(self.encounterFrame, image=self.darkness, borderwidth=0, highlightthickness=0)
+                self.keyword0.place(x=147, y=197)
+                tooltip0 =  CreateToolTip(self.keyword0, self.keywordText["darkness"])
+
+                adapter.debug("\tEnd of far_from_the_sun_tooltips", caller=calframe[1][3])
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
         def frozen_revolutions(self):
             try:
                 curframe = inspect.currentframe()
@@ -1099,6 +1484,38 @@ try:
                 imageWithText.text((145, 225), text, "black", font)
 
                 adapter.debug("\tEnd of frozen_revolutions", caller=calframe[1][3])
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
+        def frozen_revolutions_tooltips(self):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of frozen_revolutions_tooltips", caller=calframe[1][3])
+
+                self.keyword0 = tk.Label(self.encounterFrame, image=self.trial, borderwidth=0, highlightthickness=0)
+                self.keyword0.place(x=145, y=196.5)
+                tooltip0 =  CreateToolTip(self.keyword0, self.keywordText["trial"])
+
+                adapter.debug("\tEnd of frozen_revolutions_tooltips", caller=calframe[1][3])
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
+        def frozen_sentries_tooltips(self):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of frozen_sentries_tooltips", caller=calframe[1][3])
+
+                self.keyword0 = tk.Label(self.encounterFrame, image=self.snowstorm, borderwidth=0, highlightthickness=0)
+                self.keyword0.place(x=148, y=197)
+                tooltip0 =  CreateToolTip(self.keyword0, self.keywordText["snowstorm"])
+
+                adapter.debug("\tEnd of frozen_sentries_tooltips", caller=calframe[1][3])
             except Exception as e:
                 adapter.exception(e)
                 raise
@@ -1159,12 +1576,36 @@ try:
 
                 self.encounterImage.paste(im=self.enemyNode1, box=(159, 258), mask=self.enemyNode1)
                 imageWithText = ImageDraw.Draw(self.encounterImage)
-                imageWithText.text((145, 198), "Onslaught\nTrial (7)\nTimer (2)", "black", fontItalics)
+                imageWithText.text((145, 198), "Onslaught\nTrial  (7)\nTimer (2)", "black", fontItalics)
                 imageWithText.text((191, 230), "Spawn a" + ("n " if spawn1[0].lower() in {"a", "e", "i", "o", "u"} else " ") + spawn1 + " and a" + ("n " if spawn2[0].lower() in {"a", "e", "i", "o", "u"} else " "), "black", font)
                 text = spawn2 + " on tile two,\non     .\nIf there are enemies on their tile, characters must\nspend 1 stamina if they move during their turn."
                 imageWithText.text((145, 245), text, "black", font)
 
                 adapter.debug("\tEnd of giants_coffin", caller=calframe[1][3])
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
+        def giants_coffin_tooltips(self):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of giants_coffin_tooltips", caller=calframe[1][3])
+
+                self.keyword0 = tk.Label(self.encounterFrame, image=self.onslaught, borderwidth=0, highlightthickness=0)
+                self.keyword0.place(x=146.5, y=201)
+                tooltip0 =  CreateToolTip(self.keyword0, self.keywordText["onslaught"])
+
+                self.keyword1 = tk.Label(self.encounterFrame, image=self.trial, borderwidth=0, highlightthickness=0)
+                self.keyword1.place(x=145, y=217)
+                tooltip1 =  CreateToolTip(self.keyword1, self.keywordText["trial"])
+
+                self.keyword2 = tk.Label(self.encounterFrame, image=self.timer, borderwidth=0, highlightthickness=0)
+                self.keyword2.place(x=146, y=231)
+                tooltip2 =  CreateToolTip(self.keyword2, self.keywordText["timer"])
+
+                adapter.debug("\tEnd of giants_coffin_tooltips", caller=calframe[1][3])
             except Exception as e:
                 adapter.exception(e)
                 raise
@@ -1230,6 +1671,22 @@ try:
                 raise
 
 
+        def gnashing_beaks_tooltips(self):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of gnashing_beaks_tooltips", caller=calframe[1][3])
+
+                self.keyword0 = tk.Label(self.encounterFrame, image=self.trial, borderwidth=0, highlightthickness=0)
+                self.keyword0.place(x=146, y=196)
+                tooltip0 =  CreateToolTip(self.keyword0, self.keywordText["trial"])
+
+                adapter.debug("\tEnd of gnashing_beaks_tooltips", caller=calframe[1][3])
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
         def in_deep_water(self):
             try:
                 curframe = inspect.currentframe()
@@ -1261,6 +1718,38 @@ try:
                 imageWithText.text((146, 206), "on each enemy node.", "black", font)
 
                 adapter.debug("\tEnd of in_deep_water", caller=calframe[1][3])
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
+        def in_deep_water_tooltips(self):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of in_deep_water_tooltips", caller=calframe[1][3])
+
+                self.keyword0 = tk.Label(self.encounterFrame, image=self.timer, borderwidth=0, highlightthickness=0)
+                self.keyword0.place(x=148, y=196)
+                tooltip0 =  CreateToolTip(self.keyword0, self.keywordText["timer"])
+
+                adapter.debug("\tEnd of in_deep_water_tooltips", caller=calframe[1][3])
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
+        def inhospitable_ground_tooltips(self):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of inhospitable_ground_tooltips", caller=calframe[1][3])
+
+                self.keyword0 = tk.Label(self.encounterFrame, image=self.snowstorm, borderwidth=0, highlightthickness=0)
+                self.keyword0.place(x=148, y=197)
+                tooltip0 =  CreateToolTip(self.keyword0, self.keywordText["snowstorm"])
+
+                adapter.debug("\tEnd of inhospitable_ground_tooltips", caller=calframe[1][3])
             except Exception as e:
                 adapter.exception(e)
                 raise
@@ -1335,12 +1824,36 @@ try:
                 self.encounterImage.paste(im=self.enemyNode2, box=(215, 285), mask=self.enemyNode2)
                 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
-                imageWithText.text((145, 198), "Onslaught, Darkness\nTrial: Kill the " + spawn1 + (" (and resulting Hollows)" if spawn1 == "Phalanx" else ""), "black", fontItalics)
+                imageWithText.text((145, 198), "Onslaught, Darkness\nTrial  (Kill the " + spawn1 + (" and resulting Hollows)" if spawn1 == "Phalanx" else ")"), "black", fontItalics)
                 text = "The first time a character is placed on the same\nnode as the torch token, spawn a" + ("n " if spawn1[0].lower() in {"a", "e", "i", "o", "u"} else " ")
                 text += "\n" + spawn1 + " on the torch's tile\non     , and      " + spawn2 + "s\non tile two, on     ."
                 imageWithText.text((145, 230), text, "black", font)
 
                 adapter.debug("\tEnd of lakeview_refuge", caller=calframe[1][3])
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
+        def lakeview_refuge_tooltips(self):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of lakeview_refuge_tooltips", caller=calframe[1][3])
+
+                self.keyword0 = tk.Label(self.encounterFrame, image=self.onslaught, borderwidth=0, highlightthickness=0)
+                self.keyword0.place(x=146.5, y=201)
+                tooltip0 =  CreateToolTip(self.keyword0, self.keywordText["onslaught"])
+
+                self.keyword1 = tk.Label(self.encounterFrame, image=self.darkness, borderwidth=0, highlightthickness=0)
+                self.keyword1.place(x=199, y=201)
+                tooltip1 =  CreateToolTip(self.keyword1, self.keywordText["darkness"])
+
+                self.keyword2 = tk.Label(self.encounterFrame, image=self.trial, borderwidth=0, highlightthickness=0)
+                self.keyword2.place(x=146, y=216)
+                tooltip2 =  CreateToolTip(self.keyword2, self.keywordText["trial"])
+
+                adapter.debug("\tEnd of lakeview_refuge_tooltips", caller=calframe[1][3])
             except Exception as e:
                 adapter.exception(e)
                 raise
@@ -1356,6 +1869,38 @@ try:
                 imageWithText.text((145, 270), "All enemy attacks gain +1 damage.", "black", font)
 
                 adapter.debug("\tEnd of last_rites", caller=calframe[1][3])
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
+        def last_rites_tooltips(self):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of last_rites", caller=calframe[1][3])
+
+                self.keyword0 = tk.Label(self.encounterFrame, image=self.timer, borderwidth=0, highlightthickness=0)
+                self.keyword0.place(x=149, y=197)
+                tooltip0 =  CreateToolTip(self.keyword0, self.keywordText["timer"])
+
+                adapter.debug("\tEnd of last_rites", caller=calframe[1][3])
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
+        def last_shred_of_light_tooltips(self):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of last_shred_of_light_tooltips", caller=calframe[1][3])
+
+                self.keyword0 = tk.Label(self.encounterFrame, image=self.darkness, borderwidth=0, highlightthickness=0)
+                self.keyword0.place(x=147, y=197.5)
+                tooltip0 =  CreateToolTip(self.keyword0, self.keywordText["darkness"])
+
+                adapter.debug("\tEnd of last_shred_of_light_tooltips", caller=calframe[1][3])
             except Exception as e:
                 adapter.exception(e)
                 raise
@@ -1394,6 +1939,38 @@ try:
                 raise
 
 
+        def no_safe_haven_tooltips(self):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of no_safe_haven_tooltips", caller=calframe[1][3])
+
+                self.keyword0 = tk.Label(self.encounterFrame, image=self.poisonMist, borderwidth=0, highlightthickness=0)
+                self.keyword0.place(x=144, y=195)
+                tooltip0 =  CreateToolTip(self.keyword0, self.keywordText["poisonMist"])
+
+                adapter.debug("\tEnd of no_safe_haven_tooltips", caller=calframe[1][3])
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
+        def painted_passage_tooltips(self):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of painted_passage_tooltips", caller=calframe[1][3])
+
+                self.keyword0 = tk.Label(self.encounterFrame, image=self.snowstorm, borderwidth=0, highlightthickness=0)
+                self.keyword0.place(x=148, y=197)
+                tooltip0 =  CreateToolTip(self.keyword0, self.keywordText["snowstorm"])
+
+                adapter.debug("\tEnd of painted_passage_tooltips", caller=calframe[1][3])
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
         def pitch_black(self):
             try:
                 curframe = inspect.currentframe()
@@ -1410,6 +1987,38 @@ try:
                 imageWithText.text((145, 250), "All objective enemies have 5 health.", "black", font)
 
                 adapter.debug("\tEnd of pitch_black", caller=calframe[1][3])
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
+        def pitch_black_tooltips(self):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of pitch_black_tooltips", caller=calframe[1][3])
+
+                self.keyword0 = tk.Label(self.encounterFrame, image=self.darkness, borderwidth=0, highlightthickness=0)
+                self.keyword0.place(x=147, y=197.5)
+                tooltip0 =  CreateToolTip(self.keyword0, self.keywordText["darkness"])
+
+                adapter.debug("\tEnd of pitch_black_tooltips", caller=calframe[1][3])
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
+        def promised_respite_tooltips(self):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of promised_respite_tooltips", caller=calframe[1][3])
+
+                self.keyword0 = tk.Label(self.encounterFrame, image=self.snowstorm, borderwidth=0, highlightthickness=0)
+                self.keyword0.place(x=148, y=197)
+                tooltip0 =  CreateToolTip(self.keyword0, self.keywordText["snowstorm"])
+
+                adapter.debug("\tEnd of promised_respite_tooltips", caller=calframe[1][3])
             except Exception as e:
                 adapter.exception(e)
                 raise
@@ -1497,6 +2106,46 @@ try:
                 raise
 
 
+        def skeleton_overlord_tooltips(self):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of skeleton_overlord_tooltips", caller=calframe[1][3])
+
+                self.keyword0 = tk.Label(self.encounterFrame, image=self.timer, borderwidth=0, highlightthickness=0)
+                self.keyword0.place(x=146, y=197)
+                tooltip0 =  CreateToolTip(self.keyword0, self.keywordText["timer"])
+
+                adapter.debug("\tEnd of skeleton_overlord_tooltips", caller=calframe[1][3])
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
+        def snowblind_tooltips(self):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of snowblind_tooltips", caller=calframe[1][3])
+
+                self.keyword0 = tk.Label(self.encounterFrame, image=self.snowstorm, borderwidth=0, highlightthickness=0)
+                self.keyword0.place(x=146.5, y=197)
+                tooltip0 =  CreateToolTip(self.keyword0, self.keywordText["snowstorm"])
+
+                self.keyword1 = tk.Label(self.encounterFrame, image=self.bitterCold, borderwidth=0, highlightthickness=0)
+                self.keyword1.place(x=146, y=215)
+                tooltip1 =  CreateToolTip(self.keyword1, self.keywordText["bitterCold"])
+
+                self.keyword2 = tk.Label(self.encounterFrame, image=self.hidden, borderwidth=0, highlightthickness=0)
+                self.keyword2.place(x=146, y=233)
+                tooltip2 =  CreateToolTip(self.keyword2, self.keywordText["hidden"])
+
+                adapter.debug("\tEnd of snowblind_tooltips", caller=calframe[1][3])
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
         def the_abandoned_chest(self):
             try:
                 curframe = inspect.currentframe()
@@ -1574,6 +2223,22 @@ try:
                 raise
 
 
+        def the_beast_from_the_depths_tooltips(self):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of the_beast_from_the_depths_tooltips", caller=calframe[1][3])
+
+                self.keyword0 = tk.Label(self.encounterFrame, image=self.trial, borderwidth=0, highlightthickness=0)
+                self.keyword0.place(x=146, y=196)
+                tooltip0 =  CreateToolTip(self.keyword0, self.keywordText["trial"])
+
+                adapter.debug("\tEnd of the_beast_from_the_depths_tooltips", caller=calframe[1][3])
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
         def the_first_bastion(self):
             try:
                 curframe = inspect.currentframe()
@@ -1640,7 +2305,7 @@ try:
                 spawn3 = choice(enemyList)
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
-                imageWithText.text((145, 198), "Trial: Kill the " + spawn3 + (" (and resulting Hollows)" if spawn3 == "Phalanx" else ""), "black", fontItalics)
+                imageWithText.text((145, 198), "Trial  (Kill the " + spawn3 + (" and resulting Hollows)" if spawn3 == "Phalanx" else ")"), "black", fontItalics)
 
                 text = "Lever activations:"
                 text += "\nFirst: On     spawn a" + ("n " if spawn1[0].lower() in {"a", "e", "i", "o", "u"} else " ") + spawn1
@@ -1649,6 +2314,22 @@ try:
                 imageWithText.text((145, 215), text, "black", font)
 
                 adapter.debug("\tEnd of the_first_bastion", caller=calframe[1][3])
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
+        def the_first_bastion_tooltips(self):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of the_first_bastion_tooltips", caller=calframe[1][3])
+
+                self.keyword0 = tk.Label(self.encounterFrame, image=self.trial, borderwidth=0, highlightthickness=0)
+                self.keyword0.place(x=146, y=201)
+                tooltip0 =  CreateToolTip(self.keyword0, self.keywordText["trial"])
+
+                adapter.debug("\tEnd of the_first_bastion_tooltips", caller=calframe[1][3])
             except Exception as e:
                 adapter.exception(e)
                 raise
@@ -1663,12 +2344,36 @@ try:
                 self.encounterImage.paste(im=self.push, box=(204, 285), mask=self.push)
                 imageWithText = ImageDraw.Draw(self.encounterImage)
                 target = sorted([enemy for enemy in self.newTiles[1][0] + self.newTiles[1][1]], key=lambda x: enemiesDict[x].difficulty)[0]
-                imageWithText.text((145, 230), "Trial: Kill the " + target + (" (and resulting Hollows)" if target == "Phalanx" else "") + " first.", "black", fontItalics)
+                imageWithText.text((145, 230), "Trial  (Kill the " + target + (" and resulting Hollows" if target == "Phalanx" else "") + " first.)", "black", fontItalics)
                 text = "Increase the " + target + "'s starting\nhealth " + ("to 10" if enemiesDict[target].health < 10 else "by 5")
                 text += ", and its dodge difficulty value by 1.\nThe " + target + "'s\n attacks gain     and +1 damage"
                 imageWithText.text((145, 245), text, "black", font)
 
                 adapter.debug("\tEnd of the_last_bastion", caller=calframe[1][3])
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
+        def the_last_bastion_tooltips(self):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of the_last_bastion_tooltips", caller=calframe[1][3])
+
+                self.keyword0 = tk.Label(self.encounterFrame, image=self.snowstorm, borderwidth=0, highlightthickness=0)
+                self.keyword0.place(x=146.5, y=197)
+                tooltip0 =  CreateToolTip(self.keyword0, self.keywordText["snowstorm"])
+
+                self.keyword1 = tk.Label(self.encounterFrame, image=self.bitterCold, borderwidth=0, highlightthickness=0)
+                self.keyword1.place(x=146, y=215)
+                tooltip1 =  CreateToolTip(self.keyword1, self.keywordText["bitterCold"])
+
+                self.keyword2 = tk.Label(self.encounterFrame, image=self.trial, borderwidth=0, highlightthickness=0)
+                self.keyword2.place(x=146, y=233)
+                tooltip2 =  CreateToolTip(self.keyword2, self.keywordText["trial"])
+
+                adapter.debug("\tEnd of the_last_bastion_tooltips", caller=calframe[1][3])
             except Exception as e:
                 adapter.exception(e)
                 raise
@@ -1716,12 +2421,56 @@ try:
                     break
                 
                 spawn = choice(enemyList)
-                imageWithText.text((145, 198), "Trial: Kill the " + spawn + (" (and resulting Hollows)" if spawn == "Phalanx" else ""), "black", fontItalics)
+                imageWithText.text((145, 198), "Trial  (Kill the " + spawn + (" and resulting Hollows)" if spawn == "Phalanx" else ")"), "black", fontItalics)
                 text = "If the lever is activated,\nspawn a" + ("n " if spawn[0].lower() in {"a", "e", "i", "o", "u"} else " ")
                 text += spawn + " on tile three,\non the closest enemy spawn node\nto the character."
                 imageWithText.text((145, 215), text, "black", font)
 
                 adapter.debug("\tEnd of the_locked_grave", caller=calframe[1][3])
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
+        def the_locked_grave_tooltips(self):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of the_locked_grave_tooltips", caller=calframe[1][3])
+
+                self.keyword0 = tk.Label(self.encounterFrame, image=self.trial, borderwidth=0, highlightthickness=0)
+                self.keyword0.place(x=146, y=201)
+                tooltip0 =  CreateToolTip(self.keyword0, self.keywordText["trial"])
+
+                adapter.debug("\tEnd of the_locked_grave_tooltips", caller=calframe[1][3])
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
+        def the_mass_grave_tooltips(self):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of the_mass_grave_tooltips", caller=calframe[1][3])
+
+                self.keyword0 = tk.Label(self.encounterFrame, image=self.onslaught, borderwidth=0, highlightthickness=0)
+                self.keyword0.place(x=147, y=197.5)
+                tooltip0 =  CreateToolTip(self.keyword0, self.keywordText["onslaught"])
+
+                self.keyword1 = tk.Label(self.encounterFrame, image=self.timer, borderwidth=0, highlightthickness=0)
+                self.keyword1.place(x=147, y=215)
+                tooltip1 =  CreateToolTip(self.keyword1, self.keywordText["timer"])
+
+                self.keyword2 = tk.Label(self.encounterFrame, image=self.timer, borderwidth=0, highlightthickness=0)
+                self.keyword2.place(x=147, y=227)
+                tooltip2 =  CreateToolTip(self.keyword2, self.keywordText["timer"])
+
+                self.keyword3 = tk.Label(self.encounterFrame, image=self.timer, borderwidth=0, highlightthickness=0)
+                self.keyword3.place(x=147, y=239)
+                tooltip3 =  CreateToolTip(self.keyword3, self.keywordText["timer"])
+
+                adapter.debug("\tEnd of the_mass_grave_tooltips", caller=calframe[1][3])
             except Exception as e:
                 adapter.exception(e)
                 raise
@@ -1766,6 +2515,46 @@ try:
                 self.encounterImage.paste(im=allEnemies[spawns[2]]["image new"], box=(255, 275), mask=allEnemies[spawns[2]]["image new"])
 
                 adapter.debug("\tEnd of trecherous_tower", caller=calframe[1][3])
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
+        def trecherous_tower_tooltips(self):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of trecherous_tower_tooltips", caller=calframe[1][3])
+
+                self.keyword0 = tk.Label(self.encounterFrame, image=self.snowstorm, borderwidth=0, highlightthickness=0)
+                self.keyword0.place(x=148, y=197)
+                tooltip0 =  CreateToolTip(self.keyword0, self.keywordText["snowstorm"])
+
+                self.keyword1 = tk.Label(self.encounterFrame, image=self.bitterCold, borderwidth=0, highlightthickness=0)
+                self.keyword1.place(x=148, y=214)
+                tooltip1 =  CreateToolTip(self.keyword1, self.keywordText["bitterCold"])
+
+                self.keyword2 = tk.Label(self.encounterFrame, image=self.eerieTooltip, borderwidth=0, highlightthickness=0)
+                self.keyword2.place(x=146, y=232)
+                tooltip2 =  CreateToolTip(self.keyword2, self.keywordText["eerieTooltip"])
+
+                adapter.debug("\tEnd of trecherous_tower_tooltips", caller=calframe[1][3])
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
+        def unseen_scurrying_tooltips(self):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of unseen_scurrying_tooltips", caller=calframe[1][3])
+
+                self.keyword0 = tk.Label(self.encounterFrame, image=self.hidden, borderwidth=0, highlightthickness=0)
+                self.keyword0.place(x=146.5, y=198)
+                tooltip0 =  CreateToolTip(self.keyword0, self.keywordText["hidden"])
+
+                adapter.debug("\tEnd of unseen_scurrying_tooltips", caller=calframe[1][3])
             except Exception as e:
                 adapter.exception(e)
                 raise
