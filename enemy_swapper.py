@@ -338,7 +338,7 @@ try:
                 self.snowstorm = ImageTk.PhotoImage(self.create_image("snowstorm.png", "snowstorm"))
                 self.hidden = ImageTk.PhotoImage(self.create_image("hidden.png", "hidden"))
                 self.bitterCold = ImageTk.PhotoImage(self.create_image("bitter_cold.png", "bitterCold"))
-                self.eerietooltip0 = ImageTk.PhotoImage(self.create_image("eerie_tooltip.png", "eerieTooltip"))
+                self.eerieTooltip = ImageTk.PhotoImage(self.create_image("eerie_tooltip.png", "eerieTooltip"))
                 self.barrage = ImageTk.PhotoImage(self.create_image("barrage.png", "barrage"))
                 
                 self.selected = None
@@ -997,6 +997,8 @@ try:
                     self.inhospitable_ground_tooltips()
                 elif self.selected["name"] == "Lakeview Refuge":
                     self.lakeview_refuge_tooltips()
+                elif self.selected["name"] == "Last Rites":
+                    self.last_rites_tooltips()
                 elif self.selected["name"] == "Last Shred of Light":
                     self.last_shred_of_light_tooltips()
                 elif self.selected["name"] == "No Safe Haven":
@@ -1012,7 +1014,7 @@ try:
                 elif self.selected["name"] == "Snowblind":
                     self.snowblind_tooltips()
                 elif self.selected["name"] == "The Beast From the Depths":
-                    self.skeleton_overlord_tooltips()
+                    self.the_beast_from_the_depths_tooltips()
                 elif self.selected["name"] == "The First Bastion":
                     self.the_first_bastion_tooltips()
                 elif self.selected["name"] == "The Last Bastion":
@@ -1179,6 +1181,10 @@ try:
                 self.keyword1 = tk.Label(self.encounterFrame, image=self.bitterCold, borderwidth=0, highlightthickness=0)
                 self.keyword1.place(x=146, y=215)
                 tooltip1 =  CreateToolTip(self.keyword1, self.keywordText["bitterCold"])
+
+                self.keyword2 = tk.Label(self.encounterFrame, image=self.trial, borderwidth=0, highlightthickness=0)
+                self.keyword2.place(x=146, y=233)
+                tooltip2 =  CreateToolTip(self.keyword2, self.keywordText["trial"])
 
                 adapter.debug("\tEnd of cold_snap_tooltips", caller=calframe[1][3])
             except Exception as e:
@@ -1861,6 +1867,22 @@ try:
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
                 imageWithText.text((145, 270), "All enemy attacks gain +1 damage.", "black", font)
+
+                adapter.debug("\tEnd of last_rites", caller=calframe[1][3])
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
+        def last_rites_tooltips(self):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of last_rites", caller=calframe[1][3])
+
+                self.keyword0 = tk.Label(self.encounterFrame, image=self.timer, borderwidth=0, highlightthickness=0)
+                self.keyword0.place(x=149, y=197)
+                tooltip0 =  CreateToolTip(self.keyword0, self.keywordText["timer"])
 
                 adapter.debug("\tEnd of last_rites", caller=calframe[1][3])
             except Exception as e:
