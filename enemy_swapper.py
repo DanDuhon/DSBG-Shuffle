@@ -3,6 +3,7 @@ try:
     import logging
     import inspect
     import os
+    import pickle
     from os import path
     from json import load, dump
     from random import choice
@@ -10,6 +11,7 @@ try:
     from PIL import Image, ImageTk, ImageFont, ImageDraw
     import tkinter as tk
     from tkinter import ttk
+    from tkinter import filedialog
 
     from enemies import enemyIds, enemiesDict
 
@@ -244,10 +246,18 @@ try:
                 self.setsForRandomEncounters = (oldSets | newSets) & self.allSets
                 self.set_encounter_list()
                 self.create_buttons()
-                self.create_treeview()
+                self.create_tabs()
+                self.scrollbarTreeviewEncounters = ttk.Scrollbar(self.encounterTab)
+                self.scrollbarTreeviewEncounters.pack(side="right", fill="y")
+                self.create_encounters_treeview()
+                self.scrollbarTreeviewCampaign = ttk.Scrollbar(self.campaignTabTreeviewFrame)
+                self.scrollbarTreeviewCampaign.pack(side="right", fill="y")
+                self.create_campaign_treeview()
                 self.create_encounter_frame()
                 self.create_menu()
                 self.set_bindings_buttons_menus(True)
+
+                self.campaign = []
 
                 self.deathlyFreezeTarget = None
 
@@ -292,6 +302,134 @@ try:
             self.encounterCanvas.yview_scroll(int(-1*(event.delta/120)), "units")
 
 
+        def add_encounter_to_campaign(self):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of add_encounter_to_campaign", caller=calframe[1][3])
+
+                if not self.selected:
+                    adapter.debug("End of add_encounter_to_campaign (nothing done)")
+                    return
+                
+                if [self.selected["name"], self.selected["level"], self.encounterImage] not in self.campaign:
+                    self.campaign.append([self.selected["name"], self.selected["level"], self.encounterImage])
+                
+                self.campaign = sorted(self.campaign, key=lambda x: x[1])
+
+                self.treeviewCampaign.pack_forget()
+                self.treeviewCampaign.destroy()
+                self.create_campaign_treeview()
+
+                for item in self.campaign:
+                    self.treeviewCampaign.insert(parent="", values=(item[0], item[1]), index="end")
+
+                adapter.debug("End of add_encounter_to_campaign")
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
+        def delete_encounter_from_campaign(self, event=None):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of delete_encounter_from_campaign", caller=calframe[1][3])
+                
+                encounter = self.treeviewCampaign.focus()
+                if not encounter:
+                    adapter.debug("End of delete_encounter_from_campaign (nothing done)")
+                    return
+
+                encounterToRemove = self.treeviewCampaign.item(encounter)
+                self.campaign = [e for e in self.campaign if e[0] != encounterToRemove["values"][0]]
+                self.treeviewCampaign.delete(self.treeviewCampaign.selection()[0])
+                self.encounter.config(image="")
+
+                adapter.debug("End of delete_encounter_from_campaign")
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
+        def save_campaign(self):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of save_campaign", caller=calframe[1][3])
+
+                campaignName = filedialog.asksaveasfile(mode="w", initialdir=os.getcwd() + "\\saved campaigns", defaultextension=".dsbgc")
+
+                if not campaignName:
+                    adapter.debug("End of save_campaign (nothing done)")
+                    return
+
+                with open(campaignName.name, "wb") as campaignFile:
+                    pickle.dump(self.campaign, campaignFile)
+
+                adapter.debug("End of save_campaign (saved to " + str(campaignFile) + ")")
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
+        def load_campaign(self):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of load_campaign", caller=calframe[1][3])
+
+                campaignFile = filedialog.askopenfilename(initialdir=os.getcwd() + "\\saved campaigns", filetypes = [("Dark Souls Board Game Campaign files", ".dsbgc")])
+                if not campaignFile:
+                    adapter.debug("End of load_campaign (file dialog canceled)")
+                    return
+                
+                if os.path.splitext(campaignFile)[1] != ".dsbgc":
+                    adapter.debug("End of load_campaign (invalid file)")
+                    return
+
+                with open(campaignFile, "rb") as p:
+                    self.campaign = pickle.load(p)
+                
+                self.campaign = sorted(self.campaign, key=lambda x: x[1])
+
+                self.treeviewCampaign.pack_forget()
+                self.treeviewCampaign.destroy()
+                self.create_campaign_treeview()
+
+                for item in self.campaign:
+                    self.treeviewCampaign.insert(parent="", values=(item[0], item[1]), index="end")
+
+                adapter.debug("End of load_campaign (loaded from " + str(campaignFile) + ")")
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
+        def load_campaign_encounter(self, event=None):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of load_campaign_encounter", caller=calframe[1][3])
+
+                self.selected = None
+                self.encounter.unbind("<Button 1>")
+
+                tree = event.widget
+                if tree.selection():
+                    campaignEncounter = [e for e in self.campaign if e[0] == tree.item(tree.selection())["values"][0]]
+                    if campaignEncounter:
+                        self.encounterImage = campaignEncounter[0][2]
+                        self.encounterPhotoImage = ImageTk.PhotoImage(self.encounterImage)
+                        self.encounter.image = self.encounterPhotoImage
+                        self.encounter.config(image=self.encounterPhotoImage)
+
+                adapter.debug("End of load_campaign_encounter")
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
         def set_encounter_list(self):
             try:
                 curframe = inspect.currentframe()
@@ -316,11 +454,11 @@ try:
                 raise
 
 
-        def create_treeview(self, event=None):
+        def create_tabs(self, event=None):
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of create_treeview", caller=calframe[1][3])
+                adapter.debug("Start of create_tabs", caller=calframe[1][3])
 
                 with open(baseFolder + "\\settings.json") as settingsFile:
                     self.settings = load(settingsFile)
@@ -332,23 +470,57 @@ try:
                 self.pane = ttk.Frame(self.paned, padding=5)
                 self.pane.grid_rowconfigure(index=0, weight=1)
                 self.paned.add(self.pane, weight=1)
-
-                self.tvScrollbar = ttk.Scrollbar(self.pane)
-                self.tvScrollbar.pack(side="right", fill="y")
                 
-                self.treeview = ttk.Treeview(
-                    self.pane,
+                self.notebook = ttk.Notebook(self.paned)
+                self.notebook.pack(fill="both", expand=True)
+                
+                self.encounterTab = ttk.Frame(self.notebook)
+                for index in [0, 1]:
+                    self.encounterTab.columnconfigure(index=index, weight=1)
+                    self.encounterTab.rowconfigure(index=index, weight=1)
+                self.notebook.add(self.encounterTab, text="Encounters")
+                
+                self.campaignTab = ttk.Frame(self.notebook)
+                self.notebook.add(self.campaignTab, text="Campaign")
+                self.campaignTabButtonsFrame = ttk.Frame(self.campaignTab)
+                self.campaignTabButtonsFrame.pack()
+                self.campaignTabTreeviewFrame = ttk.Frame(self.campaignTab)
+                self.campaignTabTreeviewFrame.pack(fill="both", expand=True)
+                
+                self.addButton = ttk.Button(self.campaignTabButtonsFrame, text="Add Encounter", width=16, command=self.add_encounter_to_campaign)
+                self.addButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+                self.deleteButton = ttk.Button(self.campaignTabButtonsFrame, text="Remove Encounter", width=16, command=self.delete_encounter_from_campaign)
+                self.deleteButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+                self.loadButton = ttk.Button(self.campaignTabButtonsFrame, text="Load Campaign", width=16, command=self.load_campaign)
+                self.loadButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+                self.saveButton = ttk.Button(self.campaignTabButtonsFrame, text="Save Campaign", width=16, command=self.save_campaign)
+                self.saveButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+
+                adapter.debug("End of create_tabs")
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
+        def create_encounters_treeview(self):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of create_encounters_treeview", caller=calframe[1][3])
+                
+                self.treeviewEncounters = ttk.Treeview(
+                    self.encounterTab,
                     selectmode="browse",
                     columns=("Name"),
-                    yscrollcommand=self.tvScrollbar.set,
+                    yscrollcommand=self.scrollbarTreeviewEncounters.set,
                     height=29 if root.winfo_screenheight() > 1000 else 20
                 )
                 
-                self.treeview.pack(expand=True, fill="both")
-                self.tvScrollbar.config(command=self.treeview.yview)
+                self.treeviewEncounters.pack(expand=True, fill="both")
+                self.scrollbarTreeviewEncounters.config(command=self.treeviewEncounters.yview)
 
-                self.treeview.column("#0", anchor="w")
-                self.treeview.heading("#0", text="  Name", anchor="w")
+                self.treeviewEncounters.column("#0", anchor="w")
+                self.treeviewEncounters.heading("#0", text="  Name", anchor="w")
 
                 encountersSorted = [encounter for encounter in sorted(self.encounterList, key=lambda x: (
                     1 if encounters[x]["level"] == 4 else 0,
@@ -375,17 +547,48 @@ try:
                     x += 1
 
                 for item in tvData:
-                    self.treeview.insert(parent=item[0], index="end", iid=item[1], text=item[2], tags=item[3])
+                    self.treeviewEncounters.insert(parent=item[0], index="end", iid=item[1], text=item[2], tags=item[3])
                     
                     if item[0] == "":
-                        self.treeview.item(item[1], open=True)
+                        self.treeviewEncounters.item(item[1], open=True)
                         
-                self.treeview.bind("<<TreeviewSelect>>", self.load_encounter)
+                self.treeviewEncounters.bind("<<TreeviewSelect>>", self.load_encounter)
                 
                 global settingsChanged
                 settingsChanged = False
 
-                adapter.debug("End of create_treeview")
+                adapter.debug("End of create_encounters_treeview")
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
+        def create_campaign_treeview(self):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of create_campaign_treeview", caller=calframe[1][3])
+                
+                self.treeviewCampaign = ttk.Treeview(
+                    self.campaignTabTreeviewFrame,
+                    selectmode="browse",
+                    columns=("Name", "Level"),
+                    yscrollcommand=self.scrollbarTreeviewCampaign.set,
+                    height=29 if root.winfo_screenheight() > 1000 else 20,
+                    show=["headings"]
+                )
+                
+                self.treeviewCampaign.pack(expand=True, fill="both")
+                self.scrollbarTreeviewCampaign.config(command=self.treeviewCampaign.yview)
+
+                self.treeviewCampaign.column("#1", anchor="w")
+                self.treeviewCampaign.heading("#1", text="Name", anchor="w")
+                self.treeviewCampaign.column("#2", anchor="w")
+                self.treeviewCampaign.heading("#2", text="Level", anchor="w")
+                
+                self.treeviewCampaign.bind("<<TreeviewSelect>>", self.load_campaign_encounter)
+
+                adapter.debug("End of create_campaign_treeview")
             except Exception as e:
                 adapter.exception(e)
                 raise
@@ -409,7 +612,6 @@ try:
 
                 self.encounter = ttk.Label(self.encounterFrame)
                 self.encounter.grid(column=0, row=0, sticky="nsew")
-                self.encounter.bind("<Button 1>", self.shuffle_enemies)
 
                 adapter.debug("End of create_encounter_frame")
             except Exception as e:
@@ -575,20 +777,20 @@ try:
                         
                 self.wait_window(s.top)
                 
-                if settingsChanged and self.treeview.winfo_exists():
+                if settingsChanged and self.treeviewEncounters.winfo_exists():
                     with open(baseFolder + "\\settings.json") as settingsFile:
                         self.settings = load(settingsFile)
                     self.selected = None
                     self.encounter.config(image="")
-                    self.treeview.pack_forget()
-                    self.treeview.destroy()
+                    self.treeviewEncounters.pack_forget()
+                    self.treeviewEncounters.destroy()
                     self.availableSets = set(self.settings["availableSets"])
                     self.availableCoreSets = coreSets & self.availableSets
                     oldSets = {"Dark Souls The Board Game", "Darkroot", "Executioner Chariot", "Explorers", "Iron Keep"} if "old" in self.settings["randomEncounterTypes"] else set()
                     newSets = (self.allSets - {"Dark Souls The Board Game", "Darkroot", "Executioner Chariot", "Explorers", "Iron Keep"}) if "new" in self.settings["randomEncounterTypes"] else set()
                     self.setsForRandomEncounters = (oldSets | newSets) & self.allSets
                     self.set_encounter_list()
-                    self.create_treeview()
+                    self.create_encounters_treeview()
                 
                 self.set_bindings_buttons_menus(True)
 
@@ -683,13 +885,13 @@ try:
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of load_encounter", caller=calframe[1][3])
                 
-                self.treeview.unbind("<<TreeviewSelect>>")
+                self.treeviewEncounters.unbind("<<TreeviewSelect>>")
 
                 if event:
                     tree = event.widget
                     if not tree.item(tree.selection())["tags"][0]:
                         adapter.debug("\tNo encounter selected", caller=calframe[1][3])
-                        self.treeview.bind("<<TreeviewSelect>>", self.load_encounter)
+                        self.treeviewEncounters.bind("<<TreeviewSelect>>", self.load_encounter)
                         adapter.debug("\tEnd of load_encounter", caller=calframe[1][3])
                         return
                     encounterName = tree.item(tree.selection())["text"]
@@ -698,7 +900,7 @@ try:
 
                 if encounters[encounterName] == self.selected:
                     self.shuffle_enemies()
-                    self.treeview.bind("<<TreeviewSelect>>", self.load_encounter)
+                    self.treeviewEncounters.bind("<<TreeviewSelect>>", self.load_encounter)
                     adapter.debug("\tEnd of load_encounter", caller=calframe[1][3])
                     return
                 
@@ -724,7 +926,8 @@ try:
                 self.newTiles = dict()
 
                 self.shuffle_enemies()
-                self.treeview.bind("<<TreeviewSelect>>", self.load_encounter)
+                self.treeviewEncounters.bind("<<TreeviewSelect>>", self.load_encounter)
+                self.encounter.bind("<Button 1>", self.shuffle_enemies)
 
                 adapter.debug("\tEnd of load_encounter", caller=calframe[1][3])
             except Exception as e:
