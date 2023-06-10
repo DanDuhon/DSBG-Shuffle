@@ -1,3 +1,6 @@
+# Change from pickle to JSON
+# Add the ability to put bosses in the campaign, and maybe notes as child items?
+
 try:
     import sys
     import logging
@@ -393,17 +396,23 @@ try:
                     adapter.debug("End of add_encounter_to_campaign (nothing done)")
                     return
                 
-                if [self.selected["name"], self.selected["level"], self.encounterImage] not in self.campaign:
-                    self.campaign.append([self.selected["name"], self.selected["level"], self.encounterImage])
+                encounter = {
+                    "name": self.selected["name"],
+                    "level": self.selected["level"],
+                    "image": self.encounterImage
+                }
+
+                if encounter not in self.campaign:
+                    self.campaign.append(encounter)
                 
-                self.campaign = sorted(self.campaign, key=lambda x: x[1])
+                self.campaign = sorted(self.campaign, key=lambda x: x["level"])
 
                 self.treeviewCampaign.pack_forget()
                 self.treeviewCampaign.destroy()
                 self.create_campaign_treeview()
 
                 for item in self.campaign:
-                    self.treeviewCampaign.insert(parent="", values=(item[0], item[1]), index="end")
+                    self.treeviewCampaign.insert(parent="", values=(item["name"], item["level"]), index="end")
 
                 adapter.debug("End of add_encounter_to_campaign")
             except Exception as e:
@@ -421,15 +430,15 @@ try:
                     adapter.debug("End of delete_encounter_from_campaign (nothing done)")
                     return
 
-                self.campaign = [e for e in self.campaign if e[0] not in set([self.treeviewCampaign.item(e)["values"][0] for e in self.treeviewCampaign.selection()])]
-                self.campaign = sorted(self.campaign, key=lambda x: x[1])
+                self.campaign = [e for e in self.campaign if e["name"] not in set([self.treeviewCampaign.item(e)["values"][0] for e in self.treeviewCampaign.selection()])]
+                self.campaign = sorted(self.campaign, key=lambda x: x["level"])
 
                 self.treeviewCampaign.pack_forget()
                 self.treeviewCampaign.destroy()
                 self.create_campaign_treeview()
 
                 for item in self.campaign:
-                    self.treeviewCampaign.insert(parent="", values=(item[0], item[1]), index="end")
+                    self.treeviewCampaign.insert(parent="", values=(item["name"], item["level"]), index="end")
 
                 self.encounter.config(image="")
 
@@ -445,7 +454,7 @@ try:
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of save_campaign", caller=calframe[1][3])
 
-                campaignName = filedialog.asksaveasfile(mode="w", initialdir=os.getcwd() + "\\saved campaigns", defaultextension=".dsbgc")
+                campaignName = filedialog.asksaveasfile(mode="w", initialdir=baseFolder + "\\saved campaigns", defaultextension=".dsbgc")
 
                 if not campaignName:
                     adapter.debug("End of save_campaign (nothing done)")
@@ -466,7 +475,7 @@ try:
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of load_campaign", caller=calframe[1][3])
 
-                campaignFile = filedialog.askopenfilename(initialdir=os.getcwd() + "\\saved campaigns", filetypes = [("Dark Souls Board Game Campaign files", ".dsbgc")])
+                campaignFile = filedialog.askopenfilename(initialdir=baseFolder + "\\saved campaigns", filetypes = [("Dark Souls Board Game Campaign files", ".dsbgc")])
                 if not campaignFile:
                     adapter.debug("End of load_campaign (file dialog canceled)")
                     return
@@ -478,14 +487,14 @@ try:
                 with open(campaignFile, "rb") as p:
                     self.campaign = pickle.load(p)
                 
-                self.campaign = sorted(self.campaign, key=lambda x: x[1])
+                self.campaign = sorted(self.campaign, key=lambda x: x["level"])
 
                 self.treeviewCampaign.pack_forget()
                 self.treeviewCampaign.destroy()
                 self.create_campaign_treeview()
 
                 for item in self.campaign:
-                    self.treeviewCampaign.insert(parent="", values=(item[0], item[1]), index="end")
+                    self.treeviewCampaign.insert(parent="", values=(item["name"], item["level"]), index="end")
 
                 adapter.debug("End of load_campaign (loaded from " + str(campaignFile) + ")")
             except Exception as e:
@@ -507,9 +516,9 @@ try:
                     adapter.debug("End of load_campaign_encounter (not updating image)")
                     return
                 
-                campaignEncounter = [e for e in self.campaign if e[0] == tree.item(tree.selection())["values"][0]]
+                campaignEncounter = [e for e in self.campaign if e["name"] == tree.item(tree.selection())["values"][0]]
                 if campaignEncounter:
-                    self.encounterImage = campaignEncounter[0][2]
+                    self.encounterImage = campaignEncounter[0]["image"]
                     self.encounterPhotoImage = ImageTk.PhotoImage(self.encounterImage)
                     self.encounter.image = self.encounterPhotoImage
                     self.encounter.config(image=self.encounterPhotoImage)
