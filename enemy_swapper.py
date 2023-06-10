@@ -399,13 +399,11 @@ try:
                 encounter = {
                     "name": self.selected["name"],
                     "level": self.selected["level"],
-                    "image": self.encounterImage
+                    "enemies": self.newEnemies
                 }
 
-                if encounter not in self.campaign:
+                if encounter["name"] not in set([e["name"] for e in self.campaign]):
                     self.campaign.append(encounter)
-                
-                self.campaign = sorted(self.campaign, key=lambda x: x["level"])
 
                 self.treeviewCampaign.pack_forget()
                 self.treeviewCampaign.destroy()
@@ -431,7 +429,6 @@ try:
                     return
 
                 self.campaign = [e for e in self.campaign if e["name"] not in set([self.treeviewCampaign.item(e)["values"][0] for e in self.treeviewCampaign.selection()])]
-                self.campaign = sorted(self.campaign, key=lambda x: x["level"])
 
                 self.treeviewCampaign.pack_forget()
                 self.treeviewCampaign.destroy()
@@ -486,8 +483,6 @@ try:
 
                 with open(campaignFile, "rb") as p:
                     self.campaign = pickle.load(p)
-                
-                self.campaign = sorted(self.campaign, key=lambda x: x["level"])
 
                 self.treeviewCampaign.pack_forget()
                 self.treeviewCampaign.destroy()
@@ -497,6 +492,38 @@ try:
                     self.treeviewCampaign.insert(parent="", values=(item["name"], item["level"]), index="end")
 
                 adapter.debug("End of load_campaign (loaded from " + str(campaignFile) + ")")
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
+        def move_up(self):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of move_up", caller=calframe[1][3])
+
+                leaves = self.treeviewCampaign.selection()
+                for i in leaves:
+                    self.treeviewCampaign.move(i, self.treeviewCampaign.parent(i), self.treeviewCampaign.index(i)-1)
+
+                adapter.debug("End of move_up")
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
+        def move_down(self):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of move_down", caller=calframe[1][3])
+
+                leaves = self.treeviewCampaign.selection()
+                for i in reversed(leaves):
+                    self.treeviewCampaign.move(i, self.treeviewCampaign.parent(i), self.treeviewCampaign.index(i)+1)
+
+                adapter.debug("End of move_down")
             except Exception as e:
                 adapter.exception(e)
                 raise
