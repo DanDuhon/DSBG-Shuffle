@@ -134,7 +134,7 @@ try:
                 top.grab_set_global()
 
                 self.helpTextFrame = ttk.Frame(top, padding=(0, 0, 0, 10))
-                self.helpTextFrame.grid(row=0, column=0, padx=15, pady=(10, 0), sticky="w")
+                self.helpTextFrame.pack()
 
                 helpText = "You can either select an encounter from the list\n"
                 helpText += "or click the \"Random Level x\" buttons.\n\n"
@@ -156,14 +156,14 @@ try:
                 helpText += "no restrictions beyond that. Encounters added to a campaign\n"
                 helpText += "are frozen so you cannot shuffle the enemies."
                 self.helpTextLabel = ttk.Label(self.helpTextFrame, text=helpText)
-                self.helpTextLabel.grid()
+                self.helpTextLabel.pack(padx=5)
 
                 self.helpButtonsFrame = ttk.Frame(top, padding=(0, 0, 0, 10))
-                self.helpButtonsFrame.grid(row=1, column=0, padx=15, pady=(10, 0), sticky="w")
+                self.helpButtonsFrame.pack()
                 self.helpButtonsFrame.columnconfigure(index=0, weight=1)
 
                 self.okButton = ttk.Button(self.helpButtonsFrame, text="OK", width=14, command=self.top.destroy)
-                self.okButton.grid(column=0, row=0, padx=5)
+                self.okButton.pack()
             except Exception as e:
                 adapter.exception(e)
                 raise
@@ -186,52 +186,54 @@ try:
                 # These are the only sets that matter - the ones that add enemies.
                 # All encounters are always going to be available.
                 self.sets = {
-                    "Dark Souls The Board Game": {"button": None, "value": tk.IntVar()},
-                    "The Painted World of Ariamis": {"button": None, "value": tk.IntVar()},
-                    "The Tomb of Giants": {"button": None, "value": tk.IntVar()},
-                    "Darkroot": {"button": None, "value": tk.IntVar()},
-                    "Explorers": {"button": None, "value": tk.IntVar()},
-                    "Iron Keep": {"button": None, "value": tk.IntVar()},
-                    "Phantoms": {"button": None, "value": tk.IntVar()},
-                    "Executioner Chariot": {"button": None, "value": tk.IntVar()}
+                    "Dark Souls The Board Game": {"frame": None, "button": None, "value": tk.IntVar()},
+                    "The Painted World of Ariamis": {"frame": None, "button": None, "value": tk.IntVar()},
+                    "The Tomb of Giants": {"frame": None, "button": None, "value": tk.IntVar()},
+                    "Darkroot": {"frame": None, "button": None, "value": tk.IntVar()},
+                    "Explorers": {"frame": None, "button": None, "value": tk.IntVar()},
+                    "Iron Keep": {"frame": None, "button": None, "value": tk.IntVar()},
+                    "Phantoms": {"frame": None, "button": None, "value": tk.IntVar()},
+                    "Executioner Chariot": {"frame": None, "button": None, "value": tk.IntVar()}
                 }
                 
                 self.checkFrame = ttk.LabelFrame(top, text="Enabled Enemies From Sets", padding=(20, 10))
-                self.checkFrame.grid(row=0, column=0, padx=(20, 10), pady=(20, 10), sticky="nsew", columnspan=2)
+                self.checkFrame.pack(padx=(20, 10), pady=(20, 10), side=tk.LEFT, anchor=tk.N)
                 for i, a in enumerate(self.sets):
+                    self.sets[a]["frame"] = ttk.Frame(self.checkFrame)
+                    self.sets[a]["frame"].pack(anchor=tk.W)
                     self.sets[a]["value"].set(1 if a in self.settings["availableSets"] else 0)
-                    self.sets[a]["button"] = ttk.Checkbutton(self.checkFrame, text=a + (" (Core Set)" if a in coreSets else ""), variable=self.sets[a]["value"])
-                    self.sets[a]["button"].grid(row=i, column=0, padx=5, pady=10, sticky="nsew")
-                    if i > 11:
-                        self.sets[a]["button"].grid(row=i-12, column=1, padx=5, pady=10, sticky="nsew")
-                    else:
-                        self.sets[a]["button"].grid(row=i, column=0, padx=5, pady=10, sticky="nsew")
+                    self.sets[a]["button"] = ttk.Checkbutton(self.sets[a]["frame"], text=a + (" (Core Set)" if a in coreSets else ""), variable=self.sets[a]["value"])
+                    self.sets[a]["button"].pack(padx=5, pady=10)
                 
                 self.randomEncounters = {
-                    "old": {"button": None, "value": tk.IntVar()},
-                    "new": {"button": None, "value": tk.IntVar()}
+                    "old": {"frame": None, "button": None, "value": tk.IntVar()},
+                    "new": {"frame": None, "button": None, "value": tk.IntVar()}
                 }
 
                 self.randomEncounterFrame = ttk.LabelFrame(top, text="Random Encounters Shown", padding=(20, 10))
-                self.randomEncounterFrame.grid(row=0, column=3, padx=(20, 10), pady=(20, 10), sticky="nsew", columnspan=2)
+                self.randomEncounterFrame.pack(padx=(20, 10), pady=(20, 10), side=tk.LEFT, anchor=tk.N)
                 self.randomEncounters["old"]["value"].set(1 if "old" in self.settings["randomEncounterTypes"] else 0)
+                self.randomEncounters["old"]["frame"] = ttk.Frame(self.randomEncounterFrame)
+                self.randomEncounters["old"]["frame"].pack(anchor=tk.W)
+                self.randomEncounters["old"]["button"] = ttk.Checkbutton(self.randomEncounters["old"]["frame"], text="\"Old\" Style Encounters", variable=self.randomEncounters["old"]["value"])
+                self.randomEncounters["old"]["button"].pack(padx=5, pady=10)
                 self.randomEncounters["new"]["value"].set(1 if "new" in self.settings["randomEncounterTypes"] else 0)
-                self.randomEncounters["old"]["button"] = ttk.Checkbutton(self.randomEncounterFrame, text="\"Old\" Style Encounters", variable=self.randomEncounters["old"]["value"])
-                self.randomEncounters["new"]["button"] = ttk.Checkbutton(self.randomEncounterFrame, text="\"New\" Style Encounters", variable=self.randomEncounters["new"]["value"])
-                self.randomEncounters["old"]["button"].grid(row=0, column=0, padx=5, pady=10, sticky="nsew")
-                self.randomEncounters["new"]["button"].grid(row=1, column=0, padx=5, pady=10, sticky="nsew")
+                self.randomEncounters["new"]["frame"] = ttk.Frame(self.randomEncounterFrame)
+                self.randomEncounters["new"]["frame"].pack(anchor=tk.W)
+                self.randomEncounters["new"]["button"] = ttk.Checkbutton(self.randomEncounters["new"]["frame"], text="\"New\" Style Encounters", variable=self.randomEncounters["new"]["value"])
+                self.randomEncounters["new"]["button"].pack(padx=5, pady=10)
+                self.randomEncounters["new"]["button"].pack(padx=5, pady=10)
                 
                 self.errLabel = tk.Label(self.top, text="")
-                self.errLabel.grid(column=0, row=2, padx=5)
+                self.errLabel.pack(padx=5)
 
                 self.settingsButtonsFrame = ttk.Frame(top, padding=(0, 0, 0, 10))
-                self.settingsButtonsFrame.grid(row=3, column=0, padx=15, pady=(10, 0), sticky="w", columnspan=2)
-                self.settingsButtonsFrame.columnconfigure(index=0, weight=1)
+                self.settingsButtonsFrame.pack(padx=15, pady=(10, 0))
                 
                 self.saveButton = ttk.Button(self.settingsButtonsFrame, text="Save", width=14, command=lambda: self.quit_with_save())
                 self.cancelButton = ttk.Button(self.settingsButtonsFrame, text="Cancel", width=14, command=self.quit_no_save)
-                self.saveButton.grid(column=0, row=0, padx=5)
-                self.cancelButton.grid(column=1, row=0, padx=5)
+                self.saveButton.pack(padx=5)
+                self.cancelButton.pack(padx=5)
             except Exception as e:
                 adapter.exception(e)
                 raise
