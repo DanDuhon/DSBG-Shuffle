@@ -1,4 +1,3 @@
-# Change from pickle to JSON
 # Add the ability to put bosses in the campaign, and maybe notes as child items?
 
 try:
@@ -398,6 +397,7 @@ try:
                 
                 encounter = {
                     "name": self.selected["name"],
+                    "expansion": self.selected["expansion"],
                     "level": self.selected["level"],
                     "enemies": self.newEnemies
                 }
@@ -451,14 +451,14 @@ try:
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of save_campaign", caller=calframe[1][3])
 
-                campaignName = filedialog.asksaveasfile(mode="w", initialdir=baseFolder + "\\saved campaigns", defaultextension=".dsbgc")
+                campaignName = filedialog.asksaveasfile(mode="w", initialdir=baseFolder + "\\saved campaigns", defaultextension=".json")
 
                 if not campaignName:
                     adapter.debug("End of save_campaign (nothing done)")
                     return
 
-                with open(campaignName.name, "wb") as campaignFile:
-                    pickle.dump(self.campaign, campaignFile)
+                with open(campaignName.name, "w") as campaignFile:
+                    dump(self.campaign, campaignFile)
 
                 adapter.debug("End of save_campaign (saved to " + str(campaignFile) + ")")
             except Exception as e:
@@ -472,17 +472,19 @@ try:
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of load_campaign", caller=calframe[1][3])
 
-                campaignFile = filedialog.askopenfilename(initialdir=baseFolder + "\\saved campaigns", filetypes = [("Dark Souls Board Game Campaign files", ".dsbgc")])
+                campaignFile = filedialog.askopenfilename(initialdir=baseFolder + "\\saved campaigns", filetypes = [(".json", ".json")])
                 if not campaignFile:
                     adapter.debug("End of load_campaign (file dialog canceled)")
                     return
                 
-                if os.path.splitext(campaignFile)[1] != ".dsbgc":
+                if os.path.splitext(campaignFile)[1] != ".json":
                     adapter.debug("End of load_campaign (invalid file)")
                     return
+                
+                adapter.debug("Loading file " + campaignFile)
 
-                with open(campaignFile, "rb") as p:
-                    self.campaign = pickle.load(p)
+                with open(campaignFile, "r") as f:
+                    self.campaign = load(f)
 
                 self.treeviewCampaign.pack_forget()
                 self.treeviewCampaign.destroy()
@@ -545,12 +547,13 @@ try:
                 
                 campaignEncounter = [e for e in self.campaign if e["name"] == tree.item(tree.selection())["values"][0]]
                 if campaignEncounter:
-                    self.encounterImage = campaignEncounter[0]["image"]
-                    self.encounterPhotoImage = ImageTk.PhotoImage(self.encounterImage)
-                    self.encounter.image = self.encounterPhotoImage
-                    self.encounter.config(image=self.encounterPhotoImage)
+                    adapter.debug("\tOpening " + baseFolder + "\\encounters\\" + campaignEncounter[0]["name"] + ".json", caller=calframe[1][3])
+                    with open(baseFolder + "\\encounters\\" + campaignEncounter[0]["name"] + ".json") as alternativesFile:
+                        alts = load(alternativesFile)
 
-                self.apply_tooltips()
+                    self.newEnemies = campaignEncounter[0]["enemies"]
+                    self.edit_encounter_card(campaignEncounter[0]["name"], campaignEncounter[0]["expansion"], campaignEncounter[0]["level"], alts["enemySlots"])
+                    self.apply_tooltips()
 
                 adapter.debug("End of load_campaign_encounter")
             except Exception as e:
@@ -946,7 +949,7 @@ try:
                 raise
 
 
-        def create_image(self, imageFileName, imageType):
+        def create_image(self, imageFileName, imageType, level=None, expansion=None):
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -956,10 +959,10 @@ try:
                 adapter.debug("\tOpening " + imagePath, caller=calframe[1][3])
 
                 if imageType == "encounter":
-                    if self.selected["level"] < 4 and self.selected["expansion"] in {"Dark Souls The Board Game", "Iron Keep", "Darkroot", "Explorers", "Executioner Chariot"}:
+                    if level < 4 and expansion in {"Dark Souls The Board Game", "Iron Keep", "Darkroot", "Explorers", "Executioner Chariot"}:
                         width = 200
                         height = 300
-                    elif self.selected["level"] == 4:
+                    elif level == 4:
                         width = 305
                         height = 424
                     else:
@@ -1068,10 +1071,6 @@ try:
                     if set(expansionCombo.split(",")).issubset(self.availableSets):
                         self.selected["alternatives"] += alts["alternatives"][expansionCombo]
 
-                self.lakeviewRefugeBigEnemiesAvailable = sum([1 for enemy in enemiesDict if (
-                    enemiesDict[enemy].health >= 5
-                    and enemiesDict[enemy].expansion in self.availableSets)])
-
                 self.newTiles = dict()
 
                 self.shuffle_enemies()
@@ -1096,31 +1095,45 @@ try:
                     adapter.debug("\tEnd of shuffle_enemies", caller=calframe[1][3])
                     return
 
-                self.encounterPhotoImage = self.create_image(self.selected["name"] + ".jpg", "encounter")
-
                 oldEnemies = [e for e in self.newEnemies]
                 self.newEnemies = choice(self.selected["alternatives"])
                 if len(self.selected["alternatives"]) > 1:
                     while self.newEnemies == oldEnemies:
                         self.newEnemies = choice(self.selected["alternatives"])
 
+                self.edit_encounter_card(self.selected["name"], self.selected["expansion"], self.selected["level"], self.selected["enemySlots"])
+
+                adapter.debug("\tEnd of shuffle_enemies", caller=calframe[1][3])
+            except Exception as e:
+                adapter.exception(e)
+                raise
+        
+
+        def edit_encounter_card(self, name, expansion, level, enemySlots):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of edit_encounter_card", caller=calframe[1][3])
+
+                self.encounterPhotoImage = self.create_image(name + ".jpg", "encounter", level, expansion)
+
                 self.newTiles = {
                     1: [[], [], [], []],
                     2: [[], []],
                     3: [[], []]
-                }
+                    }
                 
                 adapter.debug("New enemies: " + str(self.newEnemies), caller=calframe[1][3])
                         
                 s = 0
-                for slotNum, slot in enumerate(self.selected["enemySlots"]):
+                for slotNum, slot in enumerate(enemySlots):
                     for e in range(slot):
                         self.newTiles[1 if slotNum < 4 else 2 if slotNum < 6 else 3][slotNum - (0 if slotNum < 4 else 4 if slotNum < 6 else 6)].append(enemyIds[self.newEnemies[s]].name)
-                        if self.selected["level"] == 4:
+                        if level == 4:
                             x = (115 if e == 0 else 157 if e == 1 else 200)
                             y = 79 + (47 * slotNum)
                             imageType = "image old"
-                        elif self.selected["expansion"] in {"Dark Souls The Board Game", "Iron Keep", "Darkroot", "Explorers", "Executioner Chariot"}:
+                        elif expansion in {"Dark Souls The Board Game", "Iron Keep", "Darkroot", "Explorers", "Executioner Chariot"}:
                             x = (59 if e == 0 else 105 if e == 1 else 150)
                             y = 57 + (50 * slotNum)
                             imageType = "image old"
@@ -1143,63 +1156,63 @@ try:
                         s += 1
 
                 # These are new encounters that have text referencing specific enemies.
-                if self.selected["name"] == "Abandoned and Forgotten":
+                if name == "Abandoned and Forgotten":
                     self.abandoned_and_forgotten()
-                elif self.selected["name"] == "Cloak and Feathers":
+                elif name == "Cloak and Feathers":
                     self.cloak_and_feathers()
-                elif self.selected["name"] == "Cold Snap":
+                elif name == "Cold Snap":
                     self.cold_snap()
-                elif self.selected["name"] == "Corvian Host":
+                elif name == "Corvian Host":
                     self.corvian_host()
-                elif self.selected["name"] == "Corrupted Hovel":
+                elif name == "Corrupted Hovel":
                     self.corrupted_hovel()
-                elif self.selected["name"] == "Deathly Freeze":
+                elif name == "Deathly Freeze":
                     self.deathly_freeze()
-                elif self.selected["name"] == "Deathly Magic":
+                elif name == "Deathly Magic":
                     self.deathly_magic()
-                elif self.selected["name"] == "Distant Tower":
+                elif name == "Distant Tower":
                     self.distant_tower()
-                elif self.selected["name"] == "Eye of the Storm":
+                elif name == "Eye of the Storm":
                     self.eye_of_the_storm()
-                elif self.selected["name"] == "Frozen Revolutions":
+                elif name == "Frozen Revolutions":
                     self.frozen_revolutions()
-                elif self.selected["name"] == "Giant's Coffin":
+                elif name == "Giant's Coffin":
                     self.giants_coffin()
-                elif self.selected["name"] == "Gnashing Beaks":
+                elif name == "Gnashing Beaks":
                     self.gnashing_beaks()
-                elif self.selected["name"] == "In Deep Water":
+                elif name == "In Deep Water":
                     self.in_deep_water()
-                elif self.selected["name"] == "Lakeview Refuge":
+                elif name == "Lakeview Refuge":
                     self.lakeview_refuge()
-                elif self.selected["name"] == "Last Rites":
+                elif name == "Last Rites":
                     self.last_rites()
-                elif self.selected["name"] == "Monstrous Maw":
+                elif name == "Monstrous Maw":
                     self.monstrous_maw()
-                elif self.selected["name"] == "No Safe Haven":
+                elif name == "No Safe Haven":
                     self.no_safe_haven()
-                elif self.selected["name"] == "Pitch Black":
+                elif name == "Pitch Black":
                     self.pitch_black()
-                elif self.selected["name"] == "Puppet Master":
+                elif name == "Puppet Master":
                     self.puppet_master()
-                elif self.selected["name"] == "Skeletal Spokes":
+                elif name == "Skeletal Spokes":
                     self.skeletal_spokes()
-                elif self.selected["name"] == "Skeleton Overlord":
+                elif name == "Skeleton Overlord":
                     self.skeleton_overlord()
-                elif self.selected["name"] == "The Abandoned Chest":
+                elif name == "The Abandoned Chest":
                     self.the_abandoned_chest()
-                elif self.selected["name"] == "The Beast From the Depths":
+                elif name == "The Beast From the Depths":
                     self.the_beast_from_the_depths()
-                elif self.selected["name"] == "The First Bastion":
+                elif name == "The First Bastion":
                     self.the_first_bastion()
-                elif self.selected["name"] == "The Last Bastion":
+                elif name == "The Last Bastion":
                     self.the_last_bastion()
-                elif self.selected["name"] == "The Locked Grave":
+                elif name == "The Locked Grave":
                     self.the_locked_grave()
-                elif self.selected["name"] == "The Skeleton Ball":
+                elif name == "The Skeleton Ball":
                     self.the_skeleton_ball()
-                elif self.selected["name"] == "Trecherous Tower":
+                elif name == "Trecherous Tower":
                     self.trecherous_tower()
-                elif self.selected["name"] == "Velka's Chosen":
+                elif name == "Velka's Chosen":
                     self.velkas_chosen()
                 
                 self.encounterPhotoImage = ImageTk.PhotoImage(self.encounterImage)
@@ -1209,7 +1222,7 @@ try:
 
                 self.apply_tooltips()
 
-                adapter.debug("\tEnd of shuffle_enemies", caller=calframe[1][3])
+                adapter.debug("\tEnd of edit_encounter_card", caller=calframe[1][3])
             except Exception as e:
                 adapter.exception(e)
                 raise
