@@ -73,8 +73,8 @@ try:
 
     class CreateToolTip(object):
         def __init__(self, widget, text="widget info"):
-            self.waittime = 500     #miliseconds
-            self.wraplength = 225   #pixels
+            self.waittime = 500     # miliseconds
+            self.wraplength = 225   # pixels
             self.widget = widget
             self.text = text
             self.widget.bind("<Enter>", self.enter)
@@ -88,11 +88,11 @@ try:
 
         def leave(self, event=None):
             self.unschedule()
-            self.hidetip()
+            self.hide_tip()
 
         def schedule(self):
             self.unschedule()
-            self.id = self.widget.after(self.waittime, self.showtip)
+            self.id = self.widget.after(self.waittime, self.show_tip)
 
         def unschedule(self):
             id = self.id
@@ -100,7 +100,7 @@ try:
             if id:
                 self.widget.after_cancel(id)
 
-        def showtip(self, event=None):
+        def show_tip(self, event=None):
             x = y = 0
             x, y, cx, cy = self.widget.bbox("insert")
             x += self.widget.winfo_rootx() + 25
@@ -113,7 +113,7 @@ try:
             label = ttk.Label(self.tw, text=self.text, font=(font, 12), justify="left", relief="solid", borderwidth=1, wraplength = self.wraplength)
             label.pack(ipadx=1)
 
-        def hidetip(self):
+        def hide_tip(self):
             tw = self.tw
             self.tw= None
             if tw:
