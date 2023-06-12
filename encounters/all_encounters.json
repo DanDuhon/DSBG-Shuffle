@@ -249,7 +249,7 @@
 	},
 	"Brume Tower": {
 		"name": "Brume Tower",
-		"expansion": "Executioner Chariot",
+		"expansion": "The Executioner's Chariot",
 		"level": 4,
 		"tiles": {
 			"1": [
@@ -427,7 +427,7 @@
 	},
 	"Corrupted Crypt": {
 		"name": "Corrupted Crypt",
-		"expansion": "Executioner Chariot",
+		"expansion": "The Executioner's Chariot",
 		"level": 3,
 		"tiles": {
 			"1": [
@@ -656,7 +656,7 @@
 	},
 	"Desolate Cemetery": {
 		"name": "Desolate Cemetery",
-		"expansion": "Executioner Chariot",
+		"expansion": "The Executioner's Chariot",
 		"level": 3,
 		"tiles": {
 			"1": [
@@ -973,7 +973,7 @@
 	},
 	"Gate of Peril": {
 		"name": "Gate of Peril",
-		"expansion": "Executioner Chariot",
+		"expansion": "The Executioner's Chariot",
 		"level": 4,
 		"tiles": {
 			"1": [
@@ -1212,7 +1212,7 @@
 	},
 	"Huntsman's Copse": {
 		"name": "Huntsman's Copse",
-		"expansion": "Executioner Chariot",
+		"expansion": "The Executioner's Chariot",
 		"level": 4,
 		"tiles": {
 			"1": [
@@ -1490,7 +1490,7 @@
 	},
 	"Mausoleum Ruins": {
 		"name": "Mausoleum Ruins",
-		"expansion": "Executioner Chariot",
+		"expansion": "The Executioner's Chariot",
 		"level": 2,
 		"tiles": {
 			"1": [
@@ -1515,7 +1515,7 @@
 	},
 	"Misty Burial Site": {
 		"name": "Misty Burial Site",
-		"expansion": "Executioner Chariot",
+		"expansion": "The Executioner's Chariot",
 		"level": 2,
 		"tiles": {
 			"1": [
@@ -1757,7 +1757,7 @@
 	},
 	"Quiet Graveyard": {
 		"name": "Quiet Graveyard",
-		"expansion": "Executioner Chariot",
+		"expansion": "The Executioner's Chariot",
 		"level": 1,
 		"tiles": {
 			"1": [
@@ -2000,7 +2000,7 @@
 	},
 	"Silent Pathway": {
 		"name": "Silent Pathway",
-		"expansion": "Executioner Chariot",
+		"expansion": "The Executioner's Chariot",
 		"level": 1,
 		"tiles": {
 			"1": [
@@ -2439,7 +2439,7 @@
 	},
 	"Undead Purgatory": {
 		"name": "Undead Purgatory",
-		"expansion": "Executioner Chariot",
+		"expansion": "The Executioner's Chariot",
 		"level": 4,
 		"tiles": {
 			"1": [

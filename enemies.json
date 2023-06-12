@@ -22,7 +22,7 @@
 	},
 	"Black Hollow Mage": {
 		"name": "Black Hollow Mage",
-		"expansion": "Executioner's Chariot",
+		"expansion": "The Executioner's Chariot",
 		"health": 5,
 		"count": 2,
 		"ranged": true
@@ -64,7 +64,7 @@
 	},
 	"Falchion Skeleton": {
 		"name": "Falchion Skeleton",
-		"expansion": "Executioner's Chariot",
+		"expansion": "The Executioner's Chariot",
 		"health": 1,
 		"count": 3,
 		"ranged": false

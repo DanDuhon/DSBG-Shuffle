@@ -212,7 +212,7 @@ try:
                     "Explorers": {"button": None, "value": tk.IntVar()},
                     "Iron Keep": {"button": None, "value": tk.IntVar()},
                     "Phantoms": {"button": None, "value": tk.IntVar()},
-                    "Executioner's Chariot": {"button": None, "value": tk.IntVar()}
+                    "The Executioner's Chariot": {"button": None, "value": tk.IntVar()}
                 }
                 
                 self.checkFrame = ttk.LabelFrame(top, text="Enabled Enemies From Sets", padding=(20, 10))
@@ -385,7 +385,7 @@ try:
                     "The Pursuer",
                     "--Mega Bosses--",
                     "Black Dragon Kalameet",
-                    "Executioner's Chariot",
+                    "The Executioner's Chariot",
                     "Gaping Dragon",
                     "Guardian Dragon",
                     "Manus, Father of the Abyss",
@@ -414,7 +414,7 @@ try:
                     "Smelter Demon": {"name": "Smelter Demon", "level": "Main Boss", "expansion": "Iron Keep"},
                     "The Pursuer": {"name": "The Pursuer", "level": "Main Boss", "expansion": "Explorers"},
                     "Black Dragon Kalameet": {"name": "Black Dragon Kalameet", "level": "Mega Boss", "expansion": "Black Dragon Kalameet"},
-                    "Executioner's Chariot": {"name": "Executioner's Chariot", "level": "Mega Boss", "expansion": "Executioner's Chariot"},
+                    "The Executioner's Chariot": {"name": "The Executioner's Chariot", "level": "Mega Boss", "expansion": "The Executioner's Chariot"},
                     "Gaping Dragon": {"name": "Gaping Dragon", "level": "Mega Boss", "expansion": "Gaping Dragon"},
                     "Guardian Dragon": {"name": "Guardian Dragon", "level": "Mega Boss", "expansion": "Guardian Dragon"},
                     "Manus, Father of the Abyss": {"name": "Manus, Father of the Abyss", "level": "Mega Boss", "expansion": "Manus, Father of the Abyss"},
@@ -430,8 +430,8 @@ try:
                 self.allSets = set([encounters[encounter]["expansion"] for encounter in encounters])
                 self.availableSets = set(self.settings["availableSets"])
                 self.availableCoreSets = coreSets & self.availableSets
-                oldSets = {"Dark Souls The Board Game", "Darkroot", "Executioner's Chariot", "Explorers", "Iron Keep"} if "old" in self.settings["randomEncounterTypes"] else set()
-                newSets = (self.allSets - {"Dark Souls The Board Game", "Darkroot", "Executioner's Chariot", "Explorers", "Iron Keep"}) if "new" in self.settings["randomEncounterTypes"] else set()
+                oldSets = {"Dark Souls The Board Game", "Darkroot", "The Executioner's Chariot", "Explorers", "Iron Keep"} if "old" in self.settings["randomEncounterTypes"] else set()
+                newSets = (self.allSets - {"Dark Souls The Board Game", "Darkroot", "The Executioner's Chariot", "Explorers", "Iron Keep"}) if "new" in self.settings["randomEncounterTypes"] else set()
                 self.setsForRandomEncounters = (oldSets | newSets) & self.allSets
                 
                 self.set_encounter_list()
@@ -940,13 +940,13 @@ try:
                 # Sort encounters by:
                 # 1. Encounters that have more than just level 4 encounters first
                 # 2. Core sets first
-                # 3. Executioner's Chariot at the top of the mega bosses list because it has non-level 4 encounters
+                # 3. The Executioner's Chariot at the top of the mega bosses list because it has non-level 4 encounters
                 # 4. By level
                 # 5. Alphabetically
                 encountersSorted = [encounter for encounter in sorted(self.encounterList, key=lambda x: (
                     1 if encounters[x]["level"] == 4 else 0,
                     0 if encounters[x]["expansion"] in coreSets else 1,
-                    0 if encounters[x]["expansion"] != "Executioner's Chariot" else 1,
+                    0 if encounters[x]["expansion"] != "The Executioner's Chariot" else 1,
                     encounters[x]["expansion"],
                     encounters[x]["level"],
                     encounters[x]["name"]))]
@@ -1224,8 +1224,8 @@ try:
                     self.treeviewEncounters.destroy()
                     self.availableSets = set(self.settings["availableSets"])
                     self.availableCoreSets = coreSets & self.availableSets
-                    oldSets = {"Dark Souls The Board Game", "Darkroot", "Executioner's Chariot", "Explorers", "Iron Keep"} if "old" in self.settings["randomEncounterTypes"] else set()
-                    newSets = (self.allSets - {"Dark Souls The Board Game", "Darkroot", "Executioner's Chariot", "Explorers", "Iron Keep"}) if "new" in self.settings["randomEncounterTypes"] else set()
+                    oldSets = {"Dark Souls The Board Game", "Darkroot", "The Executioner's Chariot", "Explorers", "Iron Keep"} if "old" in self.settings["randomEncounterTypes"] else set()
+                    newSets = (self.allSets - {"Dark Souls The Board Game", "Darkroot", "The Executioner's Chariot", "Explorers", "Iron Keep"}) if "new" in self.settings["randomEncounterTypes"] else set()
                     self.setsForRandomEncounters = (oldSets | newSets) & self.allSets
                     self.set_encounter_list()
                     self.create_encounters_treeview()
@@ -1291,7 +1291,7 @@ try:
                     if imageFileName == "Ornstein and Smough.jpg":
                         width = 305
                         height = 850
-                    elif level < 4 and expansion in {"Dark Souls The Board Game", "Iron Keep", "Darkroot", "Explorers", "Executioner's Chariot"}:
+                    elif level < 4 and expansion in {"Dark Souls The Board Game", "Iron Keep", "Darkroot", "Explorers", "The Executioner's Chariot"}:
                         width = 200
                         height = 300
                     elif level == 4:
@@ -1522,7 +1522,7 @@ try:
                             x = (115 if e == 0 else 157 if e == 1 else 200)
                             y = 79 + (47 * slotNum)
                             imageType = "image old"
-                        elif expansion in {"Dark Souls The Board Game", "Iron Keep", "Darkroot", "Explorers", "Executioner's Chariot"}:
+                        elif expansion in {"Dark Souls The Board Game", "Iron Keep", "Darkroot", "Explorers", "The Executioner's Chariot"}:
                             x = (59 if e == 0 else 105 if e == 1 else 150)
                             y = 57 + (50 * slotNum)
                             imageType = "image old"
