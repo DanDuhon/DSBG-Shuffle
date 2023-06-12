@@ -1,11 +1,8 @@
-# Add the ability to put bosses in the campaign, and maybe notes as child items?
-
 try:
     import sys
     import logging
     import inspect
     import os
-    import pickle
     from os import path
     from json import load, dump
     from random import choice
@@ -296,6 +293,70 @@ try:
                 with open(baseFolder + "\\settings.json") as settingsFile:
                     self.settings = load(settingsFile)
 
+                self.bossMenu = [
+                    "Boss List",
+                    "--Mini Bosses--",
+                    "Asylum Demon",
+                    "Black Knight",
+                    "Boreal Outrider Knight",
+                    "Heavy Knight",
+                    "Old Dragonslayer",
+                    "Titanite Demon",
+                    "Winged Knight",
+                    "--Main Bosses--",
+                    "Artorias",
+                    "Crossbreed Priscilla",
+                    "Dancer of the Boreal Valley",
+                    "Gravelord Nito",
+                    "Great Grey Wolf Sif",
+                    "Ornstein and Smough",
+                    "Sir Alonne",
+                    "Smelter Demon",
+                    "The Pursuer",
+                    "--Mega Bosses--",
+                    "Black Dragon Kalameet",
+                    "Executioner's Chariot",
+                    "Gaping Dragon",
+                    "Guardian Dragon",
+                    "Manus, Father of the Abyss",
+                    "Old Iron King",
+                    "Stray Demon",
+                    "The Four Kings",
+                    "The Last Giant",
+                    "Vordt of the Boreal Valley"
+                    ]
+
+                self.bosses = {
+                    "Asylum Demon": {"name": "Asylum Demon", "level": "Mini Boss"},
+                    "Black Knight": {"name": "Black Knight", "level": "Mini Boss"},
+                    "Boreal Outrider Knight": {"name": "Boreal Outrider Knight", "level": "Mini Boss"},
+                    "Heavy Knight": {"name": "Heavy Knight", "level": "Mini Boss"},
+                    "Old Dragonslayer": {"name": "Old Dragonslayer", "level": "Mini Boss"},
+                    "Titanite Demon": {"name": "Titanite Demon", "level": "Mini Boss"},
+                    "Winged Knight": {"name": "Winged Knight", "level": "Mini Boss"},
+                    "Artorias": {"name": "Artorias", "level": "Main Boss"},
+                    "Crossbreed Priscilla": {"name": "Crossbreed Priscilla", "level": "Main Boss"},
+                    "Dancer of the Boreal Valley": {"name": "Dancer of the Boreal Valley", "level": "Main Boss"},
+                    "Gravelord Nito": {"name": "Gravelord Nito", "level": "Main Boss"},
+                    "Great Grey Wolf Sif": {"name": "Great Grey Wolf Sif", "level": "Main Boss"},
+                    "Ornstein and Smough": {"name": "Ornstein and Smough", "level": "Main Boss"},
+                    "Sir Alonne": {"name": "Sir Alonne", "level": "Main Boss"},
+                    "Smelter Demon": {"name": "Smelter Demon", "level": "Main Boss"},
+                    "The Pursuer": {"name": "The Pursuer", "level": "Main Boss"},
+                    "Black Dragon Kalameet": {"name": "Black Dragon Kalameet", "level": "Mega Boss"},
+                    "Executioner's Chariot": {"name": "Executioner's Chariot", "level": "Mega Boss"},
+                    "Gaping Dragon": {"name": "Gaping Dragon", "level": "Mega Boss"},
+                    "Guardian Dragon": {"name": "Guardian Dragon", "level": "Mega Boss"},
+                    "Manus, Father of the Abyss": {"name": "Manus, Father of the Abyss", "level": "Mega Boss"},
+                    "Old Iron King": {"name": "Old Iron King", "level": "Mega Boss"},
+                    "Stray Demon": {"name": "Stray Demon", "level": "Mega Boss"},
+                    "The Four Kings": {"name": "The Four Kings", "level": "Mega Boss"},
+                    "The Last Giant": {"name": "The Last Giant", "level": "Mega Boss"},
+                    "Vordt of the Boreal Valley": {"name": "Vordt of the Boreal Valley", "level": "Mega Boss"}
+                }
+                
+                self.selectedBoss = tk.StringVar()
+
                 self.allSets = set([encounters[encounter]["expansion"] for encounter in encounters])
                 self.availableSets = set(self.settings["availableSets"])
                 self.availableCoreSets = coreSets & self.availableSets
@@ -418,6 +479,31 @@ try:
                 raise
 
 
+        def add_boss_to_campaign(self):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of add_boss_to_campaign", caller=calframe[1][3])
+
+                if self.selectedBoss.get() not in self.bosses:
+                    adapter.debug("End of add_boss_to_campaign (nothing done)")
+                    return
+                
+                self.campaign.append(self.bosses[self.selectedBoss.get()])
+
+                self.treeviewCampaign.pack_forget()
+                self.treeviewCampaign.destroy()
+                self.create_campaign_treeview()
+
+                for item in self.campaign:
+                    self.treeviewCampaign.insert(parent="", values=(item["name"], item["level"]), index="end")
+
+                adapter.debug("End of add_boss_to_campaign")
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
         def delete_encounter_from_campaign(self, event=None):
             try:
                 curframe = inspect.currentframe()
@@ -504,11 +590,12 @@ try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of move_up", caller=calframe[1][3])
-
+                
                 leaves = self.treeviewCampaign.selection()
                 for i in leaves:
                     self.treeviewCampaign.move(i, self.treeviewCampaign.parent(i), self.treeviewCampaign.index(i)-1)
-
+                    self.campaign.insert(self.treeviewCampaign.index(i)+1, self.campaign.pop(self.treeviewCampaign.index(i)))
+                
                 adapter.debug("End of move_up")
             except Exception as e:
                 adapter.exception(e)
@@ -524,6 +611,7 @@ try:
                 leaves = self.treeviewCampaign.selection()
                 for i in reversed(leaves):
                     self.treeviewCampaign.move(i, self.treeviewCampaign.parent(i), self.treeviewCampaign.index(i)+1)
+                    self.campaign.insert(self.treeviewCampaign.index(i)-1, self.campaign.pop(self.treeviewCampaign.index(i)))
 
                 adapter.debug("End of move_down")
             except Exception as e:
@@ -546,7 +634,20 @@ try:
                     return
                 
                 campaignEncounter = [e for e in self.campaign if e["name"] == tree.item(tree.selection())["values"][0]]
-                if campaignEncounter:
+                if campaignEncounter[0]["name"] in self.bosses:
+                    if hasattr(self, "keyword0") and self.keyword0.winfo_exists():
+                        self.keyword0.destroy()
+                    if hasattr(self, "keyword1") and self.keyword1.winfo_exists():
+                        self.keyword1.destroy()
+                    if hasattr(self, "keyword2") and self.keyword2.winfo_exists():
+                        self.keyword2.destroy()
+                    if hasattr(self, "keyword3") and self.keyword3.winfo_exists():
+                        self.keyword3.destroy()
+                    self.create_image(campaignEncounter[0]["name"] + ".jpg", "encounter", 4)
+                    self.encounterPhotoImage = ImageTk.PhotoImage(self.encounterImage)
+                    self.encounter.image = self.encounterPhotoImage
+                    self.encounter.config(image=self.encounterPhotoImage)
+                elif campaignEncounter:
                     adapter.debug("\tOpening " + baseFolder + "\\encounters\\" + campaignEncounter[0]["name"] + ".json", caller=calframe[1][3])
                     with open(baseFolder + "\\encounters\\" + campaignEncounter[0]["name"] + ".json") as alternativesFile:
                         alts = load(alternativesFile)
@@ -615,6 +716,8 @@ try:
                 self.notebook.add(self.campaignTab, text="Campaign")
                 self.campaignTabButtonsFrame = ttk.Frame(self.campaignTab)
                 self.campaignTabButtonsFrame.pack()
+                self.campaignTabButtonsFrame2 = ttk.Frame(self.campaignTab)
+                self.campaignTabButtonsFrame2.pack()
                 self.campaignTabTreeviewFrame = ttk.Frame(self.campaignTab)
                 self.campaignTabTreeviewFrame.pack(fill="both", expand=True)
                 
@@ -626,6 +729,17 @@ try:
                 self.loadButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
                 self.saveButton = ttk.Button(self.campaignTabButtonsFrame, text="Save Campaign", width=16, command=self.save_campaign)
                 self.saveButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+                
+                self.moveUpButton = ttk.Button(self.campaignTabButtonsFrame2, text="Move Up", width=16, command=self.move_up)
+                self.moveUpButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+                self.moveDownButton = ttk.Button(self.campaignTabButtonsFrame2, text="Move Down", width=16, command=self.move_down)
+                self.moveDownButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+                self.addBossButton = ttk.Button(self.campaignTabButtonsFrame2, text="Add Boss", width=16, command=self.add_boss_to_campaign)
+                self.addBossButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+                self.bossMenu = ttk.Combobox(self.campaignTabButtonsFrame2, state="readonly", values=self.bossMenu, textvariable=self.selectedBoss)
+                self.bossMenu.current(0)
+                self.bossMenu.config(width=17)
+                self.bossMenu.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
 
                 adapter.debug("End of create_tabs")
             except Exception as e:
