@@ -16,6 +16,16 @@ try:
 
 
     def enable_binding(bindKey, method):
+        """
+        Sets a keyboard shortcut.
+
+        Required Parameters:
+            bindKey: String
+                The key combination to be bound to a method.
+
+            method: method/function
+                The method or function to run when the key combination is pressed.
+        """
         try:
             curframe = inspect.currentframe()
             calframe = inspect.getouterframes(curframe, 2)
@@ -32,6 +42,9 @@ try:
 
 
     class CustomAdapter(logging.LoggerAdapter):
+        """
+        Used for logging.
+        """
         def process(self, msg, kwargs):
             my_context = kwargs.pop("caller", self.extra["caller"])
             return "[%s] %s" % (my_context, msg), kwargs
@@ -72,6 +85,9 @@ try:
 
 
     class CreateToolTip(object):
+        """
+        A tooltip that displays while the user is hovered over a particular Label.
+        """
         def __init__(self, widget, text="widget info"):
             self.waittime = 500     # miliseconds
             self.wraplength = 225   # pixels
@@ -121,6 +137,9 @@ try:
 
 
     class HelpWindow(object):
+        """
+        Window that just displays text about how to use the app.
+        """
         def __init__(self, master):
             try:
                 adapter.debug("Creating help window")
@@ -166,6 +185,10 @@ try:
 
 
     class SettingsWindow(object):
+        """
+        Window in which the user selects which sets they own and whether they want to see
+        old, new, or both styles of encounters when being shown random encounters.
+        """
         def __init__(self, master):
             try:
                 adapter.debug("Creating settings window")
@@ -189,7 +212,7 @@ try:
                     "Explorers": {"button": None, "value": tk.IntVar()},
                     "Iron Keep": {"button": None, "value": tk.IntVar()},
                     "Phantoms": {"button": None, "value": tk.IntVar()},
-                    "Executioner Chariot": {"button": None, "value": tk.IntVar()}
+                    "Executioner's Chariot": {"button": None, "value": tk.IntVar()}
                 }
                 
                 self.checkFrame = ttk.LabelFrame(top, text="Enabled Enemies From Sets", padding=(20, 10))
@@ -234,6 +257,13 @@ try:
             
             
         def quit_with_save(self, event=None):
+            """
+            Saves the settings and exits the settings window.
+
+            Optional Parameters:
+                event: tkinter.Event
+                    The tkinter Event that is the trigger.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -252,6 +282,7 @@ try:
                     "randomEncounterTypes": list(randomEncounterTypes)
                 }
 
+                # This will trigger the encounters treeview to be recreated to account for the changes.
                 if newSettings != self.settings:
                     global settingsChanged
                     settingsChanged = True
@@ -267,13 +298,52 @@ try:
             
             
         def quit_no_save(self, event=None):
+            """
+            Exits the settings window without saving changes.
+
+            Optional Parameters:
+                event: tkinter.Event
+                    The tkinter Event that is the trigger.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of quit_no_save", caller=calframe[1][3])
 
                 self.top.destroy()
+
                 adapter.debug("End of quit_no_save", caller=calframe[1][3])
+            except Exception as e:
+                adapter.exception(e)
+                raise
+        
+
+    class PopupWindow(object):
+        """
+        A popup window that either displays a message for the user or asks
+        for input in the form of an entry field or a choice of two options.
+
+        Required parameters:
+            master: tkinter.Tk object
+                The tkinter Tk object (root).
+                
+            labelText: String
+                The message to be displayed in the popup window.
+
+            button1Text: String
+                The text displayed on the first button.
+        """
+        def __init__(self, master, labelText, buttonText):
+            try:
+                top = self.top = tk.Toplevel(master)
+                top.wait_visibility()
+                top.grab_set_global()
+                self.l = ttk.Label(top, text=labelText, font=("calibri", 16))
+                self.l.pack()
+                self.l.focus_force()
+
+                self.b = ttk.Button(top, text=buttonText, command=lambda: self.top.destroy())
+                self.b.pack()
             except Exception as e:
                 adapter.exception(e)
                 raise
@@ -327,32 +397,32 @@ try:
                     ]
 
                 self.bosses = {
-                    "Asylum Demon": {"name": "Asylum Demon", "level": "Mini Boss"},
-                    "Black Knight": {"name": "Black Knight", "level": "Mini Boss"},
-                    "Boreal Outrider Knight": {"name": "Boreal Outrider Knight", "level": "Mini Boss"},
-                    "Heavy Knight": {"name": "Heavy Knight", "level": "Mini Boss"},
-                    "Old Dragonslayer": {"name": "Old Dragonslayer", "level": "Mini Boss"},
-                    "Titanite Demon": {"name": "Titanite Demon", "level": "Mini Boss"},
-                    "Winged Knight": {"name": "Winged Knight", "level": "Mini Boss"},
-                    "Artorias": {"name": "Artorias", "level": "Main Boss"},
-                    "Crossbreed Priscilla": {"name": "Crossbreed Priscilla", "level": "Main Boss"},
-                    "Dancer of the Boreal Valley": {"name": "Dancer of the Boreal Valley", "level": "Main Boss"},
-                    "Gravelord Nito": {"name": "Gravelord Nito", "level": "Main Boss"},
-                    "Great Grey Wolf Sif": {"name": "Great Grey Wolf Sif", "level": "Main Boss"},
-                    "Ornstein and Smough": {"name": "Ornstein and Smough", "level": "Main Boss"},
-                    "Sir Alonne": {"name": "Sir Alonne", "level": "Main Boss"},
-                    "Smelter Demon": {"name": "Smelter Demon", "level": "Main Boss"},
-                    "The Pursuer": {"name": "The Pursuer", "level": "Main Boss"},
-                    "Black Dragon Kalameet": {"name": "Black Dragon Kalameet", "level": "Mega Boss"},
-                    "Executioner's Chariot": {"name": "Executioner's Chariot", "level": "Mega Boss"},
-                    "Gaping Dragon": {"name": "Gaping Dragon", "level": "Mega Boss"},
-                    "Guardian Dragon": {"name": "Guardian Dragon", "level": "Mega Boss"},
-                    "Manus, Father of the Abyss": {"name": "Manus, Father of the Abyss", "level": "Mega Boss"},
-                    "Old Iron King": {"name": "Old Iron King", "level": "Mega Boss"},
-                    "Stray Demon": {"name": "Stray Demon", "level": "Mega Boss"},
-                    "The Four Kings": {"name": "The Four Kings", "level": "Mega Boss"},
-                    "The Last Giant": {"name": "The Last Giant", "level": "Mega Boss"},
-                    "Vordt of the Boreal Valley": {"name": "Vordt of the Boreal Valley", "level": "Mega Boss"}
+                    "Asylum Demon": {"name": "Asylum Demon", "level": "Mini Boss", "expansion": "Asylum Demon"},
+                    "Black Knight": {"name": "Black Knight", "level": "Mini Boss", "expansion": "The Tomb of Giants"},
+                    "Boreal Outrider Knight": {"name": "Boreal Outrider Knight", "level": "Mini Boss", "expansion": "Dark Souls The Board Game"},
+                    "Heavy Knight": {"name": "Heavy Knight", "level": "Mini Boss", "expansion": "The Painted World of Ariamis"},
+                    "Old Dragonslayer": {"name": "Old Dragonslayer", "level": "Mini Boss", "expansion": "Explorers"},
+                    "Titanite Demon": {"name": "Titanite Demon", "level": "Mini Boss", "expansion": "Dark Souls The Board Game"},
+                    "Winged Knight": {"name": "Winged Knight", "level": "Mini Boss", "expansion": "Dark Souls The Board Game"},
+                    "Artorias": {"name": "Artorias", "level": "Main Boss", "expansion": "Darkroot"},
+                    "Crossbreed Priscilla": {"name": "Crossbreed Priscilla", "level": "Main Boss", "expansion": "The Painted World of Ariamis"},
+                    "Dancer of the Boreal Valley": {"name": "Dancer of the Boreal Valley", "level": "Main Boss", "expansion": "Dark Souls The Board Game"},
+                    "Gravelord Nito": {"name": "Gravelord Nito", "level": "Main Boss", "expansion": "The Tomb of Giants"},
+                    "Great Grey Wolf Sif": {"name": "Great Grey Wolf Sif", "level": "Main Boss", "expansion": "Darkroot"},
+                    "Ornstein and Smough": {"name": "Ornstein and Smough", "level": "Main Boss", "expansion": "Dark Souls The Board Game"},
+                    "Sir Alonne": {"name": "Sir Alonne", "level": "Main Boss", "expansion": "Iron Keep"},
+                    "Smelter Demon": {"name": "Smelter Demon", "level": "Main Boss", "expansion": "Iron Keep"},
+                    "The Pursuer": {"name": "The Pursuer", "level": "Main Boss", "expansion": "Explorers"},
+                    "Black Dragon Kalameet": {"name": "Black Dragon Kalameet", "level": "Mega Boss", "expansion": "Black Dragon Kalameet"},
+                    "Executioner's Chariot": {"name": "Executioner's Chariot", "level": "Mega Boss", "expansion": "Executioner's Chariot"},
+                    "Gaping Dragon": {"name": "Gaping Dragon", "level": "Mega Boss", "expansion": "Gaping Dragon"},
+                    "Guardian Dragon": {"name": "Guardian Dragon", "level": "Mega Boss", "expansion": "Guardian Dragon"},
+                    "Manus, Father of the Abyss": {"name": "Manus, Father of the Abyss", "level": "Mega Boss", "expansion": "Manus, Father of the Abyss"},
+                    "Old Iron King": {"name": "Old Iron King", "level": "Mega Boss", "expansion": "Old Iron King"},
+                    "Stray Demon": {"name": "Stray Demon", "level": "Mega Boss", "expansion": "Asylum Demon"},
+                    "The Four Kings": {"name": "The Four Kings", "level": "Mega Boss", "expansion": "The Four Kings"},
+                    "The Last Giant": {"name": "The Last Giant", "level": "Mega Boss", "expansion": "The Last Giant"},
+                    "Vordt of the Boreal Valley": {"name": "Vordt of the Boreal Valley", "level": "Mega Boss", "expansion": "Vordt of the Boreal Valley"}
                 }
                 
                 self.selectedBoss = tk.StringVar()
@@ -360,9 +430,10 @@ try:
                 self.allSets = set([encounters[encounter]["expansion"] for encounter in encounters])
                 self.availableSets = set(self.settings["availableSets"])
                 self.availableCoreSets = coreSets & self.availableSets
-                oldSets = {"Dark Souls The Board Game", "Darkroot", "Executioner Chariot", "Explorers", "Iron Keep"} if "old" in self.settings["randomEncounterTypes"] else set()
-                newSets = (self.allSets - {"Dark Souls The Board Game", "Darkroot", "Executioner Chariot", "Explorers", "Iron Keep"}) if "new" in self.settings["randomEncounterTypes"] else set()
+                oldSets = {"Dark Souls The Board Game", "Darkroot", "Executioner's Chariot", "Explorers", "Iron Keep"} if "old" in self.settings["randomEncounterTypes"] else set()
+                newSets = (self.allSets - {"Dark Souls The Board Game", "Darkroot", "Executioner's Chariot", "Explorers", "Iron Keep"}) if "new" in self.settings["randomEncounterTypes"] else set()
                 self.setsForRandomEncounters = (oldSets | newSets) & self.allSets
+                
                 self.set_encounter_list()
                 self.create_buttons()
                 self.create_tabs()
@@ -386,18 +457,20 @@ try:
                     "trial": "Trials offer an extra objective providing additional rewards if completed.\n\nThis is shown in parentheses, either in writing, or as a number of turns in which the characters must complete the encounter's main objective.\n\nCompleting trial objectives is not mandatory to complete an encounter.",
                     "onslaught": "Each tile begins the encounter as active (all enemies on active tiles act on their turn).",
                     "darkness": "During this encounter, characters can only attack enemies on the same or an adjacent node.",
-                    "timer": "If the timer marker reaches the value shown in brackets, resolve the effect listed.",
-                    "respawn": "Place additional models using the enemies and enemy nodes shown on the encounter card.\n\nWhen respawning, if there are insufficient enemy models (because some enemy models are already in play), place as many enemies as possible, then place an enemy token for each missing enemy on the node it would spawn on.\n\nAs soon as the corresponding model becomes available, replace the token with the model."
+                    "timer": "If the timer marker reaches the value shown in brackets, resolve the effect listed."
                 }
 
                 self.campaign = []
 
                 self.deathlyFreezeTarget = None
 
+                # Create images
+                # Enemies
                 for enemy in allEnemies:
                     allEnemies[enemy]["image old"] = self.create_image(enemy + ".png", "enemyOld")
                     allEnemies[enemy]["image new"] = self.create_image(enemy + ".png", "enemyNew")
 
+                # Icons
                 self.playerCountImage = self.create_image("player_count.png", "playerCount")
                 self.enemyNode1 = self.create_image("enemy_node_1.png", "enemyNode")
                 self.enemyNode2 = self.create_image("enemy_node_2.png", "enemyNode")
@@ -410,6 +483,7 @@ try:
                 self.push = self.create_image("push.png", "condition")
                 self.eerie = self.create_image("eerie.png", "eerie")
 
+                # Keywords
                 self.poisonMist = ImageTk.PhotoImage(self.create_image("poison_mist.png", "poisonMist"))
                 self.darkness = ImageTk.PhotoImage(self.create_image("darkness.png", "darkness"))
                 self.trial = ImageTk.PhotoImage(self.create_image("trial.png", "trial"))
@@ -429,7 +503,7 @@ try:
                 raise
                 
 
-        def onFrameConfigure(self, canvas):
+        def on_frame_configure(self, canvas):
             """Reset the scroll region to encompass the inner frame"""
             canvas.configure(scrollregion=canvas.bbox("all"))
             
@@ -444,9 +518,39 @@ try:
 
         def _on_mousewheel(self, event):
             self.encounterCanvas.yview_scroll(int(-1*(event.delta/120)), "units")
+            
+
+        def popup(self, labelText, buttonText):
+            """
+            Create a popup window for informing or requesting information from the user.
+
+            Required Parameters:
+                labelText: String
+                    The text displayed in the popup window.
+
+                buttonText: String
+                    The text to display in the first button. If None, no button is displayed.
+            """
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of popup: labelText=" + labelText + ", buttonText=" + str(buttonText), caller=calframe[1][3])
+                
+                self.set_bindings_buttons_menus(False)
+                p = PopupWindow(self.master, labelText, buttonText=buttonText)
+                self.master.wait_window(p.top)
+                self.set_bindings_buttons_menus(True)
+
+                adapter.debug("End of popup")
+            except Exception as e:
+                adapter.exception(e)
+                raise
 
 
         def add_encounter_to_campaign(self):
+            """
+            Adds an encounter card to the campaign, visible in the campaign treeview.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -456,6 +560,7 @@ try:
                     adapter.debug("End of add_encounter_to_campaign (nothing done)")
                     return
                 
+                # Build the dictionary that will be saved to JSON if this campaign is saved.
                 encounter = {
                     "name": self.selected["name"],
                     "expansion": self.selected["expansion"],
@@ -463,15 +568,10 @@ try:
                     "enemies": self.newEnemies
                 }
 
+                # Only allow one encounter of the same name per campaign.
                 if encounter["name"] not in set([e["name"] for e in self.campaign]):
                     self.campaign.append(encounter)
-
-                self.treeviewCampaign.pack_forget()
-                self.treeviewCampaign.destroy()
-                self.create_campaign_treeview()
-
-                for item in self.campaign:
-                    self.treeviewCampaign.insert(parent="", values=(item["name"], item["level"]), index="end")
+                    self.treeviewCampaign.insert(parent="", values=(encounter["name"], encounter["level"]), index="end")
 
                 adapter.debug("End of add_encounter_to_campaign")
             except Exception as e:
@@ -480,23 +580,23 @@ try:
 
 
         def add_boss_to_campaign(self):
+            """
+            Adds a boss to the campaign, visible in the campaign treeview.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of add_boss_to_campaign", caller=calframe[1][3])
 
+                # If a menu item that isn't a boss (e.g. --Mini Boss--) is selected in the combobox, don't do anything.
                 if self.selectedBoss.get() not in self.bosses:
                     adapter.debug("End of add_boss_to_campaign (nothing done)")
                     return
                 
-                self.campaign.append(self.bosses[self.selectedBoss.get()])
-
-                self.treeviewCampaign.pack_forget()
-                self.treeviewCampaign.destroy()
-                self.create_campaign_treeview()
-
-                for item in self.campaign:
-                    self.treeviewCampaign.insert(parent="", values=(item["name"], item["level"]), index="end")
+                # Only allow a boss to appear once in a campaign.
+                if self.selectedBoss.get() not in set([e["name"] for e in self.campaign]):
+                    self.campaign.append(self.bosses[self.selectedBoss.get()])
+                    self.treeviewCampaign.insert(parent="", values=(self.campaign[-1]["name"], self.campaign[-1]["level"]), index="end")
 
                 adapter.debug("End of add_boss_to_campaign")
             except Exception as e:
@@ -505,24 +605,31 @@ try:
 
 
         def delete_encounter_from_campaign(self, event=None):
+            """
+            Delete an encounter or boss from the campaign.
+
+            Optional Parameters:
+                event: tkinter.Event
+                    The tkinter Event that is the trigger.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of delete_encounter_from_campaign", caller=calframe[1][3])
                 
+                # If the button is clicked with no selection, do nothing.
                 if not self.treeviewCampaign.selection():
                     adapter.debug("End of delete_encounter_from_campaign (nothing done)")
                     return
 
+                # Remove the deleted encounters from the campaign list.
                 self.campaign = [e for e in self.campaign if e["name"] not in set([self.treeviewCampaign.item(e)["values"][0] for e in self.treeviewCampaign.selection()])]
+                
+                # Remove the deleted encounters from the treeview.
+                for item in self.treeviewCampaign.selection():
+                    self.treeviewCampaign.delete(item)
 
-                self.treeviewCampaign.pack_forget()
-                self.treeviewCampaign.destroy()
-                self.create_campaign_treeview()
-
-                for item in self.campaign:
-                    self.treeviewCampaign.insert(parent="", values=(item["name"], item["level"]), index="end")
-
+                # Remove the image displaying a deleted encounter.
                 self.encounter.config(image="")
 
                 adapter.debug("End of delete_encounter_from_campaign")
@@ -532,13 +639,18 @@ try:
 
 
         def save_campaign(self):
+            """
+            Save the campaign to a JSON file that can be loaded later.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of save_campaign", caller=calframe[1][3])
 
+                # Prompt user to save the file.
                 campaignName = filedialog.asksaveasfile(mode="w", initialdir=baseFolder + "\\saved campaigns", defaultextension=".json")
 
+                # If they canceled it, do nothing.
                 if not campaignName:
                     adapter.debug("End of save_campaign (nothing done)")
                     return
@@ -553,17 +665,26 @@ try:
 
 
         def load_campaign(self):
+            """
+            Load a campaign from a JSON file, clearing the current campaign treeview and replacing
+            it with the data from the JSON file.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of load_campaign", caller=calframe[1][3])
 
+                # Prompt the user to find the campaign file.
                 campaignFile = filedialog.askopenfilename(initialdir=baseFolder + "\\saved campaigns", filetypes = [(".json", ".json")])
+
+                # If the user did not select a file, do nothing.
                 if not campaignFile:
                     adapter.debug("End of load_campaign (file dialog canceled)")
                     return
                 
+                # If the user did not select a JSON file, notify them that that was an invalid file.
                 if os.path.splitext(campaignFile)[1] != ".json":
+                    self.popup("Invalid DSBG-Shuffle campaign file.", "Ok")
                     adapter.debug("End of load_campaign (invalid file)")
                     return
                 
@@ -572,10 +693,19 @@ try:
                 with open(campaignFile, "r") as f:
                     self.campaign = load(f)
 
-                self.treeviewCampaign.pack_forget()
-                self.treeviewCampaign.destroy()
-                self.create_campaign_treeview()
+                # Check to see if there are any invalid names or levels in the JSON file.
+                # This is about as sure as I can be that you can't load random JSON into the app.
+                if any([(item["name"] not in encounters and item["name"] not in self.bosses) or item["level"] not in set([1, 2, 3, 4, "Mini Boss", "Main Boss", "Mega Boss"]) for item in self.campaign]):
+                    self.popup("Invalid DSBG-Shuffle campaign file.", "Ok")
+                    self.campaign = []
+                    adapter.debug("End of load_campaign (invalid file)")
+                    return
+                
+                # Remove existing campaign elements.
+                for item in self.treeviewCampaign.get_children():
+                    self.treeviewCampaign.delete(item)
 
+                # Create the campaign from the campaign list.
                 for item in self.campaign:
                     self.treeviewCampaign.insert(parent="", values=(item["name"], item["level"]), index="end")
 
@@ -586,6 +716,9 @@ try:
 
 
         def move_up(self):
+            """
+            Move an item up in the campaign treeview, with corresponding movement in the campaign list.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -593,8 +726,8 @@ try:
                 
                 leaves = self.treeviewCampaign.selection()
                 for i in leaves:
-                    self.treeviewCampaign.move(i, self.treeviewCampaign.parent(i), self.treeviewCampaign.index(i)-1)
-                    self.campaign.insert(self.treeviewCampaign.index(i)+1, self.campaign.pop(self.treeviewCampaign.index(i)))
+                    self.treeviewCampaign.move(i, self.treeviewCampaign.parent(i), self.treeviewCampaign.index(i) - 1)
+                    self.campaign.insert(self.treeviewCampaign.index(i) + 1, self.campaign.pop(self.treeviewCampaign.index(i)))
                 
                 adapter.debug("End of move_up")
             except Exception as e:
@@ -603,6 +736,9 @@ try:
 
 
         def move_down(self):
+            """
+            Move an item down in the campaign treeview, with corresponding movement in the campaign list.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -610,8 +746,8 @@ try:
 
                 leaves = self.treeviewCampaign.selection()
                 for i in reversed(leaves):
-                    self.treeviewCampaign.move(i, self.treeviewCampaign.parent(i), self.treeviewCampaign.index(i)+1)
-                    self.campaign.insert(self.treeviewCampaign.index(i)-1, self.campaign.pop(self.treeviewCampaign.index(i)))
+                    self.treeviewCampaign.move(i, self.treeviewCampaign.parent(i), self.treeviewCampaign.index(i) + 1)
+                    self.campaign.insert(self.treeviewCampaign.index(i) - 1, self.campaign.pop(self.treeviewCampaign.index(i)))
 
                 adapter.debug("End of move_down")
             except Exception as e:
@@ -620,6 +756,14 @@ try:
 
 
         def load_campaign_encounter(self, event=None):
+            """
+            When an encounter in the campaign is clicked on, display the encounter
+            and enemies that were originally saved.
+
+            Optional Parameters:
+                event: tkinter.Event
+                    The tkinter Event that is the trigger.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -629,12 +773,18 @@ try:
                 self.encounter.unbind("<Button 1>")
 
                 tree = event.widget
+
+                # Don't update the image shown if you've selected more than one encounter.
                 if len(tree.selection()) != 1:
                     adapter.debug("End of load_campaign_encounter (not updating image)")
                     return
                 
+                # Get the encounter selected.
                 campaignEncounter = [e for e in self.campaign if e["name"] == tree.item(tree.selection())["values"][0]]
+
+                # If the selected encounter is a boss.
                 if campaignEncounter[0]["name"] in self.bosses:
+                    # Remove keyword tooltips from the previous encounter shown, if there are any.
                     if hasattr(self, "keyword0") and self.keyword0.winfo_exists():
                         self.keyword0.destroy()
                     if hasattr(self, "keyword1") and self.keyword1.winfo_exists():
@@ -643,15 +793,19 @@ try:
                         self.keyword2.destroy()
                     if hasattr(self, "keyword3") and self.keyword3.winfo_exists():
                         self.keyword3.destroy()
+
+                    # Create and display the boss image.
                     self.create_image(campaignEncounter[0]["name"] + ".jpg", "encounter", 4)
                     self.encounterPhotoImage = ImageTk.PhotoImage(self.encounterImage)
                     self.encounter.image = self.encounterPhotoImage
                     self.encounter.config(image=self.encounterPhotoImage)
                 elif campaignEncounter:
                     adapter.debug("\tOpening " + baseFolder + "\\encounters\\" + campaignEncounter[0]["name"] + ".json", caller=calframe[1][3])
+                    # Get the enemy slots for this encounter.
                     with open(baseFolder + "\\encounters\\" + campaignEncounter[0]["name"] + ".json") as alternativesFile:
                         alts = load(alternativesFile)
 
+                    # Create the encounter card with saved enemies and tooltips.
                     self.newEnemies = campaignEncounter[0]["enemies"]
                     self.edit_encounter_card(campaignEncounter[0]["name"], campaignEncounter[0]["expansion"], campaignEncounter[0]["level"], alts["enemySlots"])
                     self.apply_tooltips()
@@ -663,19 +817,24 @@ try:
 
 
         def set_encounter_list(self):
+            """
+            Sets of the list of available encounters in the encounter tab based on what
+            the user selected in the settings.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of set_encounter_list", caller=calframe[1][3])
 
+                # Set the list of encounters based on available sets.
                 self.encounterList = [encounter for encounter in encounters if (
                     (
                         (self.availableSets & {"Explorers", "Phantoms"}
                             or encounter not in encountersWithInvadersOrMimics)
                         and any([frozenset(expCombo).issubset(self.availableSets) for expCombo in encounters[encounter]["setCombos"]])
-                        and any([frozenset(expCombo).issubset(self.availableSets) for expCombo in encounters[encounter]["setCombos"]])
-                        and any([frozenset(expCombo).issubset(self.availableSets) for expCombo in encounters[encounter]["setCombos"]])
                     )
+                    # Because these two have their enemies set on the fly, I can't guarantee there are valid enemies
+                    # without the Painted World core set.
                     and (encounter != "Abandoned and Forgotten" or "The Painted World of Ariamis" in self.availableSets)
                     and (encounter != "Trecherous Tower" or "The Painted World of Ariamis" in self.availableSets)
                     )]
@@ -687,6 +846,13 @@ try:
 
 
         def create_tabs(self, event=None):
+            """
+            Create the encounter and campaign tabs in the main window.
+
+            Optional Parameters:
+                event: tkinter.Event
+                    The tkinter Event that is the trigger.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -748,6 +914,10 @@ try:
 
 
         def create_encounters_treeview(self):
+            """
+            Create the encounters treeview, where a user can select an encounter
+            and shuffle the enemies in it.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -767,10 +937,16 @@ try:
                 self.treeviewEncounters.column("#0", anchor="w")
                 self.treeviewEncounters.heading("#0", text="  Name", anchor="w")
 
+                # Sort encounters by:
+                # 1. Encounters that have more than just level 4 encounters first
+                # 2. Core sets first
+                # 3. Executioner's Chariot at the top of the mega bosses list because it has non-level 4 encounters
+                # 4. By level
+                # 5. Alphabetically
                 encountersSorted = [encounter for encounter in sorted(self.encounterList, key=lambda x: (
                     1 if encounters[x]["level"] == 4 else 0,
                     0 if encounters[x]["expansion"] in coreSets else 1,
-                    0 if encounters[x]["expansion"] != "Executioner Chariot" else 1,
+                    0 if encounters[x]["expansion"] != "Executioner's Chariot" else 1,
                     encounters[x]["expansion"],
                     encounters[x]["level"],
                     encounters[x]["name"]))]
@@ -809,6 +985,9 @@ try:
 
 
         def create_campaign_treeview(self):
+            """
+            Create the campaign treeview where users can see saved encounters they've selected.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -841,6 +1020,9 @@ try:
 
 
         def create_encounter_frame(self):
+            """
+            Create the frame in which encounters will be displayed.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -854,7 +1036,7 @@ try:
                 self.encounterScrollbar.config(command=self.encounterCanvas.yview)
                 self.encounterFrame.bind("<Enter>", self._bound_to_mousewheel)
                 self.encounterFrame.bind("<Leave>", self._unbound_to_mousewheel)
-                self.encounterFrame.bind("<Configure>", lambda event, canvas=self.encounterCanvas: self.onFrameConfigure(canvas))
+                self.encounterFrame.bind("<Configure>", lambda event, canvas=self.encounterCanvas: self.on_frame_configure(canvas))
 
                 self.encounter = ttk.Label(self.encounterFrame)
                 self.encounter.grid(column=0, row=0, sticky="nsew")
@@ -913,6 +1095,9 @@ try:
                    
 
         def create_buttons(self):
+            """
+            Create the buttons on the main screen.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -943,6 +1128,9 @@ try:
 
 
         def create_menu(self):
+            """
+            Create the menu.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -1012,6 +1200,10 @@ try:
 
 
         def settings_window(self):
+            """
+            Show the settings window, where a user can change what sets are active and
+            whether random encounters show old, new, or both kinds of encounters.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -1032,8 +1224,8 @@ try:
                     self.treeviewEncounters.destroy()
                     self.availableSets = set(self.settings["availableSets"])
                     self.availableCoreSets = coreSets & self.availableSets
-                    oldSets = {"Dark Souls The Board Game", "Darkroot", "Executioner Chariot", "Explorers", "Iron Keep"} if "old" in self.settings["randomEncounterTypes"] else set()
-                    newSets = (self.allSets - {"Dark Souls The Board Game", "Darkroot", "Executioner Chariot", "Explorers", "Iron Keep"}) if "new" in self.settings["randomEncounterTypes"] else set()
+                    oldSets = {"Dark Souls The Board Game", "Darkroot", "Executioner's Chariot", "Explorers", "Iron Keep"} if "old" in self.settings["randomEncounterTypes"] else set()
+                    newSets = (self.allSets - {"Dark Souls The Board Game", "Darkroot", "Executioner's Chariot", "Explorers", "Iron Keep"}) if "new" in self.settings["randomEncounterTypes"] else set()
                     self.setsForRandomEncounters = (oldSets | newSets) & self.allSets
                     self.set_encounter_list()
                     self.create_encounters_treeview()
@@ -1047,6 +1239,9 @@ try:
 
 
         def help_window(self):
+            """
+            Display the help window, which shows basic usage information.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -1064,6 +1259,26 @@ try:
 
 
         def create_image(self, imageFileName, imageType, level=None, expansion=None):
+            """
+            Create an image to be displayed in the encounter frame.
+
+            Required Parameters:
+                imageFileName: String
+                    The file name of the image, including extension but excluding path.
+
+                imageType: String
+                    The type of image, which will determine the dimensions used.
+
+            Optional Parameters:
+                level: Integer
+                    The level of an encounter, which also determines the dimensions used.
+                    Default: None
+
+                expansion: String
+                    The expansion of the encounter, used to determine whether the image is and
+                    old or new style encounter. Determines dimensions used.
+                    Default: None
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -1073,7 +1288,10 @@ try:
                 adapter.debug("\tOpening " + imagePath, caller=calframe[1][3])
 
                 if imageType == "encounter":
-                    if level < 4 and expansion in {"Dark Souls The Board Game", "Iron Keep", "Darkroot", "Explorers", "Executioner Chariot"}:
+                    if imageFileName == "Ornstein and Smough.jpg":
+                        width = 305
+                        height = 850
+                    elif level < 4 and expansion in {"Dark Souls The Board Game", "Iron Keep", "Darkroot", "Explorers", "Executioner's Chariot"}:
                         width = 200
                         height = 300
                     elif level == 4:
@@ -1129,6 +1347,18 @@ try:
 
 
         def random_encounter(self, event=None, level=None):
+            """
+            Picks a random encounter from the list of available encounters and displays it.
+
+            Optional Parameters:
+                event: tkinter.Event
+                    The tkinter Event that is the trigger.
+                    Default: None
+
+                level: Integer
+                    The level of the encounter.
+                    Default: None
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -1146,6 +1376,18 @@ try:
 
 
         def load_encounter(self, event=None, encounter=None):
+            """
+            Loads an encounter from file data for display.
+
+            Optional Parameters:
+                event: tkinter.Event
+                    The tkinter Event that is the trigger.
+                    Default: None
+
+                encounter: String
+                    The expansion of the encounter.
+                    Default: None
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -1153,6 +1395,7 @@ try:
                 
                 self.treeviewEncounters.unbind("<<TreeviewSelect>>")
 
+                # If this encounter was clicked on, get that information.
                 if event:
                     tree = event.widget
                     if not tree.item(tree.selection())["tags"][0]:
@@ -1164,6 +1407,8 @@ try:
                 else:
                     encounterName = encounter
 
+                # If the encounter clicked on is already displayed, no need to load it again,
+                # just shuffle the enemies.
                 if encounters[encounterName] == self.selected:
                     self.shuffle_enemies()
                     self.treeviewEncounters.bind("<<TreeviewSelect>>", self.load_encounter)
@@ -1174,6 +1419,7 @@ try:
                 self.selected["difficultyMod"] = {}
                 self.selected["restrictRanged"] = {}
 
+                # Get the possible alternative enemies from the encounter's file.
                 adapter.debug("\tOpening " + baseFolder + "\\encounters\\" + encounterName + ".json", caller=calframe[1][3])
                 with open(baseFolder + "\\encounters\\" + encounterName + ".json") as alternativesFile:
                     alts = load(alternativesFile)
@@ -1181,6 +1427,7 @@ try:
                 self.selected["alternatives"] = []
                 self.selected["enemySlots"] = alts["enemySlots"]
 
+                # Use only alternative enemies for sets the user has activated in the settings.
                 for expansionCombo in alts["alternatives"]:
                     if set(expansionCombo.split(",")).issubset(self.availableSets):
                         self.selected["alternatives"] += alts["alternatives"][expansionCombo]
@@ -1197,6 +1444,14 @@ try:
                 raise
 
         def shuffle_enemies(self, event=None):
+            """
+            Pick a new set of enemies to display in the encounter.
+
+            Optional Parameters:
+                event: tkinter.Event
+                    The tkinter Event that is the trigger.
+                    Default: None
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -1209,6 +1464,8 @@ try:
                     adapter.debug("\tEnd of shuffle_enemies", caller=calframe[1][3])
                     return
 
+                # Make sure a new set of enemies is chosen each time, otherwise it
+                # feels like the program isn't doing anything.
                 oldEnemies = [e for e in self.newEnemies]
                 self.newEnemies = choice(self.selected["alternatives"])
                 if len(self.selected["alternatives"]) > 1:
@@ -1224,6 +1481,22 @@ try:
         
 
         def edit_encounter_card(self, name, expansion, level, enemySlots):
+            """
+            Modify the encounter card image with the new enemies.
+
+            Required Parameters:
+                name: String
+                    The name of the encounter.
+
+                expansion: String
+                    The expansion of the encounter.
+
+                level: Integer
+                    The level of the encounter.
+
+                enemySlots:
+                    The slots on the card in which enemies are found.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -1239,6 +1512,8 @@ try:
                 
                 adapter.debug("New enemies: " + str(self.newEnemies), caller=calframe[1][3])
                         
+                # Determine where enemies should be placed determined by whether this is an old or new style encounter,
+                # the level of the encounter, and where on the original encounter card enemies were found.
                 s = 0
                 for slotNum, slot in enumerate(enemySlots):
                     for e in range(slot):
@@ -1247,7 +1522,7 @@ try:
                             x = (115 if e == 0 else 157 if e == 1 else 200)
                             y = 79 + (47 * slotNum)
                             imageType = "image old"
-                        elif expansion in {"Dark Souls The Board Game", "Iron Keep", "Darkroot", "Explorers", "Executioner Chariot"}:
+                        elif expansion in {"Dark Souls The Board Game", "Iron Keep", "Darkroot", "Explorers", "Executioner's Chariot"}:
                             x = (59 if e == 0 else 105 if e == 1 else 150)
                             y = 57 + (50 * slotNum)
                             imageType = "image old"
@@ -1343,6 +1618,10 @@ try:
 
 
         def apply_tooltips(self):
+            """
+            If the encounter card has keywords, create an image of the word imposed over
+            the original word and create a tooltip that shows up when mousing over the keyword image.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -1441,6 +1720,9 @@ try:
 
 
         def a_trusty_ally_tooltips(self):
+            """
+            Create tooltips for this encounter.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -1448,7 +1730,7 @@ try:
 
                 self.keyword0 = tk.Label(self.encounterFrame, image=self.onslaught, borderwidth=0, highlightthickness=0)
                 self.keyword0.place(x=148, y=197)
-                tooltip0 =  CreateToolTip(self.keyword0, self.keywordText["onslaught"])
+                CreateToolTip(self.keyword0, self.keywordText["onslaught"])
 
                 adapter.debug("\tEnd of giants_coffin_tooltips", caller=calframe[1][3])
             except Exception as e:
@@ -1457,6 +1739,9 @@ try:
 
 
         def abandoned_and_forgotten(self):
+            """
+            Choose enemies for Eerie keyword.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -1485,6 +1770,9 @@ try:
 
 
         def abandoned_and_forgotten_tooltips(self):
+            """
+            Create tooltips for this encounter.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -1492,7 +1780,7 @@ try:
 
                 self.keyword0 = tk.Label(self.encounterFrame, image=self.eerieTooltip, borderwidth=0, highlightthickness=0)
                 self.keyword0.place(x=146, y=197)
-                tooltip0 =  CreateToolTip(self.keyword0, self.keywordText["eerieTooltip"])
+                CreateToolTip(self.keyword0, self.keywordText["eerieTooltip"])
 
                 adapter.debug("\tEnd of abandoned_and_forgotten_tooltips", caller=calframe[1][3])
             except Exception as e:
@@ -1501,6 +1789,9 @@ try:
 
 
         def altar_of_bones_tooltips(self):
+            """
+            Create tooltips for this encounter.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -1508,7 +1799,7 @@ try:
 
                 self.keyword0 = tk.Label(self.encounterFrame, image=self.timer, borderwidth=0, highlightthickness=0)
                 self.keyword0.place(x=149, y=197)
-                tooltip0 =  CreateToolTip(self.keyword0, self.keywordText["timer"])
+                CreateToolTip(self.keyword0, self.keywordText["timer"])
 
                 adapter.debug("\tEnd of altar_of_bones_tooltips", caller=calframe[1][3])
             except Exception as e:
@@ -1517,6 +1808,9 @@ try:
 
 
         def central_plaza_tooltips(self):
+            """
+            Create tooltips for this encounter.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -1524,7 +1818,7 @@ try:
 
                 self.keyword0 = tk.Label(self.encounterFrame, image=self.barrage, borderwidth=0, highlightthickness=0)
                 self.keyword0.place(x=146, y=198)
-                tooltip0 =  CreateToolTip(self.keyword0, self.keywordText["barrage"])
+                CreateToolTip(self.keyword0, self.keywordText["barrage"])
 
                 adapter.debug("\tEnd of central_plaza_tooltips", caller=calframe[1][3])
             except Exception as e:
@@ -1533,6 +1827,9 @@ try:
 
 
         def cloak_and_feathers(self):
+            """
+            Modify objective.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -1548,6 +1845,9 @@ try:
 
 
         def cold_snap(self):
+            """
+            Modify trial text, add armor/resist to make the replacement enemy as tough as an Engorged Zombie.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -1575,6 +1875,9 @@ try:
 
 
         def cold_snap_tooltips(self):
+            """
+            Create tooltips for this encounter.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -1582,15 +1885,15 @@ try:
 
                 self.keyword0 = tk.Label(self.encounterFrame, image=self.snowstorm, borderwidth=0, highlightthickness=0)
                 self.keyword0.place(x=147, y=197)
-                tooltip0 =  CreateToolTip(self.keyword0, self.keywordText["snowstorm"])
+                CreateToolTip(self.keyword0, self.keywordText["snowstorm"])
 
                 self.keyword1 = tk.Label(self.encounterFrame, image=self.bitterCold, borderwidth=0, highlightthickness=0)
                 self.keyword1.place(x=146, y=215)
-                tooltip1 =  CreateToolTip(self.keyword1, self.keywordText["bitterCold"])
+                CreateToolTip(self.keyword1, self.keywordText["bitterCold"])
 
                 self.keyword2 = tk.Label(self.encounterFrame, image=self.trial, borderwidth=0, highlightthickness=0)
                 self.keyword2.place(x=146, y=233)
-                tooltip2 =  CreateToolTip(self.keyword2, self.keywordText["trial"])
+                CreateToolTip(self.keyword2, self.keywordText["trial"])
 
                 adapter.debug("\tEnd of cold_snap_tooltips", caller=calframe[1][3])
             except Exception as e:
@@ -1599,6 +1902,9 @@ try:
 
 
         def corrupted_hovel_tooltips(self):
+            """
+            Create tooltips for this encounter.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -1606,11 +1912,11 @@ try:
 
                 self.keyword0 = tk.Label(self.encounterFrame, image=self.poisonMist, borderwidth=0, highlightthickness=0)
                 self.keyword0.place(x=145, y=197)
-                tooltip0 =  CreateToolTip(self.keyword0, self.keywordText["poisonMist"])
+                CreateToolTip(self.keyword0, self.keywordText["poisonMist"])
 
                 self.keyword1 = tk.Label(self.encounterFrame, image=self.trial, borderwidth=0, highlightthickness=0)
                 self.keyword1.place(x=146, y=214.5)
-                tooltip1 =  CreateToolTip(self.keyword1, self.keywordText["trial"])
+                CreateToolTip(self.keyword1, self.keywordText["trial"])
 
                 adapter.debug("\tEnd of corrupted_hovel_tooltips", caller=calframe[1][3])
             except Exception as e:
@@ -1619,6 +1925,9 @@ try:
 
 
         def corvian_host(self):
+            """
+            Change Crow Demons to another enemy.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -1650,6 +1959,9 @@ try:
 
 
         def corvian_host_tooltips(self):
+            """
+            Create tooltips for this encounter.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -1657,7 +1969,7 @@ try:
 
                 self.keyword0 = tk.Label(self.encounterFrame, image=self.poisonMist, borderwidth=0, highlightthickness=0)
                 self.keyword0.place(x=142, y=194.5)
-                tooltip0 =  CreateToolTip(self.keyword0, self.keywordText["poisonMist"])
+                CreateToolTip(self.keyword0, self.keywordText["poisonMist"])
 
                 adapter.debug("\tEnd of corvian_host_tooltips", caller=calframe[1][3])
             except Exception as e:
@@ -1666,6 +1978,9 @@ try:
 
 
         def corrupted_hovel(self):
+            """
+            Change Engorged Zombie to another enemy.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -1684,6 +1999,9 @@ try:
 
 
         def dark_resurrection_tooltips(self):
+            """
+            Create tooltips for this encounter.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -1691,7 +2009,7 @@ try:
 
                 self.keyword0 = tk.Label(self.encounterFrame, image=self.darkness, borderwidth=0, highlightthickness=0)
                 self.keyword0.place(x=147, y=197.5)
-                tooltip0 =  CreateToolTip(self.keyword0, self.keywordText["darkness"])
+                CreateToolTip(self.keyword0, self.keywordText["darkness"])
 
                 adapter.debug("\tEnd of dark_resurrection_tooltips", caller=calframe[1][3])
             except Exception as e:
@@ -1700,6 +2018,9 @@ try:
 
 
         def deathly_freeze(self):
+            """
+            Change Engorged Zombie to another enemy.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -1722,6 +2043,9 @@ try:
 
 
         def deathly_freeze_tooltips(self):
+            """
+            Create tooltips for this encounter.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -1729,11 +2053,11 @@ try:
 
                 self.keyword0 = tk.Label(self.encounterFrame, image=self.snowstorm, borderwidth=0, highlightthickness=0)
                 self.keyword0.place(x=145, y=197)
-                tooltip0 =  CreateToolTip(self.keyword0, self.keywordText["snowstorm"])
+                CreateToolTip(self.keyword0, self.keywordText["snowstorm"])
 
                 self.keyword1 = tk.Label(self.encounterFrame, image=self.bitterCold, borderwidth=0, highlightthickness=0)
                 self.keyword1.place(x=144.5, y=214.5)
-                tooltip1 =  CreateToolTip(self.keyword1, self.keywordText["bitterCold"])
+                CreateToolTip(self.keyword1, self.keywordText["bitterCold"])
 
                 adapter.debug("\tEnd of deathly_freeze_tooltips", caller=calframe[1][3])
             except Exception as e:
@@ -1742,6 +2066,9 @@ try:
 
 
         def deathly_magic(self):
+            """
+            Change Necromancer to another enemy and specify starting health.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -1765,6 +2092,9 @@ try:
 
 
         def distant_tower(self):
+            """
+            Change trial objective Crow Demon to another enemy.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -1780,6 +2110,9 @@ try:
 
 
         def distant_tower_tooltips(self):
+            """
+            Create tooltips for this encounter.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -1787,11 +2120,11 @@ try:
 
                 self.keyword0 = tk.Label(self.encounterFrame, image=self.barrage, borderwidth=0, highlightthickness=0)
                 self.keyword0.place(x=146, y=198)
-                tooltip0 =  CreateToolTip(self.keyword0, self.keywordText["barrage"])
+                CreateToolTip(self.keyword0, self.keywordText["barrage"])
 
                 self.keyword1 = tk.Label(self.encounterFrame, image=self.trial, borderwidth=0, highlightthickness=0)
                 self.keyword1.place(x=146, y=217)
-                tooltip1 =  CreateToolTip(self.keyword1, self.keywordText["trial"])
+                CreateToolTip(self.keyword1, self.keywordText["trial"])
 
                 adapter.debug("\tEnd of distant_tower_tooltips", caller=calframe[1][3])
             except Exception as e:
@@ -1800,6 +2133,10 @@ try:
 
 
         def eye_of_the_storm(self):
+            """
+            Change Phalanx objective to another enemy.
+            Change Phalanx Hollows to another enemy.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -1844,6 +2181,9 @@ try:
 
 
         def eye_of_the_storm_tooltips(self):
+            """
+            Create tooltips for this encounter.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -1851,7 +2191,7 @@ try:
 
                 self.keyword0 = tk.Label(self.encounterFrame, image=self.hidden, borderwidth=0, highlightthickness=0)
                 self.keyword0.place(x=146.5, y=198)
-                tooltip0 =  CreateToolTip(self.keyword0, self.keywordText["hidden"])
+                CreateToolTip(self.keyword0, self.keywordText["hidden"])
 
                 adapter.debug("\tEnd of eye_of_the_storm_tooltips", caller=calframe[1][3])
             except Exception as e:
@@ -1860,6 +2200,9 @@ try:
 
 
         def far_from_the_sun_tooltips(self):
+            """
+            Create tooltips for this encounter.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -1867,7 +2210,7 @@ try:
 
                 self.keyword0 = tk.Label(self.encounterFrame, image=self.darkness, borderwidth=0, highlightthickness=0)
                 self.keyword0.place(x=147, y=197)
-                tooltip0 =  CreateToolTip(self.keyword0, self.keywordText["darkness"])
+                CreateToolTip(self.keyword0, self.keywordText["darkness"])
 
                 adapter.debug("\tEnd of far_from_the_sun_tooltips", caller=calframe[1][3])
             except Exception as e:
@@ -1876,6 +2219,9 @@ try:
 
 
         def frozen_revolutions(self):
+            """
+            Change Bonewheel Skeletons to another enemy and specify repeat behavior.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -1896,6 +2242,9 @@ try:
 
 
         def frozen_revolutions_tooltips(self):
+            """
+            Create tooltips for this encounter.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -1903,7 +2252,7 @@ try:
 
                 self.keyword0 = tk.Label(self.encounterFrame, image=self.trial, borderwidth=0, highlightthickness=0)
                 self.keyword0.place(x=145, y=196.5)
-                tooltip0 =  CreateToolTip(self.keyword0, self.keywordText["trial"])
+                CreateToolTip(self.keyword0, self.keywordText["trial"])
 
                 adapter.debug("\tEnd of frozen_revolutions_tooltips", caller=calframe[1][3])
             except Exception as e:
@@ -1912,6 +2261,9 @@ try:
 
 
         def frozen_sentries_tooltips(self):
+            """
+            Create tooltips for this encounter.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -1919,7 +2271,7 @@ try:
 
                 self.keyword0 = tk.Label(self.encounterFrame, image=self.snowstorm, borderwidth=0, highlightthickness=0)
                 self.keyword0.place(x=148, y=197)
-                tooltip0 =  CreateToolTip(self.keyword0, self.keywordText["snowstorm"])
+                CreateToolTip(self.keyword0, self.keywordText["snowstorm"])
 
                 adapter.debug("\tEnd of frozen_sentries_tooltips", caller=calframe[1][3])
             except Exception as e:
@@ -1928,6 +2280,9 @@ try:
 
 
         def giants_coffin(self):
+            """
+            Change Giant Skeleton Soldier and Giant Skeleton Archer to different enemies.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -1994,6 +2349,9 @@ try:
 
 
         def giants_coffin_tooltips(self):
+            """
+            Create tooltips for this encounter.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -2001,15 +2359,15 @@ try:
 
                 self.keyword0 = tk.Label(self.encounterFrame, image=self.onslaught, borderwidth=0, highlightthickness=0)
                 self.keyword0.place(x=146.5, y=201)
-                tooltip0 =  CreateToolTip(self.keyword0, self.keywordText["onslaught"])
+                CreateToolTip(self.keyword0, self.keywordText["onslaught"])
 
                 self.keyword1 = tk.Label(self.encounterFrame, image=self.trial, borderwidth=0, highlightthickness=0)
                 self.keyword1.place(x=145, y=217)
-                tooltip1 =  CreateToolTip(self.keyword1, self.keywordText["trial"])
+                CreateToolTip(self.keyword1, self.keywordText["trial"])
 
                 self.keyword2 = tk.Label(self.encounterFrame, image=self.timer, borderwidth=0, highlightthickness=0)
                 self.keyword2.place(x=146, y=231)
-                tooltip2 =  CreateToolTip(self.keyword2, self.keywordText["timer"])
+                CreateToolTip(self.keyword2, self.keywordText["timer"])
 
                 adapter.debug("\tEnd of giants_coffin_tooltips", caller=calframe[1][3])
             except Exception as e:
@@ -2018,6 +2376,9 @@ try:
 
 
         def gnashing_beaks(self):
+            """
+            Change Phalanx Hollows and Crow Demon to new enemies.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -2078,6 +2439,9 @@ try:
 
 
         def gnashing_beaks_tooltips(self):
+            """
+            Create tooltips for this encounter.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -2085,7 +2449,7 @@ try:
 
                 self.keyword0 = tk.Label(self.encounterFrame, image=self.trial, borderwidth=0, highlightthickness=0)
                 self.keyword0.place(x=146, y=196)
-                tooltip0 =  CreateToolTip(self.keyword0, self.keywordText["trial"])
+                CreateToolTip(self.keyword0, self.keywordText["trial"])
 
                 adapter.debug("\tEnd of gnashing_beaks_tooltips", caller=calframe[1][3])
             except Exception as e:
@@ -2094,6 +2458,9 @@ try:
 
 
         def in_deep_water(self):
+            """
+            Change Skeleton Archer to new enemy.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -2130,6 +2497,9 @@ try:
 
 
         def in_deep_water_tooltips(self):
+            """
+            Create tooltips for this encounter.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -2137,7 +2507,7 @@ try:
 
                 self.keyword0 = tk.Label(self.encounterFrame, image=self.timer, borderwidth=0, highlightthickness=0)
                 self.keyword0.place(x=148, y=196)
-                tooltip0 =  CreateToolTip(self.keyword0, self.keywordText["timer"])
+                CreateToolTip(self.keyword0, self.keywordText["timer"])
 
                 adapter.debug("\tEnd of in_deep_water_tooltips", caller=calframe[1][3])
             except Exception as e:
@@ -2146,6 +2516,9 @@ try:
 
 
         def inhospitable_ground_tooltips(self):
+            """
+            Create tooltips for this encounter.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -2153,7 +2526,7 @@ try:
 
                 self.keyword0 = tk.Label(self.encounterFrame, image=self.snowstorm, borderwidth=0, highlightthickness=0)
                 self.keyword0.place(x=148, y=197)
-                tooltip0 =  CreateToolTip(self.keyword0, self.keywordText["snowstorm"])
+                CreateToolTip(self.keyword0, self.keywordText["snowstorm"])
 
                 adapter.debug("\tEnd of inhospitable_ground_tooltips", caller=calframe[1][3])
             except Exception as e:
@@ -2162,6 +2535,9 @@ try:
 
 
         def lakeview_refuge(self):
+            """
+            Update trial Skeleton Beast to new enemy and references to Skeleton Beast and Skeleton Soldiers to new enemies.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -2242,6 +2618,9 @@ try:
 
 
         def lakeview_refuge_tooltips(self):
+            """
+            Create tooltips for this encounter.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -2249,15 +2628,15 @@ try:
 
                 self.keyword0 = tk.Label(self.encounterFrame, image=self.onslaught, borderwidth=0, highlightthickness=0)
                 self.keyword0.place(x=146.5, y=201)
-                tooltip0 =  CreateToolTip(self.keyword0, self.keywordText["onslaught"])
+                CreateToolTip(self.keyword0, self.keywordText["onslaught"])
 
                 self.keyword1 = tk.Label(self.encounterFrame, image=self.darkness, borderwidth=0, highlightthickness=0)
                 self.keyword1.place(x=199, y=201)
-                tooltip1 =  CreateToolTip(self.keyword1, self.keywordText["darkness"])
+                CreateToolTip(self.keyword1, self.keywordText["darkness"])
 
                 self.keyword2 = tk.Label(self.encounterFrame, image=self.trial, borderwidth=0, highlightthickness=0)
                 self.keyword2.place(x=146, y=216)
-                tooltip2 =  CreateToolTip(self.keyword2, self.keywordText["trial"])
+                CreateToolTip(self.keyword2, self.keywordText["trial"])
 
                 adapter.debug("\tEnd of lakeview_refuge_tooltips", caller=calframe[1][3])
             except Exception as e:
@@ -2266,6 +2645,9 @@ try:
 
 
         def last_rites(self):
+            """
+            Change Skeleton Soldiers to new enemies.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -2281,6 +2663,9 @@ try:
 
 
         def last_rites_tooltips(self):
+            """
+            Create tooltips for this encounter.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -2288,7 +2673,7 @@ try:
 
                 self.keyword0 = tk.Label(self.encounterFrame, image=self.timer, borderwidth=0, highlightthickness=0)
                 self.keyword0.place(x=149, y=197)
-                tooltip0 =  CreateToolTip(self.keyword0, self.keywordText["timer"])
+                CreateToolTip(self.keyword0, self.keywordText["timer"])
 
                 adapter.debug("\tEnd of last_rites", caller=calframe[1][3])
             except Exception as e:
@@ -2297,6 +2682,9 @@ try:
 
 
         def last_shred_of_light_tooltips(self):
+            """
+            Create tooltips for this encounter.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -2304,7 +2692,7 @@ try:
 
                 self.keyword0 = tk.Label(self.encounterFrame, image=self.darkness, borderwidth=0, highlightthickness=0)
                 self.keyword0.place(x=147, y=197.5)
-                tooltip0 =  CreateToolTip(self.keyword0, self.keywordText["darkness"])
+                CreateToolTip(self.keyword0, self.keywordText["darkness"])
 
                 adapter.debug("\tEnd of last_shred_of_light_tooltips", caller=calframe[1][3])
             except Exception as e:
@@ -2313,6 +2701,9 @@ try:
 
 
         def monstrous_maw(self):
+            """
+            Change Snow Rat references to new enemy.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -2331,6 +2722,9 @@ try:
 
 
         def no_safe_haven(self):
+            """
+            Change Engorged Zombie objective to new enemy.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -2346,6 +2740,9 @@ try:
 
 
         def no_safe_haven_tooltips(self):
+            """
+            Create tooltips for this encounter.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -2353,7 +2750,7 @@ try:
 
                 self.keyword0 = tk.Label(self.encounterFrame, image=self.poisonMist, borderwidth=0, highlightthickness=0)
                 self.keyword0.place(x=144, y=195)
-                tooltip0 =  CreateToolTip(self.keyword0, self.keywordText["poisonMist"])
+                CreateToolTip(self.keyword0, self.keywordText["poisonMist"])
 
                 adapter.debug("\tEnd of no_safe_haven_tooltips", caller=calframe[1][3])
             except Exception as e:
@@ -2362,6 +2759,9 @@ try:
 
 
         def painted_passage_tooltips(self):
+            """
+            Create tooltips for this encounter.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -2369,7 +2769,7 @@ try:
 
                 self.keyword0 = tk.Label(self.encounterFrame, image=self.snowstorm, borderwidth=0, highlightthickness=0)
                 self.keyword0.place(x=148, y=197)
-                tooltip0 =  CreateToolTip(self.keyword0, self.keywordText["snowstorm"])
+                CreateToolTip(self.keyword0, self.keywordText["snowstorm"])
 
                 adapter.debug("\tEnd of painted_passage_tooltips", caller=calframe[1][3])
             except Exception as e:
@@ -2378,6 +2778,9 @@ try:
 
 
         def pitch_black(self):
+            """
+            Change Necromancer objective to new (and possibly different from each other) enemies.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -2399,6 +2802,9 @@ try:
 
 
         def pitch_black_tooltips(self):
+            """
+            Create tooltips for this encounter.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -2406,7 +2812,7 @@ try:
 
                 self.keyword0 = tk.Label(self.encounterFrame, image=self.darkness, borderwidth=0, highlightthickness=0)
                 self.keyword0.place(x=147, y=197.5)
-                tooltip0 =  CreateToolTip(self.keyword0, self.keywordText["darkness"])
+                CreateToolTip(self.keyword0, self.keywordText["darkness"])
 
                 adapter.debug("\tEnd of pitch_black_tooltips", caller=calframe[1][3])
             except Exception as e:
@@ -2415,6 +2821,9 @@ try:
 
 
         def promised_respite_tooltips(self):
+            """
+            Create tooltips for this encounter.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -2422,7 +2831,7 @@ try:
 
                 self.keyword0 = tk.Label(self.encounterFrame, image=self.snowstorm, borderwidth=0, highlightthickness=0)
                 self.keyword0.place(x=148, y=197)
-                tooltip0 =  CreateToolTip(self.keyword0, self.keywordText["snowstorm"])
+                CreateToolTip(self.keyword0, self.keywordText["snowstorm"])
 
                 adapter.debug("\tEnd of promised_respite_tooltips", caller=calframe[1][3])
             except Exception as e:
@@ -2431,6 +2840,9 @@ try:
 
 
         def puppet_master(self):
+            """
+            Change Necromancer and Giant Skeleton Soldier to different enemies, specify Necromancer replacement starting health.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -2452,6 +2864,9 @@ try:
 
 
         def skeletal_spokes(self):
+            """
+            Update Bonewheel Skeletons to different enemy.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -2471,6 +2886,9 @@ try:
 
 
         def skeleton_overlord(self):
+            """
+            Update Giant Skeleton Soldier and Skeleton Soldier to different enemies.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -2513,6 +2931,9 @@ try:
 
 
         def skeleton_overlord_tooltips(self):
+            """
+            Create tooltips for this encounter.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -2520,7 +2941,7 @@ try:
 
                 self.keyword0 = tk.Label(self.encounterFrame, image=self.timer, borderwidth=0, highlightthickness=0)
                 self.keyword0.place(x=146, y=197)
-                tooltip0 =  CreateToolTip(self.keyword0, self.keywordText["timer"])
+                CreateToolTip(self.keyword0, self.keywordText["timer"])
 
                 adapter.debug("\tEnd of skeleton_overlord_tooltips", caller=calframe[1][3])
             except Exception as e:
@@ -2529,6 +2950,9 @@ try:
 
 
         def snowblind_tooltips(self):
+            """
+            Create tooltips for this encounter.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -2536,15 +2960,15 @@ try:
 
                 self.keyword0 = tk.Label(self.encounterFrame, image=self.snowstorm, borderwidth=0, highlightthickness=0)
                 self.keyword0.place(x=146.5, y=197)
-                tooltip0 =  CreateToolTip(self.keyword0, self.keywordText["snowstorm"])
+                CreateToolTip(self.keyword0, self.keywordText["snowstorm"])
 
                 self.keyword1 = tk.Label(self.encounterFrame, image=self.bitterCold, borderwidth=0, highlightthickness=0)
                 self.keyword1.place(x=146, y=215)
-                tooltip1 =  CreateToolTip(self.keyword1, self.keywordText["bitterCold"])
+                CreateToolTip(self.keyword1, self.keywordText["bitterCold"])
 
                 self.keyword2 = tk.Label(self.encounterFrame, image=self.hidden, borderwidth=0, highlightthickness=0)
                 self.keyword2.place(x=146, y=233)
-                tooltip2 =  CreateToolTip(self.keyword2, self.keywordText["hidden"])
+                CreateToolTip(self.keyword2, self.keywordText["hidden"])
 
                 adapter.debug("\tEnd of snowblind_tooltips", caller=calframe[1][3])
             except Exception as e:
@@ -2553,6 +2977,9 @@ try:
 
 
         def the_abandoned_chest(self):
+            """
+            Update Giant Skeleton Soldier and Giant Skeleton Archers to new enemies.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -2614,6 +3041,9 @@ try:
 
 
         def the_beast_from_the_depths(self):
+            """
+            Update Skeleton Beast to different enemy.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -2630,6 +3060,9 @@ try:
 
 
         def the_beast_from_the_depths_tooltips(self):
+            """
+            Create tooltips for this encounter.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -2637,7 +3070,7 @@ try:
 
                 self.keyword0 = tk.Label(self.encounterFrame, image=self.trial, borderwidth=0, highlightthickness=0)
                 self.keyword0.place(x=146, y=196)
-                tooltip0 =  CreateToolTip(self.keyword0, self.keywordText["trial"])
+                CreateToolTip(self.keyword0, self.keywordText["trial"])
 
                 adapter.debug("\tEnd of the_beast_from_the_depths_tooltips", caller=calframe[1][3])
             except Exception as e:
@@ -2646,6 +3079,9 @@ try:
 
 
         def the_first_bastion(self):
+            """
+            Update Snow Rat, Phalanx Hollow, and Engorged Zombie to different enemies.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -2726,6 +3162,9 @@ try:
 
 
         def the_first_bastion_tooltips(self):
+            """
+            Create tooltips for this encounter.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -2733,7 +3172,7 @@ try:
 
                 self.keyword0 = tk.Label(self.encounterFrame, image=self.trial, borderwidth=0, highlightthickness=0)
                 self.keyword0.place(x=146, y=201)
-                tooltip0 =  CreateToolTip(self.keyword0, self.keywordText["trial"])
+                CreateToolTip(self.keyword0, self.keywordText["trial"])
 
                 adapter.debug("\tEnd of the_first_bastion_tooltips", caller=calframe[1][3])
             except Exception as e:
@@ -2742,6 +3181,9 @@ try:
 
 
         def the_last_bastion(self):
+            """
+            Update Phalanx to different enemy and specify health, dodge, and damage.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -2762,6 +3204,9 @@ try:
 
 
         def the_last_bastion_tooltips(self):
+            """
+            Create tooltips for this encounter.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -2769,15 +3214,15 @@ try:
 
                 self.keyword0 = tk.Label(self.encounterFrame, image=self.snowstorm, borderwidth=0, highlightthickness=0)
                 self.keyword0.place(x=146.5, y=197)
-                tooltip0 =  CreateToolTip(self.keyword0, self.keywordText["snowstorm"])
+                CreateToolTip(self.keyword0, self.keywordText["snowstorm"])
 
                 self.keyword1 = tk.Label(self.encounterFrame, image=self.bitterCold, borderwidth=0, highlightthickness=0)
                 self.keyword1.place(x=146, y=215)
-                tooltip1 =  CreateToolTip(self.keyword1, self.keywordText["bitterCold"])
+                CreateToolTip(self.keyword1, self.keywordText["bitterCold"])
 
                 self.keyword2 = tk.Label(self.encounterFrame, image=self.trial, borderwidth=0, highlightthickness=0)
                 self.keyword2.place(x=146, y=233)
-                tooltip2 =  CreateToolTip(self.keyword2, self.keywordText["trial"])
+                CreateToolTip(self.keyword2, self.keywordText["trial"])
 
                 adapter.debug("\tEnd of the_last_bastion_tooltips", caller=calframe[1][3])
             except Exception as e:
@@ -2786,6 +3231,9 @@ try:
 
 
         def the_locked_grave(self):
+            """
+            Update Skeleton Beast to different enemy.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -2839,6 +3287,9 @@ try:
 
 
         def the_locked_grave_tooltips(self):
+            """
+            Create tooltips for this encounter.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -2846,7 +3297,7 @@ try:
 
                 self.keyword0 = tk.Label(self.encounterFrame, image=self.trial, borderwidth=0, highlightthickness=0)
                 self.keyword0.place(x=146, y=201)
-                tooltip0 =  CreateToolTip(self.keyword0, self.keywordText["trial"])
+                CreateToolTip(self.keyword0, self.keywordText["trial"])
 
                 adapter.debug("\tEnd of the_locked_grave_tooltips", caller=calframe[1][3])
             except Exception as e:
@@ -2855,6 +3306,9 @@ try:
 
 
         def the_mass_grave_tooltips(self):
+            """
+            Create tooltips for this encounter.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -2862,19 +3316,19 @@ try:
 
                 self.keyword0 = tk.Label(self.encounterFrame, image=self.onslaught, borderwidth=0, highlightthickness=0)
                 self.keyword0.place(x=147, y=197.5)
-                tooltip0 =  CreateToolTip(self.keyword0, self.keywordText["onslaught"])
+                CreateToolTip(self.keyword0, self.keywordText["onslaught"])
 
                 self.keyword1 = tk.Label(self.encounterFrame, image=self.timer, borderwidth=0, highlightthickness=0)
                 self.keyword1.place(x=147, y=215)
-                tooltip1 =  CreateToolTip(self.keyword1, self.keywordText["timer"])
+                CreateToolTip(self.keyword1, self.keywordText["timer"])
 
                 self.keyword2 = tk.Label(self.encounterFrame, image=self.timer, borderwidth=0, highlightthickness=0)
                 self.keyword2.place(x=147, y=227)
-                tooltip2 =  CreateToolTip(self.keyword2, self.keywordText["timer"])
+                CreateToolTip(self.keyword2, self.keywordText["timer"])
 
                 self.keyword3 = tk.Label(self.encounterFrame, image=self.timer, borderwidth=0, highlightthickness=0)
                 self.keyword3.place(x=147, y=239)
-                tooltip3 =  CreateToolTip(self.keyword3, self.keywordText["timer"])
+                CreateToolTip(self.keyword3, self.keywordText["timer"])
 
                 adapter.debug("\tEnd of the_mass_grave_tooltips", caller=calframe[1][3])
             except Exception as e:
@@ -2883,6 +3337,9 @@ try:
 
 
         def the_skeleton_ball(self):
+            """
+            Update Necromancers to different enemy.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -2899,6 +3356,9 @@ try:
 
 
         def trecherous_tower(self):
+            """
+            Choose enemies for Eerie keyword.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -2927,6 +3387,9 @@ try:
 
 
         def trecherous_tower_tooltips(self):
+            """
+            Create tooltips for this encounter.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -2934,15 +3397,15 @@ try:
 
                 self.keyword0 = tk.Label(self.encounterFrame, image=self.snowstorm, borderwidth=0, highlightthickness=0)
                 self.keyword0.place(x=148, y=197)
-                tooltip0 =  CreateToolTip(self.keyword0, self.keywordText["snowstorm"])
+                CreateToolTip(self.keyword0, self.keywordText["snowstorm"])
 
                 self.keyword1 = tk.Label(self.encounterFrame, image=self.bitterCold, borderwidth=0, highlightthickness=0)
                 self.keyword1.place(x=148, y=214)
-                tooltip1 =  CreateToolTip(self.keyword1, self.keywordText["bitterCold"])
+                CreateToolTip(self.keyword1, self.keywordText["bitterCold"])
 
                 self.keyword2 = tk.Label(self.encounterFrame, image=self.eerieTooltip, borderwidth=0, highlightthickness=0)
                 self.keyword2.place(x=146, y=232)
-                tooltip2 =  CreateToolTip(self.keyword2, self.keywordText["eerieTooltip"])
+                CreateToolTip(self.keyword2, self.keywordText["eerieTooltip"])
 
                 adapter.debug("\tEnd of trecherous_tower_tooltips", caller=calframe[1][3])
             except Exception as e:
@@ -2951,6 +3414,9 @@ try:
 
 
         def unseen_scurrying_tooltips(self):
+            """
+            Create tooltips for this encounter.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -2958,7 +3424,7 @@ try:
 
                 self.keyword0 = tk.Label(self.encounterFrame, image=self.hidden, borderwidth=0, highlightthickness=0)
                 self.keyword0.place(x=146.5, y=198)
-                tooltip0 =  CreateToolTip(self.keyword0, self.keywordText["hidden"])
+                CreateToolTip(self.keyword0, self.keywordText["hidden"])
 
                 adapter.debug("\tEnd of unseen_scurrying_tooltips", caller=calframe[1][3])
             except Exception as e:
@@ -2967,6 +3433,9 @@ try:
 
 
         def velkas_chosen(self):
+            """
+            Update Crow Demon to different enemy.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
