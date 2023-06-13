@@ -16,17 +16,22 @@ The idea behind this program is to provide backwards and forwards compatibility 
 
 Yes, as time allows.  The lion's share of work is done, but new enemies will have to be analyzed and the new encounter design tends to need some custom code to do correctly.
 
-### Are you going to support the fan-made content?
+### Are you going to support fan-made content?
 
-Yes, as time allows.  However, I don't really have time to scour the internet to find it.  If you know of some great fan-made content you want to see added, [open an issue!](https://github.com/DanDuhon/DSBG-Shuffle/issues)
+Yes, as time allows.  However, I don't really have time to scour the internet to find it.  If you know of some great fan-made content you want to see added, [please open an issue](https://github.com/DanDuhon/DSBG-Shuffle/issues) and I'll work on it!
 
 ### Can we add custom enemies/encounters ourselves?
 
 No (unless you branch the code and do it yourself), and I don't intend to support that.  Calculating enemy strength and generating enemy combinations for an encounter can take hours depending on your machine and the size of the encounter.
 
+### I found a bug!
+
+Great!  If you can, reproduce it then find the log.txt file in the same folder as the .exe file.  Then [please open an issue](https://github.com/DanDuhon/DSBG-Shuffle/issues) and attach or paste in the log so I can investigate.
+
 ### Are you going to create a version for Mac/Linux/Android/iPhone?
 
-I'd like to, but I don't have any of experience with that sort of thing (this project is my only experience making a Windows app and I'm not even going to take much credit for that, thanks to auto-py-to-exe).  So.. eventually?  Feel free to contribute!  A workaround for Mac/Linux is if you have Python 3 installed, you can just run the enemy_swapper.py script and that should work.  You may have to install the Pillow module.
+There's a workaround for Mac/Linux.  Install [Python 3](https://www.python.org/downloads/) then [install Pillow using pip](https://pillow.readthedocs.io/en/stable/installation.html#basic-installation).  After that, you can just run the enemy_swapper.py script and that should work exactly the same.  As far as I know the .exe file is just a fancy wrapper that allows you to skip those steps.  Under the covers it really just runs the enemy_swapper.py script.
+As for mobile, I'd like to, but I don't have any of experience with that sort of thing (this project is my only experience making a Windows app and I'm not even going to take much credit for that, thanks to auto-py-to-exe).  I'm pretty sure I'd have to learn a new language or two (Javascript/Kotlin for Android and Swift for iOS?) and basically rewrite this thing from scratch (twice).  So.. eventually, maybe?  Feel free to contribute or reach out if you'd like to collaborate!
 
 ### Why are some encounters missing from the list?
 
@@ -49,4 +54,5 @@ Damage divided by toughness is the overall enemy strength.  This is what is used
 ### Why isn't the code for the above answer in this repo?
 
 Because it's here: [DSBG-Encounters](https://github.com/DanDuhon/DSBG-Encounters)
+None of that code actually runs with this app (this app essentially runs the output, which I only need to generate once), so I decided to keep them separate.
 If you want more details about how everything works, feel free to read through the code there!
