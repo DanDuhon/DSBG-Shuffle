@@ -241,7 +241,7 @@ try:
                 self.randomEncounters["new"]["button"].grid(row=1, column=0, padx=5, pady=10, sticky="nsew")
                 
                 self.errLabel = tk.Label(self.top, text="")
-                self.errLabel.grid(column=0, row=2, padx=5)
+                self.errLabel.grid(column=0, row=2, padx=5, columnspan=4)
 
                 self.settingsButtonsFrame = ttk.Frame(top, padding=(0, 0, 0, 10))
                 self.settingsButtonsFrame.grid(row=3, column=0, padx=15, pady=(10, 0), sticky="w", columnspan=2)
@@ -271,6 +271,11 @@ try:
 
                 if all([self.sets[s]["value"].get() == 0 for s in coreSets]):
                     self.errLabel.config(text="You need to select at least one Core Set!")
+                    adapter.debug("End of quit_with_save", caller=calframe[1][3])
+                    return
+
+                if all([self.randomEncounters[i]["value"].get() == 0 for i in self.randomEncounters]):
+                    self.errLabel.config(text="You need to check at least one box in the \"Random Encounters Shown\" section!")
                     adapter.debug("End of quit_with_save", caller=calframe[1][3])
                     return
 
