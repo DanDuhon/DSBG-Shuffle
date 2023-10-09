@@ -62,8 +62,7 @@ try:
 
     try:
         baseFolder = path.dirname(__file__)
-        font = ImageFont.truetype(baseFolder + "\\Goudy OldStyle.otf", 13)
-        fontTreasure = ImageFont.truetype(baseFolder + "\\Goudy Old Style Bold.ttf", 13)
+        font = ImageFont.truetype(baseFolder + "\\Goudy Old Style Bold.ttf", 13)
         enemyImages = {}
         settingsChanged = False
 
@@ -2059,10 +2058,10 @@ try:
                     lastSpaceIdx = newTreasure.rfind(" ")
                     newTreasure1 = newTreasure[:lastSpaceIdx]
                     newTreasure2 = newTreasure[lastSpaceIdx+1:]
-                    imageWithText.text((21, 232), newTreasure1, "black", fontTreasure)
-                    imageWithText.text((21, 243), newTreasure2, "black", fontTreasure)
+                    imageWithText.text((21, 232), newTreasure1, "black", font)
+                    imageWithText.text((21, 243), newTreasure2, "black", font)
                 else:
-                    imageWithText.text((21, 232), newTreasure, "black", fontTreasure)
+                    imageWithText.text((21, 232), newTreasure, "black", font)
 
                 adapter.debug("\tEnd of corvian_host", caller=calframe[1][3])
             except Exception as e:
@@ -2085,10 +2084,10 @@ try:
                     lastSpaceIdx = newTreasure.rfind(" ")
                     newTreasure1 = newTreasure[:lastSpaceIdx]
                     newTreasure2 = newTreasure[lastSpaceIdx+1:]
-                    imageWithText.text((21, 232), newTreasure1, "black", fontTreasure)
-                    imageWithText.text((21, 243), newTreasure2, "black", fontTreasure)
+                    imageWithText.text((21, 232), newTreasure1, "black", font)
+                    imageWithText.text((21, 243), newTreasure2, "black", font)
                 else:
-                    imageWithText.text((21, 232), newTreasure, "black", fontTreasure)
+                    imageWithText.text((21, 232), newTreasure, "black", font)
 
                 adapter.debug("\tEnd of dark_resurrection", caller=calframe[1][3])
             except Exception as e:
@@ -2157,10 +2156,10 @@ try:
                     lastSpaceIdx = newTreasure.rfind(" ")
                     newTreasure1 = newTreasure[:lastSpaceIdx]
                     newTreasure2 = newTreasure[lastSpaceIdx+1:]
-                    imageWithText.text((21, 283), newTreasure1, "black", fontTreasure)
-                    imageWithText.text((21, 294), newTreasure2, "black", fontTreasure)
+                    imageWithText.text((21, 283), newTreasure1, "black", font)
+                    imageWithText.text((21, 294), newTreasure2, "black", font)
                 else:
-                    imageWithText.text((21, 283), newTreasure, "black", fontTreasure)
+                    imageWithText.text((21, 283), newTreasure, "black", font)
 
                 adapter.debug("\tEnd of distant_tower", caller=calframe[1][3])
             except Exception as e:
@@ -2252,10 +2251,10 @@ try:
                     lastSpaceIdx = newTreasure.rfind(" ")
                     newTreasure1 = newTreasure[:lastSpaceIdx]
                     newTreasure2 = newTreasure[lastSpaceIdx+1:]
-                    imageWithText.text((21, 258), newTreasure1, "black", fontTreasure)
-                    imageWithText.text((21, 269), newTreasure2, "black", fontTreasure)
+                    imageWithText.text((21, 258), newTreasure1, "black", font)
+                    imageWithText.text((21, 269), newTreasure2, "black", font)
                 else:
-                    imageWithText.text((21, 258), newTreasure, "black", fontTreasure)
+                    imageWithText.text((21, 258), newTreasure, "black", font)
 
                 adapter.debug("\tEnd of frozen_revolutions", caller=calframe[1][3])
             except Exception as e:
@@ -2329,10 +2328,10 @@ try:
                     lastSpaceIdx = newTreasure.rfind(" ")
                     newTreasure1 = newTreasure[:lastSpaceIdx]
                     newTreasure2 = newTreasure[lastSpaceIdx+1:]
-                    imageWithText.text((21, 258), newTreasure1, "black", fontTreasure)
-                    imageWithText.text((21, 269), newTreasure2, "black", fontTreasure)
+                    imageWithText.text((21, 258), newTreasure1, "black", font)
+                    imageWithText.text((21, 269), newTreasure2, "black", font)
                 else:
-                    imageWithText.text((21, 258), newTreasure, "black", fontTreasure)
+                    imageWithText.text((21, 258), newTreasure, "black", font)
 
                 adapter.debug("\tEnd of giants_coffin", caller=calframe[1][3])
             except Exception as e:
@@ -2414,10 +2413,10 @@ try:
                     lastSpaceIdx = newTreasure.rfind(" ")
                     newTreasure1 = newTreasure[:lastSpaceIdx]
                     newTreasure2 = newTreasure[lastSpaceIdx+1:]
-                    imageWithText.text((21, 232), newTreasure1, "black", fontTreasure)
-                    imageWithText.text((21, 243), newTreasure2, "black", fontTreasure)
+                    imageWithText.text((21, 232), newTreasure1, "black", font)
+                    imageWithText.text((21, 243), newTreasure2, "black", font)
                 else:
-                    imageWithText.text((21, 232), newTreasure, "black", fontTreasure)
+                    imageWithText.text((21, 232), newTreasure, "black", font)
 
                 adapter.debug("\tEnd of grave_matters", caller=calframe[1][3])
             except Exception as e:
@@ -2462,10 +2461,10 @@ try:
                     lastSpaceIdx = newTreasure.rfind(" ")
                     newTreasure1 = newTreasure[:lastSpaceIdx]
                     newTreasure2 = newTreasure[lastSpaceIdx+1:]
-                    imageWithText.text((21, 232), newTreasure1, "black", fontTreasure)
-                    imageWithText.text((21, 243), newTreasure2, "black", fontTreasure)
+                    imageWithText.text((21, 232), newTreasure1, "black", font)
+                    imageWithText.text((21, 243), newTreasure2, "black", font)
                 else:
-                    imageWithText.text((21, 232), newTreasure, "black", fontTreasure)
+                    imageWithText.text((21, 232), newTreasure, "black", font)
 
                 adapter.debug("\tEnd of in_deep_water", caller=calframe[1][3])
             except Exception as e:
@@ -2488,10 +2487,10 @@ try:
                     lastSpaceIdx = newTreasure.rfind(" ")
                     newTreasure1 = newTreasure[:lastSpaceIdx]
                     newTreasure2 = newTreasure[lastSpaceIdx+1:]
-                    imageWithText.text((21, 232), newTreasure1, "black", fontTreasure)
-                    imageWithText.text((21, 243), newTreasure2, "black", fontTreasure)
+                    imageWithText.text((21, 232), newTreasure1, "black", font)
+                    imageWithText.text((21, 243), newTreasure2, "black", font)
                 else:
-                    imageWithText.text((21, 232), newTreasure, "black", fontTreasure)
+                    imageWithText.text((21, 232), newTreasure, "black", font)
 
                 adapter.debug("\tEnd of inhospitable_ground", caller=calframe[1][3])
             except Exception as e:
@@ -2598,10 +2597,10 @@ try:
                     lastSpaceIdx = newTreasure.rfind(" ")
                     newTreasure1 = newTreasure[:lastSpaceIdx]
                     newTreasure2 = newTreasure[lastSpaceIdx+1:]
-                    imageWithText.text((21, 232), newTreasure1, "black", fontTreasure)
-                    imageWithText.text((21, 243), newTreasure2, "black", fontTreasure)
+                    imageWithText.text((21, 232), newTreasure1, "black", font)
+                    imageWithText.text((21, 243), newTreasure2, "black", font)
                 else:
-                    imageWithText.text((21, 232), newTreasure, "black", fontTreasure)
+                    imageWithText.text((21, 232), newTreasure, "black", font)
 
                 adapter.debug("\tEnd of monstrous_maw", caller=calframe[1][3])
             except Exception as e:
@@ -2628,10 +2627,10 @@ try:
                     lastSpaceIdx = newTreasure.rfind(" ")
                     newTreasure1 = newTreasure[:lastSpaceIdx]
                     newTreasure2 = newTreasure[lastSpaceIdx+1:]
-                    imageWithText.text((21, 232), newTreasure1, "black", fontTreasure)
-                    imageWithText.text((21, 243), newTreasure2, "black", fontTreasure)
+                    imageWithText.text((21, 232), newTreasure1, "black", font)
+                    imageWithText.text((21, 243), newTreasure2, "black", font)
                 else:
-                    imageWithText.text((21, 232), newTreasure, "black", fontTreasure)
+                    imageWithText.text((21, 232), newTreasure, "black", font)
 
                 adapter.debug("\tEnd of no_safe_haven", caller=calframe[1][3])
             except Exception as e:
@@ -2654,10 +2653,10 @@ try:
                     lastSpaceIdx = newTreasure.rfind(" ")
                     newTreasure1 = newTreasure[:lastSpaceIdx]
                     newTreasure2 = newTreasure[lastSpaceIdx+1:]
-                    imageWithText.text((21, 232), newTreasure1, "black", fontTreasure)
-                    imageWithText.text((21, 243), newTreasure2, "black", fontTreasure)
+                    imageWithText.text((21, 232), newTreasure1, "black", font)
+                    imageWithText.text((21, 243), newTreasure2, "black", font)
                 else:
-                    imageWithText.text((21, 232), newTreasure, "black", fontTreasure)
+                    imageWithText.text((21, 232), newTreasure, "black", font)
 
                 adapter.debug("\tEnd of painted_passage", caller=calframe[1][3])
             except Exception as e:
@@ -2711,10 +2710,10 @@ try:
                     lastSpaceIdx = newTreasure.rfind(" ")
                     newTreasure1 = newTreasure[:lastSpaceIdx]
                     newTreasure2 = newTreasure[lastSpaceIdx+1:]
-                    imageWithText.text((21, 232), newTreasure1, "black", fontTreasure)
-                    imageWithText.text((21, 243), newTreasure2, "black", fontTreasure)
+                    imageWithText.text((21, 232), newTreasure1, "black", font)
+                    imageWithText.text((21, 243), newTreasure2, "black", font)
                 else:
-                    imageWithText.text((21, 232), newTreasure, "black", fontTreasure)
+                    imageWithText.text((21, 232), newTreasure, "black", font)
 
                 adapter.debug("\tEnd of puppet_master", caller=calframe[1][3])
             except Exception as e:
@@ -2737,10 +2736,10 @@ try:
                     lastSpaceIdx = newTreasure.rfind(" ")
                     newTreasure1 = newTreasure[:lastSpaceIdx]
                     newTreasure2 = newTreasure[lastSpaceIdx+1:]
-                    imageWithText.text((21, 232), newTreasure1, "black", fontTreasure)
-                    imageWithText.text((21, 243), newTreasure2, "black", fontTreasure)
+                    imageWithText.text((21, 232), newTreasure1, "black", font)
+                    imageWithText.text((21, 243), newTreasure2, "black", font)
                 else:
-                    imageWithText.text((21, 232), newTreasure, "black", fontTreasure)
+                    imageWithText.text((21, 232), newTreasure, "black", font)
 
                 adapter.debug("\tEnd of rain_of_filth", caller=calframe[1][3])
             except Exception as e:
@@ -2875,10 +2874,10 @@ try:
                     lastSpaceIdx = newTreasure.rfind(" ")
                     newTreasure1 = newTreasure[:lastSpaceIdx]
                     newTreasure2 = newTreasure[lastSpaceIdx+1:]
-                    imageWithText.text((21, 232), newTreasure1, "black", fontTreasure)
-                    imageWithText.text((21, 243), newTreasure2, "black", fontTreasure)
+                    imageWithText.text((21, 232), newTreasure1, "black", font)
+                    imageWithText.text((21, 243), newTreasure2, "black", font)
                 else:
-                    imageWithText.text((21, 232), newTreasure, "black", fontTreasure)
+                    imageWithText.text((21, 232), newTreasure, "black", font)
 
                 adapter.debug("\tEnd of the_abandoned_chest", caller=calframe[1][3])
             except Exception as e:
@@ -2906,10 +2905,10 @@ try:
                     lastSpaceIdx = newTreasure.rfind(" ")
                     newTreasure1 = newTreasure[:lastSpaceIdx]
                     newTreasure2 = newTreasure[lastSpaceIdx+1:]
-                    imageWithText.text((21, 258), newTreasure1, "black", fontTreasure)
-                    imageWithText.text((21, 269), newTreasure2, "black", fontTreasure)
+                    imageWithText.text((21, 258), newTreasure1, "black", font)
+                    imageWithText.text((21, 269), newTreasure2, "black", font)
                 else:
-                    imageWithText.text((21, 258), newTreasure, "black", fontTreasure)
+                    imageWithText.text((21, 258), newTreasure, "black", font)
 
                 adapter.debug("\tEnd of the_beast_from_the_depths", caller=calframe[1][3])
             except Exception as e:
@@ -3071,10 +3070,10 @@ try:
                         lastSpaceIdx = newTreasure.rfind(" ")
                     newTreasure1 = newTreasure[:lastSpaceIdx]
                     newTreasure2 = newTreasure[lastSpaceIdx+1:]
-                    imageWithText.text((56, 258), newTreasure1, "black", fontTreasure)
-                    imageWithText.text((21, 270), newTreasure2, "black", fontTreasure)
+                    imageWithText.text((56, 258), newTreasure1, "black", font)
+                    imageWithText.text((21, 270), newTreasure2, "black", font)
                 else:
-                    imageWithText.text((21, 270), newTreasure, "black", fontTreasure)
+                    imageWithText.text((21, 270), newTreasure, "black", font)
 
                 adapter.debug("\tEnd of the_locked_grave", caller=calframe[1][3])
             except Exception as e:
@@ -3104,10 +3103,10 @@ try:
                     lastSpaceIdx = newTreasure.rfind(" ")
                     newTreasure1 = newTreasure[:lastSpaceIdx]
                     newTreasure2 = newTreasure[lastSpaceIdx+1:]
-                    imageWithText.text((21, 232), newTreasure1, "black", fontTreasure)
-                    imageWithText.text((21, 243), newTreasure2, "black", fontTreasure)
+                    imageWithText.text((21, 232), newTreasure1, "black", font)
+                    imageWithText.text((21, 243), newTreasure2, "black", font)
                 else:
-                    imageWithText.text((21, 232), newTreasure, "black", fontTreasure)
+                    imageWithText.text((21, 232), newTreasure, "black", font)
 
                 adapter.debug("\tEnd of the_skeleton_ball", caller=calframe[1][3])
             except Exception as e:
@@ -3160,10 +3159,10 @@ try:
                     lastSpaceIdx = newTreasure.rfind(" ")
                     newTreasure1 = newTreasure[:lastSpaceIdx]
                     newTreasure2 = newTreasure[lastSpaceIdx+1:]
-                    imageWithText.text((21, 232), newTreasure1, "black", fontTreasure)
-                    imageWithText.text((21, 243), newTreasure2, "black", fontTreasure)
+                    imageWithText.text((21, 232), newTreasure1, "black", font)
+                    imageWithText.text((21, 243), newTreasure2, "black", font)
                 else:
-                    imageWithText.text((21, 232), newTreasure, "black", fontTreasure)
+                    imageWithText.text((21, 232), newTreasure, "black", font)
 
                 adapter.debug("\tEnd of unseen_scurrying", caller=calframe[1][3])
             except Exception as e:
@@ -3186,10 +3185,10 @@ try:
                     lastSpaceIdx = newTreasure.rfind(" ")
                     newTreasure1 = newTreasure[:lastSpaceIdx]
                     newTreasure2 = newTreasure[lastSpaceIdx+1:]
-                    imageWithText.text((21, 232), newTreasure1, "black", fontTreasure)
-                    imageWithText.text((21, 243), newTreasure2, "black", fontTreasure)
+                    imageWithText.text((21, 232), newTreasure1, "black", font)
+                    imageWithText.text((21, 243), newTreasure2, "black", font)
                 else:
-                    imageWithText.text((21, 232), newTreasure, "black", fontTreasure)
+                    imageWithText.text((21, 232), newTreasure, "black", font)
 
                 adapter.debug("\tEnd of urns_of_the_fallen", caller=calframe[1][3])
             except Exception as e:
@@ -3218,10 +3217,10 @@ try:
                     lastSpaceIdx = newTreasure.rfind(" ")
                     newTreasure1 = newTreasure[:lastSpaceIdx]
                     newTreasure2 = newTreasure[lastSpaceIdx+1:]
-                    imageWithText.text((21, 232), newTreasure1, "black", fontTreasure)
-                    imageWithText.text((21, 243), newTreasure2, "black", fontTreasure)
+                    imageWithText.text((21, 232), newTreasure1, "black", font)
+                    imageWithText.text((21, 243), newTreasure2, "black", font)
                 else:
-                    imageWithText.text((21, 232), newTreasure, "black", fontTreasure)
+                    imageWithText.text((21, 232), newTreasure, "black", font)
 
                 adapter.debug("\tEnd of velkas_chosen", caller=calframe[1][3])
             except Exception as e:
