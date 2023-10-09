@@ -1,3 +1,6 @@
 venv
 log.txt
 __pycache__
+DSBG-Shuffle.spec
+build
+dist
