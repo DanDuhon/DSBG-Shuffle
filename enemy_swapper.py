@@ -2205,20 +2205,20 @@ try:
                 text1 = "Increase       "
                 if fourTarget:
                     image1 = allEnemies[fourTarget[0]]["image text"]
-                    self.create_tooltip(image=image1, text=self.tooltipText[fourTarget[0]], x=190, y=246)
+                    self.create_tooltip(image=image1, text=self.tooltipText[fourTarget[0]], x=190, y=247)
                 else:
                     image1 = allEnemies[targets[0]]["image text"]
                     image2 = allEnemies[targets[1]]["image text"]
-                    self.create_tooltip(image=image1, text=self.tooltipText[targets[0]], x=190, y=246)
-                    self.create_tooltip(image=image2, text=self.tooltipText[targets[1]], x=233, y=246)
+                    self.create_tooltip(image=image1, text=self.tooltipText[targets[0]], x=190, y=247)
+                    self.create_tooltip(image=image2, text=self.tooltipText[targets[1]], x=233, y=247)
                     text1 += " and       "
                 text1 += "block and resistance"
                 text2 = "values by 1. Once these enemies have been"
                 text3 = "killed, spawn the       on      , on tile three."
                 image3 = allEnemies[spawn]["image text"]
-                self.create_tooltip(image=image3, text=self.tooltipText[spawn], x=235, y=272)
-                self.create_tooltip(image=image3, text=self.tooltipText[spawn], x=65, y=147)
-                self.encounterImage.paste(im=self.enemyNode2, box=(270, 272), mask=self.enemyNode2)
+                self.create_tooltip(image=image3, text=self.tooltipText[spawn], x=235, y=274)
+                self.create_tooltip(image=image3, text=self.tooltipText[spawn], x=65, y=149)
+                self.encounterImage.paste(im=self.enemyNode2, box=(270, 274), mask=self.enemyNode2)
                 imageWithText.text((140, 246), text1, "black", font)
                 imageWithText.text((140, 259), text2, "black", font)
                 imageWithText.text((140, 273), text3, "black", font)

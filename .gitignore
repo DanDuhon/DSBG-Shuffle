@@ -4,3 +4,4 @@ __pycache__
 DSBG-Shuffle.spec
 build
 dist
+install_script.iss
