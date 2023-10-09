@@ -1,13 +1,13 @@
 {
 	"A Trusty Ally": {
 		"name": "A Trusty Ally",
-		"expansion": "The Tomb of Giants",
+		"expansion": "Tomb of Giants",
 		"level": 3,
 		"tiles": {
 			"1": [
-				26,
+				27,
 				29,
-				26,
+				27,
 				12
 			],
 			"2": [
@@ -19,7 +19,7 @@
 	},
 	"Abandoned and Forgotten": {
 		"name": "Abandoned and Forgotten",
-		"expansion": "The Painted World of Ariamis",
+		"expansion": "Painted World of Ariamis",
 		"level": 2,
 		"tiles": {
 			"1": [],
@@ -28,7 +28,7 @@
 	},
 	"Abandoned Storeroom": {
 		"name": "Abandoned Storeroom",
-		"expansion": "The Tomb of Giants",
+		"expansion": "Tomb of Giants",
 		"level": 1,
 		"tiles": {
 			"1": [
@@ -52,7 +52,7 @@
 	},
 	"Altar of Bones": {
 		"name": "Altar of Bones",
-		"expansion": "The Tomb of Giants",
+		"expansion": "Tomb of Giants",
 		"level": 2,
 		"tiles": {
 			"1": [
@@ -61,7 +61,7 @@
 			],
 			"2": [
 				29,
-				26,
+				27,
 				12
 			]
 		}
@@ -214,12 +214,12 @@
 	},
 	"Bridge Too Far": {
 		"name": "Bridge Too Far",
-		"expansion": "The Tomb of Giants",
+		"expansion": "Tomb of Giants",
 		"level": 1,
 		"tiles": {
 			"1": [
 				29,
-				26,
+				27,
 				29
 			]
 		}
@@ -249,7 +249,7 @@
 	},
 	"Brume Tower": {
 		"name": "Brume Tower",
-		"expansion": "Executioner Chariot",
+		"expansion": "The Executioner's Chariot",
 		"level": 4,
 		"tiles": {
 			"1": [
@@ -354,7 +354,7 @@
 	},
 	"Central Plaza": {
 		"name": "Central Plaza",
-		"expansion": "The Painted World of Ariamis",
+		"expansion": "Painted World of Ariamis",
 		"level": 3,
 		"tiles": {
 			"1": [
@@ -388,7 +388,7 @@
 	},
 	"Cloak and Feathers": {
 		"name": "Cloak and Feathers",
-		"expansion": "The Painted World of Ariamis",
+		"expansion": "Painted World of Ariamis",
 		"level": 1,
 		"tiles": {
 			"1": [
@@ -398,7 +398,7 @@
 	},
 	"Cold Snap": {
 		"name": "Cold Snap",
-		"expansion": "The Painted World of Ariamis",
+		"expansion": "Painted World of Ariamis",
 		"level": 2,
 		"tiles": {
 			"1": [
@@ -427,7 +427,7 @@
 	},
 	"Corrupted Crypt": {
 		"name": "Corrupted Crypt",
-		"expansion": "Executioner Chariot",
+		"expansion": "The Executioner's Chariot",
 		"level": 3,
 		"tiles": {
 			"1": [
@@ -440,7 +440,7 @@
 	},
 	"Corrupted Hovel": {
 		"name": "Corrupted Hovel",
-		"expansion": "The Painted World of Ariamis",
+		"expansion": "Painted World of Ariamis",
 		"level": 2,
 		"tiles": {
 			"1": [
@@ -453,7 +453,7 @@
 	},
 	"Corvian Host": {
 		"name": "Corvian Host",
-		"expansion": "The Painted World of Ariamis",
+		"expansion": "Painted World of Ariamis",
 		"level": 3,
 		"tiles": {
 			"1": [
@@ -516,7 +516,7 @@
 	},
 	"Dark Resurrection": {
 		"name": "Dark Resurrection",
-		"expansion": "The Tomb of Giants",
+		"expansion": "Tomb of Giants",
 		"level": 1,
 		"tiles": {
 			"1": [
@@ -559,11 +559,11 @@
 	},
 	"Death's Precipice": {
 		"name": "Death's Precipice",
-		"expansion": "The Tomb of Giants",
+		"expansion": "Tomb of Giants",
 		"level": 3,
 		"tiles": {
 			"1": [
-				26,
+				27,
 				29,
 				29
 			],
@@ -580,7 +580,7 @@
 	},
 	"Deathly Freeze": {
 		"name": "Deathly Freeze",
-		"expansion": "The Painted World of Ariamis",
+		"expansion": "Painted World of Ariamis",
 		"level": 3,
 		"tiles": {
 			"1": [
@@ -598,7 +598,7 @@
 	},
 	"Deathly Magic": {
 		"name": "Deathly Magic",
-		"expansion": "The Tomb of Giants",
+		"expansion": "Tomb of Giants",
 		"level": 1,
 		"tiles": {
 			"1": [
@@ -656,7 +656,7 @@
 	},
 	"Desolate Cemetery": {
 		"name": "Desolate Cemetery",
-		"expansion": "Executioner Chariot",
+		"expansion": "The Executioner's Chariot",
 		"level": 3,
 		"tiles": {
 			"1": [
@@ -696,7 +696,7 @@
 	},
 	"Distant Tower": {
 		"name": "Distant Tower",
-		"expansion": "The Painted World of Ariamis",
+		"expansion": "Painted World of Ariamis",
 		"level": 2,
 		"tiles": {
 			"1": [
@@ -734,7 +734,7 @@
 	},
 	"Draconic Decay": {
 		"name": "Draconic Decay",
-		"expansion": "The Painted World of Ariamis",
+		"expansion": "Painted World of Ariamis",
 		"level": 3,
 		"tiles": {
 			"1": [
@@ -800,7 +800,7 @@
 	},
 	"Eye of the Storm": {
 		"name": "Eye of the Storm",
-		"expansion": "The Painted World of Ariamis",
+		"expansion": "Painted World of Ariamis",
 		"level": 3,
 		"tiles": {
 			"1": [
@@ -817,7 +817,7 @@
 	},
 	"Far From the Sun": {
 		"name": "Far From the Sun",
-		"expansion": "The Tomb of Giants",
+		"expansion": "Tomb of Giants",
 		"level": 2,
 		"tiles": {
 			"1": [
@@ -914,7 +914,7 @@
 	},
 	"Frozen Sentries": {
 		"name": "Frozen Sentries",
-		"expansion": "The Painted World of Ariamis",
+		"expansion": "Painted World of Ariamis",
 		"level": 1,
 		"tiles": {
 			"1": [
@@ -925,7 +925,7 @@
 	},
 	"Frozen Revolutions": {
 		"name": "Frozen Revolutions",
-		"expansion": "The Painted World of Ariamis",
+		"expansion": "Painted World of Ariamis",
 		"level": 3,
 		"tiles": {
 			"1": [
@@ -973,7 +973,7 @@
 	},
 	"Gate of Peril": {
 		"name": "Gate of Peril",
-		"expansion": "Executioner Chariot",
+		"expansion": "The Executioner's Chariot",
 		"level": 4,
 		"tiles": {
 			"1": [
@@ -1001,7 +1001,7 @@
 	},
 	"Giant's Coffin": {
 		"name": "Giant's Coffin",
-		"expansion": "The Tomb of Giants",
+		"expansion": "Tomb of Giants",
 		"level": 3,
 		"tiles": {
 			"1": [
@@ -1030,7 +1030,7 @@
 	},
 	"Gnashing Beaks": {
 		"name": "Gnashing Beaks",
-		"expansion": "The Painted World of Ariamis",
+		"expansion": "Painted World of Ariamis",
 		"level": 2,
 		"tiles": {
 			"1": [
@@ -1061,14 +1061,14 @@
 	},
 	"Grave Matters": {
 		"name": "Grave Matters",
-		"expansion": "The Tomb of Giants",
+		"expansion": "Tomb of Giants",
 		"level": 1,
 		"tiles": {
 			"1": [
 				29,
-				26,
+				27,
 				29,
-				26
+				27
 			]
 		}
 	},
@@ -1198,21 +1198,21 @@
 	},
 	"Honour Guard": {
 		"name": "Honour Guard",
-		"expansion": "The Tomb of Giants",
+		"expansion": "Tomb of Giants",
 		"level": 3,
 		"tiles": {
 			"1": [
 				29,
-				26,
+				27,
 				29,
 				29,
-				26
+				27
 			]
 		}
 	},
 	"Huntsman's Copse": {
 		"name": "Huntsman's Copse",
-		"expansion": "Executioner Chariot",
+		"expansion": "The Executioner's Chariot",
 		"level": 4,
 		"tiles": {
 			"1": [
@@ -1239,7 +1239,7 @@
 	},
 	"In Deep Water": {
 		"name": "In Deep Water",
-		"expansion": "The Tomb of Giants",
+		"expansion": "Tomb of Giants",
 		"level": 2,
 		"tiles": {
 			"1": [
@@ -1252,7 +1252,7 @@
 	},
 	"Inhospitable Ground": {
 		"name": "Inhospitable Ground",
-		"expansion": "The Painted World of Ariamis",
+		"expansion": "Painted World of Ariamis",
 		"level": 2,
 		"tiles": {
 			"1": [
@@ -1297,7 +1297,7 @@
 	},
 	"Lakeview Refuge": {
 		"name": "Lakeview Refuge",
-		"expansion": "The Tomb of Giants",
+		"expansion": "Tomb of Giants",
 		"level": 3,
 		"tiles": {
 			"1": [
@@ -1306,8 +1306,8 @@
 				29
 			],
 			"2": [
-				26,
-				26
+				27,
+				27
 			],
 			"3": [
 				18,
@@ -1318,7 +1318,7 @@
 	},
 	"Last Rites": {
 		"name": "Last Rites",
-		"expansion": "The Tomb of Giants",
+		"expansion": "Tomb of Giants",
 		"level": 1,
 		"tiles": {
 			"1": [
@@ -1329,13 +1329,13 @@
 	},
 	"Last Shred of Light": {
 		"name": "Last Shred of Light",
-		"expansion": "The Tomb of Giants",
+		"expansion": "Tomb of Giants",
 		"level": 3,
 		"tiles": {
 			"1": [
 				28,
 				29,
-				26
+				27
 			],
 			"2": [
 				11
@@ -1385,7 +1385,7 @@
 	},
 	"Lost Chapel": {
 		"name": "Lost Chapel",
-		"expansion": "The Tomb of Giants",
+		"expansion": "Tomb of Giants",
 		"level": 2,
 		"tiles": {
 			"1": [
@@ -1394,8 +1394,8 @@
 				18
 			],
 			"2": [
-				26,
-				26,
+				27,
+				27,
 				18,
 				29
 			],
@@ -1471,7 +1471,7 @@
 	},
 	"Maze of the Dead": {
 		"name": "Maze of the Dead",
-		"expansion": "The Tomb of Giants",
+		"expansion": "Tomb of Giants",
 		"level": 2,
 		"tiles": {
 			"1": [
@@ -1482,7 +1482,7 @@
 				28
 			],
 			"3": [
-				26,
+				27,
 				29,
 				29
 			]
@@ -1490,7 +1490,7 @@
 	},
 	"Mausoleum Ruins": {
 		"name": "Mausoleum Ruins",
-		"expansion": "Executioner Chariot",
+		"expansion": "The Executioner's Chariot",
 		"level": 2,
 		"tiles": {
 			"1": [
@@ -1515,7 +1515,7 @@
 	},
 	"Misty Burial Site": {
 		"name": "Misty Burial Site",
-		"expansion": "Executioner Chariot",
+		"expansion": "The Executioner's Chariot",
 		"level": 2,
 		"tiles": {
 			"1": [
@@ -1540,7 +1540,7 @@
 	},
 	"Monstrous Maw": {
 		"name": "Monstrous Maw",
-		"expansion": "The Painted World of Ariamis",
+		"expansion": "Painted World of Ariamis",
 		"level": 2,
 		"tiles": {
 			"1": [
@@ -1577,7 +1577,7 @@
 	},
 	"No Safe Haven": {
 		"name": "No Safe Haven",
-		"expansion": "The Painted World of Ariamis",
+		"expansion": "Painted World of Ariamis",
 		"level": 1,
 		"tiles": {
 			"1": [
@@ -1619,7 +1619,7 @@
 	},
 	"Painted Passage": {
 		"name": "Painted Passage",
-		"expansion": "The Painted World of Ariamis",
+		"expansion": "Painted World of Ariamis",
 		"level": 1,
 		"tiles": {
 			"1": [
@@ -1676,11 +1676,11 @@
 	},
 	"Pitch Black": {
 		"name": "Pitch Black",
-		"expansion": "The Tomb of Giants",
+		"expansion": "Tomb of Giants",
 		"level": 2,
 		"tiles": {
 			"1": [
-				26,
+				27,
 				18,
 				29
 			],
@@ -1720,7 +1720,7 @@
 	},
 	"Promised Respite": {
 		"name": "Promised Respite",
-		"expansion": "The Painted World of Ariamis",
+		"expansion": "Painted World of Ariamis",
 		"level": 1,
 		"tiles": {
 			"1": [
@@ -1735,7 +1735,7 @@
 	},
 	"Puppet Master": {
 		"name": "Puppet Master",
-		"expansion": "The Tomb of Giants",
+		"expansion": "Tomb of Giants",
 		"level": 1,
 		"tiles": {
 			"1": [
@@ -1757,7 +1757,7 @@
 	},
 	"Quiet Graveyard": {
 		"name": "Quiet Graveyard",
-		"expansion": "Executioner Chariot",
+		"expansion": "The Executioner's Chariot",
 		"level": 1,
 		"tiles": {
 			"1": [
@@ -1769,7 +1769,7 @@
 	},
 	"Rain of Filth": {
 		"name": "Rain of Filth",
-		"expansion": "The Tomb of Giants",
+		"expansion": "Tomb of Giants",
 		"level": 1,
 		"tiles": {
 			"1": [
@@ -1814,7 +1814,7 @@
 	},
 	"Roll Out": {
 		"name": "Roll Out",
-		"expansion": "The Painted World of Ariamis",
+		"expansion": "Painted World of Ariamis",
 		"level": 1,
 		"tiles": {
 			"1": [
@@ -2000,7 +2000,7 @@
 	},
 	"Silent Pathway": {
 		"name": "Silent Pathway",
-		"expansion": "Executioner Chariot",
+		"expansion": "The Executioner's Chariot",
 		"level": 1,
 		"tiles": {
 			"1": [
@@ -2026,7 +2026,7 @@
 	},
 	"Skeletal Spokes": {
 		"name": "Skeletal Spokes",
-		"expansion": "The Painted World of Ariamis",
+		"expansion": "Painted World of Ariamis",
 		"level": 2,
 		"tiles": {
 			"1": [
@@ -2041,7 +2041,7 @@
 	},
 	"Skeleton Overlord": {
 		"name": "Skeleton Overlord",
-		"expansion": "The Tomb of Giants",
+		"expansion": "Tomb of Giants",
 		"level": 3,
 		"tiles": {
 			"1": [
@@ -2051,7 +2051,7 @@
 	},
 	"Skittering Frenzy": {
 		"name": "Skittering Frenzy",
-		"expansion": "The Painted World of Ariamis",
+		"expansion": "Painted World of Ariamis",
 		"level": 1,
 		"tiles": {
 			"1": [
@@ -2088,7 +2088,7 @@
 	},
 	"Snowblind": {
 		"name": "Snowblind",
-		"expansion": "The Painted World of Ariamis",
+		"expansion": "Painted World of Ariamis",
 		"level": 2,
 		"tiles": {
 			"1": [
@@ -2191,7 +2191,7 @@
 	},
 	"The Abandoned Chest": {
 		"name": "The Abandoned Chest",
-		"expansion": "The Tomb of Giants",
+		"expansion": "Tomb of Giants",
 		"level": 2,
 		"tiles": {
 			"1": [
@@ -2199,14 +2199,14 @@
 				29
 			],
 			"2": [
-				26,
+				27,
 				18
 			]
 		}
 	},
 	"The Beast From the Depths": {
 		"name": "The Beast From the Depths",
-		"expansion": "The Tomb of Giants",
+		"expansion": "Tomb of Giants",
 		"level": 1,
 		"tiles": {
 			"1": [
@@ -2296,7 +2296,7 @@
 	},
 	"The First Bastion": {
 		"name": "The First Bastion",
-		"expansion": "The Painted World of Ariamis",
+		"expansion": "Painted World of Ariamis",
 		"level": 1,
 		"tiles": {
 			"1": [
@@ -2318,7 +2318,7 @@
 	},
 	"The Last Bastion": {
 		"name": "The Last Bastion",
-		"expansion": "The Painted World of Ariamis",
+		"expansion": "Painted World of Ariamis",
 		"level": 3,
 		"tiles": {
 			"1": [
@@ -2329,7 +2329,7 @@
 	},
 	"The Locked Grave": {
 		"name": "The Locked Grave",
-		"expansion": "The Tomb of Giants",
+		"expansion": "Tomb of Giants",
 		"level": 3,
 		"tiles": {
 			"1": [
@@ -2342,14 +2342,14 @@
 			],
 			"3": [
 				11,
-				26,
-				26
+				27,
+				27
 			]
 		}
 	},
 	"The Mass Grave": {
 		"name": "The Mass Grave",
-		"expansion": "The Tomb of Giants",
+		"expansion": "Tomb of Giants",
 		"level": 2,
 		"tiles": {
 			"1": [
@@ -2380,7 +2380,7 @@
 	},
 	"The Skeleton Ball": {
 		"name": "The Skeleton Ball",
-		"expansion": "The Tomb of Giants",
+		"expansion": "Tomb of Giants",
 		"level": 3,
 		"tiles": {
 			"1": [
@@ -2388,7 +2388,7 @@
 				11
 			],
 			"2": [
-				26,
+				27,
 				12
 			],
 			"3": [
@@ -2426,7 +2426,7 @@
 	},
 	"Trecherous Tower": {
 		"name": "Trecherous Tower",
-		"expansion": "The Painted World of Ariamis",
+		"expansion": "Painted World of Ariamis",
 		"level": 3,
 		"tiles": {
 			"1": [
@@ -2439,7 +2439,7 @@
 	},
 	"Undead Purgatory": {
 		"name": "Undead Purgatory",
-		"expansion": "Executioner Chariot",
+		"expansion": "The Executioner's Chariot",
 		"level": 4,
 		"tiles": {
 			"1": [
@@ -2489,7 +2489,7 @@
 	},
 	"Unseen Scurrying": {
 		"name": "Unseen Scurrying",
-		"expansion": "The Painted World of Ariamis",
+		"expansion": "Painted World of Ariamis",
 		"level": 1,
 		"tiles": {
 			"1": [
@@ -2513,23 +2513,23 @@
 	},
 	"Urns of the Fallen": {
 		"name": "Urns of the Fallen",
-		"expansion": "The Tomb of Giants",
+		"expansion": "Tomb of Giants",
 		"level": 2,
 		"tiles": {
 			"1": [
-				26,
+				27,
 				29,
 				29
 			],
 			"2": [
-				26,
+				27,
 				29
 			]
 		}
 	},
 	"Velka's Chosen": {
 		"name": "Velka's Chosen",
-		"expansion": "The Painted World of Ariamis",
+		"expansion": "Painted World of Ariamis",
 		"level": 3,
 		"tiles": {
 			"1": [

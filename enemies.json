@@ -22,14 +22,14 @@
 	},
 	"Black Hollow Mage": {
 		"name": "Black Hollow Mage",
-		"expansion": "Executioner's Chariot",
+		"expansion": "The Executioner's Chariot",
 		"health": 5,
 		"count": 2,
 		"ranged": true
 	},
 	"Bonewheel Skeleton": {
 		"name": "Bonewheel Skeleton",
-		"expansion": "The Painted World of Ariamis",
+		"expansion": "Painted World of Ariamis",
 		"health": 1,
 		"count": 2,
 		"ranged": false
@@ -43,7 +43,7 @@
 	},
 	"Crow Demon": {
 		"name": "Crow Demon",
-		"expansion": "The Painted World of Ariamis",
+		"expansion": "Painted World of Ariamis",
 		"health": 5,
 		"count": 2,
 		"ranged": false
@@ -57,14 +57,14 @@
 	},
 	"Engorged Zombie": {
 		"name": "Engorged Zombie",
-		"expansion": "The Painted World of Ariamis",
+		"expansion": "Painted World of Ariamis",
 		"health": 1,
 		"count": 2,
 		"ranged": false
 	},
 	"Falchion Skeleton": {
 		"name": "Falchion Skeleton",
-		"expansion": "Executioner's Chariot",
+		"expansion": "The Executioner's Chariot",
 		"health": 1,
 		"count": 3,
 		"ranged": false
@@ -134,14 +134,14 @@
 	},
 	"Phalanx": {
 		"name": "Phalanx",
-		"expansion": "The Painted World of Ariamis",
+		"expansion": "Painted World of Ariamis",
 		"health": 5,
 		"count": 1,
 		"ranged": false
 	},
 	"Phalanx Hollow": {
 		"name": "Phalanx Hollow",
-		"expansion": "The Painted World of Ariamis",
+		"expansion": "Painted World of Ariamis",
 		"health": 1,
 		"count": 5,
 		"ranged": false
@@ -211,7 +211,7 @@
 	},
 	"Snow Rat": {
 		"name": "Snow Rat",
-		"expansion": "The Painted World of Ariamis",
+		"expansion": "Painted World of Ariamis",
 		"health": 1,
 		"count": 2,
 		"ranged": false
