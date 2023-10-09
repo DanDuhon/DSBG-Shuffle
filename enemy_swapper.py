@@ -241,16 +241,50 @@ try:
                 self.randomEncounters["new"]["button"].grid(row=1, column=0, padx=5, pady=10, sticky="nsew")
                 
                 self.errLabel = tk.Label(self.top, text="")
-                self.errLabel.grid(column=0, row=2, padx=5, columnspan=4)
+                self.errLabel.grid(column=0, row=2, padx=18, columnspan=4)
 
-                self.settingsButtonsFrame = ttk.Frame(top, padding=(0, 0, 0, 10))
-                self.settingsButtonsFrame.grid(row=3, column=0, padx=15, pady=(10, 0), sticky="w", columnspan=2)
-                self.settingsButtonsFrame.columnconfigure(index=0, weight=1)
+                self.saveCancelButtonsFrame = ttk.Frame(top, padding=(0, 0, 0, 10))
+                self.saveCancelButtonsFrame.grid(row=3, column=0, padx=15, pady=(10, 0), sticky="w", columnspan=2)
+                self.saveCancelButtonsFrame.columnconfigure(index=0, weight=1)
                 
-                self.saveButton = ttk.Button(self.settingsButtonsFrame, text="Save", width=14, command=lambda: self.quit_with_save())
-                self.cancelButton = ttk.Button(self.settingsButtonsFrame, text="Cancel", width=14, command=self.quit_no_save)
+                self.saveButton = ttk.Button(self.saveCancelButtonsFrame, text="Save", width=14, command=lambda: self.quit_with_save())
+                self.cancelButton = ttk.Button(self.saveCancelButtonsFrame, text="Cancel", width=14, command=self.quit_no_save)
                 self.saveButton.grid(column=0, row=0, padx=5)
                 self.cancelButton.grid(column=1, row=0, padx=5)
+
+                self.themeButtonFrame = ttk.Frame(top, padding=(0, 0, 0, 10))
+                self.themeButtonFrame.grid(row=3, column=3, padx=15, pady=(10, 0), sticky="e", columnspan=2)
+                self.themeButtonFrame.columnconfigure(index=0, weight=1)
+
+                self.lightTheme = {"button": None, "value": tk.IntVar()}
+                self.lightTheme["value"].set(0 if self.settings["theme"] == "dark" else 1)
+                self.lightTheme["button"] = ttk.Button(self.themeButtonFrame, text="Switch to light theme" if self.lightTheme["value"].get() == 0 else "Switch to dark theme", command=self.switch_theme)
+                self.lightTheme["button"].grid(column=3, row=0, columnspan=2)
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
+        def switch_theme(self, event=None):
+            """
+            Changes the theme from dark to light or vice versa.
+
+            Optional Parameters:
+                event: tkinter.Event
+                    The tkinter Event that is the trigger.
+            """
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of switch_theme", caller=calframe[1][3])
+
+                self.lightTheme["value"].set(0 if self.lightTheme["value"].get() == 1 else 1)
+                self.settings["theme"] = "light" if self.lightTheme["value"].get() == 1 else "dark"
+                root.tk.call("set_theme", "light" if self.lightTheme["value"].get() == 1 else "dark")
+                self.lightTheme["button"]["text"] = "Switch to light theme" if self.lightTheme["value"].get() == 0 else "Switch to dark theme"
+                self.errLabel.config(text="To keep this theme when you open the program again, you need to click Save!")
+
+                adapter.debug("End of switch_theme", caller=calframe[1][3])
             except Exception as e:
                 adapter.exception(e)
                 raise
@@ -283,6 +317,7 @@ try:
                 randomEncounterTypes = set([s for s in self.randomEncounters if self.randomEncounters[s]["value"].get() == 1])
 
                 newSettings = {
+                    "theme": "light" if self.lightTheme["value"].get() == 1 else "dark",
                     "availableSets": list(newAvailableSets),
                     "randomEncounterTypes": list(randomEncounterTypes)
                 }
@@ -361,15 +396,18 @@ try:
         def __init__(self, parent):
             try:
                 adapter.debug("Initiating application")
+                    
+                with open(baseFolder + "\\settings.json") as settingsFile:
+                    self.settings = load(settingsFile)
+
+                if self.settings["theme"] == "light":
+                    root.tk.call("set_theme", "light")
                 
                 ttk.Frame.__init__(self)
                 self.grid_rowconfigure(index=1, weight=1)
                 self.grid_rowconfigure(index=2, weight=0)
                 self.encounterScrollbar = ttk.Scrollbar(root)
                 self.encounterScrollbar.pack(side=tk.RIGHT, fill=tk.Y)
-                    
-                with open(baseFolder + "\\settings.json") as settingsFile:
-                    self.settings = load(settingsFile)
 
                 self.bossMenu = [
                     "Boss List",
