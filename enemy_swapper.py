@@ -3,7 +3,6 @@ try:
     import logging
     import inspect
     import os
-    import math
     from os import path
     from json import load, dump
     from random import choice
@@ -3238,10 +3237,10 @@ try:
     }
     
     root = tk.Tk()
-    root.title("Dark Souls The Board Game Enemy Shuffler")
+    root.title("Dark Souls The Board Game Encounter Shuffler")
     root.tk.call("source", "Azure-ttk-theme-main\\azure.tcl")
     root.tk.call("set_theme", "dark")
-    root.iconphoto(True, tk.PhotoImage(file=os.path.join(baseFolder + "\\images", "Crystal Lizard.png")))
+    root.iconphoto(True, tk.PhotoImage(file=os.path.join(baseFolder, "icon.png")))
 
     app = Application(root)
     app.pack(fill="both", expand=True)

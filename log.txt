@@ -1,1248 +1,588 @@
-09/10/2023 12:03:43|DEBUG|[] Initiating application
-09/10/2023 12:03:43|DEBUG|[__init__] Start of set_encounter_list
-09/10/2023 12:03:43|DEBUG|[] End of set_encounter_list
-09/10/2023 12:03:43|DEBUG|[__init__] Start of create_buttons
-09/10/2023 12:03:43|DEBUG|[__init__] End of create_buttons
-09/10/2023 12:03:43|DEBUG|[__init__] Start of create_tabs
-09/10/2023 12:03:43|DEBUG|[] End of create_tabs
-09/10/2023 12:03:43|DEBUG|[__init__] Start of create_encounters_treeview
-09/10/2023 12:03:43|DEBUG|[] End of create_encounters_treeview
-09/10/2023 12:03:43|DEBUG|[__init__] Start of create_campaign_treeview
-09/10/2023 12:03:43|DEBUG|[] End of create_campaign_treeview
-09/10/2023 12:03:43|DEBUG|[__init__] Start of create_encounter_frame
-09/10/2023 12:03:43|DEBUG|[] End of create_encounter_frame
-09/10/2023 12:03:43|DEBUG|[__init__] Start of create_menu
-09/10/2023 12:03:43|DEBUG|[__init__] End of create_menu
-09/10/2023 12:03:43|DEBUG|[__init__] Start of set_bindings_buttons_menus: enable=True
-09/10/2023 12:03:43|DEBUG|[set_bindings_buttons_menus] Start of enable_binding: bindKey=Key-1, method=<function Application.set_bindings_buttons_menus.<locals>.<lambda> at 0x000001D556B9C0E0>
-09/10/2023 12:03:43|DEBUG|[] End of enable_binding
-09/10/2023 12:03:43|DEBUG|[set_bindings_buttons_menus] Start of enable_binding: bindKey=Key-2, method=<function Application.set_bindings_buttons_menus.<locals>.<lambda> at 0x000001D556B9C180>
-09/10/2023 12:03:43|DEBUG|[] End of enable_binding
-09/10/2023 12:03:43|DEBUG|[set_bindings_buttons_menus] Start of enable_binding: bindKey=Key-3, method=<function Application.set_bindings_buttons_menus.<locals>.<lambda> at 0x000001D556B9C220>
-09/10/2023 12:03:43|DEBUG|[] End of enable_binding
-09/10/2023 12:03:43|DEBUG|[set_bindings_buttons_menus] Start of enable_binding: bindKey=Key-4, method=<function Application.set_bindings_buttons_menus.<locals>.<lambda> at 0x000001D556B9C2C0>
-09/10/2023 12:03:43|DEBUG|[] End of enable_binding
-09/10/2023 12:03:43|DEBUG|[set_bindings_buttons_menus] Start of enable_binding: bindKey=s, method=<bound method Application.shuffle_enemies of <__main__.Application object .!application>>
-09/10/2023 12:03:43|DEBUG|[] End of enable_binding
-09/10/2023 12:03:43|DEBUG|[set_bindings_buttons_menus] Start of enable_binding: bindKey=Control-q, method=<function Application.set_bindings_buttons_menus.<locals>.<lambda> at 0x000001D556B9C360>
-09/10/2023 12:03:43|DEBUG|[] End of enable_binding
-09/10/2023 12:03:43|DEBUG|[] End of set_bindings_buttons_menus
-09/10/2023 12:03:43|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:43|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Alonne Bow Knight.png
-09/10/2023 12:03:43|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:43|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:43|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Alonne Bow Knight.png
-09/10/2023 12:03:43|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:43|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:43|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Alonne Bow Knight.png
-09/10/2023 12:03:43|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:43|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:43|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Alonne Bow Knight rule bg.jpg
-09/10/2023 12:03:43|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:43|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:43|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Alonne Knight Captain.png
-09/10/2023 12:03:43|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:43|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:43|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Alonne Knight Captain.png
-09/10/2023 12:03:43|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:43|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:43|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Alonne Knight Captain.png
-09/10/2023 12:03:43|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:43|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:43|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Alonne Knight Captain rule bg.jpg
-09/10/2023 12:03:43|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:43|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:43|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Alonne Sword Knight.png
-09/10/2023 12:03:43|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:43|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:43|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Alonne Sword Knight.png
-09/10/2023 12:03:43|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:43|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:43|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Alonne Sword Knight.png
-09/10/2023 12:03:43|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:43|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:43|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Alonne Sword Knight rule bg.jpg
-09/10/2023 12:03:43|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:43|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:43|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Black Hollow Mage.png
-09/10/2023 12:03:43|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:43|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:43|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Black Hollow Mage.png
-09/10/2023 12:03:43|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:43|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:43|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Black Hollow Mage.png
-09/10/2023 12:03:43|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:43|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:43|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Black Hollow Mage rule bg.jpg
-09/10/2023 12:03:43|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:43|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:43|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Bonewheel Skeleton.png
-09/10/2023 12:03:43|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:43|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:43|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Bonewheel Skeleton.png
-09/10/2023 12:03:43|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:43|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:43|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Bonewheel Skeleton.png
-09/10/2023 12:03:44|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:44|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:44|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Bonewheel Skeleton rule bg.jpg
-09/10/2023 12:03:44|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:44|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:44|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Crossbow Hollow.png
-09/10/2023 12:03:44|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:44|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:44|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Crossbow Hollow.png
-09/10/2023 12:03:44|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:44|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:44|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Crossbow Hollow.png
-09/10/2023 12:03:44|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:44|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:44|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Crossbow Hollow rule bg.jpg
-09/10/2023 12:03:44|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:44|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:44|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Crow Demon.png
-09/10/2023 12:03:44|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:44|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:44|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Crow Demon.png
-09/10/2023 12:03:44|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:44|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:44|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Crow Demon.png
-09/10/2023 12:03:44|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:44|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:44|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Crow Demon rule bg.jpg
-09/10/2023 12:03:44|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:44|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:44|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Demonic Foliage.png
-09/10/2023 12:03:44|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:44|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:44|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Demonic Foliage.png
-09/10/2023 12:03:44|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:44|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:44|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Demonic Foliage.png
-09/10/2023 12:03:44|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:44|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:44|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Demonic Foliage rule bg.jpg
-09/10/2023 12:03:44|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:44|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:44|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Engorged Zombie.png
-09/10/2023 12:03:44|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:44|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:44|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Engorged Zombie.png
-09/10/2023 12:03:44|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:44|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:44|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Engorged Zombie.png
-09/10/2023 12:03:44|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:44|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:44|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Engorged Zombie rule bg.jpg
-09/10/2023 12:03:44|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:44|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:44|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Falchion Skeleton.png
-09/10/2023 12:03:44|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:44|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:44|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Falchion Skeleton.png
-09/10/2023 12:03:44|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:44|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:44|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Falchion Skeleton.png
-09/10/2023 12:03:44|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:44|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:44|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Falchion Skeleton rule bg.jpg
-09/10/2023 12:03:44|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:44|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:44|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Firebomb Hollow.png
-09/10/2023 12:03:44|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:44|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:44|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Firebomb Hollow.png
-09/10/2023 12:03:44|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:44|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:44|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Firebomb Hollow.png
-09/10/2023 12:03:44|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:44|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:44|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Firebomb Hollow rule bg.jpg
-09/10/2023 12:03:44|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:44|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:44|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Giant Skeleton Archer.png
-09/10/2023 12:03:44|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:44|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:44|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Giant Skeleton Archer.png
-09/10/2023 12:03:44|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:44|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:44|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Giant Skeleton Archer.png
-09/10/2023 12:03:44|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:44|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:44|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Giant Skeleton Archer rule bg.jpg
-09/10/2023 12:03:44|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:44|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:44|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Giant Skeleton Soldier.png
-09/10/2023 12:03:44|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:44|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:44|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Giant Skeleton Soldier.png
-09/10/2023 12:03:44|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:44|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:44|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Giant Skeleton Soldier.png
-09/10/2023 12:03:44|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:44|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:44|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Giant Skeleton Soldier rule bg.jpg
-09/10/2023 12:03:44|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:44|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:44|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Hollow Soldier.png
-09/10/2023 12:03:44|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:44|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:44|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Hollow Soldier.png
-09/10/2023 12:03:45|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Hollow Soldier.png
-09/10/2023 12:03:45|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Hollow Soldier rule bg.jpg
-09/10/2023 12:03:45|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Ironclad Soldier.png
-09/10/2023 12:03:45|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Ironclad Soldier.png
-09/10/2023 12:03:45|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Ironclad Soldier.png
-09/10/2023 12:03:45|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Ironclad Soldier rule bg.jpg
-09/10/2023 12:03:45|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Large Hollow Soldier.png
-09/10/2023 12:03:45|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Large Hollow Soldier.png
-09/10/2023 12:03:45|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Large Hollow Soldier.png
-09/10/2023 12:03:45|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Large Hollow Soldier rule bg.jpg
-09/10/2023 12:03:45|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Mushroom Child.png
-09/10/2023 12:03:45|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Mushroom Child.png
-09/10/2023 12:03:45|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Mushroom Child.png
-09/10/2023 12:03:45|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Mushroom Child rule bg.jpg
-09/10/2023 12:03:45|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Mushroom Parent.png
-09/10/2023 12:03:45|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Mushroom Parent.png
-09/10/2023 12:03:45|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Mushroom Parent.png
-09/10/2023 12:03:45|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Mushroom Parent rule bg.jpg
-09/10/2023 12:03:45|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Necromancer.png
-09/10/2023 12:03:45|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Necromancer.png
-09/10/2023 12:03:45|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Necromancer.png
-09/10/2023 12:03:45|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Necromancer rule bg.jpg
-09/10/2023 12:03:45|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Phalanx.png
-09/10/2023 12:03:45|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Phalanx.png
-09/10/2023 12:03:45|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Phalanx.png
-09/10/2023 12:03:45|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Phalanx rule bg.jpg
-09/10/2023 12:03:45|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Phalanx Hollow.png
-09/10/2023 12:03:45|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Phalanx Hollow.png
-09/10/2023 12:03:45|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Phalanx Hollow.png
-09/10/2023 12:03:45|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Phalanx Hollow rule bg.jpg
-09/10/2023 12:03:45|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Plow Scarecrow.png
-09/10/2023 12:03:45|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Plow Scarecrow.png
-09/10/2023 12:03:45|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Plow Scarecrow.png
-09/10/2023 12:03:45|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Plow Scarecrow rule bg.jpg
-09/10/2023 12:03:45|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Sentinel.png
-09/10/2023 12:03:45|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Sentinel.png
-09/10/2023 12:03:45|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Sentinel.png
-09/10/2023 12:03:45|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Sentinel rule bg.jpg
-09/10/2023 12:03:45|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Shears Scarecrow.png
-09/10/2023 12:03:45|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Shears Scarecrow.png
-09/10/2023 12:03:45|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Shears Scarecrow.png
-09/10/2023 12:03:45|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Shears Scarecrow rule bg.jpg
-09/10/2023 12:03:45|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Silver Knight Greatbowman.png
-09/10/2023 12:03:45|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:45|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Silver Knight Greatbowman.png
-09/10/2023 12:03:46|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Silver Knight Greatbowman.png
-09/10/2023 12:03:46|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Silver Knight Greatbowman rule bg.jpg
-09/10/2023 12:03:46|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Silver Knight Spearman.png
-09/10/2023 12:03:46|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Silver Knight Spearman.png
-09/10/2023 12:03:46|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Silver Knight Spearman.png
-09/10/2023 12:03:46|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Silver Knight Spearman rule bg.jpg
-09/10/2023 12:03:46|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Silver Knight Swordsman.png
-09/10/2023 12:03:46|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Silver Knight Swordsman.png
-09/10/2023 12:03:46|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Silver Knight Swordsman.png
-09/10/2023 12:03:46|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Silver Knight Swordsman rule bg.jpg
-09/10/2023 12:03:46|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Skeleton Archer.png
-09/10/2023 12:03:46|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Skeleton Archer.png
-09/10/2023 12:03:46|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Skeleton Archer.png
-09/10/2023 12:03:46|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Skeleton Archer rule bg.jpg
-09/10/2023 12:03:46|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Skeleton Beast.png
-09/10/2023 12:03:46|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Skeleton Beast.png
-09/10/2023 12:03:46|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Skeleton Beast.png
-09/10/2023 12:03:46|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Skeleton Beast rule bg.jpg
-09/10/2023 12:03:46|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Skeleton Soldier.png
-09/10/2023 12:03:46|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Skeleton Soldier.png
-09/10/2023 12:03:46|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Skeleton Soldier.png
-09/10/2023 12:03:46|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Skeleton Soldier rule bg.jpg
-09/10/2023 12:03:46|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Snow Rat.png
-09/10/2023 12:03:46|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Snow Rat.png
-09/10/2023 12:03:46|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Snow Rat.png
-09/10/2023 12:03:46|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Snow Rat rule bg.jpg
-09/10/2023 12:03:46|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Stone Guardian.png
-09/10/2023 12:03:46|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Stone Guardian.png
-09/10/2023 12:03:46|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Stone Guardian.png
-09/10/2023 12:03:46|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Stone Guardian rule bg.jpg
-09/10/2023 12:03:46|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Stone Knight.png
-09/10/2023 12:03:46|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Stone Knight.png
-09/10/2023 12:03:46|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Stone Knight.png
-09/10/2023 12:03:46|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Stone Knight rule bg.jpg
-09/10/2023 12:03:46|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Kirk Knight of Thorns.png
-09/10/2023 12:03:46|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Kirk Knight of Thorns.png
-09/10/2023 12:03:46|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Kirk Knight of Thorns.png
-09/10/2023 12:03:46|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Maldron the Assassin.png
-09/10/2023 12:03:46|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Maldron the Assassin.png
-09/10/2023 12:03:46|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Maldron the Assassin.png
-09/10/2023 12:03:46|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Maneater Mildred.png
-09/10/2023 12:03:46|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Maneater Mildred.png
-09/10/2023 12:03:46|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Maneater Mildred.png
-09/10/2023 12:03:46|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Melinda the Butcher.png
-09/10/2023 12:03:46|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Melinda the Butcher.png
-09/10/2023 12:03:46|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Melinda the Butcher.png
-09/10/2023 12:03:46|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:46|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Oliver the Collector.png
-09/10/2023 12:03:47|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Oliver the Collector.png
-09/10/2023 12:03:47|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Oliver the Collector.png
-09/10/2023 12:03:47|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Xanthous King Jeremiah.png
-09/10/2023 12:03:47|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Xanthous King Jeremiah.png
-09/10/2023 12:03:47|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Xanthous King Jeremiah.png
-09/10/2023 12:03:47|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Hungry Mimic.png
-09/10/2023 12:03:47|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Hungry Mimic.png
-09/10/2023 12:03:47|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Hungry Mimic.png
-09/10/2023 12:03:47|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Armourer Dennis.png
-09/10/2023 12:03:47|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Armourer Dennis.png
-09/10/2023 12:03:47|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Armourer Dennis.png
-09/10/2023 12:03:47|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Fencer Sharron.png
-09/10/2023 12:03:47|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Fencer Sharron.png
-09/10/2023 12:03:47|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Fencer Sharron.png
-09/10/2023 12:03:47|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Invader Brylex.png
-09/10/2023 12:03:47|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Invader Brylex.png
-09/10/2023 12:03:47|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Invader Brylex.png
-09/10/2023 12:03:47|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Longfinger Kirk.png
-09/10/2023 12:03:47|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Longfinger Kirk.png
-09/10/2023 12:03:47|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Longfinger Kirk.png
-09/10/2023 12:03:47|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Marvelous Chester.png
-09/10/2023 12:03:47|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Marvelous Chester.png
-09/10/2023 12:03:47|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Marvelous Chester.png
-09/10/2023 12:03:47|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Paladin Leeroy.png
-09/10/2023 12:03:47|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Paladin Leeroy.png
-09/10/2023 12:03:47|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Paladin Leeroy.png
-09/10/2023 12:03:47|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Voracious Mimic.png
-09/10/2023 12:03:47|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Voracious Mimic.png
-09/10/2023 12:03:47|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Voracious Mimic.png
-09/10/2023 12:03:47|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\enemy_node_2.png
-09/10/2023 12:03:47|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\bleed.png
-09/10/2023 12:03:47|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\poison_mist.png
-09/10/2023 12:03:47|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\darkness.png
-09/10/2023 12:03:47|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\trial.png
-09/10/2023 12:03:47|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\timer.png
-09/10/2023 12:03:47|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\onslaught.png
-09/10/2023 12:03:47|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\snowstorm.png
-09/10/2023 12:03:47|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\hidden.png
-09/10/2023 12:03:47|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\bitter_cold.png
-09/10/2023 12:03:47|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\eerie.png
-09/10/2023 12:03:47|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] Start of create_image
-09/10/2023 12:03:47|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\barrage.png
-09/10/2023 12:03:47|DEBUG|[__init__] 	End of create_image
-09/10/2023 12:03:49|DEBUG|[__call__] Start of load_encounter
-09/10/2023 12:03:49|DEBUG|[__call__] 	No encounter selected
-09/10/2023 12:03:49|DEBUG|[__call__] 	End of load_encounter
-09/10/2023 12:03:50|DEBUG|[__call__] Start of load_encounter
-09/10/2023 12:03:50|DEBUG|[__call__] 	No encounter selected
-09/10/2023 12:03:50|DEBUG|[__call__] 	End of load_encounter
-09/10/2023 12:03:50|DEBUG|[__call__] Start of load_encounter
-09/10/2023 12:03:50|DEBUG|[__call__] 	No encounter selected
-09/10/2023 12:03:50|DEBUG|[__call__] 	End of load_encounter
-09/10/2023 12:03:51|DEBUG|[__call__] Start of load_encounter
-09/10/2023 12:03:51|DEBUG|[__call__] 	No encounter selected
-09/10/2023 12:03:51|DEBUG|[__call__] 	End of load_encounter
-09/10/2023 12:03:51|DEBUG|[__call__] Start of load_encounter
-09/10/2023 12:03:51|DEBUG|[__call__] 	No encounter selected
-09/10/2023 12:03:51|DEBUG|[__call__] 	End of load_encounter
-09/10/2023 12:03:52|DEBUG|[__call__] Start of load_encounter
-09/10/2023 12:03:52|DEBUG|[__call__] 	No encounter selected
-09/10/2023 12:03:52|DEBUG|[__call__] 	End of load_encounter
-09/10/2023 12:03:53|DEBUG|[__call__] Start of load_encounter
-09/10/2023 12:03:53|DEBUG|[__call__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\encounters\Cloak and Feathers.json
-09/10/2023 12:03:53|DEBUG|[load_encounter] Start of shuffle_enemies
-09/10/2023 12:03:53|DEBUG|[shuffle_enemies] Start of edit_encounter_card
-09/10/2023 12:03:53|DEBUG|[edit_encounter_card] Start of create_image
-09/10/2023 12:03:53|DEBUG|[edit_encounter_card] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Cloak and Feathers.jpg
-09/10/2023 12:03:53|DEBUG|[edit_encounter_card] 	End of create_image
-09/10/2023 12:03:53|DEBUG|[shuffle_enemies] New enemies: [6]
-09/10/2023 12:03:53|DEBUG|[shuffle_enemies] Pasting Crow Demon image onto encounter at (300, 323).
-09/10/2023 12:03:53|DEBUG|[edit_encounter_card] Start of apply_keyword_tooltips
-09/10/2023 12:03:53|DEBUG|[edit_encounter_card] 	End of apply_keyword_tooltips
-09/10/2023 12:03:53|DEBUG|[edit_encounter_card] Start of cloak_and_feathers
-09/10/2023 12:03:53|DEBUG|[cloak_and_feathers] Start of create_tooltip
-09/10/2023 12:03:53|DEBUG|[cloak_and_feathers] 	End of create_tooltip
-09/10/2023 12:03:53|DEBUG|[edit_encounter_card] 	End of cloak_and_feathers
-09/10/2023 12:03:53|DEBUG|[shuffle_enemies] 	End of edit_encounter_card
-09/10/2023 12:03:53|DEBUG|[load_encounter] 	End of shuffle_enemies
-09/10/2023 12:03:53|DEBUG|[__call__] 	End of load_encounter
-09/10/2023 12:03:55|DEBUG|[__call__] Start of load_encounter
-09/10/2023 12:03:55|DEBUG|[__call__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\encounters\Frozen Sentries.json
-09/10/2023 12:03:55|DEBUG|[load_encounter] Start of shuffle_enemies
-09/10/2023 12:03:55|DEBUG|[shuffle_enemies] Start of edit_encounter_card
-09/10/2023 12:03:55|DEBUG|[edit_encounter_card] Start of create_image
-09/10/2023 12:03:55|DEBUG|[edit_encounter_card] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Frozen Sentries.jpg
-09/10/2023 12:03:55|DEBUG|[edit_encounter_card] 	End of create_image
-09/10/2023 12:03:55|DEBUG|[shuffle_enemies] New enemies: [13, 20]
-09/10/2023 12:03:55|DEBUG|[shuffle_enemies] Pasting Hollow Soldier image onto encounter at (300, 323).
-09/10/2023 12:03:55|DEBUG|[shuffle_enemies] Pasting Phalanx Hollow image onto encounter at (300, 352).
-09/10/2023 12:03:55|DEBUG|[edit_encounter_card] Start of apply_keyword_tooltips
-09/10/2023 12:03:55|DEBUG|[apply_keyword_tooltips] Start of create_tooltip
-09/10/2023 12:03:55|DEBUG|[apply_keyword_tooltips] 	End of create_tooltip
-09/10/2023 12:03:55|DEBUG|[edit_encounter_card] 	End of apply_keyword_tooltips
-09/10/2023 12:03:55|DEBUG|[shuffle_enemies] 	End of edit_encounter_card
-09/10/2023 12:03:55|DEBUG|[load_encounter] 	End of shuffle_enemies
-09/10/2023 12:03:55|DEBUG|[__call__] 	End of load_encounter
-09/10/2023 12:03:55|DEBUG|[__call__] Start of load_encounter
-09/10/2023 12:03:55|DEBUG|[__call__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\encounters\No Safe Haven.json
-09/10/2023 12:03:55|DEBUG|[load_encounter] Start of shuffle_enemies
-09/10/2023 12:03:55|DEBUG|[shuffle_enemies] Start of edit_encounter_card
-09/10/2023 12:03:55|DEBUG|[edit_encounter_card] Start of create_image
-09/10/2023 12:03:55|DEBUG|[edit_encounter_card] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\No Safe Haven.jpg
-09/10/2023 12:03:55|DEBUG|[edit_encounter_card] 	End of create_image
-09/10/2023 12:03:55|DEBUG|[shuffle_enemies] New enemies: [29, 21, 15]
-09/10/2023 12:03:55|DEBUG|[shuffle_enemies] Pasting Skeleton Soldier image onto encounter at (300, 323).
-09/10/2023 12:03:55|DEBUG|[shuffle_enemies] Pasting Plow Scarecrow image onto encounter at (329, 323).
-09/10/2023 12:03:55|DEBUG|[shuffle_enemies] Pasting Large Hollow Soldier image onto encounter at (300, 445).
-09/10/2023 12:03:55|DEBUG|[edit_encounter_card] Start of apply_keyword_tooltips
-09/10/2023 12:03:55|DEBUG|[apply_keyword_tooltips] Start of create_tooltip
-09/10/2023 12:03:55|DEBUG|[apply_keyword_tooltips] 	End of create_tooltip
-09/10/2023 12:03:55|DEBUG|[edit_encounter_card] 	End of apply_keyword_tooltips
-09/10/2023 12:03:55|DEBUG|[edit_encounter_card] Start of no_safe_haven
-09/10/2023 12:03:55|DEBUG|[no_safe_haven] Start of create_tooltip
-09/10/2023 12:03:55|DEBUG|[no_safe_haven] 	End of create_tooltip
-09/10/2023 12:03:55|DEBUG|[edit_encounter_card] 	End of no_safe_haven
-09/10/2023 12:03:55|DEBUG|[shuffle_enemies] 	End of edit_encounter_card
-09/10/2023 12:03:55|DEBUG|[load_encounter] 	End of shuffle_enemies
-09/10/2023 12:03:55|DEBUG|[__call__] 	End of load_encounter
-09/10/2023 12:03:56|DEBUG|[__call__] Start of load_encounter
-09/10/2023 12:03:56|DEBUG|[__call__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\encounters\Painted Passage.json
-09/10/2023 12:03:56|DEBUG|[load_encounter] Start of shuffle_enemies
-09/10/2023 12:03:56|DEBUG|[shuffle_enemies] Start of edit_encounter_card
-09/10/2023 12:03:56|DEBUG|[edit_encounter_card] Start of create_image
-09/10/2023 12:03:56|DEBUG|[edit_encounter_card] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Painted Passage.jpg
-09/10/2023 12:03:56|DEBUG|[edit_encounter_card] 	End of create_image
-09/10/2023 12:03:56|DEBUG|[shuffle_enemies] New enemies: [20, 21, 20]
-09/10/2023 12:03:56|DEBUG|[shuffle_enemies] Pasting Phalanx Hollow image onto encounter at (300, 323).
-09/10/2023 12:03:56|DEBUG|[shuffle_enemies] Pasting Plow Scarecrow image onto encounter at (329, 323).
-09/10/2023 12:03:56|DEBUG|[shuffle_enemies] Pasting Phalanx Hollow image onto encounter at (300, 352).
-09/10/2023 12:03:56|DEBUG|[edit_encounter_card] Start of apply_keyword_tooltips
-09/10/2023 12:03:56|DEBUG|[apply_keyword_tooltips] Start of create_tooltip
-09/10/2023 12:03:56|DEBUG|[apply_keyword_tooltips] 	End of create_tooltip
-09/10/2023 12:03:56|DEBUG|[edit_encounter_card] 	End of apply_keyword_tooltips
-09/10/2023 12:03:56|DEBUG|[edit_encounter_card] Start of painted_passage
-09/10/2023 12:03:56|DEBUG|[edit_encounter_card] 	End of painted_passage
-09/10/2023 12:03:56|DEBUG|[shuffle_enemies] 	End of edit_encounter_card
-09/10/2023 12:03:56|DEBUG|[load_encounter] 	End of shuffle_enemies
-09/10/2023 12:03:56|DEBUG|[__call__] 	End of load_encounter
-09/10/2023 12:03:56|DEBUG|[__call__] Start of load_encounter
-09/10/2023 12:03:56|DEBUG|[__call__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\encounters\Promised Respite.json
-09/10/2023 12:03:56|DEBUG|[load_encounter] Start of shuffle_enemies
-09/10/2023 12:03:56|DEBUG|[shuffle_enemies] Start of edit_encounter_card
-09/10/2023 12:03:56|DEBUG|[edit_encounter_card] Start of create_image
-09/10/2023 12:03:56|DEBUG|[edit_encounter_card] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Promised Respite.jpg
-09/10/2023 12:03:56|DEBUG|[edit_encounter_card] 	End of create_image
-09/10/2023 12:03:56|DEBUG|[shuffle_enemies] New enemies: [13, 29, 21, 7]
-09/10/2023 12:03:56|DEBUG|[shuffle_enemies] Pasting Hollow Soldier image onto encounter at (300, 323).
-09/10/2023 12:03:56|DEBUG|[shuffle_enemies] Pasting Skeleton Soldier image onto encounter at (300, 352).
-09/10/2023 12:03:56|DEBUG|[shuffle_enemies] Pasting Plow Scarecrow image onto encounter at (300, 445).
-09/10/2023 12:03:56|DEBUG|[shuffle_enemies] Pasting Demonic Foliage image onto encounter at (300, 474).
-09/10/2023 12:03:56|DEBUG|[edit_encounter_card] Start of apply_keyword_tooltips
-09/10/2023 12:03:56|DEBUG|[apply_keyword_tooltips] Start of create_tooltip
-09/10/2023 12:03:56|DEBUG|[apply_keyword_tooltips] 	End of create_tooltip
-09/10/2023 12:03:56|DEBUG|[edit_encounter_card] 	End of apply_keyword_tooltips
-09/10/2023 12:03:56|DEBUG|[shuffle_enemies] 	End of edit_encounter_card
-09/10/2023 12:03:56|DEBUG|[load_encounter] 	End of shuffle_enemies
-09/10/2023 12:03:56|DEBUG|[__call__] 	End of load_encounter
-09/10/2023 12:03:57|DEBUG|[__call__] Start of load_encounter
-09/10/2023 12:03:57|DEBUG|[__call__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\encounters\Roll Out.json
-09/10/2023 12:03:57|DEBUG|[load_encounter] Start of shuffle_enemies
-09/10/2023 12:03:57|DEBUG|[shuffle_enemies] Start of edit_encounter_card
-09/10/2023 12:03:57|DEBUG|[edit_encounter_card] Start of create_image
-09/10/2023 12:03:57|DEBUG|[edit_encounter_card] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Roll Out.jpg
-09/10/2023 12:03:57|DEBUG|[edit_encounter_card] 	End of create_image
-09/10/2023 12:03:57|DEBUG|[shuffle_enemies] New enemies: [4, 8]
-09/10/2023 12:03:57|DEBUG|[shuffle_enemies] Pasting Bonewheel Skeleton image onto encounter at (300, 323).
-09/10/2023 12:03:57|DEBUG|[shuffle_enemies] Pasting Engorged Zombie image onto encounter at (300, 352).
-09/10/2023 12:03:57|DEBUG|[edit_encounter_card] Start of apply_keyword_tooltips
-09/10/2023 12:03:57|DEBUG|[edit_encounter_card] 	End of apply_keyword_tooltips
-09/10/2023 12:03:57|DEBUG|[shuffle_enemies] 	End of edit_encounter_card
-09/10/2023 12:03:57|DEBUG|[load_encounter] 	End of shuffle_enemies
-09/10/2023 12:03:57|DEBUG|[__call__] 	End of load_encounter
-09/10/2023 12:03:57|DEBUG|[__call__] Start of load_encounter
-09/10/2023 12:03:57|DEBUG|[__call__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\encounters\Skittering Frenzy.json
-09/10/2023 12:03:57|DEBUG|[load_encounter] Start of shuffle_enemies
-09/10/2023 12:03:57|DEBUG|[shuffle_enemies] Start of edit_encounter_card
-09/10/2023 12:03:57|DEBUG|[edit_encounter_card] Start of create_image
-09/10/2023 12:03:57|DEBUG|[edit_encounter_card] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Skittering Frenzy.jpg
-09/10/2023 12:03:58|DEBUG|[edit_encounter_card] 	End of create_image
-09/10/2023 12:03:58|DEBUG|[shuffle_enemies] New enemies: [13, 25]
-09/10/2023 12:03:58|DEBUG|[shuffle_enemies] Pasting Hollow Soldier image onto encounter at (300, 323).
-09/10/2023 12:03:58|DEBUG|[shuffle_enemies] Pasting Silver Knight Spearman image onto encounter at (300, 352).
-09/10/2023 12:03:58|DEBUG|[edit_encounter_card] Start of apply_keyword_tooltips
-09/10/2023 12:03:58|DEBUG|[edit_encounter_card] 	End of apply_keyword_tooltips
-09/10/2023 12:03:58|DEBUG|[shuffle_enemies] 	End of edit_encounter_card
-09/10/2023 12:03:58|DEBUG|[load_encounter] 	End of shuffle_enemies
-09/10/2023 12:03:58|DEBUG|[__call__] 	End of load_encounter
-09/10/2023 12:03:58|DEBUG|[__call__] Start of load_encounter
-09/10/2023 12:03:58|DEBUG|[__call__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\encounters\The First Bastion.json
-09/10/2023 12:03:58|DEBUG|[load_encounter] Start of shuffle_enemies
-09/10/2023 12:03:58|DEBUG|[shuffle_enemies] Start of edit_encounter_card
-09/10/2023 12:03:58|DEBUG|[edit_encounter_card] Start of create_image
-09/10/2023 12:03:58|DEBUG|[edit_encounter_card] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\The First Bastion.jpg
-09/10/2023 12:03:58|DEBUG|[edit_encounter_card] 	End of create_image
-09/10/2023 12:03:58|DEBUG|[shuffle_enemies] New enemies: [30]
-09/10/2023 12:03:58|DEBUG|[shuffle_enemies] Pasting Snow Rat image onto encounter at (300, 352).
-09/10/2023 12:03:58|DEBUG|[edit_encounter_card] Start of apply_keyword_tooltips
-09/10/2023 12:03:58|DEBUG|[apply_keyword_tooltips] Start of create_tooltip
-09/10/2023 12:03:58|DEBUG|[apply_keyword_tooltips] 	End of create_tooltip
-09/10/2023 12:03:58|DEBUG|[edit_encounter_card] 	End of apply_keyword_tooltips
-09/10/2023 12:03:58|DEBUG|[edit_encounter_card] Start of the_first_bastion
-09/10/2023 12:03:58|DEBUG|[the_first_bastion] Start of create_tooltip
-09/10/2023 12:03:58|DEBUG|[the_first_bastion] 	End of create_tooltip
-09/10/2023 12:03:58|DEBUG|[the_first_bastion] Start of create_tooltip
-09/10/2023 12:03:58|DEBUG|[the_first_bastion] 	End of create_tooltip
-09/10/2023 12:03:58|DEBUG|[the_first_bastion] Start of create_tooltip
-09/10/2023 12:03:58|DEBUG|[the_first_bastion] 	End of create_tooltip
-09/10/2023 12:03:58|DEBUG|[the_first_bastion] Start of create_tooltip
-09/10/2023 12:03:58|DEBUG|[the_first_bastion] 	End of create_tooltip
-09/10/2023 12:03:58|DEBUG|[edit_encounter_card] 	End of the_first_bastion
-09/10/2023 12:03:58|DEBUG|[shuffle_enemies] 	End of edit_encounter_card
-09/10/2023 12:03:58|DEBUG|[load_encounter] 	End of shuffle_enemies
-09/10/2023 12:03:58|DEBUG|[__call__] 	End of load_encounter
-09/10/2023 12:04:00|DEBUG|[__call__] Start of load_encounter
-09/10/2023 12:04:00|DEBUG|[__call__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\encounters\Unseen Scurrying.json
-09/10/2023 12:04:00|DEBUG|[load_encounter] Start of shuffle_enemies
-09/10/2023 12:04:00|DEBUG|[shuffle_enemies] Start of edit_encounter_card
-09/10/2023 12:04:00|DEBUG|[edit_encounter_card] Start of create_image
-09/10/2023 12:04:00|DEBUG|[edit_encounter_card] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Unseen Scurrying.jpg
-09/10/2023 12:04:00|DEBUG|[edit_encounter_card] 	End of create_image
-09/10/2023 12:04:00|DEBUG|[shuffle_enemies] New enemies: [29, 29]
-09/10/2023 12:04:00|DEBUG|[shuffle_enemies] Pasting Skeleton Soldier image onto encounter at (300, 323).
-09/10/2023 12:04:00|DEBUG|[shuffle_enemies] Pasting Skeleton Soldier image onto encounter at (300, 352).
-09/10/2023 12:04:00|DEBUG|[edit_encounter_card] Start of apply_keyword_tooltips
-09/10/2023 12:04:00|DEBUG|[apply_keyword_tooltips] Start of create_tooltip
-09/10/2023 12:04:00|DEBUG|[apply_keyword_tooltips] 	End of create_tooltip
-09/10/2023 12:04:00|DEBUG|[edit_encounter_card] 	End of apply_keyword_tooltips
-09/10/2023 12:04:00|DEBUG|[edit_encounter_card] Start of unseen_scurrying
-09/10/2023 12:04:00|DEBUG|[edit_encounter_card] 	End of unseen_scurrying
-09/10/2023 12:04:00|DEBUG|[shuffle_enemies] 	End of edit_encounter_card
-09/10/2023 12:04:00|DEBUG|[load_encounter] 	End of shuffle_enemies
-09/10/2023 12:04:00|DEBUG|[__call__] 	End of load_encounter
-09/10/2023 12:04:00|DEBUG|[__call__] Start of load_encounter
-09/10/2023 12:04:00|DEBUG|[__call__] 	No encounter selected
-09/10/2023 12:04:00|DEBUG|[__call__] 	End of load_encounter
-09/10/2023 12:04:01|DEBUG|[__call__] Start of load_encounter
-09/10/2023 12:04:01|DEBUG|[__call__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\encounters\Abandoned and Forgotten.json
-09/10/2023 12:04:01|DEBUG|[load_encounter] Start of shuffle_enemies
-09/10/2023 12:04:01|DEBUG|[shuffle_enemies] Start of edit_encounter_card
-09/10/2023 12:04:01|DEBUG|[edit_encounter_card] Start of create_image
-09/10/2023 12:04:01|DEBUG|[edit_encounter_card] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Abandoned and Forgotten.jpg
-09/10/2023 12:04:01|DEBUG|[edit_encounter_card] 	End of create_image
-09/10/2023 12:04:01|DEBUG|[shuffle_enemies] New enemies: []
-09/10/2023 12:04:01|DEBUG|[edit_encounter_card] Start of apply_keyword_tooltips
-09/10/2023 12:04:01|DEBUG|[apply_keyword_tooltips] Start of create_tooltip
-09/10/2023 12:04:01|DEBUG|[apply_keyword_tooltips] 	End of create_tooltip
-09/10/2023 12:04:01|DEBUG|[edit_encounter_card] 	End of apply_keyword_tooltips
-09/10/2023 12:04:01|DEBUG|[edit_encounter_card] Start of abandoned_and_forgotten
-09/10/2023 12:04:01|DEBUG|[edit_encounter_card] 	End of abandoned_and_forgotten
-09/10/2023 12:04:01|DEBUG|[shuffle_enemies] 	End of edit_encounter_card
-09/10/2023 12:04:01|DEBUG|[load_encounter] 	End of shuffle_enemies
-09/10/2023 12:04:01|DEBUG|[__call__] 	End of load_encounter
-09/10/2023 12:04:01|DEBUG|[__call__] Start of load_encounter
-09/10/2023 12:04:01|DEBUG|[__call__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\encounters\Cold Snap.json
-09/10/2023 12:04:01|DEBUG|[load_encounter] Start of shuffle_enemies
-09/10/2023 12:04:01|DEBUG|[shuffle_enemies] Start of edit_encounter_card
-09/10/2023 12:04:01|DEBUG|[edit_encounter_card] Start of create_image
-09/10/2023 12:04:01|DEBUG|[edit_encounter_card] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Cold Snap.jpg
-09/10/2023 12:04:02|DEBUG|[edit_encounter_card] 	End of create_image
-09/10/2023 12:04:02|DEBUG|[shuffle_enemies] New enemies: [13, 15, 13, 26, 13]
-09/10/2023 12:04:02|DEBUG|[shuffle_enemies] Pasting Hollow Soldier image onto encounter at (300, 323).
-09/10/2023 12:04:02|DEBUG|[shuffle_enemies] Pasting Large Hollow Soldier image onto encounter at (300, 352).
-09/10/2023 12:04:02|DEBUG|[shuffle_enemies] Pasting Hollow Soldier image onto encounter at (300, 445).
-09/10/2023 12:04:02|DEBUG|[shuffle_enemies] Pasting Silver Knight Swordsman image onto encounter at (329, 445).
-09/10/2023 12:04:02|DEBUG|[shuffle_enemies] Pasting Hollow Soldier image onto encounter at (300, 474).
-09/10/2023 12:04:02|DEBUG|[edit_encounter_card] Start of apply_keyword_tooltips
-09/10/2023 12:04:02|DEBUG|[apply_keyword_tooltips] Start of create_tooltip
-09/10/2023 12:04:02|DEBUG|[apply_keyword_tooltips] 	End of create_tooltip
-09/10/2023 12:04:02|DEBUG|[apply_keyword_tooltips] Start of create_tooltip
-09/10/2023 12:04:02|DEBUG|[apply_keyword_tooltips] 	End of create_tooltip
-09/10/2023 12:04:02|DEBUG|[apply_keyword_tooltips] Start of create_tooltip
-09/10/2023 12:04:02|DEBUG|[apply_keyword_tooltips] 	End of create_tooltip
-09/10/2023 12:04:02|DEBUG|[edit_encounter_card] 	End of apply_keyword_tooltips
-09/10/2023 12:04:02|DEBUG|[edit_encounter_card] Start of cold_snap
-09/10/2023 12:04:02|DEBUG|[cold_snap] Start of create_tooltip
-09/10/2023 12:04:02|DEBUG|[cold_snap] 	End of create_tooltip
-09/10/2023 12:04:02|DEBUG|[cold_snap] Start of create_tooltip
-09/10/2023 12:04:02|DEBUG|[cold_snap] 	End of create_tooltip
-09/10/2023 12:04:02|DEBUG|[edit_encounter_card] 	End of cold_snap
-09/10/2023 12:04:02|DEBUG|[shuffle_enemies] 	End of edit_encounter_card
-09/10/2023 12:04:02|DEBUG|[load_encounter] 	End of shuffle_enemies
-09/10/2023 12:04:02|DEBUG|[__call__] 	End of load_encounter
-09/10/2023 12:04:10|DEBUG|[__call__] Start of shuffle_enemies
-09/10/2023 12:04:10|DEBUG|[shuffle_enemies] Start of edit_encounter_card
-09/10/2023 12:04:10|DEBUG|[edit_encounter_card] Start of create_image
-09/10/2023 12:04:10|DEBUG|[edit_encounter_card] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Cold Snap.jpg
-09/10/2023 12:04:10|DEBUG|[edit_encounter_card] 	End of create_image
-09/10/2023 12:04:10|DEBUG|[shuffle_enemies] New enemies: [30, 29, 20, 4, 20]
-09/10/2023 12:04:10|DEBUG|[shuffle_enemies] Pasting Snow Rat image onto encounter at (300, 323).
-09/10/2023 12:04:10|DEBUG|[shuffle_enemies] Pasting Skeleton Soldier image onto encounter at (300, 352).
-09/10/2023 12:04:10|DEBUG|[shuffle_enemies] Pasting Phalanx Hollow image onto encounter at (300, 445).
-09/10/2023 12:04:10|DEBUG|[shuffle_enemies] Pasting Bonewheel Skeleton image onto encounter at (329, 445).
-09/10/2023 12:04:10|DEBUG|[shuffle_enemies] Pasting Phalanx Hollow image onto encounter at (300, 474).
-09/10/2023 12:04:10|DEBUG|[edit_encounter_card] Start of apply_keyword_tooltips
-09/10/2023 12:04:10|DEBUG|[apply_keyword_tooltips] Start of create_tooltip
-09/10/2023 12:04:10|DEBUG|[apply_keyword_tooltips] 	End of create_tooltip
-09/10/2023 12:04:10|DEBUG|[apply_keyword_tooltips] Start of create_tooltip
-09/10/2023 12:04:10|DEBUG|[apply_keyword_tooltips] 	End of create_tooltip
-09/10/2023 12:04:10|DEBUG|[apply_keyword_tooltips] Start of create_tooltip
-09/10/2023 12:04:10|DEBUG|[apply_keyword_tooltips] 	End of create_tooltip
-09/10/2023 12:04:10|DEBUG|[edit_encounter_card] 	End of apply_keyword_tooltips
-09/10/2023 12:04:10|DEBUG|[edit_encounter_card] Start of cold_snap
-09/10/2023 12:04:10|DEBUG|[cold_snap] Start of create_tooltip
-09/10/2023 12:04:10|DEBUG|[cold_snap] 	End of create_tooltip
-09/10/2023 12:04:10|DEBUG|[cold_snap] Start of create_tooltip
-09/10/2023 12:04:10|DEBUG|[cold_snap] 	End of create_tooltip
-09/10/2023 12:04:10|DEBUG|[edit_encounter_card] 	End of cold_snap
-09/10/2023 12:04:10|DEBUG|[shuffle_enemies] 	End of edit_encounter_card
-09/10/2023 12:04:10|DEBUG|[__call__] 	End of shuffle_enemies
-09/10/2023 12:04:20|DEBUG|[__call__] Start of shuffle_enemies
-09/10/2023 12:04:20|DEBUG|[shuffle_enemies] Start of edit_encounter_card
-09/10/2023 12:04:20|DEBUG|[edit_encounter_card] Start of create_image
-09/10/2023 12:04:20|DEBUG|[edit_encounter_card] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Cold Snap.jpg
-09/10/2023 12:04:20|DEBUG|[edit_encounter_card] 	End of create_image
-09/10/2023 12:04:20|DEBUG|[shuffle_enemies] New enemies: [23, 30, 20, 15, 23]
-09/10/2023 12:04:20|DEBUG|[shuffle_enemies] Pasting Shears Scarecrow image onto encounter at (300, 323).
-09/10/2023 12:04:20|DEBUG|[shuffle_enemies] Pasting Snow Rat image onto encounter at (300, 352).
-09/10/2023 12:04:20|DEBUG|[shuffle_enemies] Pasting Phalanx Hollow image onto encounter at (300, 445).
-09/10/2023 12:04:20|DEBUG|[shuffle_enemies] Pasting Large Hollow Soldier image onto encounter at (329, 445).
-09/10/2023 12:04:20|DEBUG|[shuffle_enemies] Pasting Shears Scarecrow image onto encounter at (300, 474).
-09/10/2023 12:04:20|DEBUG|[edit_encounter_card] Start of apply_keyword_tooltips
-09/10/2023 12:04:20|DEBUG|[apply_keyword_tooltips] Start of create_tooltip
-09/10/2023 12:04:20|DEBUG|[apply_keyword_tooltips] 	End of create_tooltip
-09/10/2023 12:04:20|DEBUG|[apply_keyword_tooltips] Start of create_tooltip
-09/10/2023 12:04:20|DEBUG|[apply_keyword_tooltips] 	End of create_tooltip
-09/10/2023 12:04:20|DEBUG|[apply_keyword_tooltips] Start of create_tooltip
-09/10/2023 12:04:20|DEBUG|[apply_keyword_tooltips] 	End of create_tooltip
-09/10/2023 12:04:20|DEBUG|[edit_encounter_card] 	End of apply_keyword_tooltips
-09/10/2023 12:04:20|DEBUG|[edit_encounter_card] Start of cold_snap
-09/10/2023 12:04:20|DEBUG|[cold_snap] Start of create_tooltip
-09/10/2023 12:04:20|DEBUG|[cold_snap] 	End of create_tooltip
-09/10/2023 12:04:20|DEBUG|[edit_encounter_card] 	End of cold_snap
-09/10/2023 12:04:20|DEBUG|[shuffle_enemies] 	End of edit_encounter_card
-09/10/2023 12:04:20|DEBUG|[__call__] 	End of shuffle_enemies
-09/10/2023 12:04:20|DEBUG|[__call__] Start of shuffle_enemies
-09/10/2023 12:04:20|DEBUG|[shuffle_enemies] Start of edit_encounter_card
-09/10/2023 12:04:20|DEBUG|[edit_encounter_card] Start of create_image
-09/10/2023 12:04:20|DEBUG|[edit_encounter_card] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Cold Snap.jpg
-09/10/2023 12:04:20|DEBUG|[edit_encounter_card] 	End of create_image
-09/10/2023 12:04:20|DEBUG|[shuffle_enemies] New enemies: [23, 30, 20, 25, 20]
-09/10/2023 12:04:20|DEBUG|[shuffle_enemies] Pasting Shears Scarecrow image onto encounter at (300, 323).
-09/10/2023 12:04:20|DEBUG|[shuffle_enemies] Pasting Snow Rat image onto encounter at (300, 352).
-09/10/2023 12:04:20|DEBUG|[shuffle_enemies] Pasting Phalanx Hollow image onto encounter at (300, 445).
-09/10/2023 12:04:20|DEBUG|[shuffle_enemies] Pasting Silver Knight Spearman image onto encounter at (329, 445).
-09/10/2023 12:04:20|DEBUG|[shuffle_enemies] Pasting Phalanx Hollow image onto encounter at (300, 474).
-09/10/2023 12:04:20|DEBUG|[edit_encounter_card] Start of apply_keyword_tooltips
-09/10/2023 12:04:21|DEBUG|[apply_keyword_tooltips] Start of create_tooltip
-09/10/2023 12:04:21|DEBUG|[apply_keyword_tooltips] 	End of create_tooltip
-09/10/2023 12:04:21|DEBUG|[apply_keyword_tooltips] Start of create_tooltip
-09/10/2023 12:04:21|DEBUG|[apply_keyword_tooltips] 	End of create_tooltip
-09/10/2023 12:04:21|DEBUG|[apply_keyword_tooltips] Start of create_tooltip
-09/10/2023 12:04:21|DEBUG|[apply_keyword_tooltips] 	End of create_tooltip
-09/10/2023 12:04:21|DEBUG|[edit_encounter_card] 	End of apply_keyword_tooltips
-09/10/2023 12:04:21|DEBUG|[edit_encounter_card] Start of cold_snap
-09/10/2023 12:04:21|DEBUG|[cold_snap] Start of create_tooltip
-09/10/2023 12:04:21|DEBUG|[cold_snap] 	End of create_tooltip
-09/10/2023 12:04:21|DEBUG|[cold_snap] Start of create_tooltip
-09/10/2023 12:04:21|DEBUG|[cold_snap] 	End of create_tooltip
-09/10/2023 12:04:21|DEBUG|[edit_encounter_card] 	End of cold_snap
-09/10/2023 12:04:21|DEBUG|[shuffle_enemies] 	End of edit_encounter_card
-09/10/2023 12:04:21|DEBUG|[__call__] 	End of shuffle_enemies
-09/10/2023 12:04:21|DEBUG|[__call__] Start of shuffle_enemies
-09/10/2023 12:04:21|DEBUG|[shuffle_enemies] Start of edit_encounter_card
-09/10/2023 12:04:21|DEBUG|[edit_encounter_card] Start of create_image
-09/10/2023 12:04:21|DEBUG|[edit_encounter_card] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Cold Snap.jpg
-09/10/2023 12:04:21|DEBUG|[edit_encounter_card] 	End of create_image
-09/10/2023 12:04:21|DEBUG|[shuffle_enemies] New enemies: [23, 23, 13, 2, 23]
-09/10/2023 12:04:21|DEBUG|[shuffle_enemies] Pasting Shears Scarecrow image onto encounter at (300, 323).
-09/10/2023 12:04:21|DEBUG|[shuffle_enemies] Pasting Shears Scarecrow image onto encounter at (300, 352).
-09/10/2023 12:04:21|DEBUG|[shuffle_enemies] Pasting Hollow Soldier image onto encounter at (300, 445).
-09/10/2023 12:04:21|DEBUG|[shuffle_enemies] Pasting Alonne Sword Knight image onto encounter at (329, 445).
-09/10/2023 12:04:21|DEBUG|[shuffle_enemies] Pasting Shears Scarecrow image onto encounter at (300, 474).
-09/10/2023 12:04:21|DEBUG|[edit_encounter_card] Start of apply_keyword_tooltips
-09/10/2023 12:04:21|DEBUG|[apply_keyword_tooltips] Start of create_tooltip
-09/10/2023 12:04:21|DEBUG|[apply_keyword_tooltips] 	End of create_tooltip
-09/10/2023 12:04:21|DEBUG|[apply_keyword_tooltips] Start of create_tooltip
-09/10/2023 12:04:21|DEBUG|[apply_keyword_tooltips] 	End of create_tooltip
-09/10/2023 12:04:21|DEBUG|[apply_keyword_tooltips] Start of create_tooltip
-09/10/2023 12:04:21|DEBUG|[apply_keyword_tooltips] 	End of create_tooltip
-09/10/2023 12:04:21|DEBUG|[edit_encounter_card] 	End of apply_keyword_tooltips
-09/10/2023 12:04:21|DEBUG|[edit_encounter_card] Start of cold_snap
-09/10/2023 12:04:21|DEBUG|[cold_snap] Start of create_tooltip
-09/10/2023 12:04:21|DEBUG|[cold_snap] 	End of create_tooltip
-09/10/2023 12:04:21|DEBUG|[edit_encounter_card] 	End of cold_snap
-09/10/2023 12:04:21|DEBUG|[shuffle_enemies] 	End of edit_encounter_card
-09/10/2023 12:04:21|DEBUG|[__call__] 	End of shuffle_enemies
-09/10/2023 12:04:22|DEBUG|[__call__] Start of load_encounter
-09/10/2023 12:04:22|DEBUG|[__call__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\encounters\Corrupted Hovel.json
-09/10/2023 12:04:22|DEBUG|[load_encounter] Start of shuffle_enemies
-09/10/2023 12:04:22|DEBUG|[shuffle_enemies] Start of edit_encounter_card
-09/10/2023 12:04:22|DEBUG|[edit_encounter_card] Start of create_image
-09/10/2023 12:04:22|DEBUG|[edit_encounter_card] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Corrupted Hovel.jpg
-09/10/2023 12:04:22|DEBUG|[edit_encounter_card] 	End of create_image
-09/10/2023 12:04:22|DEBUG|[shuffle_enemies] New enemies: [20, 16, 20, 26]
-09/10/2023 12:04:22|DEBUG|[shuffle_enemies] Pasting Phalanx Hollow image onto encounter at (300, 323).
-09/10/2023 12:04:22|DEBUG|[shuffle_enemies] Pasting Mushroom Child image onto encounter at (329, 323).
-09/10/2023 12:04:22|DEBUG|[shuffle_enemies] Pasting Phalanx Hollow image onto encounter at (300, 352).
-09/10/2023 12:04:22|DEBUG|[shuffle_enemies] Pasting Silver Knight Swordsman image onto encounter at (329, 352).
-09/10/2023 12:04:22|DEBUG|[edit_encounter_card] Start of apply_keyword_tooltips
-09/10/2023 12:04:22|DEBUG|[apply_keyword_tooltips] Start of create_tooltip
-09/10/2023 12:04:22|DEBUG|[apply_keyword_tooltips] 	End of create_tooltip
-09/10/2023 12:04:22|DEBUG|[apply_keyword_tooltips] Start of create_tooltip
-09/10/2023 12:04:22|DEBUG|[apply_keyword_tooltips] 	End of create_tooltip
-09/10/2023 12:04:22|DEBUG|[edit_encounter_card] 	End of apply_keyword_tooltips
-09/10/2023 12:04:22|DEBUG|[edit_encounter_card] Start of corrupted_hovel
-09/10/2023 12:04:22|DEBUG|[corrupted_hovel] Start of create_tooltip
-09/10/2023 12:04:22|DEBUG|[corrupted_hovel] 	End of create_tooltip
-09/10/2023 12:04:22|DEBUG|[edit_encounter_card] 	End of corrupted_hovel
-09/10/2023 12:04:22|DEBUG|[shuffle_enemies] 	End of edit_encounter_card
-09/10/2023 12:04:22|DEBUG|[load_encounter] 	End of shuffle_enemies
-09/10/2023 12:04:22|DEBUG|[__call__] 	End of load_encounter
-09/10/2023 12:04:24|DEBUG|[__call__] Start of load_encounter
-09/10/2023 12:04:24|DEBUG|[__call__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\encounters\Distant Tower.json
-09/10/2023 12:04:24|DEBUG|[__call__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\encounters\Distant Tower Trial Enemies.json
-09/10/2023 12:04:24|DEBUG|[load_encounter] Start of shuffle_enemies
-09/10/2023 12:04:24|DEBUG|[shuffle_enemies] Start of least_frequent_items: listToCheck=[32, 1, 6, 12, 14, 17, 19, 22, 26, 28, 31]
-09/10/2023 12:04:24|DEBUG|[] End of least_frequent_items, returning 1
-09/10/2023 12:04:24|DEBUG|[shuffle_enemies] Start of edit_encounter_card
-09/10/2023 12:04:24|DEBUG|[edit_encounter_card] Start of create_image
-09/10/2023 12:04:24|DEBUG|[edit_encounter_card] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Distant Tower.jpg
-09/10/2023 12:04:24|DEBUG|[edit_encounter_card] 	End of create_image
-09/10/2023 12:04:24|DEBUG|[shuffle_enemies] New enemies: [29, 4, 4, 7, 7, 1]
-09/10/2023 12:04:24|DEBUG|[shuffle_enemies] Pasting Skeleton Soldier image onto encounter at (300, 323).
-09/10/2023 12:04:24|DEBUG|[shuffle_enemies] Pasting Bonewheel Skeleton image onto encounter at (329, 323).
-09/10/2023 12:04:24|DEBUG|[shuffle_enemies] Pasting Bonewheel Skeleton image onto encounter at (300, 352).
-09/10/2023 12:04:24|DEBUG|[shuffle_enemies] Pasting Demonic Foliage image onto encounter at (300, 445).
-09/10/2023 12:04:24|DEBUG|[shuffle_enemies] Pasting Demonic Foliage image onto encounter at (300, 474).
-09/10/2023 12:04:24|DEBUG|[shuffle_enemies] Pasting Alonne Knight Captain image onto encounter at (300, 567).
-09/10/2023 12:04:24|DEBUG|[edit_encounter_card] Start of apply_keyword_tooltips
-09/10/2023 12:04:24|DEBUG|[apply_keyword_tooltips] Start of create_tooltip
-09/10/2023 12:04:24|DEBUG|[apply_keyword_tooltips] 	End of create_tooltip
-09/10/2023 12:04:24|DEBUG|[apply_keyword_tooltips] Start of create_tooltip
-09/10/2023 12:04:24|DEBUG|[apply_keyword_tooltips] 	End of create_tooltip
-09/10/2023 12:04:24|DEBUG|[edit_encounter_card] 	End of apply_keyword_tooltips
-09/10/2023 12:04:24|DEBUG|[edit_encounter_card] Start of distant_tower
-09/10/2023 12:04:24|DEBUG|[distant_tower] Start of create_tooltip
-09/10/2023 12:04:24|DEBUG|[distant_tower] 	End of create_tooltip
-09/10/2023 12:04:24|DEBUG|[edit_encounter_card] 	End of distant_tower
-09/10/2023 12:04:24|DEBUG|[shuffle_enemies] 	End of edit_encounter_card
-09/10/2023 12:04:24|DEBUG|[load_encounter] 	End of shuffle_enemies
-09/10/2023 12:04:24|DEBUG|[__call__] 	End of load_encounter
-09/10/2023 12:04:25|DEBUG|[__call__] Start of load_encounter
-09/10/2023 12:04:25|DEBUG|[__call__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\encounters\Gnashing Beaks.json
-09/10/2023 12:04:25|DEBUG|[load_encounter] Start of shuffle_enemies
-09/10/2023 12:04:25|DEBUG|[shuffle_enemies] Start of edit_encounter_card
-09/10/2023 12:04:25|DEBUG|[edit_encounter_card] Start of create_image
-09/10/2023 12:04:25|DEBUG|[edit_encounter_card] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Gnashing Beaks.jpg
-09/10/2023 12:04:25|DEBUG|[edit_encounter_card] 	End of create_image
-09/10/2023 12:04:25|DEBUG|[shuffle_enemies] New enemies: [9, 7, 6]
-09/10/2023 12:04:25|DEBUG|[shuffle_enemies] Pasting Falchion Skeleton image onto encounter at (300, 323).
-09/10/2023 12:04:25|DEBUG|[shuffle_enemies] Pasting Demonic Foliage image onto encounter at (300, 352).
-09/10/2023 12:04:25|DEBUG|[shuffle_enemies] Pasting Crow Demon image onto encounter at (300, 445).
-09/10/2023 12:04:25|DEBUG|[edit_encounter_card] Start of apply_keyword_tooltips
-09/10/2023 12:04:25|DEBUG|[apply_keyword_tooltips] Start of create_tooltip
-09/10/2023 12:04:25|DEBUG|[apply_keyword_tooltips] 	End of create_tooltip
-09/10/2023 12:04:25|DEBUG|[edit_encounter_card] 	End of apply_keyword_tooltips
-09/10/2023 12:04:25|DEBUG|[edit_encounter_card] Start of gnashing_beaks
-09/10/2023 12:04:25|DEBUG|[gnashing_beaks] Start of create_tooltip
-09/10/2023 12:04:25|DEBUG|[gnashing_beaks] 	End of create_tooltip
-09/10/2023 12:04:25|DEBUG|[gnashing_beaks] Start of create_tooltip
-09/10/2023 12:04:25|DEBUG|[gnashing_beaks] 	End of create_tooltip
-09/10/2023 12:04:25|DEBUG|[edit_encounter_card] 	End of gnashing_beaks
-09/10/2023 12:04:25|DEBUG|[shuffle_enemies] 	End of edit_encounter_card
-09/10/2023 12:04:25|DEBUG|[load_encounter] 	End of shuffle_enemies
-09/10/2023 12:04:25|DEBUG|[__call__] 	End of load_encounter
-09/10/2023 12:04:26|DEBUG|[__call__] Start of load_encounter
-09/10/2023 12:04:26|DEBUG|[__call__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\encounters\Inhospitable Ground.json
-09/10/2023 12:04:26|DEBUG|[load_encounter] Start of shuffle_enemies
-09/10/2023 12:04:26|DEBUG|[shuffle_enemies] Start of edit_encounter_card
-09/10/2023 12:04:26|DEBUG|[edit_encounter_card] Start of create_image
-09/10/2023 12:04:26|DEBUG|[edit_encounter_card] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Inhospitable Ground.jpg
-09/10/2023 12:04:26|DEBUG|[edit_encounter_card] 	End of create_image
-09/10/2023 12:04:26|DEBUG|[shuffle_enemies] New enemies: [13, 7, 12]
-09/10/2023 12:04:26|DEBUG|[shuffle_enemies] Pasting Hollow Soldier image onto encounter at (300, 323).
-09/10/2023 12:04:26|DEBUG|[shuffle_enemies] Pasting Demonic Foliage image onto encounter at (300, 352).
-09/10/2023 12:04:26|DEBUG|[shuffle_enemies] Pasting Giant Skeleton Soldier image onto encounter at (300, 474).
-09/10/2023 12:04:26|DEBUG|[edit_encounter_card] Start of apply_keyword_tooltips
-09/10/2023 12:04:26|DEBUG|[apply_keyword_tooltips] Start of create_tooltip
-09/10/2023 12:04:26|DEBUG|[apply_keyword_tooltips] 	End of create_tooltip
-09/10/2023 12:04:26|DEBUG|[edit_encounter_card] 	End of apply_keyword_tooltips
-09/10/2023 12:04:26|DEBUG|[edit_encounter_card] Start of inhospitable_ground
-09/10/2023 12:04:26|DEBUG|[edit_encounter_card] 	End of inhospitable_ground
-09/10/2023 12:04:26|DEBUG|[shuffle_enemies] 	End of edit_encounter_card
-09/10/2023 12:04:26|DEBUG|[load_encounter] 	End of shuffle_enemies
-09/10/2023 12:04:26|DEBUG|[__call__] 	End of load_encounter
-09/10/2023 12:04:27|DEBUG|[__call__] Start of load_encounter
-09/10/2023 12:04:27|DEBUG|[__call__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\encounters\Monstrous Maw.json
-09/10/2023 12:04:27|DEBUG|[load_encounter] Start of shuffle_enemies
-09/10/2023 12:04:27|DEBUG|[shuffle_enemies] Start of edit_encounter_card
-09/10/2023 12:04:27|DEBUG|[edit_encounter_card] Start of create_image
-09/10/2023 12:04:27|DEBUG|[edit_encounter_card] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Monstrous Maw.jpg
-09/10/2023 12:04:27|DEBUG|[edit_encounter_card] 	End of create_image
-09/10/2023 12:04:27|DEBUG|[shuffle_enemies] New enemies: [30]
-09/10/2023 12:04:27|DEBUG|[shuffle_enemies] Pasting Snow Rat image onto encounter at (300, 352).
-09/10/2023 12:04:27|DEBUG|[edit_encounter_card] Start of apply_keyword_tooltips
-09/10/2023 12:04:27|DEBUG|[edit_encounter_card] 	End of apply_keyword_tooltips
-09/10/2023 12:04:27|DEBUG|[edit_encounter_card] Start of monstrous_maw
-09/10/2023 12:04:27|DEBUG|[monstrous_maw] Start of create_tooltip
-09/10/2023 12:04:27|DEBUG|[monstrous_maw] 	End of create_tooltip
-09/10/2023 12:04:27|DEBUG|[monstrous_maw] Start of create_tooltip
-09/10/2023 12:04:27|DEBUG|[monstrous_maw] 	End of create_tooltip
-09/10/2023 12:04:27|DEBUG|[edit_encounter_card] 	End of monstrous_maw
-09/10/2023 12:04:27|DEBUG|[shuffle_enemies] 	End of edit_encounter_card
-09/10/2023 12:04:27|DEBUG|[load_encounter] 	End of shuffle_enemies
-09/10/2023 12:04:27|DEBUG|[__call__] 	End of load_encounter
-09/10/2023 12:04:27|DEBUG|[__call__] Start of load_encounter
-09/10/2023 12:04:27|DEBUG|[__call__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\encounters\Skeletal Spokes.json
-09/10/2023 12:04:27|DEBUG|[load_encounter] Start of shuffle_enemies
-09/10/2023 12:04:27|DEBUG|[shuffle_enemies] Start of edit_encounter_card
-09/10/2023 12:04:27|DEBUG|[edit_encounter_card] Start of create_image
-09/10/2023 12:04:27|DEBUG|[edit_encounter_card] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Skeletal Spokes.jpg
-09/10/2023 12:04:27|DEBUG|[edit_encounter_card] 	End of create_image
-09/10/2023 12:04:27|DEBUG|[shuffle_enemies] New enemies: [9, 26, 30, 30]
-09/10/2023 12:04:27|DEBUG|[shuffle_enemies] Pasting Falchion Skeleton image onto encounter at (300, 323).
-09/10/2023 12:04:27|DEBUG|[shuffle_enemies] Pasting Silver Knight Swordsman image onto encounter at (300, 352).
-09/10/2023 12:04:27|DEBUG|[shuffle_enemies] Pasting Snow Rat image onto encounter at (300, 445).
-09/10/2023 12:04:27|DEBUG|[shuffle_enemies] Pasting Snow Rat image onto encounter at (300, 474).
-09/10/2023 12:04:27|DEBUG|[edit_encounter_card] Start of apply_keyword_tooltips
-09/10/2023 12:04:27|DEBUG|[edit_encounter_card] 	End of apply_keyword_tooltips
-09/10/2023 12:04:27|DEBUG|[edit_encounter_card] Start of skeletal_spokes
-09/10/2023 12:04:27|DEBUG|[skeletal_spokes] Start of create_tooltip
-09/10/2023 12:04:27|DEBUG|[skeletal_spokes] 	End of create_tooltip
-09/10/2023 12:04:27|DEBUG|[skeletal_spokes] Start of create_tooltip
-09/10/2023 12:04:27|DEBUG|[skeletal_spokes] 	End of create_tooltip
-09/10/2023 12:04:27|DEBUG|[skeletal_spokes] Start of create_tooltip
-09/10/2023 12:04:27|DEBUG|[skeletal_spokes] 	End of create_tooltip
-09/10/2023 12:04:27|DEBUG|[edit_encounter_card] 	End of skeletal_spokes
-09/10/2023 12:04:27|DEBUG|[shuffle_enemies] 	End of edit_encounter_card
-09/10/2023 12:04:27|DEBUG|[load_encounter] 	End of shuffle_enemies
-09/10/2023 12:04:27|DEBUG|[__call__] 	End of load_encounter
-09/10/2023 12:04:28|DEBUG|[__call__] Start of load_encounter
-09/10/2023 12:04:28|DEBUG|[__call__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\encounters\Snowblind.json
-09/10/2023 12:04:28|DEBUG|[load_encounter] Start of shuffle_enemies
-09/10/2023 12:04:28|DEBUG|[shuffle_enemies] Start of edit_encounter_card
-09/10/2023 12:04:28|DEBUG|[edit_encounter_card] Start of create_image
-09/10/2023 12:04:28|DEBUG|[edit_encounter_card] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Snowblind.jpg
-09/10/2023 12:04:28|DEBUG|[edit_encounter_card] 	End of create_image
-09/10/2023 12:04:28|DEBUG|[shuffle_enemies] New enemies: [21, 15, 15, 1]
-09/10/2023 12:04:28|DEBUG|[shuffle_enemies] Pasting Plow Scarecrow image onto encounter at (300, 323).
-09/10/2023 12:04:28|DEBUG|[shuffle_enemies] Pasting Large Hollow Soldier image onto encounter at (300, 352).
-09/10/2023 12:04:28|DEBUG|[shuffle_enemies] Pasting Large Hollow Soldier image onto encounter at (300, 445).
-09/10/2023 12:04:28|DEBUG|[shuffle_enemies] Pasting Alonne Knight Captain image onto encounter at (300, 474).
-09/10/2023 12:04:28|DEBUG|[edit_encounter_card] Start of apply_keyword_tooltips
-09/10/2023 12:04:28|DEBUG|[apply_keyword_tooltips] Start of create_tooltip
-09/10/2023 12:04:28|DEBUG|[apply_keyword_tooltips] 	End of create_tooltip
-09/10/2023 12:04:28|DEBUG|[apply_keyword_tooltips] Start of create_tooltip
-09/10/2023 12:04:28|DEBUG|[apply_keyword_tooltips] 	End of create_tooltip
-09/10/2023 12:04:28|DEBUG|[apply_keyword_tooltips] Start of create_tooltip
-09/10/2023 12:04:28|DEBUG|[apply_keyword_tooltips] 	End of create_tooltip
-09/10/2023 12:04:28|DEBUG|[edit_encounter_card] 	End of apply_keyword_tooltips
-09/10/2023 12:04:28|DEBUG|[shuffle_enemies] 	End of edit_encounter_card
-09/10/2023 12:04:28|DEBUG|[load_encounter] 	End of shuffle_enemies
-09/10/2023 12:04:28|DEBUG|[__call__] 	End of load_encounter
-09/10/2023 12:04:29|DEBUG|[__call__] Start of load_encounter
-09/10/2023 12:04:29|DEBUG|[__call__] 	No encounter selected
-09/10/2023 12:04:29|DEBUG|[__call__] 	End of load_encounter
-09/10/2023 12:04:29|DEBUG|[__call__] Start of load_encounter
-09/10/2023 12:04:29|DEBUG|[__call__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\encounters\Central Plaza.json
-09/10/2023 12:04:29|DEBUG|[load_encounter] Start of shuffle_enemies
-09/10/2023 12:04:29|DEBUG|[shuffle_enemies] Start of edit_encounter_card
-09/10/2023 12:04:29|DEBUG|[edit_encounter_card] Start of create_image
-09/10/2023 12:04:29|DEBUG|[edit_encounter_card] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Central Plaza.jpg
-09/10/2023 12:04:29|DEBUG|[edit_encounter_card] 	End of create_image
-09/10/2023 12:04:29|DEBUG|[shuffle_enemies] New enemies: [20, 23, 9, 7, 2, 25, 25, 1]
-09/10/2023 12:04:29|DEBUG|[shuffle_enemies] Pasting Phalanx Hollow image onto encounter at (300, 323).
-09/10/2023 12:04:29|DEBUG|[shuffle_enemies] Pasting Shears Scarecrow image onto encounter at (300, 352).
-09/10/2023 12:04:29|DEBUG|[shuffle_enemies] Pasting Falchion Skeleton image onto encounter at (329, 352).
-09/10/2023 12:04:29|DEBUG|[shuffle_enemies] Pasting Demonic Foliage image onto encounter at (300, 445).
-09/10/2023 12:04:29|DEBUG|[shuffle_enemies] Pasting Alonne Sword Knight image onto encounter at (300, 474).
-09/10/2023 12:04:29|DEBUG|[shuffle_enemies] Pasting Silver Knight Spearman image onto encounter at (300, 567).
-09/10/2023 12:04:29|DEBUG|[shuffle_enemies] Pasting Silver Knight Spearman image onto encounter at (329, 567).
-09/10/2023 12:04:29|DEBUG|[shuffle_enemies] Pasting Alonne Knight Captain image onto encounter at (300, 596).
-09/10/2023 12:04:29|DEBUG|[edit_encounter_card] Start of apply_keyword_tooltips
-09/10/2023 12:04:29|DEBUG|[apply_keyword_tooltips] Start of create_tooltip
-09/10/2023 12:04:29|DEBUG|[apply_keyword_tooltips] 	End of create_tooltip
-09/10/2023 12:04:29|DEBUG|[edit_encounter_card] 	End of apply_keyword_tooltips
-09/10/2023 12:04:29|DEBUG|[shuffle_enemies] 	End of edit_encounter_card
-09/10/2023 12:04:29|DEBUG|[load_encounter] 	End of shuffle_enemies
-09/10/2023 12:04:29|DEBUG|[__call__] 	End of load_encounter
-09/10/2023 12:04:30|DEBUG|[__call__] Start of load_encounter
-09/10/2023 12:04:30|DEBUG|[__call__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\encounters\Corvian Host.json
-09/10/2023 12:04:30|DEBUG|[__call__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\encounters\Corvian Host Trial Enemies.json
-09/10/2023 12:04:30|DEBUG|[load_encounter] Start of shuffle_enemies
-09/10/2023 12:04:30|DEBUG|[shuffle_enemies] Start of least_frequent_items: listToCheck=[1, 6, 12, 14, 31]
-09/10/2023 12:04:30|DEBUG|[] End of least_frequent_items, returning 1
-09/10/2023 12:04:30|DEBUG|[shuffle_enemies] Start of edit_encounter_card
-09/10/2023 12:04:30|DEBUG|[edit_encounter_card] Start of create_image
-09/10/2023 12:04:30|DEBUG|[edit_encounter_card] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Corvian Host.jpg
-09/10/2023 12:04:30|DEBUG|[edit_encounter_card] 	End of create_image
-09/10/2023 12:04:30|DEBUG|[shuffle_enemies] New enemies: [29, 29, 1, 9, 26, 1]
-09/10/2023 12:04:30|DEBUG|[shuffle_enemies] Pasting Skeleton Soldier image onto encounter at (300, 323).
-09/10/2023 12:04:30|DEBUG|[shuffle_enemies] Pasting Skeleton Soldier image onto encounter at (329, 323).
-09/10/2023 12:04:30|DEBUG|[shuffle_enemies] Pasting Alonne Knight Captain image onto encounter at (300, 352).
-09/10/2023 12:04:30|DEBUG|[shuffle_enemies] Pasting Falchion Skeleton image onto encounter at (300, 445).
-09/10/2023 12:04:30|DEBUG|[shuffle_enemies] Pasting Silver Knight Swordsman image onto encounter at (329, 445).
-09/10/2023 12:04:30|DEBUG|[shuffle_enemies] Pasting Alonne Knight Captain image onto encounter at (300, 474).
-09/10/2023 12:04:30|DEBUG|[edit_encounter_card] Start of apply_keyword_tooltips
-09/10/2023 12:04:30|DEBUG|[apply_keyword_tooltips] Start of create_tooltip
-09/10/2023 12:04:30|DEBUG|[apply_keyword_tooltips] 	End of create_tooltip
-09/10/2023 12:04:30|DEBUG|[edit_encounter_card] 	End of apply_keyword_tooltips
-09/10/2023 12:04:30|DEBUG|[edit_encounter_card] Start of corvian_host
-09/10/2023 12:04:30|DEBUG|[corvian_host] Start of create_tooltip
-09/10/2023 12:04:30|DEBUG|[corvian_host] 	End of create_tooltip
-09/10/2023 12:04:30|DEBUG|[corvian_host] Start of create_tooltip
-09/10/2023 12:04:30|DEBUG|[corvian_host] 	End of create_tooltip
-09/10/2023 12:04:30|DEBUG|[corvian_host] Start of create_tooltip
-09/10/2023 12:04:30|DEBUG|[corvian_host] 	End of create_tooltip
-09/10/2023 12:04:30|DEBUG|[corvian_host] Start of create_tooltip
-09/10/2023 12:04:30|DEBUG|[corvian_host] 	End of create_tooltip
-09/10/2023 12:04:30|DEBUG|[edit_encounter_card] 	End of corvian_host
-09/10/2023 12:04:30|DEBUG|[shuffle_enemies] 	End of edit_encounter_card
-09/10/2023 12:04:30|DEBUG|[load_encounter] 	End of shuffle_enemies
-09/10/2023 12:04:30|DEBUG|[__call__] 	End of load_encounter
-09/10/2023 12:04:32|DEBUG|[__call__] Start of shuffle_enemies
-09/10/2023 12:04:32|DEBUG|[shuffle_enemies] Start of least_frequent_items: listToCheck=[1, 6, 12, 14, 31, 1]
-09/10/2023 12:04:32|DEBUG|[] End of least_frequent_items, returning 12
-09/10/2023 12:04:32|DEBUG|[shuffle_enemies] Start of edit_encounter_card
-09/10/2023 12:04:32|DEBUG|[edit_encounter_card] Start of create_image
-09/10/2023 12:04:32|DEBUG|[edit_encounter_card] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Corvian Host.jpg
-09/10/2023 12:04:32|DEBUG|[edit_encounter_card] 	End of create_image
-09/10/2023 12:04:32|DEBUG|[shuffle_enemies] New enemies: [15, 26, 12, 26, 19, 12]
-09/10/2023 12:04:32|DEBUG|[shuffle_enemies] Pasting Large Hollow Soldier image onto encounter at (300, 323).
-09/10/2023 12:04:32|DEBUG|[shuffle_enemies] Pasting Silver Knight Swordsman image onto encounter at (329, 323).
-09/10/2023 12:04:32|DEBUG|[shuffle_enemies] Pasting Giant Skeleton Soldier image onto encounter at (300, 352).
-09/10/2023 12:04:32|DEBUG|[shuffle_enemies] Pasting Silver Knight Swordsman image onto encounter at (300, 445).
-09/10/2023 12:04:32|DEBUG|[shuffle_enemies] Pasting Phalanx image onto encounter at (329, 445).
-09/10/2023 12:04:32|DEBUG|[shuffle_enemies] Pasting Giant Skeleton Soldier image onto encounter at (300, 474).
-09/10/2023 12:04:32|DEBUG|[edit_encounter_card] Start of apply_keyword_tooltips
-09/10/2023 12:04:32|DEBUG|[apply_keyword_tooltips] Start of create_tooltip
-09/10/2023 12:04:32|DEBUG|[apply_keyword_tooltips] 	End of create_tooltip
-09/10/2023 12:04:32|DEBUG|[edit_encounter_card] 	End of apply_keyword_tooltips
-09/10/2023 12:04:32|DEBUG|[edit_encounter_card] Start of corvian_host
-09/10/2023 12:04:32|DEBUG|[corvian_host] Start of create_tooltip
-09/10/2023 12:04:32|DEBUG|[corvian_host] 	End of create_tooltip
-09/10/2023 12:04:32|DEBUG|[corvian_host] Start of create_tooltip
-09/10/2023 12:04:32|DEBUG|[corvian_host] 	End of create_tooltip
-09/10/2023 12:04:32|DEBUG|[corvian_host] Start of create_tooltip
-09/10/2023 12:04:32|DEBUG|[corvian_host] 	End of create_tooltip
-09/10/2023 12:04:32|DEBUG|[corvian_host] Start of create_tooltip
-09/10/2023 12:04:32|DEBUG|[corvian_host] 	End of create_tooltip
-09/10/2023 12:04:32|DEBUG|[edit_encounter_card] 	End of corvian_host
-09/10/2023 12:04:32|DEBUG|[shuffle_enemies] 	End of edit_encounter_card
-09/10/2023 12:04:32|DEBUG|[__call__] 	End of shuffle_enemies
-09/10/2023 12:04:38|DEBUG|[__call__] Start of shuffle_enemies
-09/10/2023 12:04:38|DEBUG|[shuffle_enemies] Start of least_frequent_items: listToCheck=[1, 6, 12, 14, 31, 1, 12]
-09/10/2023 12:04:38|DEBUG|[] End of least_frequent_items, returning 14
-09/10/2023 12:04:38|DEBUG|[shuffle_enemies] Start of edit_encounter_card
-09/10/2023 12:04:38|DEBUG|[edit_encounter_card] Start of create_image
-09/10/2023 12:04:38|DEBUG|[edit_encounter_card] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Corvian Host.jpg
-09/10/2023 12:04:38|DEBUG|[edit_encounter_card] 	End of create_image
-09/10/2023 12:04:38|DEBUG|[shuffle_enemies] New enemies: [13, 25, 14, 15, 2, 14]
-09/10/2023 12:04:38|DEBUG|[shuffle_enemies] Pasting Hollow Soldier image onto encounter at (300, 323).
-09/10/2023 12:04:38|DEBUG|[shuffle_enemies] Pasting Silver Knight Spearman image onto encounter at (329, 323).
-09/10/2023 12:04:38|DEBUG|[shuffle_enemies] Pasting Ironclad Soldier image onto encounter at (300, 352).
-09/10/2023 12:04:38|DEBUG|[shuffle_enemies] Pasting Large Hollow Soldier image onto encounter at (300, 445).
-09/10/2023 12:04:38|DEBUG|[shuffle_enemies] Pasting Alonne Sword Knight image onto encounter at (329, 445).
-09/10/2023 12:04:38|DEBUG|[shuffle_enemies] Pasting Ironclad Soldier image onto encounter at (300, 474).
-09/10/2023 12:04:38|DEBUG|[edit_encounter_card] Start of apply_keyword_tooltips
-09/10/2023 12:04:38|DEBUG|[apply_keyword_tooltips] Start of create_tooltip
-09/10/2023 12:04:38|DEBUG|[apply_keyword_tooltips] 	End of create_tooltip
-09/10/2023 12:04:38|DEBUG|[edit_encounter_card] 	End of apply_keyword_tooltips
-09/10/2023 12:04:38|DEBUG|[edit_encounter_card] Start of corvian_host
-09/10/2023 12:04:38|DEBUG|[corvian_host] Start of create_tooltip
-09/10/2023 12:04:38|DEBUG|[corvian_host] 	End of create_tooltip
-09/10/2023 12:04:38|DEBUG|[corvian_host] Start of create_tooltip
-09/10/2023 12:04:38|DEBUG|[corvian_host] 	End of create_tooltip
-09/10/2023 12:04:38|DEBUG|[corvian_host] Start of create_tooltip
-09/10/2023 12:04:38|DEBUG|[corvian_host] 	End of create_tooltip
-09/10/2023 12:04:38|DEBUG|[corvian_host] Start of create_tooltip
-09/10/2023 12:04:38|DEBUG|[corvian_host] 	End of create_tooltip
-09/10/2023 12:04:38|DEBUG|[edit_encounter_card] 	End of corvian_host
-09/10/2023 12:04:38|DEBUG|[shuffle_enemies] 	End of edit_encounter_card
-09/10/2023 12:04:38|DEBUG|[__call__] 	End of shuffle_enemies
-09/10/2023 12:04:40|DEBUG|[__call__] Start of shuffle_enemies
-09/10/2023 12:04:40|DEBUG|[shuffle_enemies] Start of least_frequent_items: listToCheck=[1, 6, 12, 14, 31, 1, 12, 14]
-09/10/2023 12:04:40|DEBUG|[] End of least_frequent_items, returning 6
-09/10/2023 12:04:40|DEBUG|[shuffle_enemies] Start of edit_encounter_card
-09/10/2023 12:04:40|DEBUG|[edit_encounter_card] Start of create_image
-09/10/2023 12:04:40|DEBUG|[edit_encounter_card] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Corvian Host.jpg
-09/10/2023 12:04:40|DEBUG|[edit_encounter_card] 	End of create_image
-09/10/2023 12:04:40|DEBUG|[shuffle_enemies] New enemies: [13, 20, 6, 23, 21, 6]
-09/10/2023 12:04:40|DEBUG|[shuffle_enemies] Pasting Hollow Soldier image onto encounter at (300, 323).
-09/10/2023 12:04:40|DEBUG|[shuffle_enemies] Pasting Phalanx Hollow image onto encounter at (329, 323).
-09/10/2023 12:04:40|DEBUG|[shuffle_enemies] Pasting Crow Demon image onto encounter at (300, 352).
-09/10/2023 12:04:40|DEBUG|[shuffle_enemies] Pasting Shears Scarecrow image onto encounter at (300, 445).
-09/10/2023 12:04:40|DEBUG|[shuffle_enemies] Pasting Plow Scarecrow image onto encounter at (329, 445).
-09/10/2023 12:04:40|DEBUG|[shuffle_enemies] Pasting Crow Demon image onto encounter at (300, 474).
-09/10/2023 12:04:40|DEBUG|[edit_encounter_card] Start of apply_keyword_tooltips
-09/10/2023 12:04:40|DEBUG|[apply_keyword_tooltips] Start of create_tooltip
-09/10/2023 12:04:40|DEBUG|[apply_keyword_tooltips] 	End of create_tooltip
-09/10/2023 12:04:40|DEBUG|[edit_encounter_card] 	End of apply_keyword_tooltips
-09/10/2023 12:04:40|DEBUG|[edit_encounter_card] Start of corvian_host
-09/10/2023 12:04:40|DEBUG|[corvian_host] Start of create_tooltip
-09/10/2023 12:04:40|DEBUG|[corvian_host] 	End of create_tooltip
-09/10/2023 12:04:40|DEBUG|[corvian_host] Start of create_tooltip
-09/10/2023 12:04:40|DEBUG|[corvian_host] 	End of create_tooltip
-09/10/2023 12:04:40|DEBUG|[corvian_host] Start of create_tooltip
-09/10/2023 12:04:40|DEBUG|[corvian_host] 	End of create_tooltip
-09/10/2023 12:04:40|DEBUG|[corvian_host] Start of create_tooltip
-09/10/2023 12:04:40|DEBUG|[corvian_host] 	End of create_tooltip
-09/10/2023 12:04:40|DEBUG|[edit_encounter_card] 	End of corvian_host
-09/10/2023 12:04:40|DEBUG|[shuffle_enemies] 	End of edit_encounter_card
-09/10/2023 12:04:40|DEBUG|[__call__] 	End of shuffle_enemies
-09/10/2023 12:04:44|DEBUG|[] Closing application
+09/10/2023 13:17:03|DEBUG|[] Initiating application
+09/10/2023 13:17:03|DEBUG|[__init__] Start of set_encounter_list
+09/10/2023 13:17:03|DEBUG|[] End of set_encounter_list
+09/10/2023 13:17:03|DEBUG|[__init__] Start of create_buttons
+09/10/2023 13:17:03|DEBUG|[__init__] End of create_buttons
+09/10/2023 13:17:03|DEBUG|[__init__] Start of create_tabs
+09/10/2023 13:17:03|DEBUG|[] End of create_tabs
+09/10/2023 13:17:03|DEBUG|[__init__] Start of create_encounters_treeview
+09/10/2023 13:17:03|DEBUG|[] End of create_encounters_treeview
+09/10/2023 13:17:03|DEBUG|[__init__] Start of create_campaign_treeview
+09/10/2023 13:17:03|DEBUG|[] End of create_campaign_treeview
+09/10/2023 13:17:03|DEBUG|[__init__] Start of create_encounter_frame
+09/10/2023 13:17:03|DEBUG|[] End of create_encounter_frame
+09/10/2023 13:17:03|DEBUG|[__init__] Start of create_menu
+09/10/2023 13:17:03|DEBUG|[__init__] End of create_menu
+09/10/2023 13:17:03|DEBUG|[__init__] Start of set_bindings_buttons_menus: enable=True
+09/10/2023 13:17:03|DEBUG|[set_bindings_buttons_menus] Start of enable_binding: bindKey=Key-1, method=<function Application.set_bindings_buttons_menus.<locals>.<lambda> at 0x000001C22A10EE80>
+09/10/2023 13:17:03|DEBUG|[] End of enable_binding
+09/10/2023 13:17:03|DEBUG|[set_bindings_buttons_menus] Start of enable_binding: bindKey=Key-2, method=<function Application.set_bindings_buttons_menus.<locals>.<lambda> at 0x000001C22A10EF20>
+09/10/2023 13:17:03|DEBUG|[] End of enable_binding
+09/10/2023 13:17:03|DEBUG|[set_bindings_buttons_menus] Start of enable_binding: bindKey=Key-3, method=<function Application.set_bindings_buttons_menus.<locals>.<lambda> at 0x000001C22A10EFC0>
+09/10/2023 13:17:03|DEBUG|[] End of enable_binding
+09/10/2023 13:17:03|DEBUG|[set_bindings_buttons_menus] Start of enable_binding: bindKey=Key-4, method=<function Application.set_bindings_buttons_menus.<locals>.<lambda> at 0x000001C22A10F060>
+09/10/2023 13:17:03|DEBUG|[] End of enable_binding
+09/10/2023 13:17:03|DEBUG|[set_bindings_buttons_menus] Start of enable_binding: bindKey=s, method=<bound method Application.shuffle_enemies of <__main__.Application object .!application>>
+09/10/2023 13:17:03|DEBUG|[] End of enable_binding
+09/10/2023 13:17:03|DEBUG|[set_bindings_buttons_menus] Start of enable_binding: bindKey=Control-q, method=<function Application.set_bindings_buttons_menus.<locals>.<lambda> at 0x000001C22A10F100>
+09/10/2023 13:17:03|DEBUG|[] End of enable_binding
+09/10/2023 13:17:03|DEBUG|[] End of set_bindings_buttons_menus
+09/10/2023 13:17:03|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:03|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Alonne Bow Knight.png
+09/10/2023 13:17:03|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:03|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:03|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Alonne Bow Knight.png
+09/10/2023 13:17:03|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:03|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:03|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Alonne Bow Knight.png
+09/10/2023 13:17:03|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:03|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:03|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Alonne Bow Knight rule bg.jpg
+09/10/2023 13:17:03|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:03|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:03|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Alonne Knight Captain.png
+09/10/2023 13:17:03|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:03|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:03|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Alonne Knight Captain.png
+09/10/2023 13:17:03|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:03|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:03|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Alonne Knight Captain.png
+09/10/2023 13:17:03|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:03|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:03|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Alonne Knight Captain rule bg.jpg
+09/10/2023 13:17:03|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:03|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:03|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Alonne Sword Knight.png
+09/10/2023 13:17:03|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:03|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:03|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Alonne Sword Knight.png
+09/10/2023 13:17:03|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:03|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:03|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Alonne Sword Knight.png
+09/10/2023 13:17:03|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:03|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:03|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Alonne Sword Knight rule bg.jpg
+09/10/2023 13:17:03|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:03|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:03|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Black Hollow Mage.png
+09/10/2023 13:17:03|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:03|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:03|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Black Hollow Mage.png
+09/10/2023 13:17:03|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:03|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:03|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Black Hollow Mage.png
+09/10/2023 13:17:03|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:03|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:03|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Black Hollow Mage rule bg.jpg
+09/10/2023 13:17:03|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:03|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:03|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Bonewheel Skeleton.png
+09/10/2023 13:17:03|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:03|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:03|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Bonewheel Skeleton.png
+09/10/2023 13:17:03|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:03|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:03|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Bonewheel Skeleton.png
+09/10/2023 13:17:03|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:03|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:03|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Bonewheel Skeleton rule bg.jpg
+09/10/2023 13:17:03|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:03|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:03|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Crossbow Hollow.png
+09/10/2023 13:17:03|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:03|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:03|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Crossbow Hollow.png
+09/10/2023 13:17:04|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Crossbow Hollow.png
+09/10/2023 13:17:04|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Crossbow Hollow rule bg.jpg
+09/10/2023 13:17:04|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Crow Demon.png
+09/10/2023 13:17:04|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Crow Demon.png
+09/10/2023 13:17:04|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Crow Demon.png
+09/10/2023 13:17:04|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Crow Demon rule bg.jpg
+09/10/2023 13:17:04|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Demonic Foliage.png
+09/10/2023 13:17:04|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Demonic Foliage.png
+09/10/2023 13:17:04|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Demonic Foliage.png
+09/10/2023 13:17:04|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Demonic Foliage rule bg.jpg
+09/10/2023 13:17:04|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Engorged Zombie.png
+09/10/2023 13:17:04|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Engorged Zombie.png
+09/10/2023 13:17:04|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Engorged Zombie.png
+09/10/2023 13:17:04|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Engorged Zombie rule bg.jpg
+09/10/2023 13:17:04|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Falchion Skeleton.png
+09/10/2023 13:17:04|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Falchion Skeleton.png
+09/10/2023 13:17:04|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Falchion Skeleton.png
+09/10/2023 13:17:04|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Falchion Skeleton rule bg.jpg
+09/10/2023 13:17:04|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Firebomb Hollow.png
+09/10/2023 13:17:04|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Firebomb Hollow.png
+09/10/2023 13:17:04|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Firebomb Hollow.png
+09/10/2023 13:17:04|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Firebomb Hollow rule bg.jpg
+09/10/2023 13:17:04|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Giant Skeleton Archer.png
+09/10/2023 13:17:04|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Giant Skeleton Archer.png
+09/10/2023 13:17:04|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Giant Skeleton Archer.png
+09/10/2023 13:17:04|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Giant Skeleton Archer rule bg.jpg
+09/10/2023 13:17:04|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Giant Skeleton Soldier.png
+09/10/2023 13:17:04|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Giant Skeleton Soldier.png
+09/10/2023 13:17:04|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Giant Skeleton Soldier.png
+09/10/2023 13:17:04|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Giant Skeleton Soldier rule bg.jpg
+09/10/2023 13:17:04|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Hollow Soldier.png
+09/10/2023 13:17:04|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Hollow Soldier.png
+09/10/2023 13:17:04|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Hollow Soldier.png
+09/10/2023 13:17:04|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Hollow Soldier rule bg.jpg
+09/10/2023 13:17:04|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Ironclad Soldier.png
+09/10/2023 13:17:04|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Ironclad Soldier.png
+09/10/2023 13:17:04|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Ironclad Soldier.png
+09/10/2023 13:17:04|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Ironclad Soldier rule bg.jpg
+09/10/2023 13:17:04|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Large Hollow Soldier.png
+09/10/2023 13:17:04|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Large Hollow Soldier.png
+09/10/2023 13:17:04|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Large Hollow Soldier.png
+09/10/2023 13:17:04|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Large Hollow Soldier rule bg.jpg
+09/10/2023 13:17:04|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:04|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Mushroom Child.png
+09/10/2023 13:17:04|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Mushroom Child.png
+09/10/2023 13:17:05|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Mushroom Child.png
+09/10/2023 13:17:05|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Mushroom Child rule bg.jpg
+09/10/2023 13:17:05|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Mushroom Parent.png
+09/10/2023 13:17:05|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Mushroom Parent.png
+09/10/2023 13:17:05|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Mushroom Parent.png
+09/10/2023 13:17:05|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Mushroom Parent rule bg.jpg
+09/10/2023 13:17:05|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Necromancer.png
+09/10/2023 13:17:05|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Necromancer.png
+09/10/2023 13:17:05|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Necromancer.png
+09/10/2023 13:17:05|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Necromancer rule bg.jpg
+09/10/2023 13:17:05|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Phalanx.png
+09/10/2023 13:17:05|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Phalanx.png
+09/10/2023 13:17:05|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Phalanx.png
+09/10/2023 13:17:05|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Phalanx rule bg.jpg
+09/10/2023 13:17:05|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Phalanx Hollow.png
+09/10/2023 13:17:05|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Phalanx Hollow.png
+09/10/2023 13:17:05|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Phalanx Hollow.png
+09/10/2023 13:17:05|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Phalanx Hollow rule bg.jpg
+09/10/2023 13:17:05|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Plow Scarecrow.png
+09/10/2023 13:17:05|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Plow Scarecrow.png
+09/10/2023 13:17:05|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Plow Scarecrow.png
+09/10/2023 13:17:05|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Plow Scarecrow rule bg.jpg
+09/10/2023 13:17:05|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Sentinel.png
+09/10/2023 13:17:05|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Sentinel.png
+09/10/2023 13:17:05|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Sentinel.png
+09/10/2023 13:17:05|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Sentinel rule bg.jpg
+09/10/2023 13:17:05|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Shears Scarecrow.png
+09/10/2023 13:17:05|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Shears Scarecrow.png
+09/10/2023 13:17:05|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Shears Scarecrow.png
+09/10/2023 13:17:05|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Shears Scarecrow rule bg.jpg
+09/10/2023 13:17:05|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Silver Knight Greatbowman.png
+09/10/2023 13:17:05|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Silver Knight Greatbowman.png
+09/10/2023 13:17:05|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Silver Knight Greatbowman.png
+09/10/2023 13:17:05|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Silver Knight Greatbowman rule bg.jpg
+09/10/2023 13:17:05|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Silver Knight Spearman.png
+09/10/2023 13:17:05|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Silver Knight Spearman.png
+09/10/2023 13:17:05|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Silver Knight Spearman.png
+09/10/2023 13:17:05|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Silver Knight Spearman rule bg.jpg
+09/10/2023 13:17:05|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Silver Knight Swordsman.png
+09/10/2023 13:17:05|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Silver Knight Swordsman.png
+09/10/2023 13:17:05|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Silver Knight Swordsman.png
+09/10/2023 13:17:05|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Silver Knight Swordsman rule bg.jpg
+09/10/2023 13:17:05|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Skeleton Archer.png
+09/10/2023 13:17:05|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Skeleton Archer.png
+09/10/2023 13:17:05|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Skeleton Archer.png
+09/10/2023 13:17:05|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Skeleton Archer rule bg.jpg
+09/10/2023 13:17:05|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Skeleton Beast.png
+09/10/2023 13:17:05|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Skeleton Beast.png
+09/10/2023 13:17:05|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Skeleton Beast.png
+09/10/2023 13:17:05|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Skeleton Beast rule bg.jpg
+09/10/2023 13:17:05|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Skeleton Soldier.png
+09/10/2023 13:17:05|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Skeleton Soldier.png
+09/10/2023 13:17:05|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:05|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Skeleton Soldier.png
+09/10/2023 13:17:06|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Skeleton Soldier rule bg.jpg
+09/10/2023 13:17:06|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Snow Rat.png
+09/10/2023 13:17:06|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Snow Rat.png
+09/10/2023 13:17:06|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Snow Rat.png
+09/10/2023 13:17:06|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Snow Rat rule bg.jpg
+09/10/2023 13:17:06|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Stone Guardian.png
+09/10/2023 13:17:06|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Stone Guardian.png
+09/10/2023 13:17:06|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Stone Guardian.png
+09/10/2023 13:17:06|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Stone Guardian rule bg.jpg
+09/10/2023 13:17:06|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Stone Knight.png
+09/10/2023 13:17:06|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Stone Knight.png
+09/10/2023 13:17:06|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Stone Knight.png
+09/10/2023 13:17:06|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Stone Knight rule bg.jpg
+09/10/2023 13:17:06|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Kirk Knight of Thorns.png
+09/10/2023 13:17:06|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Kirk Knight of Thorns.png
+09/10/2023 13:17:06|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Kirk Knight of Thorns.png
+09/10/2023 13:17:06|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Maldron the Assassin.png
+09/10/2023 13:17:06|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Maldron the Assassin.png
+09/10/2023 13:17:06|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Maldron the Assassin.png
+09/10/2023 13:17:06|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Maneater Mildred.png
+09/10/2023 13:17:06|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Maneater Mildred.png
+09/10/2023 13:17:06|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Maneater Mildred.png
+09/10/2023 13:17:06|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Melinda the Butcher.png
+09/10/2023 13:17:06|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Melinda the Butcher.png
+09/10/2023 13:17:06|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Melinda the Butcher.png
+09/10/2023 13:17:06|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Oliver the Collector.png
+09/10/2023 13:17:06|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Oliver the Collector.png
+09/10/2023 13:17:06|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Oliver the Collector.png
+09/10/2023 13:17:06|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Xanthous King Jeremiah.png
+09/10/2023 13:17:06|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Xanthous King Jeremiah.png
+09/10/2023 13:17:06|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Xanthous King Jeremiah.png
+09/10/2023 13:17:06|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Hungry Mimic.png
+09/10/2023 13:17:06|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Hungry Mimic.png
+09/10/2023 13:17:06|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Hungry Mimic.png
+09/10/2023 13:17:06|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Armourer Dennis.png
+09/10/2023 13:17:06|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Armourer Dennis.png
+09/10/2023 13:17:06|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Armourer Dennis.png
+09/10/2023 13:17:06|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Fencer Sharron.png
+09/10/2023 13:17:06|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Fencer Sharron.png
+09/10/2023 13:17:06|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Fencer Sharron.png
+09/10/2023 13:17:06|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Invader Brylex.png
+09/10/2023 13:17:06|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Invader Brylex.png
+09/10/2023 13:17:06|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Invader Brylex.png
+09/10/2023 13:17:06|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Longfinger Kirk.png
+09/10/2023 13:17:06|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Longfinger Kirk.png
+09/10/2023 13:17:06|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Longfinger Kirk.png
+09/10/2023 13:17:06|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Marvelous Chester.png
+09/10/2023 13:17:06|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Marvelous Chester.png
+09/10/2023 13:17:06|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Marvelous Chester.png
+09/10/2023 13:17:06|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Paladin Leeroy.png
+09/10/2023 13:17:06|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Paladin Leeroy.png
+09/10/2023 13:17:06|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Paladin Leeroy.png
+09/10/2023 13:17:06|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Voracious Mimic.png
+09/10/2023 13:17:06|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Voracious Mimic.png
+09/10/2023 13:17:06|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\Voracious Mimic.png
+09/10/2023 13:17:06|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\enemy_node_2.png
+09/10/2023 13:17:06|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\bleed.png
+09/10/2023 13:17:06|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\poison_mist.png
+09/10/2023 13:17:06|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\darkness.png
+09/10/2023 13:17:06|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\trial.png
+09/10/2023 13:17:06|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\timer.png
+09/10/2023 13:17:06|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\onslaught.png
+09/10/2023 13:17:06|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\snowstorm.png
+09/10/2023 13:17:06|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\hidden.png
+09/10/2023 13:17:06|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\bitter_cold.png
+09/10/2023 13:17:06|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\eerie.png
+09/10/2023 13:17:06|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] Start of create_image
+09/10/2023 13:17:06|DEBUG|[__init__] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\images\barrage.png
+09/10/2023 13:17:06|DEBUG|[__init__] 	End of create_image
+09/10/2023 13:17:22|DEBUG|[] Closing application
