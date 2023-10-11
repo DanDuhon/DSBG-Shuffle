@@ -13,7 +13,8 @@ try:
     from tkinter import filedialog
 
     from enemies import enemyIds, enemiesDict
-    from treasure import generate_treasure_soul_cost, pick_treasure
+    from treasure import generate_treasure_soul_cost, populate_treasure_tiers, pick_treasure
+    from character import soulCost
 
 
     def enable_binding(bindKey, method):
@@ -150,25 +151,33 @@ try:
                 self.helpTextFrame = ttk.Frame(top, padding=(0, 0, 0, 10))
                 self.helpTextFrame.grid(row=0, column=0, padx=15, pady=(10, 0), sticky="w")
 
-                helpText = "You can either select an encounter from the list\n"
-                helpText += "or click the \"Random Level x\" buttons.\n\n"
-                helpText += "Once an encounter card has been loaded, you can use the \"s\"\n"
-                helpText += "key to reshuffle the enemies on the encounter.\n"
-                helpText += "Clicking on the encounter card will also do this.\n\n"
+                helpText = "Encounters Tab\n"
+                helpText += "You can either select an encounter from the list or click the \"Random\n"
+                helpText += "Level x\" buttons. Once an encounter card has been loaded, you can click\n"
+                helpText += "on the card or use the \"s\" key to reshuffle the encounter's enemies and\n"
+                helpText += "treasure reward, if any.\n\n"
+                helpText += "If you try to shuffle the enemies and nothing happens, there's probably\n"
+                helpText += "only one combination available! Many encounters with a single enemy have\n"
+                helpText += "no alternatives, even with all sets activated.\n\n"
+                helpText += "Mousing over keywords (in bold and italics) and icons in the Objectives\n"
+                helpText += "and Special Rules sections will display the name or rules for that keyword.\n\n"
+                helpText += "Campaign Tab\n"
+                helpText += "You can build your own campaign by adding encounters to it. You can also\n"
+                helpText += "save and load campaigns. You may only have one of each encounter name,\n"
+                helpText += "but there are no restrictions beyond that. Encounters added to a campaign\n"
+                helpText += "are frozen so you cannot shuffle the enemies.\n\n"
+                helpText += "Settings\n"
                 helpText += "In the settings menu, you can enable the different core sets/expansions\n"
-                helpText += "that add enemies to the game. These are the only sets listed on purpose\n"
-                helpText += "as they are the ones that add non-boss enemies.\n\n"
-                helpText += "If you try to shuffle the enemies and nothing happens,\n"
-                helpText += "there's probably only one combination available!\n"
-                helpText += "Many encounters with a single enemy have no alternatives,\n"
-                helpText += "even with all enemy expansions activated.\n\n"
-                helpText += "Mousing over keywords (in bold and italics) will display the\n"
-                helpText += "rules for that keyword.\n\n"
-                helpText += "In the Campaign tab, you can build your own campaign by adding\n"
-                helpText += "encounters to it. You can also save and load campaigns.\n"
-                helpText += "You may only have one of each encounter name, but there are\n"
-                helpText += "no restrictions beyond that. Encounters added to a campaign\n"
-                helpText += "are frozen so you cannot shuffle the enemies."
+                helpText += "that add enemies or basic treasure to the game. These are the only sets\n"
+                helpText += "listed on purpose as they are the ones that add non-boss enemies.\n\n"
+                helpText += "Treasure Swap Options are as follows:\n"
+                helpText += "Similar Soul Cost: Rewards an item of the same type as the original that\n"
+                helpText += "    also costs about the same souls in leveling stats in order to equip it\n"
+                helpText += "Tier Based: Splits treasure into tiers and rewards an item in the same\n"
+                helpText += "    tier as the original reward.\n"
+                helpText += "Generic Treasure: Changes all specific item rewards to a number of draws\n"
+                helpText += "    equal to the encounter level.\n"
+                helpText += "Original: Display the original reward on the card only."
                 self.helpTextLabel = ttk.Label(self.helpTextFrame, text=helpText)
                 self.helpTextLabel.grid()
 
@@ -201,7 +210,7 @@ try:
 
                 self.availableSets = set(self.settings["availableSets"])
                 
-                # These are the only sets that matter - the ones that add enemies or treasure.
+                # These are the only sets that matter - the ones that add enemies or regular treasure.
                 # All encounters are always going to be available.
                 self.sets = {
                     "Dark Souls The Board Game": {"button": None, "value": tk.IntVar()},
@@ -215,16 +224,49 @@ try:
                     "Character Expansion": {"button": None, "value": tk.IntVar()}
                 }
                 
-                self.checkFrame = ttk.LabelFrame(top, text="Enabled Enemies From Sets", padding=(20, 10))
-                self.checkFrame.grid(row=0, column=0, padx=(20, 10), pady=(20, 10), sticky="nsew", columnspan=2)
+                self.setsFrame = ttk.LabelFrame(top, text="Enabled Enemies From Sets", padding=(20, 10))
+                self.setsFrame.grid(row=0, column=0, padx=(20, 10), pady=(20, 10), sticky="nsew", rowspan=2, columnspan=2)
                 for i, a in enumerate(self.sets):
                     self.sets[a]["value"].set(1 if a in self.settings["availableSets"] else 0)
-                    self.sets[a]["button"] = ttk.Checkbutton(self.checkFrame, text=a + (" (Core Set)" if a in coreSets else ""), variable=self.sets[a]["value"])
-                    self.sets[a]["button"].grid(row=i, column=0, padx=5, pady=10, sticky="nsew")
+                    self.sets[a]["button"] = ttk.Checkbutton(self.setsFrame, text=a + (" (Core Set)" if a in coreSets else ""), variable=self.sets[a]["value"])
                     if i > 11:
                         self.sets[a]["button"].grid(row=i-12, column=1, padx=5, pady=10, sticky="nsew")
                     else:
                         self.sets[a]["button"].grid(row=i, column=0, padx=5, pady=10, sticky="nsew")
+
+                self.charactersActive = {
+                    "Assassin": {"button": None, "value": tk.IntVar()},
+                    "Cleric": {"button": None, "value": tk.IntVar()},
+                    "Deprived": {"button": None, "value": tk.IntVar()},
+                    "Herald": {"button": None, "value": tk.IntVar()},
+                    "Knight": {"button": None, "value": tk.IntVar()},
+                    "Mercenary": {"button": None, "value": tk.IntVar()},
+                    "Pyromancer": {"button": None, "value": tk.IntVar()},
+                    "Sorcerer": {"button": None, "value": tk.IntVar()},
+                    "Thief": {"button": None, "value": tk.IntVar()},
+                    "Warrior": {"button": None, "value": tk.IntVar()}
+                }
+                
+                self.characterFrame = ttk.LabelFrame(top, text="Characters Being Played (up to 4)", padding=(20, 10))
+                self.characterFrame.grid(row=0, column=3, padx=(20, 10), pady=(20, 10), sticky="nsew", rowspan=2, columnspan=2)
+                for i, a in enumerate(self.charactersActive):
+                    self.charactersActive[a]["value"].set(1 if a in self.settings["charactersActive"] else 0)
+                    self.charactersActive[a]["button"] = ttk.Checkbutton(self.characterFrame, text=a, variable=self.charactersActive[a]["value"], command=self.check_max_characters)
+                    self.charactersActive[a]["button"].grid(row=i, column=0, padx=5, pady=10, sticky="nsew")
+                    
+                self.treasureSwapOptions = {
+                    "Similar Soul Cost": {"button": None, "value": tk.StringVar(value="Similar Soul Cost")},
+                    "Tier Based": {"button": None, "value": tk.StringVar(value="Tier Based")},
+                    "Generic Treasure": {"button": None, "value": tk.StringVar(value="Generic Treasure")},
+                    "Original": {"button": None, "value": tk.StringVar(value="Original")}
+                }
+
+                self.treasureSwapOption = tk.StringVar(value=self.settings["treasureSwapOption"])
+                self.treasureSwapFrame = ttk.LabelFrame(top, text="Treasure Swap Options", padding=(20, 10))
+                self.treasureSwapFrame.grid(row=0, column=5, padx=(20, 10), pady=(20, 10), sticky="nsew")
+                for i, a in enumerate(self.treasureSwapOptions):
+                    self.treasureSwapOptions[a]["button"] = ttk.Radiobutton(self.treasureSwapFrame, text=a, variable=self.treasureSwapOption, value=a)
+                    self.treasureSwapOptions[a]["button"].grid(row=i, column=0, padx=5, pady=10, sticky="nsew")
                 
                 self.randomEncounters = {
                     "old": {"button": None, "value": tk.IntVar()},
@@ -232,7 +274,7 @@ try:
                 }
 
                 self.randomEncounterFrame = ttk.LabelFrame(top, text="Random Encounters Shown", padding=(20, 10))
-                self.randomEncounterFrame.grid(row=0, column=3, padx=(20, 10), pady=(20, 10), sticky="nsew", columnspan=2)
+                self.randomEncounterFrame.grid(row=1, column=5, padx=(20, 10), pady=(20, 10), sticky="nsew")
                 self.randomEncounters["old"]["value"].set(1 if "old" in self.settings["randomEncounterTypes"] else 0)
                 self.randomEncounters["new"]["value"].set(1 if "new" in self.settings["randomEncounterTypes"] else 0)
                 self.randomEncounters["old"]["button"] = ttk.Checkbutton(self.randomEncounterFrame, text="\"Old\" Style Encounters", variable=self.randomEncounters["old"]["value"])
@@ -241,10 +283,10 @@ try:
                 self.randomEncounters["new"]["button"].grid(row=1, column=0, padx=5, pady=10, sticky="nsew")
                 
                 self.errLabel = tk.Label(self.top, text="")
-                self.errLabel.grid(column=0, row=2, padx=18, columnspan=4)
+                self.errLabel.grid(column=0, row=3, padx=18, columnspan=8)
 
                 self.saveCancelButtonsFrame = ttk.Frame(top, padding=(0, 0, 0, 10))
-                self.saveCancelButtonsFrame.grid(row=3, column=0, padx=15, pady=(10, 0), sticky="w", columnspan=2)
+                self.saveCancelButtonsFrame.grid(row=4, column=0, padx=15, pady=(10, 0), sticky="w", columnspan=2)
                 self.saveCancelButtonsFrame.columnconfigure(index=0, weight=1)
                 
                 self.saveButton = ttk.Button(self.saveCancelButtonsFrame, text="Save", width=14, command=lambda: self.quit_with_save())
@@ -253,13 +295,45 @@ try:
                 self.cancelButton.grid(column=1, row=0, padx=5)
 
                 self.themeButtonFrame = ttk.Frame(top, padding=(0, 0, 0, 10))
-                self.themeButtonFrame.grid(row=3, column=3, padx=15, pady=(10, 0), sticky="e", columnspan=2)
+                self.themeButtonFrame.grid(row=4, column=5, padx=15, pady=(10, 0), sticky="e", columnspan=2)
                 self.themeButtonFrame.columnconfigure(index=0, weight=1)
 
                 self.lightTheme = {"button": None, "value": tk.IntVar()}
                 self.lightTheme["value"].set(0 if self.settings["theme"] == "dark" else 1)
                 self.lightTheme["button"] = ttk.Button(self.themeButtonFrame, text="Switch to light theme" if self.lightTheme["value"].get() == 0 else "Switch to dark theme", command=self.switch_theme)
                 self.lightTheme["button"].grid(column=3, row=0, columnspan=2)
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
+        def check_max_characters(self, event=None):
+            """
+            Checks to see how many characters have been selected.
+            Disable remaining if 4 have been selected.
+
+            Optional Parameters:
+                event: tkinter.Event
+                    The tkinter Event that is the trigger.
+            """
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of check_max_characters", caller=calframe[1][3])
+
+                numChars = len([c for c in self.charactersActive if self.charactersActive[c]["value"].get() == 1])
+                if numChars == 4:
+                    for c in [c for c in self.charactersActive if self.charactersActive[c]["value"].get() == 0]:
+                        self.charactersActive[c]["button"].config(state=tk.DISABLED)
+                        if self.lightTheme["value"].get() == 0:
+                            self.charactersActive[c]["button"].config(foreground="gray")
+                else:
+                    for c in self.charactersActive:
+                        self.charactersActive[c]["button"].config(state=tk.NORMAL)
+                        if self.lightTheme["value"].get() == 1:
+                            self.charactersActive[c]["button"].config(fg="white")
+
+                adapter.debug("End of check_max_characters", caller=calframe[1][3])
             except Exception as e:
                 adapter.exception(e)
                 raise
@@ -281,7 +355,7 @@ try:
                 self.lightTheme["value"].set(0 if self.lightTheme["value"].get() == 1 else 1)
                 self.settings["theme"] = "light" if self.lightTheme["value"].get() == 1 else "dark"
                 root.tk.call("set_theme", "light" if self.lightTheme["value"].get() == 1 else "dark")
-                self.lightTheme["button"]["text"] = "Switch to light theme" if self.lightTheme["value"].get() == 0 else "Switch to dark theme"
+                self.lightTheme["button"]["text"] = "Switch to light theme" if self.lightTheme["value"].get() == 0 else "Switch to dark (souls) theme"
                 self.errLabel.config(text="To keep this theme when you open the program again, you need to click Save!")
 
                 adapter.debug("End of switch_theme", caller=calframe[1][3])
@@ -303,6 +377,8 @@ try:
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of quit_with_save", caller=calframe[1][3])
 
+                self.errLabel.config(text="")
+
                 if all([self.sets[s]["value"].get() == 0 for s in coreSets]):
                     self.errLabel.config(text="You need to select at least one Core Set!")
                     adapter.debug("End of quit_with_save", caller=calframe[1][3])
@@ -313,13 +389,30 @@ try:
                     adapter.debug("End of quit_with_save", caller=calframe[1][3])
                     return
 
-                newAvailableSets = set([s for s in self.sets if self.sets[s]["value"].get() == 1])
+                if len([i for i in self.charactersActive if self.charactersActive[i]["value"].get() == 1]) < 1 and self.treasureSwapOption.get() in set(["Similar Soul Cost", "Tier Based"]):
+                    self.errLabel.config(text="You need to select at least 1 character if using the Similar Soul Cost or Tier Based treasure swap options!")
+                    adapter.debug("End of quit_with_save", caller=calframe[1][3])
+                    return
+                
+                characterSets = set()
+                for c in soulCost:
+                    characterSets.update(soulCost[c]["sets"])
+
+                setsActive = set([s for s in self.sets if self.sets[s]["value"].get() == 1])
+                if characterSets - setsActive:
+                    self.errLabel.config(text="You have selected one or more characters from sets you have disabled!")
+                    adapter.debug("End of quit_with_save", caller=calframe[1][3])
+                    return
+
                 randomEncounterTypes = set([s for s in self.randomEncounters if self.randomEncounters[s]["value"].get() == 1])
+                charactersActive = set([s for s in self.charactersActive if self.charactersActive[s]["value"].get() == 1])
 
                 newSettings = {
                     "theme": "light" if self.lightTheme["value"].get() == 1 else "dark",
-                    "availableSets": list(newAvailableSets),
-                    "randomEncounterTypes": list(randomEncounterTypes)
+                    "availableSets": list(setsActive),
+                    "randomEncounterTypes": list(randomEncounterTypes),
+                    "charactersActive": list(charactersActive),
+                    "treasureSwapOption": self.treasureSwapOption.get()
                 }
 
                 # This will trigger the encounters treeview to be recreated to account for the changes.
@@ -331,7 +424,11 @@ try:
                         dump(newSettings, settingsFile)
 
                     # Recalculate the average soul cost of treasure.
-                    generate_treasure_soul_cost(set(newSettings["availableSets"]))
+                    if self.treasureSwapOption.get() == "Similar Soul Cost":
+                        generate_treasure_soul_cost(setsActive, charactersActive)
+                    elif self.treasureSwapOption.get() == "Tier Based":
+                        generate_treasure_soul_cost(setsActive, charactersActive)
+                        populate_treasure_tiers(setsActive, charactersActive)
 
                 self.top.destroy()
                 adapter.debug("End of quit_with_save", caller=calframe[1][3])
@@ -475,12 +572,17 @@ try:
 
                 self.allSets = set([encounters[encounter]["expansion"] for encounter in encounters])
                 self.availableSets = set(self.settings["availableSets"])
+                self.charactersActive = set(self.settings["charactersActive"])
                 self.availableCoreSets = coreSets & self.availableSets
                 oldSets = {"Dark Souls The Board Game", "Darkroot", "The Executioner's Chariot", "Explorers", "Iron Keep"} if "old" in self.settings["randomEncounterTypes"] else set()
                 newSets = (self.allSets - {"Dark Souls The Board Game", "Darkroot", "The Executioner's Chariot", "Explorers", "Iron Keep"}) if "new" in self.settings["randomEncounterTypes"] else set()
                 self.setsForRandomEncounters = (oldSets | newSets) & self.allSets
                 
-                generate_treasure_soul_cost(self.availableSets)
+                if self.settings["treasureSwapOption"] == "Similar Soul Cost":
+                    generate_treasure_soul_cost(self.availableSets, self.charactersActive)
+                elif self.settings["treasureSwapOption"] == "Tier Based":
+                    generate_treasure_soul_cost(self.availableSets, self.charactersActive)
+                    populate_treasure_tiers(self.availableSets, self.charactersActive)
                 self.set_encounter_list()
                 self.create_buttons()
                 self.create_tabs()
@@ -720,6 +822,7 @@ try:
                 self.selected = None
                 self.newEnemies = []
                 self.newTiles = dict()
+                self.rewardTreasure = None
             except Exception as e:
                 adapter.exception(e)
                 raise
@@ -822,7 +925,9 @@ try:
                     "name": self.selected["name"],
                     "expansion": self.selected["expansion"],
                     "level": self.selected["level"],
-                    "enemies": self.newEnemies
+                    "enemies": self.newEnemies,
+                    "trialTarget": self.trialTarget,
+                    "rewardTreasure": self.rewardTreasure
                 }
 
                 # Only allow one encounter of the same name per campaign.
@@ -1027,6 +1132,7 @@ try:
                 adapter.debug("Start of load_campaign_encounter", caller=calframe[1][3])
 
                 self.selected = None
+                self.rewardTreasure = None
                 self.encounter.unbind("<Button 1>")
 
                 tree = event.widget
@@ -1038,6 +1144,8 @@ try:
                 
                 # Get the encounter selected.
                 campaignEncounter = [e for e in self.campaign if e["name"] == tree.item(tree.selection())["values"][0]]
+
+                self.rewardTreasure = campaignEncounter[0]["rewardTreasure"]
 
                 # If the selected encounter is a boss.
                 if campaignEncounter[0]["name"] in self.bosses:
@@ -1058,8 +1166,8 @@ try:
 
                     # Create the encounter card with saved enemies and tooltips.
                     self.newEnemies = campaignEncounter[0]["enemies"]
+                    self.trialTarget = campaignEncounter[0]["trialTarget"]
                     self.edit_encounter_card(campaignEncounter[0]["name"], campaignEncounter[0]["expansion"], campaignEncounter[0]["level"], alts["enemySlots"])
-                    self.apply_keyword_tooltips()
 
                 adapter.debug("End of load_campaign_encounter")
             except Exception as e:
@@ -1470,6 +1578,7 @@ try:
                     with open(baseFolder + "\\settings.json") as settingsFile:
                         self.settings = load(settingsFile)
                     self.selected = None
+                    self.rewardTreasure = None
                     self.encounter.config(image="")
                     self.treeviewEncounters.pack_forget()
                     self.treeviewEncounters.destroy()
@@ -1726,10 +1835,12 @@ try:
                     adapter.debug("\tEnd of shuffle_enemies", caller=calframe[1][3])
                     return
                 
+                self.rewardTreasure = None
+                
                 if self.selected["name"] in set(["Corvian Host", "Distant Tower"]):
-                    trialTarget = self.least_frequent_items(self.trialEnemies)
+                    self.trialTarget = self.least_frequent_items(self.trialEnemies)
                 else:
-                    trialTarget = None
+                    self.trialTarget = None
 
                 # Make sure a new set of enemies is chosen each time, otherwise it
                 # feels like the program isn't doing anything.
@@ -1741,15 +1852,15 @@ try:
                 if len(self.selected["alternatives"]) > 1:
                     while (self.newEnemies == oldEnemies
                            or (self.selected["name"] == "Corvian Host"
-                               and sorted([enemy for enemy in self.newEnemies if enemyIds[enemy].health >= 5], key=lambda x: enemyIds[x].difficulty, reverse=True)[0] != trialTarget)
+                               and sorted([enemy for enemy in self.newEnemies if enemyIds[enemy].health >= 5], key=lambda x: enemyIds[x].difficulty, reverse=True)[0] != self.trialTarget)
                            or (self.selected["name"] == "Distant Tower"
-                               and sorted(self.newEnemies, key=lambda x: enemyIds[x].difficulty, reverse=True)[0] != trialTarget)):
+                               and sorted(self.newEnemies, key=lambda x: enemyIds[x].difficulty, reverse=True)[0] != self.trialTarget)):
                         self.newEnemies = choice(self.selected["alternatives"])
 
-                if trialTarget:
-                    self.trialEnemies.append(trialTarget)
+                if self.trialTarget:
+                    self.trialEnemies.append(self.trialTarget)
 
-                self.edit_encounter_card(self.selected["name"], self.selected["expansion"], self.selected["level"], self.selected["enemySlots"], trialTarget)
+                self.edit_encounter_card(self.selected["name"], self.selected["expansion"], self.selected["level"], self.selected["enemySlots"])
 
                 adapter.debug("\tEnd of shuffle_enemies", caller=calframe[1][3])
             except Exception as e:
@@ -1757,7 +1868,7 @@ try:
                 raise
         
 
-        def edit_encounter_card(self, name, expansion, level, enemySlots, trialTarget):
+        def edit_encounter_card(self, name, expansion, level, enemySlots):
             """
             Modify the encounter card image with the new enemies and treasure reward, if applicable.
 
@@ -1773,9 +1884,6 @@ try:
 
                 enemySlots: List
                     The slots on the card in which enemies are found.
-
-                trialTarget: Integer
-                    The Enemy ID of the trial target, if there is one.
             """
             try:
                 curframe = inspect.currentframe()
@@ -1824,7 +1932,7 @@ try:
                         self.encounterImage.paste(im=image, box=(x, y), mask=image)
                         s += 1
 
-                self.apply_keyword_tooltips()
+                self.apply_keyword_tooltips(name)
 
                 # # These are new encounters that have text referencing specific enemies.
                 if name == "Abandoned and Forgotten":
@@ -1834,7 +1942,7 @@ try:
                 elif name == "Cold Snap":
                     self.cold_snap()
                 elif name == "Corvian Host":
-                    self.corvian_host(trialTarget)
+                    self.corvian_host()
                 elif name == "Corrupted Hovel":
                     self.corrupted_hovel()
                 elif name == "Dark Resurrection":
@@ -1929,7 +2037,7 @@ try:
                 raise
 
 
-        def apply_keyword_tooltips(self):
+        def apply_keyword_tooltips(self, name):
             """
             If the encounter card has keywords, create an image of the word imposed over
             the original word and create a tooltip that shows up when mousing over the keyword image.
@@ -1946,7 +2054,7 @@ try:
                     adapter.debug("\tEnd of apply_keyword_tooltips (removed tooltips only)", caller=calframe[1][3])
                     return
 
-                for i, tooltip in enumerate(self.encounterTooltips.get(self.selected["name"], [])):
+                for i, tooltip in enumerate(self.encounterTooltips.get(name, [])):
                     self.create_tooltip(image=tooltip["image"], text=self.tooltipText[tooltip["imageName"]], x=142, y=199 + (15.5 * i))
 
                 adapter.debug("\tEnd of apply_keyword_tooltips", caller=calframe[1][3])
@@ -2056,27 +2164,23 @@ try:
                 raise
 
 
-        def corvian_host(self, trialTarget):
+        def corvian_host(self):
             """
             Change Crow Demons to another enemy.
-
-            Required Parameters:
-                trialTarget: Integer
-                    The Enemy ID of the trial target.
             """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of corvian_host", caller=calframe[1][3])
 
-                target = enemyIds[trialTarget].name
+                target = enemyIds[self.trialTarget].name
                 image = allEnemies[target]["image text"]
                 self.create_tooltip(image=image, text=self.tooltipText[target], x=161, y=239)
                 self.create_tooltip(image=image, text=self.tooltipText[target], x=261, y=239)
                 self.create_tooltip(image=image, text=self.tooltipText[target], x=261, y=252)
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
-                if enemyIds[trialTarget].armor + enemyIds[trialTarget].resist <= 3:
+                if enemyIds[self.trialTarget].armor + enemyIds[self.trialTarget].resist <= 3:
                     self.create_tooltip(image=image, text=self.tooltipText[target], x=189, y=274)
                     text1 = "Increase       block and resistance"
                     text2 = "values by 1 and their attacks gain     ."
@@ -2089,9 +2193,19 @@ try:
                     self.encounterImage.paste(im=self.bleed, box=(227, 287), mask=self.bleed)
                     imageWithText.text((140, 288), text, "black", font, spacing=0)
                 
-                imageWithText = ImageDraw.Draw(self.encounterImage)
-                newTreasure = pick_treasure(self.treasureSwapEncounters[self.selected["name"]], set(self.availableSets))
-                if len(newTreasure) >= 15:
+                if self.rewardTreasure:
+                    newTreasure = self.rewardTreasure
+                else:
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableSets), set(self.charactersActive))
+                    self.rewardTreasure = newTreasure
+
+                if newTreasure.count(" ") > 2:
+                    breakIdx = newTreasure.rfind(" ", 0, newTreasure.rfind(" ") - 1)
+                    newTreasure1 = newTreasure[:breakIdx]
+                    newTreasure2 = newTreasure[breakIdx+1:]
+                    imageWithText.text((21, 232), newTreasure1, "black", font)
+                    imageWithText.text((21, 243), newTreasure2, "black", font)
+                elif newTreasure.count(" ") > 0 and len(newTreasure) >= 15:
                     lastSpaceIdx = newTreasure.rfind(" ")
                     newTreasure1 = newTreasure[:lastSpaceIdx]
                     newTreasure2 = newTreasure[lastSpaceIdx+1:]
@@ -2115,8 +2229,13 @@ try:
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of dark_resurrection", caller=calframe[1][3])
                 
+                if self.rewardTreasure:
+                    newTreasure = self.rewardTreasure
+                else:
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableSets), set(self.charactersActive))
+                    self.rewardTreasure = newTreasure
+
                 imageWithText = ImageDraw.Draw(self.encounterImage)
-                newTreasure = pick_treasure(self.treasureSwapEncounters[self.selected["name"]], set(self.availableSets))
                 if len(newTreasure) >= 15:
                     lastSpaceIdx = newTreasure.rfind(" ")
                     newTreasure1 = newTreasure[:lastSpaceIdx]
@@ -2187,8 +2306,13 @@ try:
                 image = allEnemies[target]["image text"]
                 self.create_tooltip(image=image, text=self.tooltipText[target], x=225, y=213)
                 
+                if self.rewardTreasure:
+                    newTreasure = self.rewardTreasure
+                else:
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableSets), set(self.charactersActive))
+                    self.rewardTreasure = newTreasure
+
                 imageWithText = ImageDraw.Draw(self.encounterImage)
-                newTreasure = pick_treasure(self.treasureSwapEncounters[self.selected["name"]], set(self.availableSets))
                 if len(newTreasure) >= 15:
                     lastSpaceIdx = newTreasure.rfind(" ")
                     newTreasure1 = newTreasure[:lastSpaceIdx]
@@ -2282,8 +2406,13 @@ try:
                 self.create_tooltip(image=image, text=self.tooltipText[target], x=143, y=246)
                 self.create_tooltip(image=image, text=self.tooltipText[target], x=347, y=246)
                 
+                if self.rewardTreasure:
+                    newTreasure = self.rewardTreasure
+                else:
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableSets), set(self.charactersActive))
+                    self.rewardTreasure = newTreasure
+
                 imageWithText = ImageDraw.Draw(self.encounterImage)
-                newTreasure = pick_treasure(self.treasureSwapEncounters[self.selected["name"]], set(self.availableSets))
                 if len(newTreasure) >= 15:
                     lastSpaceIdx = newTreasure.rfind(" ")
                     newTreasure1 = newTreasure[:lastSpaceIdx]
@@ -2359,8 +2488,13 @@ try:
                 image = allEnemies[spawn2]["image text"]
                 self.create_tooltip(image=image, text=self.tooltipText[spawn2], x=280, y=228)
                 
+                if self.rewardTreasure:
+                    newTreasure = self.rewardTreasure
+                else:
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableSets), set(self.charactersActive))
+                    self.rewardTreasure = newTreasure
+
                 imageWithText = ImageDraw.Draw(self.encounterImage)
-                newTreasure = pick_treasure(self.treasureSwapEncounters[self.selected["name"]], set(self.availableSets))
                 if len(newTreasure) >= 15:
                     lastSpaceIdx = newTreasure.rfind(" ")
                     newTreasure1 = newTreasure[:lastSpaceIdx]
@@ -2444,8 +2578,13 @@ try:
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of grave_matters", caller=calframe[1][3])
                 
+                if self.rewardTreasure:
+                    newTreasure = self.rewardTreasure
+                else:
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableSets), set(self.charactersActive))
+                    self.rewardTreasure = newTreasure
+
                 imageWithText = ImageDraw.Draw(self.encounterImage)
-                newTreasure = pick_treasure(self.treasureSwapEncounters[self.selected["name"]], set(self.availableSets))
                 if len(newTreasure) >= 15:
                     lastSpaceIdx = newTreasure.rfind(" ")
                     newTreasure1 = newTreasure[:lastSpaceIdx]
@@ -2492,8 +2631,13 @@ try:
                 image = allEnemies[spawn]["image text"]
                 self.create_tooltip(image=image, text=self.tooltipText[spawn], x=247, y=198)
                 
+                if self.rewardTreasure:
+                    newTreasure = self.rewardTreasure
+                else:
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableSets), set(self.charactersActive))
+                    self.rewardTreasure = newTreasure
+
                 imageWithText = ImageDraw.Draw(self.encounterImage)
-                newTreasure = pick_treasure(self.treasureSwapEncounters[self.selected["name"]], set(self.availableSets))
                 if len(newTreasure) >= 15:
                     lastSpaceIdx = newTreasure.rfind(" ")
                     newTreasure1 = newTreasure[:lastSpaceIdx]
@@ -2518,8 +2662,13 @@ try:
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of inhospitable_ground", caller=calframe[1][3])
                 
+                if self.rewardTreasure:
+                    newTreasure = self.rewardTreasure
+                else:
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableSets), set(self.charactersActive))
+                    self.rewardTreasure = newTreasure
+
                 imageWithText = ImageDraw.Draw(self.encounterImage)
-                newTreasure = pick_treasure(self.treasureSwapEncounters[self.selected["name"]], set(self.availableSets))
                 if len(newTreasure) >= 15:
                     lastSpaceIdx = newTreasure.rfind(" ")
                     newTreasure1 = newTreasure[:lastSpaceIdx]
@@ -2628,8 +2777,13 @@ try:
                 self.create_tooltip(image=image, text=self.tooltipText[target], x=208, y=197)
                 self.create_tooltip(image=image, text=self.tooltipText[target], x=65, y=147)
                 
+                if self.rewardTreasure:
+                    newTreasure = self.rewardTreasure
+                else:
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableSets), set(self.charactersActive))
+                    self.rewardTreasure = newTreasure
+
                 imageWithText = ImageDraw.Draw(self.encounterImage)
-                newTreasure = pick_treasure(self.treasureSwapEncounters[self.selected["name"]], set(self.availableSets))
                 if len(newTreasure) >= 15:
                     lastSpaceIdx = newTreasure.rfind(" ")
                     newTreasure1 = newTreasure[:lastSpaceIdx]
@@ -2658,8 +2812,13 @@ try:
                 image = allEnemies[target]["image text"]
                 self.create_tooltip(image=image, text=self.tooltipText[target], x=70, y=147)
                 
+                if self.rewardTreasure:
+                    newTreasure = self.rewardTreasure
+                else:
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableSets), set(self.charactersActive))
+                    self.rewardTreasure = newTreasure
+
                 imageWithText = ImageDraw.Draw(self.encounterImage)
-                newTreasure = pick_treasure(self.treasureSwapEncounters[self.selected["name"]], set(self.availableSets))
                 if len(newTreasure) >= 15:
                     lastSpaceIdx = newTreasure.rfind(" ")
                     newTreasure1 = newTreasure[:lastSpaceIdx]
@@ -2684,8 +2843,13 @@ try:
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of painted_passage", caller=calframe[1][3])
                 
+                if self.rewardTreasure:
+                    newTreasure = self.rewardTreasure
+                else:
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableSets), set(self.charactersActive))
+                    self.rewardTreasure = newTreasure
+
                 imageWithText = ImageDraw.Draw(self.encounterImage)
-                newTreasure = pick_treasure(self.treasureSwapEncounters[self.selected["name"]], set(self.availableSets))
                 if len(newTreasure) >= 15:
                     lastSpaceIdx = newTreasure.rfind(" ")
                     newTreasure1 = newTreasure[:lastSpaceIdx]
@@ -2741,8 +2905,13 @@ try:
                 self.create_tooltip(image=image1, text=self.tooltipText[target1], x=65, y=147)
                 self.create_tooltip(image=image2, text=self.tooltipText[target2], x=145, y=198)
                 
+                if self.rewardTreasure:
+                    newTreasure = self.rewardTreasure
+                else:
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableSets), set(self.charactersActive))
+                    self.rewardTreasure = newTreasure
+
                 imageWithText = ImageDraw.Draw(self.encounterImage)
-                newTreasure = pick_treasure(self.treasureSwapEncounters[self.selected["name"]], set(self.availableSets))
                 if len(newTreasure) >= 15:
                     lastSpaceIdx = newTreasure.rfind(" ")
                     newTreasure1 = newTreasure[:lastSpaceIdx]
@@ -2767,8 +2936,13 @@ try:
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of rain_of_filth", caller=calframe[1][3])
                 
+                if self.rewardTreasure:
+                    newTreasure = self.rewardTreasure
+                else:
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableSets), set(self.charactersActive))
+                    self.rewardTreasure = newTreasure
+
                 imageWithText = ImageDraw.Draw(self.encounterImage)
-                newTreasure = pick_treasure(self.treasureSwapEncounters[self.selected["name"]], set(self.availableSets))
                 if len(newTreasure) >= 15:
                     lastSpaceIdx = newTreasure.rfind(" ")
                     newTreasure1 = newTreasure[:lastSpaceIdx]
@@ -2905,8 +3079,13 @@ try:
                 image = allEnemies[spawn2]["image text"]
                 self.create_tooltip(image=image, text=self.tooltipText[spawn2], x=144, y=212)
                 
+                if self.rewardTreasure:
+                    newTreasure = self.rewardTreasure
+                else:
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableSets), set(self.charactersActive))
+                    self.rewardTreasure = newTreasure
+
                 imageWithText = ImageDraw.Draw(self.encounterImage)
-                newTreasure = pick_treasure(self.treasureSwapEncounters[self.selected["name"]], set(self.availableSets))
                 if len(newTreasure) >= 15:
                     lastSpaceIdx = newTreasure.rfind(" ")
                     newTreasure1 = newTreasure[:lastSpaceIdx]
@@ -2936,8 +3115,13 @@ try:
                 self.create_tooltip(image=image, text=self.tooltipText[target], x=65, y=147)
                 self.create_tooltip(image=image, text=self.tooltipText[target], x=154, y=220)
                 
+                if self.rewardTreasure:
+                    newTreasure = self.rewardTreasure
+                else:
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableSets), set(self.charactersActive))
+                    self.rewardTreasure = newTreasure
+
                 imageWithText = ImageDraw.Draw(self.encounterImage)
-                newTreasure = pick_treasure(self.treasureSwapEncounters[self.selected["name"]], set(self.availableSets))
                 if len(newTreasure) >= 15:
                     lastSpaceIdx = newTreasure.rfind(" ")
                     newTreasure1 = newTreasure[:lastSpaceIdx]
@@ -3098,8 +3282,13 @@ try:
                 self.create_tooltip(image=image, text=self.tooltipText[target], x=225, y=197)
                 self.create_tooltip(image=image, text=self.tooltipText[target], x=302, y=220)
                 
+                if self.rewardTreasure:
+                    newTreasure = self.rewardTreasure
+                else:
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableSets), set(self.charactersActive))
+                    self.rewardTreasure = newTreasure
+
                 imageWithText = ImageDraw.Draw(self.encounterImage)
-                newTreasure = pick_treasure(self.treasureSwapEncounters[self.selected["name"]], set(self.availableSets))
                 if len(newTreasure) >= 15:
                     if newTreasure.count(" ") > 1:
                         lastSpaceIdx = newTreasure.rfind(" ", 0, newTreasure.rfind(" "))
@@ -3134,8 +3323,13 @@ try:
                 self.create_tooltip(image=image1, text=self.tooltipText[target1], x=64, y=147)
                 self.create_tooltip(image=image2, text=self.tooltipText[target2], x=220, y=147)
                 
+                if self.rewardTreasure:
+                    newTreasure = self.rewardTreasure
+                else:
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableSets), set(self.charactersActive))
+                    self.rewardTreasure = newTreasure
+
                 imageWithText = ImageDraw.Draw(self.encounterImage)
-                newTreasure = pick_treasure(self.treasureSwapEncounters[self.selected["name"]], set(self.availableSets))
                 if len(newTreasure) >= 15:
                     lastSpaceIdx = newTreasure.rfind(" ")
                     newTreasure1 = newTreasure[:lastSpaceIdx]
@@ -3190,8 +3384,13 @@ try:
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of unseen_scurrying", caller=calframe[1][3])
                 
+                if self.rewardTreasure:
+                    newTreasure = self.rewardTreasure
+                else:
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableSets), set(self.charactersActive))
+                    self.rewardTreasure = newTreasure
+
                 imageWithText = ImageDraw.Draw(self.encounterImage)
-                newTreasure = pick_treasure(self.treasureSwapEncounters[self.selected["name"]], set(self.availableSets))
                 if len(newTreasure) >= 15:
                     lastSpaceIdx = newTreasure.rfind(" ")
                     newTreasure1 = newTreasure[:lastSpaceIdx]
@@ -3216,8 +3415,13 @@ try:
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of urns_of_the_fallen", caller=calframe[1][3])
                 
+                if self.rewardTreasure:
+                    newTreasure = self.rewardTreasure
+                else:
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableSets), set(self.charactersActive))
+                    self.rewardTreasure = newTreasure
+
                 imageWithText = ImageDraw.Draw(self.encounterImage)
-                newTreasure = pick_treasure(self.treasureSwapEncounters[self.selected["name"]], set(self.availableSets))
                 if len(newTreasure) >= 15:
                     lastSpaceIdx = newTreasure.rfind(" ")
                     newTreasure1 = newTreasure[:lastSpaceIdx]
@@ -3248,8 +3452,13 @@ try:
                 self.create_tooltip(image=image, text=self.tooltipText[target], x=296, y=197)
                 self.create_tooltip(image=image, text=self.tooltipText[target], x=210, y=222)
                 
+                if self.rewardTreasure:
+                    newTreasure = self.rewardTreasure
+                else:
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableSets), set(self.charactersActive))
+                    self.rewardTreasure = newTreasure
+
                 imageWithText = ImageDraw.Draw(self.encounterImage)
-                newTreasure = pick_treasure(self.treasureSwapEncounters[self.selected["name"]], set(self.availableSets))
                 if len(newTreasure) >= 15:
                     lastSpaceIdx = newTreasure.rfind(" ")
                     newTreasure1 = newTreasure[:lastSpaceIdx]

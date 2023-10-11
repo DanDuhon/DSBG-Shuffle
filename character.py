@@ -4,7 +4,7 @@ from statistics import mean
 
 # The Deprived is not included here because it really throws off the numbers.
 soulCost = {
-    "assassin": {
+    "Assassin": {
         "sets": set(["Dark Souls The Board Game"]),
         "strength": LookupTable(
             (10, 0),
@@ -27,7 +27,7 @@ soulCost = {
             (22, 6),
             (30, 14))
         },
-    "cleric": {
+    "Cleric": {
         "sets": set(["Tomb of Giants", "Character Expansion"]),
         "strength": LookupTable(
             (12, 0),
@@ -50,7 +50,30 @@ soulCost = {
             (32, 6),
             (40, 14))
         },
-    "herald": {
+    "Deprived": {
+        "sets": set(["Tomb of Giants", "Character Expansion"]),
+        "strength": LookupTable(
+            (10, 0),
+            (20, 2),
+            (30, 6),
+            (40, 14)),
+        "dexterity": LookupTable(
+            (10, 0),
+            (20, 2),
+            (30, 6),
+            (40, 14)),
+        "intelligence": LookupTable(
+            (10, 0),
+            (20, 2),
+            (30, 6),
+            (40, 14)),
+        "faith": LookupTable(
+            (10, 0),
+            (20, 2),
+            (30, 6),
+            (40, 14))
+        },
+    "Herald": {
         "sets": set(["Dark Souls The Board Game"]),
         "strength": LookupTable(
             (12, 0),
@@ -73,7 +96,7 @@ soulCost = {
             (31, 6),
             (40, 14))
         },
-    "knight": {
+    "Knight": {
         "sets": set(["Dark Souls The Board Game"]),
         "strength": LookupTable(
             (13, 0),
@@ -96,7 +119,7 @@ soulCost = {
             (23, 6),
             (31, 14))
         },
-    "mercenary": {
+    "Mercenary": {
         "sets": set(["Painted World of Ariamis", "Character Expansion"]),
         "strength": LookupTable(
             (10, 0),
@@ -119,7 +142,7 @@ soulCost = {
             (21, 6),
             (30, 14))
         },
-    "pyromancer": {
+    "Pyromancer": {
         "sets": set(["Tomb of Giants", "Character Expansion"]),
         "strength": LookupTable(
             (12, 0),
@@ -142,7 +165,7 @@ soulCost = {
             (28, 6),
             (38, 14))
         },
-    "sorcerer": {
+    "Sorcerer": {
         "sets": set(["Painted World of Ariamis", "Character Expansion"]),
         "strength": LookupTable(
             (7, 0),
@@ -165,7 +188,7 @@ soulCost = {
             (24, 6),
             (33, 14))
         },
-    "thief": {
+    "Thief": {
         "sets": set(["Tomb of Giants", "Character Expansion"]),
         "strength": LookupTable(
             (9, 0),
@@ -188,7 +211,7 @@ soulCost = {
             (23, 6),
             (31, 14))
         },
-    "warrior": {
+    "Warrior": {
         "sets": set(["Dark Souls The Board Game"]),
         "strength": LookupTable(
             (16, 0),
@@ -213,14 +236,17 @@ soulCost = {
         }
 }
 
-def mean_soul_cost(item, setsAvailable):
-    costs = []
-    for c in [character for character in soulCost if soulCost[character]["sets"] & setsAvailable]:
-        strength = soulCost[c]["strength"][item["strength"]]
-        dexterity = soulCost[c]["dexterity"][item["dexterity"]]
-        intelligence = soulCost[c]["intelligence"][item["intelligence"]]
-        faith = soulCost[c]["faith"][item["faith"]]
-        if strength is not None and dexterity is not None and intelligence is not None and faith is not None:
-            costs.append(strength + dexterity + intelligence + faith)
+def mean_soul_cost(item, setsAvailable, charactersActive):
+    try:
+        costs = []
+        for c in [c for c in soulCost if c in charactersActive and soulCost[c]["sets"] & setsAvailable]:
+            strength = soulCost[c]["strength"][item["strength"]]
+            dexterity = soulCost[c]["dexterity"][item["dexterity"]]
+            intelligence = soulCost[c]["intelligence"][item["intelligence"]]
+            faith = soulCost[c]["faith"][item["faith"]]
+            if strength is not None and dexterity is not None and intelligence is not None and faith is not None:
+                costs.append(strength + dexterity + intelligence + faith)
 
-    return mean(costs)
+        return mean(costs)
+    except:
+        pass
