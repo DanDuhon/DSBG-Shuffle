@@ -62,7 +62,7 @@ try:
 
     try:
         baseFolder = path.dirname(__file__)
-        font = ImageFont.truetype(baseFolder + "\\Goudy Old Style Bold.ttf", 13)
+        font = ImageFont.truetype(baseFolder + "\\Adobe Caslon Pro Semibold.ttf", 13)
         enemyImages = {}
         settingsChanged = False
 
