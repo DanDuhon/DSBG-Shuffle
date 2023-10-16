@@ -2240,10 +2240,10 @@ try:
                     lastSpaceIdx = newTreasure.rfind(" ")
                     newTreasure1 = newTreasure[:lastSpaceIdx]
                     newTreasure2 = newTreasure[lastSpaceIdx+1:]
-                    imageWithText.text((21, 232), newTreasure1, "black", font)
-                    imageWithText.text((21, 243), newTreasure2, "black", font)
+                    imageWithText.text((21, 235), newTreasure1, "black", font)
+                    imageWithText.text((21, 246), newTreasure2, "black", font)
                 else:
-                    imageWithText.text((21, 232), newTreasure, "black", font)
+                    imageWithText.text((21, 235), newTreasure, "black", font)
 
                 adapter.debug("\tEnd of dark_resurrection", caller=calframe[1][3])
             except Exception as e:
@@ -2346,6 +2346,7 @@ try:
                     maxDifficulty = totalDifficulty * (1 + diffMod)
                     enemyList = [enemies[enemy]["name"] for enemy in enemies if (
                         enemiesDict[enemy].expansion in self.availableSets
+                        and (self.newEnemies + [enemiesDict[enemy].id]).count(enemiesDict[enemy].id) <= enemies[enemy]["count"]
                         and enemiesDict[enemy].difficulty > 0
                         and not enemies[enemy]["ranged"] and minDifficulty <= sum([
                             (enemiesDict[enemy].difficulty),
@@ -2444,6 +2445,7 @@ try:
                     maxDifficulty = totalDifficulty * (1 + diffMod)
                     enemyList = [enemies[enemy]["name"] for enemy in enemies if (
                         enemiesDict[enemy].expansion in self.availableSets
+                        and (self.newEnemies + [enemiesDict[enemy].id]).count(enemiesDict[enemy].id) <= enemies[enemy]["count"]
                         and enemiesDict[enemy].difficulty > 0
                         and not enemies[enemy]["ranged"] and minDifficulty <= sum([
                             (enemiesDict[enemy].difficulty),
@@ -2468,6 +2470,7 @@ try:
                     maxDifficulty = totalDifficulty * (1 + diffMod)
                     enemyList = [enemies[enemy]["name"] for enemy in enemies if (
                         enemiesDict[enemy].expansion in self.availableSets
+                        and (self.newEnemies + [spawn1] + [enemiesDict[enemy].id]).count(enemiesDict[enemy].id) <= enemies[enemy]["count"]
                         and enemiesDict[enemy].difficulty > 0
                         and enemies[enemy]["ranged"] or not restrictRanged) and minDifficulty <= sum([
                             (enemiesDict[enemy].difficulty),
@@ -2526,6 +2529,7 @@ try:
                     maxDifficulty = totalDifficulty * (1 + diffMod)
                     enemyList = [enemies[enemy]["name"] for enemy in enemies if (
                         enemiesDict[enemy].expansion in self.availableSets
+                        and (self.newEnemies + [enemiesDict[enemy].id]).count(enemiesDict[enemy].id) <= enemies[enemy]["count"]
                         and enemiesDict[enemy].difficulty > 0
                         and enemies[enemy]["count"] > 1 and minDifficulty <= sum([
                             (enemiesDict[enemy].difficulty * 2),
@@ -2548,6 +2552,7 @@ try:
                     maxDifficulty = totalDifficulty * (1 + diffMod)
                     enemyList = [enemies[enemy]["name"] for enemy in enemies if (
                         enemiesDict[enemy].expansion in self.availableSets
+                        and (self.newEnemies + [spawn1] + [enemiesDict[enemy].id]).count(enemiesDict[enemy].id) <= enemies[enemy]["count"]
                         and enemiesDict[enemy].difficulty > 0
                         and minDifficulty <= sum([
                             enemiesDict[enemy].difficulty,
@@ -2617,6 +2622,7 @@ try:
                     maxDifficulty = totalDifficulty * (1 + diffMod)
                     enemyList = [enemies[enemy]["name"] for enemy in enemies if (
                         enemiesDict[enemy].expansion in self.availableSets
+                        and (self.newEnemies + [enemiesDict[enemy].id]).count(enemiesDict[enemy].id) <= enemies[enemy]["count"]
                         and enemiesDict[enemy].difficulty > 0
                         and enemies[enemy]["count"] > 1 and minDifficulty <= sum([
                             (enemiesDict[enemy].difficulty * 2),
@@ -2629,7 +2635,7 @@ try:
                     break
                 spawn = choice(enemyList)
                 image = allEnemies[spawn]["image text"]
-                self.create_tooltip(image=image, text=self.tooltipText[spawn], x=247, y=198)
+                self.create_tooltip(image=image, text=self.tooltipText[spawn], x=238, y=198)
                 
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
@@ -2716,6 +2722,7 @@ try:
                     maxDifficulty = totalDifficulty * (1 + diffMod)
                     enemyList = [enemies[enemy]["name"] for enemy in enemies if (
                         enemiesDict[enemy].expansion in self.availableSets
+                        and (self.newEnemies + [enemiesDict[enemy].id]).count(enemiesDict[enemy].id) <= enemies[enemy]["count"]
                         and enemiesDict[enemy].difficulty > 0
                         and minDifficulty <= sum([
                             (enemiesDict[enemy].difficulty),
@@ -2731,8 +2738,8 @@ try:
                 spawn1 = choice(enemyList)
                 allTileEnemies.append(spawn1)
                 image1 = allEnemies[spawn1]["image text"]
-                self.create_tooltip(image=image1, text=self.tooltipText[spawn1], x=225, y=228)
-                self.create_tooltip(image=image1, text=self.tooltipText[spawn1], x=291, y=259)
+                self.create_tooltip(image=image1, text=self.tooltipText[spawn1], x=215, y=228)
+                self.create_tooltip(image=image1, text=self.tooltipText[spawn1], x=291, y=264)
 
                 totalDifficulty += enemiesDict["Skeleton Soldier"].difficulty
                 diffMod = 0.1
@@ -2741,6 +2748,7 @@ try:
                     maxDifficulty = totalDifficulty * (1 + diffMod)
                     enemyList = [enemies[enemy]["name"] for enemy in enemies if (
                         enemiesDict[enemy].expansion in self.availableSets
+                        and (self.newEnemies + [spawn1] + [enemiesDict[enemy].id]).count(enemiesDict[enemy].id) <= enemies[enemy]["count"]
                         and enemiesDict[enemy].difficulty > 0
                         and enemies[enemy]["count"] > 1
                         and minDifficulty <= sum([
@@ -2755,7 +2763,7 @@ try:
                     break
                 spawn2 = choice(enemyList)
                 image2 = allEnemies[spawn2]["image text"]
-                self.create_tooltip(image=image2, text=self.tooltipText[spawn2], x=245, y=273)
+                self.create_tooltip(image=image2, text=self.tooltipText[spawn2], x=243, y=276)
 
                 adapter.debug("\tEnd of lakeview_refuge", caller=calframe[1][3])
             except Exception as e:
@@ -2969,9 +2977,9 @@ try:
                 
                 target = self.newTiles[2][0][0]
                 image = allEnemies[target]["image text"]
-                self.create_tooltip(image=image, text=self.tooltipText[target], x=145, y=197)
-                self.create_tooltip(image=image, text=self.tooltipText[target], x=162, y=212)
-                self.create_tooltip(image=image, text=self.tooltipText[target], x=162, y=252)
+                self.create_tooltip(image=image, text=self.tooltipText[target], x=145, y=196)
+                self.create_tooltip(image=image, text=self.tooltipText[target], x=162, y=209)
+                self.create_tooltip(image=image, text=self.tooltipText[target], x=162, y=244)
 
                 adapter.debug("\tEnd of skeletal_spokes", caller=calframe[1][3])
             except Exception as e:
@@ -2996,6 +3004,7 @@ try:
                     maxDifficulty = totalDifficulty * (1 + diffMod)
                     enemyList = [enemy for enemy in enemiesDict if (
                         enemiesDict[enemy].expansion in self.availableSets
+                        and (self.newEnemies + [enemiesDict[enemy].id]).count(enemiesDict[enemy].id) <= enemies[enemy]["count"]
                         and enemiesDict[enemy].difficulty > 0
                         and enemiesDict[enemy].health == 1
                         and minDifficulty <= (enemiesDict[enemy].difficulty * enemies[enemy]["count"]) + enemiesDict[self.newTiles[1][0][0]].difficulty <= maxDifficulty
@@ -3008,14 +3017,14 @@ try:
                     break
                 spawn = choice(enemyList)
                 image = allEnemies[spawn]["image text"]
-                self.create_tooltip(image=image, text=self.tooltipText[spawn], x=241, y=198)
-                self.create_tooltip(image=image, text=self.tooltipText[spawn], x=204, y=251)
+                self.create_tooltip(image=image, text=self.tooltipText[spawn], x=239, y=198)
+                self.create_tooltip(image=image, text=self.tooltipText[spawn], x=205, y=258)
 
                 target = self.newTiles[1][0][0]
                 image = allEnemies[target]["image text"]
                 self.create_tooltip(image=image, text=self.tooltipText[target], x=65, y=147)
-                self.create_tooltip(image=image, text=self.tooltipText[target], x=311, y=226)
-                self.create_tooltip(image=image, text=self.tooltipText[target], x=285, y=251)
+                self.create_tooltip(image=image, text=self.tooltipText[target], x=312, y=234)
+                self.create_tooltip(image=image, text=self.tooltipText[target], x=288, y=256)
 
                 adapter.debug("\tEnd of skeleton_overlord", caller=calframe[1][3])
             except Exception as e:
@@ -3039,6 +3048,7 @@ try:
                     maxDifficulty = totalDifficulty * (1 + diffMod)
                     enemyList = [enemy for enemy in enemiesDict if (
                         enemiesDict[enemy].expansion in self.availableSets
+                        and (self.newEnemies + [enemiesDict[enemy].id]).count(enemiesDict[enemy].id) <= enemies[enemy]["count"]
                         and enemiesDict[enemy].difficulty > 0
                         and minDifficulty <= sum([
                             enemiesDict[enemy].difficulty,
@@ -3053,7 +3063,7 @@ try:
                     break
                 spawn1 = choice(enemyList)
                 image = allEnemies[spawn1]["image text"]
-                self.create_tooltip(image=image, text=self.tooltipText[spawn1], x=321, y=197)
+                self.create_tooltip(image=image, text=self.tooltipText[spawn1], x=322, y=195)
 
                 totalDifficulty += enemiesDict["Giant Skeleton Archer"].difficulty
                 diffMod = 0.1
@@ -3062,6 +3072,7 @@ try:
                     maxDifficulty = totalDifficulty * (1 + diffMod)
                     enemyList = [enemy for enemy in enemiesDict if (
                         enemiesDict[enemy].expansion in self.availableSets
+                        and (self.newEnemies + [spawn1] + [enemiesDict[enemy].id]).count(enemiesDict[enemy].id) <= enemies[enemy]["count"]
                         and enemiesDict[enemy].difficulty > 0
                         and minDifficulty <= sum([
                             enemiesDict[enemy].difficulty,
@@ -3077,7 +3088,7 @@ try:
                     break
                 spawn2 = choice(enemyList)
                 image = allEnemies[spawn2]["image text"]
-                self.create_tooltip(image=image, text=self.tooltipText[spawn2], x=144, y=212)
+                self.create_tooltip(image=image, text=self.tooltipText[spawn2], x=144, y=208)
                 
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
@@ -3113,7 +3124,7 @@ try:
                 target = self.newTiles[1][0][0]
                 image = allEnemies[target]["image text"]
                 self.create_tooltip(image=image, text=self.tooltipText[target], x=65, y=147)
-                self.create_tooltip(image=image, text=self.tooltipText[target], x=154, y=220)
+                self.create_tooltip(image=image, text=self.tooltipText[target], x=158, y=222)
                 
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
@@ -3153,6 +3164,7 @@ try:
                     maxDifficulty = totalDifficulty * (1 + diffMod)
                     enemyList = [enemy for enemy in enemiesDict if (
                         enemiesDict[enemy].expansion in self.availableSets
+                        and (self.newEnemies + [enemiesDict[enemy].id]).count(enemiesDict[enemy].id) <= enemies[enemy]["count"]
                         and enemiesDict[enemy].difficulty > 0
                         and minDifficulty <= sum([
                             enemiesDict[enemy].difficulty,
@@ -3172,6 +3184,7 @@ try:
                     maxDifficulty = totalDifficulty * (1 + diffMod)
                     enemyList = [enemy for enemy in enemiesDict if (
                         enemiesDict[enemy].expansion in self.availableSets
+                        and (self.newEnemies + [spawn1] + [enemiesDict[enemy].id]).count(enemiesDict[enemy].id) <= enemies[enemy]["count"]
                         and enemiesDict[enemy].difficulty > 0
                         and minDifficulty <= sum([
                             enemiesDict[enemy].difficulty,
@@ -3192,6 +3205,7 @@ try:
                     maxDifficulty = totalDifficulty * (1 + diffMod)
                     enemyList = [enemy for enemy in enemiesDict if (
                         enemiesDict[enemy].expansion in self.availableSets
+                        and (self.newEnemies + [spawn1] + [spawn2] + [enemiesDict[enemy].id]).count(enemiesDict[enemy].id) <= enemies[enemy]["count"]
                         and enemiesDict[enemy].difficulty > 0
                         and minDifficulty <= sum([
                             enemiesDict[enemy].difficulty,
@@ -3259,6 +3273,7 @@ try:
                     maxDifficulty = totalDifficulty * (1 + diffMod)
                     enemyList = [enemy for enemy in enemies if (
                         enemiesDict[enemy].expansion in self.availableSets
+                        and (self.newEnemies + [enemiesDict[enemy].id]).count(enemiesDict[enemy].id) <= enemies[enemy]["count"]
                         and enemiesDict[enemy].difficulty > 0
                         and minDifficulty <= sum([
                                 enemiesDict[enemy].difficulty,
@@ -3279,8 +3294,8 @@ try:
                 
                 target = choice(enemyList)
                 image = allEnemies[target]["image text"]
-                self.create_tooltip(image=image, text=self.tooltipText[target], x=225, y=197)
-                self.create_tooltip(image=image, text=self.tooltipText[target], x=302, y=220)
+                self.create_tooltip(image=image, text=self.tooltipText[target], x=217, y=197)
+                self.create_tooltip(image=image, text=self.tooltipText[target], x=305, y=220)
                 
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
@@ -3299,7 +3314,7 @@ try:
                     imageWithText.text((56, 258), newTreasure1, "black", font)
                     imageWithText.text((21, 270), newTreasure2, "black", font)
                 else:
-                    imageWithText.text((21, 270), newTreasure, "black", font)
+                    imageWithText.text((21, 258), newTreasure, "black", font)
 
                 adapter.debug("\tEnd of the_locked_grave", caller=calframe[1][3])
             except Exception as e:
@@ -3320,8 +3335,8 @@ try:
                 target2 = self.newTiles[3][1][0]
                 image1 = allEnemies[target1]["image text"]
                 image2 = allEnemies[target2]["image text"]
-                self.create_tooltip(image=image1, text=self.tooltipText[target1], x=64, y=147)
-                self.create_tooltip(image=image2, text=self.tooltipText[target2], x=220, y=147)
+                self.create_tooltip(image=image1, text=self.tooltipText[target1], x=62, y=147)
+                self.create_tooltip(image=image2, text=self.tooltipText[target2], x=216, y=147)
                 
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
