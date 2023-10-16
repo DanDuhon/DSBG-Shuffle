@@ -62,7 +62,7 @@ try:
 
     try:
         baseFolder = path.dirname(__file__)
-        font = ImageFont.truetype(baseFolder + "\\Adobe Caslon Pro Semibold.ttf", 13)
+        font = ImageFont.truetype(baseFolder + "\\Adobe Caslon Pro Semibold.ttf", 12)
         enemyImages = {}
         settingsChanged = False
 
@@ -2124,11 +2124,11 @@ try:
                 coldSnapTarget = self.newTiles[2][0][1]
 
                 image = allEnemies[coldSnapTarget]["image text"]
-                self.create_tooltip(image=image, text=self.tooltipText[coldSnapTarget], x=225, y=227)
+                self.create_tooltip(image=image, text=self.tooltipText[coldSnapTarget], x=216, y=227)
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
                 if enemiesDict[coldSnapTarget].health == 1 and (enemiesDict[coldSnapTarget].armor < 2 or enemiesDict[coldSnapTarget].resist < 2):
-                    self.create_tooltip(image=image, text=self.tooltipText[coldSnapTarget], x=209, y=251)
+                    self.create_tooltip(image=image, text=self.tooltipText[coldSnapTarget], x=207, y=251)
 
                     text = "Increase the \n"
                     if enemiesDict[coldSnapTarget].armor < 2 and enemiesDict[coldSnapTarget].resist < 2:
@@ -2175,22 +2175,22 @@ try:
 
                 target = enemyIds[self.trialTarget].name
                 image = allEnemies[target]["image text"]
-                self.create_tooltip(image=image, text=self.tooltipText[target], x=161, y=239)
-                self.create_tooltip(image=image, text=self.tooltipText[target], x=261, y=239)
-                self.create_tooltip(image=image, text=self.tooltipText[target], x=261, y=252)
+                self.create_tooltip(image=image, text=self.tooltipText[target], x=159, y=238)
+                self.create_tooltip(image=image, text=self.tooltipText[target], x=255, y=238)
+                self.create_tooltip(image=image, text=self.tooltipText[target], x=242, y=251)
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
                 if enemyIds[self.trialTarget].armor + enemyIds[self.trialTarget].resist <= 3:
-                    self.create_tooltip(image=image, text=self.tooltipText[target], x=189, y=274)
+                    self.create_tooltip(image=image, text=self.tooltipText[target], x=185, y=274)
                     text1 = "Increase       block and resistance"
                     text2 = "values by 1 and their attacks gain     ."
-                    self.encounterImage.paste(im=self.bleed, box=(319, 285), mask=self.bleed)
+                    self.encounterImage.paste(im=self.bleed, box=(301, 284), mask=self.bleed)
                     imageWithText.text((140, 273), text1, "black", font, spacing=0)
                     imageWithText.text((140, 285), text2, "black", font, spacing=0)
                 else:
                     self.create_tooltip(image=image, text=self.tooltipText[target], x=145, y=288)
                     text = "       attacks gain     ."
-                    self.encounterImage.paste(im=self.bleed, box=(227, 287), mask=self.bleed)
+                    self.encounterImage.paste(im=self.bleed, box=(223, 287), mask=self.bleed)
                     imageWithText.text((140, 288), text, "black", font, spacing=0)
                 
                 if self.rewardTreasure:
@@ -2266,7 +2266,7 @@ try:
                 target = sorted([enemy for enemy in overlap if deathlyFreezeTile1.count(enemy) + deathlyFreezeTile2.count(enemy) > 1], key=lambda x: enemiesDict[x].difficulty, reverse=True)[0]
 
                 image = allEnemies[target]["image text"]
-                self.create_tooltip(image=image, text=self.tooltipText[target], x=141, y=245)
+                self.create_tooltip(image=image, text=self.tooltipText[target], x=141, y=242)
 
                 adapter.debug("\tEnd of deathly_freeze", caller=calframe[1][3])
             except Exception as e:
@@ -2304,7 +2304,7 @@ try:
 
                 target = self.newTiles[3][0][0]
                 image = allEnemies[target]["image text"]
-                self.create_tooltip(image=image, text=self.tooltipText[target], x=225, y=213)
+                self.create_tooltip(image=image, text=self.tooltipText[target], x=215, y=213)
                 
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
@@ -2367,20 +2367,20 @@ try:
                 text1 = "Increase       "
                 if fourTarget:
                     image1 = allEnemies[fourTarget[0]]["image text"]
-                    self.create_tooltip(image=image1, text=self.tooltipText[fourTarget[0]], x=190, y=247)
+                    self.create_tooltip(image=image1, text=self.tooltipText[fourTarget[0]], x=186, y=247)
                 else:
                     image1 = allEnemies[targets[0]]["image text"]
                     image2 = allEnemies[targets[1]]["image text"]
-                    self.create_tooltip(image=image1, text=self.tooltipText[targets[0]], x=190, y=247)
-                    self.create_tooltip(image=image2, text=self.tooltipText[targets[1]], x=233, y=247)
+                    self.create_tooltip(image=image1, text=self.tooltipText[targets[0]], x=186, y=247)
+                    self.create_tooltip(image=image2, text=self.tooltipText[targets[1]], x=228, y=247)
                     text1 += " and       "
                 text1 += "block and resistance"
                 text2 = "values by 1. Once these enemies have been"
                 text3 = "killed, spawn the       on      , on tile three."
                 image3 = allEnemies[spawn]["image text"]
-                self.create_tooltip(image=image3, text=self.tooltipText[spawn], x=235, y=274)
-                self.create_tooltip(image=image3, text=self.tooltipText[spawn], x=65, y=149)
-                self.encounterImage.paste(im=self.enemyNode2, box=(270, 274), mask=self.enemyNode2)
+                self.create_tooltip(image=image3, text=self.tooltipText[spawn], x=226, y=274)
+                self.create_tooltip(image=image3, text=self.tooltipText[spawn], x=65, y=147)
+                self.encounterImage.paste(im=self.enemyNode2, box=(260, 272), mask=self.enemyNode2)
                 imageWithText.text((140, 246), text1, "black", font)
                 imageWithText.text((140, 259), text2, "black", font)
                 imageWithText.text((140, 273), text3, "black", font)
@@ -2402,9 +2402,9 @@ try:
 
                 target = self.newTiles[3][0][0]
                 image = allEnemies[target]["image text"]
-                self.create_tooltip(image=image, text=self.tooltipText[target], x=143, y=230)
-                self.create_tooltip(image=image, text=self.tooltipText[target], x=143, y=246)
-                self.create_tooltip(image=image, text=self.tooltipText[target], x=347, y=246)
+                self.create_tooltip(image=image, text=self.tooltipText[target], x=143, y=225)
+                self.create_tooltip(image=image, text=self.tooltipText[target], x=143, y=238)
+                self.create_tooltip(image=image, text=self.tooltipText[target], x=348, y=238)
                 
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
@@ -2539,7 +2539,7 @@ try:
                     break
                 spawn1 = choice(enemyList)
                 image = allEnemies[spawn1]["image text"]
-                self.create_tooltip(image=image, text=self.tooltipText[spawn1], x=335, y=235)
+                self.create_tooltip(image=image, text=self.tooltipText[spawn1], x=333, y=232)
                     
                 totalDifficulty += enemiesDict["Crow Demon"].difficulty
                 diffMod = 0.1
@@ -2561,7 +2561,7 @@ try:
                     break
                 spawn2 = choice(enemyList)
                 image = allEnemies[spawn2]["image text"]
-                self.create_tooltip(image=image, text=self.tooltipText[spawn2], x=240, y=250)
+                self.create_tooltip(image=image, text=self.tooltipText[spawn2], x=235, y=243)
 
                 adapter.debug("\tEnd of gnashing_beaks", caller=calframe[1][3])
             except Exception as e:
@@ -2810,7 +2810,7 @@ try:
 
                 target = self.newTiles[2][0][0]
                 image = allEnemies[target]["image text"]
-                self.create_tooltip(image=image, text=self.tooltipText[target], x=70, y=147)
+                self.create_tooltip(image=image, text=self.tooltipText[target], x=63, y=147)
                 
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
@@ -3183,7 +3183,7 @@ try:
                     break
                 spawn2 = choice(enemyList)
                 image = allEnemies[spawn2]["image text"]
-                self.create_tooltip(image=image, text=self.tooltipText[spawn2], x=235, y=245)
+                self.create_tooltip(image=image, text=self.tooltipText[spawn2], x=185, y=245)
 
                 totalDifficulty += enemiesDict["Engorged Zombie"].difficulty
                 diffMod = 0.1
@@ -3205,8 +3205,8 @@ try:
                     break
                 spawn3 = choice(enemyList)
                 image = allEnemies[spawn3]["image text"]
-                self.create_tooltip(image=image, text=self.tooltipText[spawn3], x=295, y=257)
-                self.create_tooltip(image=image, text=self.tooltipText[spawn3], x=225, y=197)
+                self.create_tooltip(image=image, text=self.tooltipText[spawn3], x=236, y=257)
+                self.create_tooltip(image=image, text=self.tooltipText[spawn3], x=214, y=197)
 
                 adapter.debug("\tEnd of the_first_bastion", caller=calframe[1][3])
             except Exception as e:
@@ -3225,8 +3225,8 @@ try:
                 
                 target = sorted([enemy for enemy in self.newTiles[1][0] + self.newTiles[1][1]], key=lambda x: enemiesDict[x].difficulty)[0]
                 image = allEnemies[target]["image text"]
-                self.create_tooltip(image=image, text=self.tooltipText[target], x=222, y=227)
-                self.create_tooltip(image=image, text=self.tooltipText[target], x=314, y=258)
+                self.create_tooltip(image=image, text=self.tooltipText[target], x=215, y=227)
+                self.create_tooltip(image=image, text=self.tooltipText[target], x=315, y=250)
 
                 adapter.debug("\tEnd of the_last_bastion", caller=calframe[1][3])
             except Exception as e:
@@ -3449,8 +3449,8 @@ try:
                 target = sorted([enemy for enemy in self.newTiles[2][0] + self.newTiles[2][1]], key=lambda x: enemiesDict[x].difficulty, reverse=True)[0]
                 image = allEnemies[target]["image text"]
                 self.create_tooltip(image=image, text=self.tooltipText[target], x=65, y=147)
-                self.create_tooltip(image=image, text=self.tooltipText[target], x=296, y=197)
-                self.create_tooltip(image=image, text=self.tooltipText[target], x=210, y=222)
+                self.create_tooltip(image=image, text=self.tooltipText[target], x=297, y=195)
+                self.create_tooltip(image=image, text=self.tooltipText[target], x=210, y=219)
                 
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
