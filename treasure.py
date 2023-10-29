@@ -68,7 +68,7 @@ treasures = {
     "Crystal Shield": {"sets": set(["Darkroot"]), "type": "weapon", "character": None, "encounterLevels": set([1,2,3,4]), "strength": 18, "dexterity": 0, "intelligence": 0, "faith": 28},
     "Crystal Straight Sword": {"sets": set(["Characters Expansion", "Painted World of Ariamis"]), "type": "weapon", "character": "Mercenary", "encounterLevels": set([1,2]), "strength": 0, "dexterity": 30, "intelligence": 21, "faith": 0},
     "Dark Armour": {"sets": set(["Characters Expansion"]), "type": "armor", "character": None, "encounterLevels": set([1,2,3,4]), "strength": 0, "dexterity": 20, "intelligence": 20, "faith": 0},
-    "Dark Wood Giant Ring": {"sets": set(["Explorers"]), "type": "upgrade", "character": None, "encounterLevels": set([1,2,3,4]), "strength": 0, "dexterity": 26, "intelligence": 0, "faith": 0},
+    "Dark Wood Grain Ring": {"sets": set(["Explorers"]), "type": "upgrade", "character": None, "encounterLevels": set([1,2,3,4]), "strength": 0, "dexterity": 26, "intelligence": 0, "faith": 0},
     "Deacon Robes": {"sets": set(["Dark Souls The Board Game", "Tomb of Giants"]), "type": "armor", "character": None, "encounterLevels": set([1,2,3,4]), "strength": 0, "dexterity": 0, "intelligence": 0, "faith": 24},
     "Demon Titanite": {"sets": set(["Painted World of Ariamis"]), "type": "upgrade", "character": None, "encounterLevels": set([1,2,3,4]), "strength": 0, "dexterity": 0, "intelligence": 10, "faith": 10},
     "Divine Blessing": {"sets": set(["Tomb of Giants"]), "type": "upgrade", "character": None, "encounterLevels": set([1,2,3,4]), "strength": 0, "dexterity": 0, "intelligence": 0, "faith": 22},
@@ -323,7 +323,8 @@ def pick_treasure(treasureSwapOption, swapTreasure, lastPicked, encounterLevel, 
             lower = characterSoulCost - modifier
             upper = characterSoulCost + modifier
             alts += [t for t in treasures if (
-                lower <= treasures[t]["soulCost"] <= upper
+                "soulCost" in treasures[t]
+                and lower <= treasures[t]["soulCost"] <= upper
                 and treasures[t]["type"] == treasures[swapTreasure]["type"]
                 and treasures[t]["sets"] & setsAvailable
                 and (not treasures[t]["character"] or treasures[t]["character"] in charactersActive)

@@ -6,7 +6,7 @@ try:
     from os import path
     from json import load, dump
     from random import choice
-    from itertools import combinations
+    from collections import Counter
     from PIL import Image, ImageTk, ImageFont, ImageDraw
     import tkinter as tk
     from tkinter import ttk
@@ -215,13 +215,14 @@ try:
                 self.sets = {
                     "Dark Souls The Board Game": {"button": None, "value": tk.IntVar()},
                     "Painted World of Ariamis": {"button": None, "value": tk.IntVar()},
+                    "The Sunless City": {"button": None, "value": tk.IntVar()},
                     "Tomb of Giants": {"button": None, "value": tk.IntVar()},
                     "Darkroot": {"button": None, "value": tk.IntVar()},
                     "Explorers": {"button": None, "value": tk.IntVar()},
                     "Iron Keep": {"button": None, "value": tk.IntVar()},
                     "Phantoms": {"button": None, "value": tk.IntVar()},
                     "The Executioner's Chariot": {"button": None, "value": tk.IntVar()},
-                    "Character Expansion": {"button": None, "value": tk.IntVar()}
+                    "Characters Expansion": {"button": None, "value": tk.IntVar()}
                 }
                 
                 self.setsFrame = ttk.LabelFrame(top, text="Enabled Enemies From Sets", padding=(20, 10))
@@ -396,7 +397,8 @@ try:
                 
                 characterSets = set()
                 for c in soulCost:
-                    characterSets.update(soulCost[c]["sets"])
+                    if self.charactersActive[c]["value"].get() == 1:
+                        characterSets.update(soulCost[c]["sets"])
 
                 setsActive = set([s for s in self.sets if self.sets[s]["value"].get() == 1])
                 if characterSets - setsActive:
@@ -540,37 +542,37 @@ try:
                     ]
 
                 self.bosses = {
-                    "Asylum Demon": {"name": "Asylum Demon", "level": "Mini Boss", "expansion": "Asylum Demon"},
-                    "Black Knight": {"name": "Black Knight", "level": "Mini Boss", "expansion": "Tomb of Giants"},
-                    "Boreal Outrider Knight": {"name": "Boreal Outrider Knight", "level": "Mini Boss", "expansion": "Dark Souls The Board Game"},
-                    "Heavy Knight": {"name": "Heavy Knight", "level": "Mini Boss", "expansion": "Painted World of Ariamis"},
-                    "Old Dragonslayer": {"name": "Old Dragonslayer", "level": "Mini Boss", "expansion": "Explorers"},
-                    "Titanite Demon": {"name": "Titanite Demon", "level": "Mini Boss", "expansion": "Dark Souls The Board Game"},
-                    "Winged Knight": {"name": "Winged Knight", "level": "Mini Boss", "expansion": "Dark Souls The Board Game"},
-                    "Artorias": {"name": "Artorias", "level": "Main Boss", "expansion": "Darkroot"},
-                    "Crossbreed Priscilla": {"name": "Crossbreed Priscilla", "level": "Main Boss", "expansion": "Painted World of Ariamis"},
-                    "Dancer of the Boreal Valley": {"name": "Dancer of the Boreal Valley", "level": "Main Boss", "expansion": "Dark Souls The Board Game"},
-                    "Gravelord Nito": {"name": "Gravelord Nito", "level": "Main Boss", "expansion": "Tomb of Giants"},
-                    "Great Grey Wolf Sif": {"name": "Great Grey Wolf Sif", "level": "Main Boss", "expansion": "Darkroot"},
-                    "Ornstein and Smough": {"name": "Ornstein and Smough", "level": "Main Boss", "expansion": "Dark Souls The Board Game"},
-                    "Sir Alonne": {"name": "Sir Alonne", "level": "Main Boss", "expansion": "Iron Keep"},
-                    "Smelter Demon": {"name": "Smelter Demon", "level": "Main Boss", "expansion": "Iron Keep"},
-                    "The Pursuer": {"name": "The Pursuer", "level": "Main Boss", "expansion": "Explorers"},
-                    "Black Dragon Kalameet": {"name": "Black Dragon Kalameet", "level": "Mega Boss", "expansion": "Black Dragon Kalameet"},
-                    "The Executioner's Chariot": {"name": "The Executioner's Chariot", "level": "Mega Boss", "expansion": "The Executioner's Chariot"},
-                    "Gaping Dragon": {"name": "Gaping Dragon", "level": "Mega Boss", "expansion": "Gaping Dragon"},
-                    "Guardian Dragon": {"name": "Guardian Dragon", "level": "Mega Boss", "expansion": "Guardian Dragon"},
-                    "Manus, Father of the Abyss": {"name": "Manus, Father of the Abyss", "level": "Mega Boss", "expansion": "Manus, Father of the Abyss"},
-                    "Old Iron King": {"name": "Old Iron King", "level": "Mega Boss", "expansion": "Old Iron King"},
-                    "Stray Demon": {"name": "Stray Demon", "level": "Mega Boss", "expansion": "Asylum Demon"},
-                    "The Four Kings": {"name": "The Four Kings", "level": "Mega Boss", "expansion": "The Four Kings"},
-                    "The Last Giant": {"name": "The Last Giant", "level": "Mega Boss", "expansion": "The Last Giant"},
-                    "Vordt of the Boreal Valley": {"name": "Vordt of the Boreal Valley", "level": "Mega Boss", "expansion": "Vordt of the Boreal Valley"}
+                    "Asylum Demon": {"name": "Asylum Demon", "level": "Mini Boss", "sets": set(["Asylum Demon"])},
+                    "Black Knight": {"name": "Black Knight", "level": "Mini Boss", "sets": set(["Tomb of Giants"])},
+                    "Boreal Outrider Knight": {"name": "Boreal Outrider Knight", "level": "Mini Boss", "sets": set(["Dark Souls The Board Game"])},
+                    "Heavy Knight": {"name": "Heavy Knight", "level": "Mini Boss", "sets": set(["Painted World of Ariamis"])},
+                    "Old Dragonslayer": {"name": "Old Dragonslayer", "level": "Mini Boss", "sets": set(["Explorers"])},
+                    "Titanite Demon": {"name": "Titanite Demon", "level": "Mini Boss", "sets": set(["Dark Souls The Board Game", "The Sunless City"])},
+                    "Winged Knight": {"name": "Winged Knight", "level": "Mini Boss", "sets": set(["Dark Souls The Board Game"])},
+                    "Artorias": {"name": "Artorias", "level": "Main Boss", "sets": set(["Darkroot"])},
+                    "Crossbreed Priscilla": {"name": "Crossbreed Priscilla", "level": "Main Boss", "sets": set(["Painted World of Ariamis"])},
+                    "Dancer of the Boreal Valley": {"name": "Dancer of the Boreal Valley", "level": "Main Boss", "sets": set(["Dark Souls The Board Game"])},
+                    "Gravelord Nito": {"name": "Gravelord Nito", "level": "Main Boss", "sets": set(["Tomb of Giants"])},
+                    "Great Grey Wolf Sif": {"name": "Great Grey Wolf Sif", "level": "Main Boss", "sets": set(["Darkroot"])},
+                    "Ornstein and Smough": {"name": "Ornstein and Smough", "level": "Main Boss", "sets": set(["Dark Souls The Board Game", "The Sunless City"])},
+                    "Sir Alonne": {"name": "Sir Alonne", "level": "Main Boss", "sets": set(["Iron Keep"])},
+                    "Smelter Demon": {"name": "Smelter Demon", "level": "Main Boss", "sets": set(["Iron Keep"])},
+                    "The Pursuer": {"name": "The Pursuer", "level": "Main Boss", "sets": set(["Explorers"])},
+                    "Black Dragon Kalameet": {"name": "Black Dragon Kalameet", "level": "Mega Boss", "sets": set(["Black Dragon Kalameet"])},
+                    "The Executioner's Chariot": {"name": "The Executioner's Chariot", "level": "Mega Boss", "sets": set(["The Executioner's Chariot"])},
+                    "Gaping Dragon": {"name": "Gaping Dragon", "level": "Mega Boss", "sets": set(["Gaping Dragon"])},
+                    "Guardian Dragon": {"name": "Guardian Dragon", "level": "Mega Boss", "sets": set(["Guardian Dragon"])},
+                    "Manus, Father of the Abyss": {"name": "Manus, Father of the Abyss", "level": "Mega Boss", "sets": set(["Manus, Father of the Abyss"])},
+                    "Old Iron King": {"name": "Old Iron King", "level": "Mega Boss", "sets": set(["Old Iron King"])},
+                    "Stray Demon": {"name": "Stray Demon", "level": "Mega Boss", "sets": set(["Asylum Demon"])},
+                    "The Four Kings": {"name": "The Four Kings", "level": "Mega Boss", "sets": set(["The Four Kings"])},
+                    "The Last Giant": {"name": "The Last Giant", "level": "Mega Boss", "sets": set(["The Last Giant"])},
+                    "Vordt of the Boreal Valley": {"name": "Vordt of the Boreal Valley", "level": "Mega Boss", "sets": set(["Vordt of the Boreal Valley"])}
                 }
                 
                 self.selectedBoss = tk.StringVar()
 
-                self.allSets = set([encounters[encounter]["expansion"] for encounter in encounters])
+                self.allSets = set([encounters[encounter]["set"] for encounter in encounters])
                 self.availableSets = set(self.settings["availableSets"])
                 self.charactersActive = set(self.settings["charactersActive"])
                 self.availableCoreSets = coreSets & self.availableSets
@@ -597,23 +599,31 @@ try:
                 self.set_bindings_buttons_menus(True)
 
                 self.treasureSwapEncounters = {
+                    "Castle Break In": "Dragonslayer Greatbow",
                     "Corvian Host": "Bloodshield",
                     "Dark Resurrection": "Fireball",
                     "Distant Tower": "Velka's Rapier",
+                    "Flooded Fortress": "Adventurer's Armour",
                     "Frozen Revolutions": "Red Tearstone Ring",
                     "Giant's Coffin": "Black Knight Greataxe",
                     "Grave Matters": "Firebombs",
+                    "Hanging Rafters": "Dark Wood Grain Ring",
                     "In Deep Water": "Thorolund Talisman",
                     "Inhospitable Ground": "Pike",
                     "Monstrous Maw": "Exile Greatsword",
                     "No Safe Haven": "Throwing Knives",
                     "Painted Passage": "Painting Guardian Armour",
+                    "Parish Church": "Titanite Shard",
                     "Puppet Master": "Skull Lantern",
                     "Rain of Filth": "Poison Mist",
+                    "Shattered Keep": "Poison Throwing Knives",
                     "The Abandoned Chest": "Chloranthy Ring",
                     "The Beast From the Depths": "Mask of the Child",
+                    "The Iron Golem": "Giant's Halberd",
                     "The Locked Grave": "Dragon Scale",
                     "The Skeleton Ball": "Divine Blessing",
+                    "Trophy Room": "Havel's Greatshield",
+                    "Undead Sanctum": "Silver Knight Straight Sword",
                     "Unseen Scurrying": "Kukris",
                     "Urns of the Fallen": "Bonewheel Shield",
                     "Velka's Chosen": "Demon Titanite"
@@ -623,10 +633,13 @@ try:
                     "bitterCold": "If a character has a Frostbite token at the end of their turn, they suffer 1 damage.",
                     "barrage": "At the end of each character's turn, that character must make a defense roll using only their dodge dice.\n\nIf no dodge symbols are rolled, the character suffers 2 damage and Stagger.",
                     "darkness": "During this encounter, characters can only attack enemies on the same or an adjacent node.",
-                    "eerie": "During setup, take five blank trap tokens and five trap tokens with values on them, and place a random token face down on each of the highlighted nodes.\n\nIf a character moves onto a node with a token, flip the token.\n\nIf the token is blank, place it to one side.\n\nIf the token has a damage value, instead of resolving it normally, spawn an enemy corresponding to the value shown, then discard the token.",
+                    "eerie": "During setup, take five blank trap tokens and five trap tokens with values on them, and place a random token face down on each of the highlighted nodes.\n\nIf a character moves onto a node with a token, flip the token.\n\nIf the token is blank, place it to one side.\n\nIf the token has a damage value, instead of resolving it normally, spawn an enemy corresponding to the value shown, push the character to a node containing a trap token if possible, then discard the token.",
+                    "gang": "A gang enemy is a 1 health enemy whose name includes the word in parentheses.\n\nIf a character is attacked by a gang enemy and another gang enemy is within one node of the character, increase the attacking model's damage and dodge difficulty values by 1 when resolving the attack.",
                     "hidden": "After declaring an attack, players must discard a die of their choice before rolling.\n\nIf the attacks only has a single die already, ignore this rule.",
+                    "illusion": "During setup, only place tile one. Then, shuffle one doorway (or blank) trap token and four trap tokens with damage values, and place a token face down on each of the highlighted nodes.\n\nIf a character moves onto a node with a token, flip the token. If the token has a damage value, resolve the effects normally. If the token is the doorway, discard all face down trap tokens, and place the next sequential tile as shown on the encounter card. Then, place the character on a doorway node on the new tile. After placing the character, if the new tile has highlighted nodes, repeat the steps above.\n\nOnce a doorway token has been revealed, it counts as the doorway node that connects to the next sequential tile.",
+                    "mimic": "If a character opens a chest in this encounter, shuffle the chest deck and draw a card. If a blank card is drawn, resolve the chest rules as normal. If the teeth card is drawn, replace the chest with the listed model instead.\n\nThe chest deck contains three blank cards and two teeth cards. You can simulate this with trap tokens also - shuffle three blank trap tokens and two trap tokens with a value.",
                     "onslaught": "Each tile begins the encounter as active (all enemies on active tiles act on their turn).",
-                    "poisonMist": "During setup, place trap tokens on the tile indicated in brackets using the normal trap placement rules.\n\nThen, reveal the tokens, replacing each token with a value with a poison cloud token.",
+                    "poisonMist": "During setup, place trap tokens on the tile indicated in brackets using the normal trap placement rules.\n\nThen, reveal the tokens, replacing each token with a value with a poison cloud token. If a character ends their turn on the same node as a poison cloud token, they suffer Poison.",
                     "snowstorm": "At the start of each character's turn, that character suffers Frostbite unless they have the torch token on their dashboard or are on the same node as the torch token or a character with the torch token on their dashboard.",
                     "timer": "If the timer marker reaches the value shown in brackets, resolve the effect listed.",
                     "trial": "Trials offer an extra objective providing additional rewards if completed.\n\nThis is shown in parentheses, either in writing, or as a number of turns in which the characters must complete the encounter's main objective.\n\nCompleting trial objectives is not mandatory to complete an encounter.",
@@ -646,6 +659,7 @@ try:
                     "Hollow Soldier": "Hollow Soldier",
                     "Ironclad Soldier": "Ironclad Soldier",
                     "Large Hollow Soldier": "Large Hollow Soldier",
+                    "Mimic": "Mimic",
                     "Mushroom Child": "Mushroom Child",
                     "Mushroom Parent": "Mushroom Parent",
                     "Necromancer": "Necromancer",
@@ -683,139 +697,233 @@ try:
                 self.bleed = self.create_image("bleed.png", "condition")
 
                 # Keywords
-                self.poisonMist = ImageTk.PhotoImage(self.create_image("poison_mist.png", "poisonMist"))
-                self.darkness = ImageTk.PhotoImage(self.create_image("darkness.png", "darkness"))
-                self.trial = ImageTk.PhotoImage(self.create_image("trial.png", "trial"))
-                self.timer = ImageTk.PhotoImage(self.create_image("timer.png", "timer"))
-                self.onslaught = ImageTk.PhotoImage(self.create_image("onslaught.png", "onslaught"))
-                self.snowstorm = ImageTk.PhotoImage(self.create_image("snowstorm.png", "snowstorm"))
-                self.hidden = ImageTk.PhotoImage(self.create_image("hidden.png", "hidden"))
-                self.bitterCold = ImageTk.PhotoImage(self.create_image("bitter_cold.png", "bitterCold"))
-                self.eerie = ImageTk.PhotoImage(self.create_image("eerie.png", "eerie"))
                 self.barrage = ImageTk.PhotoImage(self.create_image("barrage.png", "barrage"))
+                self.bitterCold = ImageTk.PhotoImage(self.create_image("bitter_cold.png", "bitterCold"))
+                self.darkness = ImageTk.PhotoImage(self.create_image("darkness.png", "darkness"))
+                self.eerie = ImageTk.PhotoImage(self.create_image("eerie.png", "eerie"))
+                self.gangAlonne = ImageTk.PhotoImage(self.create_image("gang_alonne.png", "gangAlonne"))
+                self.gangHollow = ImageTk.PhotoImage(self.create_image("gang_hollow.png", "gangHollow"))
+                self.gangSkeleton = ImageTk.PhotoImage(self.create_image("gang_skeleton.png", "gangSkeleton"))
+                self.gangScarecrow = ImageTk.PhotoImage(self.create_image("gang_scarecrow.png", "gangScarecrow"))
+                self.hidden = ImageTk.PhotoImage(self.create_image("hidden.png", "hidden"))
+                self.illusion = ImageTk.PhotoImage(self.create_image("illusion.png", "illusion"))
+                self.mimic = ImageTk.PhotoImage(self.create_image("mimic_keyword.png", "mimic"))
+                self.onslaught = ImageTk.PhotoImage(self.create_image("onslaught.png", "onslaught"))
+                self.poisonMist = ImageTk.PhotoImage(self.create_image("poison_mist.png", "poisonMist"))
+                self.snowstorm = ImageTk.PhotoImage(self.create_image("snowstorm.png", "snowstorm"))
+                self.timer = ImageTk.PhotoImage(self.create_image("timer.png", "timer"))
+                self.trial = ImageTk.PhotoImage(self.create_image("trial.png", "trial"))
 
                 self.tooltips = []
 
                 self.encounterTooltips = {
-                    "A Trusty Ally": [
+                    ("A Trusty Ally", "Tomb of Giants"): [
                         {"image": self.onslaught, "imageName": "onslaught"}
                         ],
-                    "Abandoned and Forgotten": [
+                    ("Abandoned and Forgotten", "Painted World of Ariamis"): [
                         {"image": self.eerie, "imageName": "eerie"}
                         ],
-                    "Altar of Bones": [
+                    ("Aged Sentinel", "The Sunless City"): [
+                        {"image": self.trial, "imageName": "trial"}
+                        ],
+                    ("Altar of Bones", "Tomb of Giants"): [
                         {"image": self.timer, "imageName": "timer"}
                         ],
-                    "Central Plaza": [
+                    ("Archive Entrance", "The Sunless City"): [
+                        {"image": self.trial, "imageName": "trial"}
+                        ],
+                    ("Broken Passageway", "The Sunless City"): [
+                        {"image": self.timer, "imageName": "timer"},
+                        {"image": self.timer, "imageName": "timer"}
+                        ],
+                    ("Castle Break In", "The Sunless City"): [
+                        {"image": self.timer, "imageName": "timer"},
+                        {},
+                        {"image": self.timer, "imageName": "timer"}
+                        ],
+                    ("Central Plaza", "Painted World of Ariamis"): [
                         {"image": self.barrage, "imageName": "barrage"}
                         ],
-                    "Cold Snap": [
+                    ("Cold Snap", "Painted World of Ariamis"): [
                         {"image": self.snowstorm, "imageName": "snowstorm"},
                         {"image": self.bitterCold, "imageName": "bitterCold"},
                         {"image": self.trial, "imageName": "trial"}
                         ],
-                    "Corrupted Hovel": [
+                    ("Corrupted Hovel", "Painted World of Ariamis"): [
                         {"image": self.poisonMist, "imageName": "poisonMist"},
                         {"image": self.trial, "imageName": "trial"}
                         ],
-                    "Corvian Host": [
+                    ("Corvian Host", "Painted World of Ariamis"): [
                         {"image": self.poisonMist, "imageName": "poisonMist"}
                         ],
-                    "Dark Resurrection": [
+                    ("Dark Resurrection", "Tomb of Giants"): [
                         {"image": self.darkness, "imageName": "darkness"}
                         ],
-                    "Deathly Freeze": [
+                    ("Death's Precipice", "Tomb of Giants"): [
+                        {"image": self.timer, "imageName": "timer"},
+                        {"image": self.timer, "imageName": "timer"}
+                        ],
+                    ("Deathly Freeze", "Painted World of Ariamis"): [
                         {"image": self.snowstorm, "imageName": "snowstorm"},
                         {"image": self.bitterCold, "imageName": "bitterCold"}
                         ],
-                    "Distant Tower": [
+                    ("Deathly Tolls", "The Sunless City"): [
+                        {"image": self.timer, "imageName": "timer"},
+                        {"image": self.mimic, "imageName": "mimic"},
+                        {"image": self.onslaught, "imageName": "onslaught"}
+                        ],
+                    ("Depths of the Cathedral", "The Sunless City"): [
+                        {"image": self.mimic, "imageName": "mimic"}
+                        ],
+                    ("Distant Tower", "Painted World of Ariamis"): [
                         {"image": self.barrage, "imageName": "barrage"},
                         {"image": self.trial, "imageName": "trial"}
                         ],
-                    "Eye of the Storm": [
-                        {"image": self.hidden, "imageName": "hidden"}
+                    ("Eye of the Storm", "Painted World of Ariamis"): [
+                        {"image": self.hidden, "imageName": "hidden"},
+                        {"image": self.timer, "imageName": "timer"}
                         ],
-                    "Far From the Sun": [
+                    ("Far From the Sun", "Tomb of Giants"): [
                         {"image": self.darkness, "imageName": "darkness"}
                         ],
-                    "Frozen Revolutions": [
+                    ("Flooded Fortress", "The Sunless City"): [
                         {"image": self.trial, "imageName": "trial"}
                         ],
-                    "Frozen Sentries": [
+                    ("Frozen Revolutions", "Painted World of Ariamis"): [
+                        {"image": self.trial, "imageName": "trial"}
+                        ],
+                    ("Frozen Sentries", "Painted World of Ariamis"): [
                         {"image": self.snowstorm, "imageName": "snowstorm"}
                         ],
-                    "Giant's Coffin": [
+                    ("Giant's Coffin", "Tomb of Giants"): [
                         {"image": self.onslaught, "imageName": "onslaught"},
                         {"image": self.trial, "imageName": "trial"},
                         {"image": self.timer, "imageName": "timer"}
                         ],
-                    "Gnashing Beaks": [
+                    ("Gleaming Silver", "The Sunless City"): [
+                        {"image": self.trial, "imageName": "trial"},
+                        {"image": self.mimic, "imageName": "mimic"}
+                        ],
+                    ("Gnashing Beaks", "Painted World of Ariamis"): [
                         {"image": self.trial, "imageName": "trial"}
                         ],
-                    "In Deep Water": [
+                    ("Grim Reunion", "The Sunless City"): [
+                        {"image": self.trial, "imageName": "trial"},
+                        {"image": self.onslaught, "imageName": "onslaught"}
+                        ],
+                    ("Hanging Rafters", "The Sunless City"): [
+                        {"image": self.trial, "imageName": "trial"},
+                        {"image": self.onslaught, "imageName": "onslaught"}
+                        ],
+                    ("Illusionary Doorway", "The Sunless City"): [
+                        {"image": self.timer, "imageName": "timer"},
+                        {"image": self.illusion, "imageName": "illusion"}
+                        ],
+                    ("In Deep Water", "Tomb of Giants"): [
                         {"image": self.timer, "imageName": "timer"}
                         ],
-                    "Inhospitable Ground": [
-                        {"image": self.snowstorm, "imageName": "snowstorm"}
+                    ("Inhospitable Ground", "Painted World of Ariamis"): [
+                        {"image": self.snowstorm, "imageName": "snowstorm"},
+                        {"image": self.bitterCold, "imageName": "bitterCold"}
                         ],
-                    "Lakeview Refuge": [
+                    ("Kingdom's Messengers", "The Sunless City"): [
+                        {"image": self.trial, "imageName": "trial"}
+                        ],
+                    ("Lakeview Refuge", "Tomb of Giants"): [
                         {"image": self.onslaught, "imageName": "onslaught"},
                         {"image": self.darkness, "imageName": "darkness"},
                         {"image": self.trial, "imageName": "trial"}
                         ],
-                    "Last Rites": [
+                    ("Last Rites", "Tomb of Giants"): [
                         {"image": self.timer, "imageName": "timer"}
                         ],
-                    "Last Shred of Light": [
+                    ("Last Shred of Light", "Tomb of Giants"): [
                         {"image": self.darkness, "imageName": "darkness"}
                         ],
-                    "No Safe Haven": [
+                    ("Lost Chapel", "Tomb of Giants"): [
+                        {"image": self.timer, "imageName": "timer"},
+                        {"image": self.timer, "imageName": "timer"}
+                        ],
+                    ("Monstrous Maw", "Painted World of Ariamis"): [
                         {"image": self.poisonMist, "imageName": "poisonMist"}
                         ],
-                    "Painted Passage": [
+                    ("No Safe Haven", "Painted World of Ariamis"): [
+                        {"image": self.snowstorm, "imageName": "snowstorm"},
+                        {"image": self.bitterCold, "imageName": "bitterCold"},
+                        {"image": self.poisonMist, "imageName": "poisonMist"}
+                        ],
+                    ("Painted Passage", "Painted World of Ariamis"): [
                         {"image": self.snowstorm, "imageName": "snowstorm"}
                         ],
-                    "Pitch Black": [
+                    ("Parish Church", "The Sunless City"): [
+                        {"image": self.mimic, "imageName": "mimic"},
+                        {"image": self.illusion, "imageName": "illusion"},
+                        {"image": self.trial, "imageName": "trial"}
+                        ],
+                    ("Pitch Black", "Tomb of Giants"): [
                         {"image": self.darkness, "imageName": "darkness"}
                         ],
-                    "Promised Respite": [
+                    ("Promised Respite", "Painted World of Ariamis"): [
                         {"image": self.snowstorm, "imageName": "snowstorm"}
                         ],
-                    "Skeleton Overlord": [
+                    ("Skeleton Overlord", "Tomb of Giants"): [
                         {"image": self.timer, "imageName": "timer"}
                         ],
-                    "Snowblind": [
+                    ("Snowblind", "Painted World of Ariamis"): [
                         {"image": self.snowstorm, "imageName": "snowstorm"},
                         {"image": self.bitterCold, "imageName": "bitterCold"},
                         {"image": self.hidden, "imageName": "hidden"}
                         ],
-                    "The Beast From the Depths": [
+                    ("Tempting Maw", "The Sunless City"): [
                         {"image": self.trial, "imageName": "trial"}
                         ],
-                    "The First Bastion": [
+                    ("The Beast From the Depths", "Tomb of Giants"): [
                         {"image": self.trial, "imageName": "trial"}
                         ],
-                    "The Last Bastion": [
-                        {"image": self.snowstorm, "imageName": "snowstorm"},
-                        {"image": self.bitterCold, "imageName": "bitterCold"},
-                        {"image": self.trial, "imageName": "trial"}
-                        ],
-                    "The Locked Grave": [
-                        {"image": self.trial, "imageName": "trial"}
-                        ],
-                    "The Mass Grave": [
-                        {"image": self.onslaught, "imageName": "onslaught"},
+                    ("The First Bastion", "Painted World of Ariamis"): [
+                        {"image": self.trial, "imageName": "trial"},
                         {"image": self.timer, "imageName": "timer"},
                         {"image": self.timer, "imageName": "timer"},
                         {"image": self.timer, "imageName": "timer"}
                         ],
-                    "Trecherous Tower": [
+                    ("The Grand Hall", "The Sunless City"): [
+                        {"image": self.trial, "imageName": "trial"},
+                        {"image": self.mimic, "imageName": "mimic"}
+                        ],
+                    ("The Last Bastion", "Painted World of Ariamis"): [
+                        {"image": self.snowstorm, "imageName": "snowstorm"},
+                        {"image": self.bitterCold, "imageName": "bitterCold"},
+                        {"image": self.trial, "imageName": "trial"}
+                        ],
+                    ("The Locked Grave", "Tomb of Giants"): [
+                        {"image": self.trial, "imageName": "trial"}
+                        ],
+                    ("The Mass Grave", "Tomb of Giants"): [
+                        {"image": self.onslaught, "imageName": "onslaught"},
+                        {"image": self.timer, "imageName": "timer"}
+                        ],
+                    ("The Shine of Gold", "The Sunless City"): [
+                        {"image": self.timer, "imageName": "timer"}
+                        ],
+                    ("Trecherous Tower", "Painted World of Ariamis"): [
                         {"image": self.snowstorm, "imageName": "snowstorm"},
                         {"image": self.bitterCold, "imageName": "bitterCold"},
                         {"image": self.eerie, "imageName": "eerie"}
                         ],
-                    "Unseen Scurrying": [
+                    ("Trophy Room", "The Sunless City"): [
+                        {"image": self.barrage, "imageName": "barrage"}
+                        ],
+                    ("Twilight Falls", "The Sunless City"): [
+                        {"image": self.illusion, "imageName": "illusion"}
+                        ],
+                    ("Undead Sanctum", "The Sunless City"): [
+                        {"image": self.onslaught, "imageName": "onslaught"}
+                        ],
+                    ("Unseen Scurrying", "Painted World of Ariamis"): [
                         {"image": self.hidden, "imageName": "hidden"}
+                        ],
+                    ("Velka's Chosen", "Painted World of Ariamis"): [
+                        {"image": self.barrage, "imageName": "barrage"}
                         ]
                 }
                 
@@ -923,10 +1031,9 @@ try:
                 # Build the dictionary that will be saved to JSON if this campaign is saved.
                 encounter = {
                     "name": self.selected["name"],
-                    "expansion": self.selected["expansion"],
+                    "set": self.selected["set"],
                     "level": self.selected["level"],
                     "enemies": self.newEnemies,
-                    "trialTarget": self.trialTarget,
                     "rewardTreasure": self.rewardTreasure
                 }
 
@@ -1145,7 +1252,7 @@ try:
                 # Get the encounter selected.
                 campaignEncounter = [e for e in self.campaign if e["name"] == tree.item(tree.selection())["values"][0]]
 
-                self.rewardTreasure = campaignEncounter[0]["rewardTreasure"]
+                self.rewardTreasure = campaignEncounter[0].get("rewardTreasure")
 
                 # If the selected encounter is a boss.
                 if campaignEncounter[0]["name"] in self.bosses:
@@ -1166,8 +1273,7 @@ try:
 
                     # Create the encounter card with saved enemies and tooltips.
                     self.newEnemies = campaignEncounter[0]["enemies"]
-                    self.trialTarget = campaignEncounter[0]["trialTarget"]
-                    self.edit_encounter_card(campaignEncounter[0]["name"], campaignEncounter[0]["expansion"], campaignEncounter[0]["level"], alts["enemySlots"])
+                    self.edit_encounter_card(campaignEncounter[0]["name"], campaignEncounter[0]["set"], campaignEncounter[0]["level"], alts["enemySlots"])
 
                 adapter.debug("End of load_campaign_encounter")
             except Exception as e:
@@ -1192,10 +1298,6 @@ try:
                             or encounter not in encountersWithInvadersOrMimics)
                         and any([frozenset(expCombo).issubset(self.availableSets) for expCombo in encounters[encounter]["setCombos"]])
                     )
-                    # Because these two have their enemies set on the fly, I can't guarantee there are valid enemies
-                    # without the Painted World core set.
-                    and (encounter != "Abandoned and Forgotten" or "Painted World of Ariamis" in self.availableSets)
-                    and (encounter != "Trecherous Tower" or "Painted World of Ariamis" in self.availableSets)
                     )]
 
                 adapter.debug("End of set_encounter_list")
@@ -1304,26 +1406,26 @@ try:
                 # 5. Alphabetically
                 encountersSorted = [encounter for encounter in sorted(self.encounterList, key=lambda x: (
                     1 if encounters[x]["level"] == 4 else 0,
-                    0 if encounters[x]["expansion"] in coreSets else 1,
-                    0 if encounters[x]["expansion"] != "The Executioner's Chariot" else 1,
-                    encounters[x]["expansion"],
+                    0 if encounters[x]["set"] in coreSets else 1,
+                    0 if encounters[x]["set"] != "The Executioner's Chariot" else 1,
+                    encounters[x]["set"],
                     encounters[x]["level"],
                     encounters[x]["name"]))]
                 tvData = []
                 tvParents = dict()
                 x = 0
                 for e in encountersSorted:
-                    if encounters[e]["expansion"] not in [t[2] for t in tvData]:
-                        tvData.append(("", x, encounters[e]["expansion"], False))
-                        tvParents[encounters[e]["expansion"]] = {"exp": tvData[-1][1]}
+                    if encounters[e]["set"] not in [t[2] for t in tvData]:
+                        tvData.append(("", x, encounters[e]["set"], False))
+                        tvParents[encounters[e]["set"]] = {"exp": tvData[-1][1]}
                         x += 1
 
-                    if encounters[e]["level"] not in tvParents[encounters[e]["expansion"]]:
-                        tvData.append((tvParents[encounters[e]["expansion"]]["exp"], x, "Level " + str(encounters[e]["level"]), False))
-                        tvParents[encounters[e]["expansion"]][encounters[e]["level"]] = tvData[-1][1]
+                    if encounters[e]["level"] not in tvParents[encounters[e]["set"]]:
+                        tvData.append((tvParents[encounters[e]["set"]]["exp"], x, "Level " + str(encounters[e]["level"]), False))
+                        tvParents[encounters[e]["set"]][encounters[e]["level"]] = tvData[-1][1]
                         x += 1
 
-                    tvData.append((tvParents[encounters[e]["expansion"]][encounters[e]["level"]], x, e, True))
+                    tvData.append((tvParents[encounters[e]["set"]][encounters[e]["level"]], x, e, True))
                     x += 1
 
                 for item in tvData:
@@ -1644,7 +1746,7 @@ try:
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of create_image", caller=calframe[1][3])
 
-                imagePath = baseFolder + "\\images\\" + (imageFileName[:-4] + " rule bg.jpg" if imageType == "enemyText" else imageFileName)
+                imagePath = baseFolder + "\\images\\" + (imageFileName[:-4].replace(" (TSC)", "") + " rule bg.jpg" if imageType == "enemyText" else imageFileName[:-4] + " (TSC).jpg" if expansion == "The Sunless City" and imageFileName[:-4] in set(["Broken Passageway", "Central Plaza"]) else imageFileName.replace(" (TSC)", ""))
                 adapter.debug("\tOpening " + imagePath, caller=calframe[1][3])
 
                 if imageType == "encounter":
@@ -1679,26 +1781,38 @@ try:
                     image = Image.open(imagePath).resize((12, 12), Image.Resampling.LANCZOS)
                 elif imageType == "condition":
                     image = Image.open(imagePath).resize((13, 13), Image.Resampling.LANCZOS)
-                elif imageType == "poisonMist":
-                    image = Image.open(imagePath).resize((61, 13), Image.Resampling.LANCZOS)
-                elif imageType == "darkness":
-                    image = Image.open(imagePath).resize((48, 13), Image.Resampling.LANCZOS)
-                elif imageType == "trial":
-                    image = Image.open(imagePath).resize((26, 13), Image.Resampling.LANCZOS)
-                elif imageType == "timer":
-                    image = Image.open(imagePath).resize((31, 13), Image.Resampling.LANCZOS)
-                elif imageType == "onslaught":
-                    image = Image.open(imagePath).resize((54, 13), Image.Resampling.LANCZOS)
-                elif imageType == "snowstorm":
-                    image = Image.open(imagePath).resize((56, 13), Image.Resampling.LANCZOS)
-                elif imageType == "hidden":
-                    image = Image.open(imagePath).resize((38, 13), Image.Resampling.LANCZOS)
-                elif imageType == "bitterCold":
-                    image = Image.open(imagePath).resize((56, 13), Image.Resampling.LANCZOS)
-                elif imageType == "eerie":
-                    image = Image.open(imagePath).resize((27, 13), Image.Resampling.LANCZOS)
                 elif imageType == "barrage":
                     image = Image.open(imagePath).resize((41, 13), Image.Resampling.LANCZOS)
+                elif imageType == "bitterCold":
+                    image = Image.open(imagePath).resize((56, 13), Image.Resampling.LANCZOS)
+                elif imageType == "darkness":
+                    image = Image.open(imagePath).resize((48, 13), Image.Resampling.LANCZOS)
+                elif imageType == "eerie":
+                    image = Image.open(imagePath).resize((27, 13), Image.Resampling.LANCZOS)
+                elif imageType == "gangAlonne":
+                    image = Image.open(imagePath).resize((67, 13), Image.Resampling.LANCZOS)
+                elif imageType == "gangHollow":
+                    image = Image.open(imagePath).resize((69, 13), Image.Resampling.LANCZOS)
+                elif imageType == "gangScarecrow":
+                    image = Image.open(imagePath).resize((81, 13), Image.Resampling.LANCZOS)
+                elif imageType == "gangSkeleton":
+                    image = Image.open(imagePath).resize((73, 13), Image.Resampling.LANCZOS)
+                elif imageType == "hidden":
+                    image = Image.open(imagePath).resize((38, 13), Image.Resampling.LANCZOS)
+                elif imageType == "illusion":
+                    image = Image.open(imagePath).resize((36, 13), Image.Resampling.LANCZOS)
+                elif imageType == "mimic":
+                    image = Image.open(imagePath).resize((33, 13), Image.Resampling.LANCZOS)
+                elif imageType == "onslaught":
+                    image = Image.open(imagePath).resize((54, 13), Image.Resampling.LANCZOS)
+                elif imageType == "poisonMist":
+                    image = Image.open(imagePath).resize((61, 13), Image.Resampling.LANCZOS)
+                elif imageType == "snowstorm":
+                    image = Image.open(imagePath).resize((56, 13), Image.Resampling.LANCZOS)
+                elif imageType == "timer":
+                    image = Image.open(imagePath).resize((31, 13), Image.Resampling.LANCZOS)
+                elif imageType == "trial":
+                    image = Image.open(imagePath).resize((26, 13), Image.Resampling.LANCZOS)
 
                 adapter.debug("\tEnd of create_image", caller=calframe[1][3])
                 
@@ -1728,7 +1842,7 @@ try:
 
                 self.load_encounter(encounter=choice([encounter for encounter in self.encounterList if (
                     encounters[encounter]["level"] == level
-                    and (encounters[encounter]["expansion"] in self.setsForRandomEncounters
+                    and (encounters[encounter]["set"] in self.setsForRandomEncounters
                         or encounters[encounter]["level"] == 4))]))
 
                 adapter.debug("\tEnd of random_encounter", caller=calframe[1][3])
@@ -1836,11 +1950,6 @@ try:
                     return
                 
                 self.rewardTreasure = None
-                
-                if self.selected["name"] in set(["Corvian Host", "Distant Tower"]):
-                    self.trialTarget = self.least_frequent_items(self.trialEnemies)
-                else:
-                    self.trialTarget = None
 
                 # Make sure a new set of enemies is chosen each time, otherwise it
                 # feels like the program isn't doing anything.
@@ -1850,17 +1959,10 @@ try:
                 oldEnemies = [e for e in self.newEnemies]
                 self.newEnemies = choice(self.selected["alternatives"])
                 if len(self.selected["alternatives"]) > 1:
-                    while (self.newEnemies == oldEnemies
-                           or (self.selected["name"] == "Corvian Host"
-                               and sorted([enemy for enemy in self.newEnemies if enemyIds[enemy].health >= 5], key=lambda x: enemyIds[x].difficulty, reverse=True)[0] != self.trialTarget)
-                           or (self.selected["name"] == "Distant Tower"
-                               and sorted(self.newEnemies, key=lambda x: enemyIds[x].difficulty, reverse=True)[0] != self.trialTarget)):
+                    while self.newEnemies == oldEnemies:
                         self.newEnemies = choice(self.selected["alternatives"])
 
-                if self.trialTarget:
-                    self.trialEnemies.append(self.trialTarget)
-
-                self.edit_encounter_card(self.selected["name"], self.selected["expansion"], self.selected["level"], self.selected["enemySlots"])
+                self.edit_encounter_card(self.selected["name"], self.selected["set"], self.selected["level"], self.selected["enemySlots"])
 
                 adapter.debug("\tEnd of shuffle_enemies", caller=calframe[1][3])
             except Exception as e:
@@ -1932,11 +2034,17 @@ try:
                         self.encounterImage.paste(im=image, box=(x, y), mask=image)
                         s += 1
 
-                self.apply_keyword_tooltips(name)
+                self.apply_keyword_tooltips(name, expansion)
 
-                # # These are new encounters that have text referencing specific enemies.
+                # These are new encounters that have text referencing specific enemies.
                 if name == "Abandoned and Forgotten":
                     self.abandoned_and_forgotten()
+                elif name == "Aged Sentinel":
+                    self.aged_sentinel()
+                elif name == "Castle Break In":
+                    self.castle_break_in()
+                elif name == "Central Plaza":
+                    self.central_plaza()
                 elif name == "Cloak and Feathers":
                     self.cloak_and_feathers()
                 elif name == "Cold Snap":
@@ -1945,24 +2053,38 @@ try:
                     self.corvian_host()
                 elif name == "Corrupted Hovel":
                     self.corrupted_hovel()
+                elif name == "Dark Alleyway":
+                    self.dark_alleyway()
                 elif name == "Dark Resurrection":
                     self.dark_resurrection()
                 elif name == "Deathly Freeze":
                     self.deathly_freeze()
                 elif name == "Deathly Magic":
                     self.deathly_magic()
+                elif name == "Deathly Tolls":
+                    self.deathly_tolls()
+                elif name == "Depths of the Cathedral":
+                    self.depths_of_the_cathedral()
                 elif name == "Distant Tower":
                     self.distant_tower()
                 elif name == "Eye of the Storm":
                     self.eye_of_the_storm()
+                elif name == "Flooded Fortress":
+                    self.flooded_fortress()
                 elif name == "Frozen Revolutions":
                     self.frozen_revolutions()
                 elif name == "Giant's Coffin":
                     self.giants_coffin()
+                elif name == "Gleaming Silver":
+                    self.gleaming_silver()
                 elif name == "Gnashing Beaks":
                     self.gnashing_beaks()
                 elif name == "Grave Matters":
                     self.grave_matters()
+                elif name == "Grim Reunion":
+                    self.grim_reunion()
+                elif name == "Hanging Rafters":
+                    self.hanging_rafters()
                 elif name == "In Deep Water":
                     self.in_deep_water()
                 elif name == "Inhospitable Ground":
@@ -1975,30 +2097,54 @@ try:
                     self.no_safe_haven()
                 elif name == "Painted Passage":
                     self.painted_passage()
+                elif name == "Parish Church":
+                    self.parish_church()
+                elif name == "Parish Gates":
+                    self.parish_gates()
                 elif name == "Pitch Black":
                     self.pitch_black()
                 elif name == "Puppet Master":
                     self.puppet_master()
                 elif name == "Rain of Filth":
                     self.rain_of_filth()
+                elif name == "Shattered Keep":
+                    self.shattered_keep()
                 elif name == "Skeletal Spokes":
                     self.skeletal_spokes()
                 elif name == "Skeleton Overlord":
                     self.skeleton_overlord()
+                elif name == "Tempting Maw":
+                    self.tempting_maw()
                 elif name == "The Abandoned Chest":
                     self.the_abandoned_chest()
                 elif name == "The Beast From the Depths":
                     self.the_beast_from_the_depths()
+                elif name == "The Bell Tower":
+                    self.the_bell_tower()
                 elif name == "The First Bastion":
                     self.the_first_bastion()
+                elif name == "The Fountainhead":
+                    self.the_fountainhead()
+                elif name == "The Grand Hall":
+                    self.the_grand_hall()
+                elif name == "The Iron Golem":
+                    self.the_iron_golem()
                 elif name == "The Last Bastion":
                     self.the_last_bastion()
                 elif name == "The Locked Grave":
                     self.the_locked_grave()
+                elif name == "The Shine of Gold":
+                    self.the_shine_of_gold()
                 elif name == "The Skeleton Ball":
                     self.the_skeleton_ball()
                 elif name == "Trecherous Tower":
                     self.trecherous_tower()
+                elif name == "Trophy Room":
+                    self.trophy_room()
+                elif name == "Twilight Falls":
+                    self.twilight_falls()
+                elif name == "Undead Sanctum":
+                    self.undead_sanctum()
                 elif name == "Unseen Scurrying":
                     self.unseen_scurrying()
                 elif name == "Urns of the Fallen":
@@ -2017,7 +2163,7 @@ try:
                 raise
 
 
-        def create_tooltip(self, image, text, x, y):
+        def create_tooltip(self, tooltipDict, x, y):
             """
             Create a label and tooltip that will be placed and later removed.
             """
@@ -2026,10 +2172,10 @@ try:
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of create_tooltip", caller=calframe[1][3])
 
-                label = tk.Label(self.encounterFrame, image=image, borderwidth=0, highlightthickness=0)
+                label = tk.Label(self.encounterFrame, image=tooltipDict["image"], borderwidth=0, highlightthickness=0)
                 self.tooltips.append(label)
                 label.place(x=x, y=y)
-                CreateToolTip(label, text)
+                CreateToolTip(label, self.tooltipText[tooltipDict["imageName"].replace(" (TSC)", "")])
 
                 adapter.debug("\tEnd of create_tooltip", caller=calframe[1][3])
             except Exception as e:
@@ -2037,7 +2183,7 @@ try:
                 raise
 
 
-        def apply_keyword_tooltips(self, name):
+        def apply_keyword_tooltips(self, name, set):
             """
             If the encounter card has keywords, create an image of the word imposed over
             the original word and create a tooltip that shows up when mousing over the keyword image.
@@ -2054,8 +2200,10 @@ try:
                     adapter.debug("\tEnd of apply_keyword_tooltips (removed tooltips only)", caller=calframe[1][3])
                     return
 
-                for i, tooltip in enumerate(self.encounterTooltips.get(name, [])):
-                    self.create_tooltip(image=tooltip["image"], text=self.tooltipText[tooltip["imageName"]], x=142, y=199 + (15.5 * i))
+                for i, tooltip in enumerate(self.encounterTooltips.get((name, set), [])):
+                    if not tooltip:
+                        continue
+                    self.create_tooltip(tooltipDict=tooltip, x=142, y=199 + (15.5 * i))
 
                 adapter.debug("\tEnd of apply_keyword_tooltips", caller=calframe[1][3])
             except Exception as e:
@@ -2063,29 +2211,35 @@ try:
                 raise
 
 
+        def new_treasure_name(self, newTreasure):
+            treasureLines = {}
+            if newTreasure.count(" ") > 2:
+                breakIdx = newTreasure.rfind(" ", 0, newTreasure.rfind(" ") - 1)
+                treasureLines[0] = newTreasure[:breakIdx]
+                treasureLines[1] = newTreasure[breakIdx+1:]
+            elif newTreasure.count(" ") > 0 and len(newTreasure) >= 15:
+                lastSpaceIdx = newTreasure.rfind(" ")
+                treasureLines[0] = newTreasure[:lastSpaceIdx]
+                treasureLines[1] = newTreasure[lastSpaceIdx+1:]
+            else:
+                treasureLines[0] = newTreasure
+
+            return treasureLines
+
+
         def abandoned_and_forgotten(self):
-            """
-            Choose enemies for Eerie keyword.
-            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of abandoned_and_forgotten", caller=calframe[1][3])
 
-                totalDifficulty = sum([enemiesDict["Phalanx Hollow"].difficulty, enemiesDict["Engorged Zombie"].difficulty, enemiesDict["Crow Demon"].difficulty])
-                minDifficulty = totalDifficulty * 0.9
-                maxDifficulty = totalDifficulty * 1.1
-                allCombos = set(combinations([enemy for enemy in allEnemies if (
-                    enemy not in invadersStandard
-                    and enemy not in invadersAdvanced
-                    and enemiesDict[enemy].expansion in self.availableSets)], 3))
-                combos = [combo for combo in allCombos if minDifficulty <= sum([enemiesDict[enemy].difficulty for enemy in combo]) <= maxDifficulty]
-                spawns = choice(combos)
-                spawns = sorted(spawns, key=lambda x: enemiesDict[x].difficulty)
+                spawn1 = enemyIds[self.newEnemies[0]].name
+                spawn2 = enemyIds[self.newEnemies[1]].name
+                spawn3 = enemyIds[self.newEnemies[2]].name
 
-                self.encounterImage.paste(im=allEnemies[spawns[0]]["imageNew"], box=(285, 218), mask=allEnemies[spawns[0]]["imageNew"])
-                self.encounterImage.paste(im=allEnemies[spawns[1]]["imageNew"], box=(285, 248), mask=allEnemies[spawns[1]]["imageNew"])
-                self.encounterImage.paste(im=allEnemies[spawns[2]]["imageNew"], box=(285, 280), mask=allEnemies[spawns[2]]["imageNew"])
+                self.encounterImage.paste(im=allEnemies[spawn1]["imageNew"], box=(285, 218), mask=allEnemies[spawn1]["imageNew"])
+                self.encounterImage.paste(im=allEnemies[spawn2]["imageNew"], box=(285, 248), mask=allEnemies[spawn2]["imageNew"])
+                self.encounterImage.paste(im=allEnemies[spawn3]["imageNew"], box=(285, 280), mask=allEnemies[spawn3]["imageNew"])
 
                 adapter.debug("\tEnd of abandoned_and_forgotten", caller=calframe[1][3])
             except Exception as e:
@@ -2093,18 +2247,73 @@ try:
                 raise
 
 
+        def aged_sentinel(self):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of aged_sentinel", caller=calframe[1][3])
+
+                target = self.newTiles[1][1][0]
+                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                self.create_tooltip(tooltipDict=tooltipDict, x=65, y=147)
+                self.create_tooltip(tooltipDict=tooltipDict, x=142, y=231)
+                self.create_tooltip(tooltipDict=tooltipDict, x=202, y=255)
+
+                adapter.debug("\tEnd of aged_sentinel", caller=calframe[1][3])
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
+        def castle_break_in(self):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of castle_break_in", caller=calframe[1][3])
+
+                imageWithText = ImageDraw.Draw(self.encounterImage)
+                
+                if self.rewardTreasure:
+                    newTreasure = self.rewardTreasure
+                else:
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableSets), set(self.charactersActive))
+                    self.rewardTreasure = newTreasure
+
+                newTreasureLines = self.new_treasure_name(newTreasure)
+                imageWithText.text((21, 255), newTreasureLines[0], "black", font)
+                imageWithText.text((21, 266), newTreasureLines.get(1, ""), "black", font)
+
+                adapter.debug("\tEnd of castle_break_in", caller=calframe[1][3])
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
+        def central_plaza(self):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of central_plaza", caller=calframe[1][3])
+                    
+                target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])]].name
+                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                self.create_tooltip(tooltipDict=tooltipDict, x=143, y=243)
+
+                adapter.debug("\tEnd of central_plaza", caller=calframe[1][3])
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
         def cloak_and_feathers(self):
-            """
-            Put enemy icon in the objective.
-            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of cloak_and_feathers", caller=calframe[1][3])
 
                 target = self.newTiles[1][0][0]
-                image = allEnemies[target]["image text"]
-                self.create_tooltip(image=image, text=self.tooltipText[target], x=65, y=147)
+                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                self.create_tooltip(tooltipDict=tooltipDict, x=65, y=147)
 
                 adapter.debug("\tEnd of cloak_and_feathers", caller=calframe[1][3])
             except Exception as e:
@@ -2113,31 +2322,14 @@ try:
 
 
         def cold_snap(self):
-            """
-            Modify trial text, add armor/resist to make the replacement enemy as tough as an Engorged Zombie.
-            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of cold_snap", caller=calframe[1][3])
 
-                coldSnapTarget = self.newTiles[2][0][1]
-
-                image = allEnemies[coldSnapTarget]["image text"]
-                self.create_tooltip(image=image, text=self.tooltipText[coldSnapTarget], x=216, y=227)
-
-                imageWithText = ImageDraw.Draw(self.encounterImage)
-                if enemiesDict[coldSnapTarget].health == 1 and (enemiesDict[coldSnapTarget].armor < 2 or enemiesDict[coldSnapTarget].resist < 2):
-                    self.create_tooltip(image=image, text=self.tooltipText[coldSnapTarget], x=207, y=251)
-
-                    text = "Increase the \n"
-                    if enemiesDict[coldSnapTarget].armor < 2 and enemiesDict[coldSnapTarget].resist < 2:
-                        text += "block and resistance values to 2."
-                    elif enemiesDict[coldSnapTarget].armor < 2:
-                        text += "block value to 2."
-                    elif enemiesDict[coldSnapTarget].resist < 2:
-                        text += "resistance value to 2."
-                    imageWithText.text((140, 250), text, "black", font)
+                target = self.newTiles[2][0][1]
+                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                self.create_tooltip(tooltipDict=tooltipDict, x=216, y=227)
 
                 adapter.debug("\tEnd of cold_snap", caller=calframe[1][3])
             except Exception as e:
@@ -2146,17 +2338,14 @@ try:
 
 
         def corrupted_hovel(self):
-            """
-            Change Engorged Zombie to another enemy.
-            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of corrupted_hovel", caller=calframe[1][3])
 
                 target = [enemy for enemy in self.newTiles[1][0] + self.newTiles[1][1] if (self.newTiles[1][0] + self.newTiles[1][1]).count(enemy) == 2][0]
-                image = allEnemies[target]["image text"]
-                self.create_tooltip(image=image, text=self.tooltipText[target], x=146, y=250)
+                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                self.create_tooltip(tooltipDict=tooltipDict, x=146, y=250)
 
                 adapter.debug("\tEnd of corrupted_hovel", caller=calframe[1][3])
             except Exception as e:
@@ -2165,30 +2354,27 @@ try:
 
 
         def corvian_host(self):
-            """
-            Change Crow Demons to another enemy.
-            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of corvian_host", caller=calframe[1][3])
 
-                target = enemyIds[self.trialTarget].name
-                image = allEnemies[target]["image text"]
-                self.create_tooltip(image=image, text=self.tooltipText[target], x=159, y=238)
-                self.create_tooltip(image=image, text=self.tooltipText[target], x=255, y=238)
-                self.create_tooltip(image=image, text=self.tooltipText[target], x=242, y=251)
+                target = self.newTiles[1][1][0]
+                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                self.create_tooltip(tooltipDict=tooltipDict, x=159, y=238)
+                self.create_tooltip(tooltipDict=tooltipDict, x=255, y=238)
+                self.create_tooltip(tooltipDict=tooltipDict, x=242, y=251)
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
-                if enemyIds[self.trialTarget].armor + enemyIds[self.trialTarget].resist <= 3:
-                    self.create_tooltip(image=image, text=self.tooltipText[target], x=185, y=274)
+                if enemiesDict[target].armor + enemiesDict[target].resist <= 3:
+                    self.create_tooltip(tooltipDict=tooltipDict, x=185, y=274)
                     text1 = "Increase       block and resistance"
                     text2 = "values by 1 and their attacks gain     ."
                     self.encounterImage.paste(im=self.bleed, box=(301, 284), mask=self.bleed)
                     imageWithText.text((140, 273), text1, "black", font, spacing=0)
                     imageWithText.text((140, 285), text2, "black", font, spacing=0)
                 else:
-                    self.create_tooltip(image=image, text=self.tooltipText[target], x=145, y=288)
+                    self.create_tooltip(tooltipDict=tooltipDict, x=145, y=288)
                     text = "       attacks gain     ."
                     self.encounterImage.paste(im=self.bleed, box=(223, 287), mask=self.bleed)
                     imageWithText.text((140, 288), text, "black", font, spacing=0)
@@ -2199,20 +2385,9 @@ try:
                     newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableSets), set(self.charactersActive))
                     self.rewardTreasure = newTreasure
 
-                if newTreasure.count(" ") > 2:
-                    breakIdx = newTreasure.rfind(" ", 0, newTreasure.rfind(" ") - 1)
-                    newTreasure1 = newTreasure[:breakIdx]
-                    newTreasure2 = newTreasure[breakIdx+1:]
-                    imageWithText.text((21, 232), newTreasure1, "black", font)
-                    imageWithText.text((21, 243), newTreasure2, "black", font)
-                elif newTreasure.count(" ") > 0 and len(newTreasure) >= 15:
-                    lastSpaceIdx = newTreasure.rfind(" ")
-                    newTreasure1 = newTreasure[:lastSpaceIdx]
-                    newTreasure2 = newTreasure[lastSpaceIdx+1:]
-                    imageWithText.text((21, 232), newTreasure1, "black", font)
-                    imageWithText.text((21, 243), newTreasure2, "black", font)
-                else:
-                    imageWithText.text((21, 232), newTreasure, "black", font)
+                newTreasureLines = self.new_treasure_name(newTreasure)
+                imageWithText.text((21, 232), newTreasureLines[0], "black", font)
+                imageWithText.text((21, 243), newTreasureLines.get(1, ""), "black", font)
 
                 adapter.debug("\tEnd of corvian_host", caller=calframe[1][3])
             except Exception as e:
@@ -2220,10 +2395,23 @@ try:
                 raise
 
 
+        def dark_alleyway(self):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of dark_alleyway", caller=calframe[1][3])
+
+                target = self.newTiles[1][0][0]
+                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                self.create_tooltip(tooltipDict=tooltipDict, x=65, y=147)
+
+                adapter.debug("\tEnd of dark_alleyway", caller=calframe[1][3])
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
         def dark_resurrection(self):
-            """
-            Swap treasure reward.
-            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -2236,14 +2424,9 @@ try:
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
-                if len(newTreasure) >= 15:
-                    lastSpaceIdx = newTreasure.rfind(" ")
-                    newTreasure1 = newTreasure[:lastSpaceIdx]
-                    newTreasure2 = newTreasure[lastSpaceIdx+1:]
-                    imageWithText.text((21, 235), newTreasure1, "black", font)
-                    imageWithText.text((21, 246), newTreasure2, "black", font)
-                else:
-                    imageWithText.text((21, 235), newTreasure, "black", font)
+                newTreasureLines = self.new_treasure_name(newTreasure)
+                imageWithText.text((21, 235), newTreasureLines[0], "black", font)
+                imageWithText.text((21, 246), newTreasureLines.get(1, ""), "black", font)
 
                 adapter.debug("\tEnd of dark_resurrection", caller=calframe[1][3])
             except Exception as e:
@@ -2252,9 +2435,6 @@ try:
 
 
         def deathly_freeze(self):
-            """
-            Change Engorged Zombie to another enemy.
-            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -2264,9 +2444,8 @@ try:
                 deathlyFreezeTile2 = [enemy for enemy in self.newTiles[2][0] + self.newTiles[2][1]]
                 overlap = set(deathlyFreezeTile1) & set(deathlyFreezeTile2)
                 target = sorted([enemy for enemy in overlap if deathlyFreezeTile1.count(enemy) + deathlyFreezeTile2.count(enemy) > 1], key=lambda x: enemiesDict[x].difficulty, reverse=True)[0]
-
-                image = allEnemies[target]["image text"]
-                self.create_tooltip(image=image, text=self.tooltipText[target], x=141, y=242)
+                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                self.create_tooltip(tooltipDict=tooltipDict, x=141, y=242)
 
                 adapter.debug("\tEnd of deathly_freeze", caller=calframe[1][3])
             except Exception as e:
@@ -2275,17 +2454,15 @@ try:
 
 
         def deathly_magic(self):
-            """
-            Change Necromancer to another enemy and specify starting health.
-            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of deathly_magic", caller=calframe[1][3])
+
                 target = sorted([enemy for enemy in self.newTiles[1][0] + self.newTiles[1][1] if (self.newTiles[1][0] + self.newTiles[1][1]).count(enemy) == 1], key=lambda x: enemiesDict[x].difficulty, reverse=True)[0]
-                image = allEnemies[target]["image text"]
-                self.create_tooltip(image=image, text=self.tooltipText[target], x=65, y=147)
-                self.create_tooltip(image=image, text=self.tooltipText[target], x=273, y=197)
+                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                self.create_tooltip(tooltipDict=tooltipDict, x=65, y=147)
+                self.create_tooltip(tooltipDict=tooltipDict, x=273, y=197)
 
                 adapter.debug("\tEnd of deathly_magic", caller=calframe[1][3])
             except Exception as e:
@@ -2293,18 +2470,67 @@ try:
                 raise
 
 
+        def deathly_tolls(self):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of deathly_tolls", caller=calframe[1][3])
+                    
+                target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])]].name
+                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                self.create_tooltip(tooltipDict=tooltipDict, x=180, y=212)
+                
+                gang = Counter([enemyIds[enemy].gang for enemy in self.newEnemies if enemyIds[enemy].gang]).most_common(1)[0][0]
+                if gang == "Alonne":
+                    tooltipDict = {"image": self.gangAlonne, "imageName": "gang"}
+                elif gang == "Hollow":
+                    tooltipDict = {"image": self.gangHollow, "imageName": "gang"}
+                elif gang == "Scarecrow":
+                    tooltipDict = {"image": self.gangScarecrow, "imageName": "gang"}
+                elif gang == "Skeleton":
+                    tooltipDict = {"image": self.gangSkeleton, "imageName": "gang"}
+
+                self.create_tooltip(tooltipDict=tooltipDict, x=142, y=245)
+
+                adapter.debug("\tEnd of deathly_tolls", caller=calframe[1][3])
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
+        def depths_of_the_cathedral(self):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of depths_of_the_cathedral", caller=calframe[1][3])
+                
+                gang = Counter([enemyIds[enemy].gang for enemy in self.newEnemies if enemyIds[enemy].gang]).most_common(1)[0][0]
+                if gang == "Alonne":
+                    tooltipDict = {"image": self.gangAlonne, "imageName": "gang"}
+                elif gang == "Hollow":
+                    tooltipDict = {"image": self.gangHollow, "imageName": "gang"}
+                elif gang == "Scarecrow":
+                    tooltipDict = {"image": self.gangScarecrow, "imageName": "gang"}
+                elif gang == "Skeleton":
+                    tooltipDict = {"image": self.gangSkeleton, "imageName": "gang"}
+
+                self.create_tooltip(tooltipDict=tooltipDict, x=142, y=214)
+
+                adapter.debug("\tEnd of depths_of_the_cathedral", caller=calframe[1][3])
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
         def distant_tower(self):
-            """
-            Change trial objective Crow Demon to another enemy.
-            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of distant_tower", caller=calframe[1][3])
 
                 target = self.newTiles[3][0][0]
-                image = allEnemies[target]["image text"]
-                self.create_tooltip(image=image, text=self.tooltipText[target], x=215, y=213)
+                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                self.create_tooltip(tooltipDict=tooltipDict, x=215, y=213)
                 
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
@@ -2313,14 +2539,9 @@ try:
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
-                if len(newTreasure) >= 15:
-                    lastSpaceIdx = newTreasure.rfind(" ")
-                    newTreasure1 = newTreasure[:lastSpaceIdx]
-                    newTreasure2 = newTreasure[lastSpaceIdx+1:]
-                    imageWithText.text((21, 283), newTreasure1, "black", font)
-                    imageWithText.text((21, 294), newTreasure2, "black", font)
-                else:
-                    imageWithText.text((21, 283), newTreasure, "black", font)
+                newTreasureLines = self.new_treasure_name(newTreasure)
+                imageWithText.text((21, 283), newTreasureLines[0], "black", font)
+                imageWithText.text((21, 294), newTreasureLines.get(1, ""), "black", font)
 
                 adapter.debug("\tEnd of distant_tower", caller=calframe[1][3])
             except Exception as e:
@@ -2329,62 +2550,36 @@ try:
 
 
         def eye_of_the_storm(self):
-            """
-            Change Phalanx objective to another enemy.
-            Change Phalanx Hollows to another enemy.
-            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of eye_of_the_storm", caller=calframe[1][3])
-                
-                totalDifficulty = sum([enemiesDict["Phalanx Hollow"].difficulty * 4, enemiesDict["Engorged Zombie"].difficulty, enemiesDict["Phalanx"].difficulty])
-
-                diffMod = 0.1
-                while True:
-                    minDifficulty = totalDifficulty * (1 - diffMod)
-                    maxDifficulty = totalDifficulty * (1 + diffMod)
-                    enemyList = [enemies[enemy]["name"] for enemy in enemies if (
-                        enemiesDict[enemy].expansion in self.availableSets
-                        and (self.newEnemies + [enemiesDict[enemy].id]).count(enemiesDict[enemy].id) <= enemies[enemy]["count"]
-                        and enemiesDict[enemy].difficulty > 0
-                        and not enemies[enemy]["ranged"] and minDifficulty <= sum([
-                            (enemiesDict[enemy].difficulty),
-                            enemiesDict[self.newTiles[1][0][0]].difficulty,
-                            enemiesDict[self.newTiles[1][1][0]].difficulty,
-                            enemiesDict[self.newTiles[2][0][0]].difficulty,
-                            enemiesDict[self.newTiles[2][1][0]].difficulty
-                        ]) <= maxDifficulty
-                        and enemiesDict[enemy].health >= 5)]
-                    if not enemyList:
-                        diffMod += 0.05
-                        continue
-                    break
-                spawn = choice(enemyList)
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
                 fourTarget = [enemyIds[enemy].name for enemy in self.newEnemies if self.newEnemies.count(enemy) == 4]
                 targets = list(set([enemyIds[enemy].name for enemy in self.newEnemies if self.newEnemies.count(enemy) == 2]))
                 text1 = "Increase       "
                 if fourTarget:
-                    image1 = allEnemies[fourTarget[0]]["image text"]
-                    self.create_tooltip(image=image1, text=self.tooltipText[fourTarget[0]], x=186, y=247)
+                    tooltipDict = {"image": allEnemies[fourTarget[0]]["image text"], "imageName": fourTarget[0]}
+                    self.create_tooltip(tooltipDict=tooltipDict, x=186, y=270)
                 else:
-                    image1 = allEnemies[targets[0]]["image text"]
-                    image2 = allEnemies[targets[1]]["image text"]
-                    self.create_tooltip(image=image1, text=self.tooltipText[targets[0]], x=186, y=247)
-                    self.create_tooltip(image=image2, text=self.tooltipText[targets[1]], x=228, y=247)
+                    tooltipDict = {"image": allEnemies[targets[0]]["image text"], "imageName": targets[0]}
+                    self.create_tooltip(tooltipDict=tooltipDict, x=186, y=270)
+                    tooltipDict = {"image": allEnemies[targets[1]]["image text"], "imageName": targets[1]}
+                    self.create_tooltip(tooltipDict=tooltipDict, x=228, y=270)
                     text1 += " and       "
                 text1 += "block and resistance"
                 text2 = "values by 1. Once these enemies have been"
                 text3 = "killed, spawn the       on      , on tile three."
-                image3 = allEnemies[spawn]["image text"]
-                self.create_tooltip(image=image3, text=self.tooltipText[spawn], x=226, y=274)
-                self.create_tooltip(image=image3, text=self.tooltipText[spawn], x=65, y=147)
-                self.encounterImage.paste(im=self.enemyNode2, box=(260, 272), mask=self.enemyNode2)
-                imageWithText.text((140, 246), text1, "black", font)
-                imageWithText.text((140, 259), text2, "black", font)
-                imageWithText.text((140, 273), text3, "black", font)
+                
+                target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])]].name
+                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                self.create_tooltip(tooltipDict=tooltipDict, x=226, y=296)
+                self.create_tooltip(tooltipDict=tooltipDict, x=65, y=147)
+                self.encounterImage.paste(im=self.enemyNode2, box=(260, 296), mask=self.enemyNode2)
+                imageWithText.text((140, 270), text1, "black", font)
+                imageWithText.text((140, 283), text2, "black", font)
+                imageWithText.text((140, 297), text3, "black", font)
 
                 adapter.debug("\tEnd of eye_of_the_storm", caller=calframe[1][3])
             except Exception as e:
@@ -2392,20 +2587,11 @@ try:
                 raise
 
 
-        def frozen_revolutions(self):
-            """
-            Change Bonewheel Skeletons to another enemy and specify repeat behavior.
-            """
+        def flooded_fortress(self):
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of frozen_revolutions", caller=calframe[1][3])
-
-                target = self.newTiles[3][0][0]
-                image = allEnemies[target]["image text"]
-                self.create_tooltip(image=image, text=self.tooltipText[target], x=143, y=225)
-                self.create_tooltip(image=image, text=self.tooltipText[target], x=143, y=238)
-                self.create_tooltip(image=image, text=self.tooltipText[target], x=348, y=238)
+                adapter.debug("Start of flooded_fortress", caller=calframe[1][3])
                 
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
@@ -2414,14 +2600,51 @@ try:
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
-                if len(newTreasure) >= 15:
-                    lastSpaceIdx = newTreasure.rfind(" ")
-                    newTreasure1 = newTreasure[:lastSpaceIdx]
-                    newTreasure2 = newTreasure[lastSpaceIdx+1:]
-                    imageWithText.text((21, 258), newTreasure1, "black", font)
-                    imageWithText.text((21, 269), newTreasure2, "black", font)
+                newTreasureLines = self.new_treasure_name(newTreasure)
+                imageWithText.text((21, 258), newTreasureLines[0], "black", font)
+                imageWithText.text((21, 269), newTreasureLines.get(1, ""), "black", font)
+                
+                gang = Counter([enemyIds[enemy].gang for enemy in self.newEnemies if enemyIds[enemy].gang]).most_common(1)[0][0]
+                if gang == "Alonne":
+                    tooltipDict = {"image": self.gangAlonne, "imageName": "gang"}
+                elif gang == "Hollow":
+                    tooltipDict = {"image": self.gangHollow, "imageName": "gang"}
+                elif gang == "Scarecrow":
+                    tooltipDict = {"image": self.gangScarecrow, "imageName": "gang"}
+                elif gang == "Skeleton":
+                    tooltipDict = {"image": self.gangSkeleton, "imageName": "gang"}
+
+                self.create_tooltip(tooltipDict=tooltipDict, x=142, y=215)
+
+                adapter.debug("\tEnd of flooded_fortress", caller=calframe[1][3])
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
+        def frozen_revolutions(self):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of frozen_revolutions", caller=calframe[1][3])
+
+                target = self.newTiles[3][0][0]
+                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                self.create_tooltip(tooltipDict=tooltipDict, x=143, y=224)
+                self.create_tooltip(tooltipDict=tooltipDict, x=143, y=237)
+                self.create_tooltip(tooltipDict=tooltipDict, x=348, y=237)
+                self.create_tooltip(tooltipDict=tooltipDict, x=187, y=275)
+                
+                if self.rewardTreasure:
+                    newTreasure = self.rewardTreasure
                 else:
-                    imageWithText.text((21, 258), newTreasure, "black", font)
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableSets), set(self.charactersActive))
+                    self.rewardTreasure = newTreasure
+
+                imageWithText = ImageDraw.Draw(self.encounterImage)
+                newTreasureLines = self.new_treasure_name(newTreasure)
+                imageWithText.text((21, 258), newTreasureLines[0], "black", font)
+                imageWithText.text((21, 269), newTreasureLines.get(1, ""), "black", font)
 
                 adapter.debug("\tEnd of frozen_revolutions", caller=calframe[1][3])
             except Exception as e:
@@ -2430,66 +2653,18 @@ try:
 
 
         def giants_coffin(self):
-            """
-            Change Giant Skeleton Soldier and Giant Skeleton Archer to different enemies.
-            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of giants_coffin", caller=calframe[1][3])
-                
-                totalDifficulty = sum([enemiesDict["Giant Skeleton Archer"].difficulty * 2, enemiesDict["Giant Skeleton Soldier"].difficulty * 3])
-                diffMod = 0.1
-                while True:
-                    minDifficulty = totalDifficulty * (1 - diffMod)
-                    maxDifficulty = totalDifficulty * (1 + diffMod)
-                    enemyList = [enemies[enemy]["name"] for enemy in enemies if (
-                        enemiesDict[enemy].expansion in self.availableSets
-                        and (self.newEnemies + [enemiesDict[enemy].id]).count(enemiesDict[enemy].id) <= enemies[enemy]["count"]
-                        and enemiesDict[enemy].difficulty > 0
-                        and not enemies[enemy]["ranged"] and minDifficulty <= sum([
-                            (enemiesDict[enemy].difficulty),
-                            enemiesDict[self.newTiles[1][0][0]].difficulty,
-                            enemiesDict[self.newTiles[1][1][0]].difficulty,
-                            enemiesDict[self.newTiles[2][0][0]].difficulty,
-                            enemiesDict[self.newTiles[2][1][0]].difficulty
-                        ]) <= maxDifficulty)]
-                    if not enemyList:
-                        diffMod += 0.05
-                        continue
-                    break
-                spawn1 = choice(enemyList)
-                image = allEnemies[spawn1]["image text"]
-                self.create_tooltip(image=image, text=self.tooltipText[spawn1], x=241, y=228)
+
+                target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])]].name
+                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                self.create_tooltip(tooltipDict=tooltipDict, x=241, y=228)
                     
-                totalDifficulty += enemiesDict["Giant Skeleton Archer"].difficulty
-                diffMod = 0.1
-                restrictRanged = True
-                while True:
-                    minDifficulty = totalDifficulty * (1 - diffMod)
-                    maxDifficulty = totalDifficulty * (1 + diffMod)
-                    enemyList = [enemies[enemy]["name"] for enemy in enemies if (
-                        enemiesDict[enemy].expansion in self.availableSets
-                        and (self.newEnemies + [spawn1] + [enemiesDict[enemy].id]).count(enemiesDict[enemy].id) <= enemies[enemy]["count"]
-                        and enemiesDict[enemy].difficulty > 0
-                        and enemies[enemy]["ranged"] or not restrictRanged) and minDifficulty <= sum([
-                            (enemiesDict[enemy].difficulty),
-                            enemiesDict[self.newTiles[1][0][0]].difficulty,
-                            enemiesDict[self.newTiles[1][1][0]].difficulty,
-                            enemiesDict[self.newTiles[2][0][0]].difficulty,
-                            enemiesDict[self.newTiles[2][1][0]].difficulty,
-                            enemiesDict[spawn1].difficulty
-                        ]) <= maxDifficulty]
-                    if not enemyList:
-                        diffMod += 0.05
-                        if restrictRanged and diffMod > 0.2:
-                            restrictRanged = False
-                            diffMod = 0.1
-                        continue
-                    break
-                spawn2 = choice(enemyList)
-                image = allEnemies[spawn2]["image text"]
-                self.create_tooltip(image=image, text=self.tooltipText[spawn2], x=280, y=228)
+                target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])+1]].name
+                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                self.create_tooltip(tooltipDict=tooltipDict, x=280, y=228)
                 
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
@@ -2498,14 +2673,9 @@ try:
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
-                if len(newTreasure) >= 15:
-                    lastSpaceIdx = newTreasure.rfind(" ")
-                    newTreasure1 = newTreasure[:lastSpaceIdx]
-                    newTreasure2 = newTreasure[lastSpaceIdx+1:]
-                    imageWithText.text((21, 258), newTreasure1, "black", font)
-                    imageWithText.text((21, 269), newTreasure2, "black", font)
-                else:
-                    imageWithText.text((21, 258), newTreasure, "black", font)
+                newTreasureLines = self.new_treasure_name(newTreasure)
+                imageWithText.text((21, 258), newTreasureLines[0], "black", font)
+                imageWithText.text((21, 269), newTreasureLines.get(1, ""), "black", font)
 
                 adapter.debug("\tEnd of giants_coffin", caller=calframe[1][3])
             except Exception as e:
@@ -2513,60 +2683,44 @@ try:
                 raise
 
 
+        def gleaming_silver(self):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of gleaming_silver", caller=calframe[1][3])
+
+                targets = list(set([enemyIds[enemy].name for enemy in self.newEnemies if self.newEnemies.count(enemy) == 2]))
+                
+                tooltipDict = {"image": allEnemies[targets[0]]["image text"], "imageName": targets[0]}
+                self.create_tooltip(tooltipDict=tooltipDict, x=189, y=245)
+                self.create_tooltip(tooltipDict=tooltipDict, x=144, y=270)
+                tooltipDict = {"image": allEnemies[targets[1]]["image text"], "imageName": targets[1]}
+                self.create_tooltip(tooltipDict=tooltipDict, x=233, y=245)
+                self.create_tooltip(tooltipDict=tooltipDict, x=188, y=270)
+                    
+                target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])]].name
+                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                self.create_tooltip(tooltipDict=tooltipDict, x=180, y=212)
+
+                adapter.debug("\tEnd of gleaming_silver", caller=calframe[1][3])
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
         def gnashing_beaks(self):
-            """
-            Change Phalanx Hollows and Crow Demon to new enemies.
-            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of gnashing_beaks", caller=calframe[1][3])
                 
-                totalDifficulty = sum([enemiesDict["Snow Rat"].difficulty * 2, enemiesDict["Crow Demon"].difficulty])
-                diffMod = 0.1
-                while True:
-                    minDifficulty = totalDifficulty * (1 - diffMod)
-                    maxDifficulty = totalDifficulty * (1 + diffMod)
-                    enemyList = [enemies[enemy]["name"] for enemy in enemies if (
-                        enemiesDict[enemy].expansion in self.availableSets
-                        and (self.newEnemies + [enemiesDict[enemy].id]).count(enemiesDict[enemy].id) <= enemies[enemy]["count"]
-                        and enemiesDict[enemy].difficulty > 0
-                        and enemies[enemy]["count"] > 1 and minDifficulty <= sum([
-                            (enemiesDict[enemy].difficulty * 2),
-                            enemiesDict[self.newTiles[1][0][0]].difficulty,
-                            enemiesDict[self.newTiles[1][1][0]].difficulty,
-                            enemiesDict[self.newTiles[2][0][0]].difficulty
-                        ]) <= maxDifficulty)]
-                    if not enemyList:
-                        diffMod += 0.05
-                        continue
-                    break
-                spawn1 = choice(enemyList)
-                image = allEnemies[spawn1]["image text"]
-                self.create_tooltip(image=image, text=self.tooltipText[spawn1], x=333, y=232)
+                target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])]].name
+                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                self.create_tooltip(tooltipDict=tooltipDict, x=333, y=232)
                     
-                totalDifficulty += enemiesDict["Crow Demon"].difficulty
-                diffMod = 0.1
-                while True:
-                    minDifficulty = totalDifficulty * (1 - diffMod)
-                    maxDifficulty = totalDifficulty * (1 + diffMod)
-                    enemyList = [enemies[enemy]["name"] for enemy in enemies if (
-                        enemiesDict[enemy].expansion in self.availableSets
-                        and (self.newEnemies + [spawn1] + [enemiesDict[enemy].id]).count(enemiesDict[enemy].id) <= enemies[enemy]["count"]
-                        and enemiesDict[enemy].difficulty > 0
-                        and minDifficulty <= sum([
-                            enemiesDict[enemy].difficulty,
-                            enemiesDict[self.newTiles[1][0][0]].difficulty,
-                            enemiesDict[self.newTiles[1][1][0]].difficulty,
-                            enemiesDict[self.newTiles[2][0][0]].difficulty
-                        ]) <= maxDifficulty)]
-                    if not enemyList:
-                        diffMod += 0.05
-                        continue
-                    break
-                spawn2 = choice(enemyList)
-                image = allEnemies[spawn2]["image text"]
-                self.create_tooltip(image=image, text=self.tooltipText[spawn2], x=235, y=243)
+                target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])+1]].name
+                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                self.create_tooltip(tooltipDict=tooltipDict, x=235, y=243)
 
                 adapter.debug("\tEnd of gnashing_beaks", caller=calframe[1][3])
             except Exception as e:
@@ -2575,9 +2729,6 @@ try:
 
 
         def grave_matters(self):
-            """
-            Swap treasure reward.
-            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -2590,14 +2741,9 @@ try:
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
-                if len(newTreasure) >= 15:
-                    lastSpaceIdx = newTreasure.rfind(" ")
-                    newTreasure1 = newTreasure[:lastSpaceIdx]
-                    newTreasure2 = newTreasure[lastSpaceIdx+1:]
-                    imageWithText.text((21, 232), newTreasure1, "black", font)
-                    imageWithText.text((21, 243), newTreasure2, "black", font)
-                else:
-                    imageWithText.text((21, 232), newTreasure, "black", font)
+                newTreasureLines = self.new_treasure_name(newTreasure)
+                imageWithText.text((21, 232), newTreasureLines[0], "black", font)
+                imageWithText.text((21, 243), newTreasureLines.get(1, ""), "black", font)
 
                 adapter.debug("\tEnd of grave_matters", caller=calframe[1][3])
             except Exception as e:
@@ -2605,37 +2751,56 @@ try:
                 raise
 
 
+        def hanging_rafters(self):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of hanging_rafters", caller=calframe[1][3])
+
+                imageWithText = ImageDraw.Draw(self.encounterImage)
+                
+                if self.rewardTreasure:
+                    newTreasure = self.rewardTreasure
+                else:
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableSets), set(self.charactersActive))
+                    self.rewardTreasure = newTreasure
+
+                newTreasureLines = self.new_treasure_name(newTreasure)
+                imageWithText.text((21, 258), newTreasureLines[0], "black", font)
+                imageWithText.text((21, 269), newTreasureLines.get(1, ""), "black", font)
+
+                adapter.debug("\tEnd of hanging_rafters", caller=calframe[1][3])
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
+        def grim_reunion(self):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of grim_reunion", caller=calframe[1][3])
+                
+                target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])]].name
+                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                self.create_tooltip(tooltipDict=tooltipDict, x=219, y=196)
+                self.create_tooltip(tooltipDict=tooltipDict, x=269, y=255)
+
+                adapter.debug("\tEnd of grim_reunion", caller=calframe[1][3])
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
         def in_deep_water(self):
-            """
-            Change Skeleton Archer to new enemy.
-            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of in_deep_water", caller=calframe[1][3])
                 
-                totalDifficulty = sum([enemiesDict["Giant Skeleton Soldier"].difficulty * 2, enemiesDict["Giant Skeleton Archer"].difficulty * 2])
-
-                diffMod = 0.1
-                while True:
-                    minDifficulty = totalDifficulty * (1 - diffMod)
-                    maxDifficulty = totalDifficulty * (1 + diffMod)
-                    enemyList = [enemies[enemy]["name"] for enemy in enemies if (
-                        enemiesDict[enemy].expansion in self.availableSets
-                        and (self.newEnemies + [enemiesDict[enemy].id]).count(enemiesDict[enemy].id) <= enemies[enemy]["count"]
-                        and enemiesDict[enemy].difficulty > 0
-                        and enemies[enemy]["count"] > 1 and minDifficulty <= sum([
-                            (enemiesDict[enemy].difficulty * 2),
-                            enemiesDict[self.newTiles[1][0][0]].difficulty,
-                            enemiesDict[self.newTiles[1][1][0]].difficulty
-                        ]) <= maxDifficulty)]
-                    if not enemyList:
-                        diffMod += 0.05
-                        continue
-                    break
-                spawn = choice(enemyList)
-                image = allEnemies[spawn]["image text"]
-                self.create_tooltip(image=image, text=self.tooltipText[spawn], x=238, y=198)
+                target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])]].name
+                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                self.create_tooltip(tooltipDict=tooltipDict, x=238, y=198)
                 
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
@@ -2644,14 +2809,9 @@ try:
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
-                if len(newTreasure) >= 15:
-                    lastSpaceIdx = newTreasure.rfind(" ")
-                    newTreasure1 = newTreasure[:lastSpaceIdx]
-                    newTreasure2 = newTreasure[lastSpaceIdx+1:]
-                    imageWithText.text((21, 232), newTreasure1, "black", font)
-                    imageWithText.text((21, 243), newTreasure2, "black", font)
-                else:
-                    imageWithText.text((21, 232), newTreasure, "black", font)
+                newTreasureLines = self.new_treasure_name(newTreasure)
+                imageWithText.text((21, 232), newTreasureLines[0], "black", font)
+                imageWithText.text((21, 243), newTreasureLines.get(1, ""), "black", font)
 
                 adapter.debug("\tEnd of in_deep_water", caller=calframe[1][3])
             except Exception as e:
@@ -2660,9 +2820,6 @@ try:
 
 
         def inhospitable_ground(self):
-            """
-            Swap treasure reward.
-            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -2675,14 +2832,9 @@ try:
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
-                if len(newTreasure) >= 15:
-                    lastSpaceIdx = newTreasure.rfind(" ")
-                    newTreasure1 = newTreasure[:lastSpaceIdx]
-                    newTreasure2 = newTreasure[lastSpaceIdx+1:]
-                    imageWithText.text((21, 232), newTreasure1, "black", font)
-                    imageWithText.text((21, 243), newTreasure2, "black", font)
-                else:
-                    imageWithText.text((21, 232), newTreasure, "black", font)
+                newTreasureLines = self.new_treasure_name(newTreasure)
+                imageWithText.text((21, 232), newTreasureLines[0], "black", font)
+                imageWithText.text((21, 243), newTreasureLines.get(1, ""), "black", font)
 
                 adapter.debug("\tEnd of inhospitable_ground", caller=calframe[1][3])
             except Exception as e:
@@ -2691,79 +2843,19 @@ try:
 
 
         def lakeview_refuge(self):
-            """
-            Update trial Skeleton Beast to new enemy and references to Skeleton Beast and Skeleton Soldiers to new enemies.
-            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of lakeview_refuge", caller=calframe[1][3])
 
-                allTileEnemies = (
-                    self.newTiles[1][0]
-                    + self.newTiles[1][1]
-                    + self.newTiles[2][0]
-                    + self.newTiles[2][1]
-                    + self.newTiles[3][0]
-                    + self.newTiles[3][1]
-                )
-                
-                totalDifficulty = sum([
-                    enemiesDict["Skeleton Soldier"].difficulty * 2,
-                    enemiesDict["Giant Skeleton Archer"].difficulty,
-                    enemiesDict["Skeleton Archer"].difficulty * 2,
-                    enemiesDict["Giant Skeleton Soldier"].difficulty,
-                    enemiesDict["Necromancer"].difficulty * 2,
-                    enemiesDict["Skeleton Beast"].difficulty])
-                diffMod = 0.1
+                target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])]].name
+                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                self.create_tooltip(tooltipDict=tooltipDict, x=215, y=228)
+                self.create_tooltip(tooltipDict=tooltipDict, x=291, y=264)
 
-                while True:
-                    minDifficulty = totalDifficulty * (1 - diffMod)
-                    maxDifficulty = totalDifficulty * (1 + diffMod)
-                    enemyList = [enemies[enemy]["name"] for enemy in enemies if (
-                        enemiesDict[enemy].expansion in self.availableSets
-                        and (self.newEnemies + [enemiesDict[enemy].id]).count(enemiesDict[enemy].id) <= enemies[enemy]["count"]
-                        and enemiesDict[enemy].difficulty > 0
-                        and minDifficulty <= sum([
-                            (enemiesDict[enemy].difficulty),
-                            sum([enemiesDict[e].difficulty for e in allTileEnemies])
-                        ]) <= maxDifficulty
-                        and enemy not in allTileEnemies
-                        and (enemy != "Phalanx" or allTileEnemies.count("Phalanx Hollow") < 3)
-                        and enemiesDict[enemy].health >= 5)]
-                    if not enemyList:
-                        diffMod += 0.05
-                        continue
-                    break
-                spawn1 = choice(enemyList)
-                allTileEnemies.append(spawn1)
-                image1 = allEnemies[spawn1]["image text"]
-                self.create_tooltip(image=image1, text=self.tooltipText[spawn1], x=215, y=228)
-                self.create_tooltip(image=image1, text=self.tooltipText[spawn1], x=291, y=264)
-
-                totalDifficulty += enemiesDict["Skeleton Soldier"].difficulty
-                diffMod = 0.1
-                while True:
-                    minDifficulty = totalDifficulty * (1 - diffMod)
-                    maxDifficulty = totalDifficulty * (1 + diffMod)
-                    enemyList = [enemies[enemy]["name"] for enemy in enemies if (
-                        enemiesDict[enemy].expansion in self.availableSets
-                        and (self.newEnemies + [spawn1] + [enemiesDict[enemy].id]).count(enemiesDict[enemy].id) <= enemies[enemy]["count"]
-                        and enemiesDict[enemy].difficulty > 0
-                        and enemies[enemy]["count"] > 1
-                        and minDifficulty <= sum([
-                            (enemiesDict[enemy].difficulty),
-                            sum([enemiesDict[e].difficulty for e in allTileEnemies])
-                            ]) <= maxDifficulty)
-                        and enemy != spawn1
-                        and (enemy != "Phalanx" or allTileEnemies.count("Phalanx Hollow") < 3)]
-                    if not enemyList:
-                        diffMod += 0.05
-                        continue
-                    break
-                spawn2 = choice(enemyList)
-                image2 = allEnemies[spawn2]["image text"]
-                self.create_tooltip(image=image2, text=self.tooltipText[spawn2], x=243, y=276)
+                target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])+1]].name
+                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                self.create_tooltip(tooltipDict=tooltipDict, x=243, y=276)
 
                 adapter.debug("\tEnd of lakeview_refuge", caller=calframe[1][3])
             except Exception as e:
@@ -2772,18 +2864,16 @@ try:
 
 
         def monstrous_maw(self):
-            """
-            Change Snow Rat references to new enemy.
-            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of monstrous_maw", caller=calframe[1][3])
                 
                 target = self.newTiles[1][1][0]
-                image = allEnemies[target]["image text"]
-                self.create_tooltip(image=image, text=self.tooltipText[target], x=208, y=197)
-                self.create_tooltip(image=image, text=self.tooltipText[target], x=65, y=147)
+                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                self.create_tooltip(tooltipDict=tooltipDict, x=208, y=220)
+                self.create_tooltip(tooltipDict=tooltipDict, x=65, y=147)
+                self.create_tooltip(tooltipDict=tooltipDict, x=145, y=267)
                 
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
@@ -2792,14 +2882,9 @@ try:
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
-                if len(newTreasure) >= 15:
-                    lastSpaceIdx = newTreasure.rfind(" ")
-                    newTreasure1 = newTreasure[:lastSpaceIdx]
-                    newTreasure2 = newTreasure[lastSpaceIdx+1:]
-                    imageWithText.text((21, 232), newTreasure1, "black", font)
-                    imageWithText.text((21, 243), newTreasure2, "black", font)
-                else:
-                    imageWithText.text((21, 232), newTreasure, "black", font)
+                newTreasureLines = self.new_treasure_name(newTreasure)
+                imageWithText.text((21, 232), newTreasureLines[0], "black", font)
+                imageWithText.text((21, 243), newTreasureLines.get(1, ""), "black", font)
 
                 adapter.debug("\tEnd of monstrous_maw", caller=calframe[1][3])
             except Exception as e:
@@ -2808,17 +2893,15 @@ try:
 
 
         def no_safe_haven(self):
-            """
-            Change Engorged Zombie objective to new enemy.
-            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of no_safe_haven", caller=calframe[1][3])
 
                 target = self.newTiles[2][0][0]
-                image = allEnemies[target]["image text"]
-                self.create_tooltip(image=image, text=self.tooltipText[target], x=63, y=147)
+                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                self.create_tooltip(tooltipDict=tooltipDict, x=63, y=147)
+                self.create_tooltip(tooltipDict=tooltipDict, x=166, y=252)
                 
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
@@ -2827,14 +2910,9 @@ try:
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
-                if len(newTreasure) >= 15:
-                    lastSpaceIdx = newTreasure.rfind(" ")
-                    newTreasure1 = newTreasure[:lastSpaceIdx]
-                    newTreasure2 = newTreasure[lastSpaceIdx+1:]
-                    imageWithText.text((21, 232), newTreasure1, "black", font)
-                    imageWithText.text((21, 243), newTreasure2, "black", font)
-                else:
-                    imageWithText.text((21, 232), newTreasure, "black", font)
+                newTreasureLines = self.new_treasure_name(newTreasure)
+                imageWithText.text((21, 232), newTreasureLines[0], "black", font)
+                imageWithText.text((21, 243), newTreasureLines.get(1, ""), "black", font)
 
                 adapter.debug("\tEnd of no_safe_haven", caller=calframe[1][3])
             except Exception as e:
@@ -2843,9 +2921,6 @@ try:
 
 
         def painted_passage(self):
-            """
-            Swap treasure reward.
-            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -2858,14 +2933,9 @@ try:
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
-                if len(newTreasure) >= 15:
-                    lastSpaceIdx = newTreasure.rfind(" ")
-                    newTreasure1 = newTreasure[:lastSpaceIdx]
-                    newTreasure2 = newTreasure[lastSpaceIdx+1:]
-                    imageWithText.text((21, 232), newTreasure1, "black", font)
-                    imageWithText.text((21, 243), newTreasure2, "black", font)
-                else:
-                    imageWithText.text((21, 232), newTreasure, "black", font)
+                newTreasureLines = self.new_treasure_name(newTreasure)
+                imageWithText.text((21, 232), newTreasureLines[0], "black", font)
+                imageWithText.text((21, 243), newTreasureLines.get(1, ""), "black", font)
 
                 adapter.debug("\tEnd of painted_passage", caller=calframe[1][3])
             except Exception as e:
@@ -2873,10 +2943,41 @@ try:
                 raise
 
 
+        def parish_church(self):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of parish_church", caller=calframe[1][3])
+                    
+                target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])]].name
+                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                self.create_tooltip(tooltipDict=tooltipDict, x=180, y=198)
+
+                adapter.debug("\tEnd of parish_church", caller=calframe[1][3])
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
+        def parish_gates(self):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of parish_gates", caller=calframe[1][3])
+                    
+                target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])]].name
+                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                self.create_tooltip(tooltipDict=tooltipDict, x=309, y=220)
+                self.create_tooltip(tooltipDict=tooltipDict, x=188, y=255)
+                self.create_tooltip(tooltipDict=tooltipDict, x=144, y=280)
+
+                adapter.debug("\tEnd of parish_gates", caller=calframe[1][3])
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
         def pitch_black(self):
-            """
-            Change Necromancer objective to new (and possibly different from each other) enemies.
-            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -2884,12 +2985,12 @@ try:
 
                 tile1Enemies = self.newTiles[1][0] + self.newTiles[1][1]
                 tile2Enemies = self.newTiles[2][0] + self.newTiles[2][1]
-                target1 = sorted([enemy for enemy in tile1Enemies if tile1Enemies.count(enemy) == 1], key=lambda x: enemiesDict[x].difficulty, reverse=True)[0]
-                target2 = sorted([enemy for enemy in tile2Enemies if tile2Enemies.count(enemy) == 1], key=lambda x: enemiesDict[x].difficulty, reverse=True)[0]
-                image1 = allEnemies[target1]["image text"]
-                image2 = allEnemies[target2]["image text"]
-                self.create_tooltip(image=image1, text=self.tooltipText[target1], x=65, y=147)
-                self.create_tooltip(image=image2, text=self.tooltipText[target2], x=219, y=147)
+                target = sorted([enemy for enemy in tile1Enemies if tile1Enemies.count(enemy) == 1], key=lambda x: enemiesDict[x].difficulty, reverse=True)[0]
+                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                self.create_tooltip(tooltipDict=tooltipDict, x=65, y=147)
+                target = sorted([enemy for enemy in tile2Enemies if tile2Enemies.count(enemy) == 1], key=lambda x: enemiesDict[x].difficulty, reverse=True)[0]
+                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                self.create_tooltip(tooltipDict=tooltipDict, x=219, y=147)
 
                 adapter.debug("\tEnd of pitch_black", caller=calframe[1][3])
             except Exception as e:
@@ -2898,20 +2999,17 @@ try:
 
 
         def puppet_master(self):
-            """
-            Change Necromancer and Giant Skeleton Soldier to different enemies, specify Necromancer replacement starting health.
-            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of puppet_master", caller=calframe[1][3])
 
-                target1 = self.newTiles[1][0][1]
-                target2 = self.newTiles[1][0][0]
-                image1 = allEnemies[target1]["image text"]
-                image2 = allEnemies[target2]["image text"]
-                self.create_tooltip(image=image1, text=self.tooltipText[target1], x=65, y=147)
-                self.create_tooltip(image=image2, text=self.tooltipText[target2], x=145, y=198)
+                target = self.newTiles[1][0][1]
+                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                self.create_tooltip(tooltipDict=tooltipDict, x=65, y=147)
+                target = self.newTiles[1][0][0]
+                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                self.create_tooltip(tooltipDict=tooltipDict, x=145, y=198)
                 
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
@@ -2920,14 +3018,9 @@ try:
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
-                if len(newTreasure) >= 15:
-                    lastSpaceIdx = newTreasure.rfind(" ")
-                    newTreasure1 = newTreasure[:lastSpaceIdx]
-                    newTreasure2 = newTreasure[lastSpaceIdx+1:]
-                    imageWithText.text((21, 232), newTreasure1, "black", font)
-                    imageWithText.text((21, 243), newTreasure2, "black", font)
-                else:
-                    imageWithText.text((21, 232), newTreasure, "black", font)
+                newTreasureLines = self.new_treasure_name(newTreasure)
+                imageWithText.text((21, 232), newTreasureLines[0], "black", font)
+                imageWithText.text((21, 243), newTreasureLines.get(1, ""), "black", font)
 
                 adapter.debug("\tEnd of puppet_master", caller=calframe[1][3])
             except Exception as e:
@@ -2936,9 +3029,6 @@ try:
 
 
         def rain_of_filth(self):
-            """
-            Swap treasure reward.
-            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -2951,14 +3041,9 @@ try:
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
-                if len(newTreasure) >= 15:
-                    lastSpaceIdx = newTreasure.rfind(" ")
-                    newTreasure1 = newTreasure[:lastSpaceIdx]
-                    newTreasure2 = newTreasure[lastSpaceIdx+1:]
-                    imageWithText.text((21, 232), newTreasure1, "black", font)
-                    imageWithText.text((21, 243), newTreasure2, "black", font)
-                else:
-                    imageWithText.text((21, 232), newTreasure, "black", font)
+                newTreasureLines = self.new_treasure_name(newTreasure)
+                imageWithText.text((21, 232), newTreasureLines[0], "black", font)
+                imageWithText.text((21, 243), newTreasureLines.get(1, ""), "black", font)
 
                 adapter.debug("\tEnd of rain_of_filth", caller=calframe[1][3])
             except Exception as e:
@@ -2966,20 +3051,44 @@ try:
                 raise
 
 
+        def shattered_keep(self):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of shattered_keep", caller=calframe[1][3])
+                
+                target = self.newTiles[1][1][0]
+                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                self.create_tooltip(tooltipDict=tooltipDict, x=145, y=195)
+                
+                if self.rewardTreasure:
+                    newTreasure = self.rewardTreasure
+                else:
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableSets), set(self.charactersActive))
+                    self.rewardTreasure = newTreasure
+
+                imageWithText = ImageDraw.Draw(self.encounterImage)
+                newTreasureLines = self.new_treasure_name(newTreasure)
+                imageWithText.text((21, 255), newTreasureLines[0], "black", font)
+                imageWithText.text((21, 266), newTreasureLines.get(1, ""), "black", font)
+
+                adapter.debug("\tEnd of shattered_keep", caller=calframe[1][3])
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
         def skeletal_spokes(self):
-            """
-            Update Bonewheel Skeletons to different enemy.
-            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of skeletal_spokes", caller=calframe[1][3])
                 
                 target = self.newTiles[2][0][0]
-                image = allEnemies[target]["image text"]
-                self.create_tooltip(image=image, text=self.tooltipText[target], x=145, y=196)
-                self.create_tooltip(image=image, text=self.tooltipText[target], x=162, y=209)
-                self.create_tooltip(image=image, text=self.tooltipText[target], x=162, y=244)
+                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                self.create_tooltip(tooltipDict=tooltipDict, x=145, y=195)
+                self.create_tooltip(tooltipDict=tooltipDict, x=162, y=209)
+                self.create_tooltip(tooltipDict=tooltipDict, x=162, y=244)
 
                 adapter.debug("\tEnd of skeletal_spokes", caller=calframe[1][3])
             except Exception as e:
@@ -2988,43 +3097,21 @@ try:
 
 
         def skeleton_overlord(self):
-            """
-            Update Giant Skeleton Soldier and Skeleton Soldier to different enemies.
-            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of skeleton_overlord", caller=calframe[1][3])
 
-                totalDifficulty = sum([enemiesDict["Giant Skeleton Soldier"].difficulty, (enemiesDict["Skeleton Soldier"].difficulty * enemies["Skeleton Soldier"]["count"])])
-
-                diffMod = 0.1
-                while True:
-                    minDifficulty = totalDifficulty * (1 - diffMod)
-                    maxDifficulty = totalDifficulty * (1 + diffMod)
-                    enemyList = [enemy for enemy in enemiesDict if (
-                        enemiesDict[enemy].expansion in self.availableSets
-                        and (self.newEnemies + [enemiesDict[enemy].id]).count(enemiesDict[enemy].id) <= enemies[enemy]["count"]
-                        and enemiesDict[enemy].difficulty > 0
-                        and enemiesDict[enemy].health == 1
-                        and minDifficulty <= (enemiesDict[enemy].difficulty * enemies[enemy]["count"]) + enemiesDict[self.newTiles[1][0][0]].difficulty <= maxDifficulty
-                        and (enemy != "Phalanx Hollow" or self.newTiles[1][0][0] != "Phalanx"))]
-                    minDifficulty = totalDifficulty * (1 - diffMod)
-                    maxDifficulty = totalDifficulty * (1 + diffMod)
-                    if not enemyList:
-                        diffMod += 0.05
-                        continue
-                    break
-                spawn = choice(enemyList)
-                image = allEnemies[spawn]["image text"]
-                self.create_tooltip(image=image, text=self.tooltipText[spawn], x=239, y=198)
-                self.create_tooltip(image=image, text=self.tooltipText[spawn], x=205, y=258)
+                target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])]].name
+                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                self.create_tooltip(tooltipDict=tooltipDict, x=239, y=198)
+                self.create_tooltip(tooltipDict=tooltipDict, x=205, y=258)
 
                 target = self.newTiles[1][0][0]
-                image = allEnemies[target]["image text"]
-                self.create_tooltip(image=image, text=self.tooltipText[target], x=65, y=147)
-                self.create_tooltip(image=image, text=self.tooltipText[target], x=312, y=234)
-                self.create_tooltip(image=image, text=self.tooltipText[target], x=288, y=256)
+                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                self.create_tooltip(tooltipDict=tooltipDict, x=65, y=147)
+                self.create_tooltip(tooltipDict=tooltipDict, x=312, y=234)
+                self.create_tooltip(tooltipDict=tooltipDict, x=288, y=256)
 
                 adapter.debug("\tEnd of skeleton_overlord", caller=calframe[1][3])
             except Exception as e:
@@ -3032,63 +3119,37 @@ try:
                 raise
 
 
+        def tempting_maw(self):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of tempting_maw", caller=calframe[1][3])
+                
+                target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])]].name
+                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                self.create_tooltip(tooltipDict=tooltipDict, x=224, y=145)
+                self.create_tooltip(tooltipDict=tooltipDict, x=220, y=197)
+                self.create_tooltip(tooltipDict=tooltipDict, x=345, y=256)
+
+                adapter.debug("\tEnd of tempting_maw", caller=calframe[1][3])
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
         def the_abandoned_chest(self):
-            """
-            Update Giant Skeleton Soldier and Giant Skeleton Archers to new enemies.
-            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of the_abandoned_chest", caller=calframe[1][3])
 
-                totalDifficulty = sum([enemiesDict["Necromancer"].difficulty, enemiesDict["Skeleton Archer"].difficulty, enemiesDict["Skeleton Soldier"].difficulty * enemies["Skeleton Soldier"]["count"], enemiesDict["Giant Skeleton Soldier"].difficulty])
-                diffMod = 0.1
-                while True:
-                    minDifficulty = totalDifficulty * (1 - diffMod)
-                    maxDifficulty = totalDifficulty * (1 + diffMod)
-                    enemyList = [enemy for enemy in enemiesDict if (
-                        enemiesDict[enemy].expansion in self.availableSets
-                        and (self.newEnemies + [enemiesDict[enemy].id]).count(enemiesDict[enemy].id) <= enemies[enemy]["count"]
-                        and enemiesDict[enemy].difficulty > 0
-                        and minDifficulty <= sum([
-                            enemiesDict[enemy].difficulty,
-                            enemiesDict[self.newTiles[1][0][0]].difficulty,
-                            enemiesDict[self.newTiles[1][0][1]].difficulty,
-                            enemiesDict[self.newTiles[2][0][0]].difficulty,
-                            enemiesDict[self.newTiles[2][1][0]].difficulty]) <= maxDifficulty
-                        and (enemy != "Phalanx Hollow" or "Phalanx" not in self.newTiles[1][0] + self.newTiles[1][1] + self.newTiles[2][0] + self.newTiles[2][1]))]
-                    if not enemyList:
-                        diffMod += 0.05
-                        continue
-                    break
-                spawn1 = choice(enemyList)
-                image = allEnemies[spawn1]["image text"]
-                self.create_tooltip(image=image, text=self.tooltipText[spawn1], x=322, y=195)
+                target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])]].name
+                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                self.create_tooltip(tooltipDict=tooltipDict, x=322, y=195)
 
-                totalDifficulty += enemiesDict["Giant Skeleton Archer"].difficulty
-                diffMod = 0.1
-                while True:
-                    minDifficulty = totalDifficulty * (1 - diffMod)
-                    maxDifficulty = totalDifficulty * (1 + diffMod)
-                    enemyList = [enemy for enemy in enemiesDict if (
-                        enemiesDict[enemy].expansion in self.availableSets
-                        and (self.newEnemies + [spawn1] + [enemiesDict[enemy].id]).count(enemiesDict[enemy].id) <= enemies[enemy]["count"]
-                        and enemiesDict[enemy].difficulty > 0
-                        and minDifficulty <= sum([
-                            enemiesDict[enemy].difficulty,
-                            enemiesDict[self.newTiles[1][0][0]].difficulty,
-                            enemiesDict[self.newTiles[1][0][1]].difficulty,
-                            enemiesDict[self.newTiles[2][0][0]].difficulty,
-                            enemiesDict[self.newTiles[2][1][0]].difficulty,
-                            enemiesDict[spawn1].difficulty]) <= maxDifficulty
-                        and (enemy != "Phalanx Hollow" or "Phalanx" not in self.newTiles[1][0] + self.newTiles[1][1] + self.newTiles[2][0] + self.newTiles[2][1]))]
-                    if not enemyList:
-                        diffMod += 0.05
-                        continue
-                    break
-                spawn2 = choice(enemyList)
-                image = allEnemies[spawn2]["image text"]
-                self.create_tooltip(image=image, text=self.tooltipText[spawn2], x=144, y=208)
+                target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])+1]].name
+                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                self.create_tooltip(tooltipDict=tooltipDict, x=144, y=208)
                 
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
@@ -3097,14 +3158,9 @@ try:
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
-                if len(newTreasure) >= 15:
-                    lastSpaceIdx = newTreasure.rfind(" ")
-                    newTreasure1 = newTreasure[:lastSpaceIdx]
-                    newTreasure2 = newTreasure[lastSpaceIdx+1:]
-                    imageWithText.text((21, 232), newTreasure1, "black", font)
-                    imageWithText.text((21, 243), newTreasure2, "black", font)
-                else:
-                    imageWithText.text((21, 232), newTreasure, "black", font)
+                newTreasureLines = self.new_treasure_name(newTreasure)
+                imageWithText.text((21, 232), newTreasureLines[0], "black", font)
+                imageWithText.text((21, 243), newTreasureLines.get(1, ""), "black", font)
 
                 adapter.debug("\tEnd of the_abandoned_chest", caller=calframe[1][3])
             except Exception as e:
@@ -3113,18 +3169,15 @@ try:
 
 
         def the_beast_from_the_depths(self):
-            """
-            Update Skeleton Beast to different enemy.
-            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of the_beast_from_the_depths", caller=calframe[1][3])
 
                 target = self.newTiles[1][0][0]
-                image = allEnemies[target]["image text"]
-                self.create_tooltip(image=image, text=self.tooltipText[target], x=65, y=147)
-                self.create_tooltip(image=image, text=self.tooltipText[target], x=158, y=222)
+                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                self.create_tooltip(tooltipDict=tooltipDict, x=65, y=147)
+                self.create_tooltip(tooltipDict=tooltipDict, x=158, y=222)
                 
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
@@ -3133,14 +3186,9 @@ try:
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
-                if len(newTreasure) >= 15:
-                    lastSpaceIdx = newTreasure.rfind(" ")
-                    newTreasure1 = newTreasure[:lastSpaceIdx]
-                    newTreasure2 = newTreasure[lastSpaceIdx+1:]
-                    imageWithText.text((21, 258), newTreasure1, "black", font)
-                    imageWithText.text((21, 269), newTreasure2, "black", font)
-                else:
-                    imageWithText.text((21, 258), newTreasure, "black", font)
+                newTreasureLines = self.new_treasure_name(newTreasure)
+                imageWithText.text((21, 258), newTreasureLines[0], "black", font)
+                imageWithText.text((21, 269), newTreasureLines.get(1, ""), "black", font)
 
                 adapter.debug("\tEnd of the_beast_from_the_depths", caller=calframe[1][3])
             except Exception as e:
@@ -3148,79 +3196,40 @@ try:
                 raise
 
 
+        def the_bell_tower(self):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of the_bell_tower", caller=calframe[1][3])
+                
+                target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])]].name
+                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                self.create_tooltip(tooltipDict=tooltipDict, x=341, y=195)
+
+                adapter.debug("\tEnd of the_bell_tower", caller=calframe[1][3])
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
         def the_first_bastion(self):
-            """
-            Update Snow Rat, Phalanx Hollow, and Engorged Zombie to different enemies.
-            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of the_first_bastion", caller=calframe[1][3])
 
-                totalDifficulty = sum([enemiesDict["Snow Rat"].difficulty * 2])
-                diffMod = 0.1
-                while True:
-                    minDifficulty = totalDifficulty * (1 - diffMod)
-                    maxDifficulty = totalDifficulty * (1 + diffMod)
-                    enemyList = [enemy for enemy in enemiesDict if (
-                        enemiesDict[enemy].expansion in self.availableSets
-                        and (self.newEnemies + [enemiesDict[enemy].id]).count(enemiesDict[enemy].id) <= enemies[enemy]["count"]
-                        and enemiesDict[enemy].difficulty > 0
-                        and minDifficulty <= sum([
-                            enemiesDict[enemy].difficulty,
-                            enemiesDict[self.newTiles[1][1][0]].difficulty]) <= maxDifficulty)]
-                    if not enemyList:
-                        diffMod += 0.05
-                        continue
-                    break
-                spawn1 = choice(enemyList)
-                image = allEnemies[spawn1]["image text"]
-                self.create_tooltip(image=image, text=self.tooltipText[spawn1], x=363, y=220)
+                target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])]].name
+                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                self.create_tooltip(tooltipDict=tooltipDict, x=237, y=215)
 
-                totalDifficulty += enemiesDict["Phalanx Hollow"].difficulty
-                diffMod = 0.1
-                while True:
-                    minDifficulty = totalDifficulty * (1 - diffMod)
-                    maxDifficulty = totalDifficulty * (1 + diffMod)
-                    enemyList = [enemy for enemy in enemiesDict if (
-                        enemiesDict[enemy].expansion in self.availableSets
-                        and (self.newEnemies + [spawn1] + [enemiesDict[enemy].id]).count(enemiesDict[enemy].id) <= enemies[enemy]["count"]
-                        and enemiesDict[enemy].difficulty > 0
-                        and minDifficulty <= sum([
-                            enemiesDict[enemy].difficulty,
-                            enemiesDict[self.newTiles[1][1][0]].difficulty,
-                            enemiesDict[spawn1].difficulty]) <= maxDifficulty)]
-                    if not enemyList:
-                        diffMod += 0.05
-                        continue
-                    break
-                spawn2 = choice(enemyList)
-                image = allEnemies[spawn2]["image text"]
-                self.create_tooltip(image=image, text=self.tooltipText[spawn2], x=185, y=245)
+                target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])+1]].name
+                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                self.create_tooltip(tooltipDict=tooltipDict, x=237, y=230)
 
-                totalDifficulty += enemiesDict["Engorged Zombie"].difficulty
-                diffMod = 0.1
-                while True:
-                    minDifficulty = totalDifficulty * (1 - diffMod)
-                    maxDifficulty = totalDifficulty * (1 + diffMod)
-                    enemyList = [enemy for enemy in enemiesDict if (
-                        enemiesDict[enemy].expansion in self.availableSets
-                        and (self.newEnemies + [spawn1] + [spawn2] + [enemiesDict[enemy].id]).count(enemiesDict[enemy].id) <= enemies[enemy]["count"]
-                        and enemiesDict[enemy].difficulty > 0
-                        and minDifficulty <= sum([
-                            enemiesDict[enemy].difficulty,
-                            enemiesDict[self.newTiles[1][1][0]].difficulty,
-                            enemiesDict[spawn1].difficulty,
-                            enemiesDict[spawn2].difficulty]) <= maxDifficulty
-                            and enemy not in {spawn1, spawn2, self.newTiles[1][1][0]})]
-                    if not enemyList:
-                        diffMod += 0.05
-                        continue
-                    break
-                spawn3 = choice(enemyList)
-                image = allEnemies[spawn3]["image text"]
-                self.create_tooltip(image=image, text=self.tooltipText[spawn3], x=236, y=257)
-                self.create_tooltip(image=image, text=self.tooltipText[spawn3], x=214, y=197)
+                target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])+2]].name
+                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                self.create_tooltip(tooltipDict=tooltipDict, x=237, y=245)
+                self.create_tooltip(tooltipDict=tooltipDict, x=208, y=197)
 
                 adapter.debug("\tEnd of the_first_bastion", caller=calframe[1][3])
             except Exception as e:
@@ -3228,19 +3237,85 @@ try:
                 raise
 
 
+        def the_fountainhead(self):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of the_fountainhead", caller=calframe[1][3])
+                
+                gang = Counter([enemyIds[enemy].gang for enemy in self.newEnemies if enemyIds[enemy].gang]).most_common(1)[0][0]
+                if gang == "Alonne":
+                    tooltipDict = {"image": self.gangAlonne, "imageName": "gang"}
+                elif gang == "Hollow":
+                    tooltipDict = {"image": self.gangHollow, "imageName": "gang"}
+                elif gang == "Scarecrow":
+                    tooltipDict = {"image": self.gangScarecrow, "imageName": "gang"}
+                elif gang == "Skeleton":
+                    tooltipDict = {"image": self.gangSkeleton, "imageName": "gang"}
+
+                self.create_tooltip(tooltipDict=tooltipDict, x=142, y=200)
+
+                adapter.debug("\tEnd of the_fountainhead", caller=calframe[1][3])
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
+        def the_grand_hall(self):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of the_grand_hall", caller=calframe[1][3])
+                    
+                target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])]].name
+                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                self.create_tooltip(tooltipDict=tooltipDict, x=180, y=213)
+
+                adapter.debug("\tEnd of the_grand_hall", caller=calframe[1][3])
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
+        def the_iron_golem(self):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of the_iron_golem", caller=calframe[1][3])
+
+                target = self.newTiles[1][1][0]
+                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                self.create_tooltip(tooltipDict=tooltipDict, x=65, y=147)
+                self.create_tooltip(tooltipDict=tooltipDict, x=188, y=196)
+                self.create_tooltip(tooltipDict=tooltipDict, x=174, y=219)
+                
+                if self.rewardTreasure:
+                    newTreasure = self.rewardTreasure
+                else:
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableSets), set(self.charactersActive))
+                    self.rewardTreasure = newTreasure
+
+                imageWithText = ImageDraw.Draw(self.encounterImage)
+                newTreasureLines = self.new_treasure_name(newTreasure)
+                imageWithText.text((21, 266), newTreasureLines[0], "black", font)
+                imageWithText.text((21, 277), newTreasureLines.get(1, ""), "black", font)
+
+                adapter.debug("\tEnd of the_iron_golem", caller=calframe[1][3])
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
         def the_last_bastion(self):
-            """
-            Update Phalanx to different enemy and specify health, dodge, and damage.
-            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of the_last_bastion", caller=calframe[1][3])
                 
                 target = sorted([enemy for enemy in self.newTiles[1][0] + self.newTiles[1][1]], key=lambda x: enemiesDict[x].difficulty)[0]
-                image = allEnemies[target]["image text"]
-                self.create_tooltip(image=image, text=self.tooltipText[target], x=215, y=227)
-                self.create_tooltip(image=image, text=self.tooltipText[target], x=315, y=250)
+                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                self.create_tooltip(tooltipDict=tooltipDict, x=215, y=227)
+                self.create_tooltip(tooltipDict=tooltipDict, x=315, y=250)
 
                 adapter.debug("\tEnd of the_last_bastion", caller=calframe[1][3])
             except Exception as e:
@@ -3249,53 +3324,15 @@ try:
 
 
         def the_locked_grave(self):
-            """
-            Update Skeleton Beast to different enemy.
-            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of the_locked_grave", caller=calframe[1][3])
 
-                totalDifficulty = sum([
-                    enemiesDict["Necromancer"].difficulty,
-                    enemiesDict["Skeleton Archer"].difficulty * 2,
-                    enemiesDict["Skeleton Soldier"].difficulty * enemies["Skeleton Soldier"]["count"],
-                    enemiesDict["Giant Skeleton Soldier"].difficulty,
-                    enemiesDict["Giant Skeleton Archer"].difficulty * 2,
-                    enemiesDict["Skeleton Beast"].difficulty])
-
-                newEnemies = self.newTiles[1][0][0] + self.newTiles[1][1][0] + self.newTiles[2][0][0] + self.newTiles[2][1][0] + self.newTiles[3][0][0] + self.newTiles[3][1][0] + self.newTiles[3][1][1]
-
-                diffMod = 0.1
-                while True:
-                    minDifficulty = totalDifficulty * (1 - diffMod)
-                    maxDifficulty = totalDifficulty * (1 + diffMod)
-                    enemyList = [enemy for enemy in enemies if (
-                        enemiesDict[enemy].expansion in self.availableSets
-                        and (self.newEnemies + [enemiesDict[enemy].id]).count(enemiesDict[enemy].id) <= enemies[enemy]["count"]
-                        and enemiesDict[enemy].difficulty > 0
-                        and minDifficulty <= sum([
-                                enemiesDict[enemy].difficulty,
-                                enemiesDict[self.newTiles[1][0][0]].difficulty,
-                                enemiesDict[self.newTiles[1][1][0]].difficulty,
-                                enemiesDict[self.newTiles[2][0][0]].difficulty,
-                                enemiesDict[self.newTiles[2][1][0]].difficulty,
-                                enemiesDict[self.newTiles[3][0][0]].difficulty,
-                                enemiesDict[self.newTiles[3][1][0]].difficulty,
-                                enemiesDict[self.newTiles[3][1][1]].difficulty]) <= maxDifficulty
-                            and enemy not in newEnemies
-                            and (enemy != "Phalanx" or newEnemies.count("Phalanx Hollow") < 3)
-                            )]
-                    if not enemyList:
-                        diffMod += 0.05
-                        continue
-                    break
-                
-                target = choice(enemyList)
-                image = allEnemies[target]["image text"]
-                self.create_tooltip(image=image, text=self.tooltipText[target], x=217, y=197)
-                self.create_tooltip(image=image, text=self.tooltipText[target], x=305, y=220)
+                target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])]].name
+                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                self.create_tooltip(tooltipDict=tooltipDict, x=217, y=197)
+                self.create_tooltip(tooltipDict=tooltipDict, x=305, y=220)
                 
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
@@ -3304,17 +3341,9 @@ try:
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
-                if len(newTreasure) >= 15:
-                    if newTreasure.count(" ") > 1:
-                        lastSpaceIdx = newTreasure.rfind(" ", 0, newTreasure.rfind(" "))
-                    else:
-                        lastSpaceIdx = newTreasure.rfind(" ")
-                    newTreasure1 = newTreasure[:lastSpaceIdx]
-                    newTreasure2 = newTreasure[lastSpaceIdx+1:]
-                    imageWithText.text((56, 258), newTreasure1, "black", font)
-                    imageWithText.text((21, 270), newTreasure2, "black", font)
-                else:
-                    imageWithText.text((21, 258), newTreasure, "black", font)
+                newTreasureLines = self.new_treasure_name(newTreasure)
+                imageWithText.text((21, 258), newTreasureLines[0], "black", font)
+                imageWithText.text((21, 269), newTreasureLines.get(1, ""), "black", font)
 
                 adapter.debug("\tEnd of the_locked_grave", caller=calframe[1][3])
             except Exception as e:
@@ -3322,21 +3351,41 @@ try:
                 raise
 
 
+        def the_shine_of_gold(self):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of the_shine_of_gold", caller=calframe[1][3])
+
+                target = self.newTiles[1][1][0]
+                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                self.create_tooltip(tooltipDict=tooltipDict, x=65, y=147)
+                self.create_tooltip(tooltipDict=tooltipDict, x=207, y=219)
+                self.create_tooltip(tooltipDict=tooltipDict, x=280, y=254)
+                self.create_tooltip(tooltipDict=tooltipDict, x=250, y=268)
+
+                target = self.newTiles[1][0][0]
+                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                self.create_tooltip(tooltipDict=tooltipDict, x=268, y=195)
+
+                adapter.debug("\tEnd of the_shine_of_gold", caller=calframe[1][3])
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
         def the_skeleton_ball(self):
-            """
-            Update Necromancers to different enemy.
-            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of the_skeleton_ball", caller=calframe[1][3])
 
-                target1 = self.newTiles[1][0][0]
-                target2 = self.newTiles[3][1][0]
-                image1 = allEnemies[target1]["image text"]
-                image2 = allEnemies[target2]["image text"]
-                self.create_tooltip(image=image1, text=self.tooltipText[target1], x=62, y=147)
-                self.create_tooltip(image=image2, text=self.tooltipText[target2], x=216, y=147)
+                target = self.newTiles[1][0][0]
+                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                self.create_tooltip(tooltipDict=tooltipDict, x=62, y=147)
+                target = self.newTiles[3][1][0]
+                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                self.create_tooltip(tooltipDict=tooltipDict, x=216, y=147)
                 
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
@@ -3345,14 +3394,9 @@ try:
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
-                if len(newTreasure) >= 15:
-                    lastSpaceIdx = newTreasure.rfind(" ")
-                    newTreasure1 = newTreasure[:lastSpaceIdx]
-                    newTreasure2 = newTreasure[lastSpaceIdx+1:]
-                    imageWithText.text((21, 232), newTreasure1, "black", font)
-                    imageWithText.text((21, 243), newTreasure2, "black", font)
-                else:
-                    imageWithText.text((21, 232), newTreasure, "black", font)
+                newTreasureLines = self.new_treasure_name(newTreasure)
+                imageWithText.text((21, 232), newTreasureLines[0], "black", font)
+                imageWithText.text((21, 243), newTreasureLines.get(1, ""), "black", font)
 
                 adapter.debug("\tEnd of the_skeleton_ball", caller=calframe[1][3])
             except Exception as e:
@@ -3361,28 +3405,18 @@ try:
 
 
         def trecherous_tower(self):
-            """
-            Choose enemies for Eerie keyword.
-            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of trecherous_tower", caller=calframe[1][3])
 
-                totalDifficulty = sum([enemiesDict["Phalanx Hollow"].difficulty, enemiesDict["Engorged Zombie"].difficulty, enemiesDict["Crow Demon"].difficulty])
-                minDifficulty = totalDifficulty * 0.9
-                maxDifficulty = totalDifficulty * 1.1
-                allCombos = set(combinations([enemy for enemy in allEnemies if (
-                    enemy not in invadersStandard
-                    and enemy not in invadersAdvanced
-                    and enemiesDict[enemy].expansion in self.availableSets)], 3))
-                combos = [combo for combo in allCombos if minDifficulty <= sum([enemiesDict[enemy].difficulty for enemy in combo]) <= maxDifficulty]
-                spawns = choice(combos)
-                spawns = sorted(spawns, key=lambda x: enemiesDict[x].difficulty)
+                spawn1 = enemyIds[self.newEnemies[2]].name
+                spawn2 = enemyIds[self.newEnemies[3]].name
+                spawn3 = enemyIds[self.newEnemies[4]].name
 
-                self.encounterImage.paste(im=allEnemies[spawns[0]]["imageNew"], box=(285, 218), mask=allEnemies[spawns[0]]["imageNew"])
-                self.encounterImage.paste(im=allEnemies[spawns[1]]["imageNew"], box=(285, 248), mask=allEnemies[spawns[1]]["imageNew"])
-                self.encounterImage.paste(im=allEnemies[spawns[2]]["imageNew"], box=(285, 280), mask=allEnemies[spawns[2]]["imageNew"])
+                self.encounterImage.paste(im=allEnemies[spawn1]["imageNew"], box=(285, 218), mask=allEnemies[spawn1]["imageNew"])
+                self.encounterImage.paste(im=allEnemies[spawn2]["imageNew"], box=(285, 248), mask=allEnemies[spawn2]["imageNew"])
+                self.encounterImage.paste(im=allEnemies[spawn3]["imageNew"], box=(285, 280), mask=allEnemies[spawn3]["imageNew"])
 
                 adapter.debug("\tEnd of trecherous_tower", caller=calframe[1][3])
             except Exception as e:
@@ -3390,10 +3424,94 @@ try:
                 raise
 
 
+        def trophy_room(self):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of trophy_room", caller=calframe[1][3])
+
+                target = self.newTiles[2][0][0]
+                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                self.create_tooltip(tooltipDict=tooltipDict, x=61, y=147)
+                self.create_tooltip(tooltipDict=tooltipDict, x=210, y=220)
+                self.create_tooltip(tooltipDict=tooltipDict, x=145, y=267)
+                
+                if self.rewardTreasure:
+                    newTreasure = self.rewardTreasure
+                else:
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableSets), set(self.charactersActive))
+                    self.rewardTreasure = newTreasure
+
+                imageWithText = ImageDraw.Draw(self.encounterImage)
+                newTreasureLines = self.new_treasure_name(newTreasure)
+                imageWithText.text((21, 232), newTreasureLines[0], "black", font)
+                imageWithText.text((21, 243), newTreasureLines.get(1, ""), "black", font)
+
+                adapter.debug("\tEnd of trophy_room", caller=calframe[1][3])
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
+        def twilight_falls(self):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of twilight_falls", caller=calframe[1][3])
+                
+                gang = Counter([enemyIds[enemy].gang for enemy in self.newEnemies if enemyIds[enemy].gang]).most_common(1)[0][0]
+                if gang == "Alonne":
+                    tooltipDict = {"image": self.gangAlonne, "imageName": "gang"}
+                elif gang == "Hollow":
+                    tooltipDict = {"image": self.gangHollow, "imageName": "gang"}
+                elif gang == "Scarecrow":
+                    tooltipDict = {"image": self.gangScarecrow, "imageName": "gang"}
+                elif gang == "Skeleton":
+                    tooltipDict = {"image": self.gangSkeleton, "imageName": "gang"}
+
+                self.create_tooltip(tooltipDict=tooltipDict, x=142, y=214)
+
+                adapter.debug("\tEnd of twilight_falls", caller=calframe[1][3])
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
+        def undead_sanctum(self):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of undead_sanctum", caller=calframe[1][3])
+                
+                gang = Counter([enemyIds[enemy].gang for enemy in self.newEnemies if enemyIds[enemy].gang]).most_common(1)[0][0]
+                if gang == "Alonne":
+                    tooltipDict = {"image": self.gangAlonne, "imageName": "gang"}
+                elif gang == "Hollow":
+                    tooltipDict = {"image": self.gangHollow, "imageName": "gang"}
+                elif gang == "Scarecrow":
+                    tooltipDict = {"image": self.gangScarecrow, "imageName": "gang"}
+                elif gang == "Skeleton":
+                    tooltipDict = {"image": self.gangSkeleton, "imageName": "gang"}
+
+                self.create_tooltip(tooltipDict=tooltipDict, x=142, y=214)
+                
+                if self.rewardTreasure:
+                    newTreasure = self.rewardTreasure
+                else:
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableSets), set(self.charactersActive))
+                    self.rewardTreasure = newTreasure
+
+                imageWithText = ImageDraw.Draw(self.encounterImage)
+                newTreasureLines = self.new_treasure_name(newTreasure)
+                imageWithText.text((21, 232), newTreasureLines[0], "black", font)
+                imageWithText.text((21, 243), newTreasureLines.get(1, ""), "black", font)
+
+                adapter.debug("\tEnd of undead_sanctum", caller=calframe[1][3])
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
         def unseen_scurrying(self):
-            """
-            Swap treasure reward.
-            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -3406,14 +3524,9 @@ try:
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
-                if len(newTreasure) >= 15:
-                    lastSpaceIdx = newTreasure.rfind(" ")
-                    newTreasure1 = newTreasure[:lastSpaceIdx]
-                    newTreasure2 = newTreasure[lastSpaceIdx+1:]
-                    imageWithText.text((21, 232), newTreasure1, "black", font)
-                    imageWithText.text((21, 243), newTreasure2, "black", font)
-                else:
-                    imageWithText.text((21, 232), newTreasure, "black", font)
+                newTreasureLines = self.new_treasure_name(newTreasure)
+                imageWithText.text((21, 232), newTreasureLines[0], "black", font)
+                imageWithText.text((21, 243), newTreasureLines.get(1, ""), "black", font)
 
                 adapter.debug("\tEnd of unseen_scurrying", caller=calframe[1][3])
             except Exception as e:
@@ -3422,9 +3535,6 @@ try:
 
 
         def urns_of_the_fallen(self):
-            """
-            Swap treasure reward.
-            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -3437,14 +3547,9 @@ try:
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
-                if len(newTreasure) >= 15:
-                    lastSpaceIdx = newTreasure.rfind(" ")
-                    newTreasure1 = newTreasure[:lastSpaceIdx]
-                    newTreasure2 = newTreasure[lastSpaceIdx+1:]
-                    imageWithText.text((21, 232), newTreasure1, "black", font)
-                    imageWithText.text((21, 243), newTreasure2, "black", font)
-                else:
-                    imageWithText.text((21, 232), newTreasure, "black", font)
+                newTreasureLines = self.new_treasure_name(newTreasure)
+                imageWithText.text((21, 232), newTreasureLines[0], "black", font)
+                imageWithText.text((21, 243), newTreasureLines.get(1, ""), "black", font)
 
                 adapter.debug("\tEnd of urns_of_the_fallen", caller=calframe[1][3])
             except Exception as e:
@@ -3453,19 +3558,17 @@ try:
 
 
         def velkas_chosen(self):
-            """
-            Update Crow Demon to different enemy.
-            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of velkas_chosen", caller=calframe[1][3])
                 
                 target = sorted([enemy for enemy in self.newTiles[2][0] + self.newTiles[2][1]], key=lambda x: enemiesDict[x].difficulty, reverse=True)[0]
-                image = allEnemies[target]["image text"]
-                self.create_tooltip(image=image, text=self.tooltipText[target], x=65, y=147)
-                self.create_tooltip(image=image, text=self.tooltipText[target], x=297, y=195)
-                self.create_tooltip(image=image, text=self.tooltipText[target], x=210, y=219)
+                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                self.create_tooltip(tooltipDict=tooltipDict, x=65, y=147)
+                self.create_tooltip(tooltipDict=tooltipDict, x=297, y=219)
+                self.create_tooltip(tooltipDict=tooltipDict, x=210, y=245)
+                self.create_tooltip(tooltipDict=tooltipDict, x=239, y=195)
                 
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
@@ -3474,14 +3577,9 @@ try:
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
-                if len(newTreasure) >= 15:
-                    lastSpaceIdx = newTreasure.rfind(" ")
-                    newTreasure1 = newTreasure[:lastSpaceIdx]
-                    newTreasure2 = newTreasure[lastSpaceIdx+1:]
-                    imageWithText.text((21, 232), newTreasure1, "black", font)
-                    imageWithText.text((21, 243), newTreasure2, "black", font)
-                else:
-                    imageWithText.text((21, 232), newTreasure, "black", font)
+                newTreasureLines = self.new_treasure_name(newTreasure)
+                imageWithText.text((21, 232), newTreasureLines[0], "black", font)
+                imageWithText.text((21, 243), newTreasureLines.get(1, ""), "black", font)
 
                 adapter.debug("\tEnd of velkas_chosen", caller=calframe[1][3])
             except Exception as e:
@@ -3489,7 +3587,7 @@ try:
                 raise
 
 
-    coreSets = {"Dark Souls The Board Game", "Painted World of Ariamis", "Tomb of Giants"}
+    coreSets = {"Dark Souls The Board Game", "Painted World of Ariamis", "Tomb of Giants", "The Sunless City"}
     encountersWithInvadersOrMimics = {
         "Blazing Furnace",
         "Brume Tower",

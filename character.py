@@ -2,7 +2,6 @@ from lookup_table import LookupTable
 from statistics import mean
 
 
-# The Deprived is not included here because it really throws off the numbers.
 soulCost = {
     "Assassin": {
         "sets": set(["Dark Souls The Board Game"]),
@@ -237,16 +236,13 @@ soulCost = {
 }
 
 def mean_soul_cost(item, setsAvailable, charactersActive):
-    try:
-        costs = []
-        for c in [c for c in soulCost if c in charactersActive and soulCost[c]["sets"] & setsAvailable]:
-            strength = soulCost[c]["strength"][item["strength"]]
-            dexterity = soulCost[c]["dexterity"][item["dexterity"]]
-            intelligence = soulCost[c]["intelligence"][item["intelligence"]]
-            faith = soulCost[c]["faith"][item["faith"]]
-            if strength is not None and dexterity is not None and intelligence is not None and faith is not None:
-                costs.append(strength + dexterity + intelligence + faith)
+    costs = []
+    for c in [c for c in soulCost if c in charactersActive and soulCost[c]["sets"] & setsAvailable]:
+        strength = soulCost[c]["strength"][item["strength"]]
+        dexterity = soulCost[c]["dexterity"][item["dexterity"]]
+        intelligence = soulCost[c]["intelligence"][item["intelligence"]]
+        faith = soulCost[c]["faith"][item["faith"]]
+        if strength is not None and dexterity is not None and intelligence is not None and faith is not None:
+            costs.append(strength + dexterity + intelligence + faith)
 
-        return mean(costs)
-    except:
-        pass
+    return mean(costs)
