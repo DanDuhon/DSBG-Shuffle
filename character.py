@@ -27,7 +27,7 @@ soulCost = {
             (30, 14))
         },
     "Cleric": {
-        "sets": set(["Tomb of Giants", "Character Expansion"]),
+        "sets": set(["Tomb of Giants", "Characters Expansion"]),
         "strength": LookupTable(
             (12, 0),
             (18, 2),
@@ -50,7 +50,7 @@ soulCost = {
             (40, 14))
         },
     "Deprived": {
-        "sets": set(["Tomb of Giants", "Character Expansion"]),
+        "sets": set(["Tomb of Giants", "Characters Expansion"]),
         "strength": LookupTable(
             (10, 0),
             (20, 2),
@@ -119,7 +119,7 @@ soulCost = {
             (31, 14))
         },
     "Mercenary": {
-        "sets": set(["Painted World of Ariamis", "Character Expansion"]),
+        "sets": set(["Painted World of Ariamis", "Characters Expansion"]),
         "strength": LookupTable(
             (10, 0),
             (17, 2),
@@ -142,7 +142,7 @@ soulCost = {
             (30, 14))
         },
     "Pyromancer": {
-        "sets": set(["Tomb of Giants", "Character Expansion"]),
+        "sets": set(["Tomb of Giants", "Characters Expansion"]),
         "strength": LookupTable(
             (12, 0),
             (17, 2),
@@ -165,7 +165,7 @@ soulCost = {
             (38, 14))
         },
     "Sorcerer": {
-        "sets": set(["Painted World of Ariamis", "Character Expansion"]),
+        "sets": set(["Painted World of Ariamis", "Characters Expansion"]),
         "strength": LookupTable(
             (7, 0),
             (14, 2),
@@ -188,7 +188,7 @@ soulCost = {
             (33, 14))
         },
     "Thief": {
-        "sets": set(["Tomb of Giants", "Character Expansion"]),
+        "sets": set(["Tomb of Giants", "Characters Expansion"]),
         "strength": LookupTable(
             (9, 0),
             (16, 2),

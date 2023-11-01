@@ -2901,7 +2901,6 @@ try:
                 target = self.newTiles[2][0][0]
                 tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=63, y=147)
-                self.create_tooltip(tooltipDict=tooltipDict, x=166, y=252)
                 
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
