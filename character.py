@@ -4,7 +4,7 @@ from statistics import mean
 
 soulCost = {
     "Assassin": {
-        "sets": set(["Dark Souls The Board Game"]),
+        "expansions": set(["Dark Souls The Board Game"]),
         "strength": LookupTable(
             (10, 0),
             (16, 2),
@@ -27,7 +27,7 @@ soulCost = {
             (30, 14))
         },
     "Cleric": {
-        "sets": set(["Tomb of Giants", "Characters Expansion"]),
+        "expansions": set(["Tomb of Giants", "Characters Expansion"]),
         "strength": LookupTable(
             (12, 0),
             (18, 2),
@@ -50,7 +50,7 @@ soulCost = {
             (40, 14))
         },
     "Deprived": {
-        "sets": set(["Tomb of Giants", "Characters Expansion"]),
+        "expansions": set(["Tomb of Giants", "Characters Expansion"]),
         "strength": LookupTable(
             (10, 0),
             (20, 2),
@@ -73,7 +73,7 @@ soulCost = {
             (40, 14))
         },
     "Herald": {
-        "sets": set(["Dark Souls The Board Game"]),
+        "expansions": set(["Dark Souls The Board Game"]),
         "strength": LookupTable(
             (12, 0),
             (19, 2),
@@ -96,7 +96,7 @@ soulCost = {
             (40, 14))
         },
     "Knight": {
-        "sets": set(["Dark Souls The Board Game"]),
+        "expansions": set(["Dark Souls The Board Game"]),
         "strength": LookupTable(
             (13, 0),
             (21, 2),
@@ -119,7 +119,7 @@ soulCost = {
             (31, 14))
         },
     "Mercenary": {
-        "sets": set(["Painted World of Ariamis", "Characters Expansion"]),
+        "expansions": set(["Painted World of Ariamis", "Characters Expansion"]),
         "strength": LookupTable(
             (10, 0),
             (17, 2),
@@ -142,7 +142,7 @@ soulCost = {
             (30, 14))
         },
     "Pyromancer": {
-        "sets": set(["Tomb of Giants", "Characters Expansion"]),
+        "expansions": set(["Tomb of Giants", "Characters Expansion"]),
         "strength": LookupTable(
             (12, 0),
             (17, 2),
@@ -165,7 +165,7 @@ soulCost = {
             (38, 14))
         },
     "Sorcerer": {
-        "sets": set(["Painted World of Ariamis", "Characters Expansion"]),
+        "expansions": set(["Painted World of Ariamis", "Characters Expansion"]),
         "strength": LookupTable(
             (7, 0),
             (14, 2),
@@ -188,7 +188,7 @@ soulCost = {
             (33, 14))
         },
     "Thief": {
-        "sets": set(["Tomb of Giants", "Characters Expansion"]),
+        "expansions": set(["Tomb of Giants", "Characters Expansion"]),
         "strength": LookupTable(
             (9, 0),
             (16, 2),
@@ -211,7 +211,7 @@ soulCost = {
             (31, 14))
         },
     "Warrior": {
-        "sets": set(["Dark Souls The Board Game"]),
+        "expansions": set(["Dark Souls The Board Game"]),
         "strength": LookupTable(
             (16, 0),
             (23, 2),
@@ -237,7 +237,7 @@ soulCost = {
 
 def mean_soul_cost(item, setsAvailable, charactersActive):
     costs = []
-    for c in [c for c in soulCost if c in charactersActive and soulCost[c]["sets"] & setsAvailable]:
+    for c in [c for c in soulCost if c in charactersActive and soulCost[c]["expansions"] & setsAvailable]:
         strength = soulCost[c]["strength"][item["strength"]]
         dexterity = soulCost[c]["dexterity"][item["dexterity"]]
         intelligence = soulCost[c]["intelligence"][item["intelligence"]]

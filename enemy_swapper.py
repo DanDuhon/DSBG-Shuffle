@@ -3,6 +3,9 @@ try:
     import logging
     import inspect
     import os
+    import requests
+    import webbrowser
+    import datetime
     from os import path
     from json import load, dump
     from random import choice
@@ -15,6 +18,27 @@ try:
     from enemies import enemyIds, enemiesDict
     from treasure import generate_treasure_soul_cost, populate_treasure_tiers, pick_treasure
     from character import soulCost
+    
+
+    def center(win):
+        """
+        Centers a tkinter window
+
+        Required Parameters:
+            win: tkinter window
+                The main window or Toplevel window to center.
+        """
+        win.update_idletasks()
+        width = win.winfo_width()
+        frm_width = win.winfo_rootx() - win.winfo_x()
+        win_width = width + 2 * frm_width
+        height = win.winfo_height()
+        titlebar_height = win.winfo_rooty() - win.winfo_y()
+        win_height = height + titlebar_height + frm_width
+        x = win.winfo_screenwidth() // 2 - win_width // 2
+        y = win.winfo_screenheight() // 2 - win_height // 2
+        win.geometry('{}x{}+{}+{}'.format(width, height, x, y))
+        win.deiconify()
 
 
     def enable_binding(bindKey, method):
@@ -144,7 +168,7 @@ try:
             try:
                 adapter.debug("Creating help window")
                 top = self.top = tk.Toplevel(master)
-                top.geometry("+{}+{}".format(x_cordinate, y_cordinate-20))
+                top.attributes('-alpha', 0.0)
                 top.wait_visibility()
                 top.grab_set_global()
 
@@ -170,14 +194,7 @@ try:
                 helpText += "In the settings menu, you can enable the different core sets/expansions\n"
                 helpText += "that add enemies or basic treasure to the game. These are the only sets\n"
                 helpText += "listed on purpose as they are the ones that add non-boss enemies.\n\n"
-                helpText += "Treasure Swap Options are as follows:\n"
-                helpText += "Similar Soul Cost: Rewards an item of the same type as the original that\n"
-                helpText += "    also costs about the same souls in leveling stats in order to equip it\n"
-                helpText += "Tier Based: Splits treasure into tiers and rewards an item in the same\n"
-                helpText += "    tier as the original reward.\n"
-                helpText += "Generic Treasure: Changes all specific item rewards to a number of draws\n"
-                helpText += "    equal to the encounter level.\n"
-                helpText += "Original: Display the original reward on the card only."
+                helpText += "Some settings have tooltips, so hover over them for an explanation!"
                 self.helpTextLabel = ttk.Label(self.helpTextFrame, text=helpText)
                 self.helpTextLabel.grid()
 
@@ -187,6 +204,9 @@ try:
 
                 self.okButton = ttk.Button(self.helpButtonsFrame, text="OK", width=14, command=self.top.destroy)
                 self.okButton.grid(column=0, row=0, padx=5)
+                
+                center(top)
+                top.attributes('-alpha', 1.0)
             except Exception as e:
                 adapter.exception(e)
                 raise
@@ -194,25 +214,25 @@ try:
 
     class SettingsWindow(object):
         """
-        Window in which the user selects which sets they own and whether they want to see
+        Window in which the user selects which expansions they own and whether they want to see
         old, new, or both styles of encounters when being shown random encounters.
         """
         def __init__(self, master):
             try:
                 adapter.debug("Creating settings window")
                 top = self.top = tk.Toplevel(master)
-                top.geometry("+{}+{}".format(x_cordinate, y_cordinate-20))
+                top.attributes('-alpha', 0.0)
                 top.wait_visibility()
                 top.grab_set_global()
                 
                 with open(baseFolder + "\\settings.json") as settingsFile:
                     self.settings = load(settingsFile)
 
-                self.availableSets = set(self.settings["availableSets"])
+                self.availableExpansions = set(self.settings["availableExpansions"])
                 
-                # These are the only sets that matter - the ones that add enemies or regular treasure.
+                # These are the only expansions that matter - the ones that add enemies or regular treasure.
                 # All encounters are always going to be available.
-                self.sets = {
+                self.expansions = {
                     "Dark Souls The Board Game": {"button": None, "value": tk.IntVar()},
                     "Painted World of Ariamis": {"button": None, "value": tk.IntVar()},
                     "The Sunless City": {"button": None, "value": tk.IntVar()},
@@ -221,19 +241,19 @@ try:
                     "Explorers": {"button": None, "value": tk.IntVar()},
                     "Iron Keep": {"button": None, "value": tk.IntVar()},
                     "Phantoms": {"button": None, "value": tk.IntVar()},
-                    "The Executioner's Chariot": {"button": None, "value": tk.IntVar()},
+                    "Executioner Chariot": {"button": None, "value": tk.IntVar()},
                     "Characters Expansion": {"button": None, "value": tk.IntVar()}
                 }
                 
-                self.setsFrame = ttk.LabelFrame(top, text="Enabled Enemies From Sets", padding=(20, 10))
-                self.setsFrame.grid(row=0, column=0, padx=(20, 10), pady=(20, 10), sticky="nsew", rowspan=2, columnspan=2)
-                for i, a in enumerate(self.sets):
-                    self.sets[a]["value"].set(1 if a in self.settings["availableSets"] else 0)
-                    self.sets[a]["button"] = ttk.Checkbutton(self.setsFrame, text=a + (" (Core Set)" if a in coreSets else ""), variable=self.sets[a]["value"])
+                self.expansionsFrame = ttk.LabelFrame(top, text="Enabled Enemies From Expansions", padding=(20, 10))
+                self.expansionsFrame.grid(row=0, column=0, padx=(20, 10), pady=(20, 10), sticky="nsew", rowspan=4, columnspan=2)
+                for i, a in enumerate(self.expansions):
+                    self.expansions[a]["value"].set(1 if a in self.settings["availableExpansions"] else 0)
+                    self.expansions[a]["button"] = ttk.Checkbutton(self.expansionsFrame, text=a + (" (Core Set)" if a in coreSets else ""), variable=self.expansions[a]["value"])
                     if i > 11:
-                        self.sets[a]["button"].grid(row=i-12, column=1, padx=5, pady=10, sticky="nsew")
+                        self.expansions[a]["button"].grid(row=i-12, column=1, padx=5, pady=10, sticky="nsew")
                     else:
-                        self.sets[a]["button"].grid(row=i, column=0, padx=5, pady=10, sticky="nsew")
+                        self.expansions[a]["button"].grid(row=i, column=0, padx=5, pady=10, sticky="nsew")
 
                 self.charactersActive = {
                     "Assassin": {"button": None, "value": tk.IntVar()},
@@ -249,17 +269,17 @@ try:
                 }
                 
                 self.characterFrame = ttk.LabelFrame(top, text="Characters Being Played (up to 4)", padding=(20, 10))
-                self.characterFrame.grid(row=0, column=3, padx=(20, 10), pady=(20, 10), sticky="nsew", rowspan=2, columnspan=2)
+                self.characterFrame.grid(row=0, column=3, padx=(20, 10), pady=(20, 10), sticky="nsew", rowspan=4, columnspan=2)
                 for i, a in enumerate(self.charactersActive):
                     self.charactersActive[a]["value"].set(1 if a in self.settings["charactersActive"] else 0)
                     self.charactersActive[a]["button"] = ttk.Checkbutton(self.characterFrame, text=a, variable=self.charactersActive[a]["value"], command=self.check_max_characters)
                     self.charactersActive[a]["button"].grid(row=i, column=0, padx=5, pady=10, sticky="nsew")
                     
                 self.treasureSwapOptions = {
-                    "Similar Soul Cost": {"button": None, "value": tk.StringVar(value="Similar Soul Cost")},
-                    "Tier Based": {"button": None, "value": tk.StringVar(value="Tier Based")},
-                    "Generic Treasure": {"button": None, "value": tk.StringVar(value="Generic Treasure")},
-                    "Original": {"button": None, "value": tk.StringVar(value="Original")}
+                    "Similar Soul Cost": {"button": None, "value": tk.StringVar(value="Similar Soul Cost"), "tooltipText": "Rewards an item of the same type as the original that also costs about the same souls in leveling stats in order to equip it"},
+                    "Tier Based": {"button": None, "value": tk.StringVar(value="Tier Based"), "tooltipText": "Splits treasure into tiers based on soul cost to equip and rewards an item in the same tier as the original reward."},
+                    "Generic Treasure": {"button": None, "value": tk.StringVar(value="Generic Treasure"), "tooltipText": "Changes all specific item rewards to a number of draws equal to the encounter level"},
+                    "Original": {"button": None, "value": tk.StringVar(value="Original"), "tooltipText": "Display the original reward on the card only."}
                 }
 
                 self.treasureSwapOption = tk.StringVar(value=self.settings["treasureSwapOption"])
@@ -268,6 +288,7 @@ try:
                 for i, a in enumerate(self.treasureSwapOptions):
                     self.treasureSwapOptions[a]["button"] = ttk.Radiobutton(self.treasureSwapFrame, text=a, variable=self.treasureSwapOption, value=a)
                     self.treasureSwapOptions[a]["button"].grid(row=i, column=0, padx=5, pady=10, sticky="nsew")
+                    CreateToolTip(self.treasureSwapOptions[a]["button"], self.treasureSwapOptions[a]["tooltipText"])
                 
                 self.randomEncounters = {
                     "old": {"button": None, "value": tk.IntVar()},
@@ -283,11 +304,27 @@ try:
                 self.randomEncounters["old"]["button"].grid(row=0, column=0, padx=5, pady=10, sticky="nsew")
                 self.randomEncounters["new"]["button"].grid(row=1, column=0, padx=5, pady=10, sticky="nsew")
                 
+                self.encounterTweaks = {"button": None, "value": tk.IntVar(), "tooltipText": "Enables changes to (new style) encounters that attempt to fix some issues such as being able to rest/heal between tiles.\n\nThese have been tested, but only by me. I'm always open to feedback/suggestions for these."}
+                self.encounterTweaksFrame = ttk.LabelFrame(top, text="Encounter Tweaks", padding=(20, 10))
+                self.encounterTweaksFrame.grid(row=2, column=5, padx=(20, 10), pady=(20, 10), sticky="nsew")
+                self.encounterTweaks["value"].set(1 if "on" in self.settings["encounterTweaks"] else 0)
+                self.encounterTweaks["button"] = ttk.Checkbutton(self.encounterTweaksFrame, text="Enable Encounter Tweaks", variable=self.encounterTweaks["value"])
+                self.encounterTweaks["button"].grid(row=0, column=0, padx=5, pady=10, sticky="nsew")
+                CreateToolTip(self.encounterTweaks["button"], self.encounterTweaks["tooltipText"])
+                
+                self.updateCheck = {"button": None, "value": tk.IntVar(), "tooltipText": "If enabled, makes an API call to Github once a month when the app is opened to check for a new version.\n\nThe app won't download anything or update itself but will let you know if there's a new version."}
+                self.updateCheckFrame = ttk.LabelFrame(top, text="Check For Updates", padding=(20, 10))
+                self.updateCheckFrame.grid(row=3, column=5, padx=(20, 10), pady=(20, 10), sticky="nsew")
+                self.updateCheck["value"].set(1 if "on" in self.settings["updateCheck"] else 0)
+                self.updateCheck["button"] = ttk.Checkbutton(self.updateCheckFrame, text="Check for updates", variable=self.updateCheck["value"])
+                self.updateCheck["button"].grid(row=0, column=0, padx=5, pady=10, sticky="nsew")
+                CreateToolTip(self.updateCheck["button"], self.updateCheck["tooltipText"])
+                
                 self.errLabel = tk.Label(self.top, text="")
-                self.errLabel.grid(column=0, row=3, padx=18, columnspan=8)
+                self.errLabel.grid(column=0, row=4, padx=18, columnspan=8)
 
                 self.saveCancelButtonsFrame = ttk.Frame(top, padding=(0, 0, 0, 10))
-                self.saveCancelButtonsFrame.grid(row=4, column=0, padx=15, pady=(10, 0), sticky="w", columnspan=2)
+                self.saveCancelButtonsFrame.grid(row=5, column=0, padx=15, pady=(10, 0), sticky="w", columnspan=2)
                 self.saveCancelButtonsFrame.columnconfigure(index=0, weight=1)
                 
                 self.saveButton = ttk.Button(self.saveCancelButtonsFrame, text="Save", width=14, command=lambda: self.quit_with_save())
@@ -296,13 +333,16 @@ try:
                 self.cancelButton.grid(column=1, row=0, padx=5)
 
                 self.themeButtonFrame = ttk.Frame(top, padding=(0, 0, 0, 10))
-                self.themeButtonFrame.grid(row=4, column=5, padx=15, pady=(10, 0), sticky="e", columnspan=2)
+                self.themeButtonFrame.grid(row=5, column=5, padx=15, pady=(10, 0), sticky="e", columnspan=2)
                 self.themeButtonFrame.columnconfigure(index=0, weight=1)
 
                 self.lightTheme = {"button": None, "value": tk.IntVar()}
                 self.lightTheme["value"].set(0 if self.settings["theme"] == "dark" else 1)
                 self.lightTheme["button"] = ttk.Button(self.themeButtonFrame, text="Switch to light theme" if self.lightTheme["value"].get() == 0 else "Switch to dark theme", command=self.switch_theme)
                 self.lightTheme["button"].grid(column=3, row=0, columnspan=2)
+                
+                center(top)
+                top.attributes('-alpha', 1.0)
             except Exception as e:
                 adapter.exception(e)
                 raise
@@ -380,7 +420,7 @@ try:
 
                 self.errLabel.config(text="")
 
-                if all([self.sets[s]["value"].get() == 0 for s in coreSets]):
+                if all([self.expansions[s]["value"].get() == 0 for s in coreSets]):
                     self.errLabel.config(text="You need to select at least one Core Set!")
                     adapter.debug("End of quit_with_save", caller=calframe[1][3])
                     return
@@ -395,13 +435,13 @@ try:
                     adapter.debug("End of quit_with_save", caller=calframe[1][3])
                     return
                 
-                characterSets = set()
+                characterExpansions = set()
                 for c in soulCost:
                     if self.charactersActive[c]["value"].get() == 1:
-                        characterSets.update(soulCost[c]["sets"])
+                        characterExpansions.update(soulCost[c]["expansions"])
 
-                setsActive = set([s for s in self.sets if self.sets[s]["value"].get() == 1])
-                if characterSets - setsActive:
+                expansionsActive = set([s for s in self.expansions if self.expansions[s]["value"].get() == 1])
+                if characterExpansions - expansionsActive:
                     self.errLabel.config(text="You have selected one or more characters from sets you have disabled!")
                     adapter.debug("End of quit_with_save", caller=calframe[1][3])
                     return
@@ -411,10 +451,12 @@ try:
 
                 newSettings = {
                     "theme": "light" if self.lightTheme["value"].get() == 1 else "dark",
-                    "availableSets": list(setsActive),
+                    "availableExpansions": list(expansionsActive),
                     "randomEncounterTypes": list(randomEncounterTypes),
                     "charactersActive": list(charactersActive),
-                    "treasureSwapOption": self.treasureSwapOption.get()
+                    "treasureSwapOption": self.treasureSwapOption.get(),
+                    "encounterTweaks": "on" if self.encounterTweaks["value"].get() == 1 else "off",
+                    "updateCheck": "on" if self.updateCheck["value"].get() == 1 else "off"
                 }
 
                 # This will trigger the encounters treeview to be recreated to account for the changes.
@@ -427,10 +469,10 @@ try:
 
                     # Recalculate the average soul cost of treasure.
                     if self.treasureSwapOption.get() == "Similar Soul Cost":
-                        generate_treasure_soul_cost(setsActive, charactersActive)
+                        generate_treasure_soul_cost(expansionsActive, charactersActive)
                     elif self.treasureSwapOption.get() == "Tier Based":
-                        generate_treasure_soul_cost(setsActive, charactersActive)
-                        populate_treasure_tiers(setsActive, charactersActive)
+                        generate_treasure_soul_cost(expansionsActive, charactersActive)
+                        populate_treasure_tiers(expansionsActive, charactersActive)
 
                 self.top.destroy()
                 adapter.debug("End of quit_with_save", caller=calframe[1][3])
@@ -460,35 +502,60 @@ try:
                 raise
         
 
-    class PopupWindow(object):
+    class PopupWindow(tk.Toplevel):
         """
-        A popup window that either displays a message for the user or asks
-        for input in the form of an entry field or a choice of two options.
+        A popup window that displays a message for the user.
 
-        Required parameters:
-            master: tkinter.Tk object
-                The tkinter Tk object (root).
-                
+        Optional parameters:
             labelText: String
                 The message to be displayed in the popup window.
 
-            button1Text: String
-                The text displayed on the first button.
-        """
-        def __init__(self, master, labelText, buttonText):
-            try:
-                top = self.top = tk.Toplevel(master)
-                top.wait_visibility()
-                top.grab_set_global()
-                self.l = ttk.Label(top, text=labelText, font=("calibri", 16))
-                self.l.pack()
-                self.l.focus_force()
+            firstButton: Boolean
+                Whether to show the Ok button.
 
-                self.b = ttk.Button(top, text=buttonText, command=lambda: self.top.destroy())
-                self.b.pack()
-            except Exception as e:
-                adapter.exception(e)
-                raise
+            secondButton: Boolean
+                Whether to show the second button.
+
+            progressBar: Boolean
+                Whether to show the progress bar for app loading.
+
+            loadingImage: Boolean
+                Whether to show the loading image.
+        """
+        def __init__(self, root, labelText=None, firstButton=False, secondButton=False, progressBar=False, loadingImage=False):
+            tk.Toplevel.__init__(self, root)
+            self.attributes('-alpha', 0.0)
+            self.popupFrame = ttk.Frame(self, padding=(20, 10))
+            self.popupFrame.pack()
+            label = ttk.Label(self.popupFrame, text=labelText)
+            label.grid(column=0, row=1, columnspan=2, padx=20, pady=20)
+            self.wait_visibility()
+            self.grab_set_global()
+            label.focus_force()
+
+            if firstButton:
+                button = ttk.Button(self.popupFrame, text="OK", command=self.destroy)
+                button.grid(column=0, row=2, padx=20, pady=20)
+
+            if secondButton:
+                button2 = ttk.Button(self.popupFrame, text="Quit and take me there!", command=root.destroy)
+                button2.grid(column=1, row=2, padx=20, pady=20)
+                button2.bind("<Button 1>", lambda e: webbrowser.open_new("https://github.com/DanDuhon/DSBG-Shuffle/releases"))
+
+            if loadingImage:
+                loadingImage = ImageTk.PhotoImage(Image.open(baseFolder + "\\bonfire.png"), Image.Resampling.LANCZOS)
+                loadingLabel = ttk.Label(self.popupFrame)
+                loadingLabel.image = loadingImage
+                loadingLabel.config(image=loadingImage)
+                loadingLabel.grid(column=0, row=0, columnspan=2, padx=20, pady=20)
+
+            if progressBar:
+                self.progressVar = tk.DoubleVar()
+                progressBar = ttk.Progressbar(self.popupFrame, variable=self.progressVar, maximum=len(allEnemies), length=150)
+                progressBar.grid(row=3, column=0, columnspan=2)
+                
+            center(self)
+            self.attributes('-alpha', 1.0)
 
 
     class Application(ttk.Frame):
@@ -530,7 +597,7 @@ try:
                     "The Pursuer",
                     "--Mega Bosses--",
                     "Black Dragon Kalameet",
-                    "The Executioner's Chariot",
+                    "Executioner Chariot",
                     "Gaping Dragon",
                     "Guardian Dragon",
                     "Manus, Father of the Abyss",
@@ -542,49 +609,49 @@ try:
                     ]
 
                 self.bosses = {
-                    "Asylum Demon": {"name": "Asylum Demon", "level": "Mini Boss", "sets": set(["Asylum Demon"])},
-                    "Black Knight": {"name": "Black Knight", "level": "Mini Boss", "sets": set(["Tomb of Giants"])},
-                    "Boreal Outrider Knight": {"name": "Boreal Outrider Knight", "level": "Mini Boss", "sets": set(["Dark Souls The Board Game"])},
-                    "Heavy Knight": {"name": "Heavy Knight", "level": "Mini Boss", "sets": set(["Painted World of Ariamis"])},
-                    "Old Dragonslayer": {"name": "Old Dragonslayer", "level": "Mini Boss", "sets": set(["Explorers"])},
-                    "Titanite Demon": {"name": "Titanite Demon", "level": "Mini Boss", "sets": set(["Dark Souls The Board Game", "The Sunless City"])},
-                    "Winged Knight": {"name": "Winged Knight", "level": "Mini Boss", "sets": set(["Dark Souls The Board Game"])},
-                    "Artorias": {"name": "Artorias", "level": "Main Boss", "sets": set(["Darkroot"])},
-                    "Crossbreed Priscilla": {"name": "Crossbreed Priscilla", "level": "Main Boss", "sets": set(["Painted World of Ariamis"])},
-                    "Dancer of the Boreal Valley": {"name": "Dancer of the Boreal Valley", "level": "Main Boss", "sets": set(["Dark Souls The Board Game"])},
-                    "Gravelord Nito": {"name": "Gravelord Nito", "level": "Main Boss", "sets": set(["Tomb of Giants"])},
-                    "Great Grey Wolf Sif": {"name": "Great Grey Wolf Sif", "level": "Main Boss", "sets": set(["Darkroot"])},
-                    "Ornstein and Smough": {"name": "Ornstein and Smough", "level": "Main Boss", "sets": set(["Dark Souls The Board Game", "The Sunless City"])},
-                    "Sir Alonne": {"name": "Sir Alonne", "level": "Main Boss", "sets": set(["Iron Keep"])},
-                    "Smelter Demon": {"name": "Smelter Demon", "level": "Main Boss", "sets": set(["Iron Keep"])},
-                    "The Pursuer": {"name": "The Pursuer", "level": "Main Boss", "sets": set(["Explorers"])},
-                    "Black Dragon Kalameet": {"name": "Black Dragon Kalameet", "level": "Mega Boss", "sets": set(["Black Dragon Kalameet"])},
-                    "The Executioner's Chariot": {"name": "The Executioner's Chariot", "level": "Mega Boss", "sets": set(["The Executioner's Chariot"])},
-                    "Gaping Dragon": {"name": "Gaping Dragon", "level": "Mega Boss", "sets": set(["Gaping Dragon"])},
-                    "Guardian Dragon": {"name": "Guardian Dragon", "level": "Mega Boss", "sets": set(["Guardian Dragon"])},
-                    "Manus, Father of the Abyss": {"name": "Manus, Father of the Abyss", "level": "Mega Boss", "sets": set(["Manus, Father of the Abyss"])},
-                    "Old Iron King": {"name": "Old Iron King", "level": "Mega Boss", "sets": set(["Old Iron King"])},
-                    "Stray Demon": {"name": "Stray Demon", "level": "Mega Boss", "sets": set(["Asylum Demon"])},
-                    "The Four Kings": {"name": "The Four Kings", "level": "Mega Boss", "sets": set(["The Four Kings"])},
-                    "The Last Giant": {"name": "The Last Giant", "level": "Mega Boss", "sets": set(["The Last Giant"])},
-                    "Vordt of the Boreal Valley": {"name": "Vordt of the Boreal Valley", "level": "Mega Boss", "sets": set(["Vordt of the Boreal Valley"])}
+                    "Asylum Demon": {"name": "Asylum Demon", "level": "Mini Boss", "expansions": set(["Asylum Demon"])},
+                    "Black Knight": {"name": "Black Knight", "level": "Mini Boss", "expansions": set(["Tomb of Giants"])},
+                    "Boreal Outrider Knight": {"name": "Boreal Outrider Knight", "level": "Mini Boss", "expansions": set(["Dark Souls The Board Game"])},
+                    "Heavy Knight": {"name": "Heavy Knight", "level": "Mini Boss", "expansions": set(["Painted World of Ariamis"])},
+                    "Old Dragonslayer": {"name": "Old Dragonslayer", "level": "Mini Boss", "expansions": set(["Explorers"])},
+                    "Titanite Demon": {"name": "Titanite Demon", "level": "Mini Boss", "expansions": set(["Dark Souls The Board Game", "The Sunless City"])},
+                    "Winged Knight": {"name": "Winged Knight", "level": "Mini Boss", "expansions": set(["Dark Souls The Board Game"])},
+                    "Artorias": {"name": "Artorias", "level": "Main Boss", "expansions": set(["Darkroot"])},
+                    "Crossbreed Priscilla": {"name": "Crossbreed Priscilla", "level": "Main Boss", "expansions": set(["Painted World of Ariamis"])},
+                    "Dancer of the Boreal Valley": {"name": "Dancer of the Boreal Valley", "level": "Main Boss", "expansions": set(["Dark Souls The Board Game"])},
+                    "Gravelord Nito": {"name": "Gravelord Nito", "level": "Main Boss", "expansions": set(["Tomb of Giants"])},
+                    "Great Grey Wolf Sif": {"name": "Great Grey Wolf Sif", "level": "Main Boss", "expansions": set(["Darkroot"])},
+                    "Ornstein and Smough": {"name": "Ornstein and Smough", "level": "Main Boss", "expansions": set(["Dark Souls The Board Game", "The Sunless City"])},
+                    "Sir Alonne": {"name": "Sir Alonne", "level": "Main Boss", "expansions": set(["Iron Keep"])},
+                    "Smelter Demon": {"name": "Smelter Demon", "level": "Main Boss", "expansions": set(["Iron Keep"])},
+                    "The Pursuer": {"name": "The Pursuer", "level": "Main Boss", "expansions": set(["Explorers"])},
+                    "Black Dragon Kalameet": {"name": "Black Dragon Kalameet", "level": "Mega Boss", "expansions": set(["Black Dragon Kalameet"])},
+                    "Executioner Chariot": {"name": "Executioner Chariot", "level": "Mega Boss", "expansions": set(["Executioner Chariot"])},
+                    "Gaping Dragon": {"name": "Gaping Dragon", "level": "Mega Boss", "expansions": set(["Gaping Dragon"])},
+                    "Guardian Dragon": {"name": "Guardian Dragon", "level": "Mega Boss", "expansions": set(["Guardian Dragon"])},
+                    "Manus, Father of the Abyss": {"name": "Manus, Father of the Abyss", "level": "Mega Boss", "expansions": set(["Manus, Father of the Abyss"])},
+                    "Old Iron King": {"name": "Old Iron King", "level": "Mega Boss", "expansions": set(["Old Iron King"])},
+                    "Stray Demon": {"name": "Stray Demon", "level": "Mega Boss", "expansions": set(["Asylum Demon"])},
+                    "The Four Kings": {"name": "The Four Kings", "level": "Mega Boss", "expansions": set(["The Four Kings"])},
+                    "The Last Giant": {"name": "The Last Giant", "level": "Mega Boss", "expansions": set(["The Last Giant"])},
+                    "Vordt of the Boreal Valley": {"name": "Vordt of the Boreal Valley", "level": "Mega Boss", "expansions": set(["Vordt of the Boreal Valley"])}
                 }
                 
                 self.selectedBoss = tk.StringVar()
 
-                self.allSets = set([encounters[encounter]["set"] for encounter in encounters])
-                self.availableSets = set(self.settings["availableSets"])
+                self.allExpansions = set([encounters[encounter]["expansion"] for encounter in encounters])
+                self.availableExpansions = set(self.settings["availableExpansions"])
                 self.charactersActive = set(self.settings["charactersActive"])
-                self.availableCoreSets = coreSets & self.availableSets
-                oldSets = {"Dark Souls The Board Game", "Darkroot", "The Executioner's Chariot", "Explorers", "Iron Keep"} if "old" in self.settings["randomEncounterTypes"] else set()
-                newSets = (self.allSets - {"Dark Souls The Board Game", "Darkroot", "The Executioner's Chariot", "Explorers", "Iron Keep"}) if "new" in self.settings["randomEncounterTypes"] else set()
-                self.setsForRandomEncounters = (oldSets | newSets) & self.allSets
+                self.availableCoreSets = coreSets & self.availableExpansions
+                oldExpansions = {"Dark Souls The Board Game", "Darkroot", "Executioner Chariot", "Explorers", "Iron Keep"} if "old" in self.settings["randomEncounterTypes"] else set()
+                newExpansions = (self.allExpansions - {"Dark Souls The Board Game", "Darkroot", "Executioner Chariot", "Explorers", "Iron Keep"}) if "new" in self.settings["randomEncounterTypes"] else set()
+                self.expansionsForRandomEncounters = (oldExpansions | newExpansions) & self.allExpansions
                 
                 if self.settings["treasureSwapOption"] == "Similar Soul Cost":
-                    generate_treasure_soul_cost(self.availableSets, self.charactersActive)
+                    generate_treasure_soul_cost(self.availableExpansions, self.charactersActive)
                 elif self.settings["treasureSwapOption"] == "Tier Based":
-                    generate_treasure_soul_cost(self.availableSets, self.charactersActive)
-                    populate_treasure_tiers(self.availableSets, self.charactersActive)
+                    generate_treasure_soul_cost(self.availableExpansions, self.charactersActive)
+                    populate_treasure_tiers(self.availableExpansions, self.charactersActive)
                 self.set_encounter_list()
                 self.create_buttons()
                 self.create_tabs()
@@ -682,15 +749,23 @@ try:
                 self.campaign = []
 
                 self.deathlyFreezeTarget = None
+                
+                root.withdraw()
+                progress = PopupWindow(root, labelText="Loading...", progressBar=True, loadingImage=True)
 
                 # Create images
                 # Enemies
-                for enemy in allEnemies:
+                for i, enemy in enumerate(allEnemies):
+                    progress.progressVar.set(i)
+                    root.update_idletasks()
                     allEnemies[enemy]["imageOld"] = self.create_image(enemy + ".png", "enemyOld")
                     allEnemies[enemy]["imageOldLevel4"] = self.create_image(enemy + ".png", "enemyOldLevel4")
                     allEnemies[enemy]["imageNew"] = self.create_image(enemy + ".png", "enemyNew")
                     if enemy in enemies:
                         allEnemies[enemy]["image text"] = ImageTk.PhotoImage(self.create_image(enemy + ".png", "enemyText"))
+                    
+                progress.destroy()
+                root.deiconify()
 
                 # Icons
                 self.enemyNode2 = self.create_image("enemy_node_2.png", "enemyNode")
@@ -718,212 +793,214 @@ try:
 
                 self.encounterTooltips = {
                     ("A Trusty Ally", "Tomb of Giants"): [
-                        {"image": self.onslaught, "imageName": "onslaught"}
+                        {"image": self.onslaught, "imageName": "onslaught", "original": True}
                         ],
                     ("Abandoned and Forgotten", "Painted World of Ariamis"): [
-                        {"image": self.eerie, "imageName": "eerie"}
+                        {"image": self.eerie, "imageName": "eerie", "original": True}
                         ],
                     ("Aged Sentinel", "The Sunless City"): [
-                        {"image": self.trial, "imageName": "trial"}
+                        {"image": self.trial, "imageName": "trial", "original": True}
                         ],
                     ("Altar of Bones", "Tomb of Giants"): [
-                        {"image": self.timer, "imageName": "timer"}
+                        {"image": self.timer, "imageName": "timer", "original": True}
                         ],
                     ("Archive Entrance", "The Sunless City"): [
-                        {"image": self.trial, "imageName": "trial"}
+                        {"image": self.trial, "imageName": "trial", "original": True}
                         ],
                     ("Broken Passageway", "The Sunless City"): [
-                        {"image": self.timer, "imageName": "timer"},
-                        {"image": self.timer, "imageName": "timer"}
+                        {"image": self.timer, "imageName": "timer", "original": True},
+                        {"image": self.timer, "imageName": "timer", "original": True}
                         ],
                     ("Castle Break In", "The Sunless City"): [
-                        {"image": self.timer, "imageName": "timer"},
+                        {"image": self.timer, "imageName": "timer", "original": True},
                         {},
-                        {"image": self.timer, "imageName": "timer"}
+                        {"image": self.timer, "imageName": "timer", "original": True}
                         ],
                     ("Central Plaza", "Painted World of Ariamis"): [
-                        {"image": self.barrage, "imageName": "barrage"}
+                        {"image": self.barrage, "imageName": "barrage", "original": True}
                         ],
                     ("Cold Snap", "Painted World of Ariamis"): [
-                        {"image": self.snowstorm, "imageName": "snowstorm"},
-                        {"image": self.bitterCold, "imageName": "bitterCold"},
-                        {"image": self.trial, "imageName": "trial"}
+                        {"image": self.snowstorm, "imageName": "snowstorm", "original": True},
+                        {"image": self.bitterCold, "imageName": "bitterCold", "original": True},
+                        {"image": self.trial, "imageName": "trial", "original": True}
                         ],
                     ("Corrupted Hovel", "Painted World of Ariamis"): [
-                        {"image": self.poisonMist, "imageName": "poisonMist"},
-                        {"image": self.trial, "imageName": "trial"}
+                        {"image": self.poisonMist, "imageName": "poisonMist", "original": True},
+                        {"image": self.trial, "imageName": "trial", "original": True}
                         ],
                     ("Corvian Host", "Painted World of Ariamis"): [
-                        {"image": self.poisonMist, "imageName": "poisonMist"}
+                        {"image": self.poisonMist, "imageName": "poisonMist", "original": True}
                         ],
                     ("Dark Resurrection", "Tomb of Giants"): [
-                        {"image": self.darkness, "imageName": "darkness"}
+                        {"image": self.darkness, "imageName": "darkness", "original": True}
                         ],
                     ("Death's Precipice", "Tomb of Giants"): [
-                        {"image": self.timer, "imageName": "timer"},
-                        {"image": self.timer, "imageName": "timer"}
+                        {"image": self.timer, "imageName": "timer", "original": False},
+                        {"image": self.timer, "imageName": "timer", "original": False}
                         ],
                     ("Deathly Freeze", "Painted World of Ariamis"): [
-                        {"image": self.snowstorm, "imageName": "snowstorm"},
-                        {"image": self.bitterCold, "imageName": "bitterCold"}
+                        {"image": self.snowstorm, "imageName": "snowstorm", "original": True},
+                        {"image": self.bitterCold, "imageName": "bitterCold", "original": True}
                         ],
                     ("Deathly Tolls", "The Sunless City"): [
-                        {"image": self.timer, "imageName": "timer"},
-                        {"image": self.mimic, "imageName": "mimic"},
-                        {"image": self.onslaught, "imageName": "onslaught"}
+                        {"image": self.timer, "imageName": "timer", "original": True},
+                        {"image": self.mimic, "imageName": "mimic", "original": True},
+                        {"image": self.onslaught, "imageName": "onslaught", "original": True}
                         ],
                     ("Depths of the Cathedral", "The Sunless City"): [
-                        {"image": self.mimic, "imageName": "mimic"}
+                        {"image": self.mimic, "imageName": "mimic", "original": True}
                         ],
                     ("Distant Tower", "Painted World of Ariamis"): [
-                        {"image": self.barrage, "imageName": "barrage"},
-                        {"image": self.trial, "imageName": "trial"}
+                        {"image": self.barrage, "imageName": "barrage", "original": True},
+                        {"image": self.trial, "imageName": "trial", "original": True}
                         ],
                     ("Eye of the Storm", "Painted World of Ariamis"): [
-                        {"image": self.hidden, "imageName": "hidden"},
-                        {"image": self.timer, "imageName": "timer"}
+                        {"image": self.hidden, "imageName": "hidden", "original": True},
+                        {"image": self.timer, "imageName": "timer", "original": False}
                         ],
                     ("Far From the Sun", "Tomb of Giants"): [
-                        {"image": self.darkness, "imageName": "darkness"}
+                        {"image": self.darkness, "imageName": "darkness", "original": True}
                         ],
                     ("Flooded Fortress", "The Sunless City"): [
-                        {"image": self.trial, "imageName": "trial"}
+                        {"image": self.trial, "imageName": "trial", "original": True}
                         ],
                     ("Frozen Revolutions", "Painted World of Ariamis"): [
-                        {"image": self.trial, "imageName": "trial"}
+                        {"image": self.trial, "imageName": "trial", "original": True}
                         ],
                     ("Frozen Sentries", "Painted World of Ariamis"): [
-                        {"image": self.snowstorm, "imageName": "snowstorm"}
+                        {"image": self.snowstorm, "imageName": "snowstorm", "original": True}
                         ],
                     ("Giant's Coffin", "Tomb of Giants"): [
-                        {"image": self.onslaught, "imageName": "onslaught"},
-                        {"image": self.trial, "imageName": "trial"},
-                        {"image": self.timer, "imageName": "timer"}
+                        {"image": self.onslaught, "imageName": "onslaught", "original": True},
+                        {"image": self.trial, "imageName": "trial", "original": True},
+                        {"image": self.timer, "imageName": "timer", "original": True}
                         ],
                     ("Gleaming Silver", "The Sunless City"): [
-                        {"image": self.trial, "imageName": "trial"},
-                        {"image": self.mimic, "imageName": "mimic"}
+                        {"image": self.trial, "imageName": "trial", "original": True},
+                        {"image": self.mimic, "imageName": "mimic", "original": True}
                         ],
                     ("Gnashing Beaks", "Painted World of Ariamis"): [
-                        {"image": self.trial, "imageName": "trial"}
+                        {"image": self.trial, "imageName": "trial", "original": True}
                         ],
                     ("Grim Reunion", "The Sunless City"): [
-                        {"image": self.trial, "imageName": "trial"},
-                        {"image": self.onslaught, "imageName": "onslaught"}
+                        {"image": self.trial, "imageName": "trial", "original": True},
+                        {"image": self.onslaught, "imageName": "onslaught", "original": False}
                         ],
                     ("Hanging Rafters", "The Sunless City"): [
-                        {"image": self.trial, "imageName": "trial"},
-                        {"image": self.onslaught, "imageName": "onslaught"}
+                        {"image": self.trial, "imageName": "trial", "original": True},
+                        {"image": self.onslaught, "imageName": "onslaught", "original": True}
                         ],
                     ("Illusionary Doorway", "The Sunless City"): [
-                        {"image": self.timer, "imageName": "timer"},
-                        {"image": self.illusion, "imageName": "illusion"}
+                        {"image": self.timer, "imageName": "timer", "original": False},
+                        {"image": self.illusion, "imageName": "illusion", "original": True}
                         ],
                     ("In Deep Water", "Tomb of Giants"): [
-                        {"image": self.timer, "imageName": "timer"}
+                        {"image": self.timer, "imageName": "timer", "original": True}
                         ],
                     ("Inhospitable Ground", "Painted World of Ariamis"): [
-                        {"image": self.snowstorm, "imageName": "snowstorm"},
-                        {"image": self.bitterCold, "imageName": "bitterCold"}
+                        {"image": self.snowstorm, "imageName": "snowstorm", "original": True},
+                        {"image": self.bitterCold, "imageName": "bitterCold", "original": False}
                         ],
                     ("Kingdom's Messengers", "The Sunless City"): [
-                        {"image": self.trial, "imageName": "trial"}
+                        {"image": self.trial, "imageName": "trial", "original": True}
                         ],
                     ("Lakeview Refuge", "Tomb of Giants"): [
-                        {"image": self.onslaught, "imageName": "onslaught"},
-                        {"image": self.darkness, "imageName": "darkness"},
-                        {"image": self.trial, "imageName": "trial"}
+                        {"image": self.onslaught, "imageName": "onslaught", "original": True},
+                        {"image": self.darkness, "imageName": "darkness", "original": True},
+                        {"image": self.trial, "imageName": "trial", "original": True}
                         ],
                     ("Last Rites", "Tomb of Giants"): [
-                        {"image": self.timer, "imageName": "timer"}
+                        {"image": self.timer, "imageName": "timer", "original": True}
                         ],
                     ("Last Shred of Light", "Tomb of Giants"): [
-                        {"image": self.darkness, "imageName": "darkness"}
+                        {"image": self.darkness, "imageName": "darkness", "original": True}
                         ],
                     ("Lost Chapel", "Tomb of Giants"): [
-                        {"image": self.timer, "imageName": "timer"},
-                        {"image": self.timer, "imageName": "timer"}
+                        {"image": self.timer, "imageName": "timer", "original": False},
+                        {"image": self.timer, "imageName": "timer", "original": False}
                         ],
                     ("Monstrous Maw", "Painted World of Ariamis"): [
-                        {"image": self.poisonMist, "imageName": "poisonMist"}
+                        {"image": self.poisonMist, "imageName": "poisonMist", "original": False}
                         ],
                     ("No Safe Haven", "Painted World of Ariamis"): [
-                        {"image": self.snowstorm, "imageName": "snowstorm"},
-                        {"image": self.bitterCold, "imageName": "bitterCold"},
-                        {"image": self.poisonMist, "imageName": "poisonMist"}
+                        {"image": self.poisonMist, "imageName": "poisonMist", "original": True},
+                        {"image": self.snowstorm, "imageName": "snowstorm", "original": False},
+                        {"image": self.bitterCold, "imageName": "bitterCold", "original": False}
                         ],
                     ("Painted Passage", "Painted World of Ariamis"): [
-                        {"image": self.snowstorm, "imageName": "snowstorm"}
+                        {"image": self.snowstorm, "imageName": "snowstorm", "original": True}
                         ],
                     ("Parish Church", "The Sunless City"): [
-                        {"image": self.mimic, "imageName": "mimic"},
-                        {"image": self.illusion, "imageName": "illusion"},
-                        {"image": self.trial, "imageName": "trial"}
+                        {"image": self.mimic, "imageName": "mimic", "original": True},
+                        {"image": self.illusion, "imageName": "illusion", "original": True},
+                        {"image": self.trial, "imageName": "trial", "original": True}
                         ],
                     ("Pitch Black", "Tomb of Giants"): [
-                        {"image": self.darkness, "imageName": "darkness"}
+                        {"image": self.darkness, "imageName": "darkness", "original": True}
                         ],
                     ("Promised Respite", "Painted World of Ariamis"): [
-                        {"image": self.snowstorm, "imageName": "snowstorm"}
+                        {"image": self.snowstorm, "imageName": "snowstorm", "original": True}
                         ],
                     ("Skeleton Overlord", "Tomb of Giants"): [
-                        {"image": self.timer, "imageName": "timer"}
+                        {"image": self.timer, "imageName": "timer", "original": True}
                         ],
                     ("Snowblind", "Painted World of Ariamis"): [
-                        {"image": self.snowstorm, "imageName": "snowstorm"},
-                        {"image": self.bitterCold, "imageName": "bitterCold"},
-                        {"image": self.hidden, "imageName": "hidden"}
+                        {"image": self.snowstorm, "imageName": "snowstorm", "original": True},
+                        {"image": self.bitterCold, "imageName": "bitterCold", "original": True},
+                        {"image": self.hidden, "imageName": "hidden", "original": True}
                         ],
                     ("Tempting Maw", "The Sunless City"): [
-                        {"image": self.trial, "imageName": "trial"}
+                        {"image": self.trial, "imageName": "trial", "original": True}
                         ],
                     ("The Beast From the Depths", "Tomb of Giants"): [
-                        {"image": self.trial, "imageName": "trial"}
+                        {"image": self.trial, "imageName": "trial", "original": True}
                         ],
                     ("The First Bastion", "Painted World of Ariamis"): [
-                        {"image": self.trial, "imageName": "trial"},
-                        {"image": self.timer, "imageName": "timer"},
-                        {"image": self.timer, "imageName": "timer"},
-                        {"image": self.timer, "imageName": "timer"}
+                        {"image": self.trial, "imageName": "trial", "original": True},
+                        {"image": self.timer, "imageName": "timer", "original": False},
+                        {"image": self.timer, "imageName": "timer", "original": False},
+                        {"image": self.timer, "imageName": "timer", "original": False}
                         ],
                     ("The Grand Hall", "The Sunless City"): [
-                        {"image": self.trial, "imageName": "trial"},
-                        {"image": self.mimic, "imageName": "mimic"}
+                        {"image": self.trial, "imageName": "trial", "original": True},
+                        {"image": self.mimic, "imageName": "mimic", "original": True}
                         ],
                     ("The Last Bastion", "Painted World of Ariamis"): [
-                        {"image": self.snowstorm, "imageName": "snowstorm"},
-                        {"image": self.bitterCold, "imageName": "bitterCold"},
-                        {"image": self.trial, "imageName": "trial"}
+                        {"image": self.snowstorm, "imageName": "snowstorm", "original": True},
+                        {"image": self.bitterCold, "imageName": "bitterCold", "original": True},
+                        {"image": self.trial, "imageName": "trial", "original": True}
                         ],
                     ("The Locked Grave", "Tomb of Giants"): [
-                        {"image": self.trial, "imageName": "trial"}
+                        {"image": self.trial, "imageName": "trial", "original": True}
                         ],
                     ("The Mass Grave", "Tomb of Giants"): [
-                        {"image": self.onslaught, "imageName": "onslaught"},
-                        {"image": self.timer, "imageName": "timer"}
+                        {"image": self.onslaught, "imageName": "onslaught", "original": True},
+                        {"image": self.timer, "imageName": "timer", "original": True},
+                        {"image": self.timer, "imageName": "timer", "original": True, "tweaked": False},
+                        {"image": self.timer, "imageName": "timer", "original": True, "tweaked": False}
                         ],
                     ("The Shine of Gold", "The Sunless City"): [
-                        {"image": self.timer, "imageName": "timer"}
+                        {"image": self.timer, "imageName": "timer", "original": True}
                         ],
                     ("Trecherous Tower", "Painted World of Ariamis"): [
-                        {"image": self.snowstorm, "imageName": "snowstorm"},
-                        {"image": self.bitterCold, "imageName": "bitterCold"},
-                        {"image": self.eerie, "imageName": "eerie"}
+                        {"image": self.snowstorm, "imageName": "snowstorm", "original": True},
+                        {"image": self.bitterCold, "imageName": "bitterCold", "original": True},
+                        {"image": self.eerie, "imageName": "eerie", "original": True}
                         ],
                     ("Trophy Room", "The Sunless City"): [
-                        {"image": self.barrage, "imageName": "barrage"}
+                        {"image": self.barrage, "imageName": "barrage", "original": False}
                         ],
                     ("Twilight Falls", "The Sunless City"): [
-                        {"image": self.illusion, "imageName": "illusion"}
+                        {"image": self.illusion, "imageName": "illusion", "original": True}
                         ],
                     ("Undead Sanctum", "The Sunless City"): [
-                        {"image": self.onslaught, "imageName": "onslaught"}
+                        {"image": self.onslaught, "imageName": "onslaught", "original": True}
                         ],
                     ("Unseen Scurrying", "Painted World of Ariamis"): [
-                        {"image": self.hidden, "imageName": "hidden"}
+                        {"image": self.hidden, "imageName": "hidden", "original": True}
                         ],
                     ("Velka's Chosen", "Painted World of Ariamis"): [
-                        {"image": self.barrage, "imageName": "barrage"}
+                        {"image": self.barrage, "imageName": "barrage", "original": False}
                         ]
                 }
                 
@@ -986,33 +1063,6 @@ try:
 
         def _on_mousewheel(self, event):
             self.encounterCanvas.yview_scroll(int(-1*(event.delta/120)), "units")
-            
-
-        def popup(self, labelText, buttonText):
-            """
-            Create a popup window for informing or requesting information from the user.
-
-            Required Parameters:
-                labelText: String
-                    The text displayed in the popup window.
-
-                buttonText: String
-                    The text to display in the first button. If None, no button is displayed.
-            """
-            try:
-                curframe = inspect.currentframe()
-                calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of popup: labelText=" + labelText + ", buttonText=" + str(buttonText), caller=calframe[1][3])
-                
-                self.set_bindings_buttons_menus(False)
-                p = PopupWindow(self.master, labelText, buttonText=buttonText)
-                self.master.wait_window(p.top)
-                self.set_bindings_buttons_menus(True)
-
-                adapter.debug("End of popup")
-            except Exception as e:
-                adapter.exception(e)
-                raise
 
 
         def add_encounter_to_campaign(self):
@@ -1031,7 +1081,7 @@ try:
                 # Build the dictionary that will be saved to JSON if this campaign is saved.
                 encounter = {
                     "name": self.selected["name"],
-                    "set": self.selected["set"],
+                    "expansion": self.selected["expansion"],
                     "level": self.selected["level"],
                     "enemies": self.newEnemies,
                     "rewardTreasure": self.rewardTreasure
@@ -1153,7 +1203,9 @@ try:
                 
                 # If the user did not select a JSON file, notify them that that was an invalid file.
                 if os.path.splitext(campaignFile)[1] != ".json":
-                    self.popup("Invalid DSBG-Shuffle campaign file.", "Ok")
+                    self.set_bindings_buttons_menus(False)
+                    PopupWindow(self.master, labelText="Invalid DSBG-Shuffle campaign file.", firstButton="Ok")
+                    self.set_bindings_buttons_menus(True)
                     adapter.debug("End of load_campaign (invalid file)")
                     return
                 
@@ -1165,7 +1217,9 @@ try:
                 # Check to see if there are any invalid names or levels in the JSON file.
                 # This is about as sure as I can be that you can't load random JSON into the app.
                 if any([(item["name"] not in encounters and item["name"] not in self.bosses) or item["level"] not in set([1, 2, 3, 4, "Mini Boss", "Main Boss", "Mega Boss"]) for item in self.campaign]):
-                    self.popup("Invalid DSBG-Shuffle campaign file.", "Ok")
+                    self.set_bindings_buttons_menus(False)
+                    PopupWindow(self.master, labelText="Invalid DSBG-Shuffle campaign file.", firstButton="Ok")
+                    self.set_bindings_buttons_menus(True)
                     self.campaign = []
                     adapter.debug("End of load_campaign (invalid file)")
                     return
@@ -1273,7 +1327,7 @@ try:
 
                     # Create the encounter card with saved enemies and tooltips.
                     self.newEnemies = campaignEncounter[0]["enemies"]
-                    self.edit_encounter_card(campaignEncounter[0]["name"], campaignEncounter[0]["set"], campaignEncounter[0]["level"], alts["enemySlots"])
+                    self.edit_encounter_card(campaignEncounter[0]["name"], campaignEncounter[0]["expansion"], campaignEncounter[0]["level"], alts["enemySlots"])
 
                 adapter.debug("End of load_campaign_encounter")
             except Exception as e:
@@ -1291,12 +1345,12 @@ try:
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of set_encounter_list", caller=calframe[1][3])
 
-                # Set the list of encounters based on available sets.
+                # Set the list of encounters based on available expansions.
                 self.encounterList = [encounter for encounter in encounters if (
                     (
-                        (self.availableSets & {"Explorers", "Phantoms"}
-                            or encounter not in encountersWithInvadersOrMimics)
-                        and any([frozenset(expCombo).issubset(self.availableSets) for expCombo in encounters[encounter]["setCombos"]])
+                        (self.availableExpansions & {"Explorers", "Phantoms"}
+                            or encounter not in encountersWithInvaders)
+                        and any([frozenset(expCombo).issubset(self.availableExpansions) for expCombo in encounters[encounter]["expansionCombos"]])
                     )
                     )]
 
@@ -1401,31 +1455,31 @@ try:
                 # Sort encounters by:
                 # 1. Encounters that have more than just level 4 encounters first
                 # 2. Core sets first
-                # 3. The Executioner's Chariot at the top of the mega bosses list because it has non-level 4 encounters
+                # 3. Executioner Chariot at the top of the mega bosses list because it has non-level 4 encounters
                 # 4. By level
                 # 5. Alphabetically
                 encountersSorted = [encounter for encounter in sorted(self.encounterList, key=lambda x: (
                     1 if encounters[x]["level"] == 4 else 0,
-                    0 if encounters[x]["set"] in coreSets else 1,
-                    0 if encounters[x]["set"] != "The Executioner's Chariot" else 1,
-                    encounters[x]["set"],
+                    0 if encounters[x]["expansion"] in coreSets else 1,
+                    0 if encounters[x]["expansion"] != "Executioner Chariot" else 1,
+                    encounters[x]["expansion"],
                     encounters[x]["level"],
                     encounters[x]["name"]))]
                 tvData = []
                 tvParents = dict()
                 x = 0
                 for e in encountersSorted:
-                    if encounters[e]["set"] not in [t[2] for t in tvData]:
-                        tvData.append(("", x, encounters[e]["set"], False))
-                        tvParents[encounters[e]["set"]] = {"exp": tvData[-1][1]}
+                    if encounters[e]["expansion"] not in [t[2] for t in tvData]:
+                        tvData.append(("", x, encounters[e]["expansion"], False))
+                        tvParents[encounters[e]["expansion"]] = {"exp": tvData[-1][1]}
                         x += 1
 
-                    if encounters[e]["level"] not in tvParents[encounters[e]["set"]]:
-                        tvData.append((tvParents[encounters[e]["set"]]["exp"], x, "Level " + str(encounters[e]["level"]), False))
-                        tvParents[encounters[e]["set"]][encounters[e]["level"]] = tvData[-1][1]
+                    if encounters[e]["level"] not in tvParents[encounters[e]["expansion"]]:
+                        tvData.append((tvParents[encounters[e]["expansion"]]["exp"], x, "Level " + str(encounters[e]["level"]), False))
+                        tvParents[encounters[e]["expansion"]][encounters[e]["level"]] = tvData[-1][1]
                         x += 1
 
-                    tvData.append((tvParents[encounters[e]["set"]][encounters[e]["level"]], x, e, True))
+                    tvData.append((tvParents[encounters[e]["expansion"]][encounters[e]["level"]], x, e, True))
                     x += 1
 
                 for item in tvData:
@@ -1609,7 +1663,7 @@ try:
                 menuBar.add_cascade(label="File", menu=self.fileMenu)
 
                 self.optionsMenu = tk.Menu(menuBar, tearoff=0)
-                self.optionsMenu.add_command(label="Enabled Sets", command=self.settings_window)
+                self.optionsMenu.add_command(label="View/Change Settings", command=self.settings_window)
                 menuBar.add_cascade(label="Settings", menu=self.optionsMenu)
 
                 self.helpMenu = tk.Menu(menuBar, tearoff=0)
@@ -1662,7 +1716,7 @@ try:
 
         def settings_window(self):
             """
-            Show the settings window, where a user can change what sets are active and
+            Show the settings window, where a user can change what expansions are active and
             whether random encounters show old, new, or both kinds of encounters.
             """
             try:
@@ -1684,11 +1738,11 @@ try:
                     self.encounter.config(image="")
                     self.treeviewEncounters.pack_forget()
                     self.treeviewEncounters.destroy()
-                    self.availableSets = set(self.settings["availableSets"])
-                    self.availableCoreSets = coreSets & self.availableSets
-                    oldSets = {"Dark Souls The Board Game", "Darkroot", "The Executioner's Chariot", "Explorers", "Iron Keep"} if "old" in self.settings["randomEncounterTypes"] else set()
-                    newSets = (self.allSets - {"Dark Souls The Board Game", "Darkroot", "The Executioner's Chariot", "Explorers", "Iron Keep"}) if "new" in self.settings["randomEncounterTypes"] else set()
-                    self.setsForRandomEncounters = (oldSets | newSets) & self.allSets
+                    self.availableExpansions = set(self.settings["availableExpansions"])
+                    self.availableCoreSets = coreSets & self.availableExpansions
+                    oldExpansions = {"Dark Souls The Board Game", "Darkroot", "Executioner Chariot", "Explorers", "Iron Keep"} if "old" in self.settings["randomEncounterTypes"] else set()
+                    newExpansions = (self.allExpansions - {"Dark Souls The Board Game", "Darkroot", "Executioner Chariot", "Explorers", "Iron Keep"}) if "new" in self.settings["randomEncounterTypes"] else set()
+                    self.expansionsForRandomEncounters = (oldExpansions | newExpansions) & self.allExpansions
                     self.set_encounter_list()
                     self.create_encounters_treeview()
                 
@@ -1746,14 +1800,11 @@ try:
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of create_image", caller=calframe[1][3])
 
-                imagePath = baseFolder + "\\images\\" + (imageFileName[:-4].replace(" (TSC)", "") + " rule bg.jpg" if imageType == "enemyText" else imageFileName[:-4] + " (TSC).jpg" if expansion == "The Sunless City" and imageFileName[:-4] in set(["Broken Passageway", "Central Plaza"]) else imageFileName.replace(" (TSC)", ""))
-                adapter.debug("\tOpening " + imagePath, caller=calframe[1][3])
-
                 if imageType == "encounter":
                     if imageFileName == "Ornstein and Smough.jpg":
                         width = 305
                         height = 850
-                    elif level < 4 and expansion in {"Dark Souls The Board Game", "Iron Keep", "Darkroot", "Explorers", "The Executioner's Chariot"}:
+                    elif level < 4 and expansion in {"Dark Souls The Board Game", "Iron Keep", "Darkroot", "Explorers", "Executioner Chariot"}:
                         width = 200
                         height = 300
                     elif level == 4:
@@ -1763,56 +1814,71 @@ try:
                         width = 400
                         height = 685
 
+                    fileName = imageFileName[:-4]
+                    if expansion == "The Sunless City" and imageFileName[:-4] in set(["Broken Passageway", "Central Plaza"]):
+                        fileName += " (TSC)"
+                    if self.settings["encounterTweaks"] == "off" and os.path.isfile(baseFolder + "\\images\\" + fileName + " (original).jpg"):
+                        fileName += " (original)"
+                    fileName += ".jpg"
+
+                    imagePath = baseFolder + "\\images\\" + fileName
+                    adapter.debug("\tOpening " + imagePath, caller=calframe[1][3])
                     self.encounterImage = Image.open(imagePath).resize((width, height), Image.Resampling.LANCZOS)
                     image = ImageTk.PhotoImage(self.encounterImage)
-                elif imageType == "enemyOld":
-                    image = Image.open(imagePath).resize((27, 27), Image.Resampling.LANCZOS)
-                elif imageType == "enemyOldLevel4":
-                    image = Image.open(imagePath).resize((32, 32), Image.Resampling.LANCZOS)
-                elif imageType == "enemyNew":
-                    image = Image.open(imagePath).resize((22, 22), Image.Resampling.LANCZOS)
                 elif imageType == "enemyText":
+                    imagePath = baseFolder + "\\images\\" + imageFileName[:-4].replace(" (TSC)", "") + " rule bg.jpg"
+                    adapter.debug("\tOpening " + imagePath, caller=calframe[1][3])
                     image = Image.open(imagePath).resize((14, 14), Image.Resampling.LANCZOS)
-                elif imageType == "resurrection":
-                    image = Image.open(imagePath).resize((9, 17), Image.Resampling.LANCZOS)
-                elif imageType == "playerCount":
-                    image = Image.open(imagePath).resize((12, 12), Image.Resampling.LANCZOS)
-                elif imageType == "enemyNode":
-                    image = Image.open(imagePath).resize((12, 12), Image.Resampling.LANCZOS)
-                elif imageType == "condition":
-                    image = Image.open(imagePath).resize((13, 13), Image.Resampling.LANCZOS)
-                elif imageType == "barrage":
-                    image = Image.open(imagePath).resize((41, 13), Image.Resampling.LANCZOS)
-                elif imageType == "bitterCold":
-                    image = Image.open(imagePath).resize((56, 13), Image.Resampling.LANCZOS)
-                elif imageType == "darkness":
-                    image = Image.open(imagePath).resize((48, 13), Image.Resampling.LANCZOS)
-                elif imageType == "eerie":
-                    image = Image.open(imagePath).resize((27, 13), Image.Resampling.LANCZOS)
-                elif imageType == "gangAlonne":
-                    image = Image.open(imagePath).resize((67, 13), Image.Resampling.LANCZOS)
-                elif imageType == "gangHollow":
-                    image = Image.open(imagePath).resize((69, 13), Image.Resampling.LANCZOS)
-                elif imageType == "gangScarecrow":
-                    image = Image.open(imagePath).resize((81, 13), Image.Resampling.LANCZOS)
-                elif imageType == "gangSkeleton":
-                    image = Image.open(imagePath).resize((73, 13), Image.Resampling.LANCZOS)
-                elif imageType == "hidden":
-                    image = Image.open(imagePath).resize((38, 13), Image.Resampling.LANCZOS)
-                elif imageType == "illusion":
-                    image = Image.open(imagePath).resize((36, 13), Image.Resampling.LANCZOS)
-                elif imageType == "mimic":
-                    image = Image.open(imagePath).resize((33, 13), Image.Resampling.LANCZOS)
-                elif imageType == "onslaught":
-                    image = Image.open(imagePath).resize((54, 13), Image.Resampling.LANCZOS)
-                elif imageType == "poisonMist":
-                    image = Image.open(imagePath).resize((61, 13), Image.Resampling.LANCZOS)
-                elif imageType == "snowstorm":
-                    image = Image.open(imagePath).resize((56, 13), Image.Resampling.LANCZOS)
-                elif imageType == "timer":
-                    image = Image.open(imagePath).resize((31, 13), Image.Resampling.LANCZOS)
-                elif imageType == "trial":
-                    image = Image.open(imagePath).resize((26, 13), Image.Resampling.LANCZOS)
+                else:
+                    imagePath = baseFolder + "\\images\\" + imageFileName.replace(" (TSC)", "")
+                    adapter.debug("\tOpening " + imagePath, caller=calframe[1][3])
+
+                    if imageType == "enemyOld":
+                        image = Image.open(imagePath).resize((27, 27), Image.Resampling.LANCZOS)
+                    elif imageType == "enemyOldLevel4":
+                        image = Image.open(imagePath).resize((32, 32), Image.Resampling.LANCZOS)
+                    elif imageType == "enemyNew":
+                        image = Image.open(imagePath).resize((22, 22), Image.Resampling.LANCZOS)
+                    elif imageType == "resurrection":
+                        image = Image.open(imagePath).resize((9, 17), Image.Resampling.LANCZOS)
+                    elif imageType == "playerCount":
+                        image = Image.open(imagePath).resize((12, 12), Image.Resampling.LANCZOS)
+                    elif imageType == "enemyNode":
+                        image = Image.open(imagePath).resize((12, 12), Image.Resampling.LANCZOS)
+                    elif imageType == "condition":
+                        image = Image.open(imagePath).resize((13, 13), Image.Resampling.LANCZOS)
+                    elif imageType == "barrage":
+                        image = Image.open(imagePath).resize((41, 13), Image.Resampling.LANCZOS)
+                    elif imageType == "bitterCold":
+                        image = Image.open(imagePath).resize((56, 13), Image.Resampling.LANCZOS)
+                    elif imageType == "darkness":
+                        image = Image.open(imagePath).resize((48, 13), Image.Resampling.LANCZOS)
+                    elif imageType == "eerie":
+                        image = Image.open(imagePath).resize((27, 13), Image.Resampling.LANCZOS)
+                    elif imageType == "gangAlonne":
+                        image = Image.open(imagePath).resize((67, 13), Image.Resampling.LANCZOS)
+                    elif imageType == "gangHollow":
+                        image = Image.open(imagePath).resize((69, 13), Image.Resampling.LANCZOS)
+                    elif imageType == "gangScarecrow":
+                        image = Image.open(imagePath).resize((81, 13), Image.Resampling.LANCZOS)
+                    elif imageType == "gangSkeleton":
+                        image = Image.open(imagePath).resize((73, 13), Image.Resampling.LANCZOS)
+                    elif imageType == "hidden":
+                        image = Image.open(imagePath).resize((38, 13), Image.Resampling.LANCZOS)
+                    elif imageType == "illusion":
+                        image = Image.open(imagePath).resize((36, 13), Image.Resampling.LANCZOS)
+                    elif imageType == "mimic":
+                        image = Image.open(imagePath).resize((33, 13), Image.Resampling.LANCZOS)
+                    elif imageType == "onslaught":
+                        image = Image.open(imagePath).resize((54, 13), Image.Resampling.LANCZOS)
+                    elif imageType == "poisonMist":
+                        image = Image.open(imagePath).resize((61, 13), Image.Resampling.LANCZOS)
+                    elif imageType == "snowstorm":
+                        image = Image.open(imagePath).resize((56, 13), Image.Resampling.LANCZOS)
+                    elif imageType == "timer":
+                        image = Image.open(imagePath).resize((31, 13), Image.Resampling.LANCZOS)
+                    elif imageType == "trial":
+                        image = Image.open(imagePath).resize((26, 13), Image.Resampling.LANCZOS)
 
                 adapter.debug("\tEnd of create_image", caller=calframe[1][3])
                 
@@ -1842,7 +1908,7 @@ try:
 
                 self.load_encounter(encounter=choice([encounter for encounter in self.encounterList if (
                     encounters[encounter]["level"] == level
-                    and (encounters[encounter]["set"] in self.setsForRandomEncounters
+                    and (encounters[encounter]["expansion"] in self.expansionsForRandomEncounters
                         or encounters[encounter]["level"] == 4))]))
 
                 adapter.debug("\tEnd of random_encounter", caller=calframe[1][3])
@@ -1861,7 +1927,7 @@ try:
                     Default: None
 
                 encounter: String
-                    The expansion of the encounter.
+                    The name of the encounter.
                     Default: None
             """
             try:
@@ -1900,20 +1966,12 @@ try:
                 with open(baseFolder + "\\encounters\\" + encounterName + ".json") as alternativesFile:
                     alts = load(alternativesFile)
 
-                # If this encounter has a Trial Enemies file, load it.
-                if os.path.isfile(baseFolder + "\\encounters\\" + encounterName + " Trial Enemies.json"):
-                    adapter.debug("\tOpening " + baseFolder + "\\encounters\\" + encounterName + " Trial Enemies.json", caller=calframe[1][3])
-                    with open(baseFolder + "\\encounters\\" + encounterName + " Trial Enemies.json") as trialFile:
-                        self.trialEnemies = load(trialFile)
-                else:
-                    self.trialEnemies = []
-
                 self.selected["alternatives"] = []
                 self.selected["enemySlots"] = alts["enemySlots"]
 
-                # Use only alternative enemies for sets the user has activated in the settings.
+                # Use only alternative enemies for expansions the user has activated in the settings.
                 for expansionCombo in alts["alternatives"]:
-                    if set(expansionCombo.split(",")).issubset(self.availableSets):
+                    if set(expansionCombo.split(",")).issubset(self.availableExpansions):
                         self.selected["alternatives"] += alts["alternatives"][expansionCombo]
 
                 self.newTiles = dict()
@@ -1953,16 +2011,13 @@ try:
 
                 # Make sure a new set of enemies is chosen each time, otherwise it
                 # feels like the program isn't doing anything.
-                # Also, make sure we're rotating through Trial enemies faster than
-                # pure random - encounters such as Corvian Host do not often show
-                # Crow Demons as the Trial enemy if you have all sets enabled!
                 oldEnemies = [e for e in self.newEnemies]
                 self.newEnemies = choice(self.selected["alternatives"])
                 if len(self.selected["alternatives"]) > 1:
                     while self.newEnemies == oldEnemies:
                         self.newEnemies = choice(self.selected["alternatives"])
 
-                self.edit_encounter_card(self.selected["name"], self.selected["set"], self.selected["level"], self.selected["enemySlots"])
+                self.edit_encounter_card(self.selected["name"], self.selected["expansion"], self.selected["level"], self.selected["enemySlots"])
 
                 adapter.debug("\tEnd of shuffle_enemies", caller=calframe[1][3])
             except Exception as e:
@@ -2012,7 +2067,7 @@ try:
                             x = 116 + (43 * e)
                             y = 78 + (47 * slotNum)
                             imageType = "imageOldLevel4"
-                        elif expansion in {"Dark Souls The Board Game", "Iron Keep", "Darkroot", "Explorers", "The Executioner's Chariot"}:
+                        elif expansion in {"Dark Souls The Board Game", "Iron Keep", "Darkroot", "Explorers", "Executioner Chariot"}:
                             x = 67 + (40 * e)
                             y = 66 + (46 * slotNum)
                             imageType = "imageOld"
@@ -2021,11 +2076,11 @@ try:
                             y = 323 + (29 * (slotNum - (0 if slotNum < 4 else 4 if slotNum < 6 else 6))) + (((1 if slotNum < 4 else 2 if slotNum < 6 else 3) - 1) * 122)
                             imageType = "imageNew"
 
-                        if enemyIds[self.newEnemies[s]].name == "Standard Invader/Hungry Mimic":
-                            invaders = (["Hungry Mimic"] if "Explorers" in self.availableSets else []) + ([invader for invader in invadersStandard if invader != "Hungry Mimic" and "Phantoms" in self.availableSets])
+                        if enemyIds[self.newEnemies[s]].name == "Standard Invader":
+                            invaders = ([invader for invader in invadersStandard if "Phantoms" in self.availableExpansions])
                             image = allEnemies[choice(invaders)][imageType]
-                        elif enemyIds[self.newEnemies[s]].name == "Advanced Invader/Voracious Mimic":
-                            invaders = (["Voracious Mimic"] if "Explorers" in self.availableSets else []) + ([invader for invader in invadersAdvanced if invader != "Voracious Mimic" and "Phantoms" in self.availableSets])
+                        elif enemyIds[self.newEnemies[s]].name == "Advanced Invader":
+                            invaders = ([invader for invader in invadersAdvanced if "Phantoms" in self.availableExpansions])
                             image = allEnemies[choice(invaders)][imageType]
                         else:
                             image = allEnemies[enemyIds[self.newEnemies[s]].name][imageType]
@@ -2043,7 +2098,7 @@ try:
                     self.aged_sentinel()
                 elif name == "Castle Break In":
                     self.castle_break_in()
-                elif name == "Central Plaza":
+                elif name == "Central Plaza" and expansion == "The Sunless City":
                     self.central_plaza()
                 elif name == "Cloak and Feathers":
                     self.cloak_and_feathers()
@@ -2201,7 +2256,10 @@ try:
                     return
 
                 for i, tooltip in enumerate(self.encounterTooltips.get((name, set), [])):
-                    if not tooltip:
+                    if (
+                        not tooltip
+                        or self.settings["encounterTweaks"] == "off" and not tooltip["original"]
+                        or self.settings["encounterTweaks"] == "on" and not tooltip.get("tweaked", True)):
                         continue
                     self.create_tooltip(tooltipDict=tooltip, x=142, y=199 + (15.5 * i))
 
@@ -2276,7 +2334,7 @@ try:
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableSets), set(self.charactersActive))
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 newTreasureLines = self.new_treasure_name(newTreasure)
@@ -2297,7 +2355,10 @@ try:
                     
                 target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])]].name
                 tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
-                self.create_tooltip(tooltipDict=tooltipDict, x=143, y=243)
+                if self.settings["encounterTweaks"] == "on":
+                    self.create_tooltip(tooltipDict=tooltipDict, x=143, y=243)
+                else:
+                    self.create_tooltip(tooltipDict=tooltipDict, x=143, y=262)
 
                 adapter.debug("\tEnd of central_plaza", caller=calframe[1][3])
             except Exception as e:
@@ -2364,25 +2425,15 @@ try:
                 self.create_tooltip(tooltipDict=tooltipDict, x=159, y=238)
                 self.create_tooltip(tooltipDict=tooltipDict, x=255, y=238)
                 self.create_tooltip(tooltipDict=tooltipDict, x=242, y=251)
+                self.create_tooltip(tooltipDict=tooltipDict, x=188, y=276)
+                self.create_tooltip(tooltipDict=tooltipDict, x=145, y=288)
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
-                if enemiesDict[target].armor + enemiesDict[target].resist <= 3:
-                    self.create_tooltip(tooltipDict=tooltipDict, x=185, y=274)
-                    text1 = "Increase       block and resistance"
-                    text2 = "values by 1 and their attacks gain     ."
-                    self.encounterImage.paste(im=self.bleed, box=(301, 284), mask=self.bleed)
-                    imageWithText.text((140, 273), text1, "black", font, spacing=0)
-                    imageWithText.text((140, 285), text2, "black", font, spacing=0)
-                else:
-                    self.create_tooltip(tooltipDict=tooltipDict, x=145, y=288)
-                    text = "       attacks gain     ."
-                    self.encounterImage.paste(im=self.bleed, box=(223, 287), mask=self.bleed)
-                    imageWithText.text((140, 288), text, "black", font, spacing=0)
                 
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableSets), set(self.charactersActive))
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 newTreasureLines = self.new_treasure_name(newTreasure)
@@ -2420,7 +2471,7 @@ try:
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableSets), set(self.charactersActive))
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
@@ -2535,7 +2586,7 @@ try:
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableSets), set(self.charactersActive))
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
@@ -2561,12 +2612,12 @@ try:
                 text1 = "Increase       "
                 if fourTarget:
                     tooltipDict = {"image": allEnemies[fourTarget[0]]["image text"], "imageName": fourTarget[0]}
-                    self.create_tooltip(tooltipDict=tooltipDict, x=186, y=270)
+                    self.create_tooltip(tooltipDict=tooltipDict, x=186, y=255)
                 else:
                     tooltipDict = {"image": allEnemies[targets[0]]["image text"], "imageName": targets[0]}
-                    self.create_tooltip(tooltipDict=tooltipDict, x=186, y=270)
+                    self.create_tooltip(tooltipDict=tooltipDict, x=186, y=255)
                     tooltipDict = {"image": allEnemies[targets[1]]["image text"], "imageName": targets[1]}
-                    self.create_tooltip(tooltipDict=tooltipDict, x=228, y=270)
+                    self.create_tooltip(tooltipDict=tooltipDict, x=228, y=255)
                     text1 += " and       "
                 text1 += "block and resistance"
                 text2 = "values by 1. Once these enemies have been"
@@ -2574,12 +2625,12 @@ try:
                 
                 target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])]].name
                 tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
-                self.create_tooltip(tooltipDict=tooltipDict, x=226, y=296)
+                self.create_tooltip(tooltipDict=tooltipDict, x=226, y=281)
                 self.create_tooltip(tooltipDict=tooltipDict, x=65, y=147)
-                self.encounterImage.paste(im=self.enemyNode2, box=(260, 296), mask=self.enemyNode2)
-                imageWithText.text((140, 270), text1, "black", font)
-                imageWithText.text((140, 283), text2, "black", font)
-                imageWithText.text((140, 297), text3, "black", font)
+                self.encounterImage.paste(im=self.enemyNode2, box=(260, 281), mask=self.enemyNode2)
+                imageWithText.text((140, 255), text1, "black", font)
+                imageWithText.text((140, 268), text2, "black", font)
+                imageWithText.text((140, 282), text3, "black", font)
 
                 adapter.debug("\tEnd of eye_of_the_storm", caller=calframe[1][3])
             except Exception as e:
@@ -2596,7 +2647,7 @@ try:
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableSets), set(self.charactersActive))
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
@@ -2616,6 +2667,11 @@ try:
 
                 self.create_tooltip(tooltipDict=tooltipDict, x=142, y=215)
 
+                if self.settings["encounterTweaks"] == "on":
+                    target = self.newTiles[1][1][0]
+                    tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                    self.create_tooltip(tooltipDict=tooltipDict, x=216, y=196)
+
                 adapter.debug("\tEnd of flooded_fortress", caller=calframe[1][3])
             except Exception as e:
                 adapter.exception(e)
@@ -2630,15 +2686,20 @@ try:
 
                 target = self.newTiles[3][0][0]
                 tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
-                self.create_tooltip(tooltipDict=tooltipDict, x=143, y=224)
-                self.create_tooltip(tooltipDict=tooltipDict, x=143, y=237)
-                self.create_tooltip(tooltipDict=tooltipDict, x=348, y=237)
-                self.create_tooltip(tooltipDict=tooltipDict, x=187, y=275)
+                if self.settings["encounterTweaks"] == "on":
+                    self.create_tooltip(tooltipDict=tooltipDict, x=143, y=224)
+                    self.create_tooltip(tooltipDict=tooltipDict, x=143, y=237)
+                    self.create_tooltip(tooltipDict=tooltipDict, x=349, y=237)
+                    self.create_tooltip(tooltipDict=tooltipDict, x=187, y=275)
+                else:
+                    self.create_tooltip(tooltipDict=tooltipDict, x=143, y=227)
+                    self.create_tooltip(tooltipDict=tooltipDict, x=143, y=242)
+                    self.create_tooltip(tooltipDict=tooltipDict, x=349, y=242)
                 
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableSets), set(self.charactersActive))
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
@@ -2669,7 +2730,7 @@ try:
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableSets), set(self.charactersActive))
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
@@ -2737,7 +2798,7 @@ try:
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableSets), set(self.charactersActive))
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
@@ -2762,7 +2823,7 @@ try:
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableSets), set(self.charactersActive))
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 newTreasureLines = self.new_treasure_name(newTreasure)
@@ -2805,7 +2866,7 @@ try:
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableSets), set(self.charactersActive))
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
@@ -2828,7 +2889,7 @@ try:
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableSets), set(self.charactersActive))
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
@@ -2878,7 +2939,7 @@ try:
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableSets), set(self.charactersActive))
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
@@ -2905,7 +2966,7 @@ try:
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableSets), set(self.charactersActive))
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
@@ -2928,7 +2989,7 @@ try:
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableSets), set(self.charactersActive))
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
@@ -3013,7 +3074,7 @@ try:
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableSets), set(self.charactersActive))
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
@@ -3036,7 +3097,7 @@ try:
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableSets), set(self.charactersActive))
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
@@ -3063,7 +3124,7 @@ try:
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableSets), set(self.charactersActive))
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
@@ -3153,7 +3214,7 @@ try:
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableSets), set(self.charactersActive))
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
@@ -3181,7 +3242,7 @@ try:
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableSets), set(self.charactersActive))
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
@@ -3219,16 +3280,26 @@ try:
 
                 target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])]].name
                 tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
-                self.create_tooltip(tooltipDict=tooltipDict, x=237, y=215)
+                if self.settings["encounterTweaks"] == "on":
+                    self.create_tooltip(tooltipDict=tooltipDict, x=237, y=215)
+                else:
+                    self.create_tooltip(tooltipDict=tooltipDict, x=361, y=212)
 
                 target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])+1]].name
                 tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
-                self.create_tooltip(tooltipDict=tooltipDict, x=237, y=230)
+                if self.settings["encounterTweaks"] == "on":
+                    self.create_tooltip(tooltipDict=tooltipDict, x=237, y=230)
+                else:
+                    self.create_tooltip(tooltipDict=tooltipDict, x=185, y=237)
 
                 target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])+2]].name
                 tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
-                self.create_tooltip(tooltipDict=tooltipDict, x=237, y=245)
-                self.create_tooltip(tooltipDict=tooltipDict, x=208, y=197)
+                if self.settings["encounterTweaks"] == "on":
+                    self.create_tooltip(tooltipDict=tooltipDict, x=237, y=245)
+                    self.create_tooltip(tooltipDict=tooltipDict, x=208, y=197)
+                else:
+                    self.create_tooltip(tooltipDict=tooltipDict, x=247, y=249)
+                    self.create_tooltip(tooltipDict=tooltipDict, x=216, y=197)
 
                 adapter.debug("\tEnd of the_first_bastion", caller=calframe[1][3])
             except Exception as e:
@@ -3291,7 +3362,7 @@ try:
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableSets), set(self.charactersActive))
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
@@ -3336,7 +3407,7 @@ try:
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableSets), set(self.charactersActive))
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
@@ -3389,7 +3460,7 @@ try:
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableSets), set(self.charactersActive))
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
@@ -3432,13 +3503,17 @@ try:
                 target = self.newTiles[2][0][0]
                 tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=61, y=147)
-                self.create_tooltip(tooltipDict=tooltipDict, x=210, y=220)
-                self.create_tooltip(tooltipDict=tooltipDict, x=145, y=267)
+                if self.settings["encounterTweaks"] == "on":
+                    self.create_tooltip(tooltipDict=tooltipDict, x=210, y=220)
+                    self.create_tooltip(tooltipDict=tooltipDict, x=145, y=267)
+                else:
+                    self.create_tooltip(tooltipDict=tooltipDict, x=210, y=197)
+                    self.create_tooltip(tooltipDict=tooltipDict, x=145, y=244)
                 
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableSets), set(self.charactersActive))
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
@@ -3497,7 +3572,7 @@ try:
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableSets), set(self.charactersActive))
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
@@ -3519,7 +3594,7 @@ try:
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableSets), set(self.charactersActive))
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
@@ -3542,7 +3617,7 @@ try:
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableSets), set(self.charactersActive))
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
@@ -3565,14 +3640,17 @@ try:
                 target = sorted([enemy for enemy in self.newTiles[2][0] + self.newTiles[2][1]], key=lambda x: enemiesDict[x].difficulty, reverse=True)[0]
                 tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=65, y=147)
-                self.create_tooltip(tooltipDict=tooltipDict, x=297, y=219)
-                self.create_tooltip(tooltipDict=tooltipDict, x=210, y=245)
-                self.create_tooltip(tooltipDict=tooltipDict, x=239, y=195)
+                if self.settings["encounterTweaks"] == "on":
+                    self.create_tooltip(tooltipDict=tooltipDict, x=297, y=219)
+                    self.create_tooltip(tooltipDict=tooltipDict, x=210, y=245)
+                else:
+                    self.create_tooltip(tooltipDict=tooltipDict, x=297, y=195)
+                    self.create_tooltip(tooltipDict=tooltipDict, x=210, y=219)
                 
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableSets), set(self.charactersActive))
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
@@ -3587,7 +3665,7 @@ try:
 
 
     coreSets = {"Dark Souls The Board Game", "Painted World of Ariamis", "Tomb of Giants", "The Sunless City"}
-    encountersWithInvadersOrMimics = {
+    encountersWithInvaders = {
         "Blazing Furnace",
         "Brume Tower",
         "Courtyard of Lothric",
@@ -3596,20 +3674,35 @@ try:
     }
     
     root = tk.Tk()
+    root.withdraw()
+    root.attributes('-alpha', 0.0)
+        
     root.title("Dark Souls The Board Game Encounter Shuffler")
     root.tk.call("source", "Azure-ttk-theme-main\\azure.tcl")
     root.tk.call("set_theme", "dark")
-    root.iconphoto(True, tk.PhotoImage(file=os.path.join(baseFolder, "icon.png")))
+    root.iconphoto(True, tk.PhotoImage(file=os.path.join(baseFolder, "bonfire.png")))
+
+    # Check for a new version
+    today = datetime.datetime.today()
+    with open(baseFolder + "\\version.txt") as vFile:
+        version = vFile.readlines()
+    if int(version[1]) != today.month:
+        version[1] = today.month
+        with open(os.path.join(baseFolder, "version.txt"), "w") as v:
+            v.write("\n".join([str(line).replace("\n", "") for line in version]))
+
+        response = requests.get("https://api.github.com/repos/DanDuhon/DSBG-Shuffle/releases/latest")
+        if version[0].replace("\n", "") != response.json()["name"]:
+            p = PopupWindow(root, "A new version of DSBG-Shuffle is available!\nCheck it out on Github!\n\nIf you don't want to see this notification anymore,\ndisable checking for updates in the settings.", firstButton="Ok", secondButton=True)
+            root.wait_window(p)
 
     app = Application(root)
     app.pack(fill="both", expand=True)
-
-    root.update()
-    root.maxsize(root.winfo_screenwidth(), root.winfo_screenheight())
+    
+    center(root)
     x_cordinate = int((root.winfo_screenwidth() / 2) - (root.winfo_width() / 2))
     y_cordinate = int((root.winfo_screenheight() / 2) - (root.winfo_height() / 2))
-    root.geometry("+{}+{}".format(x_cordinate, y_cordinate-20))
-
+    root.attributes('-alpha', 1.0)
     root.mainloop()
     adapter.debug("Closing application")
     root.destroy()
