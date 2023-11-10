@@ -30,13 +30,13 @@ try:
         """
         win.update_idletasks()
         width = win.winfo_width()
-        frm_width = win.winfo_rootx() - win.winfo_x()
-        win_width = width + 2 * frm_width
+        frmWidth = win.winfo_rootx() - win.winfo_x()
+        winWidth = width + 2 * frmWidth
         height = win.winfo_height()
-        titlebar_height = win.winfo_rooty() - win.winfo_y()
-        win_height = height + titlebar_height + frm_width
-        x = win.winfo_screenwidth() // 2 - win_width // 2
-        y = win.winfo_screenheight() // 2 - win_height // 2
+        titlebarHeight = win.winfo_rooty() - win.winfo_y()
+        winHeight = height + titlebarHeight + frmWidth
+        x = win.winfo_screenwidth() // 2 - winWidth // 2
+        y = win.winfo_screenheight() // 2 - winHeight // 2
         win.geometry('{}x{}+{}+{}'.format(width, height, x, y))
         win.deiconify()
 
@@ -245,7 +245,7 @@ try:
                     "Characters Expansion": {"button": None, "value": tk.IntVar()}
                 }
                 
-                self.expansionsFrame = ttk.LabelFrame(top, text="Enabled Enemies From Expansions", padding=(20, 10))
+                self.expansionsFrame = ttk.LabelFrame(top, text="Enabled Expansions", padding=(20, 10))
                 self.expansionsFrame.grid(row=0, column=0, padx=(20, 10), pady=(20, 10), sticky="nsew", rowspan=4, columnspan=2)
                 for i, a in enumerate(self.expansions):
                     self.expansions[a]["value"].set(1 if a in self.settings["availableExpansions"] else 0)
@@ -802,7 +802,8 @@ try:
                         {"image": self.trial, "imageName": "trial", "original": True}
                         ],
                     ("Altar of Bones", "Tomb of Giants"): [
-                        {"image": self.timer, "imageName": "timer", "original": True}
+                        {"image": self.timer, "imageName": "timer", "original": True},
+                        {"image": self.onslaught, "imageName": "onslaught", "original": False}
                         ],
                     ("Archive Entrance", "The Sunless City"): [
                         {"image": self.trial, "imageName": "trial", "original": True}
