@@ -1798,7 +1798,10 @@ try:
                     if imageType == "enemyOld":
                         image = Image.open(imagePath).resize((27, 27), Image.Resampling.LANCZOS)
                     elif imageType == "enemyOldLevel4":
-                        image = Image.open(imagePath).resize((32, 32), Image.Resampling.LANCZOS)
+                        if imageFileName[:-4] in invadersAdvanced:
+                            image = Image.open(imagePath).resize((38, 38), Image.Resampling.LANCZOS)
+                        else:
+                            image = Image.open(imagePath).resize((32, 32), Image.Resampling.LANCZOS)
                     elif imageType == "enemyNew":
                         image = Image.open(imagePath).resize((22, 22), Image.Resampling.LANCZOS)
                     elif imageType == "resurrection":
@@ -2026,7 +2029,7 @@ try:
                     for e in range(slot):
                         self.newTiles[1 if slotNum < 4 else 2 if slotNum < 6 else 3][slotNum - (0 if slotNum < 4 else 4 if slotNum < 6 else 6)].append(enemyIds[self.newEnemies[s]].name)
                         if level == 4:
-                            x = 116 + (43 * e)
+                            x = 116 + (43 * e) - (3 if enemyIds[self.newEnemies[s]].name == "Advanced Invader" else 0)
                             y = 78 + (47 * slotNum)
                             imageType = "imageOldLevel4"
                         elif expansion in {"Dark Souls The Board Game", "Iron Keep", "Darkroot", "Explorers", "Executioner Chariot"}:
