@@ -304,14 +304,6 @@ try:
                 self.randomEncounters["old"]["button"].grid(row=0, column=0, padx=5, pady=10, sticky="nsew")
                 self.randomEncounters["new"]["button"].grid(row=1, column=0, padx=5, pady=10, sticky="nsew")
                 
-                self.encounterTweaks = {"button": None, "value": tk.IntVar(), "tooltipText": "Enables changes to (new style) encounters that attempt to fix some issues such as being able to rest/heal between tiles.\n\nThese have been tested, but only by me. I'm always open to feedback/suggestions for these."}
-                self.encounterTweaksFrame = ttk.LabelFrame(top, text="Encounter Tweaks", padding=(20, 10))
-                self.encounterTweaksFrame.grid(row=2, column=5, padx=(20, 10), pady=(20, 10), sticky="nsew")
-                self.encounterTweaks["value"].set(1 if "on" in self.settings["encounterTweaks"] else 0)
-                self.encounterTweaks["button"] = ttk.Checkbutton(self.encounterTweaksFrame, text="Enable Encounter Tweaks", variable=self.encounterTweaks["value"])
-                self.encounterTweaks["button"].grid(row=0, column=0, padx=5, pady=10, sticky="nsew")
-                CreateToolTip(self.encounterTweaks["button"], self.encounterTweaks["tooltipText"])
-                
                 self.updateCheck = {"button": None, "value": tk.IntVar(), "tooltipText": "If enabled, makes an API call to Github once a month when the app is opened to check for a new version.\n\nThe app won't download anything or update itself but will let you know if there's a new version."}
                 self.updateCheckFrame = ttk.LabelFrame(top, text="Check For Updates", padding=(20, 10))
                 self.updateCheckFrame.grid(row=3, column=5, padx=(20, 10), pady=(20, 10), sticky="nsew")
@@ -455,7 +447,6 @@ try:
                     "randomEncounterTypes": list(randomEncounterTypes),
                     "charactersActive": list(charactersActive),
                     "treasureSwapOption": self.treasureSwapOption.get(),
-                    "encounterTweaks": "on" if self.encounterTweaks["value"].get() == 1 else "off",
                     "updateCheck": "on" if self.updateCheck["value"].get() == 1 else "off"
                 }
 
@@ -793,215 +784,187 @@ try:
 
                 self.encounterTooltips = {
                     ("A Trusty Ally", "Tomb of Giants"): [
-                        {"image": self.onslaught, "imageName": "onslaught", "original": True}
+                        {"image": self.onslaught, "imageName": "onslaught"}
                         ],
                     ("Abandoned and Forgotten", "Painted World of Ariamis"): [
-                        {"image": self.eerie, "imageName": "eerie", "original": True}
+                        {"image": self.eerie, "imageName": "eerie"}
                         ],
                     ("Aged Sentinel", "The Sunless City"): [
-                        {"image": self.trial, "imageName": "trial", "original": True}
+                        {"image": self.trial, "imageName": "trial"}
                         ],
                     ("Altar of Bones", "Tomb of Giants"): [
-                        {"image": self.timer, "imageName": "timer", "original": True},
-                        {"image": self.onslaught, "imageName": "onslaught", "original": False}
+                        {"image": self.timer, "imageName": "timer"}
                         ],
                     ("Archive Entrance", "The Sunless City"): [
-                        {"image": self.trial, "imageName": "trial", "original": True}
+                        {"image": self.trial, "imageName": "trial"}
                         ],
                     ("Broken Passageway", "The Sunless City"): [
-                        {"image": self.timer, "imageName": "timer", "original": True},
-                        {"image": self.timer, "imageName": "timer", "original": True}
+                        {"image": self.timer, "imageName": "timer"},
+                        {"image": self.timer, "imageName": "timer"}
                         ],
                     ("Castle Break In", "The Sunless City"): [
-                        {"image": self.timer, "imageName": "timer", "original": True},
+                        {"image": self.timer, "imageName": "timer"},
                         {},
-                        {"image": self.timer, "imageName": "timer", "original": True}
+                        {"image": self.timer, "imageName": "timer"}
                         ],
                     ("Central Plaza", "Painted World of Ariamis"): [
-                        {"image": self.barrage, "imageName": "barrage", "original": True}
+                        {"image": self.barrage, "imageName": "barrage"}
                         ],
                     ("Cold Snap", "Painted World of Ariamis"): [
-                        {"image": self.snowstorm, "imageName": "snowstorm", "original": True},
-                        {"image": self.bitterCold, "imageName": "bitterCold", "original": True},
-                        {"image": self.trial, "imageName": "trial", "original": True}
+                        {"image": self.snowstorm, "imageName": "snowstorm"},
+                        {"image": self.bitterCold, "imageName": "bitterCold"},
+                        {"image": self.trial, "imageName": "trial"}
                         ],
                     ("Corrupted Hovel", "Painted World of Ariamis"): [
-                        {"image": self.poisonMist, "imageName": "poisonMist", "original": True},
-                        {"image": self.trial, "imageName": "trial", "original": True}
+                        {"image": self.poisonMist, "imageName": "poisonMist"},
+                        {"image": self.trial, "imageName": "trial"}
                         ],
                     ("Corvian Host", "Painted World of Ariamis"): [
-                        {"image": self.poisonMist, "imageName": "poisonMist", "original": True}
+                        {"image": self.poisonMist, "imageName": "poisonMist"}
                         ],
                     ("Dark Resurrection", "Tomb of Giants"): [
-                        {"image": self.darkness, "imageName": "darkness", "original": True}
-                        ],
-                    ("Death's Precipice", "Tomb of Giants"): [
-                        {"image": self.timer, "imageName": "timer", "original": False},
-                        {"image": self.timer, "imageName": "timer", "original": False}
+                        {"image": self.darkness, "imageName": "darkness"}
                         ],
                     ("Deathly Freeze", "Painted World of Ariamis"): [
-                        {"image": self.snowstorm, "imageName": "snowstorm", "original": True},
-                        {"image": self.bitterCold, "imageName": "bitterCold", "original": True}
+                        {"image": self.snowstorm, "imageName": "snowstorm"},
+                        {"image": self.bitterCold, "imageName": "bitterCold"}
                         ],
                     ("Deathly Tolls", "The Sunless City"): [
-                        {"image": self.timer, "imageName": "timer", "original": True},
-                        {"image": self.mimic, "imageName": "mimic", "original": True},
-                        {"image": self.onslaught, "imageName": "onslaught", "original": True}
+                        {"image": self.timer, "imageName": "timer"},
+                        {"image": self.mimic, "imageName": "mimic"},
+                        {"image": self.onslaught, "imageName": "onslaught"}
                         ],
                     ("Depths of the Cathedral", "The Sunless City"): [
-                        {"image": self.mimic, "imageName": "mimic", "original": True}
+                        {"image": self.mimic, "imageName": "mimic"}
                         ],
                     ("Distant Tower", "Painted World of Ariamis"): [
-                        {"image": self.barrage, "imageName": "barrage", "original": True},
-                        {"image": self.trial, "imageName": "trial", "original": True}
+                        {"image": self.barrage, "imageName": "barrage"},
+                        {"image": self.trial, "imageName": "trial"}
                         ],
                     ("Eye of the Storm", "Painted World of Ariamis"): [
-                        {"image": self.hidden, "imageName": "hidden", "original": True},
-                        {"image": self.timer, "imageName": "timer", "original": False}
+                        {"image": self.hidden, "imageName": "hidden"}
                         ],
                     ("Far From the Sun", "Tomb of Giants"): [
-                        {"image": self.darkness, "imageName": "darkness", "original": True}
+                        {"image": self.darkness, "imageName": "darkness"}
                         ],
                     ("Flooded Fortress", "The Sunless City"): [
-                        {"image": self.trial, "imageName": "trial", "original": True}
+                        {"image": self.trial, "imageName": "trial"}
                         ],
                     ("Frozen Revolutions", "Painted World of Ariamis"): [
-                        {"image": self.trial, "imageName": "trial", "original": True}
+                        {"image": self.trial, "imageName": "trial"}
                         ],
                     ("Frozen Sentries", "Painted World of Ariamis"): [
-                        {"image": self.snowstorm, "imageName": "snowstorm", "original": True}
+                        {"image": self.snowstorm, "imageName": "snowstorm"}
                         ],
                     ("Giant's Coffin", "Tomb of Giants"): [
-                        {"image": self.onslaught, "imageName": "onslaught", "original": True},
-                        {"image": self.trial, "imageName": "trial", "original": True},
-                        {"image": self.timer, "imageName": "timer", "original": True}
+                        {"image": self.onslaught, "imageName": "onslaught"},
+                        {"image": self.trial, "imageName": "trial"},
+                        {"image": self.timer, "imageName": "timer"}
                         ],
                     ("Gleaming Silver", "The Sunless City"): [
-                        {"image": self.trial, "imageName": "trial", "original": True},
-                        {"image": self.mimic, "imageName": "mimic", "original": True}
+                        {"image": self.trial, "imageName": "trial"},
+                        {"image": self.mimic, "imageName": "mimic"}
                         ],
                     ("Gnashing Beaks", "Painted World of Ariamis"): [
-                        {"image": self.trial, "imageName": "trial", "original": True}
+                        {"image": self.trial, "imageName": "trial"}
                         ],
                     ("Grim Reunion", "The Sunless City"): [
-                        {"image": self.trial, "imageName": "trial", "original": True},
-                        {"image": self.onslaught, "imageName": "onslaught", "original": False}
+                        {"image": self.trial, "imageName": "trial"}
                         ],
                     ("Hanging Rafters", "The Sunless City"): [
-                        {"image": self.trial, "imageName": "trial", "original": True},
-                        {"image": self.onslaught, "imageName": "onslaught", "original": True}
+                        {"image": self.trial, "imageName": "trial"},
+                        {"image": self.onslaught, "imageName": "onslaught"}
                         ],
                     ("Illusionary Doorway", "The Sunless City"): [
-                        {"image": self.timer, "imageName": "timer", "original": False},
-                        {"image": self.illusion, "imageName": "illusion", "original": True}
+                        {"image": self.timer, "imageName": "timer"},
+                        {"image": self.illusion, "imageName": "illusion"}
                         ],
                     ("In Deep Water", "Tomb of Giants"): [
-                        {"image": self.timer, "imageName": "timer", "original": True}
+                        {"image": self.timer, "imageName": "timer"}
                         ],
                     ("Inhospitable Ground", "Painted World of Ariamis"): [
-                        {"image": self.snowstorm, "imageName": "snowstorm", "original": True},
-                        {"image": self.bitterCold, "imageName": "bitterCold", "original": False}
+                        {"image": self.snowstorm, "imageName": "snowstorm"}
                         ],
                     ("Kingdom's Messengers", "The Sunless City"): [
-                        {"image": self.trial, "imageName": "trial", "original": True}
+                        {"image": self.trial, "imageName": "trial"}
                         ],
                     ("Lakeview Refuge", "Tomb of Giants"): [
-                        {"image": self.onslaught, "imageName": "onslaught", "original": True},
-                        {"image": self.darkness, "imageName": "darkness", "original": True},
-                        {"image": self.trial, "imageName": "trial", "original": True}
+                        {"image": self.onslaught, "imageName": "onslaught"},
+                        {"image": self.darkness, "imageName": "darkness"},
+                        {"image": self.trial, "imageName": "trial"}
                         ],
                     ("Last Rites", "Tomb of Giants"): [
-                        {"image": self.timer, "imageName": "timer", "original": True}
+                        {"image": self.timer, "imageName": "timer"}
                         ],
                     ("Last Shred of Light", "Tomb of Giants"): [
-                        {"image": self.darkness, "imageName": "darkness", "original": True}
-                        ],
-                    ("Lost Chapel", "Tomb of Giants"): [
-                        {"image": self.timer, "imageName": "timer", "original": False},
-                        {"image": self.timer, "imageName": "timer", "original": False}
-                        ],
-                    ("Monstrous Maw", "Painted World of Ariamis"): [
-                        {"image": self.poisonMist, "imageName": "poisonMist", "original": False}
+                        {"image": self.darkness, "imageName": "darkness"}
                         ],
                     ("No Safe Haven", "Painted World of Ariamis"): [
-                        {"image": self.poisonMist, "imageName": "poisonMist", "original": True},
-                        {"image": self.snowstorm, "imageName": "snowstorm", "original": False},
-                        {"image": self.bitterCold, "imageName": "bitterCold", "original": False}
+                        {"image": self.poisonMist, "imageName": "poisonMist"}
                         ],
                     ("Painted Passage", "Painted World of Ariamis"): [
-                        {"image": self.snowstorm, "imageName": "snowstorm", "original": True}
+                        {"image": self.snowstorm, "imageName": "snowstorm"}
                         ],
                     ("Parish Church", "The Sunless City"): [
-                        {"image": self.mimic, "imageName": "mimic", "original": True},
-                        {"image": self.illusion, "imageName": "illusion", "original": True},
-                        {"image": self.trial, "imageName": "trial", "original": True}
+                        {"image": self.mimic, "imageName": "mimic"},
+                        {"image": self.illusion, "imageName": "illusion"},
+                        {"image": self.trial, "imageName": "trial"}
                         ],
                     ("Pitch Black", "Tomb of Giants"): [
-                        {"image": self.darkness, "imageName": "darkness", "original": True}
+                        {"image": self.darkness, "imageName": "darkness"}
                         ],
                     ("Promised Respite", "Painted World of Ariamis"): [
-                        {"image": self.snowstorm, "imageName": "snowstorm", "original": True}
+                        {"image": self.snowstorm, "imageName": "snowstorm"}
                         ],
                     ("Skeleton Overlord", "Tomb of Giants"): [
-                        {"image": self.timer, "imageName": "timer", "original": True}
+                        {"image": self.timer, "imageName": "timer"}
                         ],
                     ("Snowblind", "Painted World of Ariamis"): [
-                        {"image": self.snowstorm, "imageName": "snowstorm", "original": True},
-                        {"image": self.bitterCold, "imageName": "bitterCold", "original": True},
-                        {"image": self.hidden, "imageName": "hidden", "original": True}
+                        {"image": self.snowstorm, "imageName": "snowstorm"},
+                        {"image": self.bitterCold, "imageName": "bitterCold"},
+                        {"image": self.hidden, "imageName": "hidden"}
                         ],
                     ("Tempting Maw", "The Sunless City"): [
-                        {"image": self.trial, "imageName": "trial", "original": True}
+                        {"image": self.trial, "imageName": "trial"}
                         ],
                     ("The Beast From the Depths", "Tomb of Giants"): [
-                        {"image": self.trial, "imageName": "trial", "original": True}
+                        {"image": self.trial, "imageName": "trial"}
                         ],
                     ("The First Bastion", "Painted World of Ariamis"): [
-                        {"image": self.trial, "imageName": "trial", "original": True},
-                        {"image": self.timer, "imageName": "timer", "original": False},
-                        {"image": self.timer, "imageName": "timer", "original": False},
-                        {"image": self.timer, "imageName": "timer", "original": False}
+                        {"image": self.trial, "imageName": "trial"}
                         ],
                     ("The Grand Hall", "The Sunless City"): [
-                        {"image": self.trial, "imageName": "trial", "original": True},
-                        {"image": self.mimic, "imageName": "mimic", "original": True}
+                        {"image": self.trial, "imageName": "trial"},
+                        {"image": self.mimic, "imageName": "mimic"}
                         ],
                     ("The Last Bastion", "Painted World of Ariamis"): [
-                        {"image": self.snowstorm, "imageName": "snowstorm", "original": True},
-                        {"image": self.bitterCold, "imageName": "bitterCold", "original": True},
-                        {"image": self.trial, "imageName": "trial", "original": True}
+                        {"image": self.snowstorm, "imageName": "snowstorm"},
+                        {"image": self.bitterCold, "imageName": "bitterCold"},
+                        {"image": self.trial, "imageName": "trial"}
                         ],
                     ("The Locked Grave", "Tomb of Giants"): [
-                        {"image": self.trial, "imageName": "trial", "original": True}
+                        {"image": self.trial, "imageName": "trial"}
                         ],
                     ("The Mass Grave", "Tomb of Giants"): [
-                        {"image": self.onslaught, "imageName": "onslaught", "original": True},
-                        {"image": self.timer, "imageName": "timer", "original": True},
-                        {"image": self.timer, "imageName": "timer", "original": True, "tweaked": False},
-                        {"image": self.timer, "imageName": "timer", "original": True, "tweaked": False}
+                        {"image": self.onslaught, "imageName": "onslaught"},
+                        {"image": self.timer, "imageName": "timer"}
                         ],
                     ("The Shine of Gold", "The Sunless City"): [
-                        {"image": self.timer, "imageName": "timer", "original": True}
+                        {"image": self.timer, "imageName": "timer"}
                         ],
                     ("Trecherous Tower", "Painted World of Ariamis"): [
-                        {"image": self.snowstorm, "imageName": "snowstorm", "original": True},
-                        {"image": self.bitterCold, "imageName": "bitterCold", "original": True},
-                        {"image": self.eerie, "imageName": "eerie", "original": True}
-                        ],
-                    ("Trophy Room", "The Sunless City"): [
-                        {"image": self.barrage, "imageName": "barrage", "original": False}
+                        {"image": self.snowstorm, "imageName": "snowstorm"},
+                        {"image": self.bitterCold, "imageName": "bitterCold"},
+                        {"image": self.eerie, "imageName": "eerie"}
                         ],
                     ("Twilight Falls", "The Sunless City"): [
-                        {"image": self.illusion, "imageName": "illusion", "original": True}
+                        {"image": self.illusion, "imageName": "illusion"}
                         ],
                     ("Undead Sanctum", "The Sunless City"): [
-                        {"image": self.onslaught, "imageName": "onslaught", "original": True}
+                        {"image": self.onslaught, "imageName": "onslaught"}
                         ],
                     ("Unseen Scurrying", "Painted World of Ariamis"): [
-                        {"image": self.hidden, "imageName": "hidden", "original": True}
-                        ],
-                    ("Velka's Chosen", "Painted World of Ariamis"): [
-                        {"image": self.barrage, "imageName": "barrage", "original": False}
+                        {"image": self.hidden, "imageName": "hidden"}
                         ]
                 }
                 
@@ -1818,8 +1781,6 @@ try:
                     fileName = imageFileName[:-4]
                     if expansion == "The Sunless City" and imageFileName[:-4] in set(["Broken Passageway", "Central Plaza"]):
                         fileName += " (TSC)"
-                    if self.settings["encounterTweaks"] == "off" and os.path.isfile(baseFolder + "\\images\\" + fileName + " (original).jpg"):
-                        fileName += " (original)"
                     fileName += ".jpg"
 
                     imagePath = baseFolder + "\\images\\" + fileName
@@ -2257,10 +2218,7 @@ try:
                     return
 
                 for i, tooltip in enumerate(self.encounterTooltips.get((name, set), [])):
-                    if (
-                        not tooltip
-                        or self.settings["encounterTweaks"] == "off" and not tooltip["original"]
-                        or self.settings["encounterTweaks"] == "on" and not tooltip.get("tweaked", True)):
+                    if not tooltip:
                         continue
                     self.create_tooltip(tooltipDict=tooltip, x=142, y=199 + (15.5 * i))
 
@@ -2356,10 +2314,7 @@ try:
                     
                 target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])]].name
                 tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
-                if self.settings["encounterTweaks"] == "on":
-                    self.create_tooltip(tooltipDict=tooltipDict, x=143, y=243)
-                else:
-                    self.create_tooltip(tooltipDict=tooltipDict, x=143, y=262)
+                self.create_tooltip(tooltipDict=tooltipDict, x=143, y=262)
 
                 adapter.debug("\tEnd of central_plaza", caller=calframe[1][3])
             except Exception as e:
@@ -2668,11 +2623,6 @@ try:
 
                 self.create_tooltip(tooltipDict=tooltipDict, x=142, y=215)
 
-                if self.settings["encounterTweaks"] == "on":
-                    target = self.newTiles[1][1][0]
-                    tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
-                    self.create_tooltip(tooltipDict=tooltipDict, x=216, y=196)
-
                 adapter.debug("\tEnd of flooded_fortress", caller=calframe[1][3])
             except Exception as e:
                 adapter.exception(e)
@@ -2687,15 +2637,9 @@ try:
 
                 target = self.newTiles[3][0][0]
                 tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
-                if self.settings["encounterTweaks"] == "on":
-                    self.create_tooltip(tooltipDict=tooltipDict, x=143, y=224)
-                    self.create_tooltip(tooltipDict=tooltipDict, x=143, y=237)
-                    self.create_tooltip(tooltipDict=tooltipDict, x=349, y=237)
-                    self.create_tooltip(tooltipDict=tooltipDict, x=187, y=275)
-                else:
-                    self.create_tooltip(tooltipDict=tooltipDict, x=143, y=227)
-                    self.create_tooltip(tooltipDict=tooltipDict, x=143, y=242)
-                    self.create_tooltip(tooltipDict=tooltipDict, x=349, y=242)
+                self.create_tooltip(tooltipDict=tooltipDict, x=143, y=227)
+                self.create_tooltip(tooltipDict=tooltipDict, x=143, y=242)
+                self.create_tooltip(tooltipDict=tooltipDict, x=349, y=242)
                 
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
@@ -2933,9 +2877,8 @@ try:
                 
                 target = self.newTiles[1][1][0]
                 tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
-                self.create_tooltip(tooltipDict=tooltipDict, x=208, y=220)
+                self.create_tooltip(tooltipDict=tooltipDict, x=208, y=195)
                 self.create_tooltip(tooltipDict=tooltipDict, x=65, y=147)
-                self.create_tooltip(tooltipDict=tooltipDict, x=145, y=267)
                 
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
@@ -3281,26 +3224,16 @@ try:
 
                 target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])]].name
                 tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
-                if self.settings["encounterTweaks"] == "on":
-                    self.create_tooltip(tooltipDict=tooltipDict, x=237, y=215)
-                else:
-                    self.create_tooltip(tooltipDict=tooltipDict, x=361, y=212)
+                self.create_tooltip(tooltipDict=tooltipDict, x=361, y=212)
 
                 target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])+1]].name
                 tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
-                if self.settings["encounterTweaks"] == "on":
-                    self.create_tooltip(tooltipDict=tooltipDict, x=237, y=230)
-                else:
-                    self.create_tooltip(tooltipDict=tooltipDict, x=185, y=237)
+                self.create_tooltip(tooltipDict=tooltipDict, x=185, y=237)
 
                 target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])+2]].name
                 tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
-                if self.settings["encounterTweaks"] == "on":
-                    self.create_tooltip(tooltipDict=tooltipDict, x=237, y=245)
-                    self.create_tooltip(tooltipDict=tooltipDict, x=208, y=197)
-                else:
-                    self.create_tooltip(tooltipDict=tooltipDict, x=247, y=249)
-                    self.create_tooltip(tooltipDict=tooltipDict, x=216, y=197)
+                self.create_tooltip(tooltipDict=tooltipDict, x=247, y=249)
+                self.create_tooltip(tooltipDict=tooltipDict, x=216, y=197)
 
                 adapter.debug("\tEnd of the_first_bastion", caller=calframe[1][3])
             except Exception as e:
@@ -3504,12 +3437,8 @@ try:
                 target = self.newTiles[2][0][0]
                 tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=61, y=147)
-                if self.settings["encounterTweaks"] == "on":
-                    self.create_tooltip(tooltipDict=tooltipDict, x=210, y=220)
-                    self.create_tooltip(tooltipDict=tooltipDict, x=145, y=267)
-                else:
-                    self.create_tooltip(tooltipDict=tooltipDict, x=210, y=197)
-                    self.create_tooltip(tooltipDict=tooltipDict, x=145, y=244)
+                self.create_tooltip(tooltipDict=tooltipDict, x=210, y=197)
+                self.create_tooltip(tooltipDict=tooltipDict, x=145, y=244)
                 
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
@@ -3641,12 +3570,8 @@ try:
                 target = sorted([enemy for enemy in self.newTiles[2][0] + self.newTiles[2][1]], key=lambda x: enemiesDict[x].difficulty, reverse=True)[0]
                 tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=65, y=147)
-                if self.settings["encounterTweaks"] == "on":
-                    self.create_tooltip(tooltipDict=tooltipDict, x=297, y=219)
-                    self.create_tooltip(tooltipDict=tooltipDict, x=210, y=245)
-                else:
-                    self.create_tooltip(tooltipDict=tooltipDict, x=297, y=195)
-                    self.create_tooltip(tooltipDict=tooltipDict, x=210, y=219)
+                self.create_tooltip(tooltipDict=tooltipDict, x=297, y=195)
+                self.create_tooltip(tooltipDict=tooltipDict, x=210, y=219)
                 
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
