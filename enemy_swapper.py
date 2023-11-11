@@ -738,8 +738,6 @@ try:
                 }
 
                 self.campaign = []
-
-                self.deathlyFreezeTarget = None
                 
                 root.withdraw()
                 progress = PopupWindow(root, labelText="Loading...", progressBar=True, loadingImage=True)
@@ -972,41 +970,6 @@ try:
                 self.newEnemies = []
                 self.newTiles = dict()
                 self.rewardTreasure = None
-            except Exception as e:
-                adapter.exception(e)
-                raise
-
-
-        def least_frequent_items(self, listToCheck):
-            """
-            Return the least frequent element in a list.
-            Used for cycling things like Trial targets.
-            """
-            try:
-                curframe = inspect.currentframe()
-                calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of least_frequent_items: listToCheck=" + str(listToCheck), caller=calframe[1][3])
-
-                n = len(listToCheck)
-
-                # Create a dictionary and store the frequency counts as values.
-                freq = dict()
-                for i in range(n):
-                    if listToCheck[i] in freq.keys():
-                        freq[listToCheck[i]] += 1
-                    else:
-                        freq[listToCheck[i]] = 1
-
-                if n > 3:
-                    cutoff = -2
-                else:
-                    cutoff = -1
-
-                res = choice([item[0] for item in sorted(freq.items(), key=lambda x: x[1])][:cutoff])
-
-                adapter.debug("End of least_frequent_items, returning " + str(res))
-                    
-                return res
             except Exception as e:
                 adapter.exception(e)
                 raise
