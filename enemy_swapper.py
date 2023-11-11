@@ -427,13 +427,14 @@ try:
                     adapter.debug("End of quit_with_save", caller=calframe[1][3])
                     return
                 
-                characterExpansions = set()
+                characterExpansions = []
                 for c in soulCost:
                     if self.charactersActive[c]["value"].get() == 1:
-                        characterExpansions.update(soulCost[c]["expansions"])
+                        characterExpansions.append(soulCost[c]["expansions"])
 
                 expansionsActive = set([s for s in self.expansions if self.expansions[s]["value"].get() == 1])
-                if characterExpansions - expansionsActive:
+                expansionsNeeded = [e for e in characterExpansions if not any([e & expansionsActive])]
+                if expansionsNeeded:
                     self.errLabel.config(text="You have selected one or more characters from sets you have disabled!")
                     adapter.debug("End of quit_with_save", caller=calframe[1][3])
                     return
