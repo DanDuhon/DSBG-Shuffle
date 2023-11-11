@@ -73,7 +73,7 @@ soulCost = {
             (40, 14))
         },
     "Herald": {
-        "expansions": set(["Dark Souls The Board Game"]),
+        "expansions": set(["Dark Souls The Board Game", "The Sunless City"]),
         "strength": LookupTable(
             (12, 0),
             (19, 2),
@@ -142,7 +142,7 @@ soulCost = {
             (30, 14))
         },
     "Pyromancer": {
-        "expansions": set(["Tomb of Giants", "Characters Expansion"]),
+        "expansions": set(["Tomb of Giants", "Characters Expansion", "The Sunless City"]),
         "strength": LookupTable(
             (12, 0),
             (17, 2),
@@ -211,7 +211,7 @@ soulCost = {
             (31, 14))
         },
     "Warrior": {
-        "expansions": set(["Dark Souls The Board Game"]),
+        "expansions": set(["Dark Souls The Board Game", "The Sunless City"]),
         "strength": LookupTable(
             (16, 0),
             (23, 2),
