@@ -5,3 +5,4 @@ DSBG-Shuffle.spec
 build
 dist
 install_script.iss
+*.pyc
