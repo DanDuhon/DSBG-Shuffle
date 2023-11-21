@@ -85,23 +85,23 @@ try:
     logger.setLevel(logging.DEBUG)
 
     try:
-        baseFolder = path.dirname(__file__)
-        font = ImageFont.truetype(baseFolder + "\\Adobe Caslon Pro Semibold.ttf", 12)
+        baseFolder = path.dirname(__file__).replace("\\lib", "")
+        font = ImageFont.truetype(baseFolder + "\\lib\\Adobe Caslon Pro Semibold.ttf", 12)
         enemyImages = {}
         settingsChanged = False
 
-        with open(baseFolder + "\\enemies.json") as enemiesFile:
+        with open(baseFolder + "\\lib\\enemies.json") as enemiesFile:
             enemies = load(enemiesFile)
 
-        with open(baseFolder + "\\invaders_standard.json") as invadersStandardFile:
+        with open(baseFolder + "\\lib\\invaders_standard.json") as invadersStandardFile:
             invadersStandard = load(invadersStandardFile)
 
-        with open(baseFolder + "\\invaders_advanced.json") as invadersAdvancedFile:
+        with open(baseFolder + "\\lib\\invaders_advanced.json") as invadersAdvancedFile:
             invadersAdvanced = load(invadersAdvancedFile)
 
         allEnemies = enemies | invadersStandard | invadersAdvanced
 
-        with open(baseFolder + "\\encounters.json") as encountersFile:
+        with open(baseFolder + "\\lib\\encounters.json") as encountersFile:
             encounters = load(encountersFile)
     except Exception as e:
         adapter.exception(e)
@@ -225,7 +225,7 @@ try:
                 top.wait_visibility()
                 top.grab_set_global()
                 
-                with open(baseFolder + "\\settings.json") as settingsFile:
+                with open(baseFolder + "\\lib\\settings.json") as settingsFile:
                     self.settings = load(settingsFile)
 
                 self.availableExpansions = set(self.settings["availableExpansions"])
@@ -452,7 +452,7 @@ try:
                     global settingsChanged
                     settingsChanged = True
 
-                    with open(baseFolder + "\\settings.json", "w") as settingsFile:
+                    with open(baseFolder + "\\lib\\settings.json", "w") as settingsFile:
                         dump(newSettings, settingsFile)
 
                     # Recalculate the average soul cost of treasure.
@@ -531,7 +531,7 @@ try:
                 button2.bind("<Button 1>", lambda e: webbrowser.open_new("https://github.com/DanDuhon/DSBG-Shuffle/releases"))
 
             if loadingImage:
-                loadingImage = ImageTk.PhotoImage(Image.open(baseFolder + "\\bonfire.png"), Image.Resampling.LANCZOS)
+                loadingImage = ImageTk.PhotoImage(Image.open(baseFolder + "\\lib\\bonfire.png"), Image.Resampling.LANCZOS)
                 loadingLabel = ttk.Label(self.popupFrame)
                 loadingLabel.image = loadingImage
                 loadingLabel.config(image=loadingImage)
@@ -551,7 +551,7 @@ try:
             try:
                 adapter.debug("Initiating application")
                     
-                with open(baseFolder + "\\settings.json") as settingsFile:
+                with open(baseFolder + "\\lib\\settings.json") as settingsFile:
                     self.settings = load(settingsFile)
 
                 if self.settings["theme"] == "light":
@@ -1092,7 +1092,7 @@ try:
                 adapter.debug("Start of save_campaign", caller=calframe[1][3])
 
                 # Prompt user to save the file.
-                campaignName = filedialog.asksaveasfile(mode="w", initialdir=baseFolder + "\\saved campaigns", defaultextension=".json")
+                campaignName = filedialog.asksaveasfile(mode="w", initialdir=baseFolder + "\\lib\\saved campaigns", defaultextension=".json")
 
                 # If they canceled it, do nothing.
                 if not campaignName:
@@ -1119,7 +1119,7 @@ try:
                 adapter.debug("Start of load_campaign", caller=calframe[1][3])
 
                 # Prompt the user to find the campaign file.
-                campaignFile = filedialog.askopenfilename(initialdir=baseFolder + "\\saved campaigns", filetypes = [(".json", ".json")])
+                campaignFile = filedialog.askopenfilename(initialdir=baseFolder + "\\lib\\saved campaigns", filetypes = [(".json", ".json")])
 
                 # If the user did not select a file, do nothing.
                 if not campaignFile:
@@ -1245,9 +1245,9 @@ try:
                     self.encounter.image = self.encounterPhotoImage
                     self.encounter.config(image=self.encounterPhotoImage)
                 elif campaignEncounter:
-                    adapter.debug("\tOpening " + baseFolder + "\\encounters\\" + campaignEncounter[0]["name"] + ".json", caller=calframe[1][3])
+                    adapter.debug("\tOpening " + baseFolder + "\\lib\\encounters\\" + campaignEncounter[0]["name"] + ".json", caller=calframe[1][3])
                     # Get the enemy slots for this encounter.
-                    with open(baseFolder + "\\encounters\\" + campaignEncounter[0]["name"] + ".json") as alternativesFile:
+                    with open(baseFolder + "\\lib\\encounters\\" + campaignEncounter[0]["name"] + ".json") as alternativesFile:
                         alts = load(alternativesFile)
 
                     # Create the encounter card with saved enemies and tooltips.
@@ -1307,7 +1307,7 @@ try:
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of create_tabs", caller=calframe[1][3])
 
-                with open(baseFolder + "\\settings.json") as settingsFile:
+                with open(baseFolder + "\\lib\\settings.json") as settingsFile:
                     self.settings = load(settingsFile)
                 
                 self.paned = ttk.PanedWindow(self)
@@ -1665,7 +1665,7 @@ try:
                 self.wait_window(s.top)
                 
                 if settingsChanged and self.treeviewEncounters.winfo_exists():
-                    with open(baseFolder + "\\settings.json") as settingsFile:
+                    with open(baseFolder + "\\lib\\settings.json") as settingsFile:
                         self.settings = load(settingsFile)
                     self.selected = None
                     self.rewardTreasure = None
@@ -1753,16 +1753,16 @@ try:
                         fileName += " (TSC)"
                     fileName += ".jpg"
 
-                    imagePath = baseFolder + "\\images\\" + fileName
+                    imagePath = baseFolder + "\\lib\\images\\" + fileName
                     adapter.debug("\tOpening " + imagePath, caller=calframe[1][3])
                     self.encounterImage = Image.open(imagePath).resize((width, height), Image.Resampling.LANCZOS)
                     image = ImageTk.PhotoImage(self.encounterImage)
                 elif imageType == "enemyText":
-                    imagePath = baseFolder + "\\images\\" + imageFileName[:-4] + " rule bg.jpg"
+                    imagePath = baseFolder + "\\lib\\images\\" + imageFileName[:-4] + " rule bg.jpg"
                     adapter.debug("\tOpening " + imagePath, caller=calframe[1][3])
                     image = Image.open(imagePath).resize((14, 14), Image.Resampling.LANCZOS)
                 else:
-                    imagePath = baseFolder + "\\images\\" + imageFileName
+                    imagePath = baseFolder + "\\lib\\images\\" + imageFileName
                     adapter.debug("\tOpening " + imagePath, caller=calframe[1][3])
 
                     if imageType == "enemyOld":
@@ -1897,8 +1897,8 @@ try:
                 self.selected["restrictRanged"] = {}
 
                 # Get the possible alternative enemies from the encounter's file.
-                adapter.debug("\tOpening " + baseFolder + "\\encounters\\" + encounterName + ".json", caller=calframe[1][3])
-                with open(baseFolder + "\\encounters\\" + encounterName + ".json") as alternativesFile:
+                adapter.debug("\tOpening " + baseFolder + "\\lib\\encounters\\" + encounterName + ".json", caller=calframe[1][3])
+                with open(baseFolder + "\\lib\\encounters\\" + encounterName + ".json") as alternativesFile:
                     alts = load(alternativesFile)
 
                 self.selected["alternatives"] = []
@@ -3608,11 +3608,11 @@ try:
 
     # Check for a new version
     today = datetime.datetime.today()
-    with open(baseFolder + "\\version.txt") as vFile:
+    with open(baseFolder + "\\lib\\version.txt") as vFile:
         version = vFile.readlines()
     if int(version[1]) != today.month:
         version[1] = today.month
-        with open(os.path.join(baseFolder, "version.txt"), "w") as v:
+        with open(os.path.join(baseFolder, "lib\\version.txt"), "w") as v:
             v.write("\n".join([str(line).replace("\n", "") for line in version]))
 
         response = requests.get("https://api.github.com/repos/DanDuhon/DSBG-Shuffle/releases/latest")

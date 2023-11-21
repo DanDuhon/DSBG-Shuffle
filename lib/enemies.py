@@ -16,7 +16,7 @@ class Enemy:
         self.health = health
         self.difficulty = difficulty
         
-        self.imagePath = baseFolder + "\\images\\" + name.replace(" (TSC)", "") + ".png"
+        self.imagePath = baseFolder + "\\lib\\images\\" + name + ".png"
         
         if "Hollow" in self.name and self.health == 1:
             self.gang = "Hollow"
@@ -28,19 +28,6 @@ class Enemy:
             self.gang = "Scarecrow"
         else:
             self.gang = None
-        
-        if "Hollow" in self.name:
-            self.group = "Hollow"
-        elif "Alonne" in self.name:
-            self.group = "Alonne"
-        elif "Skeleton" in self.name:
-            self.group = "Skeleton"
-        elif "Scarecrow" in self.name:
-            self.group = "Scarecrow"
-        elif "Silver Knight" in self.name:
-            self.group = "Silver Knight"
-        else:
-            self.group = None
 
 
 Enemy(name="Alonne Bow Knight", health=1, difficulty=111.75)

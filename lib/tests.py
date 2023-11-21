@@ -7,16 +7,16 @@ from enemies import enemyIds, enemiesDict
 
 baseFolder = path.dirname(__file__)
 
-with open(baseFolder + "\\enemies.json") as enemiesFile:
+with open(baseFolder + "\\lib\\enemies.json") as enemiesFile:
     enemies = load(enemiesFile)
 
-with open(baseFolder + "\\invaders_standard.json") as invadersStandardFile:
+with open(baseFolder + "\\lib\\invaders_standard.json") as invadersStandardFile:
     invadersStandard = load(invadersStandardFile)
 
-with open(baseFolder + "\\invaders_advanced.json") as invadersAdvancedFile:
+with open(baseFolder + "\\lib\\invaders_advanced.json") as invadersAdvancedFile:
     invadersAdvanced = load(invadersAdvancedFile)
 
-with open(baseFolder + "\\encounters.json") as encountersFile:
+with open(baseFolder + "\\lib\\encounters.json") as encountersFile:
     encounters = load(encountersFile)
 
 
@@ -51,7 +51,7 @@ class Tester():
         self.selected["restrictRanged"] = {}
 
         # Get the possible alternative enemies from the encounter's file.
-        with open(baseFolder + "\\encounters\\" + encounterName + ".json") as alternativesFile:
+        with open(baseFolder + "\\lib\\encounters\\" + encounterName + ".json") as alternativesFile:
             alts = load(alternativesFile)
 
         self.selected["alternatives"] = []
