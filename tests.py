@@ -1,6 +1,6 @@
 from os import path
 from json import load
-from random import choice
+from itertools import product
 from collections import Counter
 
 from enemies import enemyIds, enemiesDict
@@ -26,17 +26,6 @@ class Tester():
         self.selected = None
         self.newEnemies = []
         self.newTiles = dict()
-        self.availableExpansions = [
-            "The Sunless City", 
-            "Characters Expansion", 
-            "Iron Keep", 
-            "Explorers", 
-            "Executioner Chariot", 
-            "Darkroot", 
-            "Phantoms", 
-            "Tomb of Giants", 
-            "Dark Souls The Board Game", 
-            "Painted World of Ariamis"]
 
         for encounter in encounters:
             self.load_encounter(encounter)
@@ -68,12 +57,33 @@ class Tester():
         self.selected["alternatives"] = []
         self.selected["enemySlots"] = alts["enemySlots"]
 
-        for expansionCombo in alts["alternatives"]:
-            if set(expansionCombo.split(",")).issubset(self.availableExpansions):
+        if "3" in alts["alternatives"]:
+            toCombine1 = []
+            toCombine2 = []
+            toCombine3 = []
+            for expansionCombo in alts["alternatives"]["1"]:
+                toCombine1 += alts["alternatives"]["1"][expansionCombo]
+            for expansionCombo in alts["alternatives"]["2"]:
+                toCombine2 += alts["alternatives"]["2"][expansionCombo]
+            for expansionCombo in alts["alternatives"]["3"]:
+                toCombine3 += alts["alternatives"]["3"][expansionCombo]
+            self.selected["alternatives"] = (p[0] + p[1] + p[2] for p in product(toCombine1, toCombine2, toCombine3))
+            print(encounter + " (" + str(len(toCombine1) * len(toCombine2) * len(toCombine3)) + ")")
+        elif "2" in alts["alternatives"]:
+            toCombine1 = []
+            toCombine2 = []
+            for expansionCombo in alts["alternatives"]["1"]:
+                toCombine1 += alts["alternatives"]["1"][expansionCombo]
+            for expansionCombo in alts["alternatives"]["2"]:
+                toCombine2 += alts["alternatives"]["2"][expansionCombo]
+            self.selected["alternatives"] = (p[0] + p[1] for p in product(toCombine1, toCombine2))
+            print(encounter + " (" + str(len(toCombine1) * len(toCombine2)) + ")")
+        else:
+            for expansionCombo in alts["alternatives"]:
                 self.selected["alternatives"] += alts["alternatives"][expansionCombo]
                 
-        x = len(self.selected["alternatives"])
-        print(encounter + " (" + str(x) + ")")
+            x = len(self.selected["alternatives"])
+            print(encounter + " (" + str(x) + ")")
 
         self.newTiles = dict()
 
@@ -115,15 +125,12 @@ class Tester():
                 if level == 4:
                     x = 116 + (43 * e) - (3 if enemyIds[self.newEnemies[s]].name == "Advanced Invader" else 0)
                     y = 78 + (47 * slotNum)
-                    imageType = "imageOldLevel4"
                 elif expansion in {"Dark Souls The Board Game", "Iron Keep", "Darkroot", "Explorers", "Executioner Chariot"}:
                     x = 67 + (40 * e)
                     y = 66 + (46 * slotNum)
-                    imageType = "imageOld"
                 else:
                     x = 300 + (29 * e)
                     y = 323 + (29 * (slotNum - (0 if slotNum < 4 else 4 if slotNum < 6 else 6))) + (((1 if slotNum < 4 else 2 if slotNum < 6 else 3) - 1) * 122)
-                    imageType = "imageNew"
 
                 s += 1
 

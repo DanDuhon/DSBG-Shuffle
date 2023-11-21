@@ -79,11 +79,6 @@ Enemy(name="Stone Knight", health=5, difficulty=737.67)
 Enemy(name="Standard Invader", health=10, difficulty=0)
 Enemy(name="Advanced Invader", health=10, difficulty=0)
 Enemy(name="Mimic", health=5, difficulty=513.34)
-Enemy(name="Crossbow Hollow (TSC)", health=1, difficulty=45.02)
-Enemy(name="Hollow Soldier (TSC)", health=1, difficulty=34.76)
-Enemy(name="Sentinel (TSC)", health=1, difficulty=778.12)
-Enemy(name="Silver Knight Greatbowman (TSC)", health=1, difficulty=90.76)
-Enemy(name="Silver Knight Swordsman (TSC)", health=1, difficulty=161.85)
 
 for i, enemy in enumerate(enemiesDict):
     enemyIds[i] = enemiesDict[enemy]

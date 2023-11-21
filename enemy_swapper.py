@@ -277,8 +277,8 @@ try:
                     
                 self.treasureSwapOptions = {
                     "Similar Soul Cost": {"button": None, "value": tk.StringVar(value="Similar Soul Cost"), "tooltipText": "Rewards an item of the same type as the original that also costs about the same souls in leveling stats in order to equip it"},
-                    "Tier Based": {"button": None, "value": tk.StringVar(value="Tier Based"), "tooltipText": "Splits treasure into tiers based on soul cost to equip and rewards an item in the same tier as the original reward."},
-                    "Generic Treasure": {"button": None, "value": tk.StringVar(value="Generic Treasure"), "tooltipText": "Changes all specific item rewards to a number of draws equal to the encounter level"},
+                    "Tier Based": {"button": None, "value": tk.StringVar(value="Tier Based"), "tooltipText": "Splits treasure into equal tiers based on soul cost to equip and rewards an item in the same tier as the original reward."},
+                    "Generic Treasure": {"button": None, "value": tk.StringVar(value="Generic Treasure"), "tooltipText": "Changes all specific item rewards to a number of draws equal to the encounter level."},
                     "Original": {"button": None, "value": tk.StringVar(value="Original"), "tooltipText": "Display the original reward on the card only."}
                 }
 
@@ -358,13 +358,9 @@ try:
                 if numChars == 4:
                     for c in [c for c in self.charactersActive if self.charactersActive[c]["value"].get() == 0]:
                         self.charactersActive[c]["button"].config(state=tk.DISABLED)
-                        if self.lightTheme["value"].get() == 0:
-                            self.charactersActive[c]["button"].config(foreground="gray")
                 else:
                     for c in self.charactersActive:
                         self.charactersActive[c]["button"].config(state=tk.NORMAL)
-                        if self.lightTheme["value"].get() == 1:
-                            self.charactersActive[c]["button"].config(fg="white")
 
                 adapter.debug("End of check_max_characters", caller=calframe[1][3])
             except Exception as e:
@@ -427,13 +423,14 @@ try:
                     adapter.debug("End of quit_with_save", caller=calframe[1][3])
                     return
                 
-                characterExpansions = set()
+                characterExpansions = []
                 for c in soulCost:
                     if self.charactersActive[c]["value"].get() == 1:
-                        characterExpansions.update(soulCost[c]["expansions"])
+                        characterExpansions.append(soulCost[c]["expansions"])
 
                 expansionsActive = set([s for s in self.expansions if self.expansions[s]["value"].get() == 1])
-                if characterExpansions - expansionsActive:
+                expansionsNeeded = [e for e in characterExpansions if not any([e & expansionsActive])]
+                if expansionsNeeded:
                     self.errLabel.config(text="You have selected one or more characters from sets you have disabled!")
                     adapter.debug("End of quit_with_save", caller=calframe[1][3])
                     return
@@ -874,7 +871,6 @@ try:
                         {"image": self.onslaught, "imageName": "onslaught"}
                         ],
                     ("Illusionary Doorway", "The Sunless City"): [
-                        {"image": self.timer, "imageName": "timer"},
                         {"image": self.illusion, "imageName": "illusion"}
                         ],
                     ("In Deep Water", "Tomb of Giants"): [
@@ -945,6 +941,8 @@ try:
                         ],
                     ("The Mass Grave", "Tomb of Giants"): [
                         {"image": self.onslaught, "imageName": "onslaught"},
+                        {"image": self.timer, "imageName": "timer"},
+                        {"image": self.timer, "imageName": "timer"},
                         {"image": self.timer, "imageName": "timer"}
                         ],
                     ("The Shine of Gold", "The Sunless City"): [
@@ -1275,11 +1273,20 @@ try:
                 # Set the list of encounters based on available expansions.
                 self.encounterList = [encounter for encounter in encounters if (
                     (
-                        (self.availableExpansions & {"Explorers", "Phantoms"}
+                        (self.availableExpansions & {"Phantoms",}
                             or encounter not in encountersWithInvaders)
                         and any([frozenset(expCombo).issubset(self.availableExpansions) for expCombo in encounters[encounter]["expansionCombos"]])
                     )
                     )]
+                
+                for encounter in encounters:
+                    if type(encounters[encounter]["expansionCombos"]) == dict:
+                        if all([
+                            any([frozenset(expCombo).issubset(self.availableExpansions) for expCombo in encounters[encounter]["expansionCombos"]["1"]]),
+                            any([frozenset(expCombo).issubset(self.availableExpansions) for expCombo in encounters[encounter]["expansionCombos"]["2"]]),
+                            True if "3" not in encounters[encounter]["expansionCombos"] else any([frozenset(expCombo).issubset(self.availableExpansions) for expCombo in encounters[encounter]["expansionCombos"]["3"]])
+                            ]):
+                            self.encounterList.append(encounter)
 
                 adapter.debug("End of set_encounter_list")
             except Exception as e:
@@ -1751,11 +1758,11 @@ try:
                     self.encounterImage = Image.open(imagePath).resize((width, height), Image.Resampling.LANCZOS)
                     image = ImageTk.PhotoImage(self.encounterImage)
                 elif imageType == "enemyText":
-                    imagePath = baseFolder + "\\images\\" + imageFileName[:-4].replace(" (TSC)", "") + " rule bg.jpg"
+                    imagePath = baseFolder + "\\images\\" + imageFileName[:-4] + " rule bg.jpg"
                     adapter.debug("\tOpening " + imagePath, caller=calframe[1][3])
                     image = Image.open(imagePath).resize((14, 14), Image.Resampling.LANCZOS)
                 else:
-                    imagePath = baseFolder + "\\images\\" + imageFileName.replace(" (TSC)", "")
+                    imagePath = baseFolder + "\\images\\" + imageFileName
                     adapter.debug("\tOpening " + imagePath, caller=calframe[1][3])
 
                     if imageType == "enemyOld":
@@ -1898,9 +1905,25 @@ try:
                 self.selected["enemySlots"] = alts["enemySlots"]
 
                 # Use only alternative enemies for expansions the user has activated in the settings.
-                for expansionCombo in alts["alternatives"]:
-                    if set(expansionCombo.split(",")).issubset(self.availableExpansions):
-                        self.selected["alternatives"] += alts["alternatives"][expansionCombo]
+                if "1" in alts["alternatives"]:
+                    self.selected["alternatives"] = {"1": []}
+                    for expansionCombo in alts["alternatives"]["1"]:
+                        if set(expansionCombo.split(",")).issubset(self.availableExpansions):
+                            self.selected["alternatives"]["1"] += alts["alternatives"]["1"][expansionCombo]
+                if "2" in alts["alternatives"]:
+                    self.selected["alternatives"]["2"] = []
+                    for expansionCombo in alts["alternatives"].get("2", []):
+                        if set(expansionCombo.split(",")).issubset(self.availableExpansions):
+                            self.selected["alternatives"]["2"] += alts["alternatives"]["2"][expansionCombo]
+                if "3" in alts["alternatives"]:
+                    self.selected["alternatives"]["3"] = []
+                    for expansionCombo in alts["alternatives"].get("3", []):
+                        if set(expansionCombo.split(",")).issubset(self.availableExpansions):
+                            self.selected["alternatives"]["3"] += alts["alternatives"]["3"][expansionCombo]
+                else:
+                    for expansionCombo in alts["alternatives"]:
+                        if set(expansionCombo.split(",")).issubset(self.availableExpansions):
+                            self.selected["alternatives"] += alts["alternatives"][expansionCombo]
 
                 self.newTiles = dict()
 
@@ -1940,10 +1963,19 @@ try:
                 # Make sure a new set of enemies is chosen each time, otherwise it
                 # feels like the program isn't doing anything.
                 oldEnemies = [e for e in self.newEnemies]
-                self.newEnemies = choice(self.selected["alternatives"])
-                if len(self.selected["alternatives"]) > 1:
+                if "1" in self.selected["alternatives"]:
+                    self.newEnemies = (
+                        choice(self.selected["alternatives"]["1"])
+                        + (choice(self.selected["alternatives"]["2"]) if "2" in self.selected["alternatives"] else [])
+                        + (choice(self.selected["alternatives"]["3"]) if "3" in self.selected["alternatives"] else []))
+                else:
+                    self.newEnemies = choice(self.selected["alternatives"])
+                if len(self.newEnemies) > 1:
                     while self.newEnemies == oldEnemies:
-                        self.newEnemies = choice(self.selected["alternatives"])
+                        if "1" in self.selected["alternatives"]:
+                            self.newEnemies = choice(self.selected["alternatives"]["1"] + self.selected["alternatives"].get("2", []) + self.selected["alternatives"].get("3", []))
+                        else:
+                            self.newEnemies = choice(self.selected["alternatives"])
 
                 self.edit_encounter_card(self.selected["name"], self.selected["expansion"], self.selected["level"], self.selected["enemySlots"])
 
@@ -2158,7 +2190,7 @@ try:
                 label = tk.Label(self.encounterFrame, image=tooltipDict["image"], borderwidth=0, highlightthickness=0)
                 self.tooltips.append(label)
                 label.place(x=x, y=y)
-                CreateToolTip(label, self.tooltipText[tooltipDict["imageName"].replace(" (TSC)", "")])
+                CreateToolTip(label, self.tooltipText[tooltipDict["imageName"]])
 
                 adapter.debug("\tEnd of create_tooltip", caller=calframe[1][3])
             except Exception as e:
@@ -2413,8 +2445,8 @@ try:
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of deathly_freeze", caller=calframe[1][3])
                     
-                deathlyFreezeTile1 = [enemy.replace(" (TSC)", "") for enemy in self.newTiles[1][0] + self.newTiles[1][1]]
-                deathlyFreezeTile2 = [enemy.replace(" (TSC)", "") for enemy in self.newTiles[2][0] + self.newTiles[2][1]]
+                deathlyFreezeTile1 = [enemy for enemy in self.newTiles[1][0] + self.newTiles[1][1]]
+                deathlyFreezeTile2 = [enemy for enemy in self.newTiles[2][0] + self.newTiles[2][1]]
                 overlap = set(deathlyFreezeTile1) & set(deathlyFreezeTile2)
                 target = sorted([enemy for enemy in overlap if deathlyFreezeTile1.count(enemy) + deathlyFreezeTile2.count(enemy) > 1], key=lambda x: enemiesDict[x].difficulty, reverse=True)[0]
                 tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}

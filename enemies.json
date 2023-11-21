@@ -41,13 +41,6 @@
 		"count": 3,
 		"ranged": true
 	},
-	"Crossbow Hollow (TSC)": {
-		"name": "Crossbow Hollow",
-		"expansion": "The Sunless City",
-		"health": 1,
-		"count": 3,
-		"ranged": true
-	},
 	"Crow Demon": {
 		"name": "Crow Demon",
 		"expansion": "Painted World of Ariamis",
@@ -100,13 +93,6 @@
 	"Hollow Soldier": {
 		"name": "Hollow Soldier",
 		"expansion": "Dark Souls The Board Game",
-		"health": 1,
-		"count": 3,
-		"ranged": false
-	},
-	"Hollow Soldier (TSC)": {
-		"name": "Hollow Soldier",
-		"expansion": "The Sunless City",
 		"health": 1,
 		"count": 3,
 		"ranged": false
@@ -181,13 +167,6 @@
 		"count": 2,
 		"ranged": false
 	},
-	"Sentinel (TSC)": {
-		"name": "Sentinel",
-		"expansion": "The Sunless City",
-		"health": 10,
-		"count": 1,
-		"ranged": false
-	},
 	"Shears Scarecrow": {
 		"name": "Shears Scarecrow",
 		"expansion": "Darkroot",
@@ -202,13 +181,6 @@
 		"count": 3,
 		"ranged": true
 	},
-	"Silver Knight Greatbowman (TSC)": {
-		"name": "Silver Knight Greatbowman",
-		"expansion": "The Sunless City",
-		"health": 1,
-		"count": 2,
-		"ranged": true
-	},
 	"Silver Knight Spearman": {
 		"name": "Silver Knight Spearman",
 		"expansion": "Explorers",
@@ -221,13 +193,6 @@
 		"expansion": "Dark Souls The Board Game",
 		"health": 1,
 		"count": 3,
-		"ranged": false
-	},
-	"Silver Knight Swordsman (TSC)": {
-		"name": "Silver Knight Swordsman",
-		"expansion": "The Sunless City",
-		"health": 1,
-		"count": 2,
 		"ranged": false
 	},
 	"Skeleton Archer": {
