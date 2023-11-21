@@ -1,2 +1,8 @@
-
+venv
 log.txt
+__pycache__
+DSBG-Shuffle.spec
+build
+dist
+install_script.iss
+*.pyc
