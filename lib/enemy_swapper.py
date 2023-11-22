@@ -1970,7 +1970,7 @@ try:
                         + (choice(self.selected["alternatives"]["3"]) if "3" in self.selected["alternatives"] else []))
                 else:
                     self.newEnemies = choice(self.selected["alternatives"])
-                if len(self.newEnemies) > 1:
+                if len(self.selected["alternatives"]) > 1:
                     while self.newEnemies == oldEnemies:
                         if "1" in self.selected["alternatives"]:
                             self.newEnemies = choice(self.selected["alternatives"]["1"] + self.selected["alternatives"].get("2", []) + self.selected["alternatives"].get("3", []))
