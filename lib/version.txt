@@ -1,2 +1,2 @@
-DSBG-Shuffle 1.2.1
-11
+DSBG-Shuffle 1.2.2
+12
