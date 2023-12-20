@@ -2137,7 +2137,8 @@ try:
                         + (choice(self.selected["alternatives"]["3"]) if "3" in self.selected["alternatives"] else []))
                 else:
                     self.newEnemies = choice(self.selected["alternatives"])
-                if len(self.selected["alternatives"]) > 1:
+                # Check to see if there are multiple alternatives.
+                if len(set([tuple(a) for a in self.selected["alternatives"]])) > 1:
                     while self.newEnemies == oldEnemies:
                         if "1" in self.selected["alternatives"]:
                             self.newEnemies = (
