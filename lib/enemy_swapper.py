@@ -14,6 +14,7 @@ try:
     import tkinter as tk
     from tkinter import ttk
     from tkinter import filedialog
+    from fpdf import FPDF
 
     from enemies import enemyIds, enemiesDict
     from treasure import generate_treasure_soul_cost, populate_treasure_tiers, pick_treasure
@@ -189,7 +190,8 @@ try:
                 helpText += "You can build your own campaign by adding encounters to it. You can also\n"
                 helpText += "save and load campaigns. You may only have one of each encounter name,\n"
                 helpText += "but there are no restrictions beyond that. Encounters added to a campaign\n"
-                helpText += "are frozen so you cannot shuffle the enemies.\n\n"
+                helpText += "are frozen so you cannot shuffle the enemies. You can also print (non-boss)\n"
+                helpText += "encounter cards in the campaign. Front side only (fow now?) so use sleeves!\n\n"
                 helpText += "Settings\n"
                 helpText += "In the settings menu, you can enable the different core sets/expansions\n"
                 helpText += "that add enemies or basic treasure to the game. These are the only sets\n"
@@ -510,7 +512,7 @@ try:
             loadingImage: Boolean
                 Whether to show the loading image.
         """
-        def __init__(self, root, labelText=None, firstButton=False, secondButton=False, progressBar=False, loadingImage=False):
+        def __init__(self, root, labelText=None, firstButton=False, secondButton=False, progressBar=False, progressMax=None, loadingImage=False):
             tk.Toplevel.__init__(self, root)
             self.attributes('-alpha', 0.0)
             self.popupFrame = ttk.Frame(self, padding=(20, 10))
@@ -539,7 +541,7 @@ try:
 
             if progressBar:
                 self.progressVar = tk.DoubleVar()
-                progressBar = ttk.Progressbar(self.popupFrame, variable=self.progressVar, maximum=len(allEnemies), length=150)
+                progressBar = ttk.Progressbar(self.popupFrame, variable=self.progressVar, maximum=progressMax, length=150)
                 progressBar.grid(row=3, column=0, columnspan=2)
                 
             center(self)
@@ -556,6 +558,14 @@ try:
 
                 if self.settings["theme"] == "light":
                     root.tk.call("set_theme", "light")
+
+                # Delete images from staging
+                folder = baseFolder + "\\lib\\image staging"
+                for filename in os.listdir(folder):
+                    filePath = os.path.join(folder, filename)
+                    
+                    if os.path.isfile(filePath) and filePath[-4:] == ".png":
+                        os.unlink(filePath)
                 
                 ttk.Frame.__init__(self)
                 self.grid_rowconfigure(index=1, weight=1)
@@ -653,6 +663,9 @@ try:
                 self.create_menu()
                 self.set_bindings_buttons_menus(True)
 
+                self.forPrinting = False
+                self.encountersToPrint = []
+
                 self.treasureSwapEncounters = {
                     "Castle Break In": "Dragonslayer Greatbow",
                     "Corvian Host": "Bloodshield",
@@ -737,7 +750,7 @@ try:
                 self.campaign = []
                 
                 root.withdraw()
-                progress = PopupWindow(root, labelText="Loading...", progressBar=True, loadingImage=True)
+                progress = PopupWindow(root, labelText="Loading...", progressBar=True, progressMax=len(allEnemies), loadingImage=True)
 
                 # Create images
                 # Enemies
@@ -748,7 +761,8 @@ try:
                     allEnemies[enemy]["imageOldLevel4"] = self.create_image(enemy + ".png", "enemyOldLevel4")
                     allEnemies[enemy]["imageNew"] = self.create_image(enemy + ".png", "enemyNew")
                     if enemy in enemies:
-                        allEnemies[enemy]["image text"] = ImageTk.PhotoImage(self.create_image(enemy + ".png", "enemyText"))
+                        allEnemies[enemy]["image text"] = self.create_image(enemy + ".png", "enemyText")
+                        allEnemies[enemy]["image text" if self.forPrinting else "photo image text"] = ImageTk.PhotoImage(self.create_image(enemy + ".png", "enemyText"))
                     
                 progress.destroy()
                 root.deiconify()
@@ -758,209 +772,213 @@ try:
                 self.bleed = self.create_image("bleed.png", "condition")
 
                 # Keywords
-                self.barrage = ImageTk.PhotoImage(self.create_image("barrage.png", "barrage"))
-                self.bitterCold = ImageTk.PhotoImage(self.create_image("bitter_cold.png", "bitterCold"))
-                self.darkness = ImageTk.PhotoImage(self.create_image("darkness.png", "darkness"))
-                self.eerie = ImageTk.PhotoImage(self.create_image("eerie.png", "eerie"))
-                self.gangAlonne = ImageTk.PhotoImage(self.create_image("gang_alonne.png", "gangAlonne"))
-                self.gangHollow = ImageTk.PhotoImage(self.create_image("gang_hollow.png", "gangHollow"))
-                self.gangSkeleton = ImageTk.PhotoImage(self.create_image("gang_skeleton.png", "gangSkeleton"))
-                self.gangScarecrow = ImageTk.PhotoImage(self.create_image("gang_scarecrow.png", "gangScarecrow"))
-                self.hidden = ImageTk.PhotoImage(self.create_image("hidden.png", "hidden"))
-                self.illusion = ImageTk.PhotoImage(self.create_image("illusion.png", "illusion"))
-                self.mimic = ImageTk.PhotoImage(self.create_image("mimic_keyword.png", "mimic"))
-                self.onslaught = ImageTk.PhotoImage(self.create_image("onslaught.png", "onslaught"))
-                self.poisonMist = ImageTk.PhotoImage(self.create_image("poison_mist.png", "poisonMist"))
-                self.snowstorm = ImageTk.PhotoImage(self.create_image("snowstorm.png", "snowstorm"))
-                self.timer = ImageTk.PhotoImage(self.create_image("timer.png", "timer"))
-                self.trial = ImageTk.PhotoImage(self.create_image("trial.png", "trial"))
+                self.barrage = self.create_image("barrage.png", "barrage")
+                self.bitterCold = self.create_image("bitter_cold.png", "bitterCold")
+                self.darkness = self.create_image("darkness.png", "darkness")
+                self.eerie = self.create_image("eerie.png", "eerie")
+                self.gangAlonne = self.create_image("gang_alonne.png", "gangAlonne")
+                self.gangHollow = self.create_image("gang_hollow.png", "gangHollow")
+                self.gangScarecrow = self.create_image("gang_scarecrow.png", "gangScarecrow")
+                self.gangSkeleton = self.create_image("gang_skeleton.png", "gangSkeleton")
+                self.gangAlonnePhoto = ImageTk.PhotoImage(self.gangAlonne)
+                self.gangHollowPhoto = ImageTk.PhotoImage(self.gangHollow)
+                self.gangScarecrowPhoto = ImageTk.PhotoImage(self.gangScarecrow)
+                self.gangSkeletonPhoto = ImageTk.PhotoImage(self.gangSkeleton)
+                self.hidden = self.create_image("hidden.png", "hidden")
+                self.illusion = self.create_image("illusion.png", "illusion")
+                self.mimic = self.create_image("mimic_keyword.png", "mimic")
+                self.onslaught = self.create_image("onslaught.png", "onslaught")
+                self.poisonMist = self.create_image("poison_mist.png", "poisonMist")
+                self.snowstorm = self.create_image("snowstorm.png", "snowstorm")
+                self.timer = self.create_image("timer.png", "timer")
+                self.trial = self.create_image("trial.png", "trial")
 
                 self.tooltips = []
 
                 self.encounterTooltips = {
                     ("A Trusty Ally", "Tomb of Giants"): [
-                        {"image": self.onslaught, "imageName": "onslaught"}
+                        {"image": self.onslaught, "photo image": ImageTk.PhotoImage(self.onslaught), "imageName": "onslaught"}
                         ],
                     ("Abandoned and Forgotten", "Painted World of Ariamis"): [
-                        {"image": self.eerie, "imageName": "eerie"}
+                        {"image": self.eerie, "photo image": ImageTk.PhotoImage(self.eerie), "imageName": "eerie"}
                         ],
                     ("Aged Sentinel", "The Sunless City"): [
-                        {"image": self.trial, "imageName": "trial"}
+                        {"image": self.trial, "photo image": ImageTk.PhotoImage(self.trial), "imageName": "trial"}
                         ],
                     ("Altar of Bones", "Tomb of Giants"): [
-                        {"image": self.timer, "imageName": "timer"}
+                        {"image": self.timer, "photo image": ImageTk.PhotoImage(self.timer), "imageName": "timer"}
                         ],
                     ("Archive Entrance", "The Sunless City"): [
-                        {"image": self.trial, "imageName": "trial"}
+                        {"image": self.trial, "photo image": ImageTk.PhotoImage(self.trial), "imageName": "trial"}
                         ],
                     ("Broken Passageway", "The Sunless City"): [
-                        {"image": self.timer, "imageName": "timer"},
-                        {"image": self.timer, "imageName": "timer"}
+                        {"image": self.timer, "photo image": ImageTk.PhotoImage(self.timer), "imageName": "timer"},
+                        {"image": self.timer, "photo image": ImageTk.PhotoImage(self.timer), "imageName": "timer"}
                         ],
                     ("Castle Break In", "The Sunless City"): [
-                        {"image": self.timer, "imageName": "timer"},
+                        {"image": self.timer, "photo image": ImageTk.PhotoImage(self.timer), "imageName": "timer"},
                         {},
-                        {"image": self.timer, "imageName": "timer"}
+                        {"image": self.timer, "photo image": ImageTk.PhotoImage(self.timer), "imageName": "timer"}
                         ],
                     ("Central Plaza", "Painted World of Ariamis"): [
-                        {"image": self.barrage, "imageName": "barrage"}
+                        {"image": self.barrage, "photo image": ImageTk.PhotoImage(self.barrage), "imageName": "barrage"}
                         ],
                     ("Cold Snap", "Painted World of Ariamis"): [
-                        {"image": self.snowstorm, "imageName": "snowstorm"},
-                        {"image": self.bitterCold, "imageName": "bitterCold"},
-                        {"image": self.trial, "imageName": "trial"}
+                        {"image": self.snowstorm, "photo image": ImageTk.PhotoImage(self.snowstorm), "imageName": "snowstorm"},
+                        {"image": self.bitterCold, "photo image": ImageTk.PhotoImage(self.bitterCold), "imageName": "bitterCold"},
+                        {"image": self.trial, "photo image": ImageTk.PhotoImage(self.trial), "imageName": "trial"}
                         ],
                     ("Corrupted Hovel", "Painted World of Ariamis"): [
-                        {"image": self.poisonMist, "imageName": "poisonMist"},
-                        {"image": self.trial, "imageName": "trial"}
+                        {"image": self.poisonMist, "photo image": ImageTk.PhotoImage(self.poisonMist), "imageName": "poisonMist"},
+                        {"image": self.trial, "photo image": ImageTk.PhotoImage(self.trial), "imageName": "trial"}
                         ],
                     ("Corvian Host", "Painted World of Ariamis"): [
-                        {"image": self.poisonMist, "imageName": "poisonMist"}
+                        {"image": self.poisonMist, "photo image": ImageTk.PhotoImage(self.poisonMist), "imageName": "poisonMist"}
                         ],
                     ("Dark Resurrection", "Tomb of Giants"): [
-                        {"image": self.darkness, "imageName": "darkness"}
+                        {"image": self.darkness, "photo image": ImageTk.PhotoImage(self.darkness), "imageName": "darkness"}
                         ],
                     ("Deathly Freeze", "Painted World of Ariamis"): [
-                        {"image": self.snowstorm, "imageName": "snowstorm"},
-                        {"image": self.bitterCold, "imageName": "bitterCold"}
+                        {"image": self.snowstorm, "photo image": ImageTk.PhotoImage(self.snowstorm), "imageName": "snowstorm"},
+                        {"image": self.bitterCold, "photo image": ImageTk.PhotoImage(self.bitterCold), "imageName": "bitterCold"}
                         ],
                     ("Deathly Tolls", "The Sunless City"): [
-                        {"image": self.timer, "imageName": "timer"},
-                        {"image": self.mimic, "imageName": "mimic"},
-                        {"image": self.onslaught, "imageName": "onslaught"}
+                        {"image": self.timer, "photo image": ImageTk.PhotoImage(self.timer), "imageName": "timer"},
+                        {"image": self.mimic, "photo image": ImageTk.PhotoImage(self.mimic), "imageName": "mimic"},
+                        {"image": self.onslaught, "photo image": ImageTk.PhotoImage(self.onslaught), "imageName": "onslaught"}
                         ],
                     ("Depths of the Cathedral", "The Sunless City"): [
-                        {"image": self.mimic, "imageName": "mimic"}
+                        {"image": self.mimic, "photo image": ImageTk.PhotoImage(self.mimic), "imageName": "mimic"}
                         ],
                     ("Distant Tower", "Painted World of Ariamis"): [
-                        {"image": self.barrage, "imageName": "barrage"},
-                        {"image": self.trial, "imageName": "trial"}
+                        {"image": self.barrage, "photo image": ImageTk.PhotoImage(self.barrage), "imageName": "barrage"},
+                        {"image": self.trial, "photo image": ImageTk.PhotoImage(self.trial), "imageName": "trial"}
                         ],
                     ("Eye of the Storm", "Painted World of Ariamis"): [
-                        {"image": self.hidden, "imageName": "hidden"}
+                        {"image": self.hidden, "photo image": ImageTk.PhotoImage(self.hidden), "imageName": "hidden"}
                         ],
                     ("Far From the Sun", "Tomb of Giants"): [
-                        {"image": self.darkness, "imageName": "darkness"}
+                        {"image": self.darkness, "photo image": ImageTk.PhotoImage(self.darkness), "imageName": "darkness"}
                         ],
                     ("Flooded Fortress", "The Sunless City"): [
-                        {"image": self.trial, "imageName": "trial"}
+                        {"image": self.trial, "photo image": ImageTk.PhotoImage(self.trial), "imageName": "trial"}
                         ],
                     ("Frozen Revolutions", "Painted World of Ariamis"): [
-                        {"image": self.trial, "imageName": "trial"}
+                        {"image": self.trial, "photo image": ImageTk.PhotoImage(self.trial), "imageName": "trial"}
                         ],
                     ("Frozen Sentries", "Painted World of Ariamis"): [
-                        {"image": self.snowstorm, "imageName": "snowstorm"}
+                        {"image": self.snowstorm, "photo image": ImageTk.PhotoImage(self.snowstorm), "imageName": "snowstorm"}
                         ],
                     ("Giant's Coffin", "Tomb of Giants"): [
-                        {"image": self.onslaught, "imageName": "onslaught"},
-                        {"image": self.trial, "imageName": "trial"},
-                        {"image": self.timer, "imageName": "timer"}
+                        {"image": self.onslaught, "photo image": ImageTk.PhotoImage(self.onslaught), "imageName": "onslaught"},
+                        {"image": self.trial, "photo image": ImageTk.PhotoImage(self.trial), "imageName": "trial"},
+                        {"image": self.timer, "photo image": ImageTk.PhotoImage(self.timer), "imageName": "timer"}
                         ],
                     ("Gleaming Silver", "The Sunless City"): [
-                        {"image": self.trial, "imageName": "trial"},
-                        {"image": self.mimic, "imageName": "mimic"}
+                        {"image": self.trial, "photo image": ImageTk.PhotoImage(self.trial), "imageName": "trial"},
+                        {"image": self.mimic, "photo image": ImageTk.PhotoImage(self.mimic), "imageName": "mimic"}
                         ],
                     ("Gnashing Beaks", "Painted World of Ariamis"): [
-                        {"image": self.trial, "imageName": "trial"}
+                        {"image": self.trial, "photo image": ImageTk.PhotoImage(self.trial), "imageName": "trial"}
                         ],
                     ("Grim Reunion", "The Sunless City"): [
-                        {"image": self.trial, "imageName": "trial"}
+                        {"image": self.trial, "photo image": ImageTk.PhotoImage(self.trial), "imageName": "trial"}
                         ],
                     ("Hanging Rafters", "The Sunless City"): [
-                        {"image": self.trial, "imageName": "trial"},
-                        {"image": self.onslaught, "imageName": "onslaught"}
+                        {"image": self.trial, "photo image": ImageTk.PhotoImage(self.trial), "imageName": "trial"},
+                        {"image": self.onslaught, "photo image": ImageTk.PhotoImage(self.onslaught), "imageName": "onslaught"}
                         ],
                     ("Illusionary Doorway", "The Sunless City"): [
-                        {"image": self.illusion, "imageName": "illusion"}
+                        {"image": self.illusion, "photo image": ImageTk.PhotoImage(self.illusion), "imageName": "illusion"}
                         ],
                     ("In Deep Water", "Tomb of Giants"): [
-                        {"image": self.timer, "imageName": "timer"}
+                        {"image": self.timer, "photo image": ImageTk.PhotoImage(self.timer), "imageName": "timer"}
                         ],
                     ("Inhospitable Ground", "Painted World of Ariamis"): [
-                        {"image": self.snowstorm, "imageName": "snowstorm"}
+                        {"image": self.snowstorm, "photo image": ImageTk.PhotoImage(self.snowstorm), "imageName": "snowstorm"}
                         ],
                     ("Kingdom's Messengers", "The Sunless City"): [
-                        {"image": self.trial, "imageName": "trial"}
+                        {"image": self.trial, "photo image": ImageTk.PhotoImage(self.trial), "imageName": "trial"}
                         ],
                     ("Lakeview Refuge", "Tomb of Giants"): [
-                        {"image": self.onslaught, "imageName": "onslaught"},
-                        {"image": self.darkness, "imageName": "darkness"},
-                        {"image": self.trial, "imageName": "trial"}
+                        {"image": self.onslaught, "photo image": ImageTk.PhotoImage(self.onslaught), "imageName": "onslaught"},
+                        {"image": self.darkness, "photo image": ImageTk.PhotoImage(self.darkness), "imageName": "darkness"},
+                        {"image": self.trial, "photo image": ImageTk.PhotoImage(self.trial), "imageName": "trial"}
                         ],
                     ("Last Rites", "Tomb of Giants"): [
-                        {"image": self.timer, "imageName": "timer"}
+                        {"image": self.timer, "photo image": ImageTk.PhotoImage(self.timer), "imageName": "timer"}
                         ],
                     ("Last Shred of Light", "Tomb of Giants"): [
-                        {"image": self.darkness, "imageName": "darkness"}
+                        {"image": self.darkness, "photo image": ImageTk.PhotoImage(self.darkness), "imageName": "darkness"}
                         ],
                     ("No Safe Haven", "Painted World of Ariamis"): [
-                        {"image": self.poisonMist, "imageName": "poisonMist"}
+                        {"image": self.poisonMist, "photo image": ImageTk.PhotoImage(self.poisonMist), "imageName": "poisonMist"}
                         ],
                     ("Painted Passage", "Painted World of Ariamis"): [
-                        {"image": self.snowstorm, "imageName": "snowstorm"}
+                        {"image": self.snowstorm, "photo image": ImageTk.PhotoImage(self.snowstorm), "imageName": "snowstorm"}
                         ],
                     ("Parish Church", "The Sunless City"): [
-                        {"image": self.mimic, "imageName": "mimic"},
-                        {"image": self.illusion, "imageName": "illusion"},
-                        {"image": self.trial, "imageName": "trial"}
+                        {"image": self.mimic, "photo image": ImageTk.PhotoImage(self.mimic), "imageName": "mimic"},
+                        {"image": self.illusion, "photo image": ImageTk.PhotoImage(self.illusion), "imageName": "illusion"},
+                        {"image": self.trial, "photo image": ImageTk.PhotoImage(self.trial), "imageName": "trial"}
                         ],
                     ("Pitch Black", "Tomb of Giants"): [
-                        {"image": self.darkness, "imageName": "darkness"}
+                        {"image": self.darkness, "photo image": ImageTk.PhotoImage(self.darkness), "imageName": "darkness"}
                         ],
                     ("Promised Respite", "Painted World of Ariamis"): [
-                        {"image": self.snowstorm, "imageName": "snowstorm"}
+                        {"image": self.snowstorm, "photo image": ImageTk.PhotoImage(self.snowstorm), "imageName": "snowstorm"}
                         ],
                     ("Skeleton Overlord", "Tomb of Giants"): [
-                        {"image": self.timer, "imageName": "timer"}
+                        {"image": self.timer, "photo image": ImageTk.PhotoImage(self.timer), "imageName": "timer"}
                         ],
                     ("Snowblind", "Painted World of Ariamis"): [
-                        {"image": self.snowstorm, "imageName": "snowstorm"},
-                        {"image": self.bitterCold, "imageName": "bitterCold"},
-                        {"image": self.hidden, "imageName": "hidden"}
+                        {"image": self.snowstorm, "photo image": ImageTk.PhotoImage(self.snowstorm), "imageName": "snowstorm"},
+                        {"image": self.bitterCold, "photo image": ImageTk.PhotoImage(self.bitterCold), "imageName": "bitterCold"},
+                        {"image": self.hidden, "photo image": ImageTk.PhotoImage(self.hidden), "imageName": "hidden"}
                         ],
                     ("Tempting Maw", "The Sunless City"): [
-                        {"image": self.trial, "imageName": "trial"}
+                        {"image": self.trial, "photo image": ImageTk.PhotoImage(self.trial), "imageName": "trial"}
                         ],
                     ("The Beast From the Depths", "Tomb of Giants"): [
-                        {"image": self.trial, "imageName": "trial"}
+                        {"image": self.trial, "photo image": ImageTk.PhotoImage(self.trial), "imageName": "trial"}
                         ],
                     ("The First Bastion", "Painted World of Ariamis"): [
-                        {"image": self.trial, "imageName": "trial"}
+                        {"image": self.trial, "photo image": ImageTk.PhotoImage(self.trial), "imageName": "trial"}
                         ],
                     ("The Grand Hall", "The Sunless City"): [
-                        {"image": self.trial, "imageName": "trial"},
-                        {"image": self.mimic, "imageName": "mimic"}
+                        {"image": self.trial, "photo image": ImageTk.PhotoImage(self.trial), "imageName": "trial"},
+                        {"image": self.mimic, "photo image": ImageTk.PhotoImage(self.mimic), "imageName": "mimic"}
                         ],
                     ("The Last Bastion", "Painted World of Ariamis"): [
-                        {"image": self.snowstorm, "imageName": "snowstorm"},
-                        {"image": self.bitterCold, "imageName": "bitterCold"},
-                        {"image": self.trial, "imageName": "trial"}
+                        {"image": self.snowstorm, "photo image": ImageTk.PhotoImage(self.snowstorm), "imageName": "snowstorm"},
+                        {"image": self.bitterCold, "photo image": ImageTk.PhotoImage(self.bitterCold), "imageName": "bitterCold"},
+                        {"image": self.trial, "photo image": ImageTk.PhotoImage(self.trial), "imageName": "trial"}
                         ],
                     ("The Locked Grave", "Tomb of Giants"): [
-                        {"image": self.trial, "imageName": "trial"}
+                        {"image": self.trial, "photo image": ImageTk.PhotoImage(self.trial), "imageName": "trial"}
                         ],
                     ("The Mass Grave", "Tomb of Giants"): [
-                        {"image": self.onslaught, "imageName": "onslaught"},
-                        {"image": self.timer, "imageName": "timer"},
-                        {"image": self.timer, "imageName": "timer"},
-                        {"image": self.timer, "imageName": "timer"}
+                        {"image": self.onslaught, "photo image": ImageTk.PhotoImage(self.onslaught), "imageName": "onslaught"},
+                        {"image": self.timer, "photo image": ImageTk.PhotoImage(self.timer), "imageName": "timer"},
+                        {"image": self.timer, "photo image": ImageTk.PhotoImage(self.timer), "imageName": "timer"},
+                        {"image": self.timer, "photo image": ImageTk.PhotoImage(self.timer), "imageName": "timer"}
                         ],
                     ("The Shine of Gold", "The Sunless City"): [
-                        {"image": self.timer, "imageName": "timer"}
+                        {"image": self.timer, "photo image": ImageTk.PhotoImage(self.timer), "imageName": "timer"}
                         ],
                     ("Trecherous Tower", "Painted World of Ariamis"): [
-                        {"image": self.snowstorm, "imageName": "snowstorm"},
-                        {"image": self.bitterCold, "imageName": "bitterCold"},
-                        {"image": self.eerie, "imageName": "eerie"}
+                        {"image": self.snowstorm, "photo image": ImageTk.PhotoImage(self.snowstorm), "imageName": "snowstorm"},
+                        {"image": self.bitterCold, "photo image": ImageTk.PhotoImage(self.bitterCold), "imageName": "bitterCold"},
+                        {"image": self.onslaught, "photo image": ImageTk.PhotoImage(self.eerie), "imageName": "eerie"}
                         ],
                     ("Twilight Falls", "The Sunless City"): [
-                        {"image": self.illusion, "imageName": "illusion"}
+                        {"image": self.illusion, "photo image": ImageTk.PhotoImage(self.illusion), "imageName": "illusion"}
                         ],
                     ("Undead Sanctum", "The Sunless City"): [
-                        {"image": self.onslaught, "imageName": "onslaught"}
+                        {"image": self.onslaught, "photo image": ImageTk.PhotoImage(self.onslaught), "imageName": "onslaught"}
                         ],
                     ("Unseen Scurrying", "Painted World of Ariamis"): [
-                        {"image": self.hidden, "imageName": "hidden"}
+                        {"image": self.hidden, "photo image": ImageTk.PhotoImage(self.hidden), "imageName": "hidden"}
                         ]
                 }
                 
@@ -1260,6 +1278,154 @@ try:
                 raise
 
 
+        def print_encounters(self):
+            """
+            Export campaign encounters to a PDF.
+            """
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of print_encounters", caller=calframe[1][3])
+                
+                self.forPrinting = True
+                self.encountersToPrint = []
+                campaignEncounters = [e for e in self.campaign if e["name"] not in self.bosses]
+
+                for encounter in campaignEncounters:
+                    # These are the card sizes in mm
+                    if encounter["expansion"] in {
+                        "Dark Souls The Board Game",
+                        "Darkroot",
+                        "Executioner Chariot",
+                        "Explorers",
+                        "Iron Keep",
+                        "Asylum Demon",
+                        "Black Dragon Kalameet",
+                        "Gaping Dragon",
+                        "Guardian Dragon",
+                        "Manus, Father of the Abyss",
+                        "Old Iron King",
+                        "The Four Kings",
+                        "The Last Giant",
+                        "Vordt of the Boreal Valley"}:
+                        if encounter["level"] == 4:
+                            encounter["width"] = 63
+                            encounter["height"] = 88
+                        else:
+                            encounter["width"] = 42
+                            encounter["height"] = 63
+                    else:
+                        encounter["width"] = 70
+                        encounter["height"] = 120
+                
+                encounterCount = 0
+                eCount = 0
+                v1Normal = []
+                l = [e for e in campaignEncounters if e["width"] == 42]
+                for i in range(0, len(l), 18):
+                    v1Normal.append(l[i:i+18])
+                    encounterCount += len(l[i:i+18])
+                
+                v1Level4 = []
+                l = [e for e in campaignEncounters if e["width"] == 63]
+                for i in range(0, len(l), 9):
+                    v1Level4.append(l[i:i+9])
+                    encounterCount += len(l[i:i+9])
+                
+                v2 = []
+                l = [e for e in campaignEncounters if e["width"] == 70]
+                for i in range(0, len(l), 6):
+                    v2.append(l[i:i+6])
+                    encounterCount += len(l[i:i+6])
+
+                encountersToPrint = [v1Normal, v1Level4, v2]
+
+                buffer = 5
+                pdf = FPDF(unit="mm")
+                pdf.set_margins(buffer, buffer, buffer)
+                
+                progress = PopupWindow(root, labelText="Creating a PDF...", progressBar=True, progressMax=encounterCount, loadingImage=True)
+
+                for e, encounterList in enumerate(encountersToPrint):
+                    if e == 0:
+                        standardCards = 11
+                        columnBreaks = {3, 7, 11}
+                    elif e == 1:
+                        standardCards = 8
+                        columnBreaks = {2, 5}
+                    elif e == 2:
+                        standardCards = 1
+                        columnBreaks = {1}
+                        buffer = 3
+
+                    for page in encounterList:
+                        pdf.add_page()
+                        x = buffer
+                        y = buffer
+                        pdf.set_x(x)
+                        pdf.set_y(y)
+
+                        for i, encounter in enumerate(page):
+                            # Get the encounter.
+                            campaignEncounter = [e for e in self.campaign if e["name"] == encounter["name"]]
+                            self.rewardTreasure = campaignEncounter[0].get("rewardTreasure")
+                                
+                            adapter.debug("\tOpening " + baseFolder + "\\lib\\encounters\\" + campaignEncounter[0]["name"] + ".json", caller=calframe[1][3])
+                            # Get the enemy slots for this encounter.
+                            with open(baseFolder + "\\lib\\encounters\\" + campaignEncounter[0]["name"] + ".json") as alternativesFile:
+                                alts = load(alternativesFile)
+
+                            # Create the encounter card with saved enemies and tooltips.
+                            self.newEnemies = campaignEncounter[0]["enemies"]
+                            self.edit_encounter_card(campaignEncounter[0]["name"], campaignEncounter[0]["expansion"], campaignEncounter[0]["level"], alts["enemySlots"])
+
+                            # Stage the encounter image
+                            adapter.debug("\tStaging " + encounter["name"] + ", level " + str(encounter["level"]) + " from " + encounter["expansion"], caller=calframe[1][3])
+                            imageStage = ImageTk.getimage(self.encounterPhotoImage)
+
+                            if i > standardCards:
+                                imageStage = imageStage.rotate(90, Image.NEAREST, expand=1)
+                            imageStage.save(baseFolder + "\\lib\\image staging\\" + encounter["name"] + ".png")
+
+                            adapter.debug("\tAdding " + encounter["name"] + " to PDF at (" + str(x) + ", " + str(y) + ") with width of " + str(encounter["width" if not i > standardCards else "height"]), caller=calframe[1][3])
+                            pdf.image(baseFolder + "\\lib\\image staging\\" + encounter["name"] + ".png", x=x, y=y, type="PNG", w=encounter["width" if not i > standardCards else "height"])
+
+                            if i < standardCards:
+                                if i in columnBreaks:
+                                    x += encounter["width"] + buffer
+                                    y = buffer
+                                else:
+                                    y += encounter["height"] + buffer
+                            elif i == standardCards:
+                                x += encounter["width"] + buffer
+                                y = buffer
+                            else:
+                                y += encounter["width"] + buffer
+
+                            eCount += 1
+                            progress.progressVar.set(eCount)
+                            root.update_idletasks()
+                    
+                progress.destroy()
+
+                # Prompt user to save the file.
+                pdfOutput = filedialog.asksaveasfile(mode="w", initialdir=baseFolder + "\\lib\\encounter exports", defaultextension=".pdf")
+
+                # If they canceled it, do nothing.
+                if not pdfOutput:
+                    adapter.debug("End of print_encounters (nothing done)")
+                    return
+
+                pdf.output(pdfOutput.name)
+
+                self.forPrinting = False
+
+                adapter.debug("End of print_encounters")
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
         def set_encounter_list(self):
             """
             Sets of the list of available encounters in the encounter tab based on what
@@ -1333,6 +1499,8 @@ try:
                 self.campaignTabButtonsFrame.pack()
                 self.campaignTabButtonsFrame2 = ttk.Frame(self.campaignTab)
                 self.campaignTabButtonsFrame2.pack()
+                self.campaignTabButtonsFrame3 = ttk.Frame(self.campaignTab)
+                self.campaignTabButtonsFrame3.pack()
                 self.campaignTabTreeviewFrame = ttk.Frame(self.campaignTab)
                 self.campaignTabTreeviewFrame.pack(fill="both", expand=True)
                 
@@ -1340,18 +1508,21 @@ try:
                 self.addButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
                 self.deleteButton = ttk.Button(self.campaignTabButtonsFrame, text="Remove Encounter", width=16, command=self.delete_encounter_from_campaign)
                 self.deleteButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-                self.loadButton = ttk.Button(self.campaignTabButtonsFrame, text="Load Campaign", width=16, command=self.load_campaign)
-                self.loadButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-                self.saveButton = ttk.Button(self.campaignTabButtonsFrame, text="Save Campaign", width=16, command=self.save_campaign)
-                self.saveButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-                
-                self.moveUpButton = ttk.Button(self.campaignTabButtonsFrame2, text="Move Up", width=16, command=self.move_up)
+                self.moveUpButton = ttk.Button(self.campaignTabButtonsFrame, text="Move Up", width=16, command=self.move_up)
                 self.moveUpButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+
+                self.loadButton = ttk.Button(self.campaignTabButtonsFrame2, text="Load Campaign", width=16, command=self.load_campaign)
+                self.loadButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+                self.saveButton = ttk.Button(self.campaignTabButtonsFrame2, text="Save Campaign", width=16, command=self.save_campaign)
+                self.saveButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
                 self.moveDownButton = ttk.Button(self.campaignTabButtonsFrame2, text="Move Down", width=16, command=self.move_down)
                 self.moveDownButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-                self.addBossButton = ttk.Button(self.campaignTabButtonsFrame2, text="Add Boss", width=16, command=self.add_boss_to_campaign)
+
+                self.printEncounters = ttk.Button(self.campaignTabButtonsFrame3, text="Export to PDF", width=16, command=self.print_encounters)
+                self.printEncounters.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+                self.addBossButton = ttk.Button(self.campaignTabButtonsFrame3, text="Add Boss", width=16, command=self.add_boss_to_campaign)
                 self.addBossButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-                self.bossMenu = ttk.Combobox(self.campaignTabButtonsFrame2, state="readonly", values=self.bossMenu, textvariable=self.selectedBoss)
+                self.bossMenu = ttk.Combobox(self.campaignTabButtonsFrame3, state="readonly", values=self.bossMenu, textvariable=self.selectedBoss)
                 self.bossMenu.current(0)
                 self.bossMenu.config(width=17)
                 self.bossMenu.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
@@ -1970,10 +2141,14 @@ try:
                         + (choice(self.selected["alternatives"]["3"]) if "3" in self.selected["alternatives"] else []))
                 else:
                     self.newEnemies = choice(self.selected["alternatives"])
-                if len(self.newEnemies) > 1:
+                # Check to see if there are multiple alternatives.
+                if len(set([tuple(a) for a in self.selected["alternatives"]])) > 1:
                     while self.newEnemies == oldEnemies:
                         if "1" in self.selected["alternatives"]:
-                            self.newEnemies = choice(self.selected["alternatives"]["1"] + self.selected["alternatives"].get("2", []) + self.selected["alternatives"].get("3", []))
+                            self.newEnemies = (
+                                choice(self.selected["alternatives"]["1"])
+                                + (choice(self.selected["alternatives"]["2"]) if "2" in self.selected["alternatives"] else [])
+                                + (choice(self.selected["alternatives"]["3"]) if "3" in self.selected["alternatives"] else []))
                         else:
                             self.newEnemies = choice(self.selected["alternatives"])
 
@@ -2187,10 +2362,14 @@ try:
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of create_tooltip", caller=calframe[1][3])
 
-                label = tk.Label(self.encounterFrame, image=tooltipDict["image"], borderwidth=0, highlightthickness=0)
-                self.tooltips.append(label)
-                label.place(x=x, y=y)
-                CreateToolTip(label, self.tooltipText[tooltipDict["imageName"]])
+                if self.forPrinting:
+                    convertedImage = tooltipDict["image"].convert("RGBA")
+                    self.encounterImage.paste(im=convertedImage, box=(x, y), mask=convertedImage)
+                else:
+                    label = tk.Label(self.encounterFrame, image=tooltipDict["photo image"], borderwidth=0, highlightthickness=0)
+                    self.tooltips.append(label)
+                    label.place(x=x, y=y)
+                    CreateToolTip(label, self.tooltipText[tooltipDict["imageName"]])
 
                 adapter.debug("\tEnd of create_tooltip", caller=calframe[1][3])
             except Exception as e:
@@ -2218,7 +2397,7 @@ try:
                 for i, tooltip in enumerate(self.encounterTooltips.get((name, set), [])):
                     if not tooltip:
                         continue
-                    self.create_tooltip(tooltipDict=tooltip, x=142, y=199 + (15.5 * i))
+                    self.create_tooltip(tooltipDict=tooltip, x=142, y=int(199 + (15.5 * i)))
 
                 adapter.debug("\tEnd of apply_keyword_tooltips", caller=calframe[1][3])
             except Exception as e:
@@ -2269,7 +2448,7 @@ try:
                 adapter.debug("Start of aged_sentinel", caller=calframe[1][3])
 
                 target = self.newTiles[1][1][0]
-                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=65, y=147)
                 self.create_tooltip(tooltipDict=tooltipDict, x=143, y=231)
                 self.create_tooltip(tooltipDict=tooltipDict, x=203, y=255)
@@ -2310,8 +2489,8 @@ try:
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of central_plaza", caller=calframe[1][3])
                     
-                target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])]].name
-                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                target = enemyIds[self.newEnemies[-1]].name
+                tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=143, y=262)
 
                 adapter.debug("\tEnd of central_plaza", caller=calframe[1][3])
@@ -2327,7 +2506,7 @@ try:
                 adapter.debug("Start of cloak_and_feathers", caller=calframe[1][3])
 
                 target = self.newTiles[1][0][0]
-                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=65, y=147)
 
                 adapter.debug("\tEnd of cloak_and_feathers", caller=calframe[1][3])
@@ -2343,7 +2522,7 @@ try:
                 adapter.debug("Start of cold_snap", caller=calframe[1][3])
 
                 target = self.newTiles[2][0][1]
-                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=216, y=227)
 
                 adapter.debug("\tEnd of cold_snap", caller=calframe[1][3])
@@ -2359,7 +2538,7 @@ try:
                 adapter.debug("Start of corrupted_hovel", caller=calframe[1][3])
 
                 target = [enemy for enemy in self.newTiles[1][0] + self.newTiles[1][1] if (self.newTiles[1][0] + self.newTiles[1][1]).count(enemy) == 2][0]
-                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=146, y=250)
 
                 adapter.debug("\tEnd of corrupted_hovel", caller=calframe[1][3])
@@ -2375,7 +2554,7 @@ try:
                 adapter.debug("Start of corvian_host", caller=calframe[1][3])
 
                 target = self.newTiles[1][1][0]
-                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=161, y=238)
                 self.create_tooltip(tooltipDict=tooltipDict, x=263, y=238)
                 self.create_tooltip(tooltipDict=tooltipDict, x=261, y=251)
@@ -2407,7 +2586,7 @@ try:
                 adapter.debug("Start of dark_alleyway", caller=calframe[1][3])
 
                 target = self.newTiles[1][0][0]
-                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=65, y=147)
 
                 adapter.debug("\tEnd of dark_alleyway", caller=calframe[1][3])
@@ -2449,7 +2628,7 @@ try:
                 deathlyFreezeTile2 = [enemy for enemy in self.newTiles[2][0] + self.newTiles[2][1]]
                 overlap = set(deathlyFreezeTile1) & set(deathlyFreezeTile2)
                 target = sorted([enemy for enemy in overlap if deathlyFreezeTile1.count(enemy) + deathlyFreezeTile2.count(enemy) > 1], key=lambda x: enemiesDict[x].difficulty, reverse=True)[0]
-                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=141, y=242)
 
                 adapter.debug("\tEnd of deathly_freeze", caller=calframe[1][3])
@@ -2465,7 +2644,7 @@ try:
                 adapter.debug("Start of deathly_magic", caller=calframe[1][3])
 
                 target = sorted([enemy for enemy in self.newTiles[1][0] + self.newTiles[1][1] if (self.newTiles[1][0] + self.newTiles[1][1]).count(enemy) == 1], key=lambda x: enemiesDict[x].difficulty, reverse=True)[0]
-                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=65, y=147)
                 self.create_tooltip(tooltipDict=tooltipDict, x=274, y=196)
 
@@ -2481,19 +2660,19 @@ try:
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of deathly_tolls", caller=calframe[1][3])
                     
-                target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])]].name
-                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                target = enemyIds[self.newEnemies[-1]].name
+                tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=180, y=212)
                 
                 gang = Counter([enemyIds[enemy].gang for enemy in self.newEnemies if enemyIds[enemy].gang]).most_common(1)[0][0]
                 if gang == "Alonne":
-                    tooltipDict = {"image": self.gangAlonne, "imageName": "gang"}
+                    tooltipDict = {"image" if self.forPrinting else "photo image": self.gangAlonne if self.forPrinting else self.gangAlonnePhoto, "imageName": "gang"}
                 elif gang == "Hollow":
-                    tooltipDict = {"image": self.gangHollow, "imageName": "gang"}
+                    tooltipDict = {"image" if self.forPrinting else "photo image": self.gangHollow if self.forPrinting else self.gangHollowPhoto, "imageName": "gang"}
                 elif gang == "Scarecrow":
-                    tooltipDict = {"image": self.gangScarecrow, "imageName": "gang"}
+                    tooltipDict = {"image" if self.forPrinting else "photo image": self.gangScarecrow if self.forPrinting else self.gangScarecrowPhoto, "imageName": "gang"}
                 elif gang == "Skeleton":
-                    tooltipDict = {"image": self.gangSkeleton, "imageName": "gang"}
+                    tooltipDict = {"image" if self.forPrinting else "photo image": self.gangSkeleton if self.forPrinting else self.gangSkeletonPhoto, "imageName": "gang"}
 
                 self.create_tooltip(tooltipDict=tooltipDict, x=142, y=245)
 
@@ -2511,13 +2690,13 @@ try:
                 
                 gang = Counter([enemyIds[enemy].gang for enemy in self.newEnemies if enemyIds[enemy].gang]).most_common(1)[0][0]
                 if gang == "Alonne":
-                    tooltipDict = {"image": self.gangAlonne, "imageName": "gang"}
+                    tooltipDict = {"photo image": self.gangAlonne if self.forPrinting else self.gangAlonnePhoto, "imageName": "gang"}
                 elif gang == "Hollow":
-                    tooltipDict = {"image": self.gangHollow, "imageName": "gang"}
+                    tooltipDict = {"photo image": self.gangHollow if self.forPrinting else self.gangHollowPhoto, "imageName": "gang"}
                 elif gang == "Scarecrow":
-                    tooltipDict = {"image": self.gangScarecrow, "imageName": "gang"}
+                    tooltipDict = {"photo image": self.gangScarecrow if self.forPrinting else self.gangScarecrowPhoto, "imageName": "gang"}
                 elif gang == "Skeleton":
-                    tooltipDict = {"image": self.gangSkeleton, "imageName": "gang"}
+                    tooltipDict = {"photo image": self.gangSkeleton if self.forPrinting else self.gangSkeletonPhoto, "imageName": "gang"}
 
                 self.create_tooltip(tooltipDict=tooltipDict, x=142, y=214)
 
@@ -2534,7 +2713,7 @@ try:
                 adapter.debug("Start of distant_tower", caller=calframe[1][3])
 
                 target = self.newTiles[3][0][0]
-                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=217, y=213)
                 
                 if self.rewardTreasure:
@@ -2565,20 +2744,20 @@ try:
                 targets = list(set([enemyIds[enemy].name for enemy in self.newEnemies if self.newEnemies.count(enemy) == 2]))
                 text1 = "Increase        "
                 if fourTarget:
-                    tooltipDict = {"image": allEnemies[fourTarget[0]]["image text"], "imageName": fourTarget[0]}
+                    tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[fourTarget[0]]["image text" if self.forPrinting else "photo image text"], "imageName": fourTarget[0]}
                     self.create_tooltip(tooltipDict=tooltipDict, x=187, y=255)
                 else:
-                    tooltipDict = {"image": allEnemies[targets[0]]["image text"], "imageName": targets[0]}
+                    tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[targets[0]]["image text" if self.forPrinting else "photo image text"], "imageName": targets[0]}
                     self.create_tooltip(tooltipDict=tooltipDict, x=187, y=255)
-                    tooltipDict = {"image": allEnemies[targets[1]]["image text"], "imageName": targets[1]}
+                    tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[targets[1]]["image text" if self.forPrinting else "photo image text"], "imageName": targets[1]}
                     self.create_tooltip(tooltipDict=tooltipDict, x=232, y=255)
                     text1 += " and        "
                 text1 += "block and resistance"
                 text2 = "values by 1. Once these enemies have been"
                 text3 = "killed, spawn the        on      , on tile 3."
                 
-                target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])]].name
-                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                target = enemyIds[self.newEnemies[-1]].name
+                tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=65, y=147)
                 self.create_tooltip(tooltipDict=tooltipDict, x=228, y=281)
                 self.encounterImage.paste(im=self.enemyNode2, box=(263, 281), mask=self.enemyNode2)
@@ -2611,13 +2790,13 @@ try:
                 
                 gang = Counter([enemyIds[enemy].gang for enemy in self.newEnemies if enemyIds[enemy].gang]).most_common(1)[0][0]
                 if gang == "Alonne":
-                    tooltipDict = {"image": self.gangAlonne, "imageName": "gang"}
+                    tooltipDict = {"photo image": self.gangAlonne if self.forPrinting else self.gangAlonnePhoto, "imageName": "gang"}
                 elif gang == "Hollow":
-                    tooltipDict = {"image": self.gangHollow, "imageName": "gang"}
+                    tooltipDict = {"photo image": self.gangHollow if self.forPrinting else self.gangHollowPhoto, "imageName": "gang"}
                 elif gang == "Scarecrow":
-                    tooltipDict = {"image": self.gangScarecrow, "imageName": "gang"}
+                    tooltipDict = {"photo image": self.gangScarecrow if self.forPrinting else self.gangScarecrowPhoto, "imageName": "gang"}
                 elif gang == "Skeleton":
-                    tooltipDict = {"image": self.gangSkeleton, "imageName": "gang"}
+                    tooltipDict = {"photo image": self.gangSkeleton if self.forPrinting else self.gangSkeletonPhoto, "imageName": "gang"}
 
                 self.create_tooltip(tooltipDict=tooltipDict, x=142, y=215)
 
@@ -2634,7 +2813,7 @@ try:
                 adapter.debug("Start of frozen_revolutions", caller=calframe[1][3])
 
                 target = self.newTiles[3][0][0]
-                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=143, y=227)
                 self.create_tooltip(tooltipDict=tooltipDict, x=143, y=243)
                 self.create_tooltip(tooltipDict=tooltipDict, x=354, y=243)
@@ -2662,12 +2841,12 @@ try:
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of giants_coffin", caller=calframe[1][3])
 
-                target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])]].name
-                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                target = enemyIds[self.newEnemies[-2]].name
+                tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=241, y=228)
                     
-                target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])+1]].name
-                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                target = enemyIds[self.newEnemies[-1]].name
+                tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=286, y=228)
                 
                 if self.rewardTreasure:
@@ -2695,15 +2874,15 @@ try:
 
                 targets = list(set([enemyIds[enemy].name for enemy in self.newEnemies if self.newEnemies.count(enemy) == 2]))
                 
-                tooltipDict = {"image": allEnemies[targets[0]]["image text"], "imageName": targets[0]}
+                tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[targets[0]]["image text" if self.forPrinting else "photo image text"], "imageName": targets[0]}
                 self.create_tooltip(tooltipDict=tooltipDict, x=189, y=245)
                 self.create_tooltip(tooltipDict=tooltipDict, x=144, y=270)
-                tooltipDict = {"image": allEnemies[targets[1]]["image text"], "imageName": targets[1]}
+                tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[targets[1]]["image text" if self.forPrinting else "photo image text"], "imageName": targets[1]}
                 self.create_tooltip(tooltipDict=tooltipDict, x=233, y=245)
                 self.create_tooltip(tooltipDict=tooltipDict, x=188, y=270)
                     
-                target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])]].name
-                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                target = enemyIds[self.newEnemies[-1]].name
+                tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=180, y=212)
 
                 adapter.debug("\tEnd of gleaming_silver", caller=calframe[1][3])
@@ -2718,12 +2897,12 @@ try:
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of gnashing_beaks", caller=calframe[1][3])
                 
-                target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])]].name
-                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                target = enemyIds[self.newEnemies[-2]].name
+                tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=336, y=232)
                     
-                target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])+1]].name
-                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                target = enemyIds[self.newEnemies[-1]].name
+                tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=242, y=244)
 
                 adapter.debug("\tEnd of gnashing_beaks", caller=calframe[1][3])
@@ -2761,8 +2940,8 @@ try:
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of grim_reunion", caller=calframe[1][3])
                 
-                target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])]].name
-                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                target = enemyIds[self.newEnemies[-1]].name
+                tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=219, y=196)
                 self.create_tooltip(tooltipDict=tooltipDict, x=269, y=255)
 
@@ -2802,8 +2981,8 @@ try:
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of in_deep_water", caller=calframe[1][3])
                 
-                target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])]].name
-                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                target = enemyIds[self.newEnemies[-1]].name
+                tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=239, y=198)
                 
                 if self.rewardTreasure:
@@ -2852,13 +3031,13 @@ try:
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of lakeview_refuge", caller=calframe[1][3])
 
-                target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])]].name
-                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                target = enemyIds[self.newEnemies[-2]].name
+                tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=215, y=228)
                 self.create_tooltip(tooltipDict=tooltipDict, x=291, y=264)
 
-                target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])+1]].name
-                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                target = enemyIds[self.newEnemies[-1]].name
+                tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=243, y=276)
 
                 adapter.debug("\tEnd of lakeview_refuge", caller=calframe[1][3])
@@ -2874,7 +3053,7 @@ try:
                 adapter.debug("Start of monstrous_maw", caller=calframe[1][3])
                 
                 target = self.newTiles[1][1][0]
-                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=65, y=147)
                 self.create_tooltip(tooltipDict=tooltipDict, x=210, y=196)
                 
@@ -2902,7 +3081,7 @@ try:
                 adapter.debug("Start of no_safe_haven", caller=calframe[1][3])
 
                 target = self.newTiles[2][0][0]
-                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=63, y=147)
                 
                 if self.rewardTreasure:
@@ -2951,8 +3130,8 @@ try:
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of parish_church", caller=calframe[1][3])
                     
-                target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])]].name
-                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                target = enemyIds[self.newEnemies[-1]].name
+                tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=180, y=198)
 
                 adapter.debug("\tEnd of parish_church", caller=calframe[1][3])
@@ -2967,8 +3146,8 @@ try:
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of parish_gates", caller=calframe[1][3])
                     
-                target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])]].name
-                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                target = enemyIds[self.newEnemies[-1]].name
+                tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=309, y=220)
                 self.create_tooltip(tooltipDict=tooltipDict, x=188, y=255)
                 self.create_tooltip(tooltipDict=tooltipDict, x=144, y=280)
@@ -2988,10 +3167,10 @@ try:
                 tile1Enemies = self.newTiles[1][0] + self.newTiles[1][1]
                 tile2Enemies = self.newTiles[2][0] + self.newTiles[2][1]
                 target = sorted([enemy for enemy in tile1Enemies if tile1Enemies.count(enemy) == 1], key=lambda x: enemiesDict[x].difficulty, reverse=True)[0]
-                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=65, y=147)
                 target = sorted([enemy for enemy in tile2Enemies if tile2Enemies.count(enemy) == 1], key=lambda x: enemiesDict[x].difficulty, reverse=True)[0]
-                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=222, y=147)
 
                 adapter.debug("\tEnd of pitch_black", caller=calframe[1][3])
@@ -3007,10 +3186,10 @@ try:
                 adapter.debug("Start of puppet_master", caller=calframe[1][3])
 
                 target = self.newTiles[1][0][1]
-                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=64, y=148)
                 target = self.newTiles[1][0][0]
-                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=145, y=196)
                 
                 if self.rewardTreasure:
@@ -3060,7 +3239,7 @@ try:
                 adapter.debug("Start of shattered_keep", caller=calframe[1][3])
                 
                 target = self.newTiles[1][1][0]
-                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=146, y=195)
                 
                 if self.rewardTreasure:
@@ -3087,7 +3266,7 @@ try:
                 adapter.debug("Start of skeletal_spokes", caller=calframe[1][3])
                 
                 target = self.newTiles[2][0][0]
-                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=145, y=196)
                 self.create_tooltip(tooltipDict=tooltipDict, x=165, y=210)
                 self.create_tooltip(tooltipDict=tooltipDict, x=165, y=239)
@@ -3104,13 +3283,13 @@ try:
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of skeleton_overlord", caller=calframe[1][3])
 
-                target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])]].name
-                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                target = enemyIds[self.newEnemies[-1]].name
+                tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=240, y=196)
                 self.create_tooltip(tooltipDict=tooltipDict, x=208, y=257)
 
                 target = self.newTiles[1][0][0]
-                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=65, y=147)
                 self.create_tooltip(tooltipDict=tooltipDict, x=313, y=232)
                 self.create_tooltip(tooltipDict=tooltipDict, x=292, y=257)
@@ -3127,8 +3306,8 @@ try:
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of tempting_maw", caller=calframe[1][3])
                 
-                target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])]].name
-                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                target = enemyIds[self.newEnemies[-1]].name
+                tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=224, y=145)
                 self.create_tooltip(tooltipDict=tooltipDict, x=220, y=197)
                 self.create_tooltip(tooltipDict=tooltipDict, x=346, y=256)
@@ -3145,12 +3324,12 @@ try:
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of the_abandoned_chest", caller=calframe[1][3])
 
-                target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])]].name
-                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                target = enemyIds[self.newEnemies[-2]].name
+                tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=322, y=195)
 
-                target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])+1]].name
-                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                target = enemyIds[self.newEnemies[-1]].name
+                tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=144, y=208)
                 
                 if self.rewardTreasure:
@@ -3177,7 +3356,7 @@ try:
                 adapter.debug("Start of the_beast_from_the_depths", caller=calframe[1][3])
 
                 target = self.newTiles[1][0][0]
-                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=65, y=147)
                 self.create_tooltip(tooltipDict=tooltipDict, x=158, y=222)
                 
@@ -3204,8 +3383,8 @@ try:
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of the_bell_tower", caller=calframe[1][3])
                 
-                target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])]].name
-                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                target = enemyIds[self.newEnemies[-1]].name
+                tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=341, y=195)
 
                 adapter.debug("\tEnd of the_bell_tower", caller=calframe[1][3])
@@ -3220,16 +3399,16 @@ try:
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of the_first_bastion", caller=calframe[1][3])
 
-                target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])]].name
-                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                target = enemyIds[self.newEnemies[-3]].name
+                tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=362, y=212)
 
-                target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])+1]].name
-                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                target = enemyIds[self.newEnemies[-2]].name
+                tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=188, y=237)
 
-                target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])+2]].name
-                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                target = enemyIds[self.newEnemies[-1]].name
+                tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=247, y=249)
                 self.create_tooltip(tooltipDict=tooltipDict, x=216, y=197)
 
@@ -3247,13 +3426,13 @@ try:
                 
                 gang = Counter([enemyIds[enemy].gang for enemy in self.newEnemies if enemyIds[enemy].gang]).most_common(1)[0][0]
                 if gang == "Alonne":
-                    tooltipDict = {"image": self.gangAlonne, "imageName": "gang"}
+                    tooltipDict = {"photo image": self.gangAlonne if self.forPrinting else self.gangAlonnePhoto, "imageName": "gang"}
                 elif gang == "Hollow":
-                    tooltipDict = {"image": self.gangHollow, "imageName": "gang"}
+                    tooltipDict = {"photo image": self.gangHollow if self.forPrinting else self.gangHollowPhoto, "imageName": "gang"}
                 elif gang == "Scarecrow":
-                    tooltipDict = {"image": self.gangScarecrow, "imageName": "gang"}
+                    tooltipDict = {"photo image": self.gangScarecrow if self.forPrinting else self.gangScarecrowPhoto, "imageName": "gang"}
                 elif gang == "Skeleton":
-                    tooltipDict = {"image": self.gangSkeleton, "imageName": "gang"}
+                    tooltipDict = {"photo image": self.gangSkeleton if self.forPrinting else self.gangSkeletonPhoto, "imageName": "gang"}
 
                 self.create_tooltip(tooltipDict=tooltipDict, x=142, y=200)
 
@@ -3269,8 +3448,8 @@ try:
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of the_grand_hall", caller=calframe[1][3])
                     
-                target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])]].name
-                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                target = enemyIds[self.newEnemies[-1]].name
+                tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=180, y=213)
 
                 adapter.debug("\tEnd of the_grand_hall", caller=calframe[1][3])
@@ -3286,7 +3465,7 @@ try:
                 adapter.debug("Start of the_iron_golem", caller=calframe[1][3])
 
                 target = self.newTiles[1][1][0]
-                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=65, y=147)
                 self.create_tooltip(tooltipDict=tooltipDict, x=188, y=196)
                 self.create_tooltip(tooltipDict=tooltipDict, x=174, y=219)
@@ -3315,7 +3494,7 @@ try:
                 adapter.debug("Start of the_last_bastion", caller=calframe[1][3])
                 
                 target = sorted([enemy for enemy in self.newTiles[1][0] + self.newTiles[1][1]], key=lambda x: enemiesDict[x].difficulty)[0]
-                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=215, y=227)
                 self.create_tooltip(tooltipDict=tooltipDict, x=316, y=250)
 
@@ -3331,8 +3510,8 @@ try:
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of the_locked_grave", caller=calframe[1][3])
 
-                target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])]].name
-                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                target = enemyIds[self.newEnemies[-1]].name
+                tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=217, y=197)
                 self.create_tooltip(tooltipDict=tooltipDict, x=306, y=220)
                 
@@ -3360,14 +3539,14 @@ try:
                 adapter.debug("Start of the_shine_of_gold", caller=calframe[1][3])
 
                 target = self.newTiles[1][1][0]
-                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=65, y=147)
                 self.create_tooltip(tooltipDict=tooltipDict, x=207, y=219)
                 self.create_tooltip(tooltipDict=tooltipDict, x=280, y=254)
                 self.create_tooltip(tooltipDict=tooltipDict, x=250, y=268)
 
                 target = self.newTiles[1][0][0]
-                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=268, y=195)
 
                 adapter.debug("\tEnd of the_shine_of_gold", caller=calframe[1][3])
@@ -3383,10 +3562,10 @@ try:
                 adapter.debug("Start of the_skeleton_ball", caller=calframe[1][3])
 
                 target = self.newTiles[1][0][0]
-                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=64, y=148)
                 target = self.newTiles[3][1][0]
-                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=222, y=148)
                 
                 if self.rewardTreasure:
@@ -3433,7 +3612,7 @@ try:
                 adapter.debug("Start of trophy_room", caller=calframe[1][3])
 
                 target = self.newTiles[2][0][0]
-                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=61, y=147)
                 self.create_tooltip(tooltipDict=tooltipDict, x=210, y=197)
                 self.create_tooltip(tooltipDict=tooltipDict, x=145, y=244)
@@ -3463,13 +3642,13 @@ try:
                 
                 gang = Counter([enemyIds[enemy].gang for enemy in self.newEnemies if enemyIds[enemy].gang]).most_common(1)[0][0]
                 if gang == "Alonne":
-                    tooltipDict = {"image": self.gangAlonne, "imageName": "gang"}
+                    tooltipDict = {"photo image": self.gangAlonne if self.forPrinting else self.gangAlonnePhoto, "imageName": "gang"}
                 elif gang == "Hollow":
-                    tooltipDict = {"image": self.gangHollow, "imageName": "gang"}
+                    tooltipDict = {"photo image": self.gangHollow if self.forPrinting else self.gangHollowPhoto, "imageName": "gang"}
                 elif gang == "Scarecrow":
-                    tooltipDict = {"image": self.gangScarecrow, "imageName": "gang"}
+                    tooltipDict = {"photo image": self.gangScarecrow if self.forPrinting else self.gangScarecrowPhoto, "imageName": "gang"}
                 elif gang == "Skeleton":
-                    tooltipDict = {"image": self.gangSkeleton, "imageName": "gang"}
+                    tooltipDict = {"photo image": self.gangSkeleton if self.forPrinting else self.gangSkeletonPhoto, "imageName": "gang"}
 
                 self.create_tooltip(tooltipDict=tooltipDict, x=142, y=214)
 
@@ -3487,13 +3666,13 @@ try:
                 
                 gang = Counter([enemyIds[enemy].gang for enemy in self.newEnemies if enemyIds[enemy].gang]).most_common(1)[0][0]
                 if gang == "Alonne":
-                    tooltipDict = {"image": self.gangAlonne, "imageName": "gang"}
+                    tooltipDict = {"photo image": self.gangAlonne if self.forPrinting else self.gangAlonnePhoto, "imageName": "gang"}
                 elif gang == "Hollow":
-                    tooltipDict = {"image": self.gangHollow, "imageName": "gang"}
+                    tooltipDict = {"photo image": self.gangHollow if self.forPrinting else self.gangHollowPhoto, "imageName": "gang"}
                 elif gang == "Scarecrow":
-                    tooltipDict = {"image": self.gangScarecrow, "imageName": "gang"}
+                    tooltipDict = {"photo image": self.gangScarecrow if self.forPrinting else self.gangScarecrowPhoto, "imageName": "gang"}
                 elif gang == "Skeleton":
-                    tooltipDict = {"image": self.gangSkeleton, "imageName": "gang"}
+                    tooltipDict = {"photo image": self.gangSkeleton if self.forPrinting else self.gangSkeletonPhoto, "imageName": "gang"}
 
                 self.create_tooltip(tooltipDict=tooltipDict, x=142, y=214)
                 
@@ -3566,7 +3745,7 @@ try:
                 adapter.debug("Start of velkas_chosen", caller=calframe[1][3])
                 
                 target = sorted([enemy for enemy in self.newTiles[2][0] + self.newTiles[2][1]], key=lambda x: enemiesDict[x].difficulty, reverse=True)[0]
-                tooltipDict = {"image": allEnemies[target]["image text"], "imageName": target}
+                tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=65, y=147)
                 self.create_tooltip(tooltipDict=tooltipDict, x=298, y=195)
                 self.create_tooltip(tooltipDict=tooltipDict, x=205, y=219)

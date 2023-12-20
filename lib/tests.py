@@ -2,21 +2,23 @@ from os import path
 from json import load
 from itertools import product
 from collections import Counter
+from random import choice
+import types
 
 from enemies import enemyIds, enemiesDict
 
 baseFolder = path.dirname(__file__)
 
-with open(baseFolder + "\\lib\\enemies.json") as enemiesFile:
+with open(baseFolder + "\\enemies.json") as enemiesFile:
     enemies = load(enemiesFile)
 
-with open(baseFolder + "\\lib\\invaders_standard.json") as invadersStandardFile:
+with open(baseFolder + "\\invaders_standard.json") as invadersStandardFile:
     invadersStandard = load(invadersStandardFile)
 
-with open(baseFolder + "\\lib\\invaders_advanced.json") as invadersAdvancedFile:
+with open(baseFolder + "\\invaders_advanced.json") as invadersAdvancedFile:
     invadersAdvanced = load(invadersAdvancedFile)
 
-with open(baseFolder + "\\lib\\encounters.json") as encountersFile:
+with open(baseFolder + "\\encounters.json") as encountersFile:
     encounters = load(encountersFile)
 
 
@@ -29,6 +31,32 @@ class Tester():
 
         for encounter in encounters:
             self.load_encounter(encounter)
+            for _ in range(100):
+                self.shuffle_enemies()
+
+
+    def shuffle_enemies(self):
+        self.rewardTreasure = None
+
+        oldEnemies = [e for e in self.newEnemies]
+        if "1" in self.selected["alternatives"]:
+            self.newEnemies = (
+                choice(self.selected["alternatives"]["1"])
+                + (choice(self.selected["alternatives"]["2"]) if "2" in self.selected["alternatives"] else [])
+                + (choice(self.selected["alternatives"]["3"]) if "3" in self.selected["alternatives"] else []))
+        else:
+            self.newEnemies = choice(self.selected["alternatives"])
+        if len(set([tuple(a) for a in self.selected["alternatives"]])) > 1:
+            while self.newEnemies == oldEnemies:
+                if "1" in self.selected["alternatives"]:
+                    self.newEnemies = (
+                        choice(self.selected["alternatives"]["1"])
+                        + (choice(self.selected["alternatives"]["2"]) if "2" in self.selected["alternatives"] else [])
+                        + (choice(self.selected["alternatives"]["3"]) if "3" in self.selected["alternatives"] else []))
+                else:
+                    self.newEnemies = choice(self.selected["alternatives"])
+
+        self.edit_encounter_card(self.selected["name"], self.selected["expansion"], self.selected["level"], self.selected["enemySlots"])
 
 
     def load_encounter(self, encounter=None):
@@ -51,7 +79,7 @@ class Tester():
         self.selected["restrictRanged"] = {}
 
         # Get the possible alternative enemies from the encounter's file.
-        with open(baseFolder + "\\lib\\encounters\\" + encounterName + ".json") as alternativesFile:
+        with open(baseFolder + "\\encounters\\" + encounterName + ".json") as alternativesFile:
             alts = load(alternativesFile)
 
         self.selected["alternatives"] = []
@@ -87,9 +115,16 @@ class Tester():
 
         self.newTiles = dict()
 
+        gen = type(self.selected["alternatives"]) == types.GeneratorType
+        a = []
         for alt in self.selected["alternatives"]:
             self.newEnemies = alt
             self.edit_encounter_card(self.selected["name"], self.selected["expansion"], self.selected["level"], self.selected["enemySlots"])
+            if gen and len(a) < 5000000:
+                a.append(alt)
+
+        if gen:
+            self.selected["alternatives"] = a
 
 
 
