@@ -778,8 +778,12 @@ try:
                 self.eerie = self.create_image("eerie.png", "eerie")
                 self.gangAlonne = self.create_image("gang_alonne.png", "gangAlonne")
                 self.gangHollow = self.create_image("gang_hollow.png", "gangHollow")
-                self.gangSkeleton = self.create_image("gang_skeleton.png", "gangSkeleton")
                 self.gangScarecrow = self.create_image("gang_scarecrow.png", "gangScarecrow")
+                self.gangSkeleton = self.create_image("gang_skeleton.png", "gangSkeleton")
+                self.gangAlonnePhoto = ImageTk.PhotoImage(self.gangAlonne)
+                self.gangHollowPhoto = ImageTk.PhotoImage(self.gangHollow)
+                self.gangScarecrowPhoto = ImageTk.PhotoImage(self.gangScarecrow)
+                self.gangSkeletonPhoto = ImageTk.PhotoImage(self.gangSkeleton)
                 self.hidden = self.create_image("hidden.png", "hidden")
                 self.illusion = self.create_image("illusion.png", "illusion")
                 self.mimic = self.create_image("mimic_keyword.png", "mimic")
@@ -1514,7 +1518,7 @@ try:
                 self.moveDownButton = ttk.Button(self.campaignTabButtonsFrame2, text="Move Down", width=16, command=self.move_down)
                 self.moveDownButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
 
-                self.printEncounters = ttk.Button(self.campaignTabButtonsFrame3, text="Print Encounters", width=16, command=self.print_encounters)
+                self.printEncounters = ttk.Button(self.campaignTabButtonsFrame3, text="Export to PDF", width=16, command=self.print_encounters)
                 self.printEncounters.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
                 self.addBossButton = ttk.Button(self.campaignTabButtonsFrame3, text="Add Boss", width=16, command=self.add_boss_to_campaign)
                 self.addBossButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
@@ -2662,13 +2666,13 @@ try:
                 
                 gang = Counter([enemyIds[enemy].gang for enemy in self.newEnemies if enemyIds[enemy].gang]).most_common(1)[0][0]
                 if gang == "Alonne":
-                    tooltipDict = {"image": self.gangAlonne, "imageName": "gang"}
+                    tooltipDict = {"image" if self.forPrinting else "photo image": self.gangAlonne if self.forPrinting else self.gangAlonnePhoto, "imageName": "gang"}
                 elif gang == "Hollow":
-                    tooltipDict = {"image": self.gangHollow, "imageName": "gang"}
+                    tooltipDict = {"image" if self.forPrinting else "photo image": self.gangHollow if self.forPrinting else self.gangHollowPhoto, "imageName": "gang"}
                 elif gang == "Scarecrow":
-                    tooltipDict = {"image": self.gangScarecrow, "imageName": "gang"}
+                    tooltipDict = {"image" if self.forPrinting else "photo image": self.gangScarecrow if self.forPrinting else self.gangScarecrowPhoto, "imageName": "gang"}
                 elif gang == "Skeleton":
-                    tooltipDict = {"image": self.gangSkeleton, "imageName": "gang"}
+                    tooltipDict = {"image" if self.forPrinting else "photo image": self.gangSkeleton if self.forPrinting else self.gangSkeletonPhoto, "imageName": "gang"}
 
                 self.create_tooltip(tooltipDict=tooltipDict, x=142, y=245)
 
@@ -2686,13 +2690,13 @@ try:
                 
                 gang = Counter([enemyIds[enemy].gang for enemy in self.newEnemies if enemyIds[enemy].gang]).most_common(1)[0][0]
                 if gang == "Alonne":
-                    tooltipDict = {"image": self.gangAlonne, "imageName": "gang"}
+                    tooltipDict = {"photo image": self.gangAlonne if self.forPrinting else self.gangAlonnePhoto, "imageName": "gang"}
                 elif gang == "Hollow":
-                    tooltipDict = {"image": self.gangHollow, "imageName": "gang"}
+                    tooltipDict = {"photo image": self.gangHollow if self.forPrinting else self.gangHollowPhoto, "imageName": "gang"}
                 elif gang == "Scarecrow":
-                    tooltipDict = {"image": self.gangScarecrow, "imageName": "gang"}
+                    tooltipDict = {"photo image": self.gangScarecrow if self.forPrinting else self.gangScarecrowPhoto, "imageName": "gang"}
                 elif gang == "Skeleton":
-                    tooltipDict = {"image": self.gangSkeleton, "imageName": "gang"}
+                    tooltipDict = {"photo image": self.gangSkeleton if self.forPrinting else self.gangSkeletonPhoto, "imageName": "gang"}
 
                 self.create_tooltip(tooltipDict=tooltipDict, x=142, y=214)
 
@@ -2786,13 +2790,13 @@ try:
                 
                 gang = Counter([enemyIds[enemy].gang for enemy in self.newEnemies if enemyIds[enemy].gang]).most_common(1)[0][0]
                 if gang == "Alonne":
-                    tooltipDict = {"image": self.gangAlonne, "imageName": "gang"}
+                    tooltipDict = {"photo image": self.gangAlonne if self.forPrinting else self.gangAlonnePhoto, "imageName": "gang"}
                 elif gang == "Hollow":
-                    tooltipDict = {"image": self.gangHollow, "imageName": "gang"}
+                    tooltipDict = {"photo image": self.gangHollow if self.forPrinting else self.gangHollowPhoto, "imageName": "gang"}
                 elif gang == "Scarecrow":
-                    tooltipDict = {"image": self.gangScarecrow, "imageName": "gang"}
+                    tooltipDict = {"photo image": self.gangScarecrow if self.forPrinting else self.gangScarecrowPhoto, "imageName": "gang"}
                 elif gang == "Skeleton":
-                    tooltipDict = {"image": self.gangSkeleton, "imageName": "gang"}
+                    tooltipDict = {"photo image": self.gangSkeleton if self.forPrinting else self.gangSkeletonPhoto, "imageName": "gang"}
 
                 self.create_tooltip(tooltipDict=tooltipDict, x=142, y=215)
 
@@ -3422,13 +3426,13 @@ try:
                 
                 gang = Counter([enemyIds[enemy].gang for enemy in self.newEnemies if enemyIds[enemy].gang]).most_common(1)[0][0]
                 if gang == "Alonne":
-                    tooltipDict = {"image": self.gangAlonne, "imageName": "gang"}
+                    tooltipDict = {"photo image": self.gangAlonne if self.forPrinting else self.gangAlonnePhoto, "imageName": "gang"}
                 elif gang == "Hollow":
-                    tooltipDict = {"image": self.gangHollow, "imageName": "gang"}
+                    tooltipDict = {"photo image": self.gangHollow if self.forPrinting else self.gangHollowPhoto, "imageName": "gang"}
                 elif gang == "Scarecrow":
-                    tooltipDict = {"image": self.gangScarecrow, "imageName": "gang"}
+                    tooltipDict = {"photo image": self.gangScarecrow if self.forPrinting else self.gangScarecrowPhoto, "imageName": "gang"}
                 elif gang == "Skeleton":
-                    tooltipDict = {"image": self.gangSkeleton, "imageName": "gang"}
+                    tooltipDict = {"photo image": self.gangSkeleton if self.forPrinting else self.gangSkeletonPhoto, "imageName": "gang"}
 
                 self.create_tooltip(tooltipDict=tooltipDict, x=142, y=200)
 
@@ -3638,13 +3642,13 @@ try:
                 
                 gang = Counter([enemyIds[enemy].gang for enemy in self.newEnemies if enemyIds[enemy].gang]).most_common(1)[0][0]
                 if gang == "Alonne":
-                    tooltipDict = {"image": self.gangAlonne, "imageName": "gang"}
+                    tooltipDict = {"photo image": self.gangAlonne if self.forPrinting else self.gangAlonnePhoto, "imageName": "gang"}
                 elif gang == "Hollow":
-                    tooltipDict = {"image": self.gangHollow, "imageName": "gang"}
+                    tooltipDict = {"photo image": self.gangHollow if self.forPrinting else self.gangHollowPhoto, "imageName": "gang"}
                 elif gang == "Scarecrow":
-                    tooltipDict = {"image": self.gangScarecrow, "imageName": "gang"}
+                    tooltipDict = {"photo image": self.gangScarecrow if self.forPrinting else self.gangScarecrowPhoto, "imageName": "gang"}
                 elif gang == "Skeleton":
-                    tooltipDict = {"image": self.gangSkeleton, "imageName": "gang"}
+                    tooltipDict = {"photo image": self.gangSkeleton if self.forPrinting else self.gangSkeletonPhoto, "imageName": "gang"}
 
                 self.create_tooltip(tooltipDict=tooltipDict, x=142, y=214)
 
@@ -3662,13 +3666,13 @@ try:
                 
                 gang = Counter([enemyIds[enemy].gang for enemy in self.newEnemies if enemyIds[enemy].gang]).most_common(1)[0][0]
                 if gang == "Alonne":
-                    tooltipDict = {"image": self.gangAlonne, "imageName": "gang"}
+                    tooltipDict = {"photo image": self.gangAlonne if self.forPrinting else self.gangAlonnePhoto, "imageName": "gang"}
                 elif gang == "Hollow":
-                    tooltipDict = {"image": self.gangHollow, "imageName": "gang"}
+                    tooltipDict = {"photo image": self.gangHollow if self.forPrinting else self.gangHollowPhoto, "imageName": "gang"}
                 elif gang == "Scarecrow":
-                    tooltipDict = {"image": self.gangScarecrow, "imageName": "gang"}
+                    tooltipDict = {"photo image": self.gangScarecrow if self.forPrinting else self.gangScarecrowPhoto, "imageName": "gang"}
                 elif gang == "Skeleton":
-                    tooltipDict = {"image": self.gangSkeleton, "imageName": "gang"}
+                    tooltipDict = {"photo image": self.gangSkeleton if self.forPrinting else self.gangSkeletonPhoto, "imageName": "gang"}
 
                 self.create_tooltip(tooltipDict=tooltipDict, x=142, y=214)
                 
