@@ -213,11 +213,109 @@ try:
                 adapter.exception(e)
                 raise
 
+    
+    class CheckboxTreeview(ttk.Treeview):
+        """
+            Treeview widget with checkboxes left of each item.
+            The checkboxes are done via the image attribute of the item, so to keep
+            the checkbox, you cannot add an image to the item.
+        """
+
+        def __init__(self, theme, master=None, **kw):
+            ttk.Treeview.__init__(self, master, **kw)
+            # checkboxes are implemented with pictures
+            self.im_checked = tk.PhotoImage(file=baseFolder + "\\Azure-ttk-theme-main\\theme\\" + theme + "\\check-accent.png")
+            self.im_unchecked = tk.PhotoImage(file=baseFolder + "\\Azure-ttk-theme-main\\theme\\" + theme + "\\box-basic.png")
+            self.im_tristate = tk.PhotoImage(file=baseFolder + "\\Azure-ttk-theme-main\\theme\\" + theme + "\\check-tri-accent.png")
+            self.tag_configure("unchecked", image=self.im_unchecked)
+            self.tag_configure("tristate", image=self.im_tristate)
+            self.tag_configure("checked", image=self.im_checked)
+            # check / uncheck boxes on click
+            self.bind("<Button-1>", self.box_click, True)
+
+        def insert(self, parent, index, iid=None, **kw):
+            """ same method as for standard treeview but add the tag "unchecked"
+                automatically if no tag among ("checked", "unchecked", "tristate")
+                is given """
+            if not "tags" in kw:
+                kw["tags"] = ("unchecked",)
+            elif not ("unchecked" in kw["tags"] or "checked" in kw["tags"]
+                    or "tristate" in kw["tags"]):
+                kw["tags"] = ("unchecked",)
+            ttk.Treeview.insert(self, parent, index, iid, **kw)
+
+        def check_descendant(self, item):
+            """ check the boxes of item"s descendants """
+            children = self.get_children(item)
+            for iid in children:
+                self.item(iid, tags=("checked",))
+                self.check_descendant(iid)
+
+        def check_ancestor(self, item):
+            """ check the box of item and change the state of the boxes of item"s
+                ancestors accordingly """
+            self.item(item, tags=("checked",))
+            parent = self.parent(item)
+            if parent:
+                children = self.get_children(parent)
+                b = ["checked" in self.item(c, "tags") for c in children]
+                if False in b:
+                    # at least one box is not checked and item"s box is checked
+                    self.tristate_parent(parent)
+                else:
+                    # all boxes of the children are checked
+                    self.check_ancestor(parent)
+
+        def tristate_parent(self, item):
+            """ put the box of item in tristate and change the state of the boxes of
+                item"s ancestors accordingly """
+            self.item(item, tags=("tristate",))
+            parent = self.parent(item)
+            if parent:
+                self.tristate_parent(parent)
+
+        def uncheck_descendant(self, item):
+            """ uncheck the boxes of item"s descendant """
+            children = self.get_children(item)
+            for iid in children:
+                self.item(iid, tags=("unchecked",))
+                self.uncheck_descendant(iid)
+
+        def uncheck_ancestor(self, item):
+            """ uncheck the box of item and change the state of the boxes of item"s
+                ancestors accordingly """
+            self.item(item, tags=("unchecked",))
+            parent = self.parent(item)
+            if parent:
+                children = self.get_children(parent)
+                b = ["unchecked" in self.item(c, "tags") for c in children]
+                if False in b:
+                    # at least one box is checked and item's box is unchecked
+                    self.tristate_parent(parent)
+                else:
+                    # no box is checked
+                    self.uncheck_ancestor(parent)
+
+        def box_click(self, event):
+            """ check or uncheck box when clicked """
+            x, y, widget = event.x, event.y, event.widget
+            elem = widget.identify("element", x, y)
+            if "image" in elem:
+                # a box was clicked
+                item = self.identify_row(y)
+                tags = self.item(item, "tags")
+                if ("unchecked" in tags) or ("tristate" in tags):
+                    self.check_ancestor(item)
+                    self.check_descendant(item)
+                else:
+                    self.uncheck_descendant(item)
+                    self.uncheck_ancestor(item)
+
 
     class SettingsWindow(object):
         """
         Window in which the user selects which expansions they own and whether they want to see
-        old, new, or both styles of encounters when being shown random encounters.
+        V1, V1, or both styles of encounters when being shown random encounters.
         """
         def __init__(self, master):
             try:
@@ -235,27 +333,97 @@ try:
                 # These are the only expansions that matter - the ones that add enemies or regular treasure.
                 # All encounters are always going to be available.
                 self.expansions = {
-                    "Dark Souls The Board Game": {"button": None, "value": tk.IntVar()},
-                    "Painted World of Ariamis": {"button": None, "value": tk.IntVar()},
-                    "The Sunless City": {"button": None, "value": tk.IntVar()},
-                    "Tomb of Giants": {"button": None, "value": tk.IntVar()},
-                    "Darkroot": {"button": None, "value": tk.IntVar()},
-                    "Explorers": {"button": None, "value": tk.IntVar()},
-                    "Iron Keep": {"button": None, "value": tk.IntVar()},
-                    "Phantoms": {"button": None, "value": tk.IntVar()},
-                    "Executioner Chariot": {"button": None, "value": tk.IntVar()},
-                    "Characters Expansion": {"button": None, "value": tk.IntVar()}
+                    "Painted World of Ariamis": {"button": None, "value": tk.IntVar(), "displayName": "Painted World of Ariamis (V2 Core Set)"},
+                    "The Sunless City": {"button": None, "value": tk.IntVar(), "displayName": "The Sunless City (V2 Core Set)"},
+                    "Tomb of Giants": {"button": None, "value": tk.IntVar(), "displayName": "Tomb of Giants (V2 Core Set)"},
+                    "Dark Souls The Board Game": {"button": None, "value": tk.IntVar(), "displayName": "Dark Souls The Board Game (V1 Core Set)"},
+                    "Darkroot": {"button": None, "value": tk.IntVar(), "displayName": "Darkroot (V1)"},
+                    "Explorers": {"button": None, "value": tk.IntVar(), "displayName": "Explorers (V1)"},
+                    "Iron Keep": {"button": None, "value": tk.IntVar(), "displayName": "Iron Keep (V1)"},
+                    "Phantoms": {"button": None, "value": tk.IntVar(), "displayName": "Phantoms (V1)"},
+                    "Executioner Chariot": {"button": None, "value": tk.IntVar(), "displayName": "Executioner Chariot (V1)"},
+                    "Characters Expansion": {"button": None, "value": tk.IntVar(), "displayName": "Characters Expansion (V1)"}
                 }
                 
-                self.expansionsFrame = ttk.LabelFrame(top, text="Enabled Expansions", padding=(20, 10))
-                self.expansionsFrame.grid(row=0, column=0, padx=(20, 10), pady=(20, 10), sticky="nsew", rowspan=4, columnspan=2)
+                self.notebook = ttk.Notebook(top)
+                self.notebook.grid(row=0, column=0, padx=(20, 10), pady=(20, 10), sticky="nsew", rowspan=4, columnspan=2)
+                
+                self.expansionTab = ttk.Frame(self.notebook)
+                self.notebook.add(self.expansionTab, text="Enabled Expansions")
+
+                self.expansionsScrollbar = ttk.Scrollbar(self.expansionTab)
+                self.expansionsScrollbar.grid(row=0, column=3, rowspan=12, sticky=tk.N+tk.S+tk.W)
                 for i, a in enumerate(self.expansions):
                     self.expansions[a]["value"].set(1 if a in self.settings["availableExpansions"] else 0)
-                    self.expansions[a]["button"] = ttk.Checkbutton(self.expansionsFrame, text=a + (" (Core Set)" if a in coreSets else ""), variable=self.expansions[a]["value"])
-                    if i > 11:
-                        self.expansions[a]["button"].grid(row=i-12, column=1, padx=5, pady=10, sticky="nsew")
+                    self.expansions[a]["button"] = ttk.Checkbutton(self.expansionTab, text=self.expansions[a]["displayName"], variable=self.expansions[a]["value"])
+                    self.expansions[a]["button"].grid(row=i, column=0, padx=5, pady=10, sticky="nsew")
+                        
+                self.enemies = {
+                    "Painted World of Ariamis": {"button": None, "value": tk.IntVar(), "parent": "", "children": [], "displayName": "Painted World of Ariamis (V2)"},
+                    "Bonewheel Skeleton": {"button": None, "value": tk.IntVar(), "parent": "Painted World of Ariamis", "children": [], "displayName": "Bonewheel Skeleton"},
+                    "Crow Demon": {"button": None, "value": tk.IntVar(), "parent": "Painted World of Ariamis", "children": [], "displayName": "Crow Demon"},
+                    "Engorged Zombie": {"button": None, "value": tk.IntVar(), "parent": "Painted World of Ariamis", "children": [], "displayName": "Engorged Zombie"},
+                    "Phalanx": {"button": None, "value": tk.IntVar(), "parent": "Painted World of Ariamis", "children": [], "displayName": "Phalanx"},
+                    "Phalanx Hollow": {"button": None, "value": tk.IntVar(), "parent": "Painted World of Ariamis", "children": [], "displayName": "Phalanx Hollow"},
+                    "Snow Rat": {"button": None, "value": tk.IntVar(), "parent": "Painted World of Ariamis", "children": [], "displayName": "Snow Rat"},
+                    "The Sunless City": {"button": None, "value": tk.IntVar(), "parent": "", "children": [], "displayName": "The Sunless City (V2)"},
+                    "Crossbow Hollow": {"button": None, "value": tk.IntVar(), "parent": "The Sunless City", "children": [], "displayName": "Crossbow Hollow"},
+                    "Hollow Soldier": {"button": None, "value": tk.IntVar(), "parent": "The Sunless City", "children": [], "displayName": "Hollow Soldier"},
+                    "Sentinel": {"button": None, "value": tk.IntVar(), "parent": "The Sunless City", "children": [], "displayName": "Sentinel"},
+                    "Silver Knight Greatbowman": {"button": None, "value": tk.IntVar(), "parent": "The Sunless City", "children": [], "displayName": "Silver Knight Greatbowman"},
+                    "Silver Knight Swordsman": {"button": None, "value": tk.IntVar(), "parent": "The Sunless City", "children": [], "displayName": "Silver Knight Swordsman"},
+                    "Mimic": {"button": None, "value": tk.IntVar(), "parent": "The Sunless City", "children": [], "displayName": "Mimic"},
+                    "Tomb of Giants": {"button": None, "value": tk.IntVar(), "parent": "", "children": [], "displayName": "Tomb of Giants (V2)"},
+                    "Giant Skeleton Archer": {"button": None, "value": tk.IntVar(), "parent": "Tomb of Giants", "children": [], "displayName": "Giant Skeleton Archer"},
+                    "Giant Skeleton Soldier": {"button": None, "value": tk.IntVar(), "parent": "Tomb of Giants", "children": [], "displayName": "Giant Skeleton Soldier"},
+                    "Necromancer": {"button": None, "value": tk.IntVar(), "parent": "Tomb of Giants", "children": [], "displayName": "Necromancer"},
+                    "Skeleton Archer": {"button": None, "value": tk.IntVar(), "parent": "Tomb of Giants", "children": [], "displayName": "Skeleton Archer"},
+                    "Skeleton Beast": {"button": None, "value": tk.IntVar(), "parent": "Tomb of Giants", "children": [], "displayName": "Skeleton Beast"},
+                    "Skeleton Soldier": {"button": None, "value": tk.IntVar(), "parent": "Tomb of Giants", "children": [], "displayName": "Skeleton Soldier"},
+                    "Dark Souls The Board Game (V1)": {"button": None, "value": tk.IntVar(), "parent": "", "children": [], "displayName": "Dark Souls The Board Game (V1)              "},
+                    "Crossbow Hollow (V1)": {"button": None, "value": tk.IntVar(), "parent": "Dark Souls The Board Game (V1)", "children": [], "displayName": "Crossbow Hollow (V1)"},
+                    "Hollow Soldier (V1)": {"button": None, "value": tk.IntVar(), "parent": "Dark Souls The Board Game (V1)", "children": [], "displayName": "Hollow Soldier (V1)"},
+                    "Large Hollow Soldier (V1)": {"button": None, "value": tk.IntVar(), "parent": "Dark Souls The Board Game (V1)", "children": [], "displayName": "Large Hollow Soldier (V1)"},
+                    "Sentinel (V1)": {"button": None, "value": tk.IntVar(), "parent": "Dark Souls The Board Game (V1)", "children": [], "displayName": "Sentinel (V1)"},
+                    "Silver Knight Greatbowman (V1)": {"button": None, "value": tk.IntVar(), "parent": "Dark Souls The Board Game (V1)", "children": [], "displayName": "Silver Knight Greatbowman (V1)"},
+                    "Silver Knight Swordsman (V1)": {"button": None, "value": tk.IntVar(), "parent": "Dark Souls The Board Game (V1)", "children": [], "displayName": "Silver Knight Swordsman (V1)"},
+                    "Darkroot (V1)": {"button": None, "value": tk.IntVar(), "parent": "", "children": [], "displayName": "Darkroot (V1)"},
+                    "Demonic Foliage (V1)": {"button": None, "value": tk.IntVar(), "parent": "Darkroot (V1)", "children": [], "displayName": "Demonic Foliage (V1)"},
+                    "Mushroom Child (V1)": {"button": None, "value": tk.IntVar(), "parent": "Darkroot (V1)", "children": [], "displayName": "Mushroom Parent (V1)"},
+                    "Mushroom Parent (V1)": {"button": None, "value": tk.IntVar(), "parent": "Darkroot (V1)", "children": [], "displayName": "Mushroom Parent (V1)"},
+                    "Plow Scarecrow (V1)": {"button": None, "value": tk.IntVar(), "parent": "Darkroot (V1)", "children": [], "displayName": "Plow Scarecrow (V1)"},
+                    "Shears Scarecrow (V1)": {"button": None, "value": tk.IntVar(), "parent": "Darkroot (V1)", "children": [], "displayName": "Shears Scarecrow (V1)"},
+                    "Stone Guardian (V1)": {"button": None, "value": tk.IntVar(), "parent": "Darkroot (V1)", "children": [], "displayName": "Stone Guardian (V1)"},
+                    "Stone Knight (V1)": {"button": None, "value": tk.IntVar(), "parent": "Darkroot (V1)", "children": [], "displayName": "Stone Knight (V1)"},
+                    "Explorers (V1)": {"button": None, "value": tk.IntVar(), "parent": "", "children": [], "displayName": "Explorers (V1)"},
+                    "Firebomb Hollow (V1)": {"button": None, "value": tk.IntVar(), "parent": "Explorers (V1)", "children": [], "displayName": "Firebomb Hollow (V1)"},
+                    "Silver Knight Spearman (V1)": {"button": None, "value": tk.IntVar(), "parent": "Explorers (V1)", "children": [], "displayName": "Silver Knight Spearman (V1)"},
+                    "Iron Keep (V1)": {"button": None, "value": tk.IntVar(), "parent": "", "children": [], "displayName": "Iron Keep (V1)"},
+                    "Alonne Bow Knight (V1)": {"button": None, "value": tk.IntVar(), "parent": "Iron Keep (V1)", "children": [], "displayName": "Alonne Bow Knight (V1)"},
+                    "Alonne Knight Captain (V1)": {"button": None, "value": tk.IntVar(), "parent": "Iron Keep (V1)", "children": [], "displayName": "Alonne Knight Captain (V1)"},
+                    "Alonne Sword Knight (V1)": {"button": None, "value": tk.IntVar(), "parent": "Iron Keep (V1)", "children": [], "displayName": "Alonne Sword Knight (V1)"},
+                    "Ironclad Soldier (V1)": {"button": None, "value": tk.IntVar(), "parent": "Iron Keep (V1)", "children": [], "displayName": "Ironclad Soldier (V1)"},
+                    "Executioner Chariot (V1)": {"button": None, "value": tk.IntVar(), "parent": "", "children": [], "displayName": "Executioner Chariot (V1)"},
+                    "Black Hollow Mage (V1)": {"button": None, "value": tk.IntVar(), "parent": "Executioner Chariot (V1)", "children": [], "displayName": "Black Hollow Mage (V1)"},
+                    "Falchion Skeleton (V1)": {"button": None, "value": tk.IntVar(), "parent": "Executioner Chariot (V1)", "children": [], "displayName": "Falchion Skeleton (V1)"}
+                }
+                
+                self.enemiesTab = ttk.Frame(self.notebook)
+                self.enemiesTab.grid_propagate(False)
+                self.notebook.add(self.enemiesTab, text="Enabled Enemies")
+
+                self.enemiesScrollbar = ttk.Scrollbar(self.enemiesTab)
+                self.enemiesScrollbar.grid(row=0, column=4, rowspan=16, sticky=tk.N+tk.S+tk.W)
+                for i, a in enumerate(self.enemies):
+                    if self.enemies[a]["parent"]:
+                        self.enemies[self.enemies[a]["parent"]]["children"].append(a)
                     else:
-                        self.expansions[a]["button"].grid(row=i, column=0, padx=5, pady=10, sticky="nsew")
+                        tk.Label(self.enemiesTab, text="     ").grid(column=0, row=i)
+                    #self.enemies[a]["value"].set(1 if a in self.settings["availableEnemies"] else 0)
+                    # Use the functions to set the checked status
+                    self.enemies[a]["button"] = ttk.Checkbutton(self.enemiesTab, text=self.enemies[a]["displayName"], variable=self.enemies[a]["value"])
+                    self.enemies[a]["button"].grid(row=i, column=0 if not self.enemies[a]["parent"] else 1, columnspan=2 if not self.enemies[a]["parent"] else 3, padx=5, pady=1, sticky="nsew")
+                        
 
                 self.charactersActive = {
                     "Assassin": {"button": None, "value": tk.IntVar()},
@@ -293,18 +461,18 @@ try:
                     CreateToolTip(self.treasureSwapOptions[a]["button"], self.treasureSwapOptions[a]["tooltipText"])
                 
                 self.randomEncounters = {
-                    "old": {"button": None, "value": tk.IntVar()},
-                    "new": {"button": None, "value": tk.IntVar()}
+                    "v1": {"button": None, "value": tk.IntVar()},
+                    "v2": {"button": None, "value": tk.IntVar()}
                 }
 
                 self.randomEncounterFrame = ttk.LabelFrame(top, text="Random Encounters Shown", padding=(20, 10))
                 self.randomEncounterFrame.grid(row=1, column=5, padx=(20, 10), pady=(20, 10), sticky="nsew")
-                self.randomEncounters["old"]["value"].set(1 if "old" in self.settings["randomEncounterTypes"] else 0)
-                self.randomEncounters["new"]["value"].set(1 if "new" in self.settings["randomEncounterTypes"] else 0)
-                self.randomEncounters["old"]["button"] = ttk.Checkbutton(self.randomEncounterFrame, text="\"Old\" Style Encounters", variable=self.randomEncounters["old"]["value"])
-                self.randomEncounters["new"]["button"] = ttk.Checkbutton(self.randomEncounterFrame, text="\"New\" Style Encounters", variable=self.randomEncounters["new"]["value"])
-                self.randomEncounters["old"]["button"].grid(row=0, column=0, padx=5, pady=10, sticky="nsew")
-                self.randomEncounters["new"]["button"].grid(row=1, column=0, padx=5, pady=10, sticky="nsew")
+                self.randomEncounters["v1"]["value"].set(1 if "v1" in self.settings["randomEncounterTypes"] else 0)
+                self.randomEncounters["v2"]["value"].set(1 if "v2" in self.settings["randomEncounterTypes"] else 0)
+                self.randomEncounters["v1"]["button"] = ttk.Checkbutton(self.randomEncounterFrame, text="V1 Encounters", variable=self.randomEncounters["v1"]["value"])
+                self.randomEncounters["v2"]["button"] = ttk.Checkbutton(self.randomEncounterFrame, text="V2 Encounters", variable=self.randomEncounters["v2"]["value"])
+                self.randomEncounters["v1"]["button"].grid(row=0, column=0, padx=5, pady=10, sticky="nsew")
+                self.randomEncounters["v2"]["button"].grid(row=1, column=0, padx=5, pady=10, sticky="nsew")
                 
                 self.updateCheck = {"button": None, "value": tk.IntVar(), "tooltipText": "If enabled, makes an API call to Github once a month when the app is opened to check for a new version.\n\nThe app won't download anything or update itself but will let you know if there's a new version."}
                 self.updateCheckFrame = ttk.LabelFrame(top, text="Check For Updates", padding=(20, 10))
@@ -314,7 +482,7 @@ try:
                 self.updateCheck["button"].grid(row=0, column=0, padx=5, pady=10, sticky="nsew")
                 CreateToolTip(self.updateCheck["button"], self.updateCheck["tooltipText"])
                 
-                self.errLabel = tk.Label(self.top, text="")
+                self.errLabel = ttk.Label(self.top, text="")
                 self.errLabel.grid(column=0, row=4, padx=18, columnspan=8)
 
                 self.saveCancelButtonsFrame = ttk.Frame(top, padding=(0, 0, 0, 10))
@@ -436,6 +604,8 @@ try:
                     self.errLabel.config(text="You have selected one or more characters from sets you have disabled!")
                     adapter.debug("End of quit_with_save", caller=calframe[1][3])
                     return
+                
+                enabledEnemies = [s for s in self.enemies if self.enemies[s]["value"].get() == 1]
 
                 randomEncounterTypes = set([s for s in self.randomEncounters if self.randomEncounters[s]["value"].get() == 1])
                 charactersActive = set([s for s in self.charactersActive if self.charactersActive[s]["value"].get() == 1])
@@ -443,6 +613,7 @@ try:
                 newSettings = {
                     "theme": "light" if self.lightTheme["value"].get() == 1 else "dark",
                     "availableExpansions": list(expansionsActive),
+                    "enabledEnemies": list(enabledEnemies),
                     "randomEncounterTypes": list(randomEncounterTypes),
                     "charactersActive": list(charactersActive),
                     "treasureSwapOption": self.treasureSwapOption.get(),
@@ -641,9 +812,9 @@ try:
                 self.availableExpansions = set(self.settings["availableExpansions"])
                 self.charactersActive = set(self.settings["charactersActive"])
                 self.availableCoreSets = coreSets & self.availableExpansions
-                oldExpansions = {"Dark Souls The Board Game", "Darkroot", "Executioner Chariot", "Explorers", "Iron Keep"} if "old" in self.settings["randomEncounterTypes"] else set()
-                newExpansions = (self.allExpansions - {"Dark Souls The Board Game", "Darkroot", "Executioner Chariot", "Explorers", "Iron Keep"}) if "new" in self.settings["randomEncounterTypes"] else set()
-                self.expansionsForRandomEncounters = (oldExpansions | newExpansions) & self.allExpansions
+                v1Expansions = {"Dark Souls The Board Game", "Darkroot", "Executioner Chariot", "Explorers", "Iron Keep"} if "v1" in self.settings["randomEncounterTypes"] else set()
+                v2Expansions = (self.allExpansions - {"Dark Souls The Board Game", "Darkroot", "Executioner Chariot", "Explorers", "Iron Keep"}) if "v2" in self.settings["randomEncounterTypes"] else set()
+                self.expansionsForRandomEncounters = (v1Expansions | v2Expansions) & self.allExpansions
                 
                 if self.settings["treasureSwapOption"] == "Similar Soul Cost":
                     generate_treasure_soul_cost(self.availableExpansions, self.charactersActive)
@@ -1845,9 +2016,9 @@ try:
                     self.treeviewEncounters.destroy()
                     self.availableExpansions = set(self.settings["availableExpansions"])
                     self.availableCoreSets = coreSets & self.availableExpansions
-                    oldExpansions = {"Dark Souls The Board Game", "Darkroot", "Executioner Chariot", "Explorers", "Iron Keep"} if "old" in self.settings["randomEncounterTypes"] else set()
-                    newExpansions = (self.allExpansions - {"Dark Souls The Board Game", "Darkroot", "Executioner Chariot", "Explorers", "Iron Keep"}) if "new" in self.settings["randomEncounterTypes"] else set()
-                    self.expansionsForRandomEncounters = (oldExpansions | newExpansions) & self.allExpansions
+                    v1Expansions = {"Dark Souls The Board Game", "Darkroot", "Executioner Chariot", "Explorers", "Iron Keep"} if "v1" in self.settings["randomEncounterTypes"] else set()
+                    v2Expansions = (self.allExpansions - {"Dark Souls The Board Game", "Darkroot", "Executioner Chariot", "Explorers", "Iron Keep"}) if "v2" in self.settings["randomEncounterTypes"] else set()
+                    self.expansionsForRandomEncounters = (v1Expansions | v2Expansions) & self.allExpansions
                     self.set_encounter_list()
                     self.create_encounters_treeview()
                 
@@ -3798,6 +3969,8 @@ try:
         if version[0].replace("\n", "") != response.json()["name"]:
             p = PopupWindow(root, "A new version of DSBG-Shuffle is available!\nCheck it out on Github!\n\nIf you don't want to see this notification anymore,\ndisable checking for updates in the settings.", firstButton="Ok", secondButton=True)
             root.wait_window(p)
+
+    s = ttk.Style()
 
     app = Application(root)
     app.pack(fill="both", expand=True)
