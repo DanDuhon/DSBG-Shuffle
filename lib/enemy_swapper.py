@@ -316,11 +316,9 @@ try:
                 self.expansionTab = VerticalScrolledFrame(self.notebook)
                 self.notebook.add(self.expansionTab, text="Enabled Expansions")
 
-                # self.expansionsScrollbar = ttk.Scrollbar(self.expansionTab)
-                # self.expansionsScrollbar.grid(row=0, column=3, rowspan=12, sticky=tk.N+tk.S+tk.W)
                 for i, expansion in enumerate(self.expansions):
                     self.expansions[expansion]["value"].set(1 if expansion in self.settings["availableExpansions"] else 0)
-                    self.expansions[expansion]["button"] = ttk.Checkbutton(self.expansionTab.interior, text=self.expansions[expansion]["displayName"], variable=self.expansions[expansion]["value"])
+                    self.expansions[expansion]["button"] = ttk.Checkbutton(self.expansionTab.interior, text=self.expansions[expansion]["displayName"], variable=self.expansions[expansion]["value"], command=lambda expansion=expansion: self.toggle_expansion(expansion=expansion))
                     self.expansions[expansion]["button"].grid(row=i, column=0, padx=5, pady=10, sticky="nsew")
 
                 self.enemies = {
@@ -334,10 +332,10 @@ try:
                     "The Sunless City": {"button": None, "value": tk.IntVar(), "parent": None, "children": [], "displayName": "The Sunless City (V2)"},
                     "Crossbow Hollow": {"button": None, "value": tk.IntVar(), "parent": "The Sunless City", "children": [], "displayName": "Crossbow Hollow"},
                     "Hollow Soldier": {"button": None, "value": tk.IntVar(), "parent": "The Sunless City", "children": [], "displayName": "Hollow Soldier"},
+                    "Mimic": {"button": None, "value": tk.IntVar(), "parent": "The Sunless City", "children": [], "displayName": "Mimic"},
                     "Sentinel": {"button": None, "value": tk.IntVar(), "parent": "The Sunless City", "children": [], "displayName": "Sentinel"},
                     "Silver Knight Greatbowman": {"button": None, "value": tk.IntVar(), "parent": "The Sunless City", "children": [], "displayName": "Silver Knight Greatbowman"},
                     "Silver Knight Swordsman": {"button": None, "value": tk.IntVar(), "parent": "The Sunless City", "children": [], "displayName": "Silver Knight Swordsman"},
-                    "Mimic": {"button": None, "value": tk.IntVar(), "parent": "The Sunless City", "children": [], "displayName": "Mimic"},
                     "Tomb of Giants": {"button": None, "value": tk.IntVar(), "parent": None, "children": [], "displayName": "Tomb of Giants (V2)"},
                     "Giant Skeleton Archer": {"button": None, "value": tk.IntVar(), "parent": "Tomb of Giants", "children": [], "displayName": "Giant Skeleton Archer"},
                     "Giant Skeleton Soldier": {"button": None, "value": tk.IntVar(), "parent": "Tomb of Giants", "children": [], "displayName": "Giant Skeleton Soldier"},
@@ -345,32 +343,32 @@ try:
                     "Skeleton Archer": {"button": None, "value": tk.IntVar(), "parent": "Tomb of Giants", "children": [], "displayName": "Skeleton Archer"},
                     "Skeleton Beast": {"button": None, "value": tk.IntVar(), "parent": "Tomb of Giants", "children": [], "displayName": "Skeleton Beast"},
                     "Skeleton Soldier": {"button": None, "value": tk.IntVar(), "parent": "Tomb of Giants", "children": [], "displayName": "Skeleton Soldier"},
-                    "Dark Souls The Board Game (V1)": {"button": None, "value": tk.IntVar(), "parent": None, "children": [], "displayName": "Dark Souls The Board Game (V1)              "},
-                    "Crossbow Hollow (V1)": {"button": None, "value": tk.IntVar(), "parent": "Dark Souls The Board Game (V1)", "children": [], "displayName": "Crossbow Hollow (V1)"},
-                    "Hollow Soldier (V1)": {"button": None, "value": tk.IntVar(), "parent": "Dark Souls The Board Game (V1)", "children": [], "displayName": "Hollow Soldier (V1)"},
-                    "Large Hollow Soldier (V1)": {"button": None, "value": tk.IntVar(), "parent": "Dark Souls The Board Game (V1)", "children": [], "displayName": "Large Hollow Soldier (V1)"},
-                    "Sentinel (V1)": {"button": None, "value": tk.IntVar(), "parent": "Dark Souls The Board Game (V1)", "children": [], "displayName": "Sentinel (V1)"},
-                    "Silver Knight Greatbowman (V1)": {"button": None, "value": tk.IntVar(), "parent": "Dark Souls The Board Game (V1)", "children": [], "displayName": "Silver Knight Greatbowman (V1)"},
-                    "Silver Knight Swordsman (V1)": {"button": None, "value": tk.IntVar(), "parent": "Dark Souls The Board Game (V1)", "children": [], "displayName": "Silver Knight Swordsman (V1)"},
-                    "Darkroot (V1)": {"button": None, "value": tk.IntVar(), "parent": None, "children": [], "displayName": "Darkroot (V1)"},
-                    "Demonic Foliage (V1)": {"button": None, "value": tk.IntVar(), "parent": "Darkroot (V1)", "children": [], "displayName": "Demonic Foliage (V1)"},
-                    "Mushroom Child (V1)": {"button": None, "value": tk.IntVar(), "parent": "Darkroot (V1)", "children": [], "displayName": "Mushroom Parent (V1)"},
-                    "Mushroom Parent (V1)": {"button": None, "value": tk.IntVar(), "parent": "Darkroot (V1)", "children": [], "displayName": "Mushroom Parent (V1)"},
-                    "Plow Scarecrow (V1)": {"button": None, "value": tk.IntVar(), "parent": "Darkroot (V1)", "children": [], "displayName": "Plow Scarecrow (V1)"},
-                    "Shears Scarecrow (V1)": {"button": None, "value": tk.IntVar(), "parent": "Darkroot (V1)", "children": [], "displayName": "Shears Scarecrow (V1)"},
-                    "Stone Guardian (V1)": {"button": None, "value": tk.IntVar(), "parent": "Darkroot (V1)", "children": [], "displayName": "Stone Guardian (V1)"},
-                    "Stone Knight (V1)": {"button": None, "value": tk.IntVar(), "parent": "Darkroot (V1)", "children": [], "displayName": "Stone Knight (V1)"},
-                    "Explorers (V1)": {"button": None, "value": tk.IntVar(), "parent": None, "children": [], "displayName": "Explorers (V1)"},
-                    "Firebomb Hollow (V1)": {"button": None, "value": tk.IntVar(), "parent": "Explorers (V1)", "children": [], "displayName": "Firebomb Hollow (V1)"},
-                    "Silver Knight Spearman (V1)": {"button": None, "value": tk.IntVar(), "parent": "Explorers (V1)", "children": [], "displayName": "Silver Knight Spearman (V1)"},
-                    "Iron Keep (V1)": {"button": None, "value": tk.IntVar(), "parent": None, "children": [], "displayName": "Iron Keep (V1)"},
-                    "Alonne Bow Knight (V1)": {"button": None, "value": tk.IntVar(), "parent": "Iron Keep (V1)", "children": [], "displayName": "Alonne Bow Knight (V1)"},
-                    "Alonne Knight Captain (V1)": {"button": None, "value": tk.IntVar(), "parent": "Iron Keep (V1)", "children": [], "displayName": "Alonne Knight Captain (V1)"},
-                    "Alonne Sword Knight (V1)": {"button": None, "value": tk.IntVar(), "parent": "Iron Keep (V1)", "children": [], "displayName": "Alonne Sword Knight (V1)"},
-                    "Ironclad Soldier (V1)": {"button": None, "value": tk.IntVar(), "parent": "Iron Keep (V1)", "children": [], "displayName": "Ironclad Soldier (V1)"},
-                    "Executioner Chariot (V1)": {"button": None, "value": tk.IntVar(), "parent": None, "children": [], "displayName": "Executioner Chariot (V1)"},
-                    "Black Hollow Mage (V1)": {"button": None, "value": tk.IntVar(), "parent": "Executioner Chariot (V1)", "children": [], "displayName": "Black Hollow Mage (V1)"},
-                    "Falchion Skeleton (V1)": {"button": None, "value": tk.IntVar(), "parent": "Executioner Chariot (V1)", "children": [], "displayName": "Falchion Skeleton (V1)"}
+                    "Dark Souls The Board Game": {"button": None, "value": tk.IntVar(), "parent": None, "children": [], "displayName": "Dark Souls The Board Game (V1)              "},
+                    "Crossbow Hollow (V1)": {"button": None, "value": tk.IntVar(), "parent": "Dark Souls The Board Game", "children": [], "displayName": "Crossbow Hollow (V1)"},
+                    "Hollow Soldier (V1)": {"button": None, "value": tk.IntVar(), "parent": "Dark Souls The Board Game", "children": [], "displayName": "Hollow Soldier (V1)"},
+                    "Large Hollow Soldier (V1)": {"button": None, "value": tk.IntVar(), "parent": "Dark Souls The Board Game", "children": [], "displayName": "Large Hollow Soldier (V1)"},
+                    "Sentinel (V1)": {"button": None, "value": tk.IntVar(), "parent": "Dark Souls The Board Game", "children": [], "displayName": "Sentinel (V1)"},
+                    "Silver Knight Greatbowman (V1)": {"button": None, "value": tk.IntVar(), "parent": "Dark Souls The Board Game", "children": [], "displayName": "Silver Knight Greatbowman (V1)"},
+                    "Silver Knight Swordsman (V1)": {"button": None, "value": tk.IntVar(), "parent": "Dark Souls The Board Game", "children": [], "displayName": "Silver Knight Swordsman (V1)"},
+                    "Darkroot": {"button": None, "value": tk.IntVar(), "parent": None, "children": [], "displayName": "Darkroot"},
+                    "Demonic Foliage (V1)": {"button": None, "value": tk.IntVar(), "parent": "Darkroot", "children": [], "displayName": "Demonic Foliage (V1)"},
+                    "Mushroom Child (V1)": {"button": None, "value": tk.IntVar(), "parent": "Darkroot", "children": [], "displayName": "Mushroom Parent (V1)"},
+                    "Mushroom Parent (V1)": {"button": None, "value": tk.IntVar(), "parent": "Darkroot", "children": [], "displayName": "Mushroom Parent (V1)"},
+                    "Plow Scarecrow (V1)": {"button": None, "value": tk.IntVar(), "parent": "Darkroot", "children": [], "displayName": "Plow Scarecrow (V1)"},
+                    "Shears Scarecrow (V1)": {"button": None, "value": tk.IntVar(), "parent": "Darkroot", "children": [], "displayName": "Shears Scarecrow (V1)"},
+                    "Stone Guardian (V1)": {"button": None, "value": tk.IntVar(), "parent": "Darkroot", "children": [], "displayName": "Stone Guardian (V1)"},
+                    "Stone Knight (V1)": {"button": None, "value": tk.IntVar(), "parent": "Darkroot", "children": [], "displayName": "Stone Knight (V1)"},
+                    "Executioner Chariot": {"button": None, "value": tk.IntVar(), "parent": None, "children": [], "displayName": "Executioner Chariot (V1)"},
+                    "Black Hollow Mage (V1)": {"button": None, "value": tk.IntVar(), "parent": "Executioner Chariot", "children": [], "displayName": "Black Hollow Mage (V1)"},
+                    "Falchion Skeleton (V1)": {"button": None, "value": tk.IntVar(), "parent": "Executioner Chariot", "children": [], "displayName": "Falchion Skeleton (V1)"},
+                    "Explorers": {"button": None, "value": tk.IntVar(), "parent": None, "children": [], "displayName": "Explorers (V1)"},
+                    "Firebomb Hollow (V1)": {"button": None, "value": tk.IntVar(), "parent": "Explorers", "children": [], "displayName": "Firebomb Hollow (V1)"},
+                    "Silver Knight Spearman (V1)": {"button": None, "value": tk.IntVar(), "parent": "Explorers", "children": [], "displayName": "Silver Knight Spearman (V1)"},
+                    "Iron Keep": {"button": None, "value": tk.IntVar(), "parent": None, "children": [], "displayName": "Iron Keep (V1)"},
+                    "Alonne Bow Knight (V1)": {"button": None, "value": tk.IntVar(), "parent": "Iron Keep", "children": [], "displayName": "Alonne Bow Knight (V1)"},
+                    "Alonne Knight Captain (V1)": {"button": None, "value": tk.IntVar(), "parent": "Iron Keep", "children": [], "displayName": "Alonne Knight Captain (V1)"},
+                    "Alonne Sword Knight (V1)": {"button": None, "value": tk.IntVar(), "parent": "Iron Keep", "children": [], "displayName": "Alonne Sword Knight (V1)"},
+                    "Ironclad Soldier (V1)": {"button": None, "value": tk.IntVar(), "parent": "Iron Keep", "children": [], "displayName": "Ironclad Soldier (V1)"}
                 }
 
                 self.enemiesTab = VerticalScrolledFrame(self.notebook)
@@ -381,7 +379,8 @@ try:
                     if self.enemies[enemy]["parent"]:
                         self.enemies[self.enemies[enemy]["parent"]]["children"].append(enemy)
                     else:
-                        tk.Label(self.enemiesTab.interior, text="     ").grid(column=0, row=i)
+                        # Indent children for better visual organization.
+                        tk.Label(self.enemiesTab.interior, text="\t").grid(column=0, row=i)
 
                     self.enemies[enemy]["button"] = ttk.Checkbutton(self.enemiesTab.interior, text=self.enemies[enemy]["displayName"], variable=self.enemies[enemy]["value"], command=lambda enemy=enemy: self.toggle_parent_children(enemy=enemy))
                     self.enemies[enemy]["button"].grid(row=i, column=0 if not self.enemies[enemy]["parent"] else 1, columnspan=2 if not self.enemies[enemy]["parent"] else 3, padx=5, pady=1, sticky="nsew")
@@ -475,28 +474,51 @@ try:
                 raise
 
 
-        def toggle_parent_children(self, event=None, enemy=None):
+        def toggle_parent_children(self, enemy, event=None):
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of toggle_parent", caller=calframe[1][3])
+                adapter.debug("Start of toggle_parent_children", caller=calframe[1][3])
 
                 if self.enemies[enemy]["parent"]:
-                    if all([self.enemies[child]["value"].get() == 0 for child in self.enemies[self.enemies[enemy]["parent"]]["children"]]):
-                        self.enemies[self.enemies[enemy]["parent"]]["value"].set(0)
-                    elif all([self.enemies[child]["value"].get() == 1 for child in self.enemies[self.enemies[enemy]["parent"]]["children"]]):
-                        self.enemies[self.enemies[enemy]["parent"]]["value"].set(1)
+                    if (all([self.enemies[child]["value"].get() == 0 for child in self.enemies[self.enemies[enemy]["parent"]]["children"]])
+                            or all([self.enemies[child]["value"].get() == 1 for child in self.enemies[self.enemies[enemy]["parent"]]["children"]])):
+                        if enemy in self.expansions:
+                            self.expansions[enemy]["value"].set(self.enemies[enemy]["value"].get())
+                        else:
+                            self.expansions[self.enemies[enemy]["parent"]]["value"].set(self.enemies[enemy]["value"].get())
+                        self.enemies[self.enemies[enemy]["parent"]]["value"].set(self.enemies[enemy]["value"].get())
                     else:
                         self.enemies[self.enemies[enemy]["parent"]]["button"].state(["alternate"])
+                        self.expansions[self.enemies[enemy]["parent"]]["value"].set(1)
                 else:
-                    if self.enemies[enemy]["value"].get() == 1:
-                        for child in self.enemies[enemy]["children"]:
-                            self.enemies[child]["value"].set(1)
-                    else:
-                        for child in self.enemies[enemy]["children"]:
-                            self.enemies[child]["value"].set(0)
+                    self.expansions[enemy]["value"].set(self.enemies[enemy]["value"].get())
+                    
+                    for child in self.enemies[enemy]["children"]:
+                        self.enemies[child]["value"].set(self.enemies[enemy]["value"].get())
 
-                adapter.debug("End of toggle_parent", caller=calframe[1][3])
+                adapter.debug("End of toggle_parent_children", caller=calframe[1][3])
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
+        def toggle_expansion(self, expansion, event=None):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of toggle_expansion", caller=calframe[1][3])
+
+                if expansion in {"Characters Expansion", "Phantoms"}:
+                    adapter.debug("End of toggle_expansion (Characters expansion, nothing to do)", caller=calframe[1][3])
+                    return
+
+                self.enemies[expansion]["value"].set(self.expansions[expansion]["value"].get())
+                
+                for child in self.enemies[expansion]["children"]:
+                    self.enemies[child]["value"].set(self.expansions[expansion]["value"].get())
+
+                adapter.debug("End of toggle_expansion", caller=calframe[1][3])
             except Exception as e:
                 adapter.exception(e)
                 raise
