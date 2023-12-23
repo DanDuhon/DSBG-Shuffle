@@ -620,6 +620,7 @@ try:
                     return
 
                 enabledEnemies = [s for s in self.enemies if self.enemies[s]["value"].get() == 1]
+                customEnemyList = any(["alternate" in self.enemies[enemy]["button"].state() for enemy in self.enemies])
 
                 randomEncounterTypes = set([s for s in self.randomEncounters if self.randomEncounters[s]["value"].get() == 1])
                 charactersActive = set([s for s in self.charactersActive if self.charactersActive[s]["value"].get() == 1])
@@ -628,6 +629,7 @@ try:
                     "theme": "light" if self.lightTheme["value"].get() == 1 else "dark",
                     "availableExpansions": list(expansionsActive),
                     "enabledEnemies": list(enabledEnemies),
+                    "customEnemyList": customEnemyList,
                     "randomEncounterTypes": list(randomEncounterTypes),
                     "charactersActive": list(charactersActive),
                     "treasureSwapOption": self.treasureSwapOption.get(),
@@ -822,8 +824,10 @@ try:
 
                 self.selectedBoss = tk.StringVar()
 
+                self.selected = None
                 self.allExpansions = set([encounters[encounter]["expansion"] for encounter in encounters])
                 self.availableExpansions = set(self.settings["availableExpansions"])
+                self.enabledEnemies = set([enemiesDict[enemy.replace(" (V1)", "")].id for enemy in self.settings["enabledEnemies"] if enemy not in self.allExpansions])
                 self.charactersActive = set(self.settings["charactersActive"])
                 self.availableCoreSets = coreSets & self.availableExpansions
                 v1Expansions = {"Dark Souls The Board Game", "Darkroot", "Executioner Chariot", "Explorers", "Iron Keep"} if "v1" in self.settings["randomEncounterTypes"] else set()
@@ -935,11 +939,31 @@ try:
                 self.campaign = []
 
                 root.withdraw()
-                progress = PopupWindow(root, labelText="Loading...", progressBar=True, progressMax=len(allEnemies), loadingImage=True)
+                i = 0
+                progress = PopupWindow(root, labelText="Loading...", progressBar=True, progressMax=len(allEnemies) + (len(self.encounterList) if self.settings["customEnemyList"] else 0), loadingImage=True)
+
+                if self.settings["customEnemyList"]:
+                    encountersToRemove = set()
+                    for encounter in self.encounterList:
+                        i += 1
+                        progress.progressVar.set(i)
+                        root.update_idletasks()
+                        self.load_encounter(encounter=encounter, customEnemyListCheck=True)
+                        if all([not set(alt).issubset(self.enabledEnemies) for alt in self.selected["alternatives"]]):
+                            encountersToRemove.add(encounter)
+
+                    self.encounterList = list(set(self.encounterList) - encountersToRemove)
+                    
+                    self.treeviewEncounters.pack_forget()
+                    self.treeviewEncounters.destroy()
+                    self.create_encounters_treeview()
+                    self.scrollbarTreeviewCampaign = ttk.Scrollbar(self.campaignTabTreeviewFrame)
+                    self.scrollbarTreeviewCampaign.pack(side="right", fill="y")
 
                 # Create images
                 # Enemies
-                for i, enemy in enumerate(allEnemies):
+                for enemy in allEnemies:
+                    i += 1
                     progress.progressVar.set(i)
                     root.update_idletasks()
                     allEnemies[enemy]["imageOld"] = self.create_image(enemy + ".png", "enemyOld")
@@ -1167,7 +1191,6 @@ try:
                         ]
                 }
 
-                self.selected = None
                 self.newEnemies = []
                 self.newTiles = dict()
                 self.rewardTreasure = None
@@ -2208,7 +2231,7 @@ try:
                 raise
 
 
-        def load_encounter(self, event=None, encounter=None):
+        def load_encounter(self, event=None, encounter=None, customEnemyListCheck=False):
             """
             Loads an encounter from file data for display.
 
@@ -2226,7 +2249,8 @@ try:
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of load_encounter", caller=calframe[1][3])
 
-                self.treeviewEncounters.unbind("<<TreeviewSelect>>")
+                if not customEnemyListCheck:
+                    self.treeviewEncounters.unbind("<<TreeviewSelect>>")
 
                 # If this encounter was clicked on, get that information.
                 if event:
@@ -2240,13 +2264,13 @@ try:
                 else:
                     encounterName = encounter
 
-                # If the encounter clicked on is already displayed, no need to load it again,
-                # just shuffle the enemies.
-                if encounters[encounterName] == self.selected:
-                    self.shuffle_enemies()
-                    self.treeviewEncounters.bind("<<TreeviewSelect>>", self.load_encounter)
-                    adapter.debug("\tEnd of load_encounter", caller=calframe[1][3])
-                    return
+                    # If the encounter clicked on is already displayed, no need to load it again,
+                    # just shuffle the enemies.
+                    if encounters[encounterName] == self.selected:
+                        self.shuffle_enemies()
+                        self.treeviewEncounters.bind("<<TreeviewSelect>>", self.load_encounter)
+                        adapter.debug("\tEnd of load_encounter", caller=calframe[1][3])
+                        return
 
                 self.selected = encounters[encounterName]
                 self.selected["difficultyMod"] = {}
@@ -2260,32 +2284,33 @@ try:
                 self.selected["alternatives"] = []
                 self.selected["enemySlots"] = alts["enemySlots"]
 
-                # Use only alternative enemies for expansions the user has activated in the settings.
+                # Use only alternative enemies for expansions and enemies the user has activated in the settings.
                 if "1" in alts["alternatives"]:
                     self.selected["alternatives"] = {"1": []}
                     for expansionCombo in alts["alternatives"]["1"]:
                         if set(expansionCombo.split(",")).issubset(self.availableExpansions):
-                            self.selected["alternatives"]["1"] += alts["alternatives"]["1"][expansionCombo]
+                            self.selected["alternatives"]["1"] += [alt for alt in alts["alternatives"]["1"][expansionCombo] if set([enemy for enemy in alt]).issubset(self.enabledEnemies)]
                 if "2" in alts["alternatives"]:
                     self.selected["alternatives"]["2"] = []
                     for expansionCombo in alts["alternatives"].get("2", []):
                         if set(expansionCombo.split(",")).issubset(self.availableExpansions):
-                            self.selected["alternatives"]["2"] += alts["alternatives"]["2"][expansionCombo]
+                            self.selected["alternatives"]["2"] += [alt for alt in alts["alternatives"]["2"][expansionCombo] if set([enemy for enemy in alt]).issubset(self.enabledEnemies)]
                 if "3" in alts["alternatives"]:
                     self.selected["alternatives"]["3"] = []
                     for expansionCombo in alts["alternatives"].get("3", []):
                         if set(expansionCombo.split(",")).issubset(self.availableExpansions):
-                            self.selected["alternatives"]["3"] += alts["alternatives"]["3"][expansionCombo]
+                            self.selected["alternatives"]["3"] += [alt for alt in alts["alternatives"]["3"][expansionCombo] if set([enemy for enemy in alt]).issubset(self.enabledEnemies)]
                 else:
                     for expansionCombo in alts["alternatives"]:
                         if set(expansionCombo.split(",")).issubset(self.availableExpansions):
-                            self.selected["alternatives"] += alts["alternatives"][expansionCombo]
+                            self.selected["alternatives"] += [alt for alt in alts["alternatives"][expansionCombo] if set([enemy for enemy in alt]).issubset(self.enabledEnemies)]
 
                 self.newTiles = dict()
 
-                self.shuffle_enemies()
-                self.treeviewEncounters.bind("<<TreeviewSelect>>", self.load_encounter)
-                self.encounter.bind("<Button 1>", self.shuffle_enemies)
+                if not customEnemyListCheck:
+                    self.shuffle_enemies()
+                    self.treeviewEncounters.bind("<<TreeviewSelect>>", self.load_encounter)
+                    self.encounter.bind("<Button 1>", self.shuffle_enemies)
 
                 adapter.debug("\tEnd of load_encounter", caller=calframe[1][3])
             except Exception as e:
