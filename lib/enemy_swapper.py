@@ -644,6 +644,41 @@ try:
                 oldExpansions = {"Dark Souls The Board Game", "Darkroot", "Executioner Chariot", "Explorers", "Iron Keep"} if "old" in self.settings["randomEncounterTypes"] else set()
                 newExpansions = (self.allExpansions - {"Dark Souls The Board Game", "Darkroot", "Executioner Chariot", "Explorers", "Iron Keep"}) if "new" in self.settings["randomEncounterTypes"] else set()
                 self.expansionsForRandomEncounters = (oldExpansions | newExpansions) & self.allExpansions
+
+                self.events = {
+                    "Alluring Skull": {"name": "Alluring Skull", "count": 1, "expansions": set(["Painted World of Ariamis", "Tomb of Giants", "The Sunless City"])},
+                    "Big Pilgrim's Key": {"name": "Big Pilgrim's Key", "count": 1, "expansions": set(["The Sunless City"])},
+                    "Blacksmith's Trial": {"name": "Blacksmith's Trial", "count": 1, "expansions": set(["Painted World of Ariamis", "Tomb of Giants", "The Sunless City"])},
+                    "Bleak Bonfire Ascetic": {"name": "Bleak Bonfire Ascetic", "count": 1, "expansions": set(["Painted World of Ariamis", "Tomb of Giants", "The Sunless City"])},
+                    "Bloodstained Bonfire Ascetic": {"name": "Bloodstained Bonfire Ascetic", "count": 1, "expansions": set(["Painted World of Ariamis", "Tomb of Giants", "The Sunless City"])},
+                    "Cracked Bonfire Ascetic": {"name": "Cracked Bonfire Ascetic", "count": 1, "expansions": set(["Painted World of Ariamis", "Tomb of Giants", "The Sunless City"])},
+                    "Firekeeper's Boon": {"name": "Firekeeper's Boon", "count": 2, "expansions": set(["Painted World of Ariamis", "Tomb of Giants", "The Sunless City"])},
+                    "Fleeting Glory": {"name": "Fleeting Glory", "count": 2, "expansions": set(["Painted World of Ariamis"])},
+                    "Forgotten Supplies": {"name": "Forgotten Supplies", "count": 2, "expansions": set(["Painted World of Ariamis", "Tomb of Giants", "The Sunless City"])},
+                    "Frozen Bonfire Ascetic": {"name": "Frozen Bonfire Ascetic", "count": 1, "expansions": set(["Painted World of Ariamis", "Tomb of Giants", "The Sunless City"])},
+                    "Green Blossom": {"name": "Green Blossom", "count": 1, "expansions": set(["Painted World of Ariamis", "Tomb of Giants", "The Sunless City"])},
+                    "Hearty Bonfire Ascetic": {"name": "Hearty Bonfire Ascetic", "count": 1, "expansions": set(["Painted World of Ariamis", "Tomb of Giants", "The Sunless City"])},
+                    "Lifegem": {"name": "Lifegem", "count": 1, "expansions": set(["Painted World of Ariamis", "Tomb of Giants", "The Sunless City"])},
+                    "Lost Envoy": {"name": "Lost Envoy", "count": 1, "expansions": set(["The Sunless City"])},
+                    "Lost to Time": {"name": "Lost to Time", "count": 1, "expansions": set(["The Sunless City"])},
+                    "Martial Bonfire Ascetic": {"name": "Martial Bonfire Ascetic", "count": 1, "expansions": set(["Painted World of Ariamis", "Tomb of Giants", "The Sunless City"])},
+                    "Obscured Knowledge": {"name": "Obscured Knowledge", "count": 1, "expansions": set(["Painted World of Ariamis"])},
+                    "Pine Resin": {"name": "Pine Resin", "count": 1, "expansions": set(["Painted World of Ariamis", "Tomb of Giants", "The Sunless City"])},
+                    "Princess Guard": {"name": "Princess Guard", "count": 1, "expansions": set(["The Sunless City"])},
+                    "Rare Vagrant": {"name": "Rare Vagrant", "count": 1, "expansions": set(["Painted World of Ariamis"])},
+                    "Repair Powder": {"name": "Repair Powder", "count": 1, "expansions": set(["Painted World of Ariamis", "Tomb of Giants", "The Sunless City"])},
+                    "Rite of Rekindling": {"name": "Rite of Rekindling", "count": 1, "expansions": set(["Painted World of Ariamis", "Tomb of Giants", "The Sunless City"])},
+                    "Scout Ahead": {"name": "Scout Ahead", "count": 2, "expansions": set(["Painted World of Ariamis", "Tomb of Giants", "The Sunless City"])},
+                    "Scrying Stone": {"name": "Scrying Stone", "count": 1, "expansions": set(["Painted World of Ariamis", "Tomb of Giants", "The Sunless City"])},
+                    "Skeletal Reforging": {"name": "Skeletal Reforging", "count": 2, "expansions": set(["Tomb of Giants"])},
+                    "Stolen Artifact": {"name": "Stolen Artifact", "count": 2, "expansions": set(["Painted World of Ariamis", "Tomb of Giants", "The Sunless City"])},
+                    "Trustworthy Promise": {"name": "Trustworthy Promise", "count": 2, "expansions": set(["Tomb of Giants"])},
+                    "Undead Merchant": {"name": "Undead Merchant", "count": 2, "expansions": set(["Painted World of Ariamis", "Tomb of Giants", "The Sunless City"])},
+                    "Unhallowed Offering": {"name": "Unhallowed Offering", "count": 1, "expansions": set(["Painted World of Ariamis", "Tomb of Giants", "The Sunless City"])},
+                    "Virulent Bonfire Ascetic": {"name": "Virulent Bonfire Ascetic", "count": 1, "expansions": set(["Painted World of Ariamis", "Tomb of Giants", "The Sunless City"])}
+                }
+                
+                self.selectedEvent = tk.StringVar()
                 
                 if self.settings["treasureSwapOption"] == "Similar Soul Cost":
                     generate_treasure_soul_cost(self.availableExpansions, self.charactersActive)
@@ -659,6 +694,11 @@ try:
                 self.scrollbarTreeviewCampaign = ttk.Scrollbar(self.campaignTabTreeviewFrame)
                 self.scrollbarTreeviewCampaign.pack(side="right", fill="y")
                 self.create_campaign_treeview()
+                self.scrollbarTreeviewEventList = ttk.Scrollbar(self.eventTabEventListTreeviewFrame)
+                self.scrollbarTreeviewEventList.pack(side="right", fill="y")
+                self.scrollbarTreeviewEventDeck = ttk.Scrollbar(self.eventTabEventDeckTreeviewFrame)
+                self.scrollbarTreeviewEventDeck.pack(side="right", fill="y")
+                self.create_event_treeviews()
                 self.create_encounter_frame()
                 self.create_menu()
                 self.set_bindings_buttons_menus(True)
@@ -1278,6 +1318,64 @@ try:
                 raise
 
 
+        def add_event_to_deck(self):
+            """
+            Adds an event card to the event deck, visible in the event deck treeview.
+            """
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of add_event_to_deck", caller=calframe[1][3])
+
+                if not self.selected:
+                    adapter.debug("End of add_event_to_deck (nothing done)")
+                    return
+
+                # # Only allow the count of the events in the deck.
+                # if encounter["name"] not in set([e["name"] for e in self.campaign]):
+                #     self.campaign.append(encounter)
+                #     self.treeviewCampaign.insert(parent="", values=(encounter["name"], encounter["level"]), index="end")
+
+                adapter.debug("End of add_event_to_deck")
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
+        def delete_event_from_deck(self, event=None):
+            """
+            Delete an event from the event deck.
+
+            Optional Parameters:
+                event: tkinter.Event
+                    The tkinter Event that is the trigger.
+            """
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of delete_event_from_deck", caller=calframe[1][3])
+                
+                # If the button is clicked with no selection, do nothing.
+                if not self.treeviewCampaign.selection():
+                    adapter.debug("End of delete_event_from_deck (nothing done)")
+                    return
+
+                # # Remove the deleted encounters from the campaign list.
+                # self.campaign = [e for e in self.campaign if e["name"] not in set([self.treeviewCampaign.item(e)["values"][0] for e in self.treeviewCampaign.selection()])]
+                
+                # # Remove the deleted encounters from the treeview.
+                # for item in self.treeviewCampaign.selection():
+                #     self.treeviewCampaign.delete(item)
+
+                # # Remove the image displaying a deleted encounter.
+                # self.encounter.config(image="")
+
+                adapter.debug("End of delete_event_from_deck")
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
         def print_encounters(self):
             """
             Export campaign encounters to a PDF.
@@ -1526,6 +1624,32 @@ try:
                 self.bossMenu.current(0)
                 self.bossMenu.config(width=17)
                 self.bossMenu.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+                
+                # Still need buttons for:
+                # Draw event card
+                # Return event card
+                self.eventTab = ttk.Frame(self.notebook)
+                self.notebook.add(self.eventTab, text="Events")
+                self.eventTabButtonsFrame = ttk.Frame(self.eventTab)
+                self.eventTabButtonsFrame.pack()
+                self.eventTabButtonsFrame2 = ttk.Frame(self.eventTab)
+                self.eventTabButtonsFrame2.pack()
+                self.eventTabEventListTreeviewFrame = ttk.Frame(self.eventTab)
+                self.eventTabEventListTreeviewFrame.pack(fill="both", expand=True)
+                self.eventTabEventDeckTreeviewFrame = ttk.Frame(self.eventTab)
+                self.eventTabEventDeckTreeviewFrame.pack(fill="both", expand=True)
+                self.eventTabDeckFrame = ttk.Frame(self.eventTab)
+                self.eventTabDeckFrame.pack(fill="both", expand=True)
+                
+                self.addEventButton = ttk.Button(self.eventTabButtonsFrame, text="Add Event", width=16, command=self.add_event_to_deck)
+                self.addEventButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+                self.deleteEventButton = ttk.Button(self.eventTabButtonsFrame, text="Remove Event", width=16, command=self.delete_event_from_deck)
+                self.deleteEventButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+                
+                self.addEventButton = ttk.Button(self.eventTabButtonsFrame2, text="Draw Event Card", width=16, command=self.add_event_to_deck)
+                self.addEventButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+                self.deleteEventButton = ttk.Button(self.eventTabButtonsFrame2, text="Return Event Card", width=16, command=self.delete_event_from_deck)
+                self.deleteEventButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
 
                 adapter.debug("End of create_tabs")
             except Exception as e:
@@ -1634,6 +1758,60 @@ try:
                 self.treeviewCampaign.bind("<Control-a>", lambda *args: self.treeviewCampaign.selection_add(self.treeviewCampaign.get_children()))
 
                 adapter.debug("End of create_campaign_treeview")
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
+        def create_event_treeviews(self):
+            """
+            Create the event list treeview where users can see event cards.
+            """
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of create_event_treeviews", caller=calframe[1][3])
+                
+                self.treeviewEventList = ttk.Treeview(
+                    self.eventTabEventListTreeviewFrame,
+                    selectmode="extended",
+                    columns=("Event List",),
+                    yscrollcommand=self.scrollbarTreeviewEventList.set,
+                    height=14 if root.winfo_screenheight() > 1000 else 10,
+                    show=["headings"]
+                )
+                
+                self.treeviewEventList.pack(expand=True, fill="both")
+                self.scrollbarTreeviewEventList.config(command=self.treeviewEventList.yview)
+
+                self.treeviewEventList.column("#1", anchor="w")
+                self.treeviewEventList.heading("#1", text="Event List", anchor="w")
+                
+                self.treeviewEventList.bind("<<TreeviewSelect>>", self.load_campaign_encounter)
+                self.treeviewEventList.bind("<Control-a>", lambda *args: self.treeviewEventList.selection_add(self.treeviewEventList.get_children()))
+
+                # Need to add expansions and their events.
+                self.treeviewEventList.insert(parent="", values=(self.events[event]["name"],), index="end")
+                
+                self.treeviewEventDeck = ttk.Treeview(
+                    self.eventTabEventDeckTreeviewFrame,
+                    selectmode="extended",
+                    columns=("Event Deck",),
+                    yscrollcommand=self.scrollbarTreeviewEventDeck.set,
+                    height=14 if root.winfo_screenheight() > 1000 else 10,
+                    show=["headings"]
+                )
+                
+                self.treeviewEventDeck.pack(expand=True, fill="both")
+                self.scrollbarTreeviewEventDeck.config(command=self.treeviewEventDeck.yview)
+
+                self.treeviewEventDeck.column("#1", anchor="w")
+                self.treeviewEventDeck.heading("#1", text="Event Deck", anchor="w")
+                
+                self.treeviewEventDeck.bind("<<TreeviewSelect>>", self.load_campaign_encounter)
+                self.treeviewEventDeck.bind("<Control-a>", lambda *args: self.treeviewEventDeck.selection_add(self.treeviewEventDeck.get_children()))
+
+                adapter.debug("End of create_event_treeviews")
             except Exception as e:
                 adapter.exception(e)
                 raise
