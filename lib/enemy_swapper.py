@@ -8,7 +8,7 @@ try:
     import datetime
     from os import path
     from json import load, dump
-    from random import choice
+    from random import choice, shuffle
     from collections import Counter
     from PIL import Image, ImageTk, ImageFont, ImageDraw
     import tkinter as tk
@@ -678,7 +678,9 @@ try:
                     "Virulent Bonfire Ascetic": {"name": "Virulent Bonfire Ascetic", "count": 1, "expansions": set(["Painted World of Ariamis", "Tomb of Giants", "The Sunless City"])}
                 }
                 
-                self.selectedEvent = tk.StringVar()
+                self.drawnEvent = None
+                self.drawnEventNum = 0
+                self.eventDeck = []
                 
                 if self.settings["treasureSwapOption"] == "Similar Soul Cost":
                     generate_treasure_soul_cost(self.availableExpansions, self.charactersActive)
@@ -1318,7 +1320,7 @@ try:
                 raise
 
 
-        def add_event_to_deck(self):
+        def add_event_to_deck(self, event=None):
             """
             Adds an event card to the event deck, visible in the event deck treeview.
             """
@@ -1326,15 +1328,24 @@ try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of add_event_to_deck", caller=calframe[1][3])
+                
+                eventSelected = self.treeviewEventList.item(list(self.treeviewEventList.selection())[0])["values"][1 if self.treeviewEventList.item(list(self.treeviewEventList.selection())[0])["values"][1] else 0]
 
-                if not self.selected:
-                    adapter.debug("End of add_event_to_deck (nothing done)")
-                    return
+                if eventSelected in coreSets:
+                    for event in self.treeviewEventList.get_children(eventSelected):
+                        for x in range(self.events[event[:event.index("_")]]["count"]):
+                            if self.treeviewEventDeck.exists(event[:event.index("_")] + "_" + str(x)):
+                                continue
+                            self.treeviewEventDeck.insert(parent="", iid=event[:event.index("_")] + "_" + str(x), values=(event[:event.index("_")], ""), index="end", tags=False)
+                            self.eventDeck.append(event[:event.index("_")] + "_" + str(x))
+                else:
+                    for x in range(self.events[eventSelected]["count"]):
+                        if self.treeviewEventDeck.exists(eventSelected + "_" + str(x)):
+                            continue
+                        self.treeviewEventDeck.insert(parent="", iid=eventSelected + "_" + str(x), values=(eventSelected, ""), index="end", tags=False)
+                        self.eventDeck.append(event[:event.index("_")] + "_" + str(x))
 
-                # # Only allow the count of the events in the deck.
-                # if encounter["name"] not in set([e["name"] for e in self.campaign]):
-                #     self.campaign.append(encounter)
-                #     self.treeviewCampaign.insert(parent="", values=(encounter["name"], encounter["level"]), index="end")
+                shuffle(self.eventDeck)
 
                 adapter.debug("End of add_event_to_deck")
             except Exception as e:
@@ -1356,21 +1367,110 @@ try:
                 adapter.debug("Start of delete_event_from_deck", caller=calframe[1][3])
                 
                 # If the button is clicked with no selection, do nothing.
-                if not self.treeviewCampaign.selection():
+                if not self.treeviewEventDeck.selection():
                     adapter.debug("End of delete_event_from_deck (nothing done)")
                     return
-
-                # # Remove the deleted encounters from the campaign list.
-                # self.campaign = [e for e in self.campaign if e["name"] not in set([self.treeviewCampaign.item(e)["values"][0] for e in self.treeviewCampaign.selection()])]
                 
-                # # Remove the deleted encounters from the treeview.
-                # for item in self.treeviewCampaign.selection():
-                #     self.treeviewCampaign.delete(item)
+                # Remove the deleted encounters from the treeview.
+                for item in self.treeviewEventDeck.selection():
+                    self.treeviewEventDeck.delete(item)
+                    self.eventDeck.remove(item)
 
-                # # Remove the image displaying a deleted encounter.
-                # self.encounter.config(image="")
+                # Remove the image displaying a deleted encounter.
+                self.encounter.config(image="")
+
+                shuffle(self.eventDeck)
 
                 adapter.debug("End of delete_event_from_deck")
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
+        def reset_event_deck(self, event=None):
+            """
+            Deletes all events from the event deck.
+
+            Optional Parameters:
+                event: tkinter.Event
+                    The tkinter Event that is the trigger.
+            """
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of reset_event_deck", caller=calframe[1][3])
+                
+                # Remove the deleted encounters from the treeview.
+                for item in self.treeviewEventDeck.get_children():
+                    self.treeviewEventDeck.delete(item)
+                    self.eventDeck.remove(item)
+
+                # Remove the image displaying a deleted encounter.
+                self.encounter.config(image="")
+                
+                self.drawnEvent = None
+                self.drawnEventNum = 0
+
+                adapter.debug("End of reset_event_deck")
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
+        def draw_from_event_deck(self, event=None):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of draw_from_event_deck", caller=calframe[1][3])
+
+                self.drawnEvent = self.eventDeck[0]
+                self.drawnEventNum += 1
+                self.load_event()
+                self.treeviewEventDeck.item(self.drawnEvent, values=(self.treeviewEventDeck.item(self.drawnEvent)["values"][0], str(self.drawnEventNum)))
+
+                adapter.debug("End of draw_from_event_deck")
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
+        def return_event_card_to_deck(self, event=None):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of return_event_card_to_deck", caller=calframe[1][3])
+
+                shuffle(self.eventDeck)
+                self.encounter.config(image="")
+                self.treeviewEventDeck.item(self.drawnEvent, values=(self.treeviewEventDeck.item(self.drawnEvent)["values"][0], ""))
+                self.drawnEvent = None
+                self.drawnEventNum -= 1
+
+                adapter.debug("End of return_event_card_to_deck")
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
+        def return_event_card_to_bottom(self, event=None):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of return_event_card_to_bottom", caller=calframe[1][3])
+                
+                # If the button is clicked with no drawn event card, do nothing.
+                if not self.drawnEvent:
+                    adapter.debug("End of return_event_card_to_bottom (nothing done)")
+                    return
+
+                self.eventDeck = self.eventDeck[1:]
+                self.eventDeck.append(self.drawnEvent)
+                self.encounter.config(image="")
+                self.treeviewEventDeck.item(self.drawnEvent, values=(self.treeviewEventDeck.item(self.drawnEvent)["values"][0], ""))
+                self.drawnEvent = None
+                self.drawnEventNum -= 1
+
+                adapter.debug("End of return_event_card_to_bottom")
             except Exception as e:
                 adapter.exception(e)
                 raise
@@ -1625,9 +1725,6 @@ try:
                 self.bossMenu.config(width=17)
                 self.bossMenu.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
                 
-                # Still need buttons for:
-                # Draw event card
-                # Return event card
                 self.eventTab = ttk.Frame(self.notebook)
                 self.notebook.add(self.eventTab, text="Events")
                 self.eventTabButtonsFrame = ttk.Frame(self.eventTab)
@@ -1641,14 +1738,18 @@ try:
                 self.eventTabDeckFrame = ttk.Frame(self.eventTab)
                 self.eventTabDeckFrame.pack(fill="both", expand=True)
                 
-                self.addEventButton = ttk.Button(self.eventTabButtonsFrame, text="Add Event", width=16, command=self.add_event_to_deck)
+                self.addEventButton = ttk.Button(self.eventTabButtonsFrame, text="Add Event", width=20, command=self.add_event_to_deck)
                 self.addEventButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-                self.deleteEventButton = ttk.Button(self.eventTabButtonsFrame, text="Remove Event", width=16, command=self.delete_event_from_deck)
+                self.deleteEventButton = ttk.Button(self.eventTabButtonsFrame, text="Remove Event", width=20, command=self.delete_event_from_deck)
+                self.deleteEventButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+                self.deleteEventButton = ttk.Button(self.eventTabButtonsFrame, text="Reset Event Deck", width=20, command=self.reset_event_deck)
                 self.deleteEventButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
                 
-                self.addEventButton = ttk.Button(self.eventTabButtonsFrame2, text="Draw Event Card", width=16, command=self.add_event_to_deck)
+                self.addEventButton = ttk.Button(self.eventTabButtonsFrame2, text="Draw Event Card", width=20, command=self.draw_from_event_deck)
                 self.addEventButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-                self.deleteEventButton = ttk.Button(self.eventTabButtonsFrame2, text="Return Event Card", width=16, command=self.delete_event_from_deck)
+                self.deleteEventButton = ttk.Button(self.eventTabButtonsFrame2, text="Shuffle Card Into Deck", width=20, command=self.return_event_card_to_deck)
+                self.deleteEventButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+                self.deleteEventButton = ttk.Button(self.eventTabButtonsFrame2, text="Return Card To Bottom", width=20, command=self.return_event_card_to_bottom)
                 self.deleteEventButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
 
                 adapter.debug("End of create_tabs")
@@ -1775,43 +1876,97 @@ try:
                 self.treeviewEventList = ttk.Treeview(
                     self.eventTabEventListTreeviewFrame,
                     selectmode="extended",
-                    columns=("Event List",),
+                    columns=("Event List", "Name", "Count"),
                     yscrollcommand=self.scrollbarTreeviewEventList.set,
-                    height=14 if root.winfo_screenheight() > 1000 else 10,
-                    show=["headings"]
+                    height=14 if root.winfo_screenheight() > 1000 else 10
                 )
                 
                 self.treeviewEventList.pack(expand=True, fill="both")
                 self.scrollbarTreeviewEventList.config(command=self.treeviewEventList.yview)
 
-                self.treeviewEventList.column("#1", anchor="w")
-                self.treeviewEventList.heading("#1", text="Event List", anchor="w")
+                minwidth = self.treeviewEventList.column('#0', option='minwidth')
+                self.treeviewEventList.column('#0', width=minwidth)
+
+                self.treeviewEventList.heading("Event List", text="Event List", anchor=tk.W)
+                self.treeviewEventList.heading("Name", text="Name", anchor=tk.W)
+                self.treeviewEventList.heading("Count", text="Count", anchor=tk.W)
+                self.treeviewEventList.column("Event List", anchor=tk.W, width=150)
+                self.treeviewEventList.column("Name", anchor=tk.W, width=180)
+                self.treeviewEventList.column("Count", anchor=tk.W, width=98)
                 
-                self.treeviewEventList.bind("<<TreeviewSelect>>", self.load_campaign_encounter)
+                self.treeviewEventList.bind("<<TreeviewSelect>>", self.load_event)
                 self.treeviewEventList.bind("<Control-a>", lambda *args: self.treeviewEventList.selection_add(self.treeviewEventList.get_children()))
 
-                # Need to add expansions and their events.
-                self.treeviewEventList.insert(parent="", values=(self.events[event]["name"],), index="end")
+                for coreSet in sorted(coreSets - set(["Dark Souls The Board Game"])):
+                    self.treeviewEventList.insert(parent="", iid=coreSet, values=(coreSet, "", ""), index="end", tags=False)
+                    for event in [event for event in self.events if coreSet in self.events[event]["expansions"]]:
+                        self.treeviewEventList.insert(parent=coreSet, iid=event + "_" + coreSet, values=("", event, self.events[event]["count"]), index="end", tags=True)
                 
                 self.treeviewEventDeck = ttk.Treeview(
                     self.eventTabEventDeckTreeviewFrame,
-                    selectmode="extended",
-                    columns=("Event Deck",),
+                    selectmode="browse",
+                    columns=("Event Deck", "Drawn Order"),
                     yscrollcommand=self.scrollbarTreeviewEventDeck.set,
-                    height=14 if root.winfo_screenheight() > 1000 else 10,
-                    show=["headings"]
+                    height=14 if root.winfo_screenheight() > 1000 else 10
                 )
                 
                 self.treeviewEventDeck.pack(expand=True, fill="both")
                 self.scrollbarTreeviewEventDeck.config(command=self.treeviewEventDeck.yview)
 
-                self.treeviewEventDeck.column("#1", anchor="w")
-                self.treeviewEventDeck.heading("#1", text="Event Deck", anchor="w")
+                minwidth = self.treeviewEventDeck.column('#0', option='minwidth')
+                self.treeviewEventDeck.column('#0', width=minwidth)
+
+                self.treeviewEventDeck.heading("Event Deck", text="Event Deck", anchor=tk.W)
+                self.treeviewEventDeck.heading("Drawn Order", text="Drawn Order", anchor=tk.W)
+                self.treeviewEventDeck.column("Event Deck", anchor=tk.W, width=180)
+                self.treeviewEventDeck.column("Drawn Order", anchor=tk.W, width=248)
                 
-                self.treeviewEventDeck.bind("<<TreeviewSelect>>", self.load_campaign_encounter)
+                self.treeviewEventDeck.bind("<<TreeviewSelect>>", self.load_event)
                 self.treeviewEventDeck.bind("<Control-a>", lambda *args: self.treeviewEventDeck.selection_add(self.treeviewEventDeck.get_children()))
 
                 adapter.debug("End of create_event_treeviews")
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
+        def load_event(self, event=None):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of load_event", caller=calframe[1][3])
+                
+                # Get the event selected.
+                if self.drawnEvent:
+                    eventSelected = self.drawnEvent
+                else:
+                    tree = event.widget
+
+                    # Don't update the image shown if you've selected more than one encounter.
+                    if len(tree.selection()) != 1:
+                        adapter.debug("End of load_event (not updating image)")
+                        return
+                    
+                    eventSelected = tree.selection()[0]
+
+                if "_" in eventSelected:
+                    eventSelected = eventSelected[:eventSelected.index("_")]
+
+                if eventSelected not in self.events:
+                    adapter.debug("End of load_event (core set selected)")
+                    return
+
+                # Remove keyword tooltips from the previous encounter shown, if there are any.
+                for tooltip in self.tooltips:
+                    tooltip.destroy()
+
+                # Create and display the event image.
+                self.create_image(self.events[eventSelected]["name"] + ".jpg", "encounter", 4)
+                self.encounterPhotoImage = ImageTk.PhotoImage(self.encounterImage)
+                self.encounter.image = self.encounterPhotoImage
+                self.encounter.config(image=self.encounterPhotoImage)
+
+                adapter.debug("End of load_event")
             except Exception as e:
                 adapter.exception(e)
                 raise
