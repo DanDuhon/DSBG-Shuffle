@@ -317,9 +317,11 @@ try:
                 self.notebook.add(self.expansionTab, text="Enabled Expansions")
 
                 for i, expansion in enumerate(self.expansions):
-                    self.expansions[expansion]["value"].set(1 if expansion in self.settings["availableExpansions"] else 0)
                     self.expansions[expansion]["button"] = ttk.Checkbutton(self.expansionTab.interior, text=self.expansions[expansion]["displayName"], variable=self.expansions[expansion]["value"], command=lambda expansion=expansion: self.toggle_expansion(expansion=expansion))
                     self.expansions[expansion]["button"].grid(row=i, column=0, padx=5, pady=10, sticky="nsew")
+                    
+                self.expansions["Phantoms"]["value"].set(1 if "Phantoms" in self.settings["availableExpansions"] else 0)
+                self.expansions["Characters Expansion"]["value"].set(1 if "Characters Expansion" in self.settings["availableExpansions"] else 0)
 
                 self.enemies = {
                     "Painted World of Ariamis": {"button": None, "value": tk.IntVar(), "parent": None, "children": [], "displayName": "Painted World of Ariamis (V2)"},
@@ -489,6 +491,7 @@ try:
                             self.expansions[self.enemies[enemy]["parent"]]["value"].set(self.enemies[enemy]["value"].get())
                         self.enemies[self.enemies[enemy]["parent"]]["value"].set(self.enemies[enemy]["value"].get())
                     else:
+                        self.enemies[self.enemies[enemy]["parent"]]["value"].set(0)
                         self.enemies[self.enemies[enemy]["parent"]]["button"].state(["alternate"])
                         self.expansions[self.enemies[enemy]["parent"]]["value"].set(1)
                 else:
@@ -2058,6 +2061,29 @@ try:
                     self.expansionsForRandomEncounters = (v1Expansions | v2Expansions) & self.allExpansions
                     self.set_encounter_list()
                     self.create_encounters_treeview()
+                    
+                    if self.settings["customEnemyList"]:
+                        i = 0
+                        progress = PopupWindow(root, labelText="Applying enabled enemies...", progressBar=True, progressMax=len(self.encounterList), loadingImage=True)
+
+                        encountersToRemove = set()
+                        for encounter in self.encounterList:
+                            i += 1
+                            progress.progressVar.set(i)
+                            root.update_idletasks()
+                            self.load_encounter(encounter=encounter, customEnemyListCheck=True)
+                            if all([not set(alt).issubset(self.enabledEnemies) for alt in self.selected["alternatives"]]):
+                                encountersToRemove.add(encounter)
+
+                        self.encounterList = list(set(self.encounterList) - encountersToRemove)
+                        
+                        self.treeviewEncounters.pack_forget()
+                        self.treeviewEncounters.destroy()
+                        self.create_encounters_treeview()
+                        self.scrollbarTreeviewCampaign = ttk.Scrollbar(self.campaignTabTreeviewFrame)
+                        self.scrollbarTreeviewCampaign.pack(side="right", fill="y")
+
+                    progress.destroy()
 
                 self.set_bindings_buttons_menus(True)
 
