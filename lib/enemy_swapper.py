@@ -19,7 +19,7 @@ try:
     from enemies import enemyIds, enemiesDict
     from treasure import generate_treasure_soul_cost, populate_treasure_tiers, pick_treasure
     from character import soulCost
-    
+
 
     def center(win):
         """
@@ -206,18 +206,80 @@ try:
 
                 self.okButton = ttk.Button(self.helpButtonsFrame, text="OK", width=14, command=self.top.destroy)
                 self.okButton.grid(column=0, row=0, padx=5)
-                
+
                 center(top)
                 top.attributes('-alpha', 1.0)
             except Exception as e:
                 adapter.exception(e)
                 raise
 
+    class VerticalScrolledFrame(ttk.Frame):
+        """A pure Tkinter scrollable frame that actually works!
+        * Use the "interior" attribute to place widgets inside the scrollable frame.
+        * Construct and pack/place/grid normally.
+        * This frame only allows vertical scrolling.
+        """
+        def __init__(self, parent, *args, **kw):
+            ttk.Frame.__init__(self, parent, *args, **kw)
+
+            # Create a canvas object and a vertical scrollbar for scrolling it.
+            vscrollbar = ttk.Scrollbar(self, orient=tk.VERTICAL)
+            vscrollbar.pack(fill=tk.Y, side=tk.RIGHT, expand=tk.FALSE)
+            self.canvas = tk.Canvas(self, bd=0, highlightthickness=0,
+                            yscrollcommand=vscrollbar.set)
+            self.canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=tk.TRUE)
+            vscrollbar.config(command=self.canvas.yview)
+
+            # Reset the view
+            self.canvas.xview_moveto(0)
+            self.canvas.yview_moveto(0)
+
+            # Create a frame inside the canvas which will be scrolled with it.
+            self.interior = interior = ttk.Frame(self.canvas)
+            interior_id = self.canvas.create_window(0, 0, window=interior, anchor=tk.NW)
+            self.interior.bind("<Enter>", self._bound_to_mousewheel)
+            self.interior.bind("<Leave>", self._unbound_to_mousewheel)
+            self.interior.bind("<Configure>", lambda event, canvas=self.interior: self.on_frame_configure(canvas))
+
+            # Track changes to the canvas and frame width and sync them,
+            # also updating the scrollbar.
+            def _configure_interior(event):
+                # Update the scrollbars to match the size of the inner frame.
+                size = (interior.winfo_reqwidth(), interior.winfo_reqheight())
+                self.canvas.config(scrollregion="0 0 %s %s" % size)
+                if interior.winfo_reqwidth() != self.canvas.winfo_width():
+                    # Update the canvas"s width to fit the inner frame.
+                    self.canvas.config(width=interior.winfo_reqwidth())
+            interior.bind("<Configure>", _configure_interior)
+
+            def _configure_canvas(event):
+                if interior.winfo_reqwidth() != self.canvas.winfo_width():
+                    # Update the inner frame"s width to fill the canvas.
+                    self.canvas.itemconfigure(interior_id, width=self.canvas.winfo_width())
+            self.canvas.bind("<Configure>", _configure_canvas)
+
+
+        def on_frame_configure(self, canvas):
+            """Reset the scroll region to encompass the inner frame"""
+            canvas.configure(scrollregion=canvas.bbox("all"))
+
+
+        def _bound_to_mousewheel(self, event):
+            self.canvas.bind_all("<MouseWheel>", self._on_mousewheel)
+
+
+        def _unbound_to_mousewheel(self, event):
+            self.canvas.unbind_all("<MouseWheel>")
+
+
+        def _on_mousewheel(self, event):
+            self.canvas.yview_scroll(int(-1*(event.delta/120)), "units")
+
 
     class SettingsWindow(object):
         """
         Window in which the user selects which expansions they own and whether they want to see
-        old, new, or both styles of encounters when being shown random encounters.
+        V1, V1, or both styles of encounters when being shown random encounters.
         """
         def __init__(self, master):
             try:
@@ -226,36 +288,108 @@ try:
                 top.attributes('-alpha', 0.0)
                 top.wait_visibility()
                 top.grab_set_global()
-                
+
                 with open(baseFolder + "\\lib\\settings.json") as settingsFile:
                     self.settings = load(settingsFile)
 
                 self.availableExpansions = set(self.settings["availableExpansions"])
-                
+                self.enabledEnemies = self.settings["enabledEnemies"]
+
                 # These are the only expansions that matter - the ones that add enemies or regular treasure.
                 # All encounters are always going to be available.
                 self.expansions = {
-                    "Dark Souls The Board Game": {"button": None, "value": tk.IntVar()},
-                    "Painted World of Ariamis": {"button": None, "value": tk.IntVar()},
-                    "The Sunless City": {"button": None, "value": tk.IntVar()},
-                    "Tomb of Giants": {"button": None, "value": tk.IntVar()},
-                    "Darkroot": {"button": None, "value": tk.IntVar()},
-                    "Explorers": {"button": None, "value": tk.IntVar()},
-                    "Iron Keep": {"button": None, "value": tk.IntVar()},
-                    "Phantoms": {"button": None, "value": tk.IntVar()},
-                    "Executioner Chariot": {"button": None, "value": tk.IntVar()},
-                    "Characters Expansion": {"button": None, "value": tk.IntVar()}
+                    "Painted World of Ariamis": {"button": None, "value": tk.IntVar(), "displayName": "Painted World of Ariamis (V2 Core Set)"},
+                    "The Sunless City": {"button": None, "value": tk.IntVar(), "displayName": "The Sunless City (V2 Core Set)"},
+                    "Tomb of Giants": {"button": None, "value": tk.IntVar(), "displayName": "Tomb of Giants (V2 Core Set)"},
+                    "Dark Souls The Board Game": {"button": None, "value": tk.IntVar(), "displayName": "Dark Souls The Board Game (V1 Core Set)"},
+                    "Darkroot": {"button": None, "value": tk.IntVar(), "displayName": "Darkroot (V1)"},
+                    "Explorers": {"button": None, "value": tk.IntVar(), "displayName": "Explorers (V1)"},
+                    "Iron Keep": {"button": None, "value": tk.IntVar(), "displayName": "Iron Keep (V1)"},
+                    "Phantoms": {"button": None, "value": tk.IntVar(), "displayName": "Phantoms (V1)"},
+                    "Executioner Chariot": {"button": None, "value": tk.IntVar(), "displayName": "Executioner Chariot (V1)"},
+                    "Characters Expansion": {"button": None, "value": tk.IntVar(), "displayName": "Characters Expansion (V1)"}
                 }
+
+                self.notebook = ttk.Notebook(top)
+                self.notebook.grid(row=0, column=0, padx=(20, 10), pady=(20, 10), sticky="nsew", rowspan=4, columnspan=2)
+
+                self.expansionTab = VerticalScrolledFrame(self.notebook)
+                self.notebook.add(self.expansionTab, text="Enabled Expansions")
+
+                for i, expansion in enumerate(self.expansions):
+                    self.expansions[expansion]["button"] = ttk.Checkbutton(self.expansionTab.interior, text=self.expansions[expansion]["displayName"], variable=self.expansions[expansion]["value"], command=lambda expansion=expansion: self.toggle_expansion(expansion=expansion))
+                    self.expansions[expansion]["button"].grid(row=i, column=0, padx=5, pady=10, sticky="nsew")
+                    
+                self.expansions["Phantoms"]["value"].set(1 if "Phantoms" in self.settings["availableExpansions"] else 0)
+                self.expansions["Characters Expansion"]["value"].set(1 if "Characters Expansion" in self.settings["availableExpansions"] else 0)
+
+                self.enemies = {
+                    "Painted World of Ariamis": {"button": None, "value": tk.IntVar(), "parent": None, "children": [], "displayName": "Painted World of Ariamis (V2)"},
+                    "Bonewheel Skeleton": {"button": None, "value": tk.IntVar(), "parent": "Painted World of Ariamis", "children": [], "displayName": "Bonewheel Skeleton"},
+                    "Crow Demon": {"button": None, "value": tk.IntVar(), "parent": "Painted World of Ariamis", "children": [], "displayName": "Crow Demon"},
+                    "Engorged Zombie": {"button": None, "value": tk.IntVar(), "parent": "Painted World of Ariamis", "children": [], "displayName": "Engorged Zombie"},
+                    "Phalanx": {"button": None, "value": tk.IntVar(), "parent": "Painted World of Ariamis", "children": [], "displayName": "Phalanx"},
+                    "Phalanx Hollow": {"button": None, "value": tk.IntVar(), "parent": "Painted World of Ariamis", "children": [], "displayName": "Phalanx Hollow"},
+                    "Snow Rat": {"button": None, "value": tk.IntVar(), "parent": "Painted World of Ariamis", "children": [], "displayName": "Snow Rat"},
+                    "The Sunless City": {"button": None, "value": tk.IntVar(), "parent": None, "children": [], "displayName": "The Sunless City (V2)"},
+                    "Crossbow Hollow": {"button": None, "value": tk.IntVar(), "parent": "The Sunless City", "children": [], "displayName": "Crossbow Hollow"},
+                    "Hollow Soldier": {"button": None, "value": tk.IntVar(), "parent": "The Sunless City", "children": [], "displayName": "Hollow Soldier"},
+                    "Mimic": {"button": None, "value": tk.IntVar(), "parent": "The Sunless City", "children": [], "displayName": "Mimic"},
+                    "Sentinel": {"button": None, "value": tk.IntVar(), "parent": "The Sunless City", "children": [], "displayName": "Sentinel"},
+                    "Silver Knight Greatbowman": {"button": None, "value": tk.IntVar(), "parent": "The Sunless City", "children": [], "displayName": "Silver Knight Greatbowman"},
+                    "Silver Knight Swordsman": {"button": None, "value": tk.IntVar(), "parent": "The Sunless City", "children": [], "displayName": "Silver Knight Swordsman"},
+                    "Tomb of Giants": {"button": None, "value": tk.IntVar(), "parent": None, "children": [], "displayName": "Tomb of Giants (V2)"},
+                    "Giant Skeleton Archer": {"button": None, "value": tk.IntVar(), "parent": "Tomb of Giants", "children": [], "displayName": "Giant Skeleton Archer"},
+                    "Giant Skeleton Soldier": {"button": None, "value": tk.IntVar(), "parent": "Tomb of Giants", "children": [], "displayName": "Giant Skeleton Soldier"},
+                    "Necromancer": {"button": None, "value": tk.IntVar(), "parent": "Tomb of Giants", "children": [], "displayName": "Necromancer"},
+                    "Skeleton Archer": {"button": None, "value": tk.IntVar(), "parent": "Tomb of Giants", "children": [], "displayName": "Skeleton Archer"},
+                    "Skeleton Beast": {"button": None, "value": tk.IntVar(), "parent": "Tomb of Giants", "children": [], "displayName": "Skeleton Beast"},
+                    "Skeleton Soldier": {"button": None, "value": tk.IntVar(), "parent": "Tomb of Giants", "children": [], "displayName": "Skeleton Soldier"},
+                    "Dark Souls The Board Game": {"button": None, "value": tk.IntVar(), "parent": None, "children": [], "displayName": "Dark Souls The Board Game (V1)              "},
+                    "Crossbow Hollow (V1)": {"button": None, "value": tk.IntVar(), "parent": "Dark Souls The Board Game", "children": [], "displayName": "Crossbow Hollow (V1)"},
+                    "Hollow Soldier (V1)": {"button": None, "value": tk.IntVar(), "parent": "Dark Souls The Board Game", "children": [], "displayName": "Hollow Soldier (V1)"},
+                    "Large Hollow Soldier (V1)": {"button": None, "value": tk.IntVar(), "parent": "Dark Souls The Board Game", "children": [], "displayName": "Large Hollow Soldier (V1)"},
+                    "Sentinel (V1)": {"button": None, "value": tk.IntVar(), "parent": "Dark Souls The Board Game", "children": [], "displayName": "Sentinel (V1)"},
+                    "Silver Knight Greatbowman (V1)": {"button": None, "value": tk.IntVar(), "parent": "Dark Souls The Board Game", "children": [], "displayName": "Silver Knight Greatbowman (V1)"},
+                    "Silver Knight Swordsman (V1)": {"button": None, "value": tk.IntVar(), "parent": "Dark Souls The Board Game", "children": [], "displayName": "Silver Knight Swordsman (V1)"},
+                    "Darkroot": {"button": None, "value": tk.IntVar(), "parent": None, "children": [], "displayName": "Darkroot"},
+                    "Demonic Foliage (V1)": {"button": None, "value": tk.IntVar(), "parent": "Darkroot", "children": [], "displayName": "Demonic Foliage (V1)"},
+                    "Mushroom Child (V1)": {"button": None, "value": tk.IntVar(), "parent": "Darkroot", "children": [], "displayName": "Mushroom Parent (V1)"},
+                    "Mushroom Parent (V1)": {"button": None, "value": tk.IntVar(), "parent": "Darkroot", "children": [], "displayName": "Mushroom Parent (V1)"},
+                    "Plow Scarecrow (V1)": {"button": None, "value": tk.IntVar(), "parent": "Darkroot", "children": [], "displayName": "Plow Scarecrow (V1)"},
+                    "Shears Scarecrow (V1)": {"button": None, "value": tk.IntVar(), "parent": "Darkroot", "children": [], "displayName": "Shears Scarecrow (V1)"},
+                    "Stone Guardian (V1)": {"button": None, "value": tk.IntVar(), "parent": "Darkroot", "children": [], "displayName": "Stone Guardian (V1)"},
+                    "Stone Knight (V1)": {"button": None, "value": tk.IntVar(), "parent": "Darkroot", "children": [], "displayName": "Stone Knight (V1)"},
+                    "Executioner Chariot": {"button": None, "value": tk.IntVar(), "parent": None, "children": [], "displayName": "Executioner Chariot (V1)"},
+                    "Black Hollow Mage (V1)": {"button": None, "value": tk.IntVar(), "parent": "Executioner Chariot", "children": [], "displayName": "Black Hollow Mage (V1)"},
+                    "Falchion Skeleton (V1)": {"button": None, "value": tk.IntVar(), "parent": "Executioner Chariot", "children": [], "displayName": "Falchion Skeleton (V1)"},
+                    "Explorers": {"button": None, "value": tk.IntVar(), "parent": None, "children": [], "displayName": "Explorers (V1)"},
+                    "Firebomb Hollow (V1)": {"button": None, "value": tk.IntVar(), "parent": "Explorers", "children": [], "displayName": "Firebomb Hollow (V1)"},
+                    "Silver Knight Spearman (V1)": {"button": None, "value": tk.IntVar(), "parent": "Explorers", "children": [], "displayName": "Silver Knight Spearman (V1)"},
+                    "Iron Keep": {"button": None, "value": tk.IntVar(), "parent": None, "children": [], "displayName": "Iron Keep (V1)"},
+                    "Alonne Bow Knight (V1)": {"button": None, "value": tk.IntVar(), "parent": "Iron Keep", "children": [], "displayName": "Alonne Bow Knight (V1)"},
+                    "Alonne Knight Captain (V1)": {"button": None, "value": tk.IntVar(), "parent": "Iron Keep", "children": [], "displayName": "Alonne Knight Captain (V1)"},
+                    "Alonne Sword Knight (V1)": {"button": None, "value": tk.IntVar(), "parent": "Iron Keep", "children": [], "displayName": "Alonne Sword Knight (V1)"},
+                    "Ironclad Soldier (V1)": {"button": None, "value": tk.IntVar(), "parent": "Iron Keep", "children": [], "displayName": "Ironclad Soldier (V1)"}
+                }
+
+                self.enemiesTab = VerticalScrolledFrame(self.notebook)
+                self.enemiesTab.grid_propagate(False)
+                self.notebook.add(self.enemiesTab, text="Enabled Enemies")
                 
-                self.expansionsFrame = ttk.LabelFrame(top, text="Enabled Expansions", padding=(20, 10))
-                self.expansionsFrame.grid(row=0, column=0, padx=(20, 10), pady=(20, 10), sticky="nsew", rowspan=4, columnspan=2)
-                for i, a in enumerate(self.expansions):
-                    self.expansions[a]["value"].set(1 if a in self.settings["availableExpansions"] else 0)
-                    self.expansions[a]["button"] = ttk.Checkbutton(self.expansionsFrame, text=a + (" (Core Set)" if a in coreSets else ""), variable=self.expansions[a]["value"])
-                    if i > 11:
-                        self.expansions[a]["button"].grid(row=i-12, column=1, padx=5, pady=10, sticky="nsew")
+                for i, enemy in enumerate(self.enemies):
+                    if self.enemies[enemy]["parent"]:
+                        self.enemies[self.enemies[enemy]["parent"]]["children"].append(enemy)
                     else:
-                        self.expansions[a]["button"].grid(row=i, column=0, padx=5, pady=10, sticky="nsew")
+                        # Indent children for better visual organization.
+                        tk.Label(self.enemiesTab.interior, text="\t").grid(column=0, row=i)
+
+                    self.enemies[enemy]["button"] = ttk.Checkbutton(self.enemiesTab.interior, text=self.enemies[enemy]["displayName"], variable=self.enemies[enemy]["value"], command=lambda enemy=enemy: self.toggle_parent_children(enemy=enemy))
+                    self.enemies[enemy]["button"].grid(row=i, column=0 if not self.enemies[enemy]["parent"] else 1, columnspan=2 if not self.enemies[enemy]["parent"] else 3, padx=5, pady=1, sticky="nsew")
+
+                for enemy in self.enabledEnemies:
+                    self.enemies[enemy]["value"].set(1)
+                    self.toggle_parent_children(enemy=enemy)
 
                 self.charactersActive = {
                     "Assassin": {"button": None, "value": tk.IntVar()},
@@ -269,14 +403,14 @@ try:
                     "Thief": {"button": None, "value": tk.IntVar()},
                     "Warrior": {"button": None, "value": tk.IntVar()}
                 }
-                
+
                 self.characterFrame = ttk.LabelFrame(top, text="Characters Being Played (up to 4)", padding=(20, 10))
                 self.characterFrame.grid(row=0, column=3, padx=(20, 10), pady=(20, 10), sticky="nsew", rowspan=4, columnspan=2)
-                for i, a in enumerate(self.charactersActive):
-                    self.charactersActive[a]["value"].set(1 if a in self.settings["charactersActive"] else 0)
-                    self.charactersActive[a]["button"] = ttk.Checkbutton(self.characterFrame, text=a, variable=self.charactersActive[a]["value"], command=self.check_max_characters)
-                    self.charactersActive[a]["button"].grid(row=i, column=0, padx=5, pady=10, sticky="nsew")
-                    
+                for i, enemy in enumerate(self.charactersActive):
+                    self.charactersActive[enemy]["value"].set(1 if enemy in self.settings["charactersActive"] else 0)
+                    self.charactersActive[enemy]["button"] = ttk.Checkbutton(self.characterFrame, text=enemy, variable=self.charactersActive[enemy]["value"], command=self.check_max_characters)
+                    self.charactersActive[enemy]["button"].grid(row=i, column=0, padx=5, pady=10, sticky="nsew")
+
                 self.treasureSwapOptions = {
                     "Similar Soul Cost": {"button": None, "value": tk.StringVar(value="Similar Soul Cost"), "tooltipText": "Rewards an item of the same type as the original that also costs about the same souls in leveling stats in order to equip it"},
                     "Tier Based": {"button": None, "value": tk.StringVar(value="Tier Based"), "tooltipText": "Splits treasure into equal tiers based on soul cost to equip and rewards an item in the same tier as the original reward."},
@@ -287,25 +421,25 @@ try:
                 self.treasureSwapOption = tk.StringVar(value=self.settings["treasureSwapOption"])
                 self.treasureSwapFrame = ttk.LabelFrame(top, text="Treasure Swap Options", padding=(20, 10))
                 self.treasureSwapFrame.grid(row=0, column=5, padx=(20, 10), pady=(20, 10), sticky="nsew")
-                for i, a in enumerate(self.treasureSwapOptions):
-                    self.treasureSwapOptions[a]["button"] = ttk.Radiobutton(self.treasureSwapFrame, text=a, variable=self.treasureSwapOption, value=a)
-                    self.treasureSwapOptions[a]["button"].grid(row=i, column=0, padx=5, pady=10, sticky="nsew")
-                    CreateToolTip(self.treasureSwapOptions[a]["button"], self.treasureSwapOptions[a]["tooltipText"])
-                
+                for i, option in enumerate(self.treasureSwapOptions):
+                    self.treasureSwapOptions[option]["button"] = ttk.Radiobutton(self.treasureSwapFrame, text=option, variable=self.treasureSwapOption, value=option)
+                    self.treasureSwapOptions[option]["button"].grid(row=i, column=0, padx=5, pady=10, sticky="nsew")
+                    CreateToolTip(self.treasureSwapOptions[option]["button"], self.treasureSwapOptions[option]["tooltipText"])
+
                 self.randomEncounters = {
-                    "old": {"button": None, "value": tk.IntVar()},
-                    "new": {"button": None, "value": tk.IntVar()}
+                    "v1": {"button": None, "value": tk.IntVar()},
+                    "v2": {"button": None, "value": tk.IntVar()}
                 }
 
                 self.randomEncounterFrame = ttk.LabelFrame(top, text="Random Encounters Shown", padding=(20, 10))
                 self.randomEncounterFrame.grid(row=1, column=5, padx=(20, 10), pady=(20, 10), sticky="nsew")
-                self.randomEncounters["old"]["value"].set(1 if "old" in self.settings["randomEncounterTypes"] else 0)
-                self.randomEncounters["new"]["value"].set(1 if "new" in self.settings["randomEncounterTypes"] else 0)
-                self.randomEncounters["old"]["button"] = ttk.Checkbutton(self.randomEncounterFrame, text="\"Old\" Style Encounters", variable=self.randomEncounters["old"]["value"])
-                self.randomEncounters["new"]["button"] = ttk.Checkbutton(self.randomEncounterFrame, text="\"New\" Style Encounters", variable=self.randomEncounters["new"]["value"])
-                self.randomEncounters["old"]["button"].grid(row=0, column=0, padx=5, pady=10, sticky="nsew")
-                self.randomEncounters["new"]["button"].grid(row=1, column=0, padx=5, pady=10, sticky="nsew")
-                
+                self.randomEncounters["v1"]["value"].set(1 if "v1" in self.settings["randomEncounterTypes"] else 0)
+                self.randomEncounters["v2"]["value"].set(1 if "v2" in self.settings["randomEncounterTypes"] else 0)
+                self.randomEncounters["v1"]["button"] = ttk.Checkbutton(self.randomEncounterFrame, text="V1 Encounters", variable=self.randomEncounters["v1"]["value"])
+                self.randomEncounters["v2"]["button"] = ttk.Checkbutton(self.randomEncounterFrame, text="V2 Encounters", variable=self.randomEncounters["v2"]["value"])
+                self.randomEncounters["v1"]["button"].grid(row=0, column=0, padx=5, pady=10, sticky="nsew")
+                self.randomEncounters["v2"]["button"].grid(row=1, column=0, padx=5, pady=10, sticky="nsew")
+
                 self.updateCheck = {"button": None, "value": tk.IntVar(), "tooltipText": "If enabled, makes an API call to Github once a month when the app is opened to check for a new version.\n\nThe app won't download anything or update itself but will let you know if there's a new version."}
                 self.updateCheckFrame = ttk.LabelFrame(top, text="Check For Updates", padding=(20, 10))
                 self.updateCheckFrame.grid(row=3, column=5, padx=(20, 10), pady=(20, 10), sticky="nsew")
@@ -313,14 +447,14 @@ try:
                 self.updateCheck["button"] = ttk.Checkbutton(self.updateCheckFrame, text="Check for updates", variable=self.updateCheck["value"])
                 self.updateCheck["button"].grid(row=0, column=0, padx=5, pady=10, sticky="nsew")
                 CreateToolTip(self.updateCheck["button"], self.updateCheck["tooltipText"])
-                
-                self.errLabel = tk.Label(self.top, text="")
+
+                self.errLabel = ttk.Label(self.top, text="")
                 self.errLabel.grid(column=0, row=4, padx=18, columnspan=8)
 
                 self.saveCancelButtonsFrame = ttk.Frame(top, padding=(0, 0, 0, 10))
                 self.saveCancelButtonsFrame.grid(row=5, column=0, padx=15, pady=(10, 0), sticky="w", columnspan=2)
                 self.saveCancelButtonsFrame.columnconfigure(index=0, weight=1)
-                
+
                 self.saveButton = ttk.Button(self.saveCancelButtonsFrame, text="Save", width=14, command=lambda: self.quit_with_save())
                 self.cancelButton = ttk.Button(self.saveCancelButtonsFrame, text="Cancel", width=14, command=self.quit_no_save)
                 self.saveButton.grid(column=0, row=0, padx=5)
@@ -334,9 +468,60 @@ try:
                 self.lightTheme["value"].set(0 if self.settings["theme"] == "dark" else 1)
                 self.lightTheme["button"] = ttk.Button(self.themeButtonFrame, text="Switch to light theme" if self.lightTheme["value"].get() == 0 else "Switch to dark theme", command=self.switch_theme)
                 self.lightTheme["button"].grid(column=3, row=0, columnspan=2)
-                
+
                 center(top)
                 top.attributes('-alpha', 1.0)
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
+        def toggle_parent_children(self, enemy, event=None):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of toggle_parent_children", caller=calframe[1][3])
+
+                if self.enemies[enemy]["parent"]:
+                    if (all([self.enemies[child]["value"].get() == 0 for child in self.enemies[self.enemies[enemy]["parent"]]["children"]])
+                            or all([self.enemies[child]["value"].get() == 1 for child in self.enemies[self.enemies[enemy]["parent"]]["children"]])):
+                        if enemy in self.expansions:
+                            self.expansions[enemy]["value"].set(self.enemies[enemy]["value"].get())
+                        else:
+                            self.expansions[self.enemies[enemy]["parent"]]["value"].set(self.enemies[enemy]["value"].get())
+                        self.enemies[self.enemies[enemy]["parent"]]["value"].set(self.enemies[enemy]["value"].get())
+                    else:
+                        self.enemies[self.enemies[enemy]["parent"]]["value"].set(0)
+                        self.enemies[self.enemies[enemy]["parent"]]["button"].state(["alternate"])
+                        self.expansions[self.enemies[enemy]["parent"]]["value"].set(1)
+                else:
+                    self.expansions[enemy]["value"].set(self.enemies[enemy]["value"].get())
+                    
+                    for child in self.enemies[enemy]["children"]:
+                        self.enemies[child]["value"].set(self.enemies[enemy]["value"].get())
+
+                adapter.debug("End of toggle_parent_children", caller=calframe[1][3])
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
+        def toggle_expansion(self, expansion, event=None):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of toggle_expansion", caller=calframe[1][3])
+
+                if expansion in {"Characters Expansion", "Phantoms"}:
+                    adapter.debug("End of toggle_expansion (Characters expansion, nothing to do)", caller=calframe[1][3])
+                    return
+
+                self.enemies[expansion]["value"].set(self.expansions[expansion]["value"].get())
+                
+                for child in self.enemies[expansion]["children"]:
+                    self.enemies[child]["value"].set(self.expansions[expansion]["value"].get())
+
+                adapter.debug("End of toggle_expansion", caller=calframe[1][3])
             except Exception as e:
                 adapter.exception(e)
                 raise
@@ -393,8 +578,8 @@ try:
             except Exception as e:
                 adapter.exception(e)
                 raise
-            
-            
+
+
         def quit_with_save(self, event=None):
             """
             Saves the settings and exits the settings window.
@@ -424,7 +609,7 @@ try:
                     self.errLabel.config(text="You need to select at least 1 character if using the Similar Soul Cost or Tier Based treasure swap options!")
                     adapter.debug("End of quit_with_save", caller=calframe[1][3])
                     return
-                
+
                 characterExpansions = []
                 for c in soulCost:
                     if self.charactersActive[c]["value"].get() == 1:
@@ -437,12 +622,17 @@ try:
                     adapter.debug("End of quit_with_save", caller=calframe[1][3])
                     return
 
+                enabledEnemies = [s for s in self.enemies if self.enemies[s]["value"].get() == 1]
+                customEnemyList = any(["alternate" in self.enemies[enemy]["button"].state() for enemy in self.enemies])
+
                 randomEncounterTypes = set([s for s in self.randomEncounters if self.randomEncounters[s]["value"].get() == 1])
                 charactersActive = set([s for s in self.charactersActive if self.charactersActive[s]["value"].get() == 1])
 
                 newSettings = {
                     "theme": "light" if self.lightTheme["value"].get() == 1 else "dark",
                     "availableExpansions": list(expansionsActive),
+                    "enabledEnemies": list(enabledEnemies),
+                    "customEnemyList": customEnemyList,
                     "randomEncounterTypes": list(randomEncounterTypes),
                     "charactersActive": list(charactersActive),
                     "treasureSwapOption": self.treasureSwapOption.get(),
@@ -469,8 +659,8 @@ try:
             except Exception as e:
                 adapter.exception(e)
                 raise
-            
-            
+
+
         def quit_no_save(self, event=None):
             """
             Exits the settings window without saving changes.
@@ -490,7 +680,7 @@ try:
             except Exception as e:
                 adapter.exception(e)
                 raise
-        
+
 
     class PopupWindow(tk.Toplevel):
         """
@@ -543,7 +733,7 @@ try:
                 self.progressVar = tk.DoubleVar()
                 progressBar = ttk.Progressbar(self.popupFrame, variable=self.progressVar, maximum=progressMax, length=150)
                 progressBar.grid(row=3, column=0, columnspan=2)
-                
+
             center(self)
             self.attributes('-alpha', 1.0)
 
@@ -552,7 +742,7 @@ try:
         def __init__(self, parent):
             try:
                 adapter.debug("Initiating application")
-                    
+
                 with open(baseFolder + "\\lib\\settings.json") as settingsFile:
                     self.settings = load(settingsFile)
 
@@ -563,10 +753,10 @@ try:
                 folder = baseFolder + "\\lib\\image staging"
                 for filename in os.listdir(folder):
                     filePath = os.path.join(folder, filename)
-                    
+
                     if os.path.isfile(filePath) and filePath[-4:] == ".png":
                         os.unlink(filePath)
-                
+
                 ttk.Frame.__init__(self)
                 self.grid_rowconfigure(index=1, weight=1)
                 self.grid_rowconfigure(index=2, weight=0)
@@ -634,17 +824,19 @@ try:
                     "The Last Giant": {"name": "The Last Giant", "level": "Mega Boss", "expansions": set(["The Last Giant"])},
                     "Vordt of the Boreal Valley": {"name": "Vordt of the Boreal Valley", "level": "Mega Boss", "expansions": set(["Vordt of the Boreal Valley"])}
                 }
-                
+
                 self.selectedBoss = tk.StringVar()
 
+                self.selected = None
                 self.allExpansions = set([encounters[encounter]["expansion"] for encounter in encounters])
                 self.availableExpansions = set(self.settings["availableExpansions"])
+                self.enabledEnemies = set([enemiesDict[enemy.replace(" (V1)", "")].id for enemy in self.settings["enabledEnemies"] if enemy not in self.allExpansions])
                 self.charactersActive = set(self.settings["charactersActive"])
                 self.availableCoreSets = coreSets & self.availableExpansions
-                oldExpansions = {"Dark Souls The Board Game", "Darkroot", "Executioner Chariot", "Explorers", "Iron Keep"} if "old" in self.settings["randomEncounterTypes"] else set()
-                newExpansions = (self.allExpansions - {"Dark Souls The Board Game", "Darkroot", "Executioner Chariot", "Explorers", "Iron Keep"}) if "new" in self.settings["randomEncounterTypes"] else set()
-                self.expansionsForRandomEncounters = (oldExpansions | newExpansions) & self.allExpansions
-                
+                v1Expansions = {"Dark Souls The Board Game", "Darkroot", "Executioner Chariot", "Explorers", "Iron Keep"} if "v1" in self.settings["randomEncounterTypes"] else set()
+                v2Expansions = (self.allExpansions - {"Dark Souls The Board Game", "Darkroot", "Executioner Chariot", "Explorers", "Iron Keep"}) if "v2" in self.settings["randomEncounterTypes"] else set()
+                self.expansionsForRandomEncounters = (v1Expansions | v2Expansions) & self.allExpansions
+
                 if self.settings["treasureSwapOption"] == "Similar Soul Cost":
                     generate_treasure_soul_cost(self.availableExpansions, self.charactersActive)
                 elif self.settings["treasureSwapOption"] == "Tier Based":
@@ -748,13 +940,33 @@ try:
                 }
 
                 self.campaign = []
-                
+
                 root.withdraw()
-                progress = PopupWindow(root, labelText="Loading...", progressBar=True, progressMax=len(allEnemies), loadingImage=True)
+                i = 0
+                progress = PopupWindow(root, labelText="Loading...", progressBar=True, progressMax=len(allEnemies) + (len(self.encounterList) if self.settings["customEnemyList"] else 0), loadingImage=True)
+
+                if self.settings["customEnemyList"]:
+                    encountersToRemove = set()
+                    for encounter in self.encounterList:
+                        i += 1
+                        progress.progressVar.set(i)
+                        root.update_idletasks()
+                        self.load_encounter(encounter=encounter, customEnemyListCheck=True)
+                        if all([not set(alt).issubset(self.enabledEnemies) for alt in self.selected["alternatives"]]):
+                            encountersToRemove.add(encounter)
+
+                    self.encounterList = list(set(self.encounterList) - encountersToRemove)
+                    
+                    self.treeviewEncounters.pack_forget()
+                    self.treeviewEncounters.destroy()
+                    self.create_encounters_treeview()
+                    self.scrollbarTreeviewCampaign = ttk.Scrollbar(self.campaignTabTreeviewFrame)
+                    self.scrollbarTreeviewCampaign.pack(side="right", fill="y")
 
                 # Create images
                 # Enemies
-                for i, enemy in enumerate(allEnemies):
+                for enemy in allEnemies:
+                    i += 1
                     progress.progressVar.set(i)
                     root.update_idletasks()
                     allEnemies[enemy]["imageOld"] = self.create_image(enemy + ".png", "enemyOld")
@@ -763,7 +975,7 @@ try:
                     if enemy in enemies:
                         allEnemies[enemy]["image text"] = self.create_image(enemy + ".png", "enemyText")
                         allEnemies[enemy]["image text" if self.forPrinting else "photo image text"] = ImageTk.PhotoImage(self.create_image(enemy + ".png", "enemyText"))
-                    
+
                 progress.destroy()
                 root.deiconify()
 
@@ -981,20 +1193,19 @@ try:
                         {"image": self.hidden, "photo image": ImageTk.PhotoImage(self.hidden), "imageName": "hidden"}
                         ]
                 }
-                
-                self.selected = None
+
                 self.newEnemies = []
                 self.newTiles = dict()
                 self.rewardTreasure = None
             except Exception as e:
                 adapter.exception(e)
                 raise
-                
+
 
         def on_frame_configure(self, canvas):
             """Reset the scroll region to encompass the inner frame"""
             canvas.configure(scrollregion=canvas.bbox("all"))
-            
+
 
         def _bound_to_mousewheel(self, event):
             self.encounterCanvas.bind_all("<MouseWheel>", self._on_mousewheel)
@@ -1020,7 +1231,7 @@ try:
                 if not self.selected:
                     adapter.debug("End of add_encounter_to_campaign (nothing done)")
                     return
-                
+
                 # Build the dictionary that will be saved to JSON if this campaign is saved.
                 encounter = {
                     "name": self.selected["name"],
@@ -1054,7 +1265,7 @@ try:
                 if self.selectedBoss.get() not in self.bosses:
                     adapter.debug("End of add_boss_to_campaign (nothing done)")
                     return
-                
+
                 # Only allow a boss to appear once in a campaign.
                 if self.selectedBoss.get() not in set([e["name"] for e in self.campaign]):
                     self.campaign.append(self.bosses[self.selectedBoss.get()])
@@ -1078,7 +1289,7 @@ try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of delete_encounter_from_campaign", caller=calframe[1][3])
-                
+
                 # If the button is clicked with no selection, do nothing.
                 if not self.treeviewCampaign.selection():
                     adapter.debug("End of delete_encounter_from_campaign (nothing done)")
@@ -1086,7 +1297,7 @@ try:
 
                 # Remove the deleted encounters from the campaign list.
                 self.campaign = [e for e in self.campaign if e["name"] not in set([self.treeviewCampaign.item(e)["values"][0] for e in self.treeviewCampaign.selection()])]
-                
+
                 # Remove the deleted encounters from the treeview.
                 for item in self.treeviewCampaign.selection():
                     self.treeviewCampaign.delete(item)
@@ -1143,7 +1354,7 @@ try:
                 if not campaignFile:
                     adapter.debug("End of load_campaign (file dialog canceled)")
                     return
-                
+
                 # If the user did not select a JSON file, notify them that that was an invalid file.
                 if os.path.splitext(campaignFile)[1] != ".json":
                     self.set_bindings_buttons_menus(False)
@@ -1151,7 +1362,7 @@ try:
                     self.set_bindings_buttons_menus(True)
                     adapter.debug("End of load_campaign (invalid file)")
                     return
-                
+
                 adapter.debug("Loading file " + campaignFile)
 
                 with open(campaignFile, "r") as f:
@@ -1166,7 +1377,7 @@ try:
                     self.campaign = []
                     adapter.debug("End of load_campaign (invalid file)")
                     return
-                
+
                 # Remove existing campaign elements.
                 for item in self.treeviewCampaign.get_children():
                     self.treeviewCampaign.delete(item)
@@ -1189,12 +1400,12 @@ try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of move_up", caller=calframe[1][3])
-                
+
                 leaves = self.treeviewCampaign.selection()
                 for i in leaves:
                     self.treeviewCampaign.move(i, self.treeviewCampaign.parent(i), self.treeviewCampaign.index(i) - 1)
                     self.campaign.insert(self.treeviewCampaign.index(i) + 1, self.campaign.pop(self.treeviewCampaign.index(i)))
-                
+
                 adapter.debug("End of move_up")
             except Exception as e:
                 adapter.exception(e)
@@ -1245,7 +1456,7 @@ try:
                 if len(tree.selection()) != 1:
                     adapter.debug("End of load_campaign_encounter (not updating image)")
                     return
-                
+
                 # Get the encounter selected.
                 campaignEncounter = [e for e in self.campaign if e["name"] == tree.item(tree.selection())["values"][0]]
 
@@ -1286,7 +1497,7 @@ try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of print_encounters", caller=calframe[1][3])
-                
+
                 self.forPrinting = True
                 self.encountersToPrint = []
                 campaignEncounters = [e for e in self.campaign if e["name"] not in self.bosses]
@@ -1317,7 +1528,7 @@ try:
                     else:
                         encounter["width"] = 70
                         encounter["height"] = 120
-                
+
                 encounterCount = 0
                 eCount = 0
                 v1Normal = []
@@ -1325,13 +1536,13 @@ try:
                 for i in range(0, len(l), 18):
                     v1Normal.append(l[i:i+18])
                     encounterCount += len(l[i:i+18])
-                
+
                 v1Level4 = []
                 l = [e for e in campaignEncounters if e["width"] == 63]
                 for i in range(0, len(l), 9):
                     v1Level4.append(l[i:i+9])
                     encounterCount += len(l[i:i+9])
-                
+
                 v2 = []
                 l = [e for e in campaignEncounters if e["width"] == 70]
                 for i in range(0, len(l), 6):
@@ -1343,7 +1554,7 @@ try:
                 buffer = 5
                 pdf = FPDF(unit="mm")
                 pdf.set_margins(buffer, buffer, buffer)
-                
+
                 progress = PopupWindow(root, labelText="Creating a PDF...", progressBar=True, progressMax=encounterCount, loadingImage=True)
 
                 for e, encounterList in enumerate(encountersToPrint):
@@ -1369,7 +1580,7 @@ try:
                             # Get the encounter.
                             campaignEncounter = [e for e in self.campaign if e["name"] == encounter["name"]]
                             self.rewardTreasure = campaignEncounter[0].get("rewardTreasure")
-                                
+
                             adapter.debug("\tOpening " + baseFolder + "\\lib\\encounters\\" + campaignEncounter[0]["name"] + ".json", caller=calframe[1][3])
                             # Get the enemy slots for this encounter.
                             with open(baseFolder + "\\lib\\encounters\\" + campaignEncounter[0]["name"] + ".json") as alternativesFile:
@@ -1405,7 +1616,7 @@ try:
                             eCount += 1
                             progress.progressVar.set(eCount)
                             root.update_idletasks()
-                    
+
                 progress.destroy()
 
                 # Prompt user to save the file.
@@ -1444,7 +1655,7 @@ try:
                         and any([frozenset(expCombo).issubset(self.availableExpansions) for expCombo in encounters[encounter]["expansionCombos"]])
                     )
                     )]
-                
+
                 for encounter in encounters:
                     if type(encounters[encounter]["expansionCombos"]) == dict:
                         if all([
@@ -1475,24 +1686,24 @@ try:
 
                 with open(baseFolder + "\\lib\\settings.json") as settingsFile:
                     self.settings = load(settingsFile)
-                
+
                 self.paned = ttk.PanedWindow(self)
                 self.paned.grid_rowconfigure(index=0, weight=1)
                 self.paned.grid(row=1, column=0, pady=(5, 5), padx=(5, 5), sticky="nsew", columnspan=4)
-                
+
                 self.pane = ttk.Frame(self.paned, padding=5)
                 self.pane.grid_rowconfigure(index=0, weight=1)
                 self.paned.add(self.pane, weight=1)
-                
+
                 self.notebook = ttk.Notebook(self.paned)
                 self.notebook.pack(fill="both", expand=True)
-                
+
                 self.encounterTab = ttk.Frame(self.notebook)
                 for index in [0, 1]:
                     self.encounterTab.columnconfigure(index=index, weight=1)
                     self.encounterTab.rowconfigure(index=index, weight=1)
                 self.notebook.add(self.encounterTab, text="Encounters")
-                
+
                 self.campaignTab = ttk.Frame(self.notebook)
                 self.notebook.add(self.campaignTab, text="Campaign")
                 self.campaignTabButtonsFrame = ttk.Frame(self.campaignTab)
@@ -1503,7 +1714,7 @@ try:
                 self.campaignTabButtonsFrame3.pack()
                 self.campaignTabTreeviewFrame = ttk.Frame(self.campaignTab)
                 self.campaignTabTreeviewFrame.pack(fill="both", expand=True)
-                
+
                 self.addButton = ttk.Button(self.campaignTabButtonsFrame, text="Add Encounter", width=16, command=self.add_encounter_to_campaign)
                 self.addButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
                 self.deleteButton = ttk.Button(self.campaignTabButtonsFrame, text="Remove Encounter", width=16, command=self.delete_encounter_from_campaign)
@@ -1542,7 +1753,7 @@ try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of create_encounters_treeview", caller=calframe[1][3])
-                
+
                 self.treeviewEncounters = ttk.Treeview(
                     self.encounterTab,
                     selectmode="browse",
@@ -1550,7 +1761,7 @@ try:
                     yscrollcommand=self.scrollbarTreeviewEncounters.set,
                     height=29 if root.winfo_screenheight() > 1000 else 20
                 )
-                
+
                 self.treeviewEncounters.pack(expand=True, fill="both")
                 self.scrollbarTreeviewEncounters.config(command=self.treeviewEncounters.yview)
 
@@ -1589,12 +1800,12 @@ try:
 
                 for item in tvData:
                     self.treeviewEncounters.insert(parent=item[0], index="end", iid=item[1], text=item[2], tags=item[3])
-                    
+
                     if item[0] == "":
                         self.treeviewEncounters.item(item[1], open=True)
-                        
+
                 self.treeviewEncounters.bind("<<TreeviewSelect>>", self.load_encounter)
-                
+
                 global settingsChanged
                 settingsChanged = False
 
@@ -1612,7 +1823,7 @@ try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of create_campaign_treeview", caller=calframe[1][3])
-                
+
                 self.treeviewCampaign = ttk.Treeview(
                     self.campaignTabTreeviewFrame,
                     selectmode="extended",
@@ -1621,7 +1832,7 @@ try:
                     height=29 if root.winfo_screenheight() > 1000 else 20,
                     show=["headings"]
                 )
-                
+
                 self.treeviewCampaign.pack(expand=True, fill="both")
                 self.scrollbarTreeviewCampaign.config(command=self.treeviewCampaign.yview)
 
@@ -1629,7 +1840,7 @@ try:
                 self.treeviewCampaign.heading("#1", text="Name", anchor="w")
                 self.treeviewCampaign.column("#2", anchor="w")
                 self.treeviewCampaign.heading("#2", text="Level", anchor="w")
-                
+
                 self.treeviewCampaign.bind("<<TreeviewSelect>>", self.load_campaign_encounter)
                 self.treeviewCampaign.bind("<Control-a>", lambda *args: self.treeviewCampaign.selection_add(self.treeviewCampaign.get_children()))
 
@@ -1712,7 +1923,7 @@ try:
             except Exception as e:
                 adapter.exception(e)
                 raise
-                   
+
 
         def create_buttons(self):
             """
@@ -1755,7 +1966,7 @@ try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of create_menu", caller=calframe[1][3])
-                
+
                 menuBar = tk.Menu()
                 self.fileMenu = tk.Menu(menuBar, tearoff=0)
                 self.fileMenu.add_command(label="Random Level 1 Encounter", command=lambda x=1: self.random_encounter(level=x), accelerator="1")
@@ -1832,9 +2043,9 @@ try:
                 self.set_bindings_buttons_menus(False)
 
                 s = SettingsWindow(root)
-                        
+
                 self.wait_window(s.top)
-                
+
                 if settingsChanged and self.treeviewEncounters.winfo_exists():
                     with open(baseFolder + "\\lib\\settings.json") as settingsFile:
                         self.settings = load(settingsFile)
@@ -1845,12 +2056,35 @@ try:
                     self.treeviewEncounters.destroy()
                     self.availableExpansions = set(self.settings["availableExpansions"])
                     self.availableCoreSets = coreSets & self.availableExpansions
-                    oldExpansions = {"Dark Souls The Board Game", "Darkroot", "Executioner Chariot", "Explorers", "Iron Keep"} if "old" in self.settings["randomEncounterTypes"] else set()
-                    newExpansions = (self.allExpansions - {"Dark Souls The Board Game", "Darkroot", "Executioner Chariot", "Explorers", "Iron Keep"}) if "new" in self.settings["randomEncounterTypes"] else set()
-                    self.expansionsForRandomEncounters = (oldExpansions | newExpansions) & self.allExpansions
+                    v1Expansions = {"Dark Souls The Board Game", "Darkroot", "Executioner Chariot", "Explorers", "Iron Keep"} if "v1" in self.settings["randomEncounterTypes"] else set()
+                    v2Expansions = (self.allExpansions - {"Dark Souls The Board Game", "Darkroot", "Executioner Chariot", "Explorers", "Iron Keep"}) if "v2" in self.settings["randomEncounterTypes"] else set()
+                    self.expansionsForRandomEncounters = (v1Expansions | v2Expansions) & self.allExpansions
                     self.set_encounter_list()
                     self.create_encounters_treeview()
-                
+                    
+                    if self.settings["customEnemyList"]:
+                        i = 0
+                        progress = PopupWindow(root, labelText="Applying enabled enemies...", progressBar=True, progressMax=len(self.encounterList), loadingImage=True)
+
+                        encountersToRemove = set()
+                        for encounter in self.encounterList:
+                            i += 1
+                            progress.progressVar.set(i)
+                            root.update_idletasks()
+                            self.load_encounter(encounter=encounter, customEnemyListCheck=True)
+                            if all([not set(alt).issubset(self.enabledEnemies) for alt in self.selected["alternatives"]]):
+                                encountersToRemove.add(encounter)
+
+                        self.encounterList = list(set(self.encounterList) - encountersToRemove)
+                        
+                        self.treeviewEncounters.pack_forget()
+                        self.treeviewEncounters.destroy()
+                        self.create_encounters_treeview()
+                        self.scrollbarTreeviewCampaign = ttk.Scrollbar(self.campaignTabTreeviewFrame)
+                        self.scrollbarTreeviewCampaign.pack(side="right", fill="y")
+
+                    progress.destroy()
+
                 self.set_bindings_buttons_menus(True)
 
                 adapter.debug("End of settings_window", caller=calframe[1][3])
@@ -1987,7 +2221,7 @@ try:
                         image = Image.open(imagePath).resize((26, 13), Image.Resampling.LANCZOS)
 
                 adapter.debug("\tEnd of create_image", caller=calframe[1][3])
-                
+
                 return image
             except Exception as e:
                 adapter.exception(e)
@@ -2023,7 +2257,7 @@ try:
                 raise
 
 
-        def load_encounter(self, event=None, encounter=None):
+        def load_encounter(self, event=None, encounter=None, customEnemyListCheck=False):
             """
             Loads an encounter from file data for display.
 
@@ -2040,8 +2274,9 @@ try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of load_encounter", caller=calframe[1][3])
-                
-                self.treeviewEncounters.unbind("<<TreeviewSelect>>")
+
+                if not customEnemyListCheck:
+                    self.treeviewEncounters.unbind("<<TreeviewSelect>>")
 
                 # If this encounter was clicked on, get that information.
                 if event:
@@ -2055,14 +2290,14 @@ try:
                 else:
                     encounterName = encounter
 
-                # If the encounter clicked on is already displayed, no need to load it again,
-                # just shuffle the enemies.
-                if encounters[encounterName] == self.selected:
-                    self.shuffle_enemies()
-                    self.treeviewEncounters.bind("<<TreeviewSelect>>", self.load_encounter)
-                    adapter.debug("\tEnd of load_encounter", caller=calframe[1][3])
-                    return
-                
+                    # If the encounter clicked on is already displayed, no need to load it again,
+                    # just shuffle the enemies.
+                    if encounters[encounterName] == self.selected:
+                        self.shuffle_enemies()
+                        self.treeviewEncounters.bind("<<TreeviewSelect>>", self.load_encounter)
+                        adapter.debug("\tEnd of load_encounter", caller=calframe[1][3])
+                        return
+
                 self.selected = encounters[encounterName]
                 self.selected["difficultyMod"] = {}
                 self.selected["restrictRanged"] = {}
@@ -2075,32 +2310,33 @@ try:
                 self.selected["alternatives"] = []
                 self.selected["enemySlots"] = alts["enemySlots"]
 
-                # Use only alternative enemies for expansions the user has activated in the settings.
+                # Use only alternative enemies for expansions and enemies the user has activated in the settings.
                 if "1" in alts["alternatives"]:
                     self.selected["alternatives"] = {"1": []}
                     for expansionCombo in alts["alternatives"]["1"]:
                         if set(expansionCombo.split(",")).issubset(self.availableExpansions):
-                            self.selected["alternatives"]["1"] += alts["alternatives"]["1"][expansionCombo]
+                            self.selected["alternatives"]["1"] += [alt for alt in alts["alternatives"]["1"][expansionCombo] if set([enemy for enemy in alt]).issubset(self.enabledEnemies)]
                 if "2" in alts["alternatives"]:
                     self.selected["alternatives"]["2"] = []
                     for expansionCombo in alts["alternatives"].get("2", []):
                         if set(expansionCombo.split(",")).issubset(self.availableExpansions):
-                            self.selected["alternatives"]["2"] += alts["alternatives"]["2"][expansionCombo]
+                            self.selected["alternatives"]["2"] += [alt for alt in alts["alternatives"]["2"][expansionCombo] if set([enemy for enemy in alt]).issubset(self.enabledEnemies)]
                 if "3" in alts["alternatives"]:
                     self.selected["alternatives"]["3"] = []
                     for expansionCombo in alts["alternatives"].get("3", []):
                         if set(expansionCombo.split(",")).issubset(self.availableExpansions):
-                            self.selected["alternatives"]["3"] += alts["alternatives"]["3"][expansionCombo]
+                            self.selected["alternatives"]["3"] += [alt for alt in alts["alternatives"]["3"][expansionCombo] if set([enemy for enemy in alt]).issubset(self.enabledEnemies)]
                 else:
                     for expansionCombo in alts["alternatives"]:
                         if set(expansionCombo.split(",")).issubset(self.availableExpansions):
-                            self.selected["alternatives"] += alts["alternatives"][expansionCombo]
+                            self.selected["alternatives"] += [alt for alt in alts["alternatives"][expansionCombo] if set([enemy for enemy in alt]).issubset(self.enabledEnemies)]
 
                 self.newTiles = dict()
 
-                self.shuffle_enemies()
-                self.treeviewEncounters.bind("<<TreeviewSelect>>", self.load_encounter)
-                self.encounter.bind("<Button 1>", self.shuffle_enemies)
+                if not customEnemyListCheck:
+                    self.shuffle_enemies()
+                    self.treeviewEncounters.bind("<<TreeviewSelect>>", self.load_encounter)
+                    self.encounter.bind("<Button 1>", self.shuffle_enemies)
 
                 adapter.debug("\tEnd of load_encounter", caller=calframe[1][3])
             except Exception as e:
@@ -2128,7 +2364,7 @@ try:
                     self.encounter.bind("<Button 1>", self.shuffle_enemies)
                     adapter.debug("\tEnd of shuffle_enemies", caller=calframe[1][3])
                     return
-                
+
                 self.rewardTreasure = None
 
                 # Make sure a new set of enemies is chosen each time, otherwise it
@@ -2158,7 +2394,7 @@ try:
             except Exception as e:
                 adapter.exception(e)
                 raise
-        
+
 
         def edit_encounter_card(self, name, expansion, level, enemySlots):
             """
@@ -2189,9 +2425,9 @@ try:
                     2: [[], []],
                     3: [[], []]
                     }
-                
+
                 adapter.debug("New enemies: " + str(self.newEnemies), caller=calframe[1][3])
-                        
+
                 # Determine where enemies should be placed determined by whether this is an old or new style encounter,
                 # the level of the encounter, and where on the original encounter card enemies were found.
                 s = 0
@@ -2341,7 +2577,7 @@ try:
                     self.urns_of_the_fallen()
                 elif name == "Velka's Chosen":
                     self.velkas_chosen()
-                
+
                 self.encounterPhotoImage = ImageTk.PhotoImage(self.encounterImage)
                 self.encounter.image = self.encounterPhotoImage
                 self.encounter.config(image=self.encounterPhotoImage)
@@ -2466,7 +2702,7 @@ try:
                 adapter.debug("Start of castle_break_in", caller=calframe[1][3])
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
-                
+
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
@@ -2488,7 +2724,7 @@ try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of central_plaza", caller=calframe[1][3])
-                    
+
                 target = enemyIds[self.newEnemies[-1]].name
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=143, y=262)
@@ -2562,7 +2798,7 @@ try:
                 self.create_tooltip(tooltipDict=tooltipDict, x=145, y=288)
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
-                
+
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
@@ -2600,7 +2836,7 @@ try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of dark_resurrection", caller=calframe[1][3])
-                
+
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
@@ -2623,7 +2859,7 @@ try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of deathly_freeze", caller=calframe[1][3])
-                    
+
                 deathlyFreezeTile1 = [enemy for enemy in self.newTiles[1][0] + self.newTiles[1][1]]
                 deathlyFreezeTile2 = [enemy for enemy in self.newTiles[2][0] + self.newTiles[2][1]]
                 overlap = set(deathlyFreezeTile1) & set(deathlyFreezeTile2)
@@ -2659,11 +2895,11 @@ try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of deathly_tolls", caller=calframe[1][3])
-                    
+
                 target = enemyIds[self.newEnemies[-1]].name
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=180, y=212)
-                
+
                 gang = Counter([enemyIds[enemy].gang for enemy in self.newEnemies if enemyIds[enemy].gang]).most_common(1)[0][0]
                 if gang == "Alonne":
                     tooltipDict = {"image" if self.forPrinting else "photo image": self.gangAlonne if self.forPrinting else self.gangAlonnePhoto, "imageName": "gang"}
@@ -2687,7 +2923,7 @@ try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of depths_of_the_cathedral", caller=calframe[1][3])
-                
+
                 gang = Counter([enemyIds[enemy].gang for enemy in self.newEnemies if enemyIds[enemy].gang]).most_common(1)[0][0]
                 if gang == "Alonne":
                     tooltipDict = {"photo image": self.gangAlonne if self.forPrinting else self.gangAlonnePhoto, "imageName": "gang"}
@@ -2715,7 +2951,7 @@ try:
                 target = self.newTiles[3][0][0]
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=217, y=213)
-                
+
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
@@ -2755,7 +2991,7 @@ try:
                 text1 += "block and resistance"
                 text2 = "values by 1. Once these enemies have been"
                 text3 = "killed, spawn the        on      , on tile 3."
-                
+
                 target = enemyIds[self.newEnemies[-1]].name
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=65, y=147)
@@ -2776,7 +3012,7 @@ try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of flooded_fortress", caller=calframe[1][3])
-                
+
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
@@ -2787,7 +3023,7 @@ try:
                 newTreasureLines = self.new_treasure_name(newTreasure)
                 imageWithText.text((21, 258), newTreasureLines[0], "black", font)
                 imageWithText.text((21, 269), newTreasureLines.get(1, ""), "black", font)
-                
+
                 gang = Counter([enemyIds[enemy].gang for enemy in self.newEnemies if enemyIds[enemy].gang]).most_common(1)[0][0]
                 if gang == "Alonne":
                     tooltipDict = {"photo image": self.gangAlonne if self.forPrinting else self.gangAlonnePhoto, "imageName": "gang"}
@@ -2817,7 +3053,7 @@ try:
                 self.create_tooltip(tooltipDict=tooltipDict, x=143, y=227)
                 self.create_tooltip(tooltipDict=tooltipDict, x=143, y=243)
                 self.create_tooltip(tooltipDict=tooltipDict, x=354, y=243)
-                
+
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
@@ -2844,11 +3080,11 @@ try:
                 target = enemyIds[self.newEnemies[-2]].name
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=241, y=228)
-                    
+
                 target = enemyIds[self.newEnemies[-1]].name
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=286, y=228)
-                
+
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
@@ -2873,14 +3109,14 @@ try:
                 adapter.debug("Start of gleaming_silver", caller=calframe[1][3])
 
                 targets = list(set([enemyIds[enemy].name for enemy in self.newEnemies if self.newEnemies.count(enemy) == 2]))
-                
+
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[targets[0]]["image text" if self.forPrinting else "photo image text"], "imageName": targets[0]}
                 self.create_tooltip(tooltipDict=tooltipDict, x=189, y=245)
                 self.create_tooltip(tooltipDict=tooltipDict, x=144, y=270)
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[targets[1]]["image text" if self.forPrinting else "photo image text"], "imageName": targets[1]}
                 self.create_tooltip(tooltipDict=tooltipDict, x=233, y=245)
                 self.create_tooltip(tooltipDict=tooltipDict, x=188, y=270)
-                    
+
                 target = enemyIds[self.newEnemies[-1]].name
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=180, y=212)
@@ -2896,11 +3132,11 @@ try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of gnashing_beaks", caller=calframe[1][3])
-                
+
                 target = enemyIds[self.newEnemies[-2]].name
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=336, y=232)
-                    
+
                 target = enemyIds[self.newEnemies[-1]].name
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=242, y=244)
@@ -2916,7 +3152,7 @@ try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of grave_matters", caller=calframe[1][3])
-                
+
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
@@ -2939,7 +3175,7 @@ try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of grim_reunion", caller=calframe[1][3])
-                
+
                 target = enemyIds[self.newEnemies[-1]].name
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=219, y=196)
@@ -2958,7 +3194,7 @@ try:
                 adapter.debug("Start of hanging_rafters", caller=calframe[1][3])
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
-                
+
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
@@ -2980,11 +3216,11 @@ try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of in_deep_water", caller=calframe[1][3])
-                
+
                 target = enemyIds[self.newEnemies[-1]].name
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=239, y=198)
-                
+
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
@@ -3007,7 +3243,7 @@ try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of inhospitable_ground", caller=calframe[1][3])
-                
+
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
@@ -3051,12 +3287,12 @@ try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of monstrous_maw", caller=calframe[1][3])
-                
+
                 target = self.newTiles[1][1][0]
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=65, y=147)
                 self.create_tooltip(tooltipDict=tooltipDict, x=210, y=196)
-                
+
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
@@ -3083,7 +3319,7 @@ try:
                 target = self.newTiles[2][0][0]
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=63, y=147)
-                
+
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
@@ -3106,7 +3342,7 @@ try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of painted_passage", caller=calframe[1][3])
-                
+
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
@@ -3129,7 +3365,7 @@ try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of parish_church", caller=calframe[1][3])
-                    
+
                 target = enemyIds[self.newEnemies[-1]].name
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=180, y=198)
@@ -3145,7 +3381,7 @@ try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of parish_gates", caller=calframe[1][3])
-                    
+
                 target = enemyIds[self.newEnemies[-1]].name
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=309, y=220)
@@ -3191,7 +3427,7 @@ try:
                 target = self.newTiles[1][0][0]
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=145, y=196)
-                
+
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
@@ -3214,7 +3450,7 @@ try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of rain_of_filth", caller=calframe[1][3])
-                
+
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
@@ -3237,11 +3473,11 @@ try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of shattered_keep", caller=calframe[1][3])
-                
+
                 target = self.newTiles[1][1][0]
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=146, y=195)
-                
+
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
@@ -3264,7 +3500,7 @@ try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of skeletal_spokes", caller=calframe[1][3])
-                
+
                 target = self.newTiles[2][0][0]
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=145, y=196)
@@ -3305,7 +3541,7 @@ try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of tempting_maw", caller=calframe[1][3])
-                
+
                 target = enemyIds[self.newEnemies[-1]].name
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=224, y=145)
@@ -3331,7 +3567,7 @@ try:
                 target = enemyIds[self.newEnemies[-1]].name
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=144, y=208)
-                
+
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
@@ -3359,7 +3595,7 @@ try:
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=65, y=147)
                 self.create_tooltip(tooltipDict=tooltipDict, x=158, y=222)
-                
+
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
@@ -3382,7 +3618,7 @@ try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of the_bell_tower", caller=calframe[1][3])
-                
+
                 target = enemyIds[self.newEnemies[-1]].name
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=341, y=195)
@@ -3423,7 +3659,7 @@ try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of the_fountainhead", caller=calframe[1][3])
-                
+
                 gang = Counter([enemyIds[enemy].gang for enemy in self.newEnemies if enemyIds[enemy].gang]).most_common(1)[0][0]
                 if gang == "Alonne":
                     tooltipDict = {"photo image": self.gangAlonne if self.forPrinting else self.gangAlonnePhoto, "imageName": "gang"}
@@ -3447,7 +3683,7 @@ try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of the_grand_hall", caller=calframe[1][3])
-                    
+
                 target = enemyIds[self.newEnemies[-1]].name
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=180, y=213)
@@ -3469,7 +3705,7 @@ try:
                 self.create_tooltip(tooltipDict=tooltipDict, x=65, y=147)
                 self.create_tooltip(tooltipDict=tooltipDict, x=188, y=196)
                 self.create_tooltip(tooltipDict=tooltipDict, x=174, y=219)
-                
+
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
@@ -3492,7 +3728,7 @@ try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of the_last_bastion", caller=calframe[1][3])
-                
+
                 target = sorted([enemy for enemy in self.newTiles[1][0] + self.newTiles[1][1]], key=lambda x: enemiesDict[x].difficulty)[0]
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=215, y=227)
@@ -3514,7 +3750,7 @@ try:
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=217, y=197)
                 self.create_tooltip(tooltipDict=tooltipDict, x=306, y=220)
-                
+
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
@@ -3567,7 +3803,7 @@ try:
                 target = self.newTiles[3][1][0]
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=222, y=148)
-                
+
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
@@ -3616,7 +3852,7 @@ try:
                 self.create_tooltip(tooltipDict=tooltipDict, x=61, y=147)
                 self.create_tooltip(tooltipDict=tooltipDict, x=210, y=197)
                 self.create_tooltip(tooltipDict=tooltipDict, x=145, y=244)
-                
+
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
@@ -3639,7 +3875,7 @@ try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of twilight_falls", caller=calframe[1][3])
-                
+
                 gang = Counter([enemyIds[enemy].gang for enemy in self.newEnemies if enemyIds[enemy].gang]).most_common(1)[0][0]
                 if gang == "Alonne":
                     tooltipDict = {"photo image": self.gangAlonne if self.forPrinting else self.gangAlonnePhoto, "imageName": "gang"}
@@ -3663,7 +3899,7 @@ try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of undead_sanctum", caller=calframe[1][3])
-                
+
                 gang = Counter([enemyIds[enemy].gang for enemy in self.newEnemies if enemyIds[enemy].gang]).most_common(1)[0][0]
                 if gang == "Alonne":
                     tooltipDict = {"photo image": self.gangAlonne if self.forPrinting else self.gangAlonnePhoto, "imageName": "gang"}
@@ -3675,7 +3911,7 @@ try:
                     tooltipDict = {"photo image": self.gangSkeleton if self.forPrinting else self.gangSkeletonPhoto, "imageName": "gang"}
 
                 self.create_tooltip(tooltipDict=tooltipDict, x=142, y=214)
-                
+
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
@@ -3697,7 +3933,7 @@ try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of unseen_scurrying", caller=calframe[1][3])
-                
+
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
@@ -3720,7 +3956,7 @@ try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of urns_of_the_fallen", caller=calframe[1][3])
-                
+
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
@@ -3743,13 +3979,13 @@ try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of velkas_chosen", caller=calframe[1][3])
-                
+
                 target = sorted([enemy for enemy in self.newTiles[2][0] + self.newTiles[2][1]], key=lambda x: enemiesDict[x].difficulty, reverse=True)[0]
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=65, y=147)
                 self.create_tooltip(tooltipDict=tooltipDict, x=298, y=195)
                 self.create_tooltip(tooltipDict=tooltipDict, x=205, y=219)
-                
+
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
@@ -3775,11 +4011,11 @@ try:
         "Fortress Gates",
         "Sewers of Lordran"
     }
-    
+
     root = tk.Tk()
     root.withdraw()
     root.attributes('-alpha', 0.0)
-        
+
     root.title("Dark Souls The Board Game Encounter Shuffler")
     root.tk.call("source", "Azure-ttk-theme-main\\azure.tcl")
     root.tk.call("set_theme", "dark")
@@ -3799,9 +4035,11 @@ try:
             p = PopupWindow(root, "A new version of DSBG-Shuffle is available!\nCheck it out on Github!\n\nIf you don't want to see this notification anymore,\ndisable checking for updates in the settings.", firstButton="Ok", secondButton=True)
             root.wait_window(p)
 
+    s = ttk.Style()
+
     app = Application(root)
     app.pack(fill="both", expand=True)
-    
+
     center(root)
     x_cordinate = int((root.winfo_screenwidth() / 2) - (root.winfo_width() / 2))
     y_cordinate = int((root.winfo_screenheight() / 2) - (root.winfo_height() / 2))
