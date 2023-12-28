@@ -847,9 +847,9 @@ try:
                 self.charactersActive = set(self.settings["charactersActive"])
                 self.availableCoreSets = coreSets & self.availableExpansions
 
-                v1Expansions = {"Dark Souls The Board Game", "Darkroot", "Executioner Chariot", "Explorers", "Iron Keep"} if "v1" in self.settings["randomEncounterTypes"] else set()
-                v2Expansions = (self.allExpansions - {"Dark Souls The Board Game", "Darkroot", "Executioner Chariot", "Explorers", "Iron Keep"}) if "v2" in self.settings["randomEncounterTypes"] else set()
-                self.expansionsForRandomEncounters = (v1Expansions | v2Expansions) & self.allExpansions
+                self.v1Expansions = {"Dark Souls The Board Game", "Darkroot", "Executioner Chariot", "Explorers", "Iron Keep"} if "v1" in self.settings["randomEncounterTypes"] else set()
+                self.v2Expansions = (self.allExpansions - self.v1Expansions) if "v2" in self.settings["randomEncounterTypes"] else set()
+                self.expansionsForRandomEncounters = (self.v1Expansions | self.v2Expansions) & self.allExpansions
 
                 self.events = {
                     "Alluring Skull": {"name": "Alluring Skull", "count": 1, "expansions": set(["Painted World of Ariamis", "Tomb of Giants", "The Sunless City"])},
@@ -1545,6 +1545,18 @@ try:
                 raise
 
 
+        def generate_v2_campaign(self, event=None):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of generate_v2_campaign", caller=calframe[1][3])
+
+                adapter.debug("End of generate_v2_campaign")
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
         def save_event_deck(self):
             """
             Save the event deck to a JSON file that can be loaded later.
@@ -1647,21 +1659,27 @@ try:
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of add_event_to_deck", caller=calframe[1][3])
                 
-                eventSelected = self.treeviewEventList.item(list(self.treeviewEventList.selection())[0])["values"][1 if self.treeviewEventList.item(list(self.treeviewEventList.selection())[0])["values"][1] else 0]
+                for selection in list(self.treeviewEventList.selection()):
+                    eventSelected = self.treeviewEventList.item(selection)["values"][1 if self.treeviewEventList.item(selection)["values"][1] else 0]
 
-                if eventSelected in coreSets:
-                    for event in self.treeviewEventList.get_children(eventSelected):
-                        for x in range(self.events[event[:event.index("_")]]["count"]):
-                            if self.treeviewEventDeck.exists(event[:event.index("_")] + "_" + str(x)):
+                    if eventSelected in coreSets:
+                        for event in self.treeviewEventList.get_children(eventSelected):
+                            for x in range(self.events[event[:event.index("_")]]["count"]):
+                                if self.treeviewEventDeck.exists(event[:event.index("_")] + "_" + str(x)):
+                                    continue
+                                self.treeviewEventDeck.insert(parent="", iid=event[:event.index("_")] + "_" + str(x), values=(event[:event.index("_")], ""), index="end", tags=False)
+                                self.eventDeck.append(event[:event.index("_")] + "_" + str(x))
+                    else:
+                        for x in range(self.events[eventSelected]["count"]):
+                            if self.treeviewEventDeck.exists(eventSelected + "_" + str(x)):
                                 continue
-                            self.treeviewEventDeck.insert(parent="", iid=event[:event.index("_")] + "_" + str(x), values=(event[:event.index("_")], ""), index="end", tags=False)
-                            self.eventDeck.append(event[:event.index("_")] + "_" + str(x))
-                else:
-                    for x in range(self.events[eventSelected]["count"]):
-                        if self.treeviewEventDeck.exists(eventSelected + "_" + str(x)):
-                            continue
-                        self.treeviewEventDeck.insert(parent="", iid=eventSelected + "_" + str(x), values=(eventSelected, ""), index="end", tags=False)
-                        self.eventDeck.append(eventSelected + "_" + str(x))
+                            self.treeviewEventDeck.insert(parent="", iid=eventSelected + "_" + str(x), values=(eventSelected, ""), index="end", tags=False)
+                            self.eventDeck.append(eventSelected + "_" + str(x))
+
+                l = [(0 if not self.treeviewEventDeck.item(k)["values"][1] else self.treeviewEventDeck.item(k)["values"][1], k) for k in self.treeviewEventDeck.get_children()]
+                l.sort(key=lambda x: (-x[0], x[1]))
+                for index, (val, k) in enumerate(l):
+                    self.treeviewEventDeck.move(k, "", index)
 
                 shuffle(self.eventDeck)
 
@@ -1724,16 +1742,22 @@ try:
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of reset_event_deck", caller=calframe[1][3])
                 
-                # Remove the deleted encounters from the treeview.
+                # Set events to not be drawn yet.
                 for item in self.treeviewEventDeck.get_children():
-                    self.treeviewEventDeck.delete(item)
-                    self.eventDeck.remove(item)
+                    self.treeviewEventDeck.item(item, values=(self.treeviewEventDeck.item(item)["values"][0], ""))
+
+                l = [(0 if not self.treeviewEventDeck.item(k)["values"][1] else self.treeviewEventDeck.item(k)["values"][1], k) for k in self.treeviewEventDeck.get_children()]
+                l.sort(key=lambda x: (-x[0], x[1]))
+                for index, (val, k) in enumerate(l):
+                    self.treeviewEventDeck.move(k, "", index)
 
                 # Remove the image displaying a deleted encounter.
                 self.encounter.config(image="")
                 
                 self.drawnEvent = None
                 self.drawnEventNum = 0
+
+                shuffle(self.eventDeck)
 
                 adapter.debug("End of reset_event_deck")
             except Exception as e:
@@ -1755,7 +1779,7 @@ try:
                 self.drawnEvent = [event for event in self.eventDeck if not self.treeviewEventDeck.item(event)["values"][1]][0]
                 self.drawnEventNum += 1
                 self.load_event()
-                self.treeviewEventDeck.item(self.drawnEvent, values=(self.treeviewEventDeck.item(self.drawnEvent)["values"][0], str(self.drawnEventNum)))
+                self.treeviewEventDeck.item(self.drawnEvent, values=(self.treeviewEventDeck.item(self.drawnEvent)["values"][0], self.drawnEventNum))
 
                 l = [(0 if not self.treeviewEventDeck.item(k)["values"][1] else self.treeviewEventDeck.item(k)["values"][1], k) for k in self.treeviewEventDeck.get_children()]
                 l.sort(key=lambda x: (-x[0], x[1]))
@@ -2048,6 +2072,8 @@ try:
                 self.campaignTabButtonsFrame2.pack()
                 self.campaignTabButtonsFrame3 = ttk.Frame(self.campaignTab)
                 self.campaignTabButtonsFrame3.pack()
+                self.campaignTabButtonsFrame4 = ttk.Frame(self.campaignTab)
+                self.campaignTabButtonsFrame4.pack()
                 self.campaignTabTreeviewFrame = ttk.Frame(self.campaignTab)
                 self.campaignTabTreeviewFrame.pack(fill="both", expand=True)
 
@@ -2065,14 +2091,17 @@ try:
                 self.moveDownButton = ttk.Button(self.campaignTabButtonsFrame2, text="Move Down", width=16, command=self.move_down)
                 self.moveDownButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
 
-                self.printEncounters = ttk.Button(self.campaignTabButtonsFrame3, text="Export to PDF", width=16, command=self.print_encounters)
-                self.printEncounters.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-                self.addBossButton = ttk.Button(self.campaignTabButtonsFrame3, text="Add Boss", width=16, command=self.add_boss_to_campaign)
+                self.addBossButton = ttk.Button(self.campaignTabButtonsFrame3, text="Add Boss", width=20, command=self.add_boss_to_campaign)
                 self.addBossButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
                 self.bossMenu = ttk.Combobox(self.campaignTabButtonsFrame3, state="readonly", values=self.bossMenu, textvariable=self.selectedBoss)
                 self.bossMenu.current(0)
-                self.bossMenu.config(width=17)
+                self.bossMenu.config(width=21)
                 self.bossMenu.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+
+                self.generateV2Campaign = ttk.Button(self.campaignTabButtonsFrame4, text="Generate V2 Campaign", width=20, command=self.generate_v2_campaign)
+                self.generateV2Campaign.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+                self.printEncounters = ttk.Button(self.campaignTabButtonsFrame4, text="Export to PDF", width=20, command=self.print_encounters)
+                self.printEncounters.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
                 
                 self.eventTab = ttk.Frame(self.notebook)
                 self.notebook.add(self.eventTab, text="Events")
@@ -2143,14 +2172,17 @@ try:
 
                 # Sort encounters by:
                 # 1. Encounters that have more than just level 4 encounters first
-                # 2. Core sets first
-                # 3. Executioner Chariot at the top of the mega bosses list because it has non-level 4 encounters
-                # 4. By level
-                # 5. Alphabetically
+                # 2. New core sets first
+                # 3. V2 non-core sets
+                # 4. Original core set
+                # 5. Executioner Chariot at the top of the mega bosses list because it has non-level 4 encounters
+                # 6. By level
+                # 7. Alphabetically
                 encountersSorted = [encounter for encounter in sorted(self.encounterList, key=lambda x: (
                     1 if encounters[x]["level"] == 4 else 0,
-                    0 if encounters[x]["expansion"] in coreSets else 1,
-                    0 if encounters[x]["expansion"] != "Executioner Chariot" else 1,
+                    0 if encounters[x]["expansion"] in coreSets and encounters[x]["expansion"] in self.v2Expansions else 1,
+                    0 if encounters[x]["expansion"] in self.v2Expansions else 1,
+                    1 if encounters[x]["expansion"] == "Executioner Chariot" else 0,
                     encounters[x]["expansion"],
                     encounters[x]["level"],
                     encounters[x]["name"]))]
@@ -2537,9 +2569,7 @@ try:
                     self.treeviewEncounters.destroy()
                     self.availableExpansions = set(self.settings["availableExpansions"])
                     self.availableCoreSets = coreSets & self.availableExpansions
-                    v1Expansions = {"Dark Souls The Board Game", "Darkroot", "Executioner Chariot", "Explorers", "Iron Keep"} if "v1" in self.settings["randomEncounterTypes"] else set()
-                    v2Expansions = (self.allExpansions - {"Dark Souls The Board Game", "Darkroot", "Executioner Chariot", "Explorers", "Iron Keep"}) if "v2" in self.settings["randomEncounterTypes"] else set()
-                    self.expansionsForRandomEncounters = (v1Expansions | v2Expansions) & self.allExpansions
+                    self.expansionsForRandomEncounters = self.allExpansions & (self.v1Expansions if "v1" in self.settings["randomEncounterTypes"] else set() | self.v2Expansions if "v2" in self.settings["randomEncounterTypes"] else set())
                     self.set_encounter_list()
                     self.create_encounters_treeview()
                     
@@ -2793,24 +2823,25 @@ try:
 
                 # Use only alternative enemies for expansions and enemies the user has activated in the settings.
                 if "1" in alts["alternatives"]:
-                    self.selected["alternatives"] = {"1": []}
-                    for expansionCombo in alts["alternatives"]["1"]:
-                        if set(expansionCombo.split(",")).issubset(self.availableExpansions):
-                            self.selected["alternatives"]["1"] += [alt for alt in alts["alternatives"]["1"][expansionCombo] if set([enemy for enemy in alt]).issubset(self.enabledEnemies)]
-                if "2" in alts["alternatives"]:
-                    self.selected["alternatives"]["2"] = []
-                    for expansionCombo in alts["alternatives"].get("2", []):
-                        if set(expansionCombo.split(",")).issubset(self.availableExpansions):
-                            self.selected["alternatives"]["2"] += [alt for alt in alts["alternatives"]["2"][expansionCombo] if set([enemy for enemy in alt]).issubset(self.enabledEnemies)]
-                if "3" in alts["alternatives"]:
-                    self.selected["alternatives"]["3"] = []
-                    for expansionCombo in alts["alternatives"].get("3", []):
-                        if set(expansionCombo.split(",")).issubset(self.availableExpansions):
-                            self.selected["alternatives"]["3"] += [alt for alt in alts["alternatives"]["3"][expansionCombo] if set([enemy for enemy in alt]).issubset(self.enabledEnemies)]
+                    if "1" in alts["alternatives"]:
+                        self.selected["alternatives"] = {"1": []}
+                        for expansionCombo in alts["alternatives"]["1"]:
+                            if set(expansionCombo.split(",")).issubset(self.availableExpansions):
+                                self.selected["alternatives"]["1"] += [alt for alt in alts["alternatives"]["1"][expansionCombo] if set([enemy for enemy in alt if "Invader" not in enemyIds[enemy].name]).issubset(self.enabledEnemies)]
+                    if "2" in alts["alternatives"]:
+                        self.selected["alternatives"]["2"] = []
+                        for expansionCombo in alts["alternatives"].get("2", []):
+                            if set(expansionCombo.split(",")).issubset(self.availableExpansions):
+                                self.selected["alternatives"]["2"] += [alt for alt in alts["alternatives"]["2"][expansionCombo] if set([enemy for enemy in alt if "Invader" not in enemyIds[enemy].name]).issubset(self.enabledEnemies)]
+                    if "3" in alts["alternatives"]:
+                        self.selected["alternatives"]["3"] = []
+                        for expansionCombo in alts["alternatives"].get("3", []):
+                            if set(expansionCombo.split(",")).issubset(self.availableExpansions):
+                                self.selected["alternatives"]["3"] += [alt for alt in alts["alternatives"]["3"][expansionCombo] if set([enemy for enemy in alt if "Invader" not in enemyIds[enemy].name]).issubset(self.enabledEnemies)]
                 else:
                     for expansionCombo in alts["alternatives"]:
                         if set(expansionCombo.split(",")).issubset(self.availableExpansions):
-                            self.selected["alternatives"] += [alt for alt in alts["alternatives"][expansionCombo] if set([enemy for enemy in alt]).issubset(self.enabledEnemies)]
+                            self.selected["alternatives"] += [alt for alt in alts["alternatives"][expansionCombo] if set([enemy for enemy in alt if "Invader" not in enemyIds[enemy].name]).issubset(self.enabledEnemies)]
 
                 self.newTiles = dict()
 
