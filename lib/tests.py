@@ -5,7 +5,7 @@ from collections import Counter
 from random import choice
 import types
 
-from enemies import enemyIds, enemiesDict
+from dsbg_enemies import enemyIds, enemiesDict
 
 baseFolder = path.dirname(__file__)
 

@@ -1,6 +1,6 @@
 from random import choice
 from math import floor
-from character import mean_soul_cost, soulCost
+from dsbg_characters import mean_soul_cost, soulCost
 
 
 treasures = {
@@ -233,6 +233,37 @@ treasures = {
     "Worker Armour": {"expansions": set(["Dark Souls The Board Game", "Painted World of Ariamis"]), "type": "armor", "character": None, "encounterLevels": set([1,2,3,4]), "strength": 12, "dexterity": 12, "intelligence": 12, "faith": 12},
     "Xanthous Robes": {"expansions": set(["Painted World of Ariamis"]), "type": "armor", "character": None, "encounterLevels": set([1,2,3,4]), "strength": 0, "dexterity": 0, "intelligence": 23, "faith": 20},
     "Zweihander": {"expansions": set(["Dark Souls The Board Game", "Tomb of Giants"]), "type": "weapon", "character": None, "encounterLevels": set([1,2,3,4]), "strength": 35, "dexterity": 25, "intelligence": 0, "faith": 0},
+}
+
+treasureSwapEncounters = {
+    "Castle Break In": "Dragonslayer Greatbow",
+    "Corvian Host": "Bloodshield",
+    "Dark Resurrection": "Fireball",
+    "Distant Tower": "Velka's Rapier",
+    "Flooded Fortress": "Adventurer's Armour",
+    "Frozen Revolutions": "Red Tearstone Ring",
+    "Giant's Coffin": "Black Knight Greataxe",
+    "Grave Matters": "Firebombs",
+    "Hanging Rafters": "Dark Wood Grain Ring",
+    "In Deep Water": "Thorolund Talisman",
+    "Inhospitable Ground": "Pike",
+    "Monstrous Maw": "Exile Greatsword",
+    "No Safe Haven": "Throwing Knives",
+    "Painted Passage": "Painting Guardian Armour",
+    "Parish Church": "Titanite Shard",
+    "Puppet Master": "Skull Lantern",
+    "Rain of Filth": "Poison Mist",
+    "Shattered Keep": "Poison Throwing Knives",
+    "The Abandoned Chest": "Chloranthy Ring",
+    "The Beast From the Depths": "Mask of the Child",
+    "The Iron Golem": "Giant's Halberd",
+    "The Locked Grave": "Dragon Scale",
+    "The Skeleton Ball": "Divine Blessing",
+    "Trophy Room": "Havel's Greatshield",
+    "Undead Sanctum": "Silver Knight Straight Sword",
+    "Unseen Scurrying": "Kukris",
+    "Urns of the Fallen": "Bonewheel Shield",
+    "Velka's Chosen": "Demon Titanite"
 }
 
 tiers = {

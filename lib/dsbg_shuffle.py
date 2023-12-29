@@ -1,80 +1,26 @@
 try:
-    import sys
-    import logging
+    import datetime
     import inspect
+    import logging
     import os
     import requests
-    import webbrowser
-    import datetime
-    from os import path
-    from json import load, dump
-    from random import choice, shuffle
-    from collections import Counter
-    from PIL import Image, ImageTk, ImageFont, ImageDraw
+    import sys
     import tkinter as tk
-    from tkinter import ttk
-    from tkinter import filedialog
+    from collections import Counter
     from fpdf import FPDF
+    from json import load, dump
+    from PIL import Image, ImageTk, ImageFont, ImageDraw
+    from os import path
+    from random import choice, shuffle
+    from tkinter import filedialog, ttk
 
-    from enemies import enemyIds, enemiesDict
-    from treasure import generate_treasure_soul_cost, populate_treasure_tiers, pick_treasure
-    from character import soulCost
-
-
-    def center(win):
-        """
-        Centers a tkinter window
-
-        Required Parameters:
-            win: tkinter window
-                The main window or Toplevel window to center.
-        """
-        win.update_idletasks()
-        width = win.winfo_width()
-        frmWidth = win.winfo_rootx() - win.winfo_x()
-        winWidth = width + 2 * frmWidth
-        height = win.winfo_height()
-        titlebarHeight = win.winfo_rooty() - win.winfo_y()
-        winHeight = height + titlebarHeight + frmWidth
-        x = win.winfo_screenwidth() // 2 - winWidth // 2
-        y = win.winfo_screenheight() // 2 - winHeight // 2
-        win.geometry('{}x{}+{}+{}'.format(width, height, x, y))
-        win.deiconify()
-
-
-    def enable_binding(bindKey, method):
-        """
-        Sets a keyboard shortcut.
-
-        Required Parameters:
-            bindKey: String
-                The key combination to be bound to a method.
-
-            method: method/function
-                The method or function to run when the key combination is pressed.
-        """
-        try:
-            curframe = inspect.currentframe()
-            calframe = inspect.getouterframes(curframe, 2)
-            adapter.debug("Start of enable_binding: bindKey=" + bindKey + ", method=" + str(method), caller=calframe[1][3])
-            adapter.debug("End of enable_binding")
-            return root.bind_all("<" + bindKey + ">", method)
-        except Exception as e:
-            adapter.exception(e)
-            raise
-
-
-    def do_nothing(event=None):
-        pass
-
-
-    class CustomAdapter(logging.LoggerAdapter):
-        """
-        Used for logging.
-        """
-        def process(self, msg, kwargs):
-            my_context = kwargs.pop("caller", self.extra["caller"])
-            return "[%s] %s" % (my_context, msg), kwargs
+    from dsbg_classes import CreateToolTip, CustomAdapter, HelpWindow, PopupWindow
+    from dsbg_enemies import enemyIds, enemiesDict, bosses
+    from dsbg_events import events
+    from dsbg_functions import enable_binding, do_nothing, center
+    from dsbg_settings import SettingsWindow
+    from dsbg_tooltip_reference import tooltipText
+    from dsbg_treasure import generate_treasure_soul_cost, populate_treasure_tiers, pick_treasure, treasureSwapEncounters
 
 
     logger = logging.getLogger(__name__)
@@ -109,648 +55,6 @@ try:
         raise
 
 
-    class CreateToolTip(object):
-        """
-        A tooltip that displays while the user is hovered over a particular Label.
-        """
-        def __init__(self, widget, text="widget info"):
-            self.waittime = 500     # miliseconds
-            self.wraplength = 225   # pixels
-            self.widget = widget
-            self.text = text
-            self.widget.bind("<Enter>", self.enter)
-            self.widget.bind("<Leave>", self.leave)
-            self.widget.bind("<ButtonPress>", self.leave)
-            self.id = None
-            self.tw = None
-
-        def enter(self, event=None):
-            self.schedule()
-
-        def leave(self, event=None):
-            self.unschedule()
-            self.hide_tip()
-
-        def schedule(self):
-            self.unschedule()
-            self.id = self.widget.after(self.waittime, self.show_tip)
-
-        def unschedule(self):
-            id = self.id
-            self.id = None
-            if id:
-                self.widget.after_cancel(id)
-
-        def show_tip(self, event=None):
-            x = y = 0
-            x, y, cx, cy = self.widget.bbox("insert")
-            x += self.widget.winfo_rootx() + 25
-            y += self.widget.winfo_rooty() + 20
-            # Creates a toplevel window
-            self.tw = tk.Toplevel(self.widget)
-            # Leaves only the label and removes the app window
-            self.tw.wm_overrideredirect(True)
-            self.tw.wm_geometry("+%d+%d" % (x, y))
-            label = ttk.Label(self.tw, text=self.text, font=(font, 12), justify="left", relief="solid", borderwidth=1, wraplength = self.wraplength)
-            label.pack(ipadx=1)
-
-        def hide_tip(self):
-            tw = self.tw
-            self.tw= None
-            if tw:
-                tw.destroy()
-
-
-    class HelpWindow(object):
-        """
-        Window that just displays text about how to use the app.
-        """
-        def __init__(self, master):
-            try:
-                adapter.debug("Creating help window")
-                top = self.top = tk.Toplevel(master)
-                top.attributes('-alpha', 0.0)
-                top.wait_visibility()
-                top.grab_set_global()
-
-                self.helpTextFrame = ttk.Frame(top, padding=(0, 0, 0, 10))
-                self.helpTextFrame.grid(row=0, column=0, padx=15, pady=(10, 0), sticky="w")
-
-                helpText = "Encounters Tab\n"
-                helpText += "You can either select an encounter from the list or click the \"Random\n"
-                helpText += "Level x\" buttons. Once an encounter card has been loaded, you can click\n"
-                helpText += "on the card or use the \"s\" key to reshuffle the encounter's enemies and\n"
-                helpText += "treasure reward, if any.\n\n"
-                helpText += "If you try to shuffle the enemies and nothing happens, there's probably\n"
-                helpText += "only one combination available! Many encounters with a single enemy have\n"
-                helpText += "no alternatives, even with all sets activated.\n\n"
-                helpText += "Mousing over keywords (in bold and italics) and icons in the Objectives\n"
-                helpText += "and Special Rules sections will display the name or rules for that keyword.\n\n"
-                helpText += "Campaign Tab\n"
-                helpText += "You can build your own campaign by adding encounters to it. You can also\n"
-                helpText += "save and load campaigns. You may only have one of each encounter name,\n"
-                helpText += "but there are no restrictions beyond that. Encounters added to a campaign\n"
-                helpText += "are frozen so you cannot shuffle the enemies. You can also print (non-boss)\n"
-                helpText += "encounter cards in the campaign. Front side only (fow now?) so use sleeves!\n\n"
-                helpText += "Events Tab\n"
-                helpText += "Here you can browse event cards and build an event deck. Event cards are\n"
-                helpText += "listed in the upper box and the event deck is in the lower box. Events can\n"
-                helpText += "be added individually or via core set. Event cards are limited in number\n"
-                helpText += "to how many are found in a single core set (e.g. the deck can't contain\n"
-                helpText += "more than two Firekeeper's Boon cards).\n\n"
-                helpText += "Using the Draw Event Card button will display a random card from the deck\n"
-                helpText += "that hasn't been drawn yet. That card can be shuffled back into the deck\n"
-                helpText += "or put on the bottom of the deck. These buttons only work for the last\n"
-                helpText += "drawn card - not a selected one. There's no Return to Top button because\n"
-                helpText += "that card is technically still on top so such a button would literally do\n"
-                helpText += "nothing.\n\n"
-                helpText += "Settings\n"
-                helpText += "In the settings menu, you can enable the different core sets/expansions\n"
-                helpText += "that add enemies or basic treasure to the game. These are the only sets\n"
-                helpText += "listed on purpose as they are the ones that add non-boss enemies or\n"
-                helpText += "additional characters.\n"
-                helpText += "Some settings have tooltips, so hover over them for an explanation!"
-                self.helpTextLabel = ttk.Label(self.helpTextFrame, text=helpText)
-                self.helpTextLabel.grid()
-
-                self.helpButtonsFrame = ttk.Frame(top, padding=(0, 0, 0, 10))
-                self.helpButtonsFrame.grid(row=1, column=0, padx=15, pady=(10, 0), sticky="w")
-                self.helpButtonsFrame.columnconfigure(index=0, weight=1)
-
-                self.okButton = ttk.Button(self.helpButtonsFrame, text="OK", width=14, command=self.top.destroy)
-                self.okButton.grid(column=0, row=0, padx=5)
-
-                center(top)
-                top.attributes('-alpha', 1.0)
-            except Exception as e:
-                adapter.exception(e)
-                raise
-
-    class VerticalScrolledFrame(ttk.Frame):
-        """A pure Tkinter scrollable frame that actually works!
-        * Use the "interior" attribute to place widgets inside the scrollable frame.
-        * Construct and pack/place/grid normally.
-        * This frame only allows vertical scrolling.
-        """
-        def __init__(self, parent, *args, **kw):
-            ttk.Frame.__init__(self, parent, *args, **kw)
-
-            # Create a canvas object and a vertical scrollbar for scrolling it.
-            vscrollbar = ttk.Scrollbar(self, orient=tk.VERTICAL)
-            vscrollbar.pack(fill=tk.Y, side=tk.RIGHT, expand=tk.FALSE)
-            self.canvas = tk.Canvas(self, bd=0, highlightthickness=0,
-                            yscrollcommand=vscrollbar.set)
-            self.canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=tk.TRUE)
-            vscrollbar.config(command=self.canvas.yview)
-
-            # Reset the view
-            self.canvas.xview_moveto(0)
-            self.canvas.yview_moveto(0)
-
-            # Create a frame inside the canvas which will be scrolled with it.
-            self.interior = interior = ttk.Frame(self.canvas)
-            interior_id = self.canvas.create_window(0, 0, window=interior, anchor=tk.NW)
-            self.interior.bind("<Enter>", self._bound_to_mousewheel)
-            self.interior.bind("<Leave>", self._unbound_to_mousewheel)
-            self.interior.bind("<Configure>", lambda event, canvas=self.interior: self.on_frame_configure(canvas))
-
-            # Track changes to the canvas and frame width and sync them,
-            # also updating the scrollbar.
-            def _configure_interior(event):
-                # Update the scrollbars to match the size of the inner frame.
-                size = (interior.winfo_reqwidth(), interior.winfo_reqheight())
-                self.canvas.config(scrollregion="0 0 %s %s" % size)
-                if interior.winfo_reqwidth() != self.canvas.winfo_width():
-                    # Update the canvas"s width to fit the inner frame.
-                    self.canvas.config(width=interior.winfo_reqwidth())
-            interior.bind("<Configure>", _configure_interior)
-
-            def _configure_canvas(event):
-                if interior.winfo_reqwidth() != self.canvas.winfo_width():
-                    # Update the inner frame"s width to fill the canvas.
-                    self.canvas.itemconfigure(interior_id, width=self.canvas.winfo_width())
-            self.canvas.bind("<Configure>", _configure_canvas)
-
-
-        def on_frame_configure(self, canvas):
-            """Reset the scroll region to encompass the inner frame"""
-            canvas.configure(scrollregion=canvas.bbox("all"))
-
-
-        def _bound_to_mousewheel(self, event):
-            self.canvas.bind_all("<MouseWheel>", self._on_mousewheel)
-
-
-        def _unbound_to_mousewheel(self, event):
-            self.canvas.unbind_all("<MouseWheel>")
-
-
-        def _on_mousewheel(self, event):
-            self.canvas.yview_scroll(int(-1*(event.delta/120)), "units")
-
-
-    class SettingsWindow(object):
-        """
-        Window in which the user selects which expansions they own and whether they want to see
-        V1, V1, or both styles of encounters when being shown random encounters.
-        """
-        def __init__(self, master):
-            try:
-                adapter.debug("Creating settings window")
-                top = self.top = tk.Toplevel(master)
-                top.attributes('-alpha', 0.0)
-                top.wait_visibility()
-                top.grab_set_global()
-
-                with open(baseFolder + "\\lib\\settings.json") as settingsFile:
-                    self.settings = load(settingsFile)
-
-                self.availableExpansions = set(self.settings["availableExpansions"])
-                self.enabledEnemies = self.settings["enabledEnemies"]
-
-                # These are the only expansions that matter - the ones that add enemies or regular treasure.
-                # All encounters are always going to be available.
-                self.expansions = {
-                    "Painted World of Ariamis": {"button": None, "value": tk.IntVar(), "displayName": "Painted World of Ariamis (V2 Core Set)"},
-                    "The Sunless City": {"button": None, "value": tk.IntVar(), "displayName": "The Sunless City (V2 Core Set)"},
-                    "Tomb of Giants": {"button": None, "value": tk.IntVar(), "displayName": "Tomb of Giants (V2 Core Set)"},
-                    "Dark Souls The Board Game": {"button": None, "value": tk.IntVar(), "displayName": "Dark Souls The Board Game (V1 Core Set)"},
-                    "Darkroot": {"button": None, "value": tk.IntVar(), "displayName": "Darkroot (V1)"},
-                    "Explorers": {"button": None, "value": tk.IntVar(), "displayName": "Explorers (V1)"},
-                    "Iron Keep": {"button": None, "value": tk.IntVar(), "displayName": "Iron Keep (V1)"},
-                    "Phantoms": {"button": None, "value": tk.IntVar(), "displayName": "Phantoms (V1)"},
-                    "Executioner Chariot": {"button": None, "value": tk.IntVar(), "displayName": "Executioner Chariot (V1)"},
-                    "Characters Expansion": {"button": None, "value": tk.IntVar(), "displayName": "Characters Expansion (V1)"}
-                }
-
-                self.notebook = ttk.Notebook(top)
-                self.notebook.grid(row=0, column=0, padx=(20, 10), pady=(20, 10), sticky="nsew", rowspan=4, columnspan=2)
-
-                self.expansionTab = VerticalScrolledFrame(self.notebook)
-                self.notebook.add(self.expansionTab, text="Enabled Expansions")
-
-                for i, expansion in enumerate(self.expansions):
-                    self.expansions[expansion]["button"] = ttk.Checkbutton(self.expansionTab.interior, text=self.expansions[expansion]["displayName"], variable=self.expansions[expansion]["value"], command=lambda expansion=expansion: self.toggle_expansion(expansion=expansion))
-                    self.expansions[expansion]["button"].grid(row=i, column=0, padx=5, pady=10, sticky="nsew")
-                    
-                self.expansions["Phantoms"]["value"].set(1 if "Phantoms" in self.settings["availableExpansions"] else 0)
-                self.expansions["Characters Expansion"]["value"].set(1 if "Characters Expansion" in self.settings["availableExpansions"] else 0)
-
-                self.enemies = {
-                    "Painted World of Ariamis": {"button": None, "value": tk.IntVar(), "parent": None, "children": [], "displayName": "Painted World of Ariamis (V2)"},
-                    "Bonewheel Skeleton": {"button": None, "value": tk.IntVar(), "parent": "Painted World of Ariamis", "children": [], "displayName": "Bonewheel Skeleton"},
-                    "Crow Demon": {"button": None, "value": tk.IntVar(), "parent": "Painted World of Ariamis", "children": [], "displayName": "Crow Demon"},
-                    "Engorged Zombie": {"button": None, "value": tk.IntVar(), "parent": "Painted World of Ariamis", "children": [], "displayName": "Engorged Zombie"},
-                    "Phalanx": {"button": None, "value": tk.IntVar(), "parent": "Painted World of Ariamis", "children": [], "displayName": "Phalanx"},
-                    "Phalanx Hollow": {"button": None, "value": tk.IntVar(), "parent": "Painted World of Ariamis", "children": [], "displayName": "Phalanx Hollow"},
-                    "Snow Rat": {"button": None, "value": tk.IntVar(), "parent": "Painted World of Ariamis", "children": [], "displayName": "Snow Rat"},
-                    "The Sunless City": {"button": None, "value": tk.IntVar(), "parent": None, "children": [], "displayName": "The Sunless City (V2)"},
-                    "Crossbow Hollow": {"button": None, "value": tk.IntVar(), "parent": "The Sunless City", "children": [], "displayName": "Crossbow Hollow"},
-                    "Hollow Soldier": {"button": None, "value": tk.IntVar(), "parent": "The Sunless City", "children": [], "displayName": "Hollow Soldier"},
-                    "Mimic": {"button": None, "value": tk.IntVar(), "parent": "The Sunless City", "children": [], "displayName": "Mimic"},
-                    "Sentinel": {"button": None, "value": tk.IntVar(), "parent": "The Sunless City", "children": [], "displayName": "Sentinel"},
-                    "Silver Knight Greatbowman": {"button": None, "value": tk.IntVar(), "parent": "The Sunless City", "children": [], "displayName": "Silver Knight Greatbowman"},
-                    "Silver Knight Swordsman": {"button": None, "value": tk.IntVar(), "parent": "The Sunless City", "children": [], "displayName": "Silver Knight Swordsman"},
-                    "Tomb of Giants": {"button": None, "value": tk.IntVar(), "parent": None, "children": [], "displayName": "Tomb of Giants (V2)"},
-                    "Giant Skeleton Archer": {"button": None, "value": tk.IntVar(), "parent": "Tomb of Giants", "children": [], "displayName": "Giant Skeleton Archer"},
-                    "Giant Skeleton Soldier": {"button": None, "value": tk.IntVar(), "parent": "Tomb of Giants", "children": [], "displayName": "Giant Skeleton Soldier"},
-                    "Necromancer": {"button": None, "value": tk.IntVar(), "parent": "Tomb of Giants", "children": [], "displayName": "Necromancer"},
-                    "Skeleton Archer": {"button": None, "value": tk.IntVar(), "parent": "Tomb of Giants", "children": [], "displayName": "Skeleton Archer"},
-                    "Skeleton Beast": {"button": None, "value": tk.IntVar(), "parent": "Tomb of Giants", "children": [], "displayName": "Skeleton Beast"},
-                    "Skeleton Soldier": {"button": None, "value": tk.IntVar(), "parent": "Tomb of Giants", "children": [], "displayName": "Skeleton Soldier"},
-                    "Dark Souls The Board Game": {"button": None, "value": tk.IntVar(), "parent": None, "children": [], "displayName": "Dark Souls The Board Game (V1)              "},
-                    "Crossbow Hollow (V1)": {"button": None, "value": tk.IntVar(), "parent": "Dark Souls The Board Game", "children": [], "displayName": "Crossbow Hollow (V1)"},
-                    "Hollow Soldier (V1)": {"button": None, "value": tk.IntVar(), "parent": "Dark Souls The Board Game", "children": [], "displayName": "Hollow Soldier (V1)"},
-                    "Large Hollow Soldier (V1)": {"button": None, "value": tk.IntVar(), "parent": "Dark Souls The Board Game", "children": [], "displayName": "Large Hollow Soldier (V1)"},
-                    "Sentinel (V1)": {"button": None, "value": tk.IntVar(), "parent": "Dark Souls The Board Game", "children": [], "displayName": "Sentinel (V1)"},
-                    "Silver Knight Greatbowman (V1)": {"button": None, "value": tk.IntVar(), "parent": "Dark Souls The Board Game", "children": [], "displayName": "Silver Knight Greatbowman (V1)"},
-                    "Silver Knight Swordsman (V1)": {"button": None, "value": tk.IntVar(), "parent": "Dark Souls The Board Game", "children": [], "displayName": "Silver Knight Swordsman (V1)"},
-                    "Darkroot": {"button": None, "value": tk.IntVar(), "parent": None, "children": [], "displayName": "Darkroot"},
-                    "Demonic Foliage (V1)": {"button": None, "value": tk.IntVar(), "parent": "Darkroot", "children": [], "displayName": "Demonic Foliage (V1)"},
-                    "Mushroom Child (V1)": {"button": None, "value": tk.IntVar(), "parent": "Darkroot", "children": [], "displayName": "Mushroom Parent (V1)"},
-                    "Mushroom Parent (V1)": {"button": None, "value": tk.IntVar(), "parent": "Darkroot", "children": [], "displayName": "Mushroom Parent (V1)"},
-                    "Plow Scarecrow (V1)": {"button": None, "value": tk.IntVar(), "parent": "Darkroot", "children": [], "displayName": "Plow Scarecrow (V1)"},
-                    "Shears Scarecrow (V1)": {"button": None, "value": tk.IntVar(), "parent": "Darkroot", "children": [], "displayName": "Shears Scarecrow (V1)"},
-                    "Stone Guardian (V1)": {"button": None, "value": tk.IntVar(), "parent": "Darkroot", "children": [], "displayName": "Stone Guardian (V1)"},
-                    "Stone Knight (V1)": {"button": None, "value": tk.IntVar(), "parent": "Darkroot", "children": [], "displayName": "Stone Knight (V1)"},
-                    "Executioner Chariot": {"button": None, "value": tk.IntVar(), "parent": None, "children": [], "displayName": "Executioner Chariot (V1)"},
-                    "Black Hollow Mage (V1)": {"button": None, "value": tk.IntVar(), "parent": "Executioner Chariot", "children": [], "displayName": "Black Hollow Mage (V1)"},
-                    "Falchion Skeleton (V1)": {"button": None, "value": tk.IntVar(), "parent": "Executioner Chariot", "children": [], "displayName": "Falchion Skeleton (V1)"},
-                    "Explorers": {"button": None, "value": tk.IntVar(), "parent": None, "children": [], "displayName": "Explorers (V1)"},
-                    "Firebomb Hollow (V1)": {"button": None, "value": tk.IntVar(), "parent": "Explorers", "children": [], "displayName": "Firebomb Hollow (V1)"},
-                    "Silver Knight Spearman (V1)": {"button": None, "value": tk.IntVar(), "parent": "Explorers", "children": [], "displayName": "Silver Knight Spearman (V1)"},
-                    "Iron Keep": {"button": None, "value": tk.IntVar(), "parent": None, "children": [], "displayName": "Iron Keep (V1)"},
-                    "Alonne Bow Knight (V1)": {"button": None, "value": tk.IntVar(), "parent": "Iron Keep", "children": [], "displayName": "Alonne Bow Knight (V1)"},
-                    "Alonne Knight Captain (V1)": {"button": None, "value": tk.IntVar(), "parent": "Iron Keep", "children": [], "displayName": "Alonne Knight Captain (V1)"},
-                    "Alonne Sword Knight (V1)": {"button": None, "value": tk.IntVar(), "parent": "Iron Keep", "children": [], "displayName": "Alonne Sword Knight (V1)"},
-                    "Ironclad Soldier (V1)": {"button": None, "value": tk.IntVar(), "parent": "Iron Keep", "children": [], "displayName": "Ironclad Soldier (V1)"}
-                }
-
-                self.enemiesTab = VerticalScrolledFrame(self.notebook)
-                self.enemiesTab.grid_propagate(False)
-                self.notebook.add(self.enemiesTab, text="Enabled Enemies")
-                
-                for i, enemy in enumerate(self.enemies):
-                    if self.enemies[enemy]["parent"]:
-                        self.enemies[self.enemies[enemy]["parent"]]["children"].append(enemy)
-                    else:
-                        # Indent children for better visual organization.
-                        tk.Label(self.enemiesTab.interior, text="\t").grid(column=0, row=i)
-
-                    self.enemies[enemy]["button"] = ttk.Checkbutton(self.enemiesTab.interior, text=self.enemies[enemy]["displayName"], variable=self.enemies[enemy]["value"], command=lambda enemy=enemy: self.toggle_parent_children(enemy=enemy))
-                    self.enemies[enemy]["button"].grid(row=i, column=0 if not self.enemies[enemy]["parent"] else 1, columnspan=2 if not self.enemies[enemy]["parent"] else 3, padx=5, pady=1, sticky="nsew")
-
-                for enemy in self.enabledEnemies:
-                    self.enemies[enemy]["value"].set(1)
-                    self.toggle_parent_children(enemy=enemy)
-
-                self.charactersActive = {
-                    "Assassin": {"button": None, "value": tk.IntVar()},
-                    "Cleric": {"button": None, "value": tk.IntVar()},
-                    "Deprived": {"button": None, "value": tk.IntVar()},
-                    "Herald": {"button": None, "value": tk.IntVar()},
-                    "Knight": {"button": None, "value": tk.IntVar()},
-                    "Mercenary": {"button": None, "value": tk.IntVar()},
-                    "Pyromancer": {"button": None, "value": tk.IntVar()},
-                    "Sorcerer": {"button": None, "value": tk.IntVar()},
-                    "Thief": {"button": None, "value": tk.IntVar()},
-                    "Warrior": {"button": None, "value": tk.IntVar()}
-                }
-
-                self.characterFrame = ttk.LabelFrame(top, text="Characters Being Played (up to 4)", padding=(20, 10))
-                self.characterFrame.grid(row=0, column=3, padx=(20, 10), pady=(20, 10), sticky="nsew", rowspan=4, columnspan=2)
-                for i, enemy in enumerate(self.charactersActive):
-                    self.charactersActive[enemy]["value"].set(1 if enemy in self.settings["charactersActive"] else 0)
-                    self.charactersActive[enemy]["button"] = ttk.Checkbutton(self.characterFrame, text=enemy, variable=self.charactersActive[enemy]["value"], command=self.check_max_characters)
-                    self.charactersActive[enemy]["button"].grid(row=i, column=0, padx=5, pady=10, sticky="nsew")
-
-                self.treasureSwapOptions = {
-                    "Similar Soul Cost": {"button": None, "value": tk.StringVar(value="Similar Soul Cost"), "tooltipText": "Rewards an item of the same type as the original that also costs about the same souls in leveling stats in order to equip it"},
-                    "Tier Based": {"button": None, "value": tk.StringVar(value="Tier Based"), "tooltipText": "Splits treasure into equal tiers based on soul cost to equip and rewards an item in the same tier as the original reward."},
-                    "Generic Treasure": {"button": None, "value": tk.StringVar(value="Generic Treasure"), "tooltipText": "Changes all specific item rewards to a number of draws equal to the encounter level."},
-                    "Original": {"button": None, "value": tk.StringVar(value="Original"), "tooltipText": "Display the original reward on the card only."}
-                }
-
-                self.treasureSwapOption = tk.StringVar(value=self.settings["treasureSwapOption"])
-                self.treasureSwapFrame = ttk.LabelFrame(top, text="Treasure Swap Options", padding=(20, 10))
-                self.treasureSwapFrame.grid(row=0, column=5, padx=(20, 10), pady=(20, 10), sticky="nsew")
-                for i, option in enumerate(self.treasureSwapOptions):
-                    self.treasureSwapOptions[option]["button"] = ttk.Radiobutton(self.treasureSwapFrame, text=option, variable=self.treasureSwapOption, value=option)
-                    self.treasureSwapOptions[option]["button"].grid(row=i, column=0, padx=5, pady=10, sticky="nsew")
-                    CreateToolTip(self.treasureSwapOptions[option]["button"], self.treasureSwapOptions[option]["tooltipText"])
-
-                self.randomEncounters = {
-                    "v1": {"button": None, "value": tk.IntVar()},
-                    "v2": {"button": None, "value": tk.IntVar()}
-                }
-
-                self.randomEncounterFrame = ttk.LabelFrame(top, text="Random Encounters Shown", padding=(20, 10))
-                self.randomEncounterFrame.grid(row=1, column=5, padx=(20, 10), pady=(20, 10), sticky="nsew")
-                self.randomEncounters["v1"]["value"].set(1 if "v1" in self.settings["randomEncounterTypes"] else 0)
-                self.randomEncounters["v2"]["value"].set(1 if "v2" in self.settings["randomEncounterTypes"] else 0)
-                self.randomEncounters["v1"]["button"] = ttk.Checkbutton(self.randomEncounterFrame, text="V1 Encounters", variable=self.randomEncounters["v1"]["value"])
-                self.randomEncounters["v2"]["button"] = ttk.Checkbutton(self.randomEncounterFrame, text="V2 Encounters", variable=self.randomEncounters["v2"]["value"])
-                self.randomEncounters["v1"]["button"].grid(row=0, column=0, padx=5, pady=10, sticky="nsew")
-                self.randomEncounters["v2"]["button"].grid(row=1, column=0, padx=5, pady=10, sticky="nsew")
-
-                self.updateCheck = {"button": None, "value": tk.IntVar(), "tooltipText": "If enabled, makes an API call to Github once a month when the app is opened to check for a new version.\n\nThe app won't download anything or update itself but will let you know if there's a new version."}
-                self.updateCheckFrame = ttk.LabelFrame(top, text="Check For Updates", padding=(20, 10))
-                self.updateCheckFrame.grid(row=3, column=5, padx=(20, 10), pady=(20, 10), sticky="nsew")
-                self.updateCheck["value"].set(1 if "on" in self.settings["updateCheck"] else 0)
-                self.updateCheck["button"] = ttk.Checkbutton(self.updateCheckFrame, text="Check for updates", variable=self.updateCheck["value"])
-                self.updateCheck["button"].grid(row=0, column=0, padx=5, pady=10, sticky="nsew")
-                CreateToolTip(self.updateCheck["button"], self.updateCheck["tooltipText"])
-
-                self.errLabel = ttk.Label(self.top, text="")
-                self.errLabel.grid(column=0, row=4, padx=18, columnspan=8)
-
-                self.saveCancelButtonsFrame = ttk.Frame(top, padding=(0, 0, 0, 10))
-                self.saveCancelButtonsFrame.grid(row=5, column=0, padx=15, pady=(10, 0), sticky="w", columnspan=2)
-                self.saveCancelButtonsFrame.columnconfigure(index=0, weight=1)
-
-                self.saveButton = ttk.Button(self.saveCancelButtonsFrame, text="Save", width=14, command=lambda: self.quit_with_save())
-                self.cancelButton = ttk.Button(self.saveCancelButtonsFrame, text="Cancel", width=14, command=self.quit_no_save)
-                self.saveButton.grid(column=0, row=0, padx=5)
-                self.cancelButton.grid(column=1, row=0, padx=5)
-
-                self.themeButtonFrame = ttk.Frame(top, padding=(0, 0, 0, 10))
-                self.themeButtonFrame.grid(row=5, column=5, padx=15, pady=(10, 0), sticky="e", columnspan=2)
-                self.themeButtonFrame.columnconfigure(index=0, weight=1)
-
-                self.lightTheme = {"button": None, "value": tk.IntVar()}
-                self.lightTheme["value"].set(0 if self.settings["theme"] == "dark" else 1)
-                self.lightTheme["button"] = ttk.Button(self.themeButtonFrame, text="Switch to light theme" if self.lightTheme["value"].get() == 0 else "Switch to dark theme", command=self.switch_theme)
-                self.lightTheme["button"].grid(column=3, row=0, columnspan=2)
-
-                center(top)
-                top.attributes('-alpha', 1.0)
-            except Exception as e:
-                adapter.exception(e)
-                raise
-
-
-        def toggle_parent_children(self, enemy, event=None):
-            try:
-                curframe = inspect.currentframe()
-                calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of toggle_parent_children", caller=calframe[1][3])
-
-                if self.enemies[enemy]["parent"]:
-                    if (all([self.enemies[child]["value"].get() == 0 for child in self.enemies[self.enemies[enemy]["parent"]]["children"]])
-                            or all([self.enemies[child]["value"].get() == 1 for child in self.enemies[self.enemies[enemy]["parent"]]["children"]])):
-                        if enemy in self.expansions:
-                            self.expansions[enemy]["value"].set(self.enemies[enemy]["value"].get())
-                        else:
-                            self.expansions[self.enemies[enemy]["parent"]]["value"].set(self.enemies[enemy]["value"].get())
-                        self.enemies[self.enemies[enemy]["parent"]]["value"].set(self.enemies[enemy]["value"].get())
-                    else:
-                        self.enemies[self.enemies[enemy]["parent"]]["value"].set(0)
-                        self.enemies[self.enemies[enemy]["parent"]]["button"].state(["alternate"])
-                        self.expansions[self.enemies[enemy]["parent"]]["value"].set(1)
-                else:
-                    self.expansions[enemy]["value"].set(self.enemies[enemy]["value"].get())
-                    
-                    for child in self.enemies[enemy]["children"]:
-                        self.enemies[child]["value"].set(self.enemies[enemy]["value"].get())
-
-                adapter.debug("End of toggle_parent_children", caller=calframe[1][3])
-            except Exception as e:
-                adapter.exception(e)
-                raise
-
-
-        def toggle_expansion(self, expansion, event=None):
-            try:
-                curframe = inspect.currentframe()
-                calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of toggle_expansion", caller=calframe[1][3])
-
-                if expansion in {"Characters Expansion", "Phantoms"}:
-                    adapter.debug("End of toggle_expansion (Characters expansion, nothing to do)", caller=calframe[1][3])
-                    return
-
-                self.enemies[expansion]["value"].set(self.expansions[expansion]["value"].get())
-                
-                for child in self.enemies[expansion]["children"]:
-                    self.enemies[child]["value"].set(self.expansions[expansion]["value"].get())
-
-                adapter.debug("End of toggle_expansion", caller=calframe[1][3])
-            except Exception as e:
-                adapter.exception(e)
-                raise
-
-
-        def check_max_characters(self, event=None):
-            """
-            Checks to see how many characters have been selected.
-            Disable remaining if 4 have been selected.
-
-            Optional Parameters:
-                event: tkinter.Event
-                    The tkinter Event that is the trigger.
-            """
-            try:
-                curframe = inspect.currentframe()
-                calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of check_max_characters", caller=calframe[1][3])
-
-                numChars = len([c for c in self.charactersActive if self.charactersActive[c]["value"].get() == 1])
-                if numChars == 4:
-                    for c in [c for c in self.charactersActive if self.charactersActive[c]["value"].get() == 0]:
-                        self.charactersActive[c]["button"].config(state=tk.DISABLED)
-                else:
-                    for c in self.charactersActive:
-                        self.charactersActive[c]["button"].config(state=tk.NORMAL)
-
-                adapter.debug("End of check_max_characters", caller=calframe[1][3])
-            except Exception as e:
-                adapter.exception(e)
-                raise
-
-
-        def switch_theme(self, event=None):
-            """
-            Changes the theme from dark to light or vice versa.
-
-            Optional Parameters:
-                event: tkinter.Event
-                    The tkinter Event that is the trigger.
-            """
-            try:
-                curframe = inspect.currentframe()
-                calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of switch_theme", caller=calframe[1][3])
-
-                self.lightTheme["value"].set(0 if self.lightTheme["value"].get() == 1 else 1)
-                self.settings["theme"] = "light" if self.lightTheme["value"].get() == 1 else "dark"
-                root.tk.call("set_theme", "light" if self.lightTheme["value"].get() == 1 else "dark")
-                self.lightTheme["button"]["text"] = "Switch to light theme" if self.lightTheme["value"].get() == 0 else "Switch to dark (souls) theme"
-                self.errLabel.config(text="To keep this theme when you open the program again, you need to click Save!")
-
-                adapter.debug("End of switch_theme", caller=calframe[1][3])
-            except Exception as e:
-                adapter.exception(e)
-                raise
-
-
-        def quit_with_save(self, event=None):
-            """
-            Saves the settings and exits the settings window.
-
-            Optional Parameters:
-                event: tkinter.Event
-                    The tkinter Event that is the trigger.
-            """
-            try:
-                curframe = inspect.currentframe()
-                calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of quit_with_save", caller=calframe[1][3])
-
-                self.errLabel.config(text="")
-
-                if all([self.expansions[s]["value"].get() == 0 for s in coreSets]):
-                    self.errLabel.config(text="You need to select at least one Core Set!")
-                    adapter.debug("End of quit_with_save", caller=calframe[1][3])
-                    return
-
-                if all([self.randomEncounters[i]["value"].get() == 0 for i in self.randomEncounters]):
-                    self.errLabel.config(text="You need to check at least one box in the \"Random Encounters Shown\" section!")
-                    adapter.debug("End of quit_with_save", caller=calframe[1][3])
-                    return
-
-                if len([i for i in self.charactersActive if self.charactersActive[i]["value"].get() == 1]) < 1 and self.treasureSwapOption.get() in set(["Similar Soul Cost", "Tier Based"]):
-                    self.errLabel.config(text="You need to select at least 1 character if using the Similar Soul Cost or Tier Based treasure swap options!")
-                    adapter.debug("End of quit_with_save", caller=calframe[1][3])
-                    return
-
-                characterExpansions = []
-                for c in soulCost:
-                    if self.charactersActive[c]["value"].get() == 1:
-                        characterExpansions.append(soulCost[c]["expansions"])
-
-                expansionsActive = set([s for s in self.expansions if self.expansions[s]["value"].get() == 1])
-                expansionsNeeded = [e for e in characterExpansions if not any([e & expansionsActive])]
-                if expansionsNeeded:
-                    self.errLabel.config(text="You have selected one or more characters from sets you have disabled!")
-                    adapter.debug("End of quit_with_save", caller=calframe[1][3])
-                    return
-
-                enabledEnemies = [s for s in self.enemies if self.enemies[s]["value"].get() == 1]
-                customEnemyList = any(["alternate" in self.enemies[enemy]["button"].state() for enemy in self.enemies])
-
-                randomEncounterTypes = set([s for s in self.randomEncounters if self.randomEncounters[s]["value"].get() == 1])
-                charactersActive = set([s for s in self.charactersActive if self.charactersActive[s]["value"].get() == 1])
-
-                newSettings = {
-                    "theme": "light" if self.lightTheme["value"].get() == 1 else "dark",
-                    "availableExpansions": list(expansionsActive),
-                    "enabledEnemies": list(enabledEnemies),
-                    "customEnemyList": customEnemyList,
-                    "randomEncounterTypes": list(randomEncounterTypes),
-                    "charactersActive": list(charactersActive),
-                    "treasureSwapOption": self.treasureSwapOption.get(),
-                    "updateCheck": "on" if self.updateCheck["value"].get() == 1 else "off"
-                }
-
-                # This will trigger the encounters treeview to be recreated to account for the changes.
-                if newSettings != self.settings:
-                    global settingsChanged
-                    settingsChanged = True
-
-                    with open(baseFolder + "\\lib\\settings.json", "w") as settingsFile:
-                        dump(newSettings, settingsFile)
-
-                    # Recalculate the average soul cost of treasure.
-                    if self.treasureSwapOption.get() == "Similar Soul Cost":
-                        generate_treasure_soul_cost(expansionsActive, charactersActive)
-                    elif self.treasureSwapOption.get() == "Tier Based":
-                        generate_treasure_soul_cost(expansionsActive, charactersActive)
-                        populate_treasure_tiers(expansionsActive, charactersActive)
-
-                self.top.destroy()
-                adapter.debug("End of quit_with_save", caller=calframe[1][3])
-            except Exception as e:
-                adapter.exception(e)
-                raise
-
-
-        def quit_no_save(self, event=None):
-            """
-            Exits the settings window without saving changes.
-
-            Optional Parameters:
-                event: tkinter.Event
-                    The tkinter Event that is the trigger.
-            """
-            try:
-                curframe = inspect.currentframe()
-                calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of quit_no_save", caller=calframe[1][3])
-
-                self.top.destroy()
-
-                adapter.debug("End of quit_no_save", caller=calframe[1][3])
-            except Exception as e:
-                adapter.exception(e)
-                raise
-
-
-    class PopupWindow(tk.Toplevel):
-        """
-        A popup window that displays a message for the user.
-
-        Optional parameters:
-            labelText: String
-                The message to be displayed in the popup window.
-
-            firstButton: Boolean
-                Whether to show the Ok button.
-
-            secondButton: Boolean
-                Whether to show the second button.
-
-            progressBar: Boolean
-                Whether to show the progress bar for app loading.
-
-            loadingImage: Boolean
-                Whether to show the loading image.
-        """
-        def __init__(self, root, labelText=None, firstButton=False, secondButton=False, progressBar=False, progressMax=None, loadingImage=False):
-            tk.Toplevel.__init__(self, root)
-            self.attributes('-alpha', 0.0)
-            self.popupFrame = ttk.Frame(self, padding=(20, 10))
-            self.popupFrame.pack()
-            label = ttk.Label(self.popupFrame, text=labelText)
-            label.grid(column=0, row=1, columnspan=2, padx=20, pady=20)
-            self.wait_visibility()
-            self.grab_set_global()
-            label.focus_force()
-
-            if firstButton:
-                button = ttk.Button(self.popupFrame, text="OK", command=self.destroy)
-                button.grid(column=0, row=2, padx=20, pady=20)
-
-            if secondButton:
-                button2 = ttk.Button(self.popupFrame, text="Quit and take me there!", command=root.destroy)
-                button2.grid(column=1, row=2, padx=20, pady=20)
-                button2.bind("<Button 1>", lambda e: webbrowser.open_new("https://github.com/DanDuhon/DSBG-Shuffle/releases"))
-
-            if loadingImage:
-                loadingImage = ImageTk.PhotoImage(Image.open(baseFolder + "\\lib\\bonfire.png"), Image.Resampling.LANCZOS)
-                loadingLabel = ttk.Label(self.popupFrame)
-                loadingLabel.image = loadingImage
-                loadingLabel.config(image=loadingImage)
-                loadingLabel.grid(column=0, row=0, columnspan=2, padx=20, pady=20)
-
-            if progressBar:
-                self.progressVar = tk.DoubleVar()
-                progressBar = ttk.Progressbar(self.popupFrame, variable=self.progressVar, maximum=progressMax, length=150)
-                progressBar.grid(row=3, column=0, columnspan=2)
-
-            center(self)
-            self.attributes('-alpha', 1.0)
-
-
     class Application(ttk.Frame):
         def __init__(self, parent):
             try:
@@ -777,66 +81,19 @@ try:
                 self.encounterScrollbar.pack(side=tk.RIGHT, fill=tk.Y)
 
                 self.bossMenu = [
-                    "Boss List",
-                    "--Mini Bosses--",
-                    "Asylum Demon",
-                    "Black Knight",
-                    "Boreal Outrider Knight",
-                    "Heavy Knight",
-                    "Old Dragonslayer",
-                    "Titanite Demon",
-                    "Winged Knight",
-                    "--Main Bosses--",
-                    "Artorias",
-                    "Crossbreed Priscilla",
-                    "Dancer of the Boreal Valley",
-                    "Gravelord Nito",
-                    "Great Grey Wolf Sif",
-                    "Ornstein and Smough",
-                    "Sir Alonne",
-                    "Smelter Demon",
-                    "The Pursuer",
-                    "--Mega Bosses--",
-                    "Black Dragon Kalameet",
-                    "Executioner Chariot",
-                    "Gaping Dragon",
-                    "Guardian Dragon",
-                    "Manus, Father of the Abyss",
-                    "Old Iron King",
-                    "Stray Demon",
-                    "The Four Kings",
-                    "The Last Giant",
-                    "Vordt of the Boreal Valley"
+                    "Select Boss",
+                    "--Mini Bosses--"
                     ]
+                for boss in [boss for boss in bosses if bosses[boss]["level"] == "Mini Boss"]:
+                    self.bossMenu.append(bosses[boss]["name"])
 
-                self.bosses = {
-                    "Asylum Demon": {"name": "Asylum Demon", "level": "Mini Boss", "expansions": set(["Asylum Demon"])},
-                    "Black Knight": {"name": "Black Knight", "level": "Mini Boss", "expansions": set(["Tomb of Giants"])},
-                    "Boreal Outrider Knight": {"name": "Boreal Outrider Knight", "level": "Mini Boss", "expansions": set(["Dark Souls The Board Game"])},
-                    "Heavy Knight": {"name": "Heavy Knight", "level": "Mini Boss", "expansions": set(["Painted World of Ariamis"])},
-                    "Old Dragonslayer": {"name": "Old Dragonslayer", "level": "Mini Boss", "expansions": set(["Explorers"])},
-                    "Titanite Demon": {"name": "Titanite Demon", "level": "Mini Boss", "expansions": set(["Dark Souls The Board Game", "The Sunless City"])},
-                    "Winged Knight": {"name": "Winged Knight", "level": "Mini Boss", "expansions": set(["Dark Souls The Board Game"])},
-                    "Artorias": {"name": "Artorias", "level": "Main Boss", "expansions": set(["Darkroot"])},
-                    "Crossbreed Priscilla": {"name": "Crossbreed Priscilla", "level": "Main Boss", "expansions": set(["Painted World of Ariamis"])},
-                    "Dancer of the Boreal Valley": {"name": "Dancer of the Boreal Valley", "level": "Main Boss", "expansions": set(["Dark Souls The Board Game"])},
-                    "Gravelord Nito": {"name": "Gravelord Nito", "level": "Main Boss", "expansions": set(["Tomb of Giants"])},
-                    "Great Grey Wolf Sif": {"name": "Great Grey Wolf Sif", "level": "Main Boss", "expansions": set(["Darkroot"])},
-                    "Ornstein and Smough": {"name": "Ornstein and Smough", "level": "Main Boss", "expansions": set(["Dark Souls The Board Game", "The Sunless City"])},
-                    "Sir Alonne": {"name": "Sir Alonne", "level": "Main Boss", "expansions": set(["Iron Keep"])},
-                    "Smelter Demon": {"name": "Smelter Demon", "level": "Main Boss", "expansions": set(["Iron Keep"])},
-                    "The Pursuer": {"name": "The Pursuer", "level": "Main Boss", "expansions": set(["Explorers"])},
-                    "Black Dragon Kalameet": {"name": "Black Dragon Kalameet", "level": "Mega Boss", "expansions": set(["Black Dragon Kalameet"])},
-                    "Executioner Chariot": {"name": "Executioner Chariot", "level": "Mega Boss", "expansions": set(["Executioner Chariot"])},
-                    "Gaping Dragon": {"name": "Gaping Dragon", "level": "Mega Boss", "expansions": set(["Gaping Dragon"])},
-                    "Guardian Dragon": {"name": "Guardian Dragon", "level": "Mega Boss", "expansions": set(["Guardian Dragon"])},
-                    "Manus, Father of the Abyss": {"name": "Manus, Father of the Abyss", "level": "Mega Boss", "expansions": set(["Manus, Father of the Abyss"])},
-                    "Old Iron King": {"name": "Old Iron King", "level": "Mega Boss", "expansions": set(["Old Iron King"])},
-                    "Stray Demon": {"name": "Stray Demon", "level": "Mega Boss", "expansions": set(["Asylum Demon"])},
-                    "The Four Kings": {"name": "The Four Kings", "level": "Mega Boss", "expansions": set(["The Four Kings"])},
-                    "The Last Giant": {"name": "The Last Giant", "level": "Mega Boss", "expansions": set(["The Last Giant"])},
-                    "Vordt of the Boreal Valley": {"name": "Vordt of the Boreal Valley", "level": "Mega Boss", "expansions": set(["Vordt of the Boreal Valley"])}
-                }
+                self.bossMenu.append("--Main Bosses--")
+                for boss in [boss for boss in bosses if bosses[boss]["level"] == "Main Boss"]:
+                    self.bossMenu.append(bosses[boss]["name"])
+
+                self.bossMenu.append("--Mega Bosses--")
+                for boss in [boss for boss in bosses if bosses[boss]["level"] == "Mega Boss"]:
+                    self.bossMenu.append(bosses[boss]["name"])
 
                 self.selectedBoss = tk.StringVar()
 
@@ -850,42 +107,9 @@ try:
                 self.v1Expansions = {"Dark Souls The Board Game", "Darkroot", "Executioner Chariot", "Explorers", "Iron Keep"} if "v1" in self.settings["randomEncounterTypes"] else set()
                 self.v2Expansions = (self.allExpansions - self.v1Expansions) if "v2" in self.settings["randomEncounterTypes"] else set()
                 self.expansionsForRandomEncounters = (self.v1Expansions | self.v2Expansions) & self.allExpansions
-
-                self.events = {
-                    "Alluring Skull": {"name": "Alluring Skull", "count": 1, "expansions": set(["Painted World of Ariamis", "Tomb of Giants", "The Sunless City"])},
-                    "Big Pilgrim's Key": {"name": "Big Pilgrim's Key", "count": 1, "expansions": set(["The Sunless City"])},
-                    "Blacksmith's Trial": {"name": "Blacksmith's Trial", "count": 1, "expansions": set(["Painted World of Ariamis", "Tomb of Giants", "The Sunless City"])},
-                    "Bleak Bonfire Ascetic": {"name": "Bleak Bonfire Ascetic", "count": 1, "expansions": set(["Painted World of Ariamis", "Tomb of Giants", "The Sunless City"])},
-                    "Bloodstained Bonfire Ascetic": {"name": "Bloodstained Bonfire Ascetic", "count": 1, "expansions": set(["Painted World of Ariamis", "Tomb of Giants", "The Sunless City"])},
-                    "Cracked Bonfire Ascetic": {"name": "Cracked Bonfire Ascetic", "count": 1, "expansions": set(["Painted World of Ariamis", "Tomb of Giants", "The Sunless City"])},
-                    "Firekeeper's Boon": {"name": "Firekeeper's Boon", "count": 2, "expansions": set(["Painted World of Ariamis", "Tomb of Giants", "The Sunless City"])},
-                    "Fleeting Glory": {"name": "Fleeting Glory", "count": 2, "expansions": set(["Painted World of Ariamis"])},
-                    "Forgotten Supplies": {"name": "Forgotten Supplies", "count": 2, "expansions": set(["Painted World of Ariamis", "Tomb of Giants", "The Sunless City"])},
-                    "Frozen Bonfire Ascetic": {"name": "Frozen Bonfire Ascetic", "count": 1, "expansions": set(["Painted World of Ariamis", "Tomb of Giants", "The Sunless City"])},
-                    "Green Blossom": {"name": "Green Blossom", "count": 1, "expansions": set(["Painted World of Ariamis", "Tomb of Giants", "The Sunless City"])},
-                    "Hearty Bonfire Ascetic": {"name": "Hearty Bonfire Ascetic", "count": 1, "expansions": set(["Painted World of Ariamis", "Tomb of Giants", "The Sunless City"])},
-                    "Lifegem": {"name": "Lifegem", "count": 1, "expansions": set(["Painted World of Ariamis", "Tomb of Giants", "The Sunless City"])},
-                    "Lost Envoy": {"name": "Lost Envoy", "count": 1, "expansions": set(["The Sunless City"])},
-                    "Lost to Time": {"name": "Lost to Time", "count": 1, "expansions": set(["The Sunless City"])},
-                    "Martial Bonfire Ascetic": {"name": "Martial Bonfire Ascetic", "count": 1, "expansions": set(["Painted World of Ariamis", "Tomb of Giants", "The Sunless City"])},
-                    "Obscured Knowledge": {"name": "Obscured Knowledge", "count": 1, "expansions": set(["Painted World of Ariamis"])},
-                    "Pine Resin": {"name": "Pine Resin", "count": 1, "expansions": set(["Painted World of Ariamis", "Tomb of Giants", "The Sunless City"])},
-                    "Princess Guard": {"name": "Princess Guard", "count": 1, "expansions": set(["The Sunless City"])},
-                    "Rare Vagrant": {"name": "Rare Vagrant", "count": 1, "expansions": set(["Painted World of Ariamis"])},
-                    "Repair Powder": {"name": "Repair Powder", "count": 1, "expansions": set(["Painted World of Ariamis", "Tomb of Giants", "The Sunless City"])},
-                    "Rite of Rekindling": {"name": "Rite of Rekindling", "count": 1, "expansions": set(["Painted World of Ariamis", "Tomb of Giants", "The Sunless City"])},
-                    "Scout Ahead": {"name": "Scout Ahead", "count": 2, "expansions": set(["Painted World of Ariamis", "Tomb of Giants", "The Sunless City"])},
-                    "Scrying Stone": {"name": "Scrying Stone", "count": 1, "expansions": set(["Painted World of Ariamis", "Tomb of Giants", "The Sunless City"])},
-                    "Skeletal Reforging": {"name": "Skeletal Reforging", "count": 2, "expansions": set(["Tomb of Giants"])},
-                    "Stolen Artifact": {"name": "Stolen Artifact", "count": 2, "expansions": set(["Painted World of Ariamis", "Tomb of Giants", "The Sunless City"])},
-                    "Trustworthy Promise": {"name": "Trustworthy Promise", "count": 2, "expansions": set(["Tomb of Giants"])},
-                    "Undead Merchant": {"name": "Undead Merchant", "count": 2, "expansions": set(["Painted World of Ariamis", "Tomb of Giants", "The Sunless City"])},
-                    "Unhallowed Offering": {"name": "Unhallowed Offering", "count": 1, "expansions": set(["Painted World of Ariamis", "Tomb of Giants", "The Sunless City"])},
-                    "Virulent Bonfire Ascetic": {"name": "Virulent Bonfire Ascetic", "count": 1, "expansions": set(["Painted World of Ariamis", "Tomb of Giants", "The Sunless City"])}
-                }
                 
-                self.drawnEvent = None
-                self.drawnEventNum = 0
+                self.currentEvent = None
+                self.currentEventNum = 0
                 self.eventDeck = []
                 
                 if self.settings["treasureSwapOption"] == "Similar Soul Cost":
@@ -913,87 +137,6 @@ try:
 
                 self.forPrinting = False
                 self.encountersToPrint = []
-
-                self.treasureSwapEncounters = {
-                    "Castle Break In": "Dragonslayer Greatbow",
-                    "Corvian Host": "Bloodshield",
-                    "Dark Resurrection": "Fireball",
-                    "Distant Tower": "Velka's Rapier",
-                    "Flooded Fortress": "Adventurer's Armour",
-                    "Frozen Revolutions": "Red Tearstone Ring",
-                    "Giant's Coffin": "Black Knight Greataxe",
-                    "Grave Matters": "Firebombs",
-                    "Hanging Rafters": "Dark Wood Grain Ring",
-                    "In Deep Water": "Thorolund Talisman",
-                    "Inhospitable Ground": "Pike",
-                    "Monstrous Maw": "Exile Greatsword",
-                    "No Safe Haven": "Throwing Knives",
-                    "Painted Passage": "Painting Guardian Armour",
-                    "Parish Church": "Titanite Shard",
-                    "Puppet Master": "Skull Lantern",
-                    "Rain of Filth": "Poison Mist",
-                    "Shattered Keep": "Poison Throwing Knives",
-                    "The Abandoned Chest": "Chloranthy Ring",
-                    "The Beast From the Depths": "Mask of the Child",
-                    "The Iron Golem": "Giant's Halberd",
-                    "The Locked Grave": "Dragon Scale",
-                    "The Skeleton Ball": "Divine Blessing",
-                    "Trophy Room": "Havel's Greatshield",
-                    "Undead Sanctum": "Silver Knight Straight Sword",
-                    "Unseen Scurrying": "Kukris",
-                    "Urns of the Fallen": "Bonewheel Shield",
-                    "Velka's Chosen": "Demon Titanite"
-                }
-
-                self.tooltipText = {
-                    "bitterCold": "If a character has a Frostbite token at the end of their turn, they suffer 1 damage.",
-                    "barrage": "At the end of each character's turn, that character must make a defense roll using only their dodge dice.\n\nIf no dodge symbols are rolled, the character suffers 2 damage and Stagger.",
-                    "darkness": "During this encounter, characters can only attack enemies on the same or an adjacent node.",
-                    "eerie": "During setup, take five blank trap tokens and five trap tokens with values on them, and place a random token face down on each of the highlighted nodes.\n\nIf a character moves onto a node with a token, flip the token.\n\nIf the token is blank, place it to one side.\n\nIf the token has a damage value, instead of resolving it normally, spawn an enemy corresponding to the value shown, push the character to a node containing a trap token if possible, then discard the token.",
-                    "gang": "A gang enemy is a 1 health enemy whose name includes the word in parentheses.\n\nIf a character is attacked by a gang enemy and another gang enemy is within one node of the character, increase the attacking model's damage and dodge difficulty values by 1 when resolving the attack.",
-                    "hidden": "After declaring an attack, players must discard a die of their choice before rolling.\n\nIf the attacks only has a single die already, ignore this rule.",
-                    "illusion": "During setup, only place tile one. Then, shuffle one doorway (or blank) trap token and four trap tokens with damage values, and place a token face down on each of the highlighted nodes.\n\nIf a character moves onto a node with a token, flip the token. If the token has a damage value, resolve the effects normally. If the token is the doorway, discard all face down trap tokens, and place the next sequential tile as shown on the encounter card. Then, place the character on a doorway node on the new tile. After placing the character, if the new tile has highlighted nodes, repeat the steps above.\n\nOnce a doorway token has been revealed, it counts as the doorway node that connects to the next sequential tile.",
-                    "mimic": "If a character opens a chest in this encounter, shuffle the chest deck and draw a card. If a blank card is drawn, resolve the chest rules as normal. If the teeth card is drawn, replace the chest with the listed model instead.\n\nThe chest deck contains three blank cards and two teeth cards. You can simulate this with trap tokens also - shuffle three blank trap tokens and two trap tokens with a value.",
-                    "onslaught": "Each tile begins the encounter as active (all enemies on active tiles act on their turn).",
-                    "poisonMist": "During setup, place trap tokens on the tile indicated in brackets using the normal trap placement rules.\n\nThen, reveal the tokens, replacing each token with a value with a poison cloud token. If a character ends their turn on the same node as a poison cloud token, they suffer Poison.",
-                    "snowstorm": "At the start of each character's turn, that character suffers Frostbite unless they have the torch token on their dashboard or are on the same node as the torch token or a character with the torch token on their dashboard.",
-                    "timer": "If the timer marker reaches the value shown in brackets, resolve the effect listed.",
-                    "trial": "Trials offer an extra objective providing additional rewards if completed.\n\nThis is shown in parentheses, either in writing, or as a number of turns in which the characters must complete the encounter's main objective.\n\nCompleting trial objectives is not mandatory to complete an encounter.",
-                    "Alonne Bow Knight": "Alonne Bow Knight",
-                    "Alonne Knight Captain": "Alonne Knight Captain",
-                    "Alonne Sword Knight": "Alonne Sword Knight",
-                    "Black Hollow Mage": "Black Hollow Mage",
-                    "Bonewheel Skeleton": "Bonewheel Skeleton",
-                    "Crossbow Hollow": "Crossbow Hollow",
-                    "Crow Demon": "Crow Demon",
-                    "Demonic Foliage": "Demonic Foliage",
-                    "Engorged Zombie": "Engorged Zombie",
-                    "Falchion Skeleton": "Falchion Skeleton",
-                    "Firebomb Hollow": "Firebomb Hollow",
-                    "Giant Skeleton Archer": "Giant Skeleton Archer",
-                    "Giant Skeleton Soldier": "Giant Skeleton Soldier",
-                    "Hollow Soldier": "Hollow Soldier",
-                    "Ironclad Soldier": "Ironclad Soldier",
-                    "Large Hollow Soldier": "Large Hollow Soldier",
-                    "Mimic": "Mimic",
-                    "Mushroom Child": "Mushroom Child",
-                    "Mushroom Parent": "Mushroom Parent",
-                    "Necromancer": "Necromancer",
-                    "Phalanx": "Phalanx",
-                    "Phalanx Hollow": "Phalanx Hollow",
-                    "Plow Scarecrow": "Plow Scarecrow",
-                    "Sentinel": "Sentinel",
-                    "Shears Scarecrow": "Shears Scarecrow",
-                    "Silver Knight Greatbowman": "Silver Knight Greatbowman",
-                    "Silver Knight Spearman": "Silver Knight Spearman",
-                    "Silver Knight Swordsman": "Silver Knight Swordsman",
-                    "Skeleton Archer": "Skeleton Archer",
-                    "Skeleton Beast": "Skeleton Beast",
-                    "Skeleton Soldier": "Skeleton Soldier",
-                    "Snow Rat": "Snow Rat",
-                    "Stone Guardian": "Stone Guardian",
-                    "Stone Knight": "Stone Knight"
-                }
 
                 self.campaign = []
 
@@ -1275,34 +418,73 @@ try:
             self.encounterCanvas.yview_scroll(int(-1*(event.delta/120)), "units")
 
 
-        def add_encounter_to_campaign(self):
+        def add_card_to_campaign(self):
             """
             Adds an encounter card to the campaign, visible in the campaign treeview.
             """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of add_encounter_to_campaign", caller=calframe[1][3])
+                adapter.debug("Start of add_card_to_campaign", caller=calframe[1][3])
 
-                if not self.selected:
-                    adapter.debug("End of add_encounter_to_campaign (nothing done)")
-                    return
+                if self.notebook.tab(self.notebook.select(), "text") == "Events":
+                    if not self.treeviewEventDeck.selection() and not self.treeviewEventList.selection():
+                        adapter.debug("End of add_card_to_campaign (nothing done)")
+                        return
+                    
+                    eventToAdd = self.treeviewEventDeck.selection() if self.treeviewEventDeck.selection() else self.treeviewEventList.selection()
+                    
+                    # The underscore is used to denote multiple instances. Only the expansion parents don't have these.
+                    if len(eventToAdd) > 1 or "_" not in eventToAdd[0]:
+                        adapter.debug("End of add_card_to_campaign (nothing done)")
+                        return
+                    
+                    eventToAdd = eventToAdd[0]
 
-                # Build the dictionary that will be saved to JSON if this campaign is saved.
-                encounter = {
-                    "name": self.selected["name"],
-                    "expansion": self.selected["expansion"],
-                    "level": self.selected["level"],
-                    "enemies": self.newEnemies,
-                    "rewardTreasure": self.rewardTreasure
-                }
+                    if eventToAdd + "_0" not in self.treeviewCampaign.get_children():
+                        self.treeviewCampaign.insert(parent="", iid=eventToAdd + "_0", values=(eventToAdd[:eventToAdd.index("_")], "Event", ""), index="end")
+                        iidSuffix = "_0"
+                    else:
+                        i = max([int(item[item.rindex("_") + 1:]) for item in self.treeviewCampaign.get_children() if item[:item.rindex("_")] == eventToAdd])
+                        self.treeviewCampaign.insert(parent="", iid=eventToAdd + "_" + str(i+1), values=(eventToAdd[:eventToAdd.index("_")], "Event", ""), index="end")
+                        iidSuffix = "_" + str(i+1)
 
-                # Only allow one encounter of the same name per campaign.
-                if encounter["name"] not in set([e["name"] for e in self.campaign]):
-                    self.campaign.append(encounter)
-                    self.treeviewCampaign.insert(parent="", values=(encounter["name"], encounter["level"]), index="end")
+                    # Build the dictionary that will be saved to JSON if this campaign is saved.
+                    card = {
+                        "type": "event",
+                        "name": eventToAdd[:eventToAdd.index("_")],
+                        "level": " ",
+                        "iid": eventToAdd + iidSuffix
+                    }
 
-                adapter.debug("End of add_encounter_to_campaign")
+                    self.campaign.append(card)
+                else:
+                    if not self.selected:
+                        adapter.debug("End of add_card_to_campaign (nothing done)")
+                        return
+
+                    if self.selected["name"] + "_0" not in self.treeviewCampaign.get_children():
+                        self.treeviewCampaign.insert(parent="", iid=self.selected["name"] + "_0", values=(self.selected["name"], "Encounter", self.selected["level"]), index="end")
+                        iidSuffix = "_0"
+                    else:
+                        i = max([int(item[item.rindex("_") + 1:]) for item in self.treeviewCampaign.get_children() if item[:item.rindex("_")] == self.selected["name"]])
+                        self.treeviewCampaign.insert(parent="", iid=self.selected["name"] + "_" + str(i+1), values=(self.selected["name"], "Encounter", self.selected["level"]), index="end")
+                        iidSuffix = "_" + str(i+1)
+
+                    # Build the dictionary that will be saved to JSON if this campaign is saved.
+                    card = {
+                        "type": "encounter",
+                        "name": self.selected["name"],
+                        "expansion": self.selected["expansion"],
+                        "level": self.selected["level"],
+                        "enemies": self.newEnemies,
+                        "rewardTreasure": self.rewardTreasure,
+                        "iid": self.selected["name"] + iidSuffix
+                    }
+
+                    self.campaign.append(card)
+
+                adapter.debug("End of add_card_to_campaign")
             except Exception as e:
                 adapter.exception(e)
                 raise
@@ -1318,14 +500,27 @@ try:
                 adapter.debug("Start of add_boss_to_campaign", caller=calframe[1][3])
 
                 # If a menu item that isn't a boss (e.g. --Mini Boss--) is selected in the combobox, don't do anything.
-                if self.selectedBoss.get() not in self.bosses:
+                if self.selectedBoss.get() not in bosses:
                     adapter.debug("End of add_boss_to_campaign (nothing done)")
                     return
 
-                # Only allow a boss to appear once in a campaign.
-                if self.selectedBoss.get() not in set([e["name"] for e in self.campaign]):
-                    self.campaign.append(self.bosses[self.selectedBoss.get()])
-                    self.treeviewCampaign.insert(parent="", values=(self.campaign[-1]["name"], self.campaign[-1]["level"]), index="end")
+                if self.selectedBoss.get() + "_0" not in self.treeviewCampaign.get_children():
+                    self.treeviewCampaign.insert(parent="", iid=self.selectedBoss.get() + "_0", values=(self.selectedBoss.get(), "Boss", bosses[self.selectedBoss.get()]["level"]), index="end")
+                    iidSuffix = "_0"
+                else:
+                    i = max([int(item[item.rindex("_") + 1:]) for item in self.treeviewCampaign.get_children() if item[:item.rindex("_")] == self.selectedBoss.get()])
+                    self.treeviewCampaign.insert(parent="", iid=self.selectedBoss.get() + "_" + str(i+1), values=(self.selectedBoss.get(), "Boss", bosses[self.selectedBoss.get()]["level"]), index="end")
+                    iidSuffix = "_" + str(i+1)
+
+                # Build the dictionary that will be saved to JSON if this campaign is saved.
+                card = {
+                    "name": self.selectedBoss.get(),
+                    "type": "boss",
+                    "level": bosses[self.selectedBoss.get()]["level"],
+                    "iid": self.selectedBoss.get() + iidSuffix
+                }
+
+                self.campaign.append(card)
 
                 adapter.debug("End of add_boss_to_campaign")
             except Exception as e:
@@ -1333,9 +528,9 @@ try:
                 raise
 
 
-        def delete_encounter_from_campaign(self, event=None):
+        def delete_card_from_campaign(self, event=None):
             """
-            Delete an encounter or boss from the campaign.
+            Delete a card from the campaign.
 
             Optional Parameters:
                 event: tkinter.Event
@@ -1344,24 +539,22 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of delete_encounter_from_campaign", caller=calframe[1][3])
+                adapter.debug("Start of delete_card_from_campaign", caller=calframe[1][3])
 
                 # If the button is clicked with no selection, do nothing.
                 if not self.treeviewCampaign.selection():
-                    adapter.debug("End of delete_encounter_from_campaign (nothing done)")
+                    adapter.debug("End of delete_card_from_campaign (nothing done)")
                     return
 
-                # Remove the deleted encounters from the campaign list.
-                self.campaign = [e for e in self.campaign if e["name"] not in set([self.treeviewCampaign.item(e)["values"][0] for e in self.treeviewCampaign.selection()])]
-
-                # Remove the deleted encounters from the treeview.
+                # Remove the deleted cards from the campaign list and treeview.
                 for item in self.treeviewCampaign.selection():
+                    self.campaign = [c for c in self.campaign if c["iid"] != item]
                     self.treeviewCampaign.delete(item)
 
-                # Remove the image displaying a deleted encounter.
+                # Remove the image displaying a deleted card.
                 self.encounter.config(image="")
 
-                adapter.debug("End of delete_encounter_from_campaign")
+                adapter.debug("End of delete_card_from_campaign")
             except Exception as e:
                 adapter.exception(e)
                 raise
@@ -1426,7 +619,7 @@ try:
 
                 # Check to see if there are any invalid names or levels in the JSON file.
                 # This is about as sure as I can be that you can't load random JSON into the app.
-                if any([(item["name"] not in encounters and item["name"] not in self.bosses) or item["level"] not in set([1, 2, 3, 4, "Mini Boss", "Main Boss", "Mega Boss"]) for item in self.campaign]):
+                if any([(item["name"] not in encounters and item["name"] not in bosses and item["name"] not in events) or item["type"] not in set(["encounter", "boss", "event"]) or item["level"] not in set([1, 2, 3, 4, "Mini Boss", "Main Boss", "Mega Boss", " "]) for item in self.campaign]):
                     self.set_bindings_buttons_menus(False)
                     PopupWindow(self.master, labelText="Invalid DSBG-Shuffle campaign file.", firstButton="Ok")
                     self.set_bindings_buttons_menus(True)
@@ -1440,7 +633,7 @@ try:
 
                 # Create the campaign from the campaign list.
                 for item in self.campaign:
-                    self.treeviewCampaign.insert(parent="", values=(item["name"], item["level"]), index="end")
+                    self.treeviewCampaign.insert(parent="", iid=item["iid"], values=(item["name"], item["type"][0].upper() + item["type"][1:], item["level"]), index="end")
 
                 adapter.debug("End of load_campaign (loaded from " + str(campaignFile) + ")")
             except Exception as e:
@@ -1488,7 +681,7 @@ try:
                 raise
 
 
-        def load_campaign_encounter(self, event=None):
+        def load_campaign_card(self, event=None):
             """
             When an encounter in the campaign is clicked on, display the encounter
             and enemies that were originally saved.
@@ -1500,7 +693,7 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of load_campaign_encounter", caller=calframe[1][3])
+                adapter.debug("Start of load_campaign_card", caller=calframe[1][3])
 
                 self.selected = None
                 self.rewardTreasure = None
@@ -1508,50 +701,40 @@ try:
 
                 tree = event.widget
 
-                # Don't update the image shown if you've selected more than one encounter.
+                # Don't update the image shown if you've selected more than one card.
                 if len(tree.selection()) != 1:
-                    adapter.debug("End of load_campaign_encounter (not updating image)")
+                    adapter.debug("End of load_campaign_card (not updating image)")
                     return
+                
+                # Remove keyword tooltips from the previous card shown, if there are any.
+                for tooltip in self.tooltips:
+                    tooltip.destroy()
 
-                # Get the encounter selected.
-                campaignEncounter = [e for e in self.campaign if e["name"] == tree.item(tree.selection())["values"][0]]
+                # Get the card selected.
+                campaignCard = [e for e in self.campaign if e["iid"] == tree.selection()[0]][0]
 
-                self.rewardTreasure = campaignEncounter[0].get("rewardTreasure")
+                if campaignCard["type"] == "encounter":
+                    self.rewardTreasure = campaignCard.get("rewardTreasure")
 
-                # If the selected encounter is a boss.
-                if campaignEncounter[0]["name"] in self.bosses:
-                    # Remove keyword tooltips from the previous encounter shown, if there are any.
-                    for tooltip in self.tooltips:
-                        tooltip.destroy()
+                    adapter.debug("\tOpening " + baseFolder + "\\lib\\encounters\\" + campaignCard["name"] + ".json", caller=calframe[1][3])
 
-                    # Create and display the boss image.
-                    self.create_image(campaignEncounter[0]["name"] + ".jpg", "encounter", 4)
-                    self.encounterPhotoImage = ImageTk.PhotoImage(self.encounterImage)
-                    self.encounter.image = self.encounterPhotoImage
-                    self.encounter.config(image=self.encounterPhotoImage)
-                elif campaignEncounter:
-                    adapter.debug("\tOpening " + baseFolder + "\\lib\\encounters\\" + campaignEncounter[0]["name"] + ".json", caller=calframe[1][3])
-                    # Get the enemy slots for this encounter.
-                    with open(baseFolder + "\\lib\\encounters\\" + campaignEncounter[0]["name"] + ".json") as alternativesFile:
+                    # Get the enemy slots for this card.
+                    with open(baseFolder + "\\lib\\encounters\\" + campaignCard["name"] + ".json") as alternativesFile:
                         alts = load(alternativesFile)
 
                     # Create the encounter card with saved enemies and tooltips.
-                    self.newEnemies = campaignEncounter[0]["enemies"]
-                    self.edit_encounter_card(campaignEncounter[0]["name"], campaignEncounter[0]["expansion"], campaignEncounter[0]["level"], alts["enemySlots"])
+                    self.newEnemies = campaignCard["enemies"]
+                    self.edit_encounter_card(campaignCard["name"], campaignCard["expansion"], campaignCard["level"], alts["enemySlots"])
+                elif campaignCard["type"] == "boss":
+                    # Create and display the boss image.
+                    self.create_image(campaignCard["name"] + ".jpg", "encounter", 4)
+                    self.encounterPhotoImage = ImageTk.PhotoImage(self.encounterImage)
+                    self.encounter.image = self.encounterPhotoImage
+                    self.encounter.config(image=self.encounterPhotoImage)
+                elif campaignCard["type"] == "event":
+                    self.load_event(campaign=True)
 
-                adapter.debug("End of load_campaign_encounter")
-            except Exception as e:
-                adapter.exception(e)
-                raise
-
-
-        def generate_v2_campaign(self, event=None):
-            try:
-                curframe = inspect.currentframe()
-                calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of generate_v2_campaign", caller=calframe[1][3])
-
-                adapter.debug("End of generate_v2_campaign")
+                adapter.debug("End of load_campaign_card")
             except Exception as e:
                 adapter.exception(e)
                 raise
@@ -1624,8 +807,8 @@ try:
                 # Check to see if there are any invalid names or levels in the JSON file.
                 # This is about as sure as I can be that you can't load random JSON into the app.
                 if any([
-                    any([item["eventDeckEntry"][:item["eventDeckEntry"].index("_")] not in self.events for item in self.deckData]),
-                    any([item["values"][0] not in self.events for item in self.deckData])
+                    any([item["eventDeckEntry"][:item["eventDeckEntry"].index("_")] not in events for item in self.deckData]),
+                    any([item["values"][0] not in events for item in self.deckData])
                     ]):
                     self.set_bindings_buttons_menus(False)
                     PopupWindow(self.master, labelText="Invalid DSBG-Shuffle event deck file.", firstButton="Ok")
@@ -1641,10 +824,27 @@ try:
                 self.eventDeck = [item["eventDeckEntry"] for item in self.deckData]
                 for item in self.deckData:
                     self.treeviewEventDeck.insert(parent="", iid=item["eventDeckEntry"], values=item["values"], index="end")
-                    if item["values"][1] and item["values"][1] > self.drawnEventNum:
-                        self.drawnEventNum = item["values"][1]
+                    if item["values"][1] and item["values"][1] > self.currentEventNum:
+                        self.currentEventNum = item["values"][1]
 
-                adapter.debug("End of load_campaign (loaded from " + str(deckFile) + ")")
+                adapter.debug("End of load_event_deck (loaded from " + str(deckFile) + ")")
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+
+        def sort_event_deck_treeview(self):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of sort_event_deck_treeview", caller=calframe[1][3])
+
+                l = [(0 if not self.treeviewEventDeck.item(k)["values"][1] else self.treeviewEventDeck.item(k)["values"][1], k) for k in self.treeviewEventDeck.get_children()]
+                l.sort(key=lambda x: (-x[0], x[1]))
+                for index, (val, k) in enumerate(l):
+                    self.treeviewEventDeck.move(k, "", index)
+
+                adapter.debug("End of sort_event_deck_treeview")
             except Exception as e:
                 adapter.exception(e)
                 raise
@@ -1664,22 +864,19 @@ try:
 
                     if eventSelected in coreSets:
                         for event in self.treeviewEventList.get_children(eventSelected):
-                            for x in range(self.events[event[:event.index("_")]]["count"]):
+                            for x in range(events[event[:event.index("_")]]["count"]):
                                 if self.treeviewEventDeck.exists(event[:event.index("_")] + "_" + str(x)):
                                     continue
                                 self.treeviewEventDeck.insert(parent="", iid=event[:event.index("_")] + "_" + str(x), values=(event[:event.index("_")], ""), index="end", tags=False)
                                 self.eventDeck.append(event[:event.index("_")] + "_" + str(x))
                     else:
-                        for x in range(self.events[eventSelected]["count"]):
+                        for x in range(events[eventSelected]["count"]):
                             if self.treeviewEventDeck.exists(eventSelected + "_" + str(x)):
                                 continue
                             self.treeviewEventDeck.insert(parent="", iid=eventSelected + "_" + str(x), values=(eventSelected, ""), index="end", tags=False)
                             self.eventDeck.append(eventSelected + "_" + str(x))
 
-                l = [(0 if not self.treeviewEventDeck.item(k)["values"][1] else self.treeviewEventDeck.item(k)["values"][1], k) for k in self.treeviewEventDeck.get_children()]
-                l.sort(key=lambda x: (-x[0], x[1]))
-                for index, (val, k) in enumerate(l):
-                    self.treeviewEventDeck.move(k, "", index)
+                self.sort_event_deck_treeview()
 
                 shuffle(self.eventDeck)
 
@@ -1710,7 +907,7 @@ try:
                 # Remove the deleted encounters from the treeview.
                 for item in self.treeviewEventDeck.selection():
                     if self.treeviewEventDeck.item(item)["values"][1]:
-                        self.drawnEventNum -= 1
+                        self.currentEventNum -= 1
                         for event in self.treeviewEventDeck.get_children():
                             if self.treeviewEventDeck.item(event)["values"][1] and self.treeviewEventDeck.item(event)["values"][1] > self.treeviewEventDeck.item(item)["values"][1]:
                                 self.treeviewEventDeck.item(event, values=(self.treeviewEventDeck.item(event)["values"][0], self.treeviewEventDeck.item(event)["values"][1] - 1))
@@ -1746,16 +943,13 @@ try:
                 for item in self.treeviewEventDeck.get_children():
                     self.treeviewEventDeck.item(item, values=(self.treeviewEventDeck.item(item)["values"][0], ""))
 
-                l = [(0 if not self.treeviewEventDeck.item(k)["values"][1] else self.treeviewEventDeck.item(k)["values"][1], k) for k in self.treeviewEventDeck.get_children()]
-                l.sort(key=lambda x: (-x[0], x[1]))
-                for index, (val, k) in enumerate(l):
-                    self.treeviewEventDeck.move(k, "", index)
+                self.sort_event_deck_treeview()
 
                 # Remove the image displaying a deleted encounter.
                 self.encounter.config(image="")
                 
-                self.drawnEvent = None
-                self.drawnEventNum = 0
+                self.currentEvent = None
+                self.currentEventNum = 0
 
                 shuffle(self.eventDeck)
 
@@ -1772,19 +966,16 @@ try:
                 adapter.debug("Start of draw_from_event_deck", caller=calframe[1][3])
                 
                 # If the button is clicked with no drawn event card, do nothing.
-                if not self.eventDeck or not [event for event in self.eventDeck if not self.treeviewEventDeck.item(event)["values"][1]]:
+                if not self.eventDeck or not [eventCard for eventCard in self.eventDeck if not self.treeviewEventDeck.item(eventCard)["values"][1]]:
                     adapter.debug("End of return_event_card_to_deck (nothing done)")
                     return
 
-                self.drawnEvent = [event for event in self.eventDeck if not self.treeviewEventDeck.item(event)["values"][1]][0]
-                self.drawnEventNum += 1
+                self.currentEvent = [eventCard for eventCard in self.eventDeck if not self.treeviewEventDeck.item(eventCard)["values"][1]][0]
+                self.currentEventNum += 1
                 self.load_event()
-                self.treeviewEventDeck.item(self.drawnEvent, values=(self.treeviewEventDeck.item(self.drawnEvent)["values"][0], self.drawnEventNum))
+                self.treeviewEventDeck.item(self.currentEvent, values=(self.treeviewEventDeck.item(self.currentEvent)["values"][0], self.currentEventNum))
 
-                l = [(0 if not self.treeviewEventDeck.item(k)["values"][1] else self.treeviewEventDeck.item(k)["values"][1], k) for k in self.treeviewEventDeck.get_children()]
-                l.sort(key=lambda x: (-x[0], x[1]))
-                for index, (val, k) in enumerate(l):
-                    self.treeviewEventDeck.move(k, "", index)
+                self.sort_event_deck_treeview()
 
                 adapter.debug("End of draw_from_event_deck")
             except Exception as e:
@@ -1798,21 +989,24 @@ try:
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of return_event_card_to_deck", caller=calframe[1][3])
                 
-                # If the button is clicked with no drawn event card, do nothing.
-                if not self.drawnEvent:
-                    adapter.debug("End of return_event_card_to_deck (nothing done)")
+                # If the button is clicked with no event card selected, do nothing.
+                if not self.treeviewEventDeck.selection() or len(self.treeviewEventDeck.selection()) > 1:
+                    adapter.debug("End of return_event_card_to_bottom (nothing done)")
                     return
+                
+                card = self.treeviewEventDeck.selection()[0]
 
                 shuffle(self.eventDeck)
                 self.encounter.config(image="")
-                self.treeviewEventDeck.item(self.drawnEvent, values=(self.treeviewEventDeck.item(self.drawnEvent)["values"][0], ""))
-                self.drawnEvent = None
-                self.drawnEventNum -= 1
+                # Reduce the Drawn Order value of more recently drawn cards by 1.
+                for eventCard in self.treeviewEventDeck.get_children():
+                    if self.treeviewEventDeck.item(eventCard)["values"][1] and self.treeviewEventDeck.item(eventCard)["values"][1] > self.treeviewEventDeck.item(card)["values"][1]:
+                        self.treeviewEventDeck.item(eventCard, values=(self.treeviewEventDeck.item(eventCard)["values"][0], self.treeviewEventDeck.item(eventCard)["values"][1]-1))
+                self.treeviewEventDeck.item(card, values=(self.treeviewEventDeck.item(card)["values"][0], ""))
+                self.currentEvent = None
+                self.currentEventNum -= 1
 
-                l = [(0 if not self.treeviewEventDeck.item(k)["values"][1] else self.treeviewEventDeck.item(k)["values"][1], k) for k in self.treeviewEventDeck.get_children()]
-                l.sort(key=lambda x: (-x[0], x[1]))
-                for index, (val, k) in enumerate(l):
-                    self.treeviewEventDeck.move(k, "", index)
+                self.sort_event_deck_treeview()
 
                 adapter.debug("End of return_event_card_to_deck")
             except Exception as e:
@@ -1826,24 +1020,58 @@ try:
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of return_event_card_to_bottom", caller=calframe[1][3])
                 
-                # If the button is clicked with no drawn event card, do nothing.
-                if not self.drawnEvent:
+                # If the button is clicked with no event card selected, do nothing.
+                if not self.treeviewEventDeck.selection() or len(self.treeviewEventDeck.selection()) > 1:
                     adapter.debug("End of return_event_card_to_bottom (nothing done)")
                     return
+                
+                card = self.treeviewEventDeck.selection()[0]
 
-                self.eventDeck = self.eventDeck[1:]
-                self.eventDeck.append(self.drawnEvent)
+                self.eventDeck.remove(card)
+                self.eventDeck.append(card)
                 self.encounter.config(image="")
-                self.treeviewEventDeck.item(self.drawnEvent, values=(self.treeviewEventDeck.item(self.drawnEvent)["values"][0], ""))
-                self.drawnEvent = None
-                self.drawnEventNum -= 1
+                # Reduce the Drawn Order value of more recently drawn cards by 1.
+                for eventCard in self.treeviewEventDeck.get_children():
+                    if self.treeviewEventDeck.item(eventCard)["values"][1] and self.treeviewEventDeck.item(eventCard)["values"][1] > self.treeviewEventDeck.item(card)["values"][1]:
+                        self.treeviewEventDeck.item(eventCard, values=(self.treeviewEventDeck.item(eventCard)["values"][0], self.treeviewEventDeck.item(eventCard)["values"][1]-1))
+                self.treeviewEventDeck.item(card, values=(self.treeviewEventDeck.item(card)["values"][0], ""))
+                self.currentEvent = None
+                self.currentEventNum -= 1
 
-                l = [(0 if not self.treeviewEventDeck.item(k)["values"][1] else self.treeviewEventDeck.item(k)["values"][1], k) for k in self.treeviewEventDeck.get_children()]
-                l.sort(key=lambda x: (-x[0], x[1]))
-                for index, (val, k) in enumerate(l):
-                    self.treeviewEventDeck.move(k, "", index)
+                self.sort_event_deck_treeview()
 
                 adapter.debug("End of return_event_card_to_bottom")
+            except Exception as e:
+                adapter.exception(e)
+                raise
+
+        def return_event_card_to_top(self, event=None):
+            try:
+                curframe = inspect.currentframe()
+                calframe = inspect.getouterframes(curframe, 2)
+                adapter.debug("Start of return_event_card_to_top", caller=calframe[1][3])
+                
+                # If the button is clicked with no event card selected, do nothing.
+                if not self.treeviewEventDeck.selection() or len(self.treeviewEventDeck.selection()) > 1:
+                    adapter.debug("End of return_event_card_to_top (nothing done)")
+                    return
+                
+                card = self.treeviewEventDeck.selection()[0]
+
+                self.eventDeck.remove(card)
+                self.eventDeck.insert(0, card)
+                self.encounter.config(image="")
+                # Reduce the Drawn Order value of more recently drawn cards by 1.
+                for eventCard in self.treeviewEventDeck.get_children():
+                    if self.treeviewEventDeck.item(eventCard)["values"][1] and self.treeviewEventDeck.item(eventCard)["values"][1] > self.treeviewEventDeck.item(card)["values"][1]:
+                        self.treeviewEventDeck.item(eventCard, values=(self.treeviewEventDeck.item(eventCard)["values"][0], self.treeviewEventDeck.item(eventCard)["values"][1]-1))
+                self.treeviewEventDeck.item(card, values=(self.treeviewEventDeck.item(card)["values"][0], ""))
+                self.currentEvent = None
+                self.currentEventNum -= 1
+
+                self.sort_event_deck_treeview()
+
+                adapter.debug("End of return_event_card_to_top")
             except Exception as e:
                 adapter.exception(e)
                 raise
@@ -1860,7 +1088,7 @@ try:
 
                 self.forPrinting = True
                 self.encountersToPrint = []
-                campaignEncounters = [e for e in self.campaign if e["name"] not in self.bosses]
+                campaignEncounters = [e for e in self.campaign if e["name"] not in bosses]
 
                 for encounter in campaignEncounters:
                     # These are the card sizes in mm
@@ -2070,38 +1298,28 @@ try:
                 self.campaignTabButtonsFrame.pack()
                 self.campaignTabButtonsFrame2 = ttk.Frame(self.campaignTab)
                 self.campaignTabButtonsFrame2.pack()
-                self.campaignTabButtonsFrame3 = ttk.Frame(self.campaignTab)
-                self.campaignTabButtonsFrame3.pack()
-                self.campaignTabButtonsFrame4 = ttk.Frame(self.campaignTab)
-                self.campaignTabButtonsFrame4.pack()
                 self.campaignTabTreeviewFrame = ttk.Frame(self.campaignTab)
                 self.campaignTabTreeviewFrame.pack(fill="both", expand=True)
 
-                self.addButton = ttk.Button(self.campaignTabButtonsFrame, text="Add Encounter", width=16, command=self.add_encounter_to_campaign)
-                self.addButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-                self.deleteButton = ttk.Button(self.campaignTabButtonsFrame, text="Remove Encounter", width=16, command=self.delete_encounter_from_campaign)
+                self.deleteButton = ttk.Button(self.campaignTabButtonsFrame, text="Remove Card", width=16, command=self.delete_card_from_campaign)
                 self.deleteButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+                self.printEncounters = ttk.Button(self.campaignTabButtonsFrame, text="Export to PDF", width=16, command=self.print_encounters)
+                self.printEncounters.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
                 self.moveUpButton = ttk.Button(self.campaignTabButtonsFrame, text="Move Up", width=16, command=self.move_up)
                 self.moveUpButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+                self.moveDownButton = ttk.Button(self.campaignTabButtonsFrame, text="Move Down", width=16, command=self.move_down)
+                self.moveDownButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
 
                 self.loadButton = ttk.Button(self.campaignTabButtonsFrame2, text="Load Campaign", width=16, command=self.load_campaign)
                 self.loadButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
                 self.saveButton = ttk.Button(self.campaignTabButtonsFrame2, text="Save Campaign", width=16, command=self.save_campaign)
                 self.saveButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-                self.moveDownButton = ttk.Button(self.campaignTabButtonsFrame2, text="Move Down", width=16, command=self.move_down)
-                self.moveDownButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-
-                self.addBossButton = ttk.Button(self.campaignTabButtonsFrame3, text="Add Boss", width=20, command=self.add_boss_to_campaign)
-                self.addBossButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-                self.bossMenu = ttk.Combobox(self.campaignTabButtonsFrame3, state="readonly", values=self.bossMenu, textvariable=self.selectedBoss)
+                self.bossMenu = ttk.Combobox(self.campaignTabButtonsFrame2, state="readonly", values=self.bossMenu, textvariable=self.selectedBoss)
                 self.bossMenu.current(0)
-                self.bossMenu.config(width=21)
+                self.bossMenu.config(width=17)
                 self.bossMenu.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-
-                self.generateV2Campaign = ttk.Button(self.campaignTabButtonsFrame4, text="Generate V2 Campaign", width=20, command=self.generate_v2_campaign)
-                self.generateV2Campaign.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-                self.printEncounters = ttk.Button(self.campaignTabButtonsFrame4, text="Export to PDF", width=20, command=self.print_encounters)
-                self.printEncounters.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+                self.addBossButton = ttk.Button(self.campaignTabButtonsFrame2, text="Add Boss", width=16, command=self.add_boss_to_campaign)
+                self.addBossButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
                 
                 self.eventTab = ttk.Frame(self.notebook)
                 self.notebook.add(self.eventTab, text="Events")
@@ -2113,8 +1331,6 @@ try:
                 self.eventTabButtonsFrame2.pack()
                 self.eventTabButtonsFrame3 = ttk.Frame(self.eventTab)
                 self.eventTabButtonsFrame3.pack()
-                self.eventTabButtonsFrame4 = ttk.Frame(self.eventTab)
-                self.eventTabButtonsFrame4.pack()
                 self.eventTabEventDeckTreeviewFrame = ttk.Frame(self.eventTab)
                 self.eventTabEventDeckTreeviewFrame.pack(fill="both", expand=True)
                 self.eventTabDeckFrame = ttk.Frame(self.eventTab)
@@ -2123,22 +1339,23 @@ try:
                 self.addEventButton = ttk.Button(self.eventTabButtonsFrame, text="Add Event(s)", width=16, command=self.add_event_to_deck)
                 self.addEventButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
 
-                self.deleteEventButton = ttk.Button(self.eventTabButtonsFrame2, text="Remove Event(s)", width=16, command=self.delete_event_from_deck)
+                self.deleteEventButton = ttk.Button(self.eventTabButtonsFrame2, text="Remove Event", width=16, command=self.delete_event_from_deck)
                 self.deleteEventButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
                 self.resetEventButton = ttk.Button(self.eventTabButtonsFrame2, text="Reset Event Deck", width=16, command=self.reset_event_deck)
                 self.resetEventButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-                
-                self.loadEventDeckButton = ttk.Button(self.eventTabButtonsFrame3, text="Load Event Deck", width=16, command=self.load_event_deck)
+                self.loadEventDeckButton = ttk.Button(self.eventTabButtonsFrame2, text="Load Event Deck", width=16, command=self.load_event_deck)
                 self.loadEventDeckButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-                self.saveEventDeckButton = ttk.Button(self.eventTabButtonsFrame3, text="Save Event Deck", width=16, command=self.save_event_deck)
+                self.saveEventDeckButton = ttk.Button(self.eventTabButtonsFrame2, text="Save Event Deck", width=16, command=self.save_event_deck)
                 self.saveEventDeckButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
                 
-                self.drawEventButton = ttk.Button(self.eventTabButtonsFrame4, text="Draw Event Card", width=16, command=self.draw_from_event_deck)
+                self.drawEventButton = ttk.Button(self.eventTabButtonsFrame3, text="Draw Event Card", width=16, command=self.draw_from_event_deck)
                 self.drawEventButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-                self.shuffleEventButton = ttk.Button(self.eventTabButtonsFrame4, text="Shuffle Into Deck", width=16, command=self.return_event_card_to_deck)
+                self.shuffleEventButton = ttk.Button(self.eventTabButtonsFrame3, text="Shuffle Into Deck", width=16, command=self.return_event_card_to_deck)
                 self.shuffleEventButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-                self.bottomEventButton = ttk.Button(self.eventTabButtonsFrame4, text="Return To Bottom", width=16, command=self.return_event_card_to_bottom)
+                self.bottomEventButton = ttk.Button(self.eventTabButtonsFrame3, text="Return To Bottom", width=16, command=self.return_event_card_to_bottom)
                 self.bottomEventButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+                self.topEventButton = ttk.Button(self.eventTabButtonsFrame3, text="Return To Top", width=16, command=self.return_event_card_to_top)
+                self.topEventButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
 
                 adapter.debug("End of create_tabs")
             except Exception as e:
@@ -2232,7 +1449,7 @@ try:
                 self.treeviewCampaign = ttk.Treeview(
                     self.campaignTabTreeviewFrame,
                     selectmode="extended",
-                    columns=("Name", "Level"),
+                    columns=("Name", "Type", "Level"),
                     yscrollcommand=self.scrollbarTreeviewCampaign.set,
                     height=29 if root.winfo_screenheight() > 1000 else 20,
                     show=["headings"]
@@ -2241,12 +1458,14 @@ try:
                 self.treeviewCampaign.pack(expand=True, fill="both")
                 self.scrollbarTreeviewCampaign.config(command=self.treeviewCampaign.yview)
 
-                self.treeviewCampaign.column("#1", anchor="w")
-                self.treeviewCampaign.heading("#1", text="Name", anchor="w")
-                self.treeviewCampaign.column("#2", anchor="w")
-                self.treeviewCampaign.heading("#2", text="Level", anchor="w")
+                self.treeviewCampaign.column("Name", anchor="w")
+                self.treeviewCampaign.heading("Name", text="Name", anchor="w")
+                self.treeviewCampaign.column("Type", anchor="w")
+                self.treeviewCampaign.heading("Type", text="Type", anchor="w")
+                self.treeviewCampaign.column("Level", anchor="w")
+                self.treeviewCampaign.heading("Level", text="Level", anchor="w")
 
-                self.treeviewCampaign.bind("<<TreeviewSelect>>", self.load_campaign_encounter)
+                self.treeviewCampaign.bind("<<TreeviewSelect>>", self.load_campaign_card)
                 self.treeviewCampaign.bind("<Control-a>", lambda *args: self.treeviewCampaign.selection_add(self.treeviewCampaign.get_children()))
 
                 adapter.debug("End of create_campaign_treeview")
@@ -2290,8 +1509,8 @@ try:
 
                 for coreSet in sorted(coreSets - set(["Dark Souls The Board Game"])):
                     self.treeviewEventList.insert(parent="", iid=coreSet, values=(coreSet, "", ""), index="end", tags=False)
-                    for event in [event for event in self.events if coreSet in self.events[event]["expansions"]]:
-                        self.treeviewEventList.insert(parent=coreSet, iid=event + "_" + coreSet, values=("", event, self.events[event]["count"]), index="end", tags=True)
+                    for event in [event for event in events if coreSet in events[event]["expansions"]]:
+                        self.treeviewEventList.insert(parent=coreSet, iid=event + "_" + coreSet, values=("", event, events[event]["count"]), index="end", tags=True)
                 
                 self.treeviewEventDeck = ttk.Treeview(
                     self.eventTabEventDeckTreeviewFrame,
@@ -2313,7 +1532,6 @@ try:
                 self.treeviewEventDeck.column("Drawn Order", anchor=tk.W, width=248)
                 
                 self.treeviewEventDeck.bind("<<TreeviewSelect>>", self.load_event)
-                self.treeviewEventDeck.bind("<Control-a>", lambda *args: self.treeviewEventDeck.selection_add(self.treeviewEventDeck.get_children()))
 
                 adapter.debug("End of create_event_treeviews")
             except Exception as e:
@@ -2321,16 +1539,14 @@ try:
                 raise
 
 
-        def load_event(self, event=None):
+        def load_event(self, event=None, campaign=False):
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of load_event", caller=calframe[1][3])
                 
                 # Get the event selected.
-                if self.drawnEvent:
-                    eventSelected = self.drawnEvent
-                else:
+                if event:
                     tree = event.widget
 
                     # Don't update the image shown if you've selected more than one encounter.
@@ -2338,21 +1554,30 @@ try:
                         adapter.debug("End of load_event (not updating image)")
                         return
                     
+                    if tree == self.treeviewEventList and len(self.treeviewEventDeck.selection()) > 0:
+                        self.treeviewEventDeck.selection_remove(self.treeviewEventDeck.selection()[0])
+                    elif tree == self.treeviewEventDeck and len(self.treeviewEventList.selection()) > 0:
+                        self.treeviewEventList.selection_remove(self.treeviewEventList.selection()[0])
+                    
                     eventSelected = tree.selection()[0]
+                elif campaign:
+                    eventSelected = self.treeviewCampaign.selection()[0]
+                else:
+                    eventSelected = self.currentEvent
 
                 if "_" in eventSelected:
                     eventSelected = eventSelected[:eventSelected.index("_")]
 
-                if eventSelected not in self.events:
+                if eventSelected not in events:
                     adapter.debug("End of load_event (core set selected)")
                     return
 
-                # Remove keyword tooltips from the previous encounter shown, if there are any.
+                # Remove keyword tooltips from the previous image shown, if there are any.
                 for tooltip in self.tooltips:
                     tooltip.destroy()
 
                 # Create and display the event image.
-                self.create_image(self.events[eventSelected]["name"] + ".jpg", "encounter", 4)
+                self.create_image(events[eventSelected]["name"] + ".jpg", "encounter", 4)
                 self.encounterPhotoImage = ImageTk.PhotoImage(self.encounterImage)
                 self.encounter.image = self.encounterPhotoImage
                 self.encounter.config(image=self.encounterPhotoImage)
@@ -2406,18 +1631,18 @@ try:
                 adapter.debug("Start of set_bindings_buttons_menus: enable=" + str(enable), caller=calframe[1][3])
 
                 if enable:
-                    enable_binding("Key-1", lambda x: self.keybind_call("1"))
-                    enable_binding("Key-2", lambda x: self.keybind_call("2"))
-                    enable_binding("Key-3", lambda x: self.keybind_call("3"))
-                    enable_binding("Key-4", lambda x: self.keybind_call("4"))
-                    enable_binding("s", self.shuffle_enemies)
-                    enable_binding("Control-q", lambda x: self.keybind_call("q"))
+                    enable_binding("Key-1", lambda x: self.keybind_call("1"), root)
+                    enable_binding("Key-2", lambda x: self.keybind_call("2"), root)
+                    enable_binding("Key-3", lambda x: self.keybind_call("3"), root)
+                    enable_binding("Key-4", lambda x: self.keybind_call("4"), root)
+                    enable_binding("s", self.shuffle_enemies, root)
+                    enable_binding("Control-q", lambda x: self.keybind_call("q"), root)
                 else:
-                    enable_binding("Key-1", do_nothing)
-                    enable_binding("Key-2", do_nothing)
-                    enable_binding("Key-3", do_nothing)
-                    enable_binding("Key-4", do_nothing)
-                    enable_binding("s", do_nothing)
+                    enable_binding("Key-1", do_nothing, root)
+                    enable_binding("Key-2", do_nothing, root)
+                    enable_binding("Key-3", do_nothing, root)
+                    enable_binding("Key-4", do_nothing, root)
+                    enable_binding("s", do_nothing, root)
 
                 if enable:
                     self.fileMenu.entryconfig("Random Level 1 Encounter", state=tk.NORMAL)
@@ -2452,18 +1677,21 @@ try:
                 self.buttonsFrame.columnconfigure(index=0, weight=1)
 
                 self.buttons = set()
-                self.l1 = ttk.Button(self.buttonsFrame, text="Random Level 1", width=14, command=lambda x=1: self.random_encounter(level=x))
-                self.l2 = ttk.Button(self.buttonsFrame, text="Random Level 2", width=14, command=lambda x=2: self.random_encounter(level=x))
-                self.l3 = ttk.Button(self.buttonsFrame, text="Random Level 3", width=14, command=lambda x=3: self.random_encounter(level=x))
-                self.l4 = ttk.Button(self.buttonsFrame, text="Random Level 4", width=14, command=lambda x=4: self.random_encounter(level=x))
+                self.l1 = ttk.Button(self.buttonsFrame, text="Random Level 1", width=16, command=lambda x=1: self.random_encounter(level=x))
+                self.l2 = ttk.Button(self.buttonsFrame, text="Random Level 2", width=16, command=lambda x=2: self.random_encounter(level=x))
+                self.l3 = ttk.Button(self.buttonsFrame, text="Random Level 3", width=16, command=lambda x=3: self.random_encounter(level=x))
+                self.l4 = ttk.Button(self.buttonsFrame, text="Random Level 4", width=16, command=lambda x=4: self.random_encounter(level=x))
+                self.l5 = ttk.Button(self.buttonsFrame, text="Add to Campaign", width=16, command=self.add_card_to_campaign)
                 self.buttons.add(self.l1)
                 self.buttons.add(self.l2)
                 self.buttons.add(self.l3)
                 self.buttons.add(self.l4)
+                self.buttons.add(self.l5)
                 self.l1.grid(column=0, row=0, padx=5)
                 self.l2.grid(column=1, row=0, padx=5)
                 self.l3.grid(column=2, row=0, padx=5)
                 self.l4.grid(column=3, row=0, padx=5)
+                self.l5.grid(column=0, row=1, padx=5, pady=5)
 
                 adapter.debug("End of create_buttons", caller=calframe[1][3])
             except Exception as e:
@@ -2555,7 +1783,7 @@ try:
 
                 self.set_bindings_buttons_menus(False)
 
-                s = SettingsWindow(root)
+                s = SettingsWindow(root, coreSets)
 
                 self.wait_window(s.top)
 
@@ -2594,7 +1822,7 @@ try:
                         self.scrollbarTreeviewCampaign = ttk.Scrollbar(self.campaignTabTreeviewFrame)
                         self.scrollbarTreeviewCampaign.pack(side="right", fill="y")
 
-                    progress.destroy()
+                        progress.destroy()
 
                 self.set_bindings_buttons_menus(True)
 
@@ -3117,7 +2345,7 @@ try:
                     label = tk.Label(self.encounterFrame, image=tooltipDict["photo image"], borderwidth=0, highlightthickness=0)
                     self.tooltips.append(label)
                     label.place(x=x, y=y)
-                    CreateToolTip(label, self.tooltipText[tooltipDict["imageName"]])
+                    CreateToolTip(label, tooltipText[tooltipDict["imageName"]])
 
                 adapter.debug("\tEnd of create_tooltip", caller=calframe[1][3])
             except Exception as e:
@@ -3218,7 +2446,7 @@ try:
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 newTreasureLines = self.new_treasure_name(newTreasure)
@@ -3314,7 +2542,7 @@ try:
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 newTreasureLines = self.new_treasure_name(newTreasure)
@@ -3352,7 +2580,7 @@ try:
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
@@ -3467,7 +2695,7 @@ try:
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
@@ -3528,7 +2756,7 @@ try:
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
@@ -3569,7 +2797,7 @@ try:
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
@@ -3600,7 +2828,7 @@ try:
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
@@ -3668,7 +2896,7 @@ try:
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
@@ -3710,7 +2938,7 @@ try:
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 newTreasureLines = self.new_treasure_name(newTreasure)
@@ -3736,7 +2964,7 @@ try:
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
@@ -3759,7 +2987,7 @@ try:
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
@@ -3808,7 +3036,7 @@ try:
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
@@ -3835,7 +3063,7 @@ try:
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
@@ -3858,7 +3086,7 @@ try:
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
@@ -3943,7 +3171,7 @@ try:
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
@@ -3966,7 +3194,7 @@ try:
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
@@ -3993,7 +3221,7 @@ try:
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
@@ -4083,7 +3311,7 @@ try:
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
@@ -4111,7 +3339,7 @@ try:
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
@@ -4221,7 +3449,7 @@ try:
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
@@ -4266,7 +3494,7 @@ try:
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
@@ -4319,7 +3547,7 @@ try:
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
@@ -4368,7 +3596,7 @@ try:
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
@@ -4427,7 +3655,7 @@ try:
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
@@ -4449,7 +3677,7 @@ try:
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
@@ -4472,7 +3700,7 @@ try:
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
@@ -4501,7 +3729,7 @@ try:
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], self.treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
+                    newTreasure = pick_treasure(self.settings["treasureSwapOption"], treasureSwapEncounters[self.selected["name"]], self.rewardTreasure, self.selected["level"], set(self.availableExpansions), set(self.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
