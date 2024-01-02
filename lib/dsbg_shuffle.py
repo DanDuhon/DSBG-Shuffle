@@ -3757,7 +3757,7 @@ try:
     root.attributes('-alpha', 0.0)
         
     root.title("DSBG-Shuffle")
-    root.tk.call("source", "Azure-ttk-theme-main\\azure.tcl")
+    root.tk.call("source", baseFolder + "\\Azure-ttk-theme-main\\azure.tcl")
     root.tk.call("set_theme", "dark")
     root.iconphoto(True, tk.PhotoImage(file=os.path.join(baseFolder, "bonfire.png")))
 
@@ -3791,4 +3791,5 @@ try:
 except Exception as e:
     error = str(sys.exc_info())
     if "application has been destroyed" not in error:
+        adapter.exception(error)
         raise
