@@ -6,6 +6,7 @@ try:
     import requests
     import sys
     import tkinter as tk
+    import platform
     from collections import Counter
     from fpdf import FPDF
     from json import load, dump
@@ -23,32 +24,38 @@ try:
     from dsbg_treasure import generate_treasure_soul_cost, populate_treasure_tiers, pick_treasure, treasureSwapEncounters
 
 
+    print(platform.system())
+    if platform.system() == "Windows":
+        pathSep = "\\"
+    else:
+        pathSep = "/"
+
     logger = logging.getLogger(__name__)
     formatter = logging.Formatter("%(asctime)s|%(levelname)s|%(message)s", "%d/%m/%Y %H:%M:%S")
-    fh = logging.FileHandler(path.dirname(path.realpath(__file__)) + "\\log.txt", "w")
+    fh = logging.FileHandler(path.dirname(path.realpath(__file__)) + "\\log.txt".replace("\\", pathSep), "w")
     fh.setFormatter(formatter)
     logger.addHandler(fh)
     adapter = CustomAdapter(logger, {"caller": ""})
     logger.setLevel(logging.DEBUG)
 
     try:
-        baseFolder = path.dirname(__file__).replace("\\lib", "")
-        font = ImageFont.truetype(baseFolder + "\\lib\\Adobe Caslon Pro Semibold.ttf", 12)
+        baseFolder = path.dirname(__file__).replace("\\lib".replace("\\", pathSep), "")
+        font = ImageFont.truetype(baseFolder + "\\lib\\Adobe Caslon Pro Semibold.ttf".replace("\\", pathSep), 12)
         enemyImages = {}
         settingsChanged = False
 
-        with open(baseFolder + "\\lib\\enemies.json") as enemiesFile:
+        with open(baseFolder + "\\lib\\enemies.json".replace("\\", pathSep)) as enemiesFile:
             enemies = load(enemiesFile)
 
-        with open(baseFolder + "\\lib\\invaders_standard.json") as invadersStandardFile:
+        with open(baseFolder + "\\lib\\invaders_standard.json".replace("\\", pathSep)) as invadersStandardFile:
             invadersStandard = load(invadersStandardFile)
 
-        with open(baseFolder + "\\lib\\invaders_advanced.json") as invadersAdvancedFile:
+        with open(baseFolder + "\\lib\\invaders_advanced.json".replace("\\", pathSep)) as invadersAdvancedFile:
             invadersAdvanced = load(invadersAdvancedFile)
 
         allEnemies = enemies | invadersStandard | invadersAdvanced
 
-        with open(baseFolder + "\\lib\\encounters.json") as encountersFile:
+        with open(baseFolder + "\\lib\\encounters.json".replace("\\", pathSep)) as encountersFile:
             encounters = load(encountersFile)
     except Exception as e:
         adapter.exception(e)
@@ -60,14 +67,14 @@ try:
             try:
                 adapter.debug("Initiating application")
 
-                with open(baseFolder + "\\lib\\settings.json") as settingsFile:
+                with open(baseFolder + "\\lib\\settings.json".replace("\\", pathSep)) as settingsFile:
                     self.settings = load(settingsFile)
 
                 if self.settings["theme"] == "light":
                     root.tk.call("set_theme", "light")
 
                 # Delete images from staging
-                folder = baseFolder + "\\lib\\image staging"
+                folder = baseFolder + "\\lib\\image staging".replace("\\", pathSep)
                 for filename in os.listdir(folder):
                     filePath = os.path.join(folder, filename)
 
@@ -144,6 +151,8 @@ try:
                 i = 0
                 progress = PopupWindow(root, labelText="Loading...", progressBar=True, progressMax=len(allEnemies) + (len(self.encounterList) if self.settings["customEnemyList"] else 0), loadingImage=True)
 
+                # If specific enemies (rather than just expansions) are toggled on or off, do extra work
+                # to make sure all encounters are still valid.
                 if self.settings["customEnemyList"]:
                     encountersToRemove = set()
                     for encounter in self.encounterList:
@@ -206,6 +215,7 @@ try:
 
                 self.tooltips = []
 
+                # What encounter have what special rules
                 self.encounterTooltips = {
                     ("A Trusty Ally", "Tomb of Giants"): [
                         {"image": self.onslaught, "photo image": ImageTk.PhotoImage(self.onslaught), "imageName": "onslaught"}
@@ -435,12 +445,14 @@ try:
                     eventToAdd = self.treeviewEventDeck.selection() if self.treeviewEventDeck.selection() else self.treeviewEventList.selection()
                     
                     # The underscore is used to denote multiple instances. Only the expansion parents don't have these.
+                    # Also do nothing if you have multiple cards selected.
                     if len(eventToAdd) > 1 or "_" not in eventToAdd[0]:
                         adapter.debug("End of add_card_to_campaign (nothing done)")
                         return
                     
                     eventToAdd = eventToAdd[0]
 
+                    # Multiples need a different iid in the treeview, so append a number.
                     if eventToAdd + "_0" not in self.treeviewCampaign.get_children():
                         self.treeviewCampaign.insert(parent="", iid=eventToAdd + "_0", values=(eventToAdd[:eventToAdd.index("_")], "Event", ""), index="end")
                         iidSuffix = "_0"
@@ -463,6 +475,7 @@ try:
                         adapter.debug("End of add_card_to_campaign (nothing done)")
                         return
 
+                    # Multiples need a different iid in the treeview, so append a number.
                     if self.selected["name"] + "_0" not in self.treeviewCampaign.get_children():
                         self.treeviewCampaign.insert(parent="", iid=self.selected["name"] + "_0", values=(self.selected["name"], "Encounter", self.selected["level"]), index="end")
                         iidSuffix = "_0"
@@ -504,6 +517,7 @@ try:
                     adapter.debug("End of add_boss_to_campaign (nothing done)")
                     return
 
+                # Multiples need a different iid in the treeview, so append a number.
                 if self.selectedBoss.get() + "_0" not in self.treeviewCampaign.get_children():
                     self.treeviewCampaign.insert(parent="", iid=self.selectedBoss.get() + "_0", values=(self.selectedBoss.get(), "Boss", bosses[self.selectedBoss.get()]["level"]), index="end")
                     iidSuffix = "_0"
@@ -570,7 +584,7 @@ try:
                 adapter.debug("Start of save_campaign", caller=calframe[1][3])
 
                 # Prompt user to save the file.
-                campaignName = filedialog.asksaveasfile(mode="w", initialdir=baseFolder + "\\lib\\saved campaigns", defaultextension=".json")
+                campaignName = filedialog.asksaveasfile(mode="w", initialdir=baseFolder + "\\lib\\saved campaigns".replace("\\", pathSep), defaultextension=".json")
 
                 # If they canceled it, do nothing.
                 if not campaignName:
@@ -597,7 +611,7 @@ try:
                 adapter.debug("Start of load_campaign", caller=calframe[1][3])
 
                 # Prompt the user to find the campaign file.
-                campaignFile = filedialog.askopenfilename(initialdir=baseFolder + "\\lib\\saved campaigns", filetypes = [(".json", ".json")])
+                campaignFile = filedialog.askopenfilename(initialdir=baseFolder + "\\lib\\saved campaigns".replace("\\", pathSep), filetypes = [(".json", ".json")])
 
                 # If the user did not select a file, do nothing.
                 if not campaignFile:
@@ -716,10 +730,10 @@ try:
                 if campaignCard["type"] == "encounter":
                     self.rewardTreasure = campaignCard.get("rewardTreasure")
 
-                    adapter.debug("\tOpening " + baseFolder + "\\lib\\encounters\\" + campaignCard["name"] + ".json", caller=calframe[1][3])
+                    adapter.debug("\tOpening " + baseFolder + "\\lib\\encounters\\".replace("\\", pathSep) + campaignCard["name"] + ".json", caller=calframe[1][3])
 
                     # Get the enemy slots for this card.
-                    with open(baseFolder + "\\lib\\encounters\\" + campaignCard["name"] + ".json") as alternativesFile:
+                    with open(baseFolder + "\\lib\\encounters\\".replace("\\", pathSep) + campaignCard["name"] + ".json") as alternativesFile:
                         alts = load(alternativesFile)
 
                     # Create the encounter card with saved enemies and tooltips.
@@ -750,7 +764,7 @@ try:
                 adapter.debug("Start of save_event_deck", caller=calframe[1][3])
 
                 # Prompt user to save the file.
-                deckName = filedialog.asksaveasfile(mode="w", initialdir=baseFolder + "\\lib\\saved event decks", defaultextension=".json")
+                deckName = filedialog.asksaveasfile(mode="w", initialdir=baseFolder + "\\lib\\saved event decks".replace("\\", pathSep), defaultextension=".json")
 
                 # If they canceled it, do nothing.
                 if not deckName:
@@ -784,7 +798,7 @@ try:
                 adapter.debug("Start of load_event_deck", caller=calframe[1][3])
 
                 # Prompt the user to find the campaign file.
-                deckFile = filedialog.askopenfilename(initialdir=baseFolder + "\\lib\\saved event decks", filetypes = [(".json", ".json")])
+                deckFile = filedialog.askopenfilename(initialdir=baseFolder + "\\lib\\saved event decks".replace("\\", pathSep), filetypes = [(".json", ".json")])
 
                 # If the user did not select a file, do nothing.
                 if not deckFile:
@@ -839,6 +853,8 @@ try:
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of sort_event_deck_treeview", caller=calframe[1][3])
 
+                # Sort the event deck so that cards that have been drawn are at the top,
+                # in order of most recently drawn.
                 l = [(0 if not self.treeviewEventDeck.item(k)["values"][1] else self.treeviewEventDeck.item(k)["values"][1], k) for k in self.treeviewEventDeck.get_children()]
                 l.sort(key=lambda x: (-x[0], x[1]))
                 for index, (val, k) in enumerate(l):
@@ -862,14 +878,17 @@ try:
                 for selection in list(self.treeviewEventList.selection()):
                     eventSelected = self.treeviewEventList.item(selection)["values"][1 if self.treeviewEventList.item(selection)["values"][1] else 0]
 
+                    # If an expansion is selected, add the events under that expansion.
                     if eventSelected in coreSets:
                         for event in self.treeviewEventList.get_children(eventSelected):
+                            # Add an event for each copy of the card that exists.
                             for x in range(events[event[:event.index("_")]]["count"]):
                                 if self.treeviewEventDeck.exists(event[:event.index("_")] + "_" + str(x)):
                                     continue
                                 self.treeviewEventDeck.insert(parent="", iid=event[:event.index("_")] + "_" + str(x), values=(event[:event.index("_")], ""), index="end", tags=False)
                                 self.eventDeck.append(event[:event.index("_")] + "_" + str(x))
                     else:
+                        # Add an event for each copy of the card that exists.
                         for x in range(events[eventSelected]["count"]):
                             if self.treeviewEventDeck.exists(eventSelected + "_" + str(x)):
                                 continue
@@ -928,7 +947,7 @@ try:
 
         def reset_event_deck(self, event=None):
             """
-            Deletes all events from the event deck.
+            Essentially shuffles all drawn cards back into the deck.
 
             Optional Parameters:
                 event: tkinter.Event
@@ -960,6 +979,13 @@ try:
 
 
         def draw_from_event_deck(self, event=None):
+            """
+            "Draw" the top card from the virtual deck and display it.
+
+            Optional Parameters:
+                event: tkinter.Event
+                    The tkinter Event that is the trigger.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -967,7 +993,7 @@ try:
                 
                 # If the button is clicked with no drawn event card, do nothing.
                 if not self.eventDeck or not [eventCard for eventCard in self.eventDeck if not self.treeviewEventDeck.item(eventCard)["values"][1]]:
-                    adapter.debug("End of return_event_card_to_deck (nothing done)")
+                    adapter.debug("End of draw_from_event_deck (nothing done)")
                     return
 
                 self.currentEvent = [eventCard for eventCard in self.eventDeck if not self.treeviewEventDeck.item(eventCard)["values"][1]][0]
@@ -984,14 +1010,21 @@ try:
 
 
         def return_event_card_to_deck(self, event=None):
+            """
+            Shuffles the selected card back into the deck.
+
+            Optional Parameters:
+                event: tkinter.Event
+                    The tkinter Event that is the trigger.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of return_event_card_to_deck", caller=calframe[1][3])
                 
                 # If the button is clicked with no event card selected, do nothing.
-                if not self.treeviewEventDeck.selection() or len(self.treeviewEventDeck.selection()) > 1:
-                    adapter.debug("End of return_event_card_to_bottom (nothing done)")
+                if not self.treeviewEventDeck.selection() or len(self.treeviewEventDeck.selection()) > 1 or not self.treeviewEventDeck.item(card)["values"][1]:
+                    adapter.debug("End of return_event_card_to_deck (nothing done)")
                     return
                 
                 card = self.treeviewEventDeck.selection()[0]
@@ -1008,6 +1041,8 @@ try:
 
                 self.sort_event_deck_treeview()
 
+                shuffle(self.eventDeck)
+
                 adapter.debug("End of return_event_card_to_deck")
             except Exception as e:
                 adapter.exception(e)
@@ -1015,6 +1050,13 @@ try:
 
 
         def return_event_card_to_bottom(self, event=None):
+            """
+            Puts the selected card on the bottom of the virtual deck.
+
+            Optional Parameters:
+                event: tkinter.Event
+                    The tkinter Event that is the trigger.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -1046,6 +1088,13 @@ try:
                 raise
 
         def return_event_card_to_top(self, event=None):
+            """
+            Puts the selected card on the top of the virtual deck.
+
+            Optional Parameters:
+                event: tkinter.Event
+                    The tkinter Event that is the trigger.
+            """
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
@@ -1117,6 +1166,7 @@ try:
                         encounter["width"] = 70
                         encounter["height"] = 120
 
+                # Add cards to a list associated with their type/size.
                 encounterCount = 0
                 eCount = 0
                 v1Normal = []
@@ -1145,6 +1195,7 @@ try:
 
                 progress = PopupWindow(root, labelText="Creating a PDF...", progressBar=True, progressMax=encounterCount, loadingImage=True)
 
+                # Loop through the card lists and add them to pages.
                 for e, encounterList in enumerate(encountersToPrint):
                     if e == 0:
                         standardCards = 11
@@ -1169,9 +1220,9 @@ try:
                             campaignEncounter = [e for e in self.campaign if e["name"] == encounter["name"]]
                             self.rewardTreasure = campaignEncounter[0].get("rewardTreasure")
 
-                            adapter.debug("\tOpening " + baseFolder + "\\lib\\encounters\\" + campaignEncounter[0]["name"] + ".json", caller=calframe[1][3])
+                            adapter.debug("\tOpening " + baseFolder + "\\lib\\encounters\\".replace("\\", pathSep) + campaignEncounter[0]["name"] + ".json", caller=calframe[1][3])
                             # Get the enemy slots for this encounter.
-                            with open(baseFolder + "\\lib\\encounters\\" + campaignEncounter[0]["name"] + ".json") as alternativesFile:
+                            with open(baseFolder + "\\lib\\encounters\\".replace("\\", pathSep) + campaignEncounter[0]["name"] + ".json") as alternativesFile:
                                 alts = load(alternativesFile)
 
                             # Create the encounter card with saved enemies and tooltips.
@@ -1184,10 +1235,10 @@ try:
 
                             if i > standardCards:
                                 imageStage = imageStage.rotate(90, Image.NEAREST, expand=1)
-                            imageStage.save(baseFolder + "\\lib\\image staging\\" + encounter["name"] + ".png")
+                            imageStage.save(baseFolder + "\\lib\\image staging\\".replace("\\", pathSep) + encounter["name"] + ".png")
 
                             adapter.debug("\tAdding " + encounter["name"] + " to PDF at (" + str(x) + ", " + str(y) + ") with width of " + str(encounter["width" if not i > standardCards else "height"]), caller=calframe[1][3])
-                            pdf.image(baseFolder + "\\lib\\image staging\\" + encounter["name"] + ".png", x=x, y=y, type="PNG", w=encounter["width" if not i > standardCards else "height"])
+                            pdf.image(baseFolder + "\\lib\\image staging\\".replace("\\", pathSep) + encounter["name"] + ".png", x=x, y=y, type="PNG", w=encounter["width" if not i > standardCards else "height"])
 
                             if i < standardCards:
                                 if i in columnBreaks:
@@ -1208,7 +1259,7 @@ try:
                 progress.destroy()
 
                 # Prompt user to save the file.
-                pdfOutput = filedialog.asksaveasfile(mode="w", initialdir=baseFolder + "\\lib\\encounter exports", defaultextension=".pdf")
+                pdfOutput = filedialog.asksaveasfile(mode="w", initialdir=baseFolder + "\\lib\\encounter exports".replace("\\", pathSep), defaultextension=".pdf")
 
                 # If they canceled it, do nothing.
                 if not pdfOutput:
@@ -1244,6 +1295,7 @@ try:
                     )
                     )]
 
+                # These are for the bigger encounters.
                 for encounter in encounters:
                     if type(encounters[encounter]["expansionCombos"]) == dict:
                         if all([
@@ -1272,7 +1324,7 @@ try:
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of create_tabs", caller=calframe[1][3])
 
-                with open(baseFolder + "\\lib\\settings.json") as settingsFile:
+                with open(baseFolder + "\\lib\\settings.json".replace("\\", pathSep)) as settingsFile:
                     self.settings = load(settingsFile)
 
                 self.paned = ttk.PanedWindow(self)
@@ -1476,7 +1528,7 @@ try:
 
         def create_event_treeviews(self):
             """
-            Create the event list treeview where users can see event cards.
+            Create the event list and event deck treeviews where users can see event cards.
             """
             try:
                 curframe = inspect.currentframe()
@@ -1555,9 +1607,11 @@ try:
                         return
                     
                     if tree == self.treeviewEventList and len(self.treeviewEventDeck.selection()) > 0:
-                        self.treeviewEventDeck.selection_remove(self.treeviewEventDeck.selection()[0])
+                        for selection in self.treeviewEventDeck.selection():
+                            self.treeviewEventDeck.selection_remove(selection)
                     elif tree == self.treeviewEventDeck and len(self.treeviewEventList.selection()) > 0:
-                        self.treeviewEventList.selection_remove(self.treeviewEventList.selection()[0])
+                        for selection in self.treeviewEventList.selection():
+                            self.treeviewEventList.selection_remove(selection)
                     
                     eventSelected = tree.selection()[0]
                 elif campaign:
@@ -1788,7 +1842,7 @@ try:
                 self.wait_window(s.top)
 
                 if settingsChanged and self.treeviewEncounters.winfo_exists():
-                    with open(baseFolder + "\\lib\\settings.json") as settingsFile:
+                    with open(baseFolder + "\\lib\\settings.json".replace("\\", pathSep)) as settingsFile:
                         self.settings = load(settingsFile)
                     self.selected = None
                     self.rewardTreasure = None
@@ -1897,16 +1951,16 @@ try:
                         fileName += " (TSC)"
                     fileName += ".jpg"
 
-                    imagePath = baseFolder + "\\lib\\images\\" + fileName
+                    imagePath = baseFolder + "\\lib\\images\\".replace("\\", pathSep) + fileName
                     adapter.debug("\tOpening " + imagePath, caller=calframe[1][3])
                     self.encounterImage = Image.open(imagePath).resize((width, height), Image.Resampling.LANCZOS)
                     image = ImageTk.PhotoImage(self.encounterImage)
                 elif imageType == "enemyText":
-                    imagePath = baseFolder + "\\lib\\images\\" + imageFileName[:-4] + " rule bg.jpg"
+                    imagePath = baseFolder + "\\lib\\images\\".replace("\\", pathSep) + imageFileName[:-4] + " rule bg.jpg"
                     adapter.debug("\tOpening " + imagePath, caller=calframe[1][3])
                     image = Image.open(imagePath).resize((14, 14), Image.Resampling.LANCZOS)
                 else:
-                    imagePath = baseFolder + "\\lib\\images\\" + imageFileName
+                    imagePath = baseFolder + "\\lib\\images\\".replace("\\", pathSep) + imageFileName
                     adapter.debug("\tOpening " + imagePath, caller=calframe[1][3])
 
                     if imageType == "enemyOld":
@@ -2042,8 +2096,8 @@ try:
                 self.selected["restrictRanged"] = {}
 
                 # Get the possible alternative enemies from the encounter's file.
-                adapter.debug("\tOpening " + baseFolder + "\\lib\\encounters\\" + encounterName + ".json", caller=calframe[1][3])
-                with open(baseFolder + "\\lib\\encounters\\" + encounterName + ".json") as alternativesFile:
+                adapter.debug("\tOpening " + baseFolder + "\\lib\\encounters\\".replace("\\", pathSep) + encounterName + ".json", caller=calframe[1][3])
+                with open(baseFolder + "\\lib\\encounters\\".replace("\\", pathSep) + encounterName + ".json") as alternativesFile:
                     alts = load(alternativesFile)
 
                 self.selected["alternatives"] = []
@@ -3757,17 +3811,17 @@ try:
     root.attributes('-alpha', 0.0)
         
     root.title("DSBG-Shuffle")
-    root.tk.call("source", baseFolder + "\\Azure-ttk-theme-main\\azure.tcl")
+    root.tk.call("source", baseFolder + "\\Azure-ttk-theme-main\\azure.tcl".replace("\\", pathSep))
     root.tk.call("set_theme", "dark")
     root.iconphoto(True, tk.PhotoImage(file=os.path.join(baseFolder, "bonfire.png")))
 
     # Check for a new version
     today = datetime.datetime.today()
-    with open(baseFolder + "\\lib\\version.txt") as vFile:
+    with open(baseFolder + "\\lib\\version.txt".replace("\\", pathSep)) as vFile:
         version = vFile.readlines()
     if int(version[1]) != today.month:
         version[1] = today.month
-        with open(os.path.join(baseFolder, "lib\\version.txt"), "w") as v:
+        with open(os.path.join(baseFolder, "lib\\version.txt".replace("\\", pathSep)), "w") as v:
             v.write("\n".join([str(line).replace("\n", "") for line in version]))
 
         response = requests.get("https://api.github.com/repos/DanDuhon/DSBG-Shuffle/releases/latest")
