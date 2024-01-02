@@ -24,7 +24,6 @@ try:
     from dsbg_treasure import generate_treasure_soul_cost, populate_treasure_tiers, pick_treasure, treasureSwapEncounters
 
 
-    print(platform.system())
     if platform.system() == "Windows":
         pathSep = "\\"
     else:
@@ -40,7 +39,10 @@ try:
 
     try:
         baseFolder = path.dirname(__file__).replace("\\lib".replace("\\", pathSep), "")
-        font = ImageFont.truetype(baseFolder + "\\lib\\Adobe Caslon Pro Semibold.ttf".replace("\\", pathSep), 12)
+        if platform.system() == "Windows":
+            font = ImageFont.truetype(baseFolder + "\\lib\\Adobe Caslon Pro Semibold.ttf", 12)
+        else:
+            font = ImageFont.truetype("./Adobe Caslon Pro Semibold.ttf", 12)
         enemyImages = {}
         settingsChanged = False
 
