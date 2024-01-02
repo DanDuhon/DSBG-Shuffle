@@ -34,7 +34,7 @@ Great!  If you can, reproduce it then find the log.txt file in the same folder a
 
 ### Are you going to create a version for Mac/Linux/Android/iPhone/web?
 
-There's a workaround for Mac/Linux.  Install [Python 3](https://www.python.org/downloads/) then [install Pillow using pip](https://pillow.readthedocs.io/en/stable/installation.html#basic-installation).  After that, you can just run the dsbg-shuffle.py script and that should work exactly the same.  As far as I know the .exe file is just a fancy wrapper that allows you to skip those steps.  Under the covers it really just runs the dsbg-shuffle.py script.
+There's a workaround for Mac/Linux.  Install [Python 3](https://www.python.org/downloads/) then install the following modules using pip: [Pillow](https://pillow.readthedocs.io/en/stable/installation.html#basic-installation), [fpdf](https://pypi.org/project/fpdf/).  After that, you can just run the dsbg-shuffle.py script and that should work exactly the same.  As far as I know the .exe file is just a fancy wrapper that allows you to skip those steps.  Under the covers it really just runs the dsbg-shuffle.py script.
 
 As for mobile, I'd like to, but I don't have any of experience with that sort of thing, and my brief looks into Android development left me confused.  So.. eventually, maybe?  Feel free to contribute or reach out if you'd like to collaborate!
 
