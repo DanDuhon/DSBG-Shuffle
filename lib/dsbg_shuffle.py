@@ -26,16 +26,16 @@ try:
 
     if platform.system() == "Windows":
         pathSep = "\\"
+
+        logger = logging.getLogger(__name__)
+        formatter = logging.Formatter("%(asctime)s|%(levelname)s|%(message)s", "%d/%m/%Y %H:%M:%S")
+        fh = logging.FileHandler(path.dirname(path.realpath(__file__)) + "\\log.txt".replace("\\", pathSep), "w")
+        fh.setFormatter(formatter)
+        logger.addHandler(fh)
+        adapter = CustomAdapter(logger, {"caller": ""})
+        logger.setLevel(logging.DEBUG)
     else:
         pathSep = "/"
-
-    logger = logging.getLogger(__name__)
-    formatter = logging.Formatter("%(asctime)s|%(levelname)s|%(message)s", "%d/%m/%Y %H:%M:%S")
-    fh = logging.FileHandler(path.dirname(path.realpath(__file__)) + "\\log.txt".replace("\\", pathSep), "w")
-    fh.setFormatter(formatter)
-    logger.addHandler(fh)
-    adapter = CustomAdapter(logger, {"caller": ""})
-    logger.setLevel(logging.DEBUG)
 
     try:
         baseFolder = path.dirname(__file__).replace("\\lib".replace("\\", pathSep), "")
@@ -60,14 +60,16 @@ try:
         with open(baseFolder + "\\lib\\encounters.json".replace("\\", pathSep)) as encountersFile:
             encounters = load(encountersFile)
     except Exception as e:
-        adapter.exception(e)
+        if platform.system() == "Windows":
+            adapter.exception(e)
         raise
 
 
     class Application(ttk.Frame):
         def __init__(self, parent):
             try:
-                adapter.debug("Initiating application")
+                if platform.system() == "Windows":
+                    adapter.debug("Initiating application")
 
                 with open(baseFolder + "\\lib\\settings.json".replace("\\", pathSep)) as settingsFile:
                     self.settings = load(settingsFile)
@@ -409,7 +411,8 @@ try:
                 self.newTiles = dict()
                 self.rewardTreasure = None
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -437,11 +440,13 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of add_card_to_campaign", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of add_card_to_campaign", caller=calframe[1][3])
 
                 if self.notebook.tab(self.notebook.select(), "text") == "Events":
                     if not self.treeviewEventDeck.selection() and not self.treeviewEventList.selection():
-                        adapter.debug("End of add_card_to_campaign (nothing done)")
+                        if platform.system() == "Windows":
+                            adapter.debug.debug("End of add_card_to_campaign (nothing done)")
                         return
                     
                     eventToAdd = self.treeviewEventDeck.selection() if self.treeviewEventDeck.selection() else self.treeviewEventList.selection()
@@ -449,7 +454,8 @@ try:
                     # The underscore is used to denote multiple instances. Only the expansion parents don't have these.
                     # Also do nothing if you have multiple cards selected.
                     if len(eventToAdd) > 1 or "_" not in eventToAdd[0]:
-                        adapter.debug("End of add_card_to_campaign (nothing done)")
+                        if platform.system() == "Windows":
+                            adapter.debug.debug("End of add_card_to_campaign (nothing done)")
                         return
                     
                     eventToAdd = eventToAdd[0]
@@ -474,7 +480,8 @@ try:
                     self.campaign.append(card)
                 else:
                     if not self.selected:
-                        adapter.debug("End of add_card_to_campaign (nothing done)")
+                        if platform.system() == "Windows":
+                            adapter.debug.debug("End of add_card_to_campaign (nothing done)")
                         return
 
                     # Multiples need a different iid in the treeview, so append a number.
@@ -499,9 +506,11 @@ try:
 
                     self.campaign.append(card)
 
-                adapter.debug("End of add_card_to_campaign")
+                if platform.system() == "Windows":
+                    adapter.debug("End of add_card_to_campaign")
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -512,11 +521,13 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of add_boss_to_campaign", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of add_boss_to_campaign", caller=calframe[1][3])
 
                 # If a menu item that isn't a boss (e.g. --Mini Boss--) is selected in the combobox, don't do anything.
                 if self.selectedBoss.get() not in bosses:
-                    adapter.debug("End of add_boss_to_campaign (nothing done)")
+                    if platform.system() == "Windows":
+                        adapter.debug("End of add_boss_to_campaign (nothing done)")
                     return
 
                 # Multiples need a different iid in the treeview, so append a number.
@@ -538,9 +549,11 @@ try:
 
                 self.campaign.append(card)
 
-                adapter.debug("End of add_boss_to_campaign")
+                if platform.system() == "Windows":
+                    adapter.debug("End of add_boss_to_campaign")
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -555,11 +568,13 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of delete_card_from_campaign", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of delete_card_from_campaign", caller=calframe[1][3])
 
                 # If the button is clicked with no selection, do nothing.
                 if not self.treeviewCampaign.selection():
-                    adapter.debug("End of delete_card_from_campaign (nothing done)")
+                    if platform.system() == "Windows":
+                        adapter.debug("End of delete_card_from_campaign (nothing done)")
                     return
 
                 # Remove the deleted cards from the campaign list and treeview.
@@ -570,9 +585,11 @@ try:
                 # Remove the image displaying a deleted card.
                 self.encounter.config(image="")
 
-                adapter.debug("End of delete_card_from_campaign")
+                if platform.system() == "Windows":
+                    adapter.debug("End of delete_card_from_campaign")
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -583,22 +600,26 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of save_campaign", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of save_campaign", caller=calframe[1][3])
 
                 # Prompt user to save the file.
                 campaignName = filedialog.asksaveasfile(mode="w", initialdir=baseFolder + "\\lib\\saved campaigns".replace("\\", pathSep), defaultextension=".json")
 
                 # If they canceled it, do nothing.
                 if not campaignName:
-                    adapter.debug("End of save_campaign (nothing done)")
+                    if platform.system() == "Windows":
+                        adapter.debug("End of save_campaign (nothing done)")
                     return
 
                 with open(campaignName.name, "w") as campaignFile:
                     dump(self.campaign, campaignFile)
 
-                adapter.debug("End of save_campaign (saved to " + str(campaignFile) + ")")
+                if platform.system() == "Windows":
+                    adapter.debug("End of save_campaign (saved to " + str(campaignFile) + ")")
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -610,14 +631,16 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of load_campaign", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of load_campaign", caller=calframe[1][3])
 
                 # Prompt the user to find the campaign file.
                 campaignFile = filedialog.askopenfilename(initialdir=baseFolder + "\\lib\\saved campaigns".replace("\\", pathSep), filetypes = [(".json", ".json")])
 
                 # If the user did not select a file, do nothing.
                 if not campaignFile:
-                    adapter.debug("End of load_campaign (file dialog canceled)")
+                    if platform.system() == "Windows":
+                        adapter.debug("End of load_campaign (file dialog canceled)")
                     return
 
                 # If the user did not select a JSON file, notify them that that was an invalid file.
@@ -628,7 +651,8 @@ try:
                     adapter.debug("End of load_campaign (invalid file)")
                     return
 
-                adapter.debug("Loading file " + campaignFile)
+                if platform.system() == "Windows":
+                    adapter.debug("Loading file " + campaignFile)
 
                 with open(campaignFile, "r") as f:
                     self.campaign = load(f)
@@ -651,9 +675,11 @@ try:
                 for item in self.campaign:
                     self.treeviewCampaign.insert(parent="", iid=item["iid"], values=(item["name"], item["type"][0].upper() + item["type"][1:], item["level"]), index="end")
 
-                adapter.debug("End of load_campaign (loaded from " + str(campaignFile) + ")")
+                if platform.system() == "Windows":
+                    adapter.debug("End of load_campaign (loaded from " + str(campaignFile) + ")")
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -664,16 +690,19 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of move_up", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of move_up", caller=calframe[1][3])
 
                 leaves = self.treeviewCampaign.selection()
                 for i in leaves:
                     self.treeviewCampaign.move(i, self.treeviewCampaign.parent(i), self.treeviewCampaign.index(i) - 1)
                     self.campaign.insert(self.treeviewCampaign.index(i) + 1, self.campaign.pop(self.treeviewCampaign.index(i)))
 
-                adapter.debug("End of move_up")
+                if platform.system() == "Windows":
+                    adapter.debug("End of move_up")
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -684,16 +713,19 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of move_down", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of move_down", caller=calframe[1][3])
 
                 leaves = self.treeviewCampaign.selection()
                 for i in reversed(leaves):
                     self.treeviewCampaign.move(i, self.treeviewCampaign.parent(i), self.treeviewCampaign.index(i) + 1)
                     self.campaign.insert(self.treeviewCampaign.index(i) - 1, self.campaign.pop(self.treeviewCampaign.index(i)))
 
-                adapter.debug("End of move_down")
+                if platform.system() == "Windows":
+                    adapter.debug("End of move_down")
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -709,7 +741,8 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of load_campaign_card", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of load_campaign_card", caller=calframe[1][3])
 
                 self.selected = None
                 self.rewardTreasure = None
@@ -719,7 +752,8 @@ try:
 
                 # Don't update the image shown if you've selected more than one card.
                 if len(tree.selection()) != 1:
-                    adapter.debug("End of load_campaign_card (not updating image)")
+                    if platform.system() == "Windows":
+                        adapter.debug("End of load_campaign_card (not updating image)")
                     return
                 
                 # Remove keyword tooltips from the previous card shown, if there are any.
@@ -750,9 +784,11 @@ try:
                 elif campaignCard["type"] == "event":
                     self.load_event(campaign=True)
 
-                adapter.debug("End of load_campaign_card")
+                if platform.system() == "Windows":
+                    adapter.debug("End of load_campaign_card")
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -763,14 +799,16 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of save_event_deck", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of save_event_deck", caller=calframe[1][3])
 
                 # Prompt user to save the file.
                 deckName = filedialog.asksaveasfile(mode="w", initialdir=baseFolder + "\\lib\\saved event decks".replace("\\", pathSep), defaultextension=".json")
 
                 # If they canceled it, do nothing.
                 if not deckName:
-                    adapter.debug("End of save_event_deck (nothing done)")
+                    if platform.system() == "Windows":
+                        adapter.debug("End of save_event_deck (nothing done)")
                     return
                 
                 deckData = [self.treeviewEventDeck.item(event) for event in self.treeviewEventDeck.get_children()]
@@ -783,9 +821,11 @@ try:
                 with open(deckName.name, "w") as deckFile:
                     dump(deckData, deckFile)
 
-                adapter.debug("End of save_event_deck (saved to " + str(deckFile) + ")")
+                if platform.system() == "Windows":
+                    adapter.debug("End of save_event_deck (saved to " + str(deckFile) + ")")
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -797,14 +837,16 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of load_event_deck", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of load_event_deck", caller=calframe[1][3])
 
                 # Prompt the user to find the campaign file.
                 deckFile = filedialog.askopenfilename(initialdir=baseFolder + "\\lib\\saved event decks".replace("\\", pathSep), filetypes = [(".json", ".json")])
 
                 # If the user did not select a file, do nothing.
                 if not deckFile:
-                    adapter.debug("End of load_event_deck (file dialog canceled)")
+                    if platform.system() == "Windows":
+                        adapter.debug("End of load_event_deck (file dialog canceled)")
                     return
                 
                 # If the user did not select a JSON file, notify them that that was an invalid file.
@@ -815,7 +857,8 @@ try:
                     adapter.debug("End of load_event_deck (invalid file)")
                     return
                 
-                adapter.debug("Loading file " + deckFile)
+                if platform.system() == "Windows":
+                    adapter.debug("Loading file " + deckFile)
 
                 with open(deckFile, "r") as f:
                     self.deckData = load(f)
@@ -843,9 +886,11 @@ try:
                     if item["values"][1] and item["values"][1] > self.currentEventNum:
                         self.currentEventNum = item["values"][1]
 
-                adapter.debug("End of load_event_deck (loaded from " + str(deckFile) + ")")
+                if platform.system() == "Windows":
+                    adapter.debug("End of load_event_deck (loaded from " + str(deckFile) + ")")
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -853,7 +898,8 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of sort_event_deck_treeview", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of sort_event_deck_treeview", caller=calframe[1][3])
 
                 # Sort the event deck so that cards that have been drawn are at the top,
                 # in order of most recently drawn.
@@ -862,9 +908,11 @@ try:
                 for index, (val, k) in enumerate(l):
                     self.treeviewEventDeck.move(k, "", index)
 
-                adapter.debug("End of sort_event_deck_treeview")
+                if platform.system() == "Windows":
+                    adapter.debug("End of sort_event_deck_treeview")
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -875,7 +923,8 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of add_event_to_deck", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of add_event_to_deck", caller=calframe[1][3])
                 
                 for selection in list(self.treeviewEventList.selection()):
                     eventSelected = self.treeviewEventList.item(selection)["values"][1 if self.treeviewEventList.item(selection)["values"][1] else 0]
@@ -901,9 +950,11 @@ try:
 
                 shuffle(self.eventDeck)
 
-                adapter.debug("End of add_event_to_deck")
+                if platform.system() == "Windows":
+                    adapter.debug("End of add_event_to_deck")
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -918,11 +969,13 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of delete_event_from_deck", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of delete_event_from_deck", caller=calframe[1][3])
                 
                 # If the button is clicked with no selection, do nothing.
                 if not self.treeviewEventDeck.selection():
-                    adapter.debug("End of delete_event_from_deck (nothing done)")
+                    if platform.system() == "Windows":
+                        adapter.debug("End of delete_event_from_deck (nothing done)")
                     return
                 
                 # Remove the deleted encounters from the treeview.
@@ -941,9 +994,11 @@ try:
 
                 shuffle(self.eventDeck)
 
-                adapter.debug("End of delete_event_from_deck")
+                if platform.system() == "Windows":
+                    adapter.debug("End of delete_event_from_deck")
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -958,7 +1013,8 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of reset_event_deck", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of reset_event_deck", caller=calframe[1][3])
                 
                 # Set events to not be drawn yet.
                 for item in self.treeviewEventDeck.get_children():
@@ -974,9 +1030,11 @@ try:
 
                 shuffle(self.eventDeck)
 
-                adapter.debug("End of reset_event_deck")
+                if platform.system() == "Windows":
+                    adapter.debug("End of reset_event_deck")
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -991,11 +1049,13 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of draw_from_event_deck", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of draw_from_event_deck", caller=calframe[1][3])
                 
                 # If the button is clicked with no drawn event card, do nothing.
                 if not self.eventDeck or not [eventCard for eventCard in self.eventDeck if not self.treeviewEventDeck.item(eventCard)["values"][1]]:
-                    adapter.debug("End of draw_from_event_deck (nothing done)")
+                    if platform.system() == "Windows":
+                        adapter.debug("End of draw_from_event_deck (nothing done)")
                     return
 
                 self.currentEvent = [eventCard for eventCard in self.eventDeck if not self.treeviewEventDeck.item(eventCard)["values"][1]][0]
@@ -1005,9 +1065,11 @@ try:
 
                 self.sort_event_deck_treeview()
 
-                adapter.debug("End of draw_from_event_deck")
+                if platform.system() == "Windows":
+                    adapter.debug("End of draw_from_event_deck")
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -1022,11 +1084,13 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of return_event_card_to_deck", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of return_event_card_to_deck", caller=calframe[1][3])
                 
                 # If the button is clicked with no event card selected, do nothing.
                 if not self.treeviewEventDeck.selection() or len(self.treeviewEventDeck.selection()) > 1 or not self.treeviewEventDeck.item(card)["values"][1]:
-                    adapter.debug("End of return_event_card_to_deck (nothing done)")
+                    if platform.system() == "Windows":
+                        adapter.debug("End of return_event_card_to_deck (nothing done)")
                     return
                 
                 card = self.treeviewEventDeck.selection()[0]
@@ -1045,9 +1109,11 @@ try:
 
                 shuffle(self.eventDeck)
 
-                adapter.debug("End of return_event_card_to_deck")
+                if platform.system() == "Windows":
+                    adapter.debug("End of return_event_card_to_deck")
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -1062,11 +1128,13 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of return_event_card_to_bottom", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of return_event_card_to_bottom", caller=calframe[1][3])
                 
                 # If the button is clicked with no event card selected, do nothing.
                 if not self.treeviewEventDeck.selection() or len(self.treeviewEventDeck.selection()) > 1:
-                    adapter.debug("End of return_event_card_to_bottom (nothing done)")
+                    if platform.system() == "Windows":
+                        adapter.debug("End of return_event_card_to_bottom (nothing done)")
                     return
                 
                 card = self.treeviewEventDeck.selection()[0]
@@ -1084,9 +1152,11 @@ try:
 
                 self.sort_event_deck_treeview()
 
-                adapter.debug("End of return_event_card_to_bottom")
+                if platform.system() == "Windows":
+                    adapter.debug("End of return_event_card_to_bottom")
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
         def return_event_card_to_top(self, event=None):
@@ -1100,11 +1170,13 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of return_event_card_to_top", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of return_event_card_to_top", caller=calframe[1][3])
                 
                 # If the button is clicked with no event card selected, do nothing.
                 if not self.treeviewEventDeck.selection() or len(self.treeviewEventDeck.selection()) > 1:
-                    adapter.debug("End of return_event_card_to_top (nothing done)")
+                    if platform.system() == "Windows":
+                        adapter.debug("End of return_event_card_to_top (nothing done)")
                     return
                 
                 card = self.treeviewEventDeck.selection()[0]
@@ -1122,9 +1194,11 @@ try:
 
                 self.sort_event_deck_treeview()
 
-                adapter.debug("End of return_event_card_to_top")
+                if platform.system() == "Windows":
+                    adapter.debug("End of return_event_card_to_top")
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -1135,7 +1209,8 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of print_encounters", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of print_encounters", caller=calframe[1][3])
 
                 self.forPrinting = True
                 self.encountersToPrint = []
@@ -1265,16 +1340,19 @@ try:
 
                 # If they canceled it, do nothing.
                 if not pdfOutput:
-                    adapter.debug("End of print_encounters (nothing done)")
+                    if platform.system() == "Windows":
+                        adapter.debug("End of print_encounters (nothing done)")
                     return
 
                 pdf.output(pdfOutput.name)
 
                 self.forPrinting = False
 
-                adapter.debug("End of print_encounters")
+                if platform.system() == "Windows":
+                    adapter.debug("End of print_encounters")
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -1286,7 +1364,8 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of set_encounter_list", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of set_encounter_list", caller=calframe[1][3])
 
                 # Set the list of encounters based on available expansions.
                 self.encounterList = [encounter for encounter in encounters if (
@@ -1307,9 +1386,11 @@ try:
                             ]):
                             self.encounterList.append(encounter)
 
-                adapter.debug("End of set_encounter_list")
+                if platform.system() == "Windows":
+                    adapter.debug("End of set_encounter_list")
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -1324,7 +1405,8 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of create_tabs", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of create_tabs", caller=calframe[1][3])
 
                 with open(baseFolder + "\\lib\\settings.json".replace("\\", pathSep)) as settingsFile:
                     self.settings = load(settingsFile)
@@ -1411,9 +1493,11 @@ try:
                 self.topEventButton = ttk.Button(self.eventTabButtonsFrame3, text="Return To Top", width=16, command=self.return_event_card_to_top)
                 self.topEventButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
 
-                adapter.debug("End of create_tabs")
+                if platform.system() == "Windows":
+                    adapter.debug("End of create_tabs")
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -1425,7 +1509,8 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of create_encounters_treeview", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of create_encounters_treeview", caller=calframe[1][3])
 
                 self.treeviewEncounters = ttk.Treeview(
                     self.encounterTab,
@@ -1485,9 +1570,11 @@ try:
                 global settingsChanged
                 settingsChanged = False
 
-                adapter.debug("End of create_encounters_treeview")
+                if platform.system() == "Windows":
+                    adapter.debug("End of create_encounters_treeview")
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -1498,7 +1585,8 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of create_campaign_treeview", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of create_campaign_treeview", caller=calframe[1][3])
 
                 self.treeviewCampaign = ttk.Treeview(
                     self.campaignTabTreeviewFrame,
@@ -1522,9 +1610,11 @@ try:
                 self.treeviewCampaign.bind("<<TreeviewSelect>>", self.load_campaign_card)
                 self.treeviewCampaign.bind("<Control-a>", lambda *args: self.treeviewCampaign.selection_add(self.treeviewCampaign.get_children()))
 
-                adapter.debug("End of create_campaign_treeview")
+                if platform.system() == "Windows":
+                    adapter.debug("End of create_campaign_treeview")
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -1535,7 +1625,8 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of create_event_treeviews", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of create_event_treeviews", caller=calframe[1][3])
                 
                 self.treeviewEventList = ttk.Treeview(
                     self.eventTabEventListTreeviewFrame,
@@ -1587,9 +1678,11 @@ try:
                 
                 self.treeviewEventDeck.bind("<<TreeviewSelect>>", self.load_event)
 
-                adapter.debug("End of create_event_treeviews")
+                if platform.system() == "Windows":
+                    adapter.debug("End of create_event_treeviews")
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -1597,7 +1690,8 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of load_event", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of load_event", caller=calframe[1][3])
                 
                 # Get the event selected.
                 if event:
@@ -1605,7 +1699,8 @@ try:
 
                     # Don't update the image shown if you've selected more than one encounter.
                     if len(tree.selection()) != 1:
-                        adapter.debug("End of load_event (not updating image)")
+                        if platform.system() == "Windows":
+                            adapter.debug.debug("End of load_event (not updating image)")
                         return
                     
                     if tree == self.treeviewEventList and len(self.treeviewEventDeck.selection()) > 0:
@@ -1638,9 +1733,11 @@ try:
                 self.encounter.image = self.encounterPhotoImage
                 self.encounter.config(image=self.encounterPhotoImage)
 
-                adapter.debug("End of load_event")
+                if platform.system() == "Windows":
+                    adapter.debug("End of load_event")
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -1651,7 +1748,8 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of create_encounter_frame", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of create_encounter_frame", caller=calframe[1][3])
 
                 self.encounterCanvas = tk.Canvas(self, width=410, yscrollcommand=self.encounterScrollbar.set)
                 self.encounterFrame = ttk.Frame(self.encounterCanvas)
@@ -1666,9 +1764,11 @@ try:
                 self.encounter = ttk.Label(self.encounterFrame)
                 self.encounter.grid(column=0, row=0, sticky="nsew")
 
-                adapter.debug("End of create_encounter_frame")
+                if platform.system() == "Windows":
+                    adapter.debug("End of create_encounter_frame")
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -1684,7 +1784,8 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of set_bindings_buttons_menus: enable=" + str(enable), caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of set_bindings_buttons_menus: enable=" + str(enable), caller=calframe[1][3])
 
                 if enable:
                     enable_binding("Key-1", lambda x: self.keybind_call("1"), root)
@@ -1713,9 +1814,11 @@ try:
                     self.fileMenu.entryconfig("Random Level 4 Encounter", state=tk.DISABLED)
                     self.fileMenu.entryconfig("Shuffle Enemies", state=tk.DISABLED)
 
-                adapter.debug("End of set_bindings_buttons_menus")
+                if platform.system() == "Windows":
+                    adapter.debug("End of set_bindings_buttons_menus")
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -1726,7 +1829,8 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of create_buttons", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of create_buttons", caller=calframe[1][3])
 
                 self.buttonsFrame = ttk.Frame(self)
                 self.buttonsFrame.grid(row=0, column=0, pady=(10, 0), sticky="nw")
@@ -1749,9 +1853,11 @@ try:
                 self.l4.grid(column=3, row=0, padx=5)
                 self.l5.grid(column=0, row=1, padx=5, pady=5)
 
-                adapter.debug("End of create_buttons", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("End of create_buttons", caller=calframe[1][3])
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -1762,7 +1868,8 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of create_menu", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of create_menu", caller=calframe[1][3])
 
                 menuBar = tk.Menu()
                 self.fileMenu = tk.Menu(menuBar, tearoff=0)
@@ -1785,9 +1892,11 @@ try:
 
                 root.config(menu=menuBar)
 
-                adapter.debug("End of create_menu", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("End of create_menu", caller=calframe[1][3])
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -1806,7 +1915,8 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of keybind_call: call=" + call, caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of keybind_call: call=" + call, caller=calframe[1][3])
 
                 if call == "1":
                     self.random_encounter(level=1)
@@ -1821,9 +1931,11 @@ try:
                 elif call == "q":
                     root.quit()
 
-                adapter.debug("End of keybind_call", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("End of keybind_call", caller=calframe[1][3])
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -1835,7 +1947,8 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of settings_window", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of settings_window", caller=calframe[1][3])
 
                 self.set_bindings_buttons_menus(False)
 
@@ -1882,9 +1995,11 @@ try:
 
                 self.set_bindings_buttons_menus(True)
 
-                adapter.debug("End of settings_window", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("End of settings_window", caller=calframe[1][3])
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -1895,16 +2010,19 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of settings_window", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of settings_window", caller=calframe[1][3])
 
                 self.set_bindings_buttons_menus(False)
                 h = HelpWindow(root)
                 self.wait_window(h.top)
                 self.set_bindings_buttons_menus(True)
 
-                adapter.debug("End of settings_window", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("End of settings_window", caller=calframe[1][3])
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -1932,7 +2050,8 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of create_image", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of create_image", caller=calframe[1][3])
 
                 if imageType == "encounter":
                     if imageFileName == "Ornstein and Smough.jpg":
@@ -1954,16 +2073,19 @@ try:
                     fileName += ".jpg"
 
                     imagePath = baseFolder + "\\lib\\images\\".replace("\\", pathSep) + fileName
-                    adapter.debug("\tOpening " + imagePath, caller=calframe[1][3])
+                    if platform.system() == "Windows":
+                        adapter.debug("\tOpening " + imagePath, caller=calframe[1][3])
                     self.encounterImage = Image.open(imagePath).resize((width, height), Image.Resampling.LANCZOS)
                     image = ImageTk.PhotoImage(self.encounterImage)
                 elif imageType == "enemyText":
                     imagePath = baseFolder + "\\lib\\images\\".replace("\\", pathSep) + imageFileName[:-4] + " rule bg.jpg"
-                    adapter.debug("\tOpening " + imagePath, caller=calframe[1][3])
+                    if platform.system() == "Windows":
+                        adapter.debug("\tOpening " + imagePath, caller=calframe[1][3])
                     image = Image.open(imagePath).resize((14, 14), Image.Resampling.LANCZOS)
                 else:
                     imagePath = baseFolder + "\\lib\\images\\".replace("\\", pathSep) + imageFileName
-                    adapter.debug("\tOpening " + imagePath, caller=calframe[1][3])
+                    if platform.system() == "Windows":
+                        adapter.debug("\tOpening " + imagePath, caller=calframe[1][3])
 
                     if imageType == "enemyOld":
                         image = Image.open(imagePath).resize((27, 27), Image.Resampling.LANCZOS)
@@ -2015,11 +2137,13 @@ try:
                     elif imageType == "trial":
                         image = Image.open(imagePath).resize((26, 13), Image.Resampling.LANCZOS)
 
-                adapter.debug("\tEnd of create_image", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("\tEnd of create_image", caller=calframe[1][3])
 
                 return image
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -2039,16 +2163,19 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of random_encounter", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of random_encounter", caller=calframe[1][3])
 
                 self.load_encounter(encounter=choice([encounter for encounter in self.encounterList if (
                     encounters[encounter]["level"] == level
                     and (encounters[encounter]["expansion"] in self.expansionsForRandomEncounters
                         or encounters[encounter]["level"] == 4))]))
 
-                adapter.debug("\tEnd of random_encounter", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("\tEnd of random_encounter", caller=calframe[1][3])
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -2068,7 +2195,8 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of load_encounter", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of load_encounter", caller=calframe[1][3])
 
                 if not customEnemyListCheck:
                     self.treeviewEncounters.unbind("<<TreeviewSelect>>")
@@ -2077,9 +2205,11 @@ try:
                 if event:
                     tree = event.widget
                     if not tree.item(tree.selection())["tags"][0]:
-                        adapter.debug("\tNo encounter selected", caller=calframe[1][3])
+                        if platform.system() == "Windows":
+                            adapter.debug.debug("\tNo encounter selected", caller=calframe[1][3])
                         self.treeviewEncounters.bind("<<TreeviewSelect>>", self.load_encounter)
-                        adapter.debug("\tEnd of load_encounter", caller=calframe[1][3])
+                        if platform.system() == "Windows":
+                            adapter.debug.debug("\tEnd of load_encounter", caller=calframe[1][3])
                         return
                     encounterName = tree.item(tree.selection())["text"]
                 else:
@@ -2090,7 +2220,8 @@ try:
                     if encounters[encounterName] == self.selected:
                         self.shuffle_enemies()
                         self.treeviewEncounters.bind("<<TreeviewSelect>>", self.load_encounter)
-                        adapter.debug("\tEnd of load_encounter", caller=calframe[1][3])
+                        if platform.system() == "Windows":
+                            adapter.debug.debug("\tEnd of load_encounter", caller=calframe[1][3])
                         return
 
                 self.selected = encounters[encounterName]
@@ -2098,7 +2229,8 @@ try:
                 self.selected["restrictRanged"] = {}
 
                 # Get the possible alternative enemies from the encounter's file.
-                adapter.debug("\tOpening " + baseFolder + "\\lib\\encounters\\".replace("\\", pathSep) + encounterName + ".json", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("\tOpening " + baseFolder + "\\lib\\encounters\\".replace("\\", pathSep) + encounterName + ".json", caller=calframe[1][3])
                 with open(baseFolder + "\\lib\\encounters\\".replace("\\", pathSep) + encounterName + ".json") as alternativesFile:
                     alts = load(alternativesFile)
 
@@ -2134,9 +2266,11 @@ try:
                     self.treeviewEncounters.bind("<<TreeviewSelect>>", self.load_encounter)
                     self.encounter.bind("<Button 1>", self.shuffle_enemies)
 
-                adapter.debug("\tEnd of load_encounter", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("\tEnd of load_encounter", caller=calframe[1][3])
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -2152,7 +2286,8 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of shuffle_enemies", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of shuffle_enemies", caller=calframe[1][3])
 
                 self.encounter.bind("<Button 1>", do_nothing)
                 if not self.selected:
@@ -2186,9 +2321,11 @@ try:
 
                 self.edit_encounter_card(self.selected["name"], self.selected["expansion"], self.selected["level"], self.selected["enemySlots"])
 
-                adapter.debug("\tEnd of shuffle_enemies", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("\tEnd of shuffle_enemies", caller=calframe[1][3])
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -2212,7 +2349,8 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of edit_encounter_card", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of edit_encounter_card", caller=calframe[1][3])
 
                 self.encounterPhotoImage = self.create_image(name + ".jpg", "encounter", level, expansion)
 
@@ -2222,7 +2360,8 @@ try:
                     3: [[], []]
                     }
 
-                adapter.debug("New enemies: " + str(self.newEnemies), caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("New enemies: " + str(self.newEnemies), caller=calframe[1][3])
 
                 # Determine where enemies should be placed determined by whether this is an old or new style encounter,
                 # the level of the encounter, and where on the original encounter card enemies were found.
@@ -2252,7 +2391,8 @@ try:
                         else:
                             image = allEnemies[enemyIds[self.newEnemies[s]].name][imageType]
 
-                        adapter.debug("Pasting " + enemyIds[self.newEnemies[s]].name + " image onto encounter at " + str((x, y)) + ".", caller=calframe[1][3])
+                        if platform.system() == "Windows":
+                            adapter.debug.debug("Pasting " + enemyIds[self.newEnemies[s]].name + " image onto encounter at " + str((x, y)) + ".", caller=calframe[1][3])
                         self.encounterImage.paste(im=image, box=(x, y), mask=image)
                         s += 1
 
@@ -2379,9 +2519,11 @@ try:
                 self.encounter.config(image=self.encounterPhotoImage)
                 self.encounter.bind("<Button 1>", self.shuffle_enemies)
 
-                adapter.debug("\tEnd of edit_encounter_card", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("\tEnd of edit_encounter_card", caller=calframe[1][3])
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -2392,7 +2534,8 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of create_tooltip", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of create_tooltip", caller=calframe[1][3])
 
                 if self.forPrinting:
                     convertedImage = tooltipDict["image"].convert("RGBA")
@@ -2403,9 +2546,11 @@ try:
                     label.place(x=x, y=y)
                     CreateToolTip(label, tooltipText[tooltipDict["imageName"]])
 
-                adapter.debug("\tEnd of create_tooltip", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("\tEnd of create_tooltip", caller=calframe[1][3])
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -2417,13 +2562,15 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of apply_keyword_tooltips", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of apply_keyword_tooltips", caller=calframe[1][3])
 
                 for tooltip in self.tooltips:
                     tooltip.destroy()
 
                 if not self.selected and not self.treeviewCampaign.focus():
-                    adapter.debug("\tEnd of apply_keyword_tooltips (removed tooltips only)", caller=calframe[1][3])
+                    if platform.system() == "Windows":
+                        adapter.debug("\tEnd of apply_keyword_tooltips (removed tooltips only)", caller=calframe[1][3])
                     return
 
                 for i, tooltip in enumerate(self.encounterTooltips.get((name, set), [])):
@@ -2431,9 +2578,11 @@ try:
                         continue
                     self.create_tooltip(tooltipDict=tooltip, x=142, y=int(199 + (15.5 * i)))
 
-                adapter.debug("\tEnd of apply_keyword_tooltips", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("\tEnd of apply_keyword_tooltips", caller=calframe[1][3])
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -2457,7 +2606,8 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of abandoned_and_forgotten", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of abandoned_and_forgotten", caller=calframe[1][3])
 
                 spawn1 = enemyIds[self.newEnemies[0]].name
                 spawn2 = enemyIds[self.newEnemies[1]].name
@@ -2467,9 +2617,11 @@ try:
                 self.encounterImage.paste(im=allEnemies[spawn2]["imageNew"], box=(285, 248), mask=allEnemies[spawn2]["imageNew"])
                 self.encounterImage.paste(im=allEnemies[spawn3]["imageNew"], box=(285, 280), mask=allEnemies[spawn3]["imageNew"])
 
-                adapter.debug("\tEnd of abandoned_and_forgotten", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("\tEnd of abandoned_and_forgotten", caller=calframe[1][3])
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -2477,7 +2629,8 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of aged_sentinel", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of aged_sentinel", caller=calframe[1][3])
 
                 target = self.newTiles[1][1][0]
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
@@ -2485,9 +2638,11 @@ try:
                 self.create_tooltip(tooltipDict=tooltipDict, x=143, y=231)
                 self.create_tooltip(tooltipDict=tooltipDict, x=203, y=255)
 
-                adapter.debug("\tEnd of aged_sentinel", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("\tEnd of aged_sentinel", caller=calframe[1][3])
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -2495,7 +2650,8 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of castle_break_in", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of castle_break_in", caller=calframe[1][3])
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
 
@@ -2509,9 +2665,11 @@ try:
                 imageWithText.text((21, 255), newTreasureLines[0], "black", font)
                 imageWithText.text((21, 266), newTreasureLines.get(1, ""), "black", font)
 
-                adapter.debug("\tEnd of castle_break_in", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("\tEnd of castle_break_in", caller=calframe[1][3])
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -2519,15 +2677,18 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of central_plaza", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of central_plaza", caller=calframe[1][3])
 
                 target = enemyIds[self.newEnemies[-1]].name
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=143, y=262)
 
-                adapter.debug("\tEnd of central_plaza", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("\tEnd of central_plaza", caller=calframe[1][3])
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -2535,15 +2696,18 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of cloak_and_feathers", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of cloak_and_feathers", caller=calframe[1][3])
 
                 target = self.newTiles[1][0][0]
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=65, y=147)
 
-                adapter.debug("\tEnd of cloak_and_feathers", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("\tEnd of cloak_and_feathers", caller=calframe[1][3])
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -2551,15 +2715,18 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of cold_snap", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of cold_snap", caller=calframe[1][3])
 
                 target = self.newTiles[2][0][1]
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=216, y=227)
 
-                adapter.debug("\tEnd of cold_snap", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("\tEnd of cold_snap", caller=calframe[1][3])
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -2567,15 +2734,18 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of corrupted_hovel", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of corrupted_hovel", caller=calframe[1][3])
 
                 target = [enemy for enemy in self.newTiles[1][0] + self.newTiles[1][1] if (self.newTiles[1][0] + self.newTiles[1][1]).count(enemy) == 2][0]
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=146, y=250)
 
-                adapter.debug("\tEnd of corrupted_hovel", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("\tEnd of corrupted_hovel", caller=calframe[1][3])
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -2583,7 +2753,8 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of corvian_host", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of corvian_host", caller=calframe[1][3])
 
                 target = self.newTiles[1][1][0]
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
@@ -2605,9 +2776,11 @@ try:
                 imageWithText.text((21, 232), newTreasureLines[0], "black", font)
                 imageWithText.text((21, 243), newTreasureLines.get(1, ""), "black", font)
 
-                adapter.debug("\tEnd of corvian_host", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("\tEnd of corvian_host", caller=calframe[1][3])
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -2615,15 +2788,18 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of dark_alleyway", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of dark_alleyway", caller=calframe[1][3])
 
                 target = self.newTiles[1][0][0]
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=65, y=147)
 
-                adapter.debug("\tEnd of dark_alleyway", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("\tEnd of dark_alleyway", caller=calframe[1][3])
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -2631,7 +2807,8 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of dark_resurrection", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of dark_resurrection", caller=calframe[1][3])
 
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
@@ -2644,9 +2821,11 @@ try:
                 imageWithText.text((21, 235), newTreasureLines[0], "black", font)
                 imageWithText.text((21, 246), newTreasureLines.get(1, ""), "black", font)
 
-                adapter.debug("\tEnd of dark_resurrection", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("\tEnd of dark_resurrection", caller=calframe[1][3])
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -2654,7 +2833,8 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of deathly_freeze", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of deathly_freeze", caller=calframe[1][3])
 
                 deathlyFreezeTile1 = [enemy for enemy in self.newTiles[1][0] + self.newTiles[1][1]]
                 deathlyFreezeTile2 = [enemy for enemy in self.newTiles[2][0] + self.newTiles[2][1]]
@@ -2663,9 +2843,11 @@ try:
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=141, y=242)
 
-                adapter.debug("\tEnd of deathly_freeze", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("\tEnd of deathly_freeze", caller=calframe[1][3])
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -2673,16 +2855,19 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of deathly_magic", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of deathly_magic", caller=calframe[1][3])
 
                 target = sorted([enemy for enemy in self.newTiles[1][0] + self.newTiles[1][1] if (self.newTiles[1][0] + self.newTiles[1][1]).count(enemy) == 1], key=lambda x: enemiesDict[x].difficulty, reverse=True)[0]
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=65, y=147)
                 self.create_tooltip(tooltipDict=tooltipDict, x=274, y=196)
 
-                adapter.debug("\tEnd of deathly_magic", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("\tEnd of deathly_magic", caller=calframe[1][3])
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -2690,7 +2875,8 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of deathly_tolls", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of deathly_tolls", caller=calframe[1][3])
 
                 target = enemyIds[self.newEnemies[-1]].name
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
@@ -2708,9 +2894,11 @@ try:
 
                 self.create_tooltip(tooltipDict=tooltipDict, x=142, y=245)
 
-                adapter.debug("\tEnd of deathly_tolls", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("\tEnd of deathly_tolls", caller=calframe[1][3])
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -2718,7 +2906,8 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of depths_of_the_cathedral", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of depths_of_the_cathedral", caller=calframe[1][3])
 
                 gang = Counter([enemyIds[enemy].gang for enemy in self.newEnemies if enemyIds[enemy].gang]).most_common(1)[0][0]
                 if gang == "Alonne":
@@ -2732,9 +2921,11 @@ try:
 
                 self.create_tooltip(tooltipDict=tooltipDict, x=142, y=214)
 
-                adapter.debug("\tEnd of depths_of_the_cathedral", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("\tEnd of depths_of_the_cathedral", caller=calframe[1][3])
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -2742,7 +2933,8 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of distant_tower", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of distant_tower", caller=calframe[1][3])
 
                 target = self.newTiles[3][0][0]
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
@@ -2759,9 +2951,11 @@ try:
                 imageWithText.text((21, 283), newTreasureLines[0], "black", font)
                 imageWithText.text((21, 294), newTreasureLines.get(1, ""), "black", font)
 
-                adapter.debug("\tEnd of distant_tower", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("\tEnd of distant_tower", caller=calframe[1][3])
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -2769,7 +2963,8 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of eye_of_the_storm", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of eye_of_the_storm", caller=calframe[1][3])
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
                 fourTarget = [enemyIds[enemy].name for enemy in self.newEnemies if self.newEnemies.count(enemy) == 4]
@@ -2797,9 +2992,11 @@ try:
                 imageWithText.text((140, 268), text2, "black", font)
                 imageWithText.text((140, 282), text3, "black", font)
 
-                adapter.debug("\tEnd of eye_of_the_storm", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("\tEnd of eye_of_the_storm", caller=calframe[1][3])
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -2807,7 +3004,8 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of flooded_fortress", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of flooded_fortress", caller=calframe[1][3])
 
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
@@ -2832,9 +3030,11 @@ try:
 
                 self.create_tooltip(tooltipDict=tooltipDict, x=142, y=215)
 
-                adapter.debug("\tEnd of flooded_fortress", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("\tEnd of flooded_fortress", caller=calframe[1][3])
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -2842,7 +3042,8 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of frozen_revolutions", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of frozen_revolutions", caller=calframe[1][3])
 
                 target = self.newTiles[3][0][0]
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
@@ -2861,9 +3062,11 @@ try:
                 imageWithText.text((21, 258), newTreasureLines[0], "black", font)
                 imageWithText.text((21, 269), newTreasureLines.get(1, ""), "black", font)
 
-                adapter.debug("\tEnd of frozen_revolutions", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("\tEnd of frozen_revolutions", caller=calframe[1][3])
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -2871,7 +3074,8 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of giants_coffin", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of giants_coffin", caller=calframe[1][3])
 
                 target = enemyIds[self.newEnemies[-2]].name
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
@@ -2892,9 +3096,11 @@ try:
                 imageWithText.text((21, 258), newTreasureLines[0], "black", font)
                 imageWithText.text((21, 269), newTreasureLines.get(1, ""), "black", font)
 
-                adapter.debug("\tEnd of giants_coffin", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("\tEnd of giants_coffin", caller=calframe[1][3])
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -2902,7 +3108,8 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of gleaming_silver", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of gleaming_silver", caller=calframe[1][3])
 
                 targets = list(set([enemyIds[enemy].name for enemy in self.newEnemies if self.newEnemies.count(enemy) == 2]))
 
@@ -2917,9 +3124,11 @@ try:
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=180, y=212)
 
-                adapter.debug("\tEnd of gleaming_silver", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("\tEnd of gleaming_silver", caller=calframe[1][3])
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -2927,7 +3136,8 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of gnashing_beaks", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of gnashing_beaks", caller=calframe[1][3])
 
                 target = enemyIds[self.newEnemies[-2]].name
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
@@ -2937,9 +3147,11 @@ try:
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=242, y=244)
 
-                adapter.debug("\tEnd of gnashing_beaks", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("\tEnd of gnashing_beaks", caller=calframe[1][3])
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -2947,7 +3159,8 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of grave_matters", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of grave_matters", caller=calframe[1][3])
 
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
@@ -2960,9 +3173,11 @@ try:
                 imageWithText.text((21, 232), newTreasureLines[0], "black", font)
                 imageWithText.text((21, 243), newTreasureLines.get(1, ""), "black", font)
 
-                adapter.debug("\tEnd of grave_matters", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("\tEnd of grave_matters", caller=calframe[1][3])
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -2970,16 +3185,19 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of grim_reunion", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of grim_reunion", caller=calframe[1][3])
 
                 target = enemyIds[self.newEnemies[-1]].name
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=219, y=196)
                 self.create_tooltip(tooltipDict=tooltipDict, x=269, y=255)
 
-                adapter.debug("\tEnd of grim_reunion", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("\tEnd of grim_reunion", caller=calframe[1][3])
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -2987,7 +3205,8 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of hanging_rafters", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of hanging_rafters", caller=calframe[1][3])
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
 
@@ -3001,9 +3220,11 @@ try:
                 imageWithText.text((21, 258), newTreasureLines[0], "black", font)
                 imageWithText.text((21, 269), newTreasureLines.get(1, ""), "black", font)
 
-                adapter.debug("\tEnd of hanging_rafters", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("\tEnd of hanging_rafters", caller=calframe[1][3])
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -3011,7 +3232,8 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of in_deep_water", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of in_deep_water", caller=calframe[1][3])
 
                 target = enemyIds[self.newEnemies[-1]].name
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
@@ -3028,9 +3250,11 @@ try:
                 imageWithText.text((21, 232), newTreasureLines[0], "black", font)
                 imageWithText.text((21, 243), newTreasureLines.get(1, ""), "black", font)
 
-                adapter.debug("\tEnd of in_deep_water", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("\tEnd of in_deep_water", caller=calframe[1][3])
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -3038,7 +3262,8 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of inhospitable_ground", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of inhospitable_ground", caller=calframe[1][3])
 
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
@@ -3051,9 +3276,11 @@ try:
                 imageWithText.text((21, 232), newTreasureLines[0], "black", font)
                 imageWithText.text((21, 243), newTreasureLines.get(1, ""), "black", font)
 
-                adapter.debug("\tEnd of inhospitable_ground", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("\tEnd of inhospitable_ground", caller=calframe[1][3])
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -3061,7 +3288,8 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of lakeview_refuge", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of lakeview_refuge", caller=calframe[1][3])
 
                 target = enemyIds[self.newEnemies[-2]].name
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
@@ -3072,9 +3300,11 @@ try:
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=243, y=276)
 
-                adapter.debug("\tEnd of lakeview_refuge", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("\tEnd of lakeview_refuge", caller=calframe[1][3])
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -3082,7 +3312,8 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of monstrous_maw", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of monstrous_maw", caller=calframe[1][3])
 
                 target = self.newTiles[1][1][0]
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
@@ -3100,9 +3331,11 @@ try:
                 imageWithText.text((21, 232), newTreasureLines[0], "black", font)
                 imageWithText.text((21, 243), newTreasureLines.get(1, ""), "black", font)
 
-                adapter.debug("\tEnd of monstrous_maw", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("\tEnd of monstrous_maw", caller=calframe[1][3])
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -3110,7 +3343,8 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of no_safe_haven", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of no_safe_haven", caller=calframe[1][3])
 
                 target = self.newTiles[2][0][0]
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
@@ -3127,9 +3361,11 @@ try:
                 imageWithText.text((21, 232), newTreasureLines[0], "black", font)
                 imageWithText.text((21, 243), newTreasureLines.get(1, ""), "black", font)
 
-                adapter.debug("\tEnd of no_safe_haven", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("\tEnd of no_safe_haven", caller=calframe[1][3])
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -3137,7 +3373,8 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of painted_passage", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of painted_passage", caller=calframe[1][3])
 
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
@@ -3150,9 +3387,11 @@ try:
                 imageWithText.text((21, 232), newTreasureLines[0], "black", font)
                 imageWithText.text((21, 243), newTreasureLines.get(1, ""), "black", font)
 
-                adapter.debug("\tEnd of painted_passage", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("\tEnd of painted_passage", caller=calframe[1][3])
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -3160,15 +3399,18 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of parish_church", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of parish_church", caller=calframe[1][3])
 
                 target = enemyIds[self.newEnemies[-1]].name
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=180, y=198)
 
-                adapter.debug("\tEnd of parish_church", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("\tEnd of parish_church", caller=calframe[1][3])
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -3176,7 +3418,8 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of parish_gates", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of parish_gates", caller=calframe[1][3])
 
                 target = enemyIds[self.newEnemies[-1]].name
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
@@ -3184,9 +3427,11 @@ try:
                 self.create_tooltip(tooltipDict=tooltipDict, x=188, y=255)
                 self.create_tooltip(tooltipDict=tooltipDict, x=144, y=280)
 
-                adapter.debug("\tEnd of parish_gates", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("\tEnd of parish_gates", caller=calframe[1][3])
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -3194,7 +3439,8 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of pitch_black", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of pitch_black", caller=calframe[1][3])
 
                 tile1Enemies = self.newTiles[1][0] + self.newTiles[1][1]
                 tile2Enemies = self.newTiles[2][0] + self.newTiles[2][1]
@@ -3205,9 +3451,11 @@ try:
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=222, y=147)
 
-                adapter.debug("\tEnd of pitch_black", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("\tEnd of pitch_black", caller=calframe[1][3])
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -3215,7 +3463,8 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of puppet_master", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of puppet_master", caller=calframe[1][3])
 
                 target = self.newTiles[1][0][1]
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
@@ -3235,9 +3484,11 @@ try:
                 imageWithText.text((21, 232), newTreasureLines[0], "black", font)
                 imageWithText.text((21, 243), newTreasureLines.get(1, ""), "black", font)
 
-                adapter.debug("\tEnd of puppet_master", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("\tEnd of puppet_master", caller=calframe[1][3])
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -3245,7 +3496,8 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of rain_of_filth", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of rain_of_filth", caller=calframe[1][3])
 
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
@@ -3258,9 +3510,11 @@ try:
                 imageWithText.text((21, 232), newTreasureLines[0], "black", font)
                 imageWithText.text((21, 243), newTreasureLines.get(1, ""), "black", font)
 
-                adapter.debug("\tEnd of rain_of_filth", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("\tEnd of rain_of_filth", caller=calframe[1][3])
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -3268,7 +3522,8 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of shattered_keep", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of shattered_keep", caller=calframe[1][3])
 
                 target = self.newTiles[1][1][0]
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
@@ -3285,9 +3540,11 @@ try:
                 imageWithText.text((21, 255), newTreasureLines[0], "black", font)
                 imageWithText.text((21, 266), newTreasureLines.get(1, ""), "black", font)
 
-                adapter.debug("\tEnd of shattered_keep", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("\tEnd of shattered_keep", caller=calframe[1][3])
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -3295,7 +3552,8 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of skeletal_spokes", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of skeletal_spokes", caller=calframe[1][3])
 
                 target = self.newTiles[2][0][0]
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
@@ -3303,9 +3561,11 @@ try:
                 self.create_tooltip(tooltipDict=tooltipDict, x=165, y=210)
                 self.create_tooltip(tooltipDict=tooltipDict, x=165, y=239)
 
-                adapter.debug("\tEnd of skeletal_spokes", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("\tEnd of skeletal_spokes", caller=calframe[1][3])
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -3313,7 +3573,8 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of skeleton_overlord", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of skeleton_overlord", caller=calframe[1][3])
 
                 target = enemyIds[self.newEnemies[-1]].name
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
@@ -3326,9 +3587,11 @@ try:
                 self.create_tooltip(tooltipDict=tooltipDict, x=313, y=232)
                 self.create_tooltip(tooltipDict=tooltipDict, x=292, y=257)
 
-                adapter.debug("\tEnd of skeleton_overlord", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("\tEnd of skeleton_overlord", caller=calframe[1][3])
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -3336,7 +3599,8 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of tempting_maw", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of tempting_maw", caller=calframe[1][3])
 
                 target = enemyIds[self.newEnemies[-1]].name
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
@@ -3344,9 +3608,11 @@ try:
                 self.create_tooltip(tooltipDict=tooltipDict, x=220, y=197)
                 self.create_tooltip(tooltipDict=tooltipDict, x=346, y=256)
 
-                adapter.debug("\tEnd of tempting_maw", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("\tEnd of tempting_maw", caller=calframe[1][3])
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -3354,7 +3620,8 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of the_abandoned_chest", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of the_abandoned_chest", caller=calframe[1][3])
 
                 target = enemyIds[self.newEnemies[-2]].name
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
@@ -3375,9 +3642,11 @@ try:
                 imageWithText.text((21, 232), newTreasureLines[0], "black", font)
                 imageWithText.text((21, 243), newTreasureLines.get(1, ""), "black", font)
 
-                adapter.debug("\tEnd of the_abandoned_chest", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("\tEnd of the_abandoned_chest", caller=calframe[1][3])
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -3385,7 +3654,8 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of the_beast_from_the_depths", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of the_beast_from_the_depths", caller=calframe[1][3])
 
                 target = self.newTiles[1][0][0]
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
@@ -3403,9 +3673,11 @@ try:
                 imageWithText.text((21, 258), newTreasureLines[0], "black", font)
                 imageWithText.text((21, 269), newTreasureLines.get(1, ""), "black", font)
 
-                adapter.debug("\tEnd of the_beast_from_the_depths", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("\tEnd of the_beast_from_the_depths", caller=calframe[1][3])
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -3413,15 +3685,18 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of the_bell_tower", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of the_bell_tower", caller=calframe[1][3])
 
                 target = enemyIds[self.newEnemies[-1]].name
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=341, y=195)
 
-                adapter.debug("\tEnd of the_bell_tower", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("\tEnd of the_bell_tower", caller=calframe[1][3])
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -3429,7 +3704,8 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of the_first_bastion", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of the_first_bastion", caller=calframe[1][3])
 
                 target = enemyIds[self.newEnemies[-3]].name
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
@@ -3444,9 +3720,11 @@ try:
                 self.create_tooltip(tooltipDict=tooltipDict, x=247, y=249)
                 self.create_tooltip(tooltipDict=tooltipDict, x=216, y=197)
 
-                adapter.debug("\tEnd of the_first_bastion", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("\tEnd of the_first_bastion", caller=calframe[1][3])
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -3454,7 +3732,8 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of the_fountainhead", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of the_fountainhead", caller=calframe[1][3])
 
                 gang = Counter([enemyIds[enemy].gang for enemy in self.newEnemies if enemyIds[enemy].gang]).most_common(1)[0][0]
                 if gang == "Alonne":
@@ -3468,9 +3747,11 @@ try:
 
                 self.create_tooltip(tooltipDict=tooltipDict, x=142, y=200)
 
-                adapter.debug("\tEnd of the_fountainhead", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("\tEnd of the_fountainhead", caller=calframe[1][3])
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -3478,15 +3759,18 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of the_grand_hall", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of the_grand_hall", caller=calframe[1][3])
 
                 target = enemyIds[self.newEnemies[-1]].name
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=180, y=213)
 
-                adapter.debug("\tEnd of the_grand_hall", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("\tEnd of the_grand_hall", caller=calframe[1][3])
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -3494,7 +3778,8 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of the_iron_golem", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of the_iron_golem", caller=calframe[1][3])
 
                 target = self.newTiles[1][1][0]
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
@@ -3513,9 +3798,11 @@ try:
                 imageWithText.text((21, 266), newTreasureLines[0], "black", font)
                 imageWithText.text((21, 277), newTreasureLines.get(1, ""), "black", font)
 
-                adapter.debug("\tEnd of the_iron_golem", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("\tEnd of the_iron_golem", caller=calframe[1][3])
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -3523,16 +3810,19 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of the_last_bastion", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of the_last_bastion", caller=calframe[1][3])
 
                 target = sorted([enemy for enemy in self.newTiles[1][0] + self.newTiles[1][1]], key=lambda x: enemiesDict[x].difficulty)[0]
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=215, y=227)
                 self.create_tooltip(tooltipDict=tooltipDict, x=316, y=250)
 
-                adapter.debug("\tEnd of the_last_bastion", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("\tEnd of the_last_bastion", caller=calframe[1][3])
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -3540,7 +3830,8 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of the_locked_grave", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of the_locked_grave", caller=calframe[1][3])
 
                 target = enemyIds[self.newEnemies[-1]].name
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
@@ -3558,9 +3849,11 @@ try:
                 imageWithText.text((21, 258), newTreasureLines[0], "black", font)
                 imageWithText.text((21, 269), newTreasureLines.get(1, ""), "black", font)
 
-                adapter.debug("\tEnd of the_locked_grave", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("\tEnd of the_locked_grave", caller=calframe[1][3])
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -3568,7 +3861,8 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of the_shine_of_gold", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of the_shine_of_gold", caller=calframe[1][3])
 
                 target = self.newTiles[1][1][0]
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
@@ -3581,9 +3875,11 @@ try:
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=268, y=195)
 
-                adapter.debug("\tEnd of the_shine_of_gold", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("\tEnd of the_shine_of_gold", caller=calframe[1][3])
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -3591,7 +3887,8 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of the_skeleton_ball", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of the_skeleton_ball", caller=calframe[1][3])
 
                 target = self.newTiles[1][0][0]
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
@@ -3611,9 +3908,11 @@ try:
                 imageWithText.text((21, 232), newTreasureLines[0], "black", font)
                 imageWithText.text((21, 243), newTreasureLines.get(1, ""), "black", font)
 
-                adapter.debug("\tEnd of the_skeleton_ball", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("\tEnd of the_skeleton_ball", caller=calframe[1][3])
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -3621,7 +3920,8 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of trecherous_tower", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of trecherous_tower", caller=calframe[1][3])
 
                 spawn1 = enemyIds[self.newEnemies[2]].name
                 spawn2 = enemyIds[self.newEnemies[3]].name
@@ -3631,9 +3931,11 @@ try:
                 self.encounterImage.paste(im=allEnemies[spawn2]["imageNew"], box=(285, 248), mask=allEnemies[spawn2]["imageNew"])
                 self.encounterImage.paste(im=allEnemies[spawn3]["imageNew"], box=(285, 280), mask=allEnemies[spawn3]["imageNew"])
 
-                adapter.debug("\tEnd of trecherous_tower", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("\tEnd of trecherous_tower", caller=calframe[1][3])
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -3641,7 +3943,8 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of trophy_room", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of trophy_room", caller=calframe[1][3])
 
                 target = self.newTiles[2][0][0]
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
@@ -3660,9 +3963,11 @@ try:
                 imageWithText.text((21, 232), newTreasureLines[0], "black", font)
                 imageWithText.text((21, 243), newTreasureLines.get(1, ""), "black", font)
 
-                adapter.debug("\tEnd of trophy_room", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("\tEnd of trophy_room", caller=calframe[1][3])
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -3670,7 +3975,8 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of twilight_falls", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of twilight_falls", caller=calframe[1][3])
 
                 gang = Counter([enemyIds[enemy].gang for enemy in self.newEnemies if enemyIds[enemy].gang]).most_common(1)[0][0]
                 if gang == "Alonne":
@@ -3684,9 +3990,11 @@ try:
 
                 self.create_tooltip(tooltipDict=tooltipDict, x=142, y=214)
 
-                adapter.debug("\tEnd of twilight_falls", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("\tEnd of twilight_falls", caller=calframe[1][3])
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -3694,7 +4002,8 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of undead_sanctum", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of undead_sanctum", caller=calframe[1][3])
 
                 gang = Counter([enemyIds[enemy].gang for enemy in self.newEnemies if enemyIds[enemy].gang]).most_common(1)[0][0]
                 if gang == "Alonne":
@@ -3719,16 +4028,19 @@ try:
                 imageWithText.text((21, 232), newTreasureLines[0], "black", font)
                 imageWithText.text((21, 243), newTreasureLines.get(1, ""), "black", font)
 
-                adapter.debug("\tEnd of undead_sanctum", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("\tEnd of undead_sanctum", caller=calframe[1][3])
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
         def unseen_scurrying(self):
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of unseen_scurrying", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of unseen_scurrying", caller=calframe[1][3])
 
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
@@ -3741,9 +4053,11 @@ try:
                 imageWithText.text((21, 232), newTreasureLines[0], "black", font)
                 imageWithText.text((21, 243), newTreasureLines.get(1, ""), "black", font)
 
-                adapter.debug("\tEnd of unseen_scurrying", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("\tEnd of unseen_scurrying", caller=calframe[1][3])
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -3751,7 +4065,8 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of urns_of_the_fallen", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of urns_of_the_fallen", caller=calframe[1][3])
 
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
@@ -3764,9 +4079,11 @@ try:
                 imageWithText.text((21, 232), newTreasureLines[0], "black", font)
                 imageWithText.text((21, 243), newTreasureLines.get(1, ""), "black", font)
 
-                adapter.debug("\tEnd of urns_of_the_fallen", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("\tEnd of urns_of_the_fallen", caller=calframe[1][3])
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -3774,7 +4091,8 @@ try:
             try:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
-                adapter.debug("Start of velkas_chosen", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("Start of velkas_chosen", caller=calframe[1][3])
 
                 target = sorted([enemy for enemy in self.newTiles[2][0] + self.newTiles[2][1]], key=lambda x: enemiesDict[x].difficulty, reverse=True)[0]
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
@@ -3793,9 +4111,11 @@ try:
                 imageWithText.text((21, 232), newTreasureLines[0], "black", font)
                 imageWithText.text((21, 243), newTreasureLines.get(1, ""), "black", font)
 
-                adapter.debug("\tEnd of velkas_chosen", caller=calframe[1][3])
+                if platform.system() == "Windows":
+                    adapter.debug("\tEnd of velkas_chosen", caller=calframe[1][3])
             except Exception as e:
-                adapter.exception(e)
+                if platform.system() == "Windows":
+                    adapter.exception(e)
                 raise
 
 
@@ -3841,11 +4161,13 @@ try:
     y_cordinate = int((root.winfo_screenheight() / 2) - (root.winfo_height() / 2))
     root.attributes('-alpha', 1.0)
     root.mainloop()
-    adapter.debug("Closing application")
+    if platform.system() == "Windows":
+        adapter.debug("Closing application")
     root.destroy()
 
 except Exception as e:
     error = str(sys.exc_info())
     if "application has been destroyed" not in error:
-        adapter.exception(error)
+        if platform.system() == "Windows":
+            adapter.exception(error)
         raise
