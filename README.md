@@ -12,7 +12,7 @@ The idea behind this program is to provide backwards and forwards compatibility 
 
 
 ## Roadmap
-Beyond future expansions, I want to figure out how to put Events in here.  At the moment I'm not really sure how to do that in a way that makes sense.  Let me know if you have ideas on this subject.
+Beyond future expansions, I'm really not sure where to go from here.  Possibly a v2 campaign generator.
 
 
 ## FAQ
@@ -34,11 +34,21 @@ Great!  If you can, reproduce it then find the log.txt file in the same folder a
 
 ### Are you going to create a version for Mac/Linux/Android/iPhone/web?
 
-There's a workaround for Mac/Linux.  Install [Python 3](https://www.python.org/downloads/) then install the following modules using pip: [Pillow](https://pillow.readthedocs.io/en/stable/installation.html#basic-installation), [fpdf](https://pypi.org/project/fpdf/).  After that, you can just run the dsbg-shuffle.py script and that should work exactly the same.  As far as I know the .exe file is just a fancy wrapper that allows you to skip those steps.  Under the covers it really just runs the dsbg-shuffle.py script.
+There are a couple workaround options for Mac/Linux.
+- The easy way: use [Wine](https://wiki.winehq.org/Main_Page).
+- The might work way:
+  1. Install [Python 3](https://www.python.org/downloads/) (requires Python 3.1 or higher).
+  2. Install [pip](https://pip.pypa.io/en/stable/installation/).
+  3. Install the following modules using pip: [Pillow](https://pillow.readthedocs.io/en/stable/installation.html#basic-installation), [fpdf](https://pypi.org/project/fpdf/).  All other modules used should come bundled with Python 3, but here they are in case you're missing some: collections, datetime, inspect, json, logging, math, os, platform, random, requests, statistics, sys, tkinter, webbrowser.
+  4. Create a directory to install the font: `mkdir /usr/local/share/fonts/truetype`
+  5. Copy the font from the repo's lib directory to the one just created: `sudo cp "[path to lib dir]/Adobe Caslon Pro Semibold.ttf" /usr/local/share/fonts/truetype/`
+  6. Refresh the system font cache: `fc-cache -fv` (you might need to install fc-cache with `apt install fontconfig`)
+  7. Run the lib/dsbg-shuffle.py script.
+In my testing, the "might work" way has some awful graphical glitches.  That may just be because I was using a Linux subsystem on Windows, but maybe not.
 
 As for mobile, I'd like to, but I don't have any of experience with that sort of thing, and my brief looks into Android development left me confused.  So.. eventually, maybe?  Feel free to contribute or reach out if you'd like to collaborate!
 
-For web, I'd really like to get this up as a web app, since then I wouldn't have to maintain different versions.  However, I also know nothing about web development.  So again, eventually, but please reach out if you'd like to help with that!
+For web, I'd really like to get this up as a web app, since then I wouldn't have to maintain different versions.  However, I also know nothing about web development.  So again, eventually maybe, but please reach out if you'd like to help with that!
 
 ### Why are some encounters missing from the list?
 
