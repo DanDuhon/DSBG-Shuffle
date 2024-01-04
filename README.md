@@ -41,7 +41,7 @@ There are a couple workaround options for Mac/Linux.
   2. Install [pip](https://pip.pypa.io/en/stable/installation/).
   3. Install the following modules using pip: [Pillow](https://pillow.readthedocs.io/en/stable/installation.html#basic-installation), [fpdf](https://pypi.org/project/fpdf/).  All other modules used should come bundled with Python 3, but here they are in case you're missing some: collections, datetime, inspect, json, logging, math, os, platform, random, requests, statistics, sys, tkinter, webbrowser.
   4. Create a directory to install the font: `mkdir /usr/local/share/fonts/truetype`
-  5. Copy the font from the repo's lib directory to the one just created: `sudo cp "[path to lib dir]/Adobe Caslon Pro Semibold.ttf" /usr/local/share/fonts/truetype/`
+  5. Copy the font from the repo's lib directory to the one just created: `cp "[path to lib dir]/Adobe Caslon Pro Semibold.ttf" /usr/local/share/fonts/truetype/`
   6. Refresh the system font cache: `fc-cache -fv` (you might need to install fc-cache with `apt install fontconfig`)
   7. Run the lib/dsbg-shuffle.py script.
 In my testing, the "might work" way has some awful graphical glitches.  That may just be because I was using a Linux subsystem on Windows, but maybe not.
