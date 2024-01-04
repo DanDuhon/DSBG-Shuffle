@@ -1,6 +1,7 @@
 import tkinter as tk
 import logging
 import webbrowser
+import platform
 from tkinter import ttk
 from PIL import Image, ImageTk, ImageFont
 from os import path
@@ -8,8 +9,16 @@ from PIL import ImageFont
 from dsbg_functions import center
 
 
-baseFolder = path.dirname(__file__).replace("\\lib", "")
-font = ImageFont.truetype(baseFolder + "\\lib\\Adobe Caslon Pro Semibold.ttf", 12)
+if platform.system() == "Windows":
+    pathSep = "\\"
+else:
+    pathSep = "/"
+
+baseFolder = path.dirname(__file__).replace("\\lib".replace("\\", pathSep), "")
+if platform.system() == "Windows":
+    font = ImageFont.truetype(baseFolder + "\\lib\\Adobe Caslon Pro Semibold.ttf", 12)
+else:
+    font = ImageFont.truetype("./Adobe Caslon Pro Semibold.ttf", 12)
 
 
 class CustomAdapter(logging.LoggerAdapter):
@@ -114,7 +123,7 @@ class PopupWindow(tk.Toplevel):
             button2.bind("<Button 1>", lambda e: webbrowser.open_new("https://github.com/DanDuhon/DSBG-Shuffle/releases"))
 
         if loadingImage:
-            loadingImage = ImageTk.PhotoImage(Image.open(baseFolder + "\\lib\\bonfire.png"), Image.Resampling.LANCZOS)
+            loadingImage = ImageTk.PhotoImage(Image.open(baseFolder + "\\lib\\bonfire.png".replace("\\", pathSep)), Image.Resampling.LANCZOS)
             loadingLabel = ttk.Label(self.popupFrame)
             loadingLabel.image = loadingImage
             loadingLabel.config(image=loadingImage)
