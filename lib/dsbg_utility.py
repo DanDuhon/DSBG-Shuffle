@@ -9,12 +9,12 @@ from tkinter import ttk
 
 
 class CustomAdapter(logging.LoggerAdapter):
-        """
-        Used for logging.
-        """
-        def process(self, msg, kwargs):
-            my_context = kwargs.pop("caller", self.extra["caller"])
-            return "[%s] %s" % (my_context, msg), kwargs
+    """
+    Used for logging.
+    """
+    def process(self, msg, kwargs):
+        my_context = kwargs.pop("caller", self.extra["caller"])
+        return "[%s] %s" % (my_context, msg), kwargs
 
 
 if platform.system() == "Windows":

@@ -21,12 +21,12 @@ try:
     from dsbg_utility import CreateToolTip, HelpWindow, PopupWindow, enable_binding, center, do_nothing, log
 
 
-    if platform.system() == "Windows":
-        pathSep = "\\"
-    else:
-        pathSep = "/"
-
     try:
+        if platform.system() == "Windows":
+            pathSep = "\\"
+        else:
+            pathSep = "/"
+
         baseFolder = path.dirname(__file__).replace("\\lib".replace("\\", pathSep), "")
         if platform.system() == "Windows":
             font = ImageFont.truetype(baseFolder + "\\lib\\Adobe Caslon Pro Semibold.ttf", 12)
