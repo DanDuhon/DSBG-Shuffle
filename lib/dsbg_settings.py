@@ -525,11 +525,7 @@ class SettingsWindow(object):
                 "updateCheck": "on" if self.updateCheck["value"].get() == 1 else "off"
             }
 
-            # This will trigger the encounters treeview to be recreated to account for the changes.
             if newSettings != self.settings:
-                global settingsChanged
-                settingsChanged = True
-
                 with open(baseFolder + "\\lib\\settings.json".replace("\\", pathSep), "w") as settingsFile:
                     dump(newSettings, settingsFile)
 

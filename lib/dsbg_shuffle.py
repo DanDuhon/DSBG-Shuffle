@@ -43,8 +43,8 @@ try:
             font = ImageFont.truetype(baseFolder + "\\lib\\Adobe Caslon Pro Semibold.ttf", 12)
         else:
             font = ImageFont.truetype("./Adobe Caslon Pro Semibold.ttf", 12)
+
         enemyImages = {}
-        settingsChanged = False
 
         with open(baseFolder + "\\lib\\enemies.json".replace("\\", pathSep)) as enemiesFile:
             enemies = load(enemiesFile)
@@ -153,11 +153,25 @@ try:
 
                 root.withdraw()
                 i = 0
-                progress = PopupWindow(root, labelText="Loading...", progressBar=True, progressMax=len(allEnemies) + (len(self.encounterList) if self.settings["customEnemyList"] else 0), loadingImage=True)
+                progress = PopupWindow(root, labelText="Loading images...", progressBar=True, progressMax=len(allEnemies) + (len(self.encounterList) if self.settings["customEnemyList"] else 0), loadingImage=True)
+
+                # Create images
+                # Enemies
+                for enemy in allEnemies:
+                    i += 1
+                    progress.progressVar.set(i)
+                    root.update_idletasks()
+                    allEnemies[enemy]["imageOld"] = self.create_image(enemy + ".png", "enemyOld")
+                    allEnemies[enemy]["imageOldLevel4"] = self.create_image(enemy + ".png", "enemyOldLevel4")
+                    allEnemies[enemy]["imageNew"] = self.create_image(enemy + ".png", "enemyNew")
+                    if enemy in enemies:
+                        allEnemies[enemy]["image text"] = self.create_image(enemy + ".png", "enemyText")
+                        allEnemies[enemy]["image text" if self.forPrinting else "photo image text"] = ImageTk.PhotoImage(self.create_image(enemy + ".png", "enemyText"))
 
                 # If specific enemies (rather than just expansions) are toggled on or off, do extra work
                 # to make sure all encounters are still valid.
                 if self.settings["customEnemyList"]:
+                    progress.label.config(text = "Applying custom enemy list...")
                     encountersToRemove = set()
                     for encounter in self.encounterList:
                         i += 1
@@ -174,19 +188,6 @@ try:
                     self.create_encounters_treeview()
                     self.scrollbarTreeviewCampaign = ttk.Scrollbar(self.campaignTabTreeviewFrame)
                     self.scrollbarTreeviewCampaign.pack(side="right", fill="y")
-
-                # Create images
-                # Enemies
-                for enemy in allEnemies:
-                    i += 1
-                    progress.progressVar.set(i)
-                    root.update_idletasks()
-                    allEnemies[enemy]["imageOld"] = self.create_image(enemy + ".png", "enemyOld")
-                    allEnemies[enemy]["imageOldLevel4"] = self.create_image(enemy + ".png", "enemyOldLevel4")
-                    allEnemies[enemy]["imageNew"] = self.create_image(enemy + ".png", "enemyNew")
-                    if enemy in enemies:
-                        allEnemies[enemy]["image text"] = self.create_image(enemy + ".png", "enemyText")
-                        allEnemies[enemy]["image text" if self.forPrinting else "photo image text"] = ImageTk.PhotoImage(self.create_image(enemy + ".png", "enemyText"))
 
                 progress.destroy()
                 root.deiconify()
@@ -446,7 +447,7 @@ try:
                 if self.notebook.tab(self.notebook.select(), "text") == "Events":
                     if not self.treeviewEventDeck.selection() and not self.treeviewEventList.selection():
                         if platform.system() == "Windows":
-                            adapter.debug.debug("End of add_card_to_campaign (nothing done)")
+                            adapter.debug("End of add_card_to_campaign (nothing done)")
                         return
                     
                     eventToAdd = self.treeviewEventDeck.selection() if self.treeviewEventDeck.selection() else self.treeviewEventList.selection()
@@ -455,7 +456,7 @@ try:
                     # Also do nothing if you have multiple cards selected.
                     if len(eventToAdd) > 1 or "_" not in eventToAdd[0]:
                         if platform.system() == "Windows":
-                            adapter.debug.debug("End of add_card_to_campaign (nothing done)")
+                            adapter.debug("End of add_card_to_campaign (nothing done)")
                         return
                     
                     eventToAdd = eventToAdd[0]
@@ -481,7 +482,7 @@ try:
                 else:
                     if not self.selected:
                         if platform.system() == "Windows":
-                            adapter.debug.debug("End of add_card_to_campaign (nothing done)")
+                            adapter.debug("End of add_card_to_campaign (nothing done)")
                         return
 
                     # Multiples need a different iid in the treeview, so append a number.
@@ -1567,9 +1568,6 @@ try:
 
                 self.treeviewEncounters.bind("<<TreeviewSelect>>", self.load_encounter)
 
-                global settingsChanged
-                settingsChanged = False
-
                 if platform.system() == "Windows":
                     adapter.debug("End of create_encounters_treeview")
             except Exception as e:
@@ -1700,7 +1698,7 @@ try:
                     # Don't update the image shown if you've selected more than one encounter.
                     if len(tree.selection()) != 1:
                         if platform.system() == "Windows":
-                            adapter.debug.debug("End of load_event (not updating image)")
+                            adapter.debug("End of load_event (not updating image)")
                         return
                     
                     if tree == self.treeviewEventList and len(self.treeviewEventDeck.selection()) > 0:
@@ -1952,13 +1950,16 @@ try:
 
                 self.set_bindings_buttons_menus(False)
 
+                oldSettings = {k:v for k, v in self.settings.items()}
+
                 s = SettingsWindow(root, coreSets)
 
                 self.wait_window(s.top)
 
-                if settingsChanged and self.treeviewEncounters.winfo_exists():
-                    with open(baseFolder + "\\lib\\settings.json".replace("\\", pathSep)) as settingsFile:
-                        self.settings = load(settingsFile)
+                with open(baseFolder + "\\lib\\settings.json".replace("\\", pathSep)) as settingsFile:
+                    self.settings = load(settingsFile)
+
+                if self.settings != oldSettings and self.treeviewEncounters.winfo_exists():
                     self.selected = None
                     self.rewardTreasure = None
                     self.encounter.config(image="")
@@ -1972,7 +1973,7 @@ try:
                     
                     if self.settings["customEnemyList"]:
                         i = 0
-                        progress = PopupWindow(root, labelText="Applying enabled enemies...", progressBar=True, progressMax=len(self.encounterList), loadingImage=True)
+                        progress = PopupWindow(root, labelText="Applying custom enemy list...", progressBar=True, progressMax=len(self.encounterList), loadingImage=True)
 
                         encountersToRemove = set()
                         for encounter in self.encounterList:
@@ -2206,10 +2207,10 @@ try:
                     tree = event.widget
                     if not tree.item(tree.selection())["tags"][0]:
                         if platform.system() == "Windows":
-                            adapter.debug.debug("\tNo encounter selected", caller=calframe[1][3])
+                            adapter.debug("\tNo encounter selected", caller=calframe[1][3])
                         self.treeviewEncounters.bind("<<TreeviewSelect>>", self.load_encounter)
                         if platform.system() == "Windows":
-                            adapter.debug.debug("\tEnd of load_encounter", caller=calframe[1][3])
+                            adapter.debug("\tEnd of load_encounter", caller=calframe[1][3])
                         return
                     encounterName = tree.item(tree.selection())["text"]
                 else:
@@ -2221,7 +2222,7 @@ try:
                         self.shuffle_enemies()
                         self.treeviewEncounters.bind("<<TreeviewSelect>>", self.load_encounter)
                         if platform.system() == "Windows":
-                            adapter.debug.debug("\tEnd of load_encounter", caller=calframe[1][3])
+                            adapter.debug("\tEnd of load_encounter", caller=calframe[1][3])
                         return
 
                 self.selected = encounters[encounterName]
@@ -2392,7 +2393,7 @@ try:
                             image = allEnemies[enemyIds[self.newEnemies[s]].name][imageType]
 
                         if platform.system() == "Windows":
-                            adapter.debug.debug("Pasting " + enemyIds[self.newEnemies[s]].name + " image onto encounter at " + str((x, y)) + ".", caller=calframe[1][3])
+                            adapter.debug("Pasting " + enemyIds[self.newEnemies[s]].name + " image onto encounter at " + str((x, y)) + ".", caller=calframe[1][3])
                         self.encounterImage.paste(im=image, box=(x, y), mask=image)
                         s += 1
 

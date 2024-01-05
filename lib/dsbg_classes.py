@@ -107,11 +107,11 @@ class PopupWindow(tk.Toplevel):
         self.attributes('-alpha', 0.0)
         self.popupFrame = ttk.Frame(self, padding=(20, 10))
         self.popupFrame.pack()
-        label = ttk.Label(self.popupFrame, text=labelText)
-        label.grid(column=0, row=1, columnspan=2, padx=20, pady=20)
+        self.label = ttk.Label(self.popupFrame, text=labelText)
+        self.label.grid(column=0, row=1, columnspan=2, padx=20, pady=20)
         self.wait_visibility()
         self.grab_set_global()
-        label.focus_force()
+        self.label.focus_force()
 
         if firstButton:
             button = ttk.Button(self.popupFrame, text="OK", command=self.destroy)
@@ -162,11 +162,10 @@ class HelpWindow(object):
         helpText += "Mousing over keywords (in bold and italics) and icons in the Objectives\n"
         helpText += "and Special Rules sections will display the name or rules for that keyword.\n\n"
         helpText += "Campaign Tab\n"
-        helpText += "You can build your own campaign by adding encounters to it. You can also\n"
-        helpText += "save and load campaigns. You may only have one of each encounter name,\n"
-        helpText += "but there are no restrictions beyond that. Encounters added to a campaign\n"
+        helpText += "You can build your own campaign by adding encounters and/or events to it.\n"
+        helpText += "You can also save and load campaigns. Encounters added to a campaign\n"
         helpText += "are frozen so you cannot shuffle the enemies. You can also print (non-boss)\n"
-        helpText += "encounter cards in the campaign. Front side only (fow now?) so use sleeves!\n\n"
+        helpText += "encounter cards in the campaign. Front side only so use sleeves!\n\n"
         helpText += "Events Tab\n"
         helpText += "Here you can browse event cards and build an event deck. Event cards are\n"
         helpText += "listed in the upper box and the event deck is in the lower box. Events can\n"
@@ -174,16 +173,14 @@ class HelpWindow(object):
         helpText += "to how many are found in a single core set (e.g. the deck can't contain\n"
         helpText += "more than two Firekeeper's Boon cards).\n\n"
         helpText += "Using the Draw Event Card button will display a random card from the deck\n"
-        helpText += "that hasn't been drawn yet. That card can be shuffled back into the deck\n"
-        helpText += "or put on the bottom of the deck. These buttons only work for the last\n"
-        helpText += "drawn card - not a selected one. There's no Return to Top button because\n"
-        helpText += "that card is technically still on top so such a button would literally do\n"
-        helpText += "nothing.\n\n"
+        helpText += "that hasn't been drawn yet. It will also keep track of what cards were\n"
+        helpText += "drawn and in what order. Cards can be returned to the top or bottom of\n"
+        helpText += "the deck or shuffled back in. The reset button shuffles all drawn cards\n"
+        helpText += "back into the deck.\n\n"
         helpText += "Settings\n"
-        helpText += "In the settings menu, you can enable the different core sets/expansions\n"
-        helpText += "that add enemies or basic treasure to the game. These are the only sets\n"
-        helpText += "listed on purpose as they are the ones that add non-boss enemies or\n"
-        helpText += "additional characters.\n"
+        helpText += "In the settings menu, you can enable the different core sets/expansions.\n"
+        helpText += "These are the only sets listed on purpose as they are the ones that add\n"
+        helpText += "non-boss enemies, additional characters, or common treasure.\n"
         helpText += "Some settings have tooltips, so hover over them for an explanation!"
         self.helpTextLabel = ttk.Label(self.helpTextFrame, text=helpText)
         self.helpTextLabel.grid()
