@@ -22,7 +22,7 @@ class Enemy:
         self.expansions = expansions
         self.difficulty = difficulty
         
-        self.imagePath = baseFolder + "\\lib\\images\\".replace("\\", pathSep) + name + ".png"
+        self.imagePath = baseFolder + "\\lib\\dsbg_shuffle_images\\".replace("\\", pathSep) + name + ".png"
         
         if "Hollow" in self.name and health == 1:
             self.gang = "Hollow"

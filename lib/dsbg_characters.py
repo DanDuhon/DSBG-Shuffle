@@ -13,7 +13,7 @@ if platform.system() == "Windows":
     windowsOs = True
     logger = logging.getLogger(__name__)
     formatter = logging.Formatter("%(asctime)s|%(levelname)s|%(message)s", "%d/%m/%Y %H:%M:%S")
-    fh = logging.FileHandler(path.dirname(path.realpath(__file__)) + "\\log.txt".replace("\\", pathSep), "w")
+    fh = logging.FileHandler(path.dirname(path.realpath(__file__)) + "\\dsbg_shuffle_log.txt".replace("\\", pathSep), "w")
     fh.setFormatter(formatter)
     logger.addHandler(fh)
     adapter = CustomAdapter(logger, {"caller": ""})

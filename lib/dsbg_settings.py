@@ -43,7 +43,7 @@ class SettingsWindow(object):
             top.wait_visibility()
             top.grab_set_global()
 
-            with open(baseFolder + "\\lib\\settings.json".replace("\\", pathSep)) as settingsFile:
+            with open(baseFolder + "\\lib\\dsbg_shuffle_settings.json".replace("\\", pathSep)) as settingsFile:
                 self.settings = load(settingsFile)
 
             self.availableExpansions = set(self.settings["availableExpansions"])
@@ -526,7 +526,7 @@ class SettingsWindow(object):
             }
 
             if newSettings != self.settings:
-                with open(baseFolder + "\\lib\\settings.json".replace("\\", pathSep), "w") as settingsFile:
+                with open(baseFolder + "\\lib\\dsbg_shuffle_settings.json".replace("\\", pathSep), "w") as settingsFile:
                     dump(newSettings, settingsFile)
 
                 # Recalculate the average soul cost of treasure.

@@ -29,7 +29,7 @@ try:
         windowsOs = True
         logger = logging.getLogger(__name__)
         formatter = logging.Formatter("%(asctime)s|%(levelname)s|%(message)s", "%d/%m/%Y %H:%M:%S")
-        fh = logging.FileHandler(path.dirname(path.realpath(__file__)) + "\\log.txt".replace("\\", pathSep), "w")
+        fh = logging.FileHandler(path.dirname(path.realpath(__file__)) + "\\dsbg_shuffle_log.txt".replace("\\", pathSep), "w")
         fh.setFormatter(formatter)
         logger.addHandler(fh)
         adapter = CustomAdapter(logger, {"caller": ""})
@@ -47,18 +47,18 @@ try:
 
         enemyImages = {}
 
-        with open(baseFolder + "\\lib\\enemies.json".replace("\\", pathSep)) as enemiesFile:
+        with open(baseFolder + "\\lib\\dsbg_shuffle_enemies.json".replace("\\", pathSep)) as enemiesFile:
             enemies = load(enemiesFile)
 
-        with open(baseFolder + "\\lib\\invaders_standard.json".replace("\\", pathSep)) as invadersStandardFile:
+        with open(baseFolder + "\\lib\\dsbg_shuffle_invaders_standard.json".replace("\\", pathSep)) as invadersStandardFile:
             invadersStandard = load(invadersStandardFile)
 
-        with open(baseFolder + "\\lib\\invaders_advanced.json".replace("\\", pathSep)) as invadersAdvancedFile:
+        with open(baseFolder + "\\lib\\dsbg_shuffle_invaders_advanced.json".replace("\\", pathSep)) as invadersAdvancedFile:
             invadersAdvanced = load(invadersAdvancedFile)
 
         allEnemies = enemies | invadersStandard | invadersAdvanced
 
-        with open(baseFolder + "\\lib\\encounters.json".replace("\\", pathSep)) as encountersFile:
+        with open(baseFolder + "\\lib\\dsbg_shuffle_encounters.json".replace("\\", pathSep)) as encountersFile:
             encounters = load(encountersFile)
     except Exception as e:
         if windowsOs:
@@ -72,14 +72,14 @@ try:
                 if windowsOs:
                     adapter.debug("Initiating application")
 
-                with open(baseFolder + "\\lib\\settings.json".replace("\\", pathSep)) as settingsFile:
+                with open(baseFolder + "\\lib\\dsbg_shuffle_settings.json".replace("\\", pathSep)) as settingsFile:
                     self.settings = load(settingsFile)
 
                 if self.settings["theme"] == "light":
                     root.tk.call("set_theme", "light")
 
                 # Delete images from staging
-                folder = baseFolder + "\\lib\\image staging".replace("\\", pathSep)
+                folder = baseFolder + "\\lib\\dsbg_shuffle_image_staging".replace("\\", pathSep)
                 for filename in os.listdir(folder):
                     filePath = os.path.join(folder, filename)
 
@@ -238,7 +238,7 @@ try:
                     ("Archive Entrance", "The Sunless City"): [
                         {"image": self.trial, "photo image": ImageTk.PhotoImage(self.trial), "imageName": "trial"}
                         ],
-                    ("Broken Passageway", "The Sunless City"): [
+                    ("Broken Passageway (TSC)", "The Sunless City"): [
                         {"image": self.timer, "photo image": ImageTk.PhotoImage(self.timer), "imageName": "timer"},
                         {"image": self.timer, "photo image": ImageTk.PhotoImage(self.timer), "imageName": "timer"}
                         ],
@@ -435,7 +435,7 @@ try:
             self.encounterCanvas.yview_scroll(int(-1*(event.delta/120)), "units")
 
 
-        def add_card_to_campaign(self):
+        def add_card_to_campaign(self, event=None):
             """
             Adds an encounter card to the campaign, visible in the campaign treeview.
             """
@@ -498,7 +498,7 @@ try:
                     # Build the dictionary that will be saved to JSON if this campaign is saved.
                     card = {
                         "type": "encounter",
-                        "name": self.selected["name"],
+                        "name": self.selected["name"] + (" (TSC)" if self.selected["expansion"] == "The Sunless City" and self.selected["name"] in set(["Broken Passageway", "Central Plaza"]) else ""),
                         "expansion": self.selected["expansion"],
                         "level": self.selected["level"],
                         "enemies": self.newEnemies,
@@ -606,7 +606,7 @@ try:
                     adapter.debug("Start of save_campaign", caller=calframe[1][3])
 
                 # Prompt user to save the file.
-                campaignName = filedialog.asksaveasfile(mode="w", initialdir=baseFolder + "\\lib\\saved campaigns".replace("\\", pathSep), defaultextension=".json")
+                campaignName = filedialog.asksaveasfile(mode="w", initialdir=baseFolder + "\\lib\\dsbg_shuffle_saved_campaigns".replace("\\", pathSep), defaultextension=".json")
 
                 # If they canceled it, do nothing.
                 if not campaignName:
@@ -637,7 +637,7 @@ try:
                     adapter.debug("Start of load_campaign", caller=calframe[1][3])
 
                 # Prompt the user to find the campaign file.
-                campaignFile = filedialog.askopenfilename(initialdir=baseFolder + "\\lib\\saved campaigns".replace("\\", pathSep), filetypes = [(".json", ".json")])
+                campaignFile = filedialog.askopenfilename(initialdir=baseFolder + "\\lib\\dsbg_shuffle_saved_campaigns".replace("\\", pathSep), filetypes = [(".json", ".json")])
 
                 # If the user did not select a file, do nothing.
                 if not campaignFile:
@@ -768,10 +768,10 @@ try:
                 if campaignCard["type"] == "encounter":
                     self.rewardTreasure = campaignCard.get("rewardTreasure")
 
-                    adapter.debug("\tOpening " + baseFolder + "\\lib\\encounters\\".replace("\\", pathSep) + campaignCard["name"] + ".json", caller=calframe[1][3])
+                    adapter.debug("\tOpening " + baseFolder + "\\lib\\dsbg_shuffle_encounters\\".replace("\\", pathSep) + campaignCard["name"] + ".json", caller=calframe[1][3])
 
                     # Get the enemy slots for this card.
-                    with open(baseFolder + "\\lib\\encounters\\".replace("\\", pathSep) + campaignCard["name"] + ".json") as alternativesFile:
+                    with open(baseFolder + "\\lib\\dsbg_shuffle_encounters\\".replace("\\", pathSep) + campaignCard["name"] + ".json") as alternativesFile:
                         alts = load(alternativesFile)
 
                     # Create the encounter card with saved enemies and tooltips.
@@ -805,7 +805,7 @@ try:
                     adapter.debug("Start of save_event_deck", caller=calframe[1][3])
 
                 # Prompt user to save the file.
-                deckName = filedialog.asksaveasfile(mode="w", initialdir=baseFolder + "\\lib\\saved event decks".replace("\\", pathSep), defaultextension=".json")
+                deckName = filedialog.asksaveasfile(mode="w", initialdir=baseFolder + "\\lib\\dsbg_shuffle_saved_event_decks".replace("\\", pathSep), defaultextension=".json")
 
                 # If they canceled it, do nothing.
                 if not deckName:
@@ -843,7 +843,7 @@ try:
                     adapter.debug("Start of load_event_deck", caller=calframe[1][3])
 
                 # Prompt the user to find the campaign file.
-                deckFile = filedialog.askopenfilename(initialdir=baseFolder + "\\lib\\saved event decks".replace("\\", pathSep), filetypes = [(".json", ".json")])
+                deckFile = filedialog.askopenfilename(initialdir=baseFolder + "\\lib\\dsbg_shuffle_saved_event_decks".replace("\\", pathSep), filetypes = [(".json", ".json")])
 
                 # If the user did not select a file, do nothing.
                 if not deckFile:
@@ -1237,6 +1237,10 @@ try:
                 campaignEncounters = [e for e in self.campaign if e["name"] not in bosses]
 
                 for encounter in campaignEncounters:
+                    # Skip event cards
+                    if encounter["type"] != "encounter":
+                        continue
+
                     # These are the card sizes in mm
                     if encounter["expansion"] in {
                         "Dark Souls The Board Game",
@@ -1267,19 +1271,19 @@ try:
                 encounterCount = 0
                 eCount = 0
                 v1Normal = []
-                l = [e for e in campaignEncounters if e["width"] == 42]
+                l = [e for e in campaignEncounters if e["type"] == "encounter" and e["width"] == 42]
                 for i in range(0, len(l), 18):
                     v1Normal.append(l[i:i+18])
                     encounterCount += len(l[i:i+18])
 
                 v1Level4 = []
-                l = [e for e in campaignEncounters if e["width"] == 63]
+                l = [e for e in campaignEncounters if e["type"] == "encounter" and e["width"] == 63]
                 for i in range(0, len(l), 9):
                     v1Level4.append(l[i:i+9])
                     encounterCount += len(l[i:i+9])
 
                 v2 = []
-                l = [e for e in campaignEncounters if e["width"] == 70]
+                l = [e for e in campaignEncounters if e["type"] == "encounter" and e["width"] == 70]
                 for i in range(0, len(l), 6):
                     v2.append(l[i:i+6])
                     encounterCount += len(l[i:i+6])
@@ -1317,9 +1321,9 @@ try:
                             campaignEncounter = [e for e in self.campaign if e["name"] == encounter["name"]]
                             self.rewardTreasure = campaignEncounter[0].get("rewardTreasure")
 
-                            adapter.debug("\tOpening " + baseFolder + "\\lib\\encounters\\".replace("\\", pathSep) + campaignEncounter[0]["name"] + ".json", caller=calframe[1][3])
+                            adapter.debug("\tOpening " + baseFolder + "\\lib\\dsbg_shuffle_encounters\\".replace("\\", pathSep) + campaignEncounter[0]["name"] + ".json", caller=calframe[1][3])
                             # Get the enemy slots for this encounter.
-                            with open(baseFolder + "\\lib\\encounters\\".replace("\\", pathSep) + campaignEncounter[0]["name"] + ".json") as alternativesFile:
+                            with open(baseFolder + "\\lib\\dsbg_shuffle_encounters\\".replace("\\", pathSep) + campaignEncounter[0]["name"] + ".json") as alternativesFile:
                                 alts = load(alternativesFile)
 
                             # Create the encounter card with saved enemies and tooltips.
@@ -1332,10 +1336,10 @@ try:
 
                             if i > standardCards:
                                 imageStage = imageStage.rotate(90, Image.NEAREST, expand=1)
-                            imageStage.save(baseFolder + "\\lib\\image staging\\".replace("\\", pathSep) + encounter["name"] + ".png")
+                            imageStage.save(baseFolder + "\\lib\\dsbg_shuffle_image_staging\\".replace("\\", pathSep) + encounter["name"] + ".png")
 
                             adapter.debug("\tAdding " + encounter["name"] + " to PDF at (" + str(x) + ", " + str(y) + ") with width of " + str(encounter["width" if not i > standardCards else "height"]), caller=calframe[1][3])
-                            pdf.image(baseFolder + "\\lib\\image staging\\".replace("\\", pathSep) + encounter["name"] + ".png", x=x, y=y, type="PNG", w=encounter["width" if not i > standardCards else "height"])
+                            pdf.image(baseFolder + "\\lib\\dsbg_shuffle_image_staging\\".replace("\\", pathSep) + encounter["name"] + ".png", x=x, y=y, type="PNG", w=encounter["width" if not i > standardCards else "height"])
 
                             if i < standardCards:
                                 if i in columnBreaks:
@@ -1356,15 +1360,19 @@ try:
                 progress.destroy()
 
                 # Prompt user to save the file.
-                pdfOutput = filedialog.asksaveasfile(mode="w", initialdir=baseFolder + "\\lib\\encounter exports".replace("\\", pathSep), defaultextension=".pdf")
+                pdfOutput = filedialog.asksaveasfile(mode="w", initialdir=baseFolder + "\\lib\\dsbg_shuffle_pdfs".replace("\\", pathSep), defaultextension=".pdf")
 
                 # If they canceled it, do nothing.
                 if not pdfOutput:
                     if windowsOs:
                         adapter.debug("End of print_encounters (nothing done)")
                     return
+                
+                progress = PopupWindow(root, labelText="Saving PDF, please wait...", loadingImage=True)
 
                 pdf.output(pdfOutput.name)
+
+                progress.destroy()
 
                 self.forPrinting = False
 
@@ -1428,7 +1436,7 @@ try:
                 if windowsOs:
                     adapter.debug("Start of create_tabs", caller=calframe[1][3])
 
-                with open(baseFolder + "\\lib\\settings.json".replace("\\", pathSep)) as settingsFile:
+                with open(baseFolder + "\\lib\\dsbg_shuffle_settings.json".replace("\\", pathSep)) as settingsFile:
                     self.settings = load(settingsFile)
 
                 self.paned = ttk.PanedWindow(self)
@@ -1813,15 +1821,6 @@ try:
                     enable_binding("s", self.shuffle_enemies, root)
                     enable_binding("c", self.add_card_to_campaign, root)
                     enable_binding("Control-q", lambda x: self.keybind_call("q"), root)
-                else:
-                    enable_binding("Key-1", do_nothing, root)
-                    enable_binding("Key-2", do_nothing, root)
-                    enable_binding("Key-3", do_nothing, root)
-                    enable_binding("Key-4", do_nothing, root)
-                    enable_binding("s", do_nothing, root)
-                    enable_binding("c", do_nothing, root)
-
-                if enable:
                     self.fileMenu.entryconfig("Random Level 1 Encounter", state=tk.NORMAL)
                     self.fileMenu.entryconfig("Random Level 2 Encounter", state=tk.NORMAL)
                     self.fileMenu.entryconfig("Random Level 3 Encounter", state=tk.NORMAL)
@@ -1829,6 +1828,12 @@ try:
                     self.fileMenu.entryconfig("Shuffle Enemies", state=tk.NORMAL)
                     self.fileMenu.entryconfig("Add to Campaign", state=tk.NORMAL)
                 else:
+                    enable_binding("Key-1", do_nothing, root)
+                    enable_binding("Key-2", do_nothing, root)
+                    enable_binding("Key-3", do_nothing, root)
+                    enable_binding("Key-4", do_nothing, root)
+                    enable_binding("s", do_nothing, root)
+                    enable_binding("c", do_nothing, root)
                     self.fileMenu.entryconfig("Random Level 1 Encounter", state=tk.DISABLED)
                     self.fileMenu.entryconfig("Random Level 2 Encounter", state=tk.DISABLED)
                     self.fileMenu.entryconfig("Random Level 3 Encounter", state=tk.DISABLED)
@@ -1900,7 +1905,7 @@ try:
                 self.fileMenu.add_command(label="Random Level 3 Encounter", command=lambda x=3: self.random_encounter(level=x), accelerator="3")
                 self.fileMenu.add_command(label="Random Level 4 Encounter", command=lambda x=4: self.random_encounter(level=x), accelerator="4")
                 self.fileMenu.add_command(label="Shuffle Enemies", command=self.shuffle_enemies, accelerator="s")
-                self.fileMenu.add_command(label="Add to Campaign", command=self.shuffle_enemies, accelerator="c")
+                self.fileMenu.add_command(label="Add to Campaign", command=self.add_card_to_campaign, accelerator="c")
                 self.fileMenu.add_separator()
                 self.fileMenu.add_command(label="Quit", command=root.quit, accelerator="Ctrl+Q")
                 menuBar.add_cascade(label="File", menu=self.fileMenu)
@@ -1983,7 +1988,7 @@ try:
 
                 self.wait_window(s.top)
 
-                with open(baseFolder + "\\lib\\settings.json".replace("\\", pathSep)) as settingsFile:
+                with open(baseFolder + "\\lib\\dsbg_shuffle_settings.json".replace("\\", pathSep)) as settingsFile:
                     self.settings = load(settingsFile)
 
                 if self.settings != oldSettings and self.treeviewEncounters.winfo_exists():
@@ -2100,18 +2105,18 @@ try:
                         fileName += " (TSC)"
                     fileName += ".jpg"
 
-                    imagePath = baseFolder + "\\lib\\images\\".replace("\\", pathSep) + fileName
+                    imagePath = baseFolder + "\\lib\\dsbg_shuffle_images\\".replace("\\", pathSep) + fileName
                     if windowsOs:
                         adapter.debug("\tOpening " + imagePath, caller=calframe[1][3])
                     self.encounterImage = Image.open(imagePath).resize((width, height), Image.Resampling.LANCZOS)
                     image = ImageTk.PhotoImage(self.encounterImage)
                 elif imageType == "enemyText":
-                    imagePath = baseFolder + "\\lib\\images\\".replace("\\", pathSep) + imageFileName[:-4] + " rule bg.jpg"
+                    imagePath = baseFolder + "\\lib\\dsbg_shuffle_images\\".replace("\\", pathSep) + imageFileName[:-4] + " rule bg.jpg"
                     if windowsOs:
                         adapter.debug("\tOpening " + imagePath, caller=calframe[1][3])
                     image = Image.open(imagePath).resize((14, 14), Image.Resampling.LANCZOS)
                 else:
-                    imagePath = baseFolder + "\\lib\\images\\".replace("\\", pathSep) + imageFileName
+                    imagePath = baseFolder + "\\lib\\dsbg_shuffle_images\\".replace("\\", pathSep) + imageFileName
                     if windowsOs:
                         adapter.debug("\tOpening " + imagePath, caller=calframe[1][3])
 
@@ -2258,8 +2263,8 @@ try:
 
                 # Get the possible alternative enemies from the encounter's file.
                 if windowsOs:
-                    adapter.debug("\tOpening " + baseFolder + "\\lib\\encounters\\".replace("\\", pathSep) + encounterName + ".json", caller=calframe[1][3])
-                with open(baseFolder + "\\lib\\encounters\\".replace("\\", pathSep) + encounterName + ".json") as alternativesFile:
+                    adapter.debug("\tOpening " + baseFolder + "\\lib\\dsbg_shuffle_encounters\\".replace("\\", pathSep) + encounterName + ".json", caller=calframe[1][3])
+                with open(baseFolder + "\\lib\\dsbg_shuffle_encounters\\".replace("\\", pathSep) + encounterName + ".json") as alternativesFile:
                     alts = load(alternativesFile)
 
                 self.selected["alternatives"] = []
@@ -2433,7 +2438,7 @@ try:
                     self.aged_sentinel()
                 elif name == "Castle Break In":
                     self.castle_break_in()
-                elif name == "Central Plaza" and expansion == "The Sunless City":
+                elif (name == "Central Plaza" or name == "Central Plaza (TSC)") and expansion == "The Sunless City":
                     self.central_plaza()
                 elif name == "Cloak and Feathers":
                     self.cloak_and_feathers()
@@ -2544,7 +2549,8 @@ try:
 
                 self.encounterPhotoImage = ImageTk.PhotoImage(self.encounterImage)
                 self.encounter.image = self.encounterPhotoImage
-                self.encounter.config(image=self.encounterPhotoImage)
+                if not self.forPrinting:
+                    self.encounter.config(image=self.encounterPhotoImage)
                 self.encounter.bind("<Button 1>", self.shuffle_enemies)
 
                 if windowsOs:
@@ -2912,13 +2918,13 @@ try:
 
                 gang = Counter([enemyIds[enemy].gang for enemy in self.newEnemies if enemyIds[enemy].gang]).most_common(1)[0][0]
                 if gang == "Alonne":
-                    tooltipDict = {"image" if self.forPrinting else "photo image": self.gangAlonne if self.forPrinting else self.gangAlonnePhoto, "imageName": "gang"}
+                    tooltipDict = {"image" if self.forPrinting else "image" if self.forPrinting else "photo image": self.gangAlonne if self.forPrinting else self.gangAlonnePhoto, "imageName": "gang"}
                 elif gang == "Hollow":
-                    tooltipDict = {"image" if self.forPrinting else "photo image": self.gangHollow if self.forPrinting else self.gangHollowPhoto, "imageName": "gang"}
+                    tooltipDict = {"image" if self.forPrinting else "image" if self.forPrinting else "photo image": self.gangHollow if self.forPrinting else self.gangHollowPhoto, "imageName": "gang"}
                 elif gang == "Scarecrow":
-                    tooltipDict = {"image" if self.forPrinting else "photo image": self.gangScarecrow if self.forPrinting else self.gangScarecrowPhoto, "imageName": "gang"}
+                    tooltipDict = {"image" if self.forPrinting else "image" if self.forPrinting else "photo image": self.gangScarecrow if self.forPrinting else self.gangScarecrowPhoto, "imageName": "gang"}
                 elif gang == "Skeleton":
-                    tooltipDict = {"image" if self.forPrinting else "photo image": self.gangSkeleton if self.forPrinting else self.gangSkeletonPhoto, "imageName": "gang"}
+                    tooltipDict = {"image" if self.forPrinting else "image" if self.forPrinting else "photo image": self.gangSkeleton if self.forPrinting else self.gangSkeletonPhoto, "imageName": "gang"}
 
                 self.create_tooltip(tooltipDict=tooltipDict, x=142, y=245)
 
@@ -2939,13 +2945,13 @@ try:
 
                 gang = Counter([enemyIds[enemy].gang for enemy in self.newEnemies if enemyIds[enemy].gang]).most_common(1)[0][0]
                 if gang == "Alonne":
-                    tooltipDict = {"photo image": self.gangAlonne if self.forPrinting else self.gangAlonnePhoto, "imageName": "gang"}
+                    tooltipDict = {"image" if self.forPrinting else "photo image": self.gangAlonne if self.forPrinting else self.gangAlonnePhoto, "imageName": "gang"}
                 elif gang == "Hollow":
-                    tooltipDict = {"photo image": self.gangHollow if self.forPrinting else self.gangHollowPhoto, "imageName": "gang"}
+                    tooltipDict = {"image" if self.forPrinting else "photo image": self.gangHollow if self.forPrinting else self.gangHollowPhoto, "imageName": "gang"}
                 elif gang == "Scarecrow":
-                    tooltipDict = {"photo image": self.gangScarecrow if self.forPrinting else self.gangScarecrowPhoto, "imageName": "gang"}
+                    tooltipDict = {"image" if self.forPrinting else "photo image": self.gangScarecrow if self.forPrinting else self.gangScarecrowPhoto, "imageName": "gang"}
                 elif gang == "Skeleton":
-                    tooltipDict = {"photo image": self.gangSkeleton if self.forPrinting else self.gangSkeletonPhoto, "imageName": "gang"}
+                    tooltipDict = {"image" if self.forPrinting else "photo image": self.gangSkeleton if self.forPrinting else self.gangSkeletonPhoto, "imageName": "gang"}
 
                 self.create_tooltip(tooltipDict=tooltipDict, x=142, y=214)
 
@@ -3048,13 +3054,13 @@ try:
 
                 gang = Counter([enemyIds[enemy].gang for enemy in self.newEnemies if enemyIds[enemy].gang]).most_common(1)[0][0]
                 if gang == "Alonne":
-                    tooltipDict = {"photo image": self.gangAlonne if self.forPrinting else self.gangAlonnePhoto, "imageName": "gang"}
+                    tooltipDict = {"image" if self.forPrinting else "photo image": self.gangAlonne if self.forPrinting else self.gangAlonnePhoto, "imageName": "gang"}
                 elif gang == "Hollow":
-                    tooltipDict = {"photo image": self.gangHollow if self.forPrinting else self.gangHollowPhoto, "imageName": "gang"}
+                    tooltipDict = {"image" if self.forPrinting else "photo image": self.gangHollow if self.forPrinting else self.gangHollowPhoto, "imageName": "gang"}
                 elif gang == "Scarecrow":
-                    tooltipDict = {"photo image": self.gangScarecrow if self.forPrinting else self.gangScarecrowPhoto, "imageName": "gang"}
+                    tooltipDict = {"image" if self.forPrinting else "photo image": self.gangScarecrow if self.forPrinting else self.gangScarecrowPhoto, "imageName": "gang"}
                 elif gang == "Skeleton":
-                    tooltipDict = {"photo image": self.gangSkeleton if self.forPrinting else self.gangSkeletonPhoto, "imageName": "gang"}
+                    tooltipDict = {"image" if self.forPrinting else "photo image": self.gangSkeleton if self.forPrinting else self.gangSkeletonPhoto, "imageName": "gang"}
 
                 self.create_tooltip(tooltipDict=tooltipDict, x=142, y=215)
 
@@ -3765,13 +3771,13 @@ try:
 
                 gang = Counter([enemyIds[enemy].gang for enemy in self.newEnemies if enemyIds[enemy].gang]).most_common(1)[0][0]
                 if gang == "Alonne":
-                    tooltipDict = {"photo image": self.gangAlonne if self.forPrinting else self.gangAlonnePhoto, "imageName": "gang"}
+                    tooltipDict = {"image" if self.forPrinting else "photo image": self.gangAlonne if self.forPrinting else self.gangAlonnePhoto, "imageName": "gang"}
                 elif gang == "Hollow":
-                    tooltipDict = {"photo image": self.gangHollow if self.forPrinting else self.gangHollowPhoto, "imageName": "gang"}
+                    tooltipDict = {"image" if self.forPrinting else "photo image": self.gangHollow if self.forPrinting else self.gangHollowPhoto, "imageName": "gang"}
                 elif gang == "Scarecrow":
-                    tooltipDict = {"photo image": self.gangScarecrow if self.forPrinting else self.gangScarecrowPhoto, "imageName": "gang"}
+                    tooltipDict = {"image" if self.forPrinting else "photo image": self.gangScarecrow if self.forPrinting else self.gangScarecrowPhoto, "imageName": "gang"}
                 elif gang == "Skeleton":
-                    tooltipDict = {"photo image": self.gangSkeleton if self.forPrinting else self.gangSkeletonPhoto, "imageName": "gang"}
+                    tooltipDict = {"image" if self.forPrinting else "photo image": self.gangSkeleton if self.forPrinting else self.gangSkeletonPhoto, "imageName": "gang"}
 
                 self.create_tooltip(tooltipDict=tooltipDict, x=142, y=200)
 
@@ -4008,13 +4014,13 @@ try:
 
                 gang = Counter([enemyIds[enemy].gang for enemy in self.newEnemies if enemyIds[enemy].gang]).most_common(1)[0][0]
                 if gang == "Alonne":
-                    tooltipDict = {"photo image": self.gangAlonne if self.forPrinting else self.gangAlonnePhoto, "imageName": "gang"}
+                    tooltipDict = {"image" if self.forPrinting else "photo image": self.gangAlonne if self.forPrinting else self.gangAlonnePhoto, "imageName": "gang"}
                 elif gang == "Hollow":
-                    tooltipDict = {"photo image": self.gangHollow if self.forPrinting else self.gangHollowPhoto, "imageName": "gang"}
+                    tooltipDict = {"image" if self.forPrinting else "photo image": self.gangHollow if self.forPrinting else self.gangHollowPhoto, "imageName": "gang"}
                 elif gang == "Scarecrow":
-                    tooltipDict = {"photo image": self.gangScarecrow if self.forPrinting else self.gangScarecrowPhoto, "imageName": "gang"}
+                    tooltipDict = {"image" if self.forPrinting else "photo image": self.gangScarecrow if self.forPrinting else self.gangScarecrowPhoto, "imageName": "gang"}
                 elif gang == "Skeleton":
-                    tooltipDict = {"photo image": self.gangSkeleton if self.forPrinting else self.gangSkeletonPhoto, "imageName": "gang"}
+                    tooltipDict = {"image" if self.forPrinting else "photo image": self.gangSkeleton if self.forPrinting else self.gangSkeletonPhoto, "imageName": "gang"}
 
                 self.create_tooltip(tooltipDict=tooltipDict, x=142, y=214)
 
@@ -4035,13 +4041,13 @@ try:
 
                 gang = Counter([enemyIds[enemy].gang for enemy in self.newEnemies if enemyIds[enemy].gang]).most_common(1)[0][0]
                 if gang == "Alonne":
-                    tooltipDict = {"photo image": self.gangAlonne if self.forPrinting else self.gangAlonnePhoto, "imageName": "gang"}
+                    tooltipDict = {"image" if self.forPrinting else "photo image": self.gangAlonne if self.forPrinting else self.gangAlonnePhoto, "imageName": "gang"}
                 elif gang == "Hollow":
-                    tooltipDict = {"photo image": self.gangHollow if self.forPrinting else self.gangHollowPhoto, "imageName": "gang"}
+                    tooltipDict = {"image" if self.forPrinting else "photo image": self.gangHollow if self.forPrinting else self.gangHollowPhoto, "imageName": "gang"}
                 elif gang == "Scarecrow":
-                    tooltipDict = {"photo image": self.gangScarecrow if self.forPrinting else self.gangScarecrowPhoto, "imageName": "gang"}
+                    tooltipDict = {"image" if self.forPrinting else "photo image": self.gangScarecrow if self.forPrinting else self.gangScarecrowPhoto, "imageName": "gang"}
                 elif gang == "Skeleton":
-                    tooltipDict = {"photo image": self.gangSkeleton if self.forPrinting else self.gangSkeletonPhoto, "imageName": "gang"}
+                    tooltipDict = {"image" if self.forPrinting else "photo image": self.gangSkeleton if self.forPrinting else self.gangSkeletonPhoto, "imageName": "gang"}
 
                 self.create_tooltip(tooltipDict=tooltipDict, x=142, y=214)
 
@@ -4167,11 +4173,11 @@ try:
 
     # Check for a new version
     today = datetime.datetime.today()
-    with open(baseFolder + "\\lib\\version.txt".replace("\\", pathSep)) as vFile:
+    with open(baseFolder + "\\lib\\dsbg_shuffle_version.txt".replace("\\", pathSep)) as vFile:
         version = vFile.readlines()
     if int(version[1]) != today.month:
         version[1] = today.month
-        with open(os.path.join(baseFolder, "lib\\version.txt".replace("\\", pathSep)), "w") as v:
+        with open(os.path.join(baseFolder, "lib\\dsbg_shuffle_version.txt".replace("\\", pathSep)), "w") as v:
             v.write("\n".join([str(line).replace("\n", "") for line in version]))
 
         response = requests.get("https://api.github.com/repos/DanDuhon/DSBG-Shuffle/releases/latest")
