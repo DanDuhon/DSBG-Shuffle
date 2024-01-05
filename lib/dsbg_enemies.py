@@ -1,7 +1,13 @@
+import platform
 from os import path
 
 
-baseFolder = path.dirname(__file__)
+if platform.system() == "Windows":
+    pathSep = "\\"
+else:
+    pathSep = "/"
+
+baseFolder = path.dirname(__file__).replace("\\lib".replace("\\", pathSep), "")
 enemies = []
 enemyIds = {}
 enemiesDict = {}
@@ -16,7 +22,7 @@ class Enemy:
         self.expansions = expansions
         self.difficulty = difficulty
         
-        self.imagePath = baseFolder + "\\lib\\images\\" + name + ".png"
+        self.imagePath = baseFolder + "\\lib\\images\\".replace("\\", pathSep) + name + ".png"
         
         if "Hollow" in self.name and health == 1:
             self.gang = "Hollow"

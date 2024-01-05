@@ -1,7 +1,27 @@
-from random import choice
+import inspect
+import logging
+import platform
 from math import floor
-from dsbg_characters import mean_soul_cost, soulCost
+from os import path
+from random import choice
 
+from dsbg_characters import mean_soul_cost, soulCost
+from dsbg_classes import CustomAdapter
+
+
+if platform.system() == "Windows":
+    pathSep = "\\"
+    windowsOs = True
+    logger = logging.getLogger(__name__)
+    formatter = logging.Formatter("%(asctime)s|%(levelname)s|%(message)s", "%d/%m/%Y %H:%M:%S")
+    fh = logging.FileHandler(path.dirname(path.realpath(__file__)) + "\\log.txt".replace("\\", pathSep), "w")
+    fh.setFormatter(formatter)
+    logger.addHandler(fh)
+    adapter = CustomAdapter(logger, {"caller": ""})
+    logger.setLevel(logging.DEBUG)
+else:
+    pathSep = "/"
+    windowsOs = False
 
 treasures = {
     "Adventurer's Armour": {"expansions": set(["Characters Expansion"]), "type": "armor", "character": None, "encounterLevels": set([1,2,3,4]), "strength": 14, "dexterity": 22, "intelligence": 14, "faith": 0},
@@ -274,103 +294,142 @@ tiers = {
 
 
 def generate_treasure_soul_cost(setsAvailable, charactersActive):
-    maxStr = max([len(soulCost[c]["strength"]) for c in charactersActive])
-    maxDex = max([len(soulCost[c]["dexterity"]) for c in charactersActive])
-    maxInt = max([len(soulCost[c]["intelligence"]) for c in charactersActive])
-    maxFai = max([len(soulCost[c]["faith"]) for c in charactersActive])
+    try:
+        curframe = inspect.currentframe()
+        calframe = inspect.getouterframes(curframe, 2)
+        if windowsOs:
+            adapter.debug("Start of generate_treasure_soul_cost", caller=calframe[1][3])
 
-    for t in [t for t in treasures if not treasures[t]["character"] or treasures[t]["character"] in charactersActive]:
-        # Don't attempt to calculate soul cost for items that can't be equipped by anyone in the party.
-        if any([
-            treasures[t]["strength"] > maxStr,
-            treasures[t]["dexterity"] > maxDex,
-            treasures[t]["intelligence"] > maxInt,
-            treasures[t]["faith"] > maxFai
-            ]):
-            continue
-        treasures[t]["soulCost"] = mean_soul_cost(treasures[t], setsAvailable, charactersActive)
+        maxStr = max([len(soulCost[c]["strength"]) for c in charactersActive])
+        maxDex = max([len(soulCost[c]["dexterity"]) for c in charactersActive])
+        maxInt = max([len(soulCost[c]["intelligence"]) for c in charactersActive])
+        maxFai = max([len(soulCost[c]["faith"]) for c in charactersActive])
+
+        for t in [t for t in treasures if not treasures[t]["character"] or treasures[t]["character"] in charactersActive]:
+            # Don't attempt to calculate soul cost for items that can't be equipped by anyone in the party.
+            if any([
+                treasures[t]["strength"] > maxStr,
+                treasures[t]["dexterity"] > maxDex,
+                treasures[t]["intelligence"] > maxInt,
+                treasures[t]["faith"] > maxFai
+                ]):
+                continue
+            treasures[t]["soulCost"] = mean_soul_cost(treasures[t], setsAvailable, charactersActive)
+
+        if windowsOs:
+            adapter.debug("End of generate_treasure_soul_cost")
+    except Exception as e:
+        if windowsOs:
+            adapter.exception(e)
+        raise
 
     
 def populate_treasure_tiers(setsAvailable, charactersActive):
-    # Generate the list of available treasures for each type.
-    armor = sorted([t for t in treasures if (
-        treasures[t]["type"] == "armor"
-        and treasures[t]["expansions"] & setsAvailable
-        and (not treasures[t]["character"] or treasures[t]["character"] in charactersActive)
-        and "soulCost" in treasures[t])
-        ], key=lambda x: treasures[x]["soulCost"])
-    armorLen = len(armor)
-    weapon = sorted([t for t in treasures if (
-        treasures[t]["type"] == "weapon"
-        and treasures[t]["expansions"] & setsAvailable
-        and (not treasures[t]["character"] or treasures[t]["character"] in charactersActive)
-        and "soulCost" in treasures[t])
-        ], key=lambda x: treasures[x]["soulCost"])
-    weaponLen = len(weapon)
-    upgrade = sorted([t for t in treasures if (
-        treasures[t]["type"] == "upgrade"
-        and treasures[t]["expansions"] & setsAvailable
-        and (not treasures[t]["character"] or treasures[t]["character"] in charactersActive)
-        and "soulCost" in treasures[t])
-        ], key=lambda x: treasures[x]["soulCost"])
-    upgradeLen = len(upgrade)
+    try:
+        curframe = inspect.currentframe()
+        calframe = inspect.getouterframes(curframe, 2)
+        if windowsOs:
+            adapter.debug("Start of populate_treasure_tiers", caller=calframe[1][3])
 
-    # Split the treasures into 3 nearly-equal tiers based on soul cost.
-    tiers["armor"][1] = armor[:floor(armorLen/3)]
-    tiers["armor"][2] = armor[floor(armorLen/3):floor(armorLen/3)*2]
-    tiers["armor"][3] = armor[floor(armorLen/3)*2:]
+        # Generate the list of available treasures for each type.
+        armor = sorted([t for t in treasures if (
+            treasures[t]["type"] == "armor"
+            and treasures[t]["expansions"] & setsAvailable
+            and (not treasures[t]["character"] or treasures[t]["character"] in charactersActive)
+            and "soulCost" in treasures[t])
+            ], key=lambda x: treasures[x]["soulCost"])
+        armorLen = len(armor)
+        weapon = sorted([t for t in treasures if (
+            treasures[t]["type"] == "weapon"
+            and treasures[t]["expansions"] & setsAvailable
+            and (not treasures[t]["character"] or treasures[t]["character"] in charactersActive)
+            and "soulCost" in treasures[t])
+            ], key=lambda x: treasures[x]["soulCost"])
+        weaponLen = len(weapon)
+        upgrade = sorted([t for t in treasures if (
+            treasures[t]["type"] == "upgrade"
+            and treasures[t]["expansions"] & setsAvailable
+            and (not treasures[t]["character"] or treasures[t]["character"] in charactersActive)
+            and "soulCost" in treasures[t])
+            ], key=lambda x: treasures[x]["soulCost"])
+        upgradeLen = len(upgrade)
 
-    tiers["weapon"][1] = weapon[:floor(weaponLen/3)]
-    tiers["weapon"][2] = weapon[floor(weaponLen/3):floor(weaponLen/3)*2]
-    tiers["weapon"][3] = weapon[floor(weaponLen/3)*2:]
+        # Split the treasures into 3 nearly-equal tiers based on soul cost.
+        tiers["armor"][1] = armor[:floor(armorLen/3)]
+        tiers["armor"][2] = armor[floor(armorLen/3):floor(armorLen/3)*2]
+        tiers["armor"][3] = armor[floor(armorLen/3)*2:]
 
-    tiers["upgrade"][1] = upgrade[:floor(upgradeLen/3)]
-    tiers["upgrade"][2] = upgrade[floor(upgradeLen/3):floor(upgradeLen/3)*2]
-    tiers["upgrade"][3] = upgrade[floor(upgradeLen/3)*2:]
+        tiers["weapon"][1] = weapon[:floor(weaponLen/3)]
+        tiers["weapon"][2] = weapon[floor(weaponLen/3):floor(weaponLen/3)*2]
+        tiers["weapon"][3] = weapon[floor(weaponLen/3)*2:]
 
-    # Push the tier back to the treasure.
-    for treasure in treasures:
-        if any([treasure in set(tiers["armor"][1]), treasure in set(tiers["weapon"][1]), treasure in set(tiers["upgrade"][1])]):
-            treasures[treasure]["tier"] = 1
-        elif any([treasure in set(tiers["armor"][2]), treasure in set(tiers["weapon"][2]), treasure in set(tiers["upgrade"][2])]):
-            treasures[treasure]["tier"] = 2
-        else:
-            treasures[treasure]["tier"] = 3
+        tiers["upgrade"][1] = upgrade[:floor(upgradeLen/3)]
+        tiers["upgrade"][2] = upgrade[floor(upgradeLen/3):floor(upgradeLen/3)*2]
+        tiers["upgrade"][3] = upgrade[floor(upgradeLen/3)*2:]
+
+        # Push the tier back to the treasure.
+        for treasure in treasures:
+            if any([treasure in set(tiers["armor"][1]), treasure in set(tiers["weapon"][1]), treasure in set(tiers["upgrade"][1])]):
+                treasures[treasure]["tier"] = 1
+            elif any([treasure in set(tiers["armor"][2]), treasure in set(tiers["weapon"][2]), treasure in set(tiers["upgrade"][2])]):
+                treasures[treasure]["tier"] = 2
+            else:
+                treasures[treasure]["tier"] = 3
+
+        if windowsOs:
+            adapter.debug("End of populate_treasure_tiers")
+    except Exception as e:
+        if windowsOs:
+            adapter.exception(e)
+        raise
 
 
 def pick_treasure(treasureSwapOption, swapTreasure, lastPicked, encounterLevel, setsAvailable, charactersActive):
-    if treasureSwapOption == "Similar Soul Cost":
-        # If the treasure we're swapping out doesn't have a soul cost (because it's not in the active sets),
-        # calculate it based on all characters instead of just the active ones.
-        if "soulCost" not in treasures[swapTreasure]:
-            treasures[swapTreasure]["soulCost"] = mean_soul_cost(treasures[swapTreasure], setsAvailable, set([c for c in soulCost]))
-        alts = []
-        extraMod = 0
+    try:
+        curframe = inspect.currentframe()
+        calframe = inspect.getouterframes(curframe, 2)
+        if windowsOs:
+            adapter.debug("Start of pick_treasure", caller=calframe[1][3])
 
-        # If there are fewer than 2 alternatives, increase the threshold until there are at least 2.
-        while len(alts) < 2:
-            characterSoulCost = treasures[swapTreasure]["soulCost"]
-            modifier = 1 + extraMod if characterSoulCost * 0.1 + (extraMod / 10) < 1 else characterSoulCost * 0.1 + (extraMod / 10)
-            lower = characterSoulCost - modifier
-            upper = characterSoulCost + modifier
-            alts += [t for t in treasures if (
-                "soulCost" in treasures[t]
-                and lower <= treasures[t]["soulCost"] <= upper
-                and treasures[t]["type"] == treasures[swapTreasure]["type"]
-                and treasures[t]["expansions"] & setsAvailable
-                and (not treasures[t]["character"] or treasures[t]["character"] in charactersActive)
-                and encounterLevel in treasures[t]["encounterLevels"]
+        if treasureSwapOption == "Similar Soul Cost":
+            # If the treasure we're swapping out doesn't have a soul cost (because it's not in the active sets),
+            # calculate it based on all characters instead of just the active ones.
+            if "soulCost" not in treasures[swapTreasure]:
+                treasures[swapTreasure]["soulCost"] = mean_soul_cost(treasures[swapTreasure], setsAvailable, set([c for c in soulCost]))
+            alts = []
+            extraMod = 0
+
+            # If there are fewer than 2 alternatives, increase the threshold until there are at least 2.
+            while len(alts) < 2:
+                characterSoulCost = treasures[swapTreasure]["soulCost"]
+                modifier = 1 + extraMod if characterSoulCost * 0.1 + (extraMod / 10) < 1 else characterSoulCost * 0.1 + (extraMod / 10)
+                lower = characterSoulCost - modifier
+                upper = characterSoulCost + modifier
+                alts += [t for t in treasures if (
+                    "soulCost" in treasures[t]
+                    and lower <= treasures[t]["soulCost"] <= upper
+                    and treasures[t]["type"] == treasures[swapTreasure]["type"]
+                    and treasures[t]["expansions"] & setsAvailable
+                    and (not treasures[t]["character"] or treasures[t]["character"] in charactersActive)
+                    and encounterLevel in treasures[t]["encounterLevels"]
+                    and t != lastPicked)]
+                alts = list(set(alts))
+                extraMod += 0.5
+        elif treasureSwapOption == "Tier Based":
+            alts = [t for t in treasures if (
+                treasures[t]["type"] == treasures[swapTreasure]["type"]
+                and treasures[t]["tier"] == treasures[swapTreasure]["tier"]
+                    and encounterLevel in treasures[t]["encounterLevels"]
                 and t != lastPicked)]
-            alts = list(set(alts))
-            extraMod += 0.5
-    elif treasureSwapOption == "Tier Based":
-        alts = [t for t in treasures if (
-            treasures[t]["type"] == treasures[swapTreasure]["type"]
-            and treasures[t]["tier"] == treasures[swapTreasure]["tier"]
-                and encounterLevel in treasures[t]["encounterLevels"]
-            and t != lastPicked)]
-    elif treasureSwapOption == "Generic Treasure":
-        alts = [str(encounterLevel) + "x Treasure"]
-    elif treasureSwapOption == "Original":
-        alts = [swapTreasure]
-    return choice(alts)
+        elif treasureSwapOption == "Generic Treasure":
+            alts = [str(encounterLevel) + "x Treasure"]
+        elif treasureSwapOption == "Original":
+            alts = [swapTreasure]
+
+        if windowsOs:
+            adapter.debug("End of pick_treasure")
+        return choice(alts)
+    except Exception as e:
+        if windowsOs:
+            adapter.exception(e)
+        raise

@@ -14,7 +14,7 @@ from dsbg_functions import center
 
 if platform.system() == "Windows":
     pathSep = "\\"
-
+    windowsOs = True
     logger = logging.getLogger(__name__)
     formatter = logging.Formatter("%(asctime)s|%(levelname)s|%(message)s", "%d/%m/%Y %H:%M:%S")
     fh = logging.FileHandler(path.dirname(path.realpath(__file__)) + "\\log.txt".replace("\\", pathSep), "w")
@@ -24,6 +24,7 @@ if platform.system() == "Windows":
     logger.setLevel(logging.DEBUG)
 else:
     pathSep = "/"
+    windowsOs = False
 
 baseFolder = path.dirname(__file__).replace("\\lib".replace("\\", pathSep), "")
 
@@ -35,7 +36,7 @@ class SettingsWindow(object):
     """
     def __init__(self, master, coreSets):
         try:
-            if platform.system() == "Windows":
+            if windowsOs:
                 adapter.debug("Creating settings window")
             top = self.top = tk.Toplevel(master)
             top.attributes('-alpha', 0.0)
@@ -66,20 +67,19 @@ class SettingsWindow(object):
             center(top)
             top.attributes('-alpha', 1.0)
         except Exception as e:
-            if platform.system() == "Windows":
+            if windowsOs:
                 adapter.exception(e)
             raise
 
 
     def create_expansion_tab(self):
         try:
-            if platform.system() == "Windows":
+            if windowsOs:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of create_expansion_tab", caller=calframe[1][3])
 
-            # These are the only expansions that matter - the ones that add enemies or regular treasure.
-            # All encounters are always going to be available.
+            # These are the only expansions that matter - the ones that add enemies, regular treasure, or characters.
             self.expansions = {
                 "Painted World of Ariamis": {"button": None, "value": tk.IntVar(), "displayName": "Painted World of Ariamis (V2 Core Set)"},
                 "The Sunless City": {"button": None, "value": tk.IntVar(), "displayName": "The Sunless City (V2 Core Set)"},
@@ -103,17 +103,17 @@ class SettingsWindow(object):
             self.expansions["Phantoms"]["value"].set(1 if "Phantoms" in self.settings["availableExpansions"] else 0)
             self.expansions["Characters Expansion"]["value"].set(1 if "Characters Expansion" in self.settings["availableExpansions"] else 0)
 
-            if platform.system() == "Windows":
+            if windowsOs:
                 adapter.debug("End of create_expansion_tab", caller=calframe[1][3])
         except Exception as e:
-            if platform.system() == "Windows":
+            if windowsOs:
                 adapter.exception(e)
             raise
 
 
     def create_enemies_tab(self):
         try:
-            if platform.system() == "Windows":
+            if windowsOs:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of create_enemies_tab", caller=calframe[1][3])
@@ -186,17 +186,17 @@ class SettingsWindow(object):
                 self.enemies[enemy]["value"].set(1)
                 self.toggle_parent_children(enemy=enemy)
 
-            if platform.system() == "Windows":
+            if windowsOs:
                 adapter.debug("End of create_enemies_tab", caller=calframe[1][3])
         except Exception as e:
-            if platform.system() == "Windows":
+            if windowsOs:
                 adapter.exception(e)
             raise
 
 
     def create_characters_pane(self, parent):
         try:
-            if platform.system() == "Windows":
+            if windowsOs:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of create_characters_pane", caller=calframe[1][3])
@@ -221,17 +221,17 @@ class SettingsWindow(object):
                 self.charactersActive[enemy]["button"] = ttk.Checkbutton(self.characterFrame, text=enemy, variable=self.charactersActive[enemy]["value"], command=self.check_max_characters)
                 self.charactersActive[enemy]["button"].grid(row=i, column=0, padx=5, pady=10, sticky="nsew")
 
-            if platform.system() == "Windows":
+            if windowsOs:
                 adapter.debug("End of create_characters_pane", caller=calframe[1][3])
         except Exception as e:
-            if platform.system() == "Windows":
+            if windowsOs:
                 adapter.exception(e)
             raise
 
 
     def create_treasure_swap_pane(self, parent):
         try:
-            if platform.system() == "Windows":
+            if windowsOs:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of create_treasure_swap_pane", caller=calframe[1][3])
@@ -251,17 +251,17 @@ class SettingsWindow(object):
                 self.treasureSwapOptions[option]["button"].grid(row=i, column=0, padx=5, pady=10, sticky="nsew")
                 CreateToolTip(self.treasureSwapOptions[option]["button"], self.treasureSwapOptions[option]["tooltipText"])
 
-            if platform.system() == "Windows":
+            if windowsOs:
                 adapter.debug("End of create_treasure_swap_pane", caller=calframe[1][3])
         except Exception as e:
-            if platform.system() == "Windows":
+            if windowsOs:
                 adapter.exception(e)
             raise
 
 
     def create_random_encounters_pane(self, parent):
         try:
-            if platform.system() == "Windows":
+            if windowsOs:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of create_random_encounters_pane", caller=calframe[1][3])
@@ -280,17 +280,17 @@ class SettingsWindow(object):
             self.randomEncounters["v1"]["button"].grid(row=0, column=0, padx=5, pady=10, sticky="nsew")
             self.randomEncounters["v2"]["button"].grid(row=1, column=0, padx=5, pady=10, sticky="nsew")
 
-            if platform.system() == "Windows":
+            if windowsOs:
                 adapter.debug("End of create_random_encounters_pane", caller=calframe[1][3])
         except Exception as e:
-            if platform.system() == "Windows":
+            if windowsOs:
                 adapter.exception(e)
             raise
 
 
     def create_update_check_pane(self, parent):
         try:
-            if platform.system() == "Windows":
+            if windowsOs:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of create_update_check_pane", caller=calframe[1][3])
@@ -303,17 +303,17 @@ class SettingsWindow(object):
             self.updateCheck["button"].grid(row=0, column=0, padx=5, pady=10, sticky="nsew")
             CreateToolTip(self.updateCheck["button"], self.updateCheck["tooltipText"])
 
-            if platform.system() == "Windows":
+            if windowsOs:
                 adapter.debug("End of create_update_check_pane", caller=calframe[1][3])
         except Exception as e:
-            if platform.system() == "Windows":
+            if windowsOs:
                 adapter.exception(e)
             raise
 
 
     def create_buttons(self, parent):
         try:
-            if platform.system() == "Windows":
+            if windowsOs:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of create_buttons", caller=calframe[1][3])
@@ -336,17 +336,17 @@ class SettingsWindow(object):
             self.lightTheme["button"] = ttk.Button(self.themeButtonFrame, text="Switch to light theme" if self.lightTheme["value"].get() == 0 else "Switch to dark theme", command=self.switch_theme)
             self.lightTheme["button"].grid(column=3, row=0, columnspan=2)
 
-            if platform.system() == "Windows":
+            if windowsOs:
                 adapter.debug("End of create_buttons", caller=calframe[1][3])
         except Exception as e:
-            if platform.system() == "Windows":
+            if windowsOs:
                 adapter.exception(e)
             raise
 
 
     def toggle_parent_children(self, enemy, event=None):
         try:
-            if platform.system() == "Windows":
+            if windowsOs:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of toggle_parent_children", caller=calframe[1][3])
@@ -369,23 +369,23 @@ class SettingsWindow(object):
                 for child in self.enemies[enemy]["children"]:
                     self.enemies[child]["value"].set(self.enemies[enemy]["value"].get())
 
-            if platform.system() == "Windows":
+            if windowsOs:
                 adapter.debug("End of toggle_parent_children", caller=calframe[1][3])
         except Exception as e:
-            if platform.system() == "Windows":
+            if windowsOs:
                 adapter.exception(e)
             raise
 
 
     def toggle_expansion(self, expansion, event=None):
         try:
-            if platform.system() == "Windows":
+            if windowsOs:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of toggle_expansion", caller=calframe[1][3])
 
             if expansion in {"Characters Expansion", "Phantoms"}:
-                if platform.system() == "Windows":
+                if windowsOs:
                     adapter.debug("End of toggle_expansion (Characters expansion, nothing to do)", caller=calframe[1][3])
                 return
 
@@ -394,10 +394,10 @@ class SettingsWindow(object):
             for child in self.enemies[expansion]["children"]:
                 self.enemies[child]["value"].set(self.expansions[expansion]["value"].get())
 
-            if platform.system() == "Windows":
+            if windowsOs:
                 adapter.debug("End of toggle_expansion", caller=calframe[1][3])
         except Exception as e:
-            if platform.system() == "Windows":
+            if windowsOs:
                 adapter.exception(e)
             raise
 
@@ -412,7 +412,7 @@ class SettingsWindow(object):
                 The tkinter Event that is the trigger.
         """
         try:
-            if platform.system() == "Windows":
+            if windowsOs:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of check_max_characters", caller=calframe[1][3])
@@ -425,10 +425,10 @@ class SettingsWindow(object):
                 for c in self.charactersActive:
                     self.charactersActive[c]["button"].config(state=tk.NORMAL)
 
-            if platform.system() == "Windows":
+            if windowsOs:
                 adapter.debug("End of check_max_characters", caller=calframe[1][3])
         except Exception as e:
-            if platform.system() == "Windows":
+            if windowsOs:
                 adapter.exception(e)
             raise
 
@@ -442,7 +442,7 @@ class SettingsWindow(object):
                 The tkinter Event that is the trigger.
         """
         try:
-            if platform.system() == "Windows":
+            if windowsOs:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of switch_theme", caller=calframe[1][3])
@@ -453,10 +453,10 @@ class SettingsWindow(object):
             self.lightTheme["button"]["text"] = "Switch to light theme" if self.lightTheme["value"].get() == 0 else "Switch to dark (souls) theme"
             self.errLabel.config(text="To keep this theme when you open the program again, you need to click Save!")
 
-            if platform.system() == "Windows":
+            if windowsOs:
                 adapter.debug("End of switch_theme", caller=calframe[1][3])
         except Exception as e:
-            if platform.system() == "Windows":
+            if windowsOs:
                 adapter.exception(e)
             raise
 
@@ -470,7 +470,7 @@ class SettingsWindow(object):
                 The tkinter Event that is the trigger.
         """
         try:
-            if platform.system() == "Windows":
+            if windowsOs:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of quit_with_save", caller=calframe[1][3])
@@ -479,19 +479,19 @@ class SettingsWindow(object):
 
             if all([self.expansions[s]["value"].get() == 0 for s in coreSets]):
                 self.errLabel.config(text="You need to select at least one Core Set!")
-                if platform.system() == "Windows":
+                if windowsOs:
                     adapter.debug("End of quit_with_save", caller=calframe[1][3])
                 return
 
             if all([self.randomEncounters[i]["value"].get() == 0 for i in self.randomEncounters]):
                 self.errLabel.config(text="You need to check at least one box in the \"Random Encounters Shown\" section!")
-                if platform.system() == "Windows":
+                if windowsOs:
                     adapter.debug("End of quit_with_save", caller=calframe[1][3])
                 return
 
             if len([i for i in self.charactersActive if self.charactersActive[i]["value"].get() == 1]) < 1 and self.treasureSwapOption.get() in set(["Similar Soul Cost", "Tier Based"]):
                 self.errLabel.config(text="You need to select at least 1 character if using the Similar Soul Cost or Tier Based treasure swap options!")
-                if platform.system() == "Windows":
+                if windowsOs:
                     adapter.debug("End of quit_with_save", caller=calframe[1][3])
                 return
 
@@ -504,7 +504,7 @@ class SettingsWindow(object):
             expansionsNeeded = [e for e in characterExpansions if not any([e & expansionsActive])]
             if expansionsNeeded:
                 self.errLabel.config(text="You have selected one or more characters from sets you have disabled!")
-                if platform.system() == "Windows":
+                if windowsOs:
                     adapter.debug("End of quit_with_save", caller=calframe[1][3])
                 return
 
@@ -537,10 +537,10 @@ class SettingsWindow(object):
                     populate_treasure_tiers(expansionsActive, charactersActive)
 
             self.top.destroy()
-            if platform.system() == "Windows":
+            if windowsOs:
                 adapter.debug("End of quit_with_save", caller=calframe[1][3])
         except Exception as e:
-            if platform.system() == "Windows":
+            if windowsOs:
                 adapter.exception(e)
             raise
 
@@ -554,16 +554,16 @@ class SettingsWindow(object):
                 The tkinter Event that is the trigger.
         """
         try:
-            if platform.system() == "Windows":
+            if windowsOs:
                 curframe = inspect.currentframe()
                 calframe = inspect.getouterframes(curframe, 2)
                 adapter.debug("Start of quit_no_save", caller=calframe[1][3])
 
             self.top.destroy()
 
-            if platform.system() == "Windows":
+            if windowsOs:
                 adapter.debug("End of quit_no_save", caller=calframe[1][3])
         except Exception as e:
-            if platform.system() == "Windows":
+            if windowsOs:
                 adapter.exception(e)
             raise
