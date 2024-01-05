@@ -1,24 +1,11 @@
-import tkinter as tk
+import inspect
 import logging
-import webbrowser
+import tkinter as tk
 import platform
-from tkinter import ttk
-from PIL import Image, ImageTk, ImageFont
+import webbrowser
 from os import path
-from PIL import ImageFont
-from dsbg_functions import center
-
-
-if platform.system() == "Windows":
-    pathSep = "\\"
-else:
-    pathSep = "/"
-
-baseFolder = path.dirname(__file__).replace("\\lib".replace("\\", pathSep), "")
-if platform.system() == "Windows":
-    font = ImageFont.truetype(baseFolder + "\\lib\\Adobe Caslon Pro Semibold.ttf", 12)
-else:
-    font = ImageFont.truetype("./Adobe Caslon Pro Semibold.ttf", 12)
+from PIL import Image, ImageTk, ImageFont
+from tkinter import ttk
 
 
 class CustomAdapter(logging.LoggerAdapter):
@@ -28,6 +15,27 @@ class CustomAdapter(logging.LoggerAdapter):
         def process(self, msg, kwargs):
             my_context = kwargs.pop("caller", self.extra["caller"])
             return "[%s] %s" % (my_context, msg), kwargs
+
+
+if platform.system() == "Windows":
+    pathSep = "\\"
+    windowsOs = True
+    logger = logging.getLogger(__name__)
+    formatter = logging.Formatter("%(asctime)s|%(levelname)s|%(message)s", "%d/%m/%Y %H:%M:%S")
+    fh = logging.FileHandler(path.dirname(path.realpath(__file__)) + "\\dsbg_shuffle_log.txt".replace("\\", pathSep), "w")
+    fh.setFormatter(formatter)
+    logger.addHandler(fh)
+    adapter = CustomAdapter(logger, {"caller": ""})
+    logger.setLevel(logging.DEBUG)
+else:
+    pathSep = "/"
+    windowsOs = False
+
+baseFolder = path.dirname(__file__).replace("\\lib".replace("\\", pathSep), "")
+if windowsOs:
+    font = ImageFont.truetype(baseFolder + "\\lib\\Adobe Caslon Pro Semibold.ttf", 12)
+else:
+    font = ImageFont.truetype("./Adobe Caslon Pro Semibold.ttf", 12)
 
 
 class CreateToolTip(object):
@@ -257,3 +265,53 @@ class VerticalScrolledFrame(ttk.Frame):
 
     def _on_mousewheel(self, event):
         self.canvas.yview_scroll(int(-1*(event.delta/120)), "units")
+
+
+def center(win):
+    """
+    Centers a tkinter window
+
+    Required Parameters:
+        win: tkinter window
+            The main window or Toplevel window to center.
+    """
+    win.update_idletasks()
+    width = win.winfo_width()
+    frmWidth = win.winfo_rootx() - win.winfo_x()
+    winWidth = width + 2 * frmWidth
+    height = win.winfo_height()
+    titlebarHeight = win.winfo_rooty() - win.winfo_y()
+    winHeight = height + titlebarHeight + frmWidth
+    x = win.winfo_screenwidth() // 2 - winWidth // 2
+    y = win.winfo_screenheight() // 2 - winHeight // 2
+    win.geometry('{}x{}+{}+{}'.format(width, height, x, y))
+    win.deiconify()
+
+
+def enable_binding(bindKey, method, root):
+    """
+    Sets a keyboard shortcut.
+
+    Required Parameters:
+        bindKey: String
+            The key combination to be bound to a method.
+
+        method: method/function
+            The method or function to run when the key combination is pressed.
+    """
+    return root.bind_all("<" + bindKey + ">", method)
+
+
+def log(message, exception=False):
+    if windowsOs:
+        if exception:
+            adapter.exception(message)
+            return
+        
+        curframe = inspect.currentframe()
+        calframe = inspect.getouterframes(curframe, 2)
+        adapter.debug(message, caller=calframe[1][3])
+
+
+def do_nothing(event=None):
+    pass

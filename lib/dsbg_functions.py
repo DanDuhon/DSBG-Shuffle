@@ -1,37 +1,21 @@
-def center(win):
-    """
-    Centers a tkinter window
+import logging
+import inspect
+import platform
+from os import path
 
-    Required Parameters:
-        win: tkinter window
-            The main window or Toplevel window to center.
-    """
-    win.update_idletasks()
-    width = win.winfo_width()
-    frmWidth = win.winfo_rootx() - win.winfo_x()
-    winWidth = width + 2 * frmWidth
-    height = win.winfo_height()
-    titlebarHeight = win.winfo_rooty() - win.winfo_y()
-    winHeight = height + titlebarHeight + frmWidth
-    x = win.winfo_screenwidth() // 2 - winWidth // 2
-    y = win.winfo_screenheight() // 2 - winHeight // 2
-    win.geometry('{}x{}+{}+{}'.format(width, height, x, y))
-    win.deiconify()
+from dsbg_classes import CustomAdapter
 
 
-def enable_binding(bindKey, method, root):
-    """
-    Sets a keyboard shortcut.
-
-    Required Parameters:
-        bindKey: String
-            The key combination to be bound to a method.
-
-        method: method/function
-            The method or function to run when the key combination is pressed.
-    """
-    return root.bind_all("<" + bindKey + ">", method)
-
-
-def do_nothing(event=None):
-    pass
+if platform.system() == "Windows":
+    pathSep = "\\"
+    windowsOs = True
+    logger = logging.getLogger(__name__)
+    formatter = logging.Formatter("%(asctime)s|%(levelname)s|%(message)s", "%d/%m/%Y %H:%M:%S")
+    fh = logging.FileHandler(path.dirname(path.realpath(__file__)) + "\\dsbg_shuffle_log.txt".replace("\\", pathSep), "w")
+    fh.setFormatter(formatter)
+    logger.addHandler(fh)
+    adapter = CustomAdapter(logger, {"caller": ""})
+    logger.setLevel(logging.DEBUG)
+else:
+    pathSep = "/"
+    windowsOs = False

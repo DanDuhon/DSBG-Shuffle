@@ -1,27 +1,9 @@
-import inspect
-import logging
-import platform
 from math import floor
-from os import path
 from random import choice
 
 from dsbg_characters import mean_soul_cost, soulCost
-from dsbg_classes import CustomAdapter
+from dsbg_utility import log
 
-
-if platform.system() == "Windows":
-    pathSep = "\\"
-    windowsOs = True
-    logger = logging.getLogger(__name__)
-    formatter = logging.Formatter("%(asctime)s|%(levelname)s|%(message)s", "%d/%m/%Y %H:%M:%S")
-    fh = logging.FileHandler(path.dirname(path.realpath(__file__)) + "\\log.txt".replace("\\", pathSep), "w")
-    fh.setFormatter(formatter)
-    logger.addHandler(fh)
-    adapter = CustomAdapter(logger, {"caller": ""})
-    logger.setLevel(logging.DEBUG)
-else:
-    pathSep = "/"
-    windowsOs = False
 
 treasures = {
     "Adventurer's Armour": {"expansions": set(["Characters Expansion"]), "type": "armor", "character": None, "encounterLevels": set([1,2,3,4]), "strength": 14, "dexterity": 22, "intelligence": 14, "faith": 0},
@@ -295,10 +277,7 @@ tiers = {
 
 def generate_treasure_soul_cost(setsAvailable, charactersActive):
     try:
-        curframe = inspect.currentframe()
-        calframe = inspect.getouterframes(curframe, 2)
-        if windowsOs:
-            adapter.debug("Start of generate_treasure_soul_cost", caller=calframe[1][3])
+        log("Start of generate_treasure_soul_cost")
 
         maxStr = max([len(soulCost[c]["strength"]) for c in charactersActive])
         maxDex = max([len(soulCost[c]["dexterity"]) for c in charactersActive])
@@ -316,20 +295,15 @@ def generate_treasure_soul_cost(setsAvailable, charactersActive):
                 continue
             treasures[t]["soulCost"] = mean_soul_cost(treasures[t], setsAvailable, charactersActive)
 
-        if windowsOs:
-            adapter.debug("End of generate_treasure_soul_cost")
+        log("End of generate_treasure_soul_cost")
     except Exception as e:
-        if windowsOs:
-            adapter.exception(e)
+        log(e, exception=True)
         raise
 
     
 def populate_treasure_tiers(setsAvailable, charactersActive):
     try:
-        curframe = inspect.currentframe()
-        calframe = inspect.getouterframes(curframe, 2)
-        if windowsOs:
-            adapter.debug("Start of populate_treasure_tiers", caller=calframe[1][3])
+        log("Start of populate_treasure_tiers")
 
         # Generate the list of available treasures for each type.
         armor = sorted([t for t in treasures if (
@@ -376,20 +350,15 @@ def populate_treasure_tiers(setsAvailable, charactersActive):
             else:
                 treasures[treasure]["tier"] = 3
 
-        if windowsOs:
-            adapter.debug("End of populate_treasure_tiers")
+        log("End of populate_treasure_tiers")
     except Exception as e:
-        if windowsOs:
-            adapter.exception(e)
+        log(e, exception=True)
         raise
 
 
 def pick_treasure(treasureSwapOption, swapTreasure, lastPicked, encounterLevel, setsAvailable, charactersActive):
     try:
-        curframe = inspect.currentframe()
-        calframe = inspect.getouterframes(curframe, 2)
-        if windowsOs:
-            adapter.debug("Start of pick_treasure", caller=calframe[1][3])
+        log("Start of pick_treasure")
 
         if treasureSwapOption == "Similar Soul Cost":
             # If the treasure we're swapping out doesn't have a soul cost (because it's not in the active sets),
@@ -426,10 +395,8 @@ def pick_treasure(treasureSwapOption, swapTreasure, lastPicked, encounterLevel, 
         elif treasureSwapOption == "Original":
             alts = [swapTreasure]
 
-        if windowsOs:
-            adapter.debug("End of pick_treasure")
+        log("End of pick_treasure")
         return choice(alts)
     except Exception as e:
-        if windowsOs:
-            adapter.exception(e)
+        log(e, exception=True)
         raise

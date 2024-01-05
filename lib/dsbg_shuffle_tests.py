@@ -4,21 +4,27 @@ from itertools import product
 from collections import Counter
 from random import choice
 import types
+import platform
 
 from dsbg_enemies import enemyIds, enemiesDict
 
-baseFolder = path.dirname(__file__)
+if platform.system() == "Windows":
+    pathSep = "\\"
+else:
+    pathSep = "/"
 
-with open(baseFolder + "\\enemies.json") as enemiesFile:
+baseFolder = path.dirname(__file__).replace("\\lib".replace("\\", pathSep), "")
+
+with open(baseFolder + "\\lib\\dsbg_shuffle_enemies.json".replace("\\", pathSep)) as enemiesFile:
     enemies = load(enemiesFile)
 
-with open(baseFolder + "\\invaders_standard.json") as invadersStandardFile:
+with open(baseFolder + "\\lib\\dsbg_shuffle_invaders_standard.json".replace("\\", pathSep)) as invadersStandardFile:
     invadersStandard = load(invadersStandardFile)
 
-with open(baseFolder + "\\invaders_advanced.json") as invadersAdvancedFile:
+with open(baseFolder + "\\lib\\dsbg_shuffle_invaders_advanced.json".replace("\\", pathSep)) as invadersAdvancedFile:
     invadersAdvanced = load(invadersAdvancedFile)
 
-with open(baseFolder + "\\encounters.json") as encountersFile:
+with open(baseFolder + "\\lib\\dsbg_shuffle_encounters.json".replace("\\", pathSep)) as encountersFile:
     encounters = load(encountersFile)
 
 
@@ -79,7 +85,7 @@ class Tester():
         self.selected["restrictRanged"] = {}
 
         # Get the possible alternative enemies from the encounter's file.
-        with open(baseFolder + "\\encounters\\" + encounterName + ".json") as alternativesFile:
+        with open(baseFolder + "\\lib\\dsbg_shuffle_encounters\\" + encounterName + ".json") as alternativesFile:
             alts = load(alternativesFile)
 
         self.selected["alternatives"] = []
@@ -125,7 +131,6 @@ class Tester():
 
         if gen:
             self.selected["alternatives"] = a
-
 
 
     def edit_encounter_card(self, name, expansion, level, enemySlots):
@@ -174,7 +179,7 @@ class Tester():
             self.abandoned_and_forgotten()
         elif name == "Aged Sentinel":
             self.aged_sentinel()
-        elif name == "Central Plaza" and expansion == "The Sunless City":
+        elif (name == "Central Plaza" or name == "Central Plaza (TSC)") and expansion == "The Sunless City":
             self.central_plaza()
         elif name == "Cloak and Feathers":
             self.cloak_and_feathers()

@@ -1,26 +1,9 @@
-import inspect
-import logging
 import platform
-from os import path
-
-from dsbg_classes import CustomAdapter
-from lookup_table import LookupTable
 from statistics import mean
 
+from lookup_table import LookupTable
+from dsbg_utility import log
 
-if platform.system() == "Windows":
-    pathSep = "\\"
-    windowsOs = True
-    logger = logging.getLogger(__name__)
-    formatter = logging.Formatter("%(asctime)s|%(levelname)s|%(message)s", "%d/%m/%Y %H:%M:%S")
-    fh = logging.FileHandler(path.dirname(path.realpath(__file__)) + "\\dsbg_shuffle_log.txt".replace("\\", pathSep), "w")
-    fh.setFormatter(formatter)
-    logger.addHandler(fh)
-    adapter = CustomAdapter(logger, {"caller": ""})
-    logger.setLevel(logging.DEBUG)
-else:
-    pathSep = "/"
-    windowsOs = False
 
 soulCost = {
     "Assassin": {
@@ -257,10 +240,7 @@ soulCost = {
 
 def mean_soul_cost(item, setsAvailable, charactersActive):
     try:
-        curframe = inspect.currentframe()
-        calframe = inspect.getouterframes(curframe, 2)
-        if windowsOs:
-            adapter.debug("Start of mean_soul_cost", caller=calframe[1][3])
+        log("Start of mean_soul_cost")
 
         costs = []
         for c in [c for c in soulCost if c in charactersActive and soulCost[c]["expansions"] & setsAvailable]:
@@ -271,11 +251,9 @@ def mean_soul_cost(item, setsAvailable, charactersActive):
             if strength is not None and dexterity is not None and intelligence is not None and faith is not None:
                 costs.append(strength + dexterity + intelligence + faith)
 
-            if windowsOs:
-                adapter.debug("End of mean_soul_cost")
+            log("End of mean_soul_cost")
 
         return mean(costs)
     except Exception as e:
-        if windowsOs:
-            adapter.exception(e)
+        log(e, exception=True)
         raise
