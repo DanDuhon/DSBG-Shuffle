@@ -34,11 +34,19 @@ class Tester():
         self.selected = None
         self.newEnemies = []
         self.newTiles = dict()
+        skip = True
 
         for encounter in encounters:
-            self.load_encounter(encounter)
-            for _ in range(100):
-                self.shuffle_enemies()
+            # if encounter != "Deathly Freeze":
+            #     continue
+            # if encounter == "The Grand Hall":
+            #     skip = False
+            # if skip:
+            #     continue
+            for charCnt in range(1, 5):
+                self.load_encounter(charCnt, encounter)
+                for _ in range(100):
+                    self.shuffle_enemies()
 
 
     def shuffle_enemies(self):
@@ -65,7 +73,7 @@ class Tester():
         self.edit_encounter_card(self.selected["name"], self.selected["expansion"], self.selected["level"], self.selected["enemySlots"])
 
 
-    def load_encounter(self, encounter=None):
+    def load_encounter(self, charCnt, encounter=None):
         """
         Loads an encounter from file data for display.
 
@@ -80,12 +88,13 @@ class Tester():
         """
         encounterName = encounter
             
+        self.characterCount = charCnt
         self.selected = encounters[encounterName]
         self.selected["difficultyMod"] = {}
         self.selected["restrictRanged"] = {}
 
         # Get the possible alternative enemies from the encounter's file.
-        with open(baseFolder + "\\lib\\dsbg_shuffle_encounters\\" + encounterName + ".json") as alternativesFile:
+        with open(baseFolder + "\\lib\\dsbg_shuffle_encounters\\" + encounterName + str(self.characterCount) + ".json") as alternativesFile:
             alts = load(alternativesFile)
 
         self.selected["alternatives"] = []
@@ -126,8 +135,10 @@ class Tester():
         for alt in self.selected["alternatives"]:
             self.newEnemies = alt
             self.edit_encounter_card(self.selected["name"], self.selected["expansion"], self.selected["level"], self.selected["enemySlots"])
-            if gen and len(a) < 5000000:
+            if gen and len(a) < 500000:
                 a.append(alt)
+            if len(a) == 500000:
+                break
 
         if gen:
             self.selected["alternatives"] = a
@@ -311,24 +322,24 @@ class Tester():
         deathlyFreezeTile1 = [enemy.replace(" (TSC)", "") for enemy in self.newTiles[1][0] + self.newTiles[1][1]]
         deathlyFreezeTile2 = [enemy.replace(" (TSC)", "") for enemy in self.newTiles[2][0] + self.newTiles[2][1]]
         overlap = set(deathlyFreezeTile1) & set(deathlyFreezeTile2)
-        target = sorted([enemy for enemy in overlap if deathlyFreezeTile1.count(enemy) + deathlyFreezeTile2.count(enemy) > 1], key=lambda x: enemiesDict[x].difficulty, reverse=True)[0]
+        target = sorted([enemy for enemy in overlap if deathlyFreezeTile1.count(enemy) + deathlyFreezeTile2.count(enemy) > 1], key=lambda x: (-enemiesDict[x].toughness, enemiesDict[x].difficulty[self.characterCount]), reverse=True)[0]
 
 
     def deathly_magic(self):
-        target = sorted([enemy for enemy in self.newTiles[1][0] + self.newTiles[1][1] if (self.newTiles[1][0] + self.newTiles[1][1]).count(enemy) == 1], key=lambda x: enemiesDict[x].difficulty, reverse=True)[0]
+        target = sorted([enemy for enemy in self.newTiles[1][0] + self.newTiles[1][1] if (self.newTiles[1][0] + self.newTiles[1][1]).count(enemy) == 1], key=lambda x: enemiesDict[x].difficulty[self.characterCount], reverse=True)[0]
 
 
     def deathly_tolls(self):
         target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])]].name
         
         gang = Counter([enemyIds[enemy].gang for enemy in self.newEnemies if enemyIds[enemy].gang]).most_common(1)[0][0]
-        if gang not in ["Alonne", "Hollow", "Scarecrow", "Skeleton"]:
+        if gang not in ["Alonne", "Hollow", "Silver Knight", "Skeleton"]:
             raise
 
 
     def depths_of_the_cathedral(self):
         gang = Counter([enemyIds[enemy].gang for enemy in self.newEnemies if enemyIds[enemy].gang]).most_common(1)[0][0]
-        if gang not in ["Alonne", "Hollow", "Scarecrow", "Skeleton"]:
+        if gang not in ["Alonne", "Hollow", "Silver Knight", "Skeleton"]:
             raise
 
 
@@ -344,7 +355,7 @@ class Tester():
 
     def flooded_fortress(self):
         gang = Counter([enemyIds[enemy].gang for enemy in self.newEnemies if enemyIds[enemy].gang]).most_common(1)[0][0]
-        if gang not in ["Alonne", "Hollow", "Scarecrow", "Skeleton"]:
+        if gang not in ["Alonne", "Hollow", "Silver Knight", "Skeleton"]:
             raise
 
 
@@ -358,8 +369,7 @@ class Tester():
 
 
     def gleaming_silver(self):
-        targets = list(set([enemyIds[enemy].name for enemy in self.newEnemies if self.newEnemies.count(enemy) == 2]))
-        target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])]].name
+        targets = list(set(sorted(self.newEnemies, key=lambda x: enemyIds[x].difficulty[self.characterCount])[1:-1]))
 
 
     def gnashing_beaks(self):
@@ -399,8 +409,8 @@ class Tester():
     def pitch_black(self):
         tile1Enemies = self.newTiles[1][0] + self.newTiles[1][1]
         tile2Enemies = self.newTiles[2][0] + self.newTiles[2][1]
-        target = sorted([enemy for enemy in tile1Enemies if tile1Enemies.count(enemy) == 1], key=lambda x: enemiesDict[x].difficulty, reverse=True)[0]
-        target = sorted([enemy for enemy in tile2Enemies if tile2Enemies.count(enemy) == 1], key=lambda x: enemiesDict[x].difficulty, reverse=True)[0]
+        target = sorted([enemy for enemy in tile1Enemies if tile1Enemies.count(enemy) == 1], key=lambda x: enemiesDict[x].difficulty[self.characterCount], reverse=True)[0]
+        target = sorted([enemy for enemy in tile2Enemies if tile2Enemies.count(enemy) == 1], key=lambda x: enemiesDict[x].difficulty[self.characterCount], reverse=True)[0]
 
 
     def puppet_master(self):
@@ -446,7 +456,7 @@ class Tester():
 
     def the_fountainhead(self):
         gang = Counter([enemyIds[enemy].gang for enemy in self.newEnemies if enemyIds[enemy].gang]).most_common(1)[0][0]
-        if gang not in ["Alonne", "Hollow", "Scarecrow", "Skeleton"]:
+        if gang not in ["Alonne", "Hollow", "Silver Knight", "Skeleton"]:
             raise
 
 
@@ -459,7 +469,7 @@ class Tester():
 
 
     def the_last_bastion(self):
-        target = sorted([enemy for enemy in self.newTiles[1][0] + self.newTiles[1][1]], key=lambda x: enemiesDict[x].difficulty)[0]
+        target = sorted([enemy for enemy in self.newTiles[1][0] + self.newTiles[1][1]], key=lambda x: enemiesDict[x].difficulty[self.characterCount])[0]
 
 
     def the_locked_grave(self):
@@ -487,18 +497,18 @@ class Tester():
 
     def twilight_falls(self):
         gang = Counter([enemyIds[enemy].gang for enemy in self.newEnemies if enemyIds[enemy].gang]).most_common(1)[0][0]
-        if gang not in ["Alonne", "Hollow", "Scarecrow", "Skeleton"]:
+        if gang not in ["Alonne", "Hollow", "Silver Knight", "Skeleton"]:
             raise
 
 
     def undead_sanctum(self):
         gang = Counter([enemyIds[enemy].gang for enemy in self.newEnemies if enemyIds[enemy].gang]).most_common(1)[0][0]
-        if gang not in ["Alonne", "Hollow", "Scarecrow", "Skeleton"]:
+        if gang not in ["Alonne", "Hollow", "Silver Knight", "Skeleton"]:
             raise
 
 
     def velkas_chosen(self):
-        target = sorted([enemy for enemy in self.newTiles[2][0] + self.newTiles[2][1]], key=lambda x: enemiesDict[x].difficulty, reverse=True)[0]
+        target = sorted([enemy for enemy in self.newTiles[2][0] + self.newTiles[2][1]], key=lambda x: enemiesDict[x].difficulty[self.characterCount], reverse=True)[0]
 
 
 

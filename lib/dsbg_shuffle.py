@@ -17,7 +17,7 @@ try:
     from dsbg_events import events
     from dsbg_settings import SettingsWindow
     from dsbg_tooltip_reference import tooltipText
-    from dsbg_treasure import generate_treasure_soul_cost, populate_treasure_tiers, pick_treasure, treasureSwapEncounters
+    from dsbg_treasure import generate_treasure_soul_cost, populate_treasure_tiers, pick_treasure, treasureSwapEncounters, treasures
     from dsbg_utility import CreateToolTip, HelpWindow, PopupWindow, enable_binding, center, do_nothing, log
 
 
@@ -64,6 +64,22 @@ try:
                 if self.settings["theme"] == "light":
                     root.tk.call("set_theme", "light")
 
+                self.selected = None
+                self.allExpansions = set([encounters[encounter]["expansion"] for encounter in encounters])
+                self.availableExpansions = set(self.settings["availableExpansions"])
+                self.enabledEnemies = set([enemiesDict[enemy.replace(" (V1)", "")].id for enemy in self.settings["enabledEnemies"] if enemy not in self.allExpansions])
+                self.charactersActive = set(self.settings["charactersActive"])
+                self.numberOfCharacters = len(self.charactersActive)
+                self.availableCoreSets = coreSets & self.availableExpansions
+
+                self.v1Expansions = {"Dark Souls The Board Game", "Darkroot", "Executioner Chariot", "Explorers", "Iron Keep"} if "v1" in self.settings["randomEncounterTypes"] else set()
+                self.v2Expansions = (self.allExpansions - self.v1Expansions) if "v2" in self.settings["randomEncounterTypes"] else set()
+                self.expansionsForRandomEncounters = (self.v1Expansions | self.v2Expansions) & self.allExpansions
+
+                root.withdraw()
+                i = 0
+                progress = PopupWindow(root, labelText="Praising the sun...", progressBar=True, progressMax=(len(allEnemies)*5) + len([t for t in treasures if not treasures[t]["character"] or treasures[t]["character"] in self.charactersActive]) + (len(self.encounterList) if self.settings["customEnemyList"] else 0), loadingImage=True)
+
                 # Delete images from staging
                 folder = baseFolder + "\\lib\\dsbg_shuffle_image_staging".replace("\\", pathSep)
                 for filename in os.listdir(folder):
@@ -94,26 +110,16 @@ try:
                     self.bossMenu.append(bosses[boss]["name"])
 
                 self.selectedBoss = tk.StringVar()
-
-                self.selected = None
-                self.allExpansions = set([encounters[encounter]["expansion"] for encounter in encounters])
-                self.availableExpansions = set(self.settings["availableExpansions"])
-                self.enabledEnemies = set([enemiesDict[enemy.replace(" (V1)", "")].id for enemy in self.settings["enabledEnemies"] if enemy not in self.allExpansions])
-                self.charactersActive = set(self.settings["charactersActive"])
-                self.availableCoreSets = coreSets & self.availableExpansions
-
-                self.v1Expansions = {"Dark Souls The Board Game", "Darkroot", "Executioner Chariot", "Explorers", "Iron Keep"} if "v1" in self.settings["randomEncounterTypes"] else set()
-                self.v2Expansions = (self.allExpansions - self.v1Expansions) if "v2" in self.settings["randomEncounterTypes"] else set()
-                self.expansionsForRandomEncounters = (self.v1Expansions | self.v2Expansions) & self.allExpansions
                 
                 self.currentEvent = None
                 self.currentEventNum = 0
                 self.eventDeck = []
                 
-                if self.settings["treasureSwapOption"] == "Similar Soul Cost":
-                    generate_treasure_soul_cost(self.availableExpansions, self.charactersActive)
-                elif self.settings["treasureSwapOption"] == "Tier Based":
-                    generate_treasure_soul_cost(self.availableExpansions, self.charactersActive)
+                progress.label.config(text = "Loading treasure...")
+                if self.settings["treasureSwapOption"] in {"Similar Soul Cost", "Tier Based"}:
+                    generate_treasure_soul_cost(self.availableExpansions, self.charactersActive, root, progress)
+                i = len([t for t in treasures if not treasures[t]["character"] or treasures[t]["character"] in self.charactersActive])
+                if self.settings["treasureSwapOption"] == "Tier Based":
                     populate_treasure_tiers(self.availableExpansions, self.charactersActive)
                 self.set_encounter_list()
                 self.create_buttons()
@@ -138,14 +144,11 @@ try:
 
                 self.campaign = []
 
-                root.withdraw()
-                i = 0
-                progress = PopupWindow(root, labelText="Loading images...", progressBar=True, progressMax=len(allEnemies) + (len(self.encounterList) if self.settings["customEnemyList"] else 0), loadingImage=True)
-
                 # Create images
+                progress.label.config(text = "Loading images...")
                 # Enemies
                 for enemy in allEnemies:
-                    i += 1
+                    i += 5
                     progress.progressVar.set(i)
                     root.update_idletasks()
                     allEnemies[enemy]["imageOld"] = self.create_image(enemy + ".png", "enemyOld")
@@ -161,7 +164,7 @@ try:
                     progress.label.config(text = "Applying custom enemy list...")
                     encountersToRemove = set()
                     for encounter in self.encounterList:
-                        i += 1
+                        i += 5
                         progress.progressVar.set(i)
                         root.update_idletasks()
                         self.load_encounter(encounter=encounter, customEnemyListCheck=True)
@@ -706,10 +709,10 @@ try:
                 if campaignCard["type"] == "encounter":
                     self.rewardTreasure = campaignCard.get("rewardTreasure")
 
-                    log("\tOpening " + baseFolder + "\\lib\\dsbg_shuffle_encounters\\".replace("\\", pathSep) + campaignCard["name"] + ".json")
+                    log("\tOpening " + baseFolder + "\\lib\\dsbg_shuffle_encounters\\".replace("\\", pathSep) + campaignCard["name"] + str(self.numberOfCharacters) + ".json")
 
                     # Get the enemy slots for this card.
-                    with open(baseFolder + "\\lib\\dsbg_shuffle_encounters\\".replace("\\", pathSep) + campaignCard["name"] + ".json") as alternativesFile:
+                    with open(baseFolder + "\\lib\\dsbg_shuffle_encounters\\".replace("\\", pathSep) + campaignCard["name"] + str(self.numberOfCharacters) + ".json") as alternativesFile:
                         alts = load(alternativesFile)
 
                     # Create the encounter card with saved enemies and tooltips.
@@ -1193,9 +1196,9 @@ try:
                             campaignEncounter = [e for e in self.campaign if e["name"] == encounter["name"]]
                             self.rewardTreasure = campaignEncounter[0].get("rewardTreasure")
 
-                            log("\tOpening " + baseFolder + "\\lib\\dsbg_shuffle_encounters\\".replace("\\", pathSep) + campaignEncounter[0]["name"] + ".json")
+                            log("\tOpening " + baseFolder + "\\lib\\dsbg_shuffle_encounters\\".replace("\\", pathSep) + campaignEncounter[0]["name"] + str(self.numberOfCharacters) + ".json")
                             # Get the enemy slots for this encounter.
-                            with open(baseFolder + "\\lib\\dsbg_shuffle_encounters\\".replace("\\", pathSep) + campaignEncounter[0]["name"] + ".json") as alternativesFile:
+                            with open(baseFolder + "\\lib\\dsbg_shuffle_encounters\\".replace("\\", pathSep) + campaignEncounter[0]["name"] + str(self.numberOfCharacters) + ".json") as alternativesFile:
                                 alts = load(alternativesFile)
 
                             # Create the encounter card with saved enemies and tooltips.
@@ -2046,8 +2049,8 @@ try:
                 self.selected["restrictRanged"] = {}
 
                 # Get the possible alternative enemies from the encounter's file.
-                log("\tOpening " + baseFolder + "\\lib\\dsbg_shuffle_encounters\\".replace("\\", pathSep) + encounterName + ".json")
-                with open(baseFolder + "\\lib\\dsbg_shuffle_encounters\\".replace("\\", pathSep) + encounterName + ".json") as alternativesFile:
+                log("\tOpening " + baseFolder + "\\lib\\dsbg_shuffle_encounters\\".replace("\\", pathSep) + encounterName + str(self.numberOfCharacters) + ".json")
+                with open(baseFolder + "\\lib\\dsbg_shuffle_encounters\\".replace("\\", pathSep) + encounterName + str(self.numberOfCharacters) + ".json") as alternativesFile:
                     alts = load(alternativesFile)
 
                 self.selected["alternatives"] = []
@@ -2578,7 +2581,7 @@ try:
                 deathlyFreezeTile1 = [enemy for enemy in self.newTiles[1][0] + self.newTiles[1][1]]
                 deathlyFreezeTile2 = [enemy for enemy in self.newTiles[2][0] + self.newTiles[2][1]]
                 overlap = set(deathlyFreezeTile1) & set(deathlyFreezeTile2)
-                target = sorted([enemy for enemy in overlap if deathlyFreezeTile1.count(enemy) + deathlyFreezeTile2.count(enemy) > 1], key=lambda x: enemiesDict[x].difficulty, reverse=True)[0]
+                target = sorted([enemy for enemy in overlap if deathlyFreezeTile1.count(enemy) + deathlyFreezeTile2.count(enemy) == 2], key=lambda x: (-enemiesDict[x].toughness, enemiesDict[x].difficulty[self.numberOfCharacters]), reverse=True)[0]
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=141, y=242)
 
@@ -2592,7 +2595,7 @@ try:
             try:
                 log("Start of deathly_magic")
 
-                target = sorted([enemy for enemy in self.newTiles[1][0] + self.newTiles[1][1] if (self.newTiles[1][0] + self.newTiles[1][1]).count(enemy) == 1], key=lambda x: enemiesDict[x].difficulty, reverse=True)[0]
+                target = sorted([enemy for enemy in self.newTiles[1][0] + self.newTiles[1][1] if (self.newTiles[1][0] + self.newTiles[1][1]).count(enemy) == 1], key=lambda x: enemiesDict[x].difficulty[self.numberOfCharacters], reverse=True)[0]
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=65, y=147)
                 self.create_tooltip(tooltipDict=tooltipDict, x=274, y=196)
@@ -2805,14 +2808,11 @@ try:
             try:
                 log("Start of gleaming_silver")
 
-                targets = list(set([enemyIds[enemy].name for enemy in self.newEnemies if self.newEnemies.count(enemy) == 2]))
+                targets = [enemyIds[enemy].name for enemy in list(set(sorted(self.newEnemies, key=lambda x: enemyIds[x].difficulty[self.numberOfCharacters])[1:-1]))]
 
-                tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[targets[0]]["image text" if self.forPrinting else "photo image text"], "imageName": targets[0]}
-                self.create_tooltip(tooltipDict=tooltipDict, x=189, y=245)
-                self.create_tooltip(tooltipDict=tooltipDict, x=144, y=270)
-                tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[targets[1]]["image text" if self.forPrinting else "photo image text"], "imageName": targets[1]}
-                self.create_tooltip(tooltipDict=tooltipDict, x=233, y=245)
-                self.create_tooltip(tooltipDict=tooltipDict, x=188, y=270)
+                for i, target in enumerate(targets):
+                    tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
+                    self.create_tooltip(tooltipDict=tooltipDict, x=144 + (i * 20), y=270)
 
                 target = enemyIds[self.newEnemies[-1]].name
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
@@ -3073,10 +3073,10 @@ try:
 
                 tile1Enemies = self.newTiles[1][0] + self.newTiles[1][1]
                 tile2Enemies = self.newTiles[2][0] + self.newTiles[2][1]
-                target = sorted([enemy for enemy in tile1Enemies if tile1Enemies.count(enemy) == 1], key=lambda x: enemiesDict[x].difficulty, reverse=True)[0]
+                target = sorted([enemy for enemy in tile1Enemies if tile1Enemies.count(enemy) == 1], key=lambda x: enemiesDict[x].difficulty[self.numberOfCharacters], reverse=True)[0]
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=65, y=147)
-                target = sorted([enemy for enemy in tile2Enemies if tile2Enemies.count(enemy) == 1], key=lambda x: enemiesDict[x].difficulty, reverse=True)[0]
+                target = sorted([enemy for enemy in tile2Enemies if tile2Enemies.count(enemy) == 1], key=lambda x: enemiesDict[x].difficulty[self.numberOfCharacters], reverse=True)[0]
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=222, y=147)
 
@@ -3286,16 +3286,12 @@ try:
             try:
                 log("Start of the_first_bastion")
 
-                target = enemyIds[self.newEnemies[-3]].name
-                tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
+                targets = sorted([enemyIds[enemy].name for enemy in self.newEnemies[-3:]], key=lambda x: (-enemiesDict[x].toughness, enemiesDict[x].difficulty[self.numberOfCharacters]))
+                tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[targets[0]]["image text" if self.forPrinting else "photo image text"], "imageName": targets[0]}
                 self.create_tooltip(tooltipDict=tooltipDict, x=362, y=212)
-
-                target = enemyIds[self.newEnemies[-2]].name
-                tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
+                tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[targets[1]]["image text" if self.forPrinting else "photo image text"], "imageName": targets[1]}
                 self.create_tooltip(tooltipDict=tooltipDict, x=188, y=237)
-
-                target = enemyIds[self.newEnemies[-1]].name
-                tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
+                tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[targets[2]]["image text" if self.forPrinting else "photo image text"], "imageName": targets[2]}
                 self.create_tooltip(tooltipDict=tooltipDict, x=247, y=249)
                 self.create_tooltip(tooltipDict=tooltipDict, x=216, y=197)
 
@@ -3372,7 +3368,7 @@ try:
             try:
                 log("Start of the_last_bastion")
 
-                target = sorted([enemy for enemy in self.newTiles[1][0] + self.newTiles[1][1]], key=lambda x: enemiesDict[x].difficulty)[0]
+                target = sorted([enemy for enemy in self.newTiles[1][0] + self.newTiles[1][1]], key=lambda x: enemiesDict[x].difficulty[self.numberOfCharacters])[0]
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=215, y=227)
                 self.create_tooltip(tooltipDict=tooltipDict, x=316, y=250)
@@ -3603,7 +3599,7 @@ try:
             try:
                 log("Start of velkas_chosen")
 
-                target = sorted([enemy for enemy in self.newTiles[2][0] + self.newTiles[2][1]], key=lambda x: enemiesDict[x].difficulty, reverse=True)[0]
+                target = sorted([enemy for enemy in self.newTiles[2][0] + self.newTiles[2][1]], key=lambda x: enemiesDict[x].difficulty[self.numberOfCharacters], reverse=True)[0]
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=65, y=147)
                 self.create_tooltip(tooltipDict=tooltipDict, x=298, y=195)

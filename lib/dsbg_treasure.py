@@ -276,7 +276,7 @@ try:
     }
 
 
-    def generate_treasure_soul_cost(setsAvailable, charactersActive):
+    def generate_treasure_soul_cost(setsAvailable, charactersActive, root, progress):
         try:
             log("Start of generate_treasure_soul_cost")
 
@@ -285,7 +285,13 @@ try:
             maxInt = max([len(soulCost[c]["intelligence"]) for c in charactersActive])
             maxFai = max([len(soulCost[c]["faith"]) for c in charactersActive])
 
+            i = 0
+
             for t in [t for t in treasures if not treasures[t]["character"] or treasures[t]["character"] in charactersActive]:
+                i += 1
+                progress.progressVar.set(i)
+                root.update_idletasks()
+
                 # Don't attempt to calculate soul cost for items that can't be equipped by anyone in the party.
                 if any([
                     treasures[t]["strength"] > maxStr,
