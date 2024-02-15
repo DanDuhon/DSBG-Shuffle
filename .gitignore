@@ -6,3 +6,4 @@ build
 dist
 install_script.iss
 *.pyc
+dsbgshuffle
