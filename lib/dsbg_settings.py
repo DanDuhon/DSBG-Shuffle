@@ -6,8 +6,8 @@ try:
     from json import load, dump
 
     from dsbg_characters import soulCost
-    from dsbg_treasure import generate_treasure_soul_cost, populate_treasure_tiers
-    from dsbg_utility import VerticalScrolledFrame, CreateToolTip, center, log
+    from dsbg_treasure import generate_treasure_soul_cost, populate_treasure_tiers, treasures
+    from dsbg_utility import VerticalScrolledFrame, PopupWindow, CreateToolTip, center, log
 
 
     if platform.system() == "Windows":
@@ -23,10 +23,11 @@ try:
         Window in which the user selects which expansions they own and whether they want to see
         V1, V1, or both styles of encounters when being shown random encounters.
         """
-        def __init__(self, master, coreSets):
+        def __init__(self, root, coreSets):
             try:
                 log("Creating settings window")
-                top = self.top = tk.Toplevel(master)
+                self.root = root
+                top = self.top = tk.Toplevel(root)
                 top.attributes('-alpha', 0.0)
                 top.wait_visibility()
                 top.grab_set_global()
@@ -454,11 +455,12 @@ try:
                         dump(newSettings, settingsFile)
 
                     # Recalculate the average soul cost of treasure.
-                    if self.treasureSwapOption.get() == "Similar Soul Cost":
-                        generate_treasure_soul_cost(expansionsActive, charactersActive)
-                    elif self.treasureSwapOption.get() == "Tier Based":
-                        generate_treasure_soul_cost(expansionsActive, charactersActive)
-                        populate_treasure_tiers(expansionsActive, charactersActive)
+                    if self.treasureSwapOption.get() in {"Similar Soul Cost", "Tier Based"}:
+                        progress = PopupWindow(self.root, labelText="Reloading treasure...", progressBar=True, progressMax=len([t for t in treasures if not treasures[t]["character"] or treasures[t]["character"] in charactersActive]), loadingImage=True)
+                        generate_treasure_soul_cost(expansionsActive, charactersActive, self.root, progress)
+                        if self.treasureSwapOption.get() == "Tier Based":
+                            populate_treasure_tiers(expansionsActive, charactersActive)
+                        progress.destroy()
 
                 self.top.destroy()
 

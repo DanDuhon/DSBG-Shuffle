@@ -288,9 +288,10 @@ try:
             i = 0
 
             for t in [t for t in treasures if not treasures[t]["character"] or treasures[t]["character"] in charactersActive]:
-                i += 1
-                progress.progressVar.set(i)
-                root.update_idletasks()
+                if progress:
+                    i += 1
+                    progress.progressVar.set(i)
+                    root.update_idletasks()
 
                 # Don't attempt to calculate soul cost for items that can't be equipped by anyone in the party.
                 if any([

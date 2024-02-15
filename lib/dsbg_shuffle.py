@@ -115,7 +115,7 @@ try:
                 self.currentEventNum = 0
                 self.eventDeck = []
                 
-                progress.label.config(text = "Loading treasure...")
+                progress.label.config(text="Loading treasure...")
                 if self.settings["treasureSwapOption"] in {"Similar Soul Cost", "Tier Based"}:
                     generate_treasure_soul_cost(self.availableExpansions, self.charactersActive, root, progress)
                 i = len([t for t in treasures if not treasures[t]["character"] or treasures[t]["character"] in self.charactersActive])
@@ -1813,6 +1813,8 @@ try:
                     self.availableExpansions = set(self.settings["availableExpansions"])
                     self.availableCoreSets = coreSets & self.availableExpansions
                     self.expansionsForRandomEncounters = self.allExpansions & (self.v1Expansions if "v1" in self.settings["randomEncounterTypes"] else set() | self.v2Expansions if "v2" in self.settings["randomEncounterTypes"] else set())
+                    self.charactersActive = set(self.settings["charactersActive"])
+                    self.numberOfCharacters = len(self.charactersActive)
                     self.set_encounter_list()
                     self.create_encounters_treeview()
                     
@@ -2175,8 +2177,12 @@ try:
                 # the level of the encounter, and where on the original encounter card enemies were found.
                 s = 0
                 for slotNum, slot in enumerate(enemySlots):
+                    # These are the slot numbers for spawns. Skip over these enemies.
+                    if slotNum in {4, 7, 10}:
+                        s += slot
+                        continue
                     for e in range(slot):
-                        self.newTiles[1 if slotNum < 4 else 2 if slotNum < 6 else 3][slotNum - (0 if slotNum < 4 else 4 if slotNum < 6 else 6)].append(enemyIds[self.newEnemies[s]].name)
+                        self.newTiles[1 if slotNum < 4 else 2 if slotNum < 7 else 3][slotNum - (0 if slotNum < 4 else 5 if slotNum < 7 else 7)].append(enemyIds[self.newEnemies[s]].name)
                         if level == 4:
                             x = 116 + (43 * e) - (3 if enemyIds[self.newEnemies[s]].name == "Advanced Invader" else 0)
                             y = 78 + (47 * slotNum)
@@ -2187,7 +2193,7 @@ try:
                             imageType = "imageOld"
                         else:
                             x = 300 + (29 * e)
-                            y = 323 + (29 * (slotNum - (0 if slotNum < 4 else 4 if slotNum < 6 else 6))) + (((1 if slotNum < 4 else 2 if slotNum < 6 else 3) - 1) * 122)
+                            y = 323 + (29 * (slotNum - (0 if slotNum < 4 else 5 if slotNum < 7 else 7))) + (((1 if slotNum < 4 else 2 if slotNum < 7 else 3) - 1) * 122)
                             imageType = "imageNew"
 
                         if enemyIds[self.newEnemies[s]].name == "Standard Invader":
@@ -2457,7 +2463,7 @@ try:
             try:
                 log("Start of central_plaza")
 
-                target = enemyIds[self.newEnemies[-1]].name
+                target = enemyIds[self.newEnemies[4]].name
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=143, y=262)
 
@@ -2610,7 +2616,7 @@ try:
             try:
                 log("Start of deathly_tolls")
 
-                target = enemyIds[self.newEnemies[-1]].name
+                target = enemyIds[self.newEnemies[7]].name
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=180, y=212)
 
@@ -2700,7 +2706,7 @@ try:
                 text2 = "values by 1. Once these enemies have been"
                 text3 = "killed, spawn the        on      , on tile 3."
 
-                target = enemyIds[self.newEnemies[-1]].name
+                target = enemyIds[self.newEnemies[5]].name
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=65, y=147)
                 self.create_tooltip(tooltipDict=tooltipDict, x=228, y=281)
@@ -2779,11 +2785,11 @@ try:
             try:
                 log("Start of giants_coffin")
 
-                target = enemyIds[self.newEnemies[-2]].name
+                target = enemyIds[self.newEnemies[4]].name
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=241, y=228)
 
-                target = enemyIds[self.newEnemies[-1]].name
+                target = enemyIds[self.newEnemies[5]].name
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=286, y=228)
 
@@ -2814,7 +2820,7 @@ try:
                     tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                     self.create_tooltip(tooltipDict=tooltipDict, x=144 + (i * 20), y=270)
 
-                target = enemyIds[self.newEnemies[-1]].name
+                target = enemyIds[self.newEnemies[5]].name
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=180, y=212)
 
@@ -2828,13 +2834,17 @@ try:
             try:
                 log("Start of gnashing_beaks")
 
-                target = enemyIds[self.newEnemies[-2]].name
+                target = enemyIds[self.newEnemies[2]].name
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
-                self.create_tooltip(tooltipDict=tooltipDict, x=336, y=232)
+                self.create_tooltip(tooltipDict=tooltipDict, x=314, y=232)
 
-                target = enemyIds[self.newEnemies[-1]].name
+                target = enemyIds[self.newEnemies[3]].name
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
-                self.create_tooltip(tooltipDict=tooltipDict, x=242, y=244)
+                self.create_tooltip(tooltipDict=tooltipDict, x=338, y=232)
+
+                target = enemyIds[self.newEnemies[4]].name
+                tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
+                self.create_tooltip(tooltipDict=tooltipDict, x=235, y=244)
 
                 log("\tEnd of gnashing_beaks")
             except Exception as e:
@@ -2867,7 +2877,7 @@ try:
             try:
                 log("Start of grim_reunion")
 
-                target = enemyIds[self.newEnemies[-1]].name
+                target = enemyIds[self.newEnemies[10]].name
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=219, y=196)
                 self.create_tooltip(tooltipDict=tooltipDict, x=269, y=255)
@@ -2904,9 +2914,13 @@ try:
             try:
                 log("Start of in_deep_water")
 
-                target = enemyIds[self.newEnemies[-1]].name
+                target = enemyIds[self.newEnemies[4]].name
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=239, y=198)
+
+                target = enemyIds[self.newEnemies[5]].name
+                tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
+                self.create_tooltip(tooltipDict=tooltipDict, x=259, y=198)
 
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
@@ -2950,14 +2964,15 @@ try:
             try:
                 log("Start of lakeview_refuge")
 
-                target = enemyIds[self.newEnemies[-2]].name
+                target = enemyIds[self.newEnemies[-(self.numberOfCharacters + 1)]].name
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=215, y=228)
                 self.create_tooltip(tooltipDict=tooltipDict, x=291, y=264)
 
-                target = enemyIds[self.newEnemies[-1]].name
-                tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
-                self.create_tooltip(tooltipDict=tooltipDict, x=243, y=276)
+                for i, enemy in enumerate(self.newEnemies[-self.numberOfCharacters:]):
+                    target = enemyIds[enemy].name
+                    tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
+                    self.create_tooltip(tooltipDict=tooltipDict, x=181 + (20 * i), y=288)
 
                 log("\tEnd of lakeview_refuge")
             except Exception as e:
@@ -3041,7 +3056,7 @@ try:
             try:
                 log("Start of parish_church")
 
-                target = enemyIds[self.newEnemies[-1]].name
+                target = enemyIds[self.newEnemies[10]].name
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=180, y=198)
 
@@ -3055,11 +3070,17 @@ try:
             try:
                 log("Start of parish_gates")
 
-                target = enemyIds[self.newEnemies[-1]].name
+                target = enemyIds[self.newEnemies[3]].name
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=309, y=220)
                 self.create_tooltip(tooltipDict=tooltipDict, x=188, y=255)
                 self.create_tooltip(tooltipDict=tooltipDict, x=144, y=280)
+
+                target = enemyIds[self.newEnemies[4]].name
+                tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
+                self.create_tooltip(tooltipDict=tooltipDict, x=329, y=220)
+                self.create_tooltip(tooltipDict=tooltipDict, x=208, y=255)
+                self.create_tooltip(tooltipDict=tooltipDict, x=164, y=280)
 
                 log("\tEnd of parish_gates")
             except Exception as e:
@@ -3180,10 +3201,15 @@ try:
             try:
                 log("Start of skeleton_overlord")
 
-                target = enemyIds[self.newEnemies[-1]].name
+                target = enemyIds[self.newEnemies[1]].name
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=240, y=196)
                 self.create_tooltip(tooltipDict=tooltipDict, x=208, y=257)
+
+                target = enemyIds[self.newEnemies[2]].name
+                tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
+                self.create_tooltip(tooltipDict=tooltipDict, x=260, y=196)
+                self.create_tooltip(tooltipDict=tooltipDict, x=228, y=257)
 
                 target = self.newTiles[1][0][0]
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
@@ -3201,7 +3227,7 @@ try:
             try:
                 log("Start of tempting_maw")
 
-                target = enemyIds[self.newEnemies[-1]].name
+                target = enemyIds[self.newEnemies[4]].name
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=224, y=145)
                 self.create_tooltip(tooltipDict=tooltipDict, x=220, y=197)
@@ -3217,11 +3243,11 @@ try:
             try:
                 log("Start of the_abandoned_chest")
 
-                target = enemyIds[self.newEnemies[-2]].name
+                target = enemyIds[self.newEnemies[4]].name
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=322, y=195)
 
-                target = enemyIds[self.newEnemies[-1]].name
+                target = enemyIds[self.newEnemies[5]].name
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=144, y=208)
 
@@ -3272,9 +3298,13 @@ try:
             try:
                 log("Start of the_bell_tower")
 
-                target = enemyIds[self.newEnemies[-1]].name
+                target = enemyIds[self.newEnemies[2]].name
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=341, y=195)
+
+                target = enemyIds[self.newEnemies[3]].name
+                tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
+                self.create_tooltip(tooltipDict=tooltipDict, x=361, y=195)
 
                 log("\tEnd of the_bell_tower")
             except Exception as e:
@@ -3327,7 +3357,7 @@ try:
             try:
                 log("Start of the_grand_hall")
 
-                target = enemyIds[self.newEnemies[-1]].name
+                target = enemyIds[self.newEnemies[7]].name
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=180, y=213)
 
@@ -3383,7 +3413,7 @@ try:
             try:
                 log("Start of the_locked_grave")
 
-                target = enemyIds[self.newEnemies[-1]].name
+                target = enemyIds[self.newEnemies[7]].name
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=217, y=197)
                 self.create_tooltip(tooltipDict=tooltipDict, x=306, y=220)
