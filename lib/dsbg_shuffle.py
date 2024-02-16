@@ -33,18 +33,7 @@ try:
         else:
             font = ImageFont.truetype("./Adobe Caslon Pro Semibold.ttf", 12)
 
-        enemyImages = {}
-
-        with open(baseFolder + "\\lib\\dsbg_shuffle_enemies.json".replace("\\", pathSep)) as enemiesFile:
-            enemies = load(enemiesFile)
-
-        with open(baseFolder + "\\lib\\dsbg_shuffle_invaders_standard.json".replace("\\", pathSep)) as invadersStandardFile:
-            invadersStandard = load(invadersStandardFile)
-
-        with open(baseFolder + "\\lib\\dsbg_shuffle_invaders_advanced.json".replace("\\", pathSep)) as invadersAdvancedFile:
-            invadersAdvanced = load(invadersAdvancedFile)
-
-        allEnemies = enemies | invadersStandard | invadersAdvanced
+        allEnemies = {enemy: {} for enemy in enemiesDict}
 
         with open(baseFolder + "\\lib\\dsbg_shuffle_encounters.json".replace("\\", pathSep)) as encountersFile:
             encounters = load(encountersFile)
@@ -68,6 +57,8 @@ try:
                 self.allExpansions = set([encounters[encounter]["expansion"] for encounter in encounters])
                 self.availableExpansions = set(self.settings["availableExpansions"])
                 self.enabledEnemies = set([enemiesDict[enemy.replace(" (V1)", "")].id for enemy in self.settings["enabledEnemies"] if enemy not in self.allExpansions])
+                if "Phantoms" in self.availableExpansions:
+                    self.enabledEnemies = self.enabledEnemies.union(set([enemy for enemy in enemyIds if "Phantoms" in enemyIds[enemy].expansions]))
                 self.charactersActive = set(self.settings["charactersActive"])
                 self.numberOfCharacters = len(self.charactersActive)
                 self.availableCoreSets = coreSets & self.availableExpansions
@@ -75,6 +66,7 @@ try:
                 self.v1Expansions = {"Dark Souls The Board Game", "Darkroot", "Executioner Chariot", "Explorers", "Iron Keep"} if "v1" in self.settings["randomEncounterTypes"] else set()
                 self.v2Expansions = (self.allExpansions - self.v1Expansions) if "v2" in self.settings["randomEncounterTypes"] else set()
                 self.expansionsForRandomEncounters = (self.v1Expansions | self.v2Expansions) & self.allExpansions
+                self.set_encounter_list()
 
                 root.withdraw()
                 i = 0
@@ -121,7 +113,7 @@ try:
                 i = len([t for t in treasures if not treasures[t]["character"] or treasures[t]["character"] in self.charactersActive])
                 if self.settings["treasureSwapOption"] == "Tier Based":
                     populate_treasure_tiers(self.availableExpansions, self.charactersActive)
-                self.set_encounter_list()
+
                 self.create_buttons()
                 self.create_tabs()
                 self.scrollbarTreeviewEncounters = ttk.Scrollbar(self.encounterTab)
@@ -145,7 +137,7 @@ try:
                 self.campaign = []
 
                 # Create images
-                progress.label.config(text = "Loading images...")
+                progress.label.config(text = "Loading images... ")
                 # Enemies
                 for enemy in allEnemies:
                     i += 5
@@ -154,7 +146,7 @@ try:
                     allEnemies[enemy]["imageOld"] = self.create_image(enemy + ".png", "enemyOld")
                     allEnemies[enemy]["imageOldLevel4"] = self.create_image(enemy + ".png", "enemyOldLevel4")
                     allEnemies[enemy]["imageNew"] = self.create_image(enemy + ".png", "enemyNew")
-                    if enemy in enemies:
+                    if "Phantoms" not in enemiesDict[enemy].expansions:
                         allEnemies[enemy]["image text"] = self.create_image(enemy + ".png", "enemyText")
                         allEnemies[enemy]["image text" if self.forPrinting else "photo image text"] = ImageTk.PhotoImage(self.create_image(enemy + ".png", "enemyText"))
 
@@ -164,7 +156,7 @@ try:
                     progress.label.config(text = "Applying custom enemy list...")
                     encountersToRemove = set()
                     for encounter in self.encounterList:
-                        i += 5
+                        i += 1
                         progress.progressVar.set(i)
                         root.update_idletasks()
                         self.load_encounter(encounter=encounter, customEnemyListCheck=True)
@@ -193,11 +185,11 @@ try:
                 self.eerie = self.create_image("eerie.png", "eerie")
                 self.gangAlonne = self.create_image("gang_alonne.png", "gangAlonne")
                 self.gangHollow = self.create_image("gang_hollow.png", "gangHollow")
-                self.gangScarecrow = self.create_image("gang_scarecrow.png", "gangScarecrow")
+                self.gangSilverKnight = self.create_image("gang_silver_knight.png", "gangSilverKnight")
                 self.gangSkeleton = self.create_image("gang_skeleton.png", "gangSkeleton")
                 self.gangAlonnePhoto = ImageTk.PhotoImage(self.gangAlonne)
                 self.gangHollowPhoto = ImageTk.PhotoImage(self.gangHollow)
-                self.gangScarecrowPhoto = ImageTk.PhotoImage(self.gangScarecrow)
+                self.gangSilverKnightPhoto = ImageTk.PhotoImage(self.gangSilverKnight)
                 self.gangSkeletonPhoto = ImageTk.PhotoImage(self.gangSkeleton)
                 self.hidden = self.create_image("hidden.png", "hidden")
                 self.illusion = self.create_image("illusion.png", "illusion")
@@ -1796,6 +1788,8 @@ try:
                 self.set_bindings_buttons_menus(False)
 
                 oldSettings = {k:v for k, v in self.settings.items()}
+                oldTreasureSwapOption = self.settings["treasureSwapOption"]
+                oldCustomEnemyList = self.settings["customEnemyList"]
 
                 s = SettingsWindow(root, coreSets)
 
@@ -1817,27 +1811,35 @@ try:
                     self.numberOfCharacters = len(self.charactersActive)
                     self.set_encounter_list()
                     self.create_encounters_treeview()
-                    
-                    if self.settings["customEnemyList"]:
+
+                    # Recalculate the average soul cost of treasure.
+                    if (oldTreasureSwapOption != self.settings["treasureSwapOption"] and self.settings["treasureSwapOption"] in {"Similar Soul Cost", "Tier Based"}) or (oldCustomEnemyList != self.settings["customEnemyList"] and self.settings["customEnemyList"]):
                         i = 0
-                        progress = PopupWindow(root, labelText="Applying custom enemy list...", progressBar=True, progressMax=len(self.encounterList), loadingImage=True)
+                        progress = PopupWindow(root, labelText="Reloading treasure...", progressBar=True, progressMax=(len([t for t in treasures if not treasures[t]["character"] or treasures[t]["character"] in self.charactersActive]) if oldTreasureSwapOption != self.settings["treasureSwapOption"] and self.settings["treasureSwapOption"] in {"Similar Soul Cost", "Tier Based"} else 0) + (len(self.encounterList) if oldCustomEnemyList != self.settings["customEnemyList"] and self.settings["customEnemyList"] else 0), loadingImage=True)
+                        if oldTreasureSwapOption != self.settings["treasureSwapOption"] and self.settings["treasureSwapOption"] in {"Similar Soul Cost", "Tier Based"}:
+                            i = generate_treasure_soul_cost(self.availableExpansions, self.charactersActive, root, progress)
+                            if self.settings["treasureSwapOption"] == "Tier Based":
+                                populate_treasure_tiers(self.availableExpansions, self.charactersActive)
+                    
+                        if oldCustomEnemyList != self.settings["customEnemyList"] and self.settings["customEnemyList"]:
+                            progress.label.config(text = "Applying custom enemy list...")
 
-                        encountersToRemove = set()
-                        for encounter in self.encounterList:
-                            i += 1
-                            progress.progressVar.set(i)
-                            root.update_idletasks()
-                            self.load_encounter(encounter=encounter, customEnemyListCheck=True)
-                            if all([not set(alt).issubset(self.enabledEnemies) for alt in self.selected["alternatives"]]):
-                                encountersToRemove.add(encounter)
+                            encountersToRemove = set()
+                            for encounter in self.encounterList:
+                                i += 1
+                                progress.progressVar.set(i)
+                                root.update_idletasks()
+                                self.load_encounter(encounter=encounter, customEnemyListCheck=True)
+                                if all([not set(alt).issubset(self.enabledEnemies) for alt in self.selected["alternatives"]]):
+                                    encountersToRemove.add(encounter)
 
-                        self.encounterList = list(set(self.encounterList) - encountersToRemove)
-                        
-                        self.treeviewEncounters.pack_forget()
-                        self.treeviewEncounters.destroy()
-                        self.create_encounters_treeview()
-                        self.scrollbarTreeviewCampaign = ttk.Scrollbar(self.campaignTabTreeviewFrame)
-                        self.scrollbarTreeviewCampaign.pack(side="right", fill="y")
+                            self.encounterList = list(set(self.encounterList) - encountersToRemove)
+                            
+                            self.treeviewEncounters.pack_forget()
+                            self.treeviewEncounters.destroy()
+                            self.create_encounters_treeview()
+                            self.scrollbarTreeviewCampaign = ttk.Scrollbar(self.campaignTabTreeviewFrame)
+                            self.scrollbarTreeviewCampaign.pack(side="right", fill="y")
 
                         progress.destroy()
 
@@ -1925,7 +1927,7 @@ try:
                     if imageType == "enemyOld":
                         image = Image.open(imagePath).resize((27, 27), Image.Resampling.LANCZOS)
                     elif imageType == "enemyOldLevel4":
-                        if imageFileName[:-4] in invadersAdvanced:
+                        if "Phantoms" in enemiesDict[imageFileName[:-4]].expansions:
                             image = Image.open(imagePath).resize((38, 38), Image.Resampling.LANCZOS)
                         else:
                             image = Image.open(imagePath).resize((32, 32), Image.Resampling.LANCZOS)
@@ -1951,8 +1953,8 @@ try:
                         image = Image.open(imagePath).resize((67, 13), Image.Resampling.LANCZOS)
                     elif imageType == "gangHollow":
                         image = Image.open(imagePath).resize((69, 13), Image.Resampling.LANCZOS)
-                    elif imageType == "gangScarecrow":
-                        image = Image.open(imagePath).resize((81, 13), Image.Resampling.LANCZOS)
+                    elif imageType == "gangSilverKnight":
+                        image = Image.open(imagePath).resize((96, 13), Image.Resampling.LANCZOS)
                     elif imageType == "gangSkeleton":
                         image = Image.open(imagePath).resize((73, 13), Image.Resampling.LANCZOS)
                     elif imageType == "hidden":
@@ -2047,8 +2049,6 @@ try:
                         return
 
                 self.selected = encounters[encounterName]
-                self.selected["difficultyMod"] = {}
-                self.selected["restrictRanged"] = {}
 
                 # Get the possible alternative enemies from the encounter's file.
                 log("\tOpening " + baseFolder + "\\lib\\dsbg_shuffle_encounters\\".replace("\\", pathSep) + encounterName + str(self.numberOfCharacters) + ".json")
@@ -2064,21 +2064,21 @@ try:
                         self.selected["alternatives"] = {"1": []}
                         for expansionCombo in alts["alternatives"]["1"]:
                             if set(expansionCombo.split(",")).issubset(self.availableExpansions):
-                                self.selected["alternatives"]["1"] += [alt for alt in alts["alternatives"]["1"][expansionCombo] if set([enemy for enemy in alt if "Invader" not in enemyIds[enemy].name]).issubset(self.enabledEnemies)]
+                                self.selected["alternatives"]["1"] += [alt for alt in alts["alternatives"]["1"][expansionCombo] if set(alt).issubset(self.enabledEnemies)]
                     if "2" in alts["alternatives"]:
                         self.selected["alternatives"]["2"] = []
                         for expansionCombo in alts["alternatives"].get("2", []):
                             if set(expansionCombo.split(",")).issubset(self.availableExpansions):
-                                self.selected["alternatives"]["2"] += [alt for alt in alts["alternatives"]["2"][expansionCombo] if set([enemy for enemy in alt if "Invader" not in enemyIds[enemy].name]).issubset(self.enabledEnemies)]
+                                self.selected["alternatives"]["2"] += [alt for alt in alts["alternatives"]["2"][expansionCombo] if set(alt).issubset(self.enabledEnemies)]
                     if "3" in alts["alternatives"]:
                         self.selected["alternatives"]["3"] = []
                         for expansionCombo in alts["alternatives"].get("3", []):
                             if set(expansionCombo.split(",")).issubset(self.availableExpansions):
-                                self.selected["alternatives"]["3"] += [alt for alt in alts["alternatives"]["3"][expansionCombo] if set([enemy for enemy in alt if "Invader" not in enemyIds[enemy].name]).issubset(self.enabledEnemies)]
+                                self.selected["alternatives"]["3"] += [alt for alt in alts["alternatives"]["3"][expansionCombo] if set(alt).issubset(self.enabledEnemies)]
                 else:
                     for expansionCombo in alts["alternatives"]:
                         if set(expansionCombo.split(",")).issubset(self.availableExpansions):
-                            self.selected["alternatives"] += [alt for alt in alts["alternatives"][expansionCombo] if set([enemy for enemy in alt if "Invader" not in enemyIds[enemy].name]).issubset(self.enabledEnemies)]
+                            self.selected["alternatives"] += [alt for alt in alts["alternatives"][expansionCombo] if set(alt).issubset(self.enabledEnemies)]
 
                 self.newTiles = dict()
 
@@ -2182,10 +2182,10 @@ try:
                         s += slot
                         continue
                     for e in range(slot):
-                        self.newTiles[1 if slotNum < 4 else 2 if slotNum < 7 else 3][slotNum - (0 if slotNum < 4 else 5 if slotNum < 7 else 7)].append(enemyIds[self.newEnemies[s]].name)
+                        self.newTiles[1 if slotNum < 4 else 2 if slotNum < 7 else 3][slotNum - (0 if slotNum < 4 else 5 if slotNum < 7 else 8)].append(enemyIds[self.newEnemies[s]].name)
                         if level == 4:
-                            x = 116 + (43 * e) - (3 if enemyIds[self.newEnemies[s]].name == "Advanced Invader" else 0)
-                            y = 78 + (47 * slotNum)
+                            x = 116 + (43 * e) - (3 if "Phantoms" in enemyIds[self.newEnemies[s]].expansions else 0)
+                            y = 78 + (47 * slotNum) - ((1 * (4 - slotNum)) if "Phantoms" in enemyIds[self.newEnemies[s]].expansions else 0)
                             imageType = "imageOldLevel4"
                         elif expansion in {"Dark Souls The Board Game", "Iron Keep", "Darkroot", "Explorers", "Executioner Chariot"}:
                             x = 67 + (40 * e)
@@ -2193,17 +2193,10 @@ try:
                             imageType = "imageOld"
                         else:
                             x = 300 + (29 * e)
-                            y = 323 + (29 * (slotNum - (0 if slotNum < 4 else 5 if slotNum < 7 else 7))) + (((1 if slotNum < 4 else 2 if slotNum < 7 else 3) - 1) * 122)
+                            y = 323 + (29 * (slotNum - (0 if slotNum < 4 else 5 if slotNum < 7 else 8))) + (((1 if slotNum < 4 else 2 if slotNum < 7 else 3) - 1) * 122)
                             imageType = "imageNew"
-
-                        if enemyIds[self.newEnemies[s]].name == "Standard Invader":
-                            invaders = ([invader for invader in invadersStandard if "Phantoms" in self.availableExpansions])
-                            image = allEnemies[choice(invaders)][imageType]
-                        elif enemyIds[self.newEnemies[s]].name == "Advanced Invader":
-                            invaders = ([invader for invader in invadersAdvanced if "Phantoms" in self.availableExpansions])
-                            image = allEnemies[choice(invaders)][imageType]
-                        else:
-                            image = allEnemies[enemyIds[self.newEnemies[s]].name][imageType]
+                            
+                        image = allEnemies[enemyIds[self.newEnemies[s]].name][imageType]
 
                         log("Pasting " + enemyIds[self.newEnemies[s]].name + " image onto encounter at " + str((x, y)) + ".")
                         self.encounterImage.paste(im=image, box=(x, y), mask=image)
@@ -2625,8 +2618,8 @@ try:
                     tooltipDict = {"image" if self.forPrinting else "image" if self.forPrinting else "photo image": self.gangAlonne if self.forPrinting else self.gangAlonnePhoto, "imageName": "gang"}
                 elif gang == "Hollow":
                     tooltipDict = {"image" if self.forPrinting else "image" if self.forPrinting else "photo image": self.gangHollow if self.forPrinting else self.gangHollowPhoto, "imageName": "gang"}
-                elif gang == "Scarecrow":
-                    tooltipDict = {"image" if self.forPrinting else "image" if self.forPrinting else "photo image": self.gangScarecrow if self.forPrinting else self.gangScarecrowPhoto, "imageName": "gang"}
+                elif gang == "Silver Knight":
+                    tooltipDict = {"image" if self.forPrinting else "image" if self.forPrinting else "photo image": self.gangSilverKnight if self.forPrinting else self.gangSilverKnightPhoto, "imageName": "gang"}
                 elif gang == "Skeleton":
                     tooltipDict = {"image" if self.forPrinting else "image" if self.forPrinting else "photo image": self.gangSkeleton if self.forPrinting else self.gangSkeletonPhoto, "imageName": "gang"}
 
@@ -2647,8 +2640,8 @@ try:
                     tooltipDict = {"image" if self.forPrinting else "photo image": self.gangAlonne if self.forPrinting else self.gangAlonnePhoto, "imageName": "gang"}
                 elif gang == "Hollow":
                     tooltipDict = {"image" if self.forPrinting else "photo image": self.gangHollow if self.forPrinting else self.gangHollowPhoto, "imageName": "gang"}
-                elif gang == "Scarecrow":
-                    tooltipDict = {"image" if self.forPrinting else "photo image": self.gangScarecrow if self.forPrinting else self.gangScarecrowPhoto, "imageName": "gang"}
+                elif gang == "Silver Knight":
+                    tooltipDict = {"image" if self.forPrinting else "image" if self.forPrinting else "photo image": self.gangSilverKnight if self.forPrinting else self.gangSilverKnightPhoto, "imageName": "gang"}
                 elif gang == "Skeleton":
                     tooltipDict = {"image" if self.forPrinting else "photo image": self.gangSkeleton if self.forPrinting else self.gangSkeletonPhoto, "imageName": "gang"}
 
@@ -2741,8 +2734,8 @@ try:
                     tooltipDict = {"image" if self.forPrinting else "photo image": self.gangAlonne if self.forPrinting else self.gangAlonnePhoto, "imageName": "gang"}
                 elif gang == "Hollow":
                     tooltipDict = {"image" if self.forPrinting else "photo image": self.gangHollow if self.forPrinting else self.gangHollowPhoto, "imageName": "gang"}
-                elif gang == "Scarecrow":
-                    tooltipDict = {"image" if self.forPrinting else "photo image": self.gangScarecrow if self.forPrinting else self.gangScarecrowPhoto, "imageName": "gang"}
+                elif gang == "Silver Knight":
+                    tooltipDict = {"image" if self.forPrinting else "image" if self.forPrinting else "photo image": self.gangSilverKnight if self.forPrinting else self.gangSilverKnightPhoto, "imageName": "gang"}
                 elif gang == "Skeleton":
                     tooltipDict = {"image" if self.forPrinting else "photo image": self.gangSkeleton if self.forPrinting else self.gangSkeletonPhoto, "imageName": "gang"}
 
@@ -2920,7 +2913,7 @@ try:
 
                 target = enemyIds[self.newEnemies[5]].name
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
-                self.create_tooltip(tooltipDict=tooltipDict, x=259, y=198)
+                self.create_tooltip(tooltipDict=tooltipDict, x=323, y=198)
 
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
@@ -3072,13 +3065,13 @@ try:
 
                 target = enemyIds[self.newEnemies[3]].name
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
-                self.create_tooltip(tooltipDict=tooltipDict, x=309, y=220)
+                self.create_tooltip(tooltipDict=tooltipDict, x=301, y=220)
                 self.create_tooltip(tooltipDict=tooltipDict, x=188, y=255)
                 self.create_tooltip(tooltipDict=tooltipDict, x=144, y=280)
 
                 target = enemyIds[self.newEnemies[4]].name
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
-                self.create_tooltip(tooltipDict=tooltipDict, x=329, y=220)
+                self.create_tooltip(tooltipDict=tooltipDict, x=321, y=220)
                 self.create_tooltip(tooltipDict=tooltipDict, x=208, y=255)
                 self.create_tooltip(tooltipDict=tooltipDict, x=164, y=280)
 
@@ -3159,10 +3152,11 @@ try:
         def shattered_keep(self):
             try:
                 log("Start of shattered_keep")
-
-                target = self.newTiles[1][1][0]
-                tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
-                self.create_tooltip(tooltipDict=tooltipDict, x=146, y=195)
+                
+                targets = set([self.newTiles[1][0][1], self.newTiles[1][1][0], self.newTiles[1][1][1]])
+                for i, target in enumerate(targets):
+                    tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
+                    self.create_tooltip(tooltipDict=tooltipDict, x=145 + (20 * i), y=213)
 
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
@@ -3203,19 +3197,19 @@ try:
 
                 target = enemyIds[self.newEnemies[1]].name
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
-                self.create_tooltip(tooltipDict=tooltipDict, x=240, y=196)
+                self.create_tooltip(tooltipDict=tooltipDict, x=230, y=196)
                 self.create_tooltip(tooltipDict=tooltipDict, x=208, y=257)
 
                 target = enemyIds[self.newEnemies[2]].name
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
-                self.create_tooltip(tooltipDict=tooltipDict, x=260, y=196)
-                self.create_tooltip(tooltipDict=tooltipDict, x=228, y=257)
+                self.create_tooltip(tooltipDict=tooltipDict, x=309, y=196)
+                self.create_tooltip(tooltipDict=tooltipDict, x=245, y=257)
 
                 target = self.newTiles[1][0][0]
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=65, y=147)
                 self.create_tooltip(tooltipDict=tooltipDict, x=313, y=232)
-                self.create_tooltip(tooltipDict=tooltipDict, x=292, y=257)
+                self.create_tooltip(tooltipDict=tooltipDict, x=332, y=257)
 
                 log("\tEnd of skeleton_overlord")
             except Exception as e:
@@ -3300,11 +3294,11 @@ try:
 
                 target = enemyIds[self.newEnemies[2]].name
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
-                self.create_tooltip(tooltipDict=tooltipDict, x=341, y=195)
+                self.create_tooltip(tooltipDict=tooltipDict, x=321, y=195)
 
                 target = enemyIds[self.newEnemies[3]].name
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
-                self.create_tooltip(tooltipDict=tooltipDict, x=361, y=195)
+                self.create_tooltip(tooltipDict=tooltipDict, x=341, y=195)
 
                 log("\tEnd of the_bell_tower")
             except Exception as e:
@@ -3340,8 +3334,8 @@ try:
                     tooltipDict = {"image" if self.forPrinting else "photo image": self.gangAlonne if self.forPrinting else self.gangAlonnePhoto, "imageName": "gang"}
                 elif gang == "Hollow":
                     tooltipDict = {"image" if self.forPrinting else "photo image": self.gangHollow if self.forPrinting else self.gangHollowPhoto, "imageName": "gang"}
-                elif gang == "Scarecrow":
-                    tooltipDict = {"image" if self.forPrinting else "photo image": self.gangScarecrow if self.forPrinting else self.gangScarecrowPhoto, "imageName": "gang"}
+                elif gang == "Silver Knight":
+                    tooltipDict = {"image" if self.forPrinting else "image" if self.forPrinting else "photo image": self.gangSilverKnight if self.forPrinting else self.gangSilverKnightPhoto, "imageName": "gang"}
                 elif gang == "Skeleton":
                     tooltipDict = {"image" if self.forPrinting else "photo image": self.gangSkeleton if self.forPrinting else self.gangSkeletonPhoto, "imageName": "gang"}
 
@@ -3402,6 +3396,7 @@ try:
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=215, y=227)
                 self.create_tooltip(tooltipDict=tooltipDict, x=316, y=250)
+                self.create_tooltip(tooltipDict=tooltipDict, x=337, y=263)
 
                 log("\tEnd of the_last_bastion")
             except Exception as e:
@@ -3506,11 +3501,12 @@ try:
             try:
                 log("Start of trophy_room")
 
-                target = self.newTiles[2][0][0]
-                tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
-                self.create_tooltip(tooltipDict=tooltipDict, x=61, y=147)
-                self.create_tooltip(tooltipDict=tooltipDict, x=210, y=197)
-                self.create_tooltip(tooltipDict=tooltipDict, x=145, y=244)
+                targets = set([self.newTiles[2][0][0], self.newTiles[2][1][0]])
+                for i, target in enumerate(targets):
+                    tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
+                    self.create_tooltip(tooltipDict=tooltipDict, x=61 + (20 * i), y=147)
+                    self.create_tooltip(tooltipDict=tooltipDict, x=210 + (20 * i), y=197)
+                    self.create_tooltip(tooltipDict=tooltipDict, x=145 + (20 * i), y=244)
 
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
@@ -3538,8 +3534,8 @@ try:
                     tooltipDict = {"image" if self.forPrinting else "photo image": self.gangAlonne if self.forPrinting else self.gangAlonnePhoto, "imageName": "gang"}
                 elif gang == "Hollow":
                     tooltipDict = {"image" if self.forPrinting else "photo image": self.gangHollow if self.forPrinting else self.gangHollowPhoto, "imageName": "gang"}
-                elif gang == "Scarecrow":
-                    tooltipDict = {"image" if self.forPrinting else "photo image": self.gangScarecrow if self.forPrinting else self.gangScarecrowPhoto, "imageName": "gang"}
+                elif gang == "Silver Knight":
+                    tooltipDict = {"image" if self.forPrinting else "image" if self.forPrinting else "photo image": self.gangSilverKnight if self.forPrinting else self.gangSilverKnightPhoto, "imageName": "gang"}
                 elif gang == "Skeleton":
                     tooltipDict = {"image" if self.forPrinting else "photo image": self.gangSkeleton if self.forPrinting else self.gangSkeletonPhoto, "imageName": "gang"}
 
@@ -3560,8 +3556,8 @@ try:
                     tooltipDict = {"image" if self.forPrinting else "photo image": self.gangAlonne if self.forPrinting else self.gangAlonnePhoto, "imageName": "gang"}
                 elif gang == "Hollow":
                     tooltipDict = {"image" if self.forPrinting else "photo image": self.gangHollow if self.forPrinting else self.gangHollowPhoto, "imageName": "gang"}
-                elif gang == "Scarecrow":
-                    tooltipDict = {"image" if self.forPrinting else "photo image": self.gangScarecrow if self.forPrinting else self.gangScarecrowPhoto, "imageName": "gang"}
+                elif gang == "Silver Knight":
+                    tooltipDict = {"image" if self.forPrinting else "image" if self.forPrinting else "photo image": self.gangSilverKnight if self.forPrinting else self.gangSilverKnightPhoto, "imageName": "gang"}
                 elif gang == "Skeleton":
                     tooltipDict = {"image" if self.forPrinting else "photo image": self.gangSkeleton if self.forPrinting else self.gangSkeletonPhoto, "imageName": "gang"}
 

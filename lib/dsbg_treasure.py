@@ -23,7 +23,7 @@ try:
         "Black Bow of Pharis": {"expansions": set(["Iron Keep"]), "type": "weapon", "character": None, "encounterLevels": set([1,2,3,4]), "strength": 0, "dexterity": 33, "intelligence": 0, "faith": 0},
         "Black Firebombs": {"expansions": set(["Explorers"]), "type": "weapon", "character": None, "encounterLevels": set([1,2,3,4]), "strength": 0, "dexterity": 0, "intelligence": 20, "faith": 20},
         "Black Hand Armour (Thief)": {"expansions": set(["Characters Expansion", "Tomb of Giants"]), "type": "armor", "character": "Thief", "encounterLevels": set([1,2]), "strength": 20, "dexterity": 20, "intelligence": 0, "faith": 0},
-        "Black Hand Armour (non-Theif)": {"expansions": set(["Painted World of Ariamis"]), "type": "armor", "character": None, "encounterLevels": set([1,2,3,4]), "strength": 0, "dexterity": 20, "intelligence": 20, "faith": 0},
+        "Black Hand Armour (common)": {"expansions": set(["Painted World of Ariamis"]), "type": "armor", "character": None, "encounterLevels": set([1,2,3,4]), "strength": 0, "dexterity": 20, "intelligence": 20, "faith": 0},
         "Black Iron Armour": {"expansions": set(["Characters Expansion"]), "type": "armor", "character": None, "encounterLevels": set([1,2,3,4]), "strength": 18, "dexterity": 0, "intelligence": 0, "faith": 12},
         "Black Iron Greatshield": {"expansions": set(["Dark Souls The Board Game"]), "type": "weapon", "character": "Knight", "encounterLevels": set([2,3,4]), "strength": 27, "dexterity": 37, "intelligence": 17, "faith": 0},
         "Black Knight Armour": {"expansions": set(["Characters Expansion"]), "type": "armor", "character": None, "encounterLevels": set([1,2,3,4]), "strength": 26, "dexterity": 16, "intelligence": 0, "faith": 16},
@@ -304,6 +304,8 @@ try:
                 treasures[t]["soulCost"] = mean_soul_cost(treasures[t], setsAvailable, charactersActive)
 
             log("End of generate_treasure_soul_cost")
+
+            return i
         except Exception as e:
             log(e, exception=True)
             raise

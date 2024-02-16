@@ -434,7 +434,10 @@ try:
                     return
 
                 enabledEnemies = [s for s in self.enemies if self.enemies[s]["value"].get() == 1]
-                customEnemyList = any(["alternate" in self.enemies[enemy]["button"].state() for enemy in self.enemies])
+                if any(["alternate" in self.enemies[enemy]["button"].state() for enemy in self.enemies]):
+                    customEnemyList = [enemy for enemy in self.enemies if "selected" in self.enemies[enemy]["button"].state() and not self.enemies[enemy]["children"]]
+                else:
+                    customEnemyList = []
 
                 randomEncounterTypes = set([s for s in self.randomEncounters if self.randomEncounters[s]["value"].get() == 1])
                 charactersActive = set([s for s in self.charactersActive if self.charactersActive[s]["value"].get() == 1])
@@ -453,14 +456,6 @@ try:
                 if newSettings != self.settings:
                     with open(baseFolder + "\\lib\\dsbg_shuffle_settings.json".replace("\\", pathSep), "w") as settingsFile:
                         dump(newSettings, settingsFile)
-
-                    # Recalculate the average soul cost of treasure.
-                    if self.treasureSwapOption.get() in {"Similar Soul Cost", "Tier Based"}:
-                        progress = PopupWindow(self.root, labelText="Reloading treasure...", progressBar=True, progressMax=len([t for t in treasures if not treasures[t]["character"] or treasures[t]["character"] in charactersActive]), loadingImage=True)
-                        generate_treasure_soul_cost(expansionsActive, charactersActive, self.root, progress)
-                        if self.treasureSwapOption.get() == "Tier Based":
-                            populate_treasure_tiers(expansionsActive, charactersActive)
-                        progress.destroy()
 
                 self.top.destroy()
 
