@@ -8,11 +8,17 @@ The idea behind this program is to provide backwards and forwards compatibility 
 ## How to run/Installation
 1. Go to [Releases](https://github.com/DanDuhon/DSBG-Shuffle/releases) and click on "Source code (zip)" or "Source code (tar.gz)", whichever archive format is your preference.
 2. Inside the archive file is a folder called "DSBG-Shuffle-main".  Unzip this folder anywhere you want.
-3. Open the folder, and run "DSBG-Shuffle.exe" inside it.  There isn't an installer (mostly because it's too big for GitHub), you just run the .exe.  If you're not running Windows, see the FAQ for workarounds for Mac/Linux.
+3. Open the folder, and run "DSBG-Shuffle.exe" inside it.  There isn't an installer (mostly because it would be too big for GitHub), you just run the .exe.  If you're not running Windows, see the FAQ for workarounds for Mac/Linux.
 
 
 ## Roadmap
-Beyond future expansions, I'm really not sure where to go from here.  Possibly a v2 campaign generator.
+Future official expansions.
+
+Continued refinement of enemy difficulty scores.
+
+Enemy/boss changes for NG+ runs or just increasing challenge level.
+
+Maybe a v2 campaign generator.
 
 
 ## FAQ
@@ -36,10 +42,10 @@ Great!  If you can, reproduce it then find the log.txt file in the same folder a
 
 There are a couple workaround options for Mac/Linux.
 - The easy way: use [Wine](https://wiki.winehq.org/Main_Page).
-- The might work way:
+- The "might work" way:
   1. Install [Python 3](https://www.python.org/downloads/) (requires Python 3.1 or higher).
   2. Install [pip](https://pip.pypa.io/en/stable/installation/).
-  3. Install the following modules using pip: [Pillow](https://pillow.readthedocs.io/en/stable/installation.html#basic-installation), [fpdf](https://pypi.org/project/fpdf/).  All other modules used should come bundled with Python 3, but here they are in case you're missing some: collections, datetime, inspect, json, logging, math, os, platform, random, requests, statistics, sys, tkinter, webbrowser.
+  3. Install the following modules using pip: [Pillow](https://pillow.readthedocs.io/en/stable/installation.html#basic-installation), [fpdf](https://pypi.org/project/fpdf/), [requests](https://pypi.org/project/requests/).  All other modules used should come bundled with Python 3, but here they are in case you're missing some: collections, datetime, inspect, json, logging, math, os, platform, random, requests, statistics, sys, tkinter, webbrowser.
   4. Create a directory to install the font: `mkdir /usr/local/share/fonts/truetype`
   5. Copy the font from the repo's lib directory to the one just created: `cp "[path to lib dir]/Adobe Caslon Pro Semibold.ttf" /usr/local/share/fonts/truetype/`
   6. Refresh the system font cache: `fc-cache -fv` (you might need to install fc-cache with `apt install fontconfig`)
@@ -54,10 +60,6 @@ For web, I'd really like to get this up as a web app, since then I wouldn't have
 ### Why are some encounters missing from the list?
 
 Encounters shown are dependent on the enemies you have available.  For example, there are no (at the time of writing) single enemies that are valid alternatives to a Crow Demon.  So if you don't have The Painted World of Ariamis checked in the settings, it's not going to show the Cloak and Feathers encounter because there are no valid enemy alternatives.  Iron Keep encounters that include Crystal Lizards will not show up if you don't have Iron Keep.  Encounters that contain invaders will not show up if you don't have Phantoms.
-
-### What happened to the Hungry Mimic and Voracious Mimic?
-
-They are no longer valid alternatives to an invader due to the new Mimic from The Sunless City.  Honestly, I think the new Mimic design is better so the Hungry Mimic and Voracious Mimic are just relics of the past, now.
 
 ### How do you decide what enemies to swap in?
 
