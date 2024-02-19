@@ -8,11 +8,17 @@ The idea behind this program is to provide backwards and forwards compatibility 
 ## How to run/Installation
 1. Go to [Releases](https://github.com/DanDuhon/DSBG-Shuffle/releases) and click on "Source code (zip)" or "Source code (tar.gz)", whichever archive format is your preference.
 2. Inside the archive file is a folder called "DSBG-Shuffle-main".  Unzip this folder anywhere you want.
-3. Open the folder, and run "DSBG-Shuffle.exe" inside it.  There isn't an installer (mostly because it's too big for GitHub), you just run the .exe.  If you're not running Windows, see the FAQ for workarounds for Mac/Linux.
+3. Open the folder, and run "DSBG-Shuffle.exe" inside it.  There isn't an installer (mostly because it would be too big for GitHub), you just run the .exe.  If you're not running Windows, see the FAQ for workarounds for Mac/Linux.
 
 
 ## Roadmap
-Beyond future expansions, I want to figure out how to put Events in here.  At the moment I'm not really sure how to do that in a way that makes sense.  Let me know if you have ideas on this subject.
+Future official expansions.
+
+Continued refinement of enemy difficulty scores.
+
+Enemy/boss changes for NG+ runs or just increasing challenge level.
+
+Maybe a v2 campaign generator.
 
 
 ## FAQ
@@ -34,19 +40,26 @@ Great!  If you can, reproduce it then find the log.txt file in the same folder a
 
 ### Are you going to create a version for Mac/Linux/Android/iPhone/web?
 
-There's a workaround for Mac/Linux.  Install [Python 3](https://www.python.org/downloads/) then [install Pillow using pip](https://pillow.readthedocs.io/en/stable/installation.html#basic-installation).  After that, you can just run the enemy_swapper.py script and that should work exactly the same.  As far as I know the .exe file is just a fancy wrapper that allows you to skip those steps.  Under the covers it really just runs the enemy_swapper.py script.
+There are a couple workaround options for Mac/Linux.
+- The easy way: use [Wine](https://wiki.winehq.org/Main_Page).
+- The "might work" way:
+  1. Install [Python 3](https://www.python.org/downloads/) (requires Python 3.1 or higher).
+  2. Install [pip](https://pip.pypa.io/en/stable/installation/).
+  3. Install the following modules using pip: [Pillow](https://pillow.readthedocs.io/en/stable/installation.html#basic-installation), [fpdf](https://pypi.org/project/fpdf/), [requests](https://pypi.org/project/requests/).  All other modules used should come bundled with Python 3, but here they are in case you're missing some: collections, datetime, inspect, json, logging, math, os, platform, random, requests, statistics, sys, tkinter, webbrowser.
+  4. Create a directory to install the font: `mkdir /usr/local/share/fonts/truetype`
+  5. Copy the font from the repo's lib directory to the one just created: `cp "[path to lib dir]/Adobe Caslon Pro Semibold.ttf" /usr/local/share/fonts/truetype/`
+  6. Refresh the system font cache: `fc-cache -fv` (you might need to install fc-cache with `apt install fontconfig`)
+  7. Run the lib/dsbg-shuffle.py script.
+
+In my testing, the "might work" way has some awful graphical glitches.  That may just be because I was using a Linux subsystem on Windows, but maybe not.
 
 As for mobile, I'd like to, but I don't have any of experience with that sort of thing, and my brief looks into Android development left me confused.  So.. eventually, maybe?  Feel free to contribute or reach out if you'd like to collaborate!
 
-For web, I'd really like to get this up as a web app, since then I wouldn't have to maintain different versions.  However, I also know nothing about web development.  So again, eventually, but please reach out if you'd like to help with that!
+For web, I'd really like to get this up as a web app, since then I wouldn't have to maintain different versions.  However, I also know nothing about web development.  So again, eventually maybe, but please reach out if you'd like to help with that!
 
 ### Why are some encounters missing from the list?
 
 Encounters shown are dependent on the enemies you have available.  For example, there are no (at the time of writing) single enemies that are valid alternatives to a Crow Demon.  So if you don't have The Painted World of Ariamis checked in the settings, it's not going to show the Cloak and Feathers encounter because there are no valid enemy alternatives.  Iron Keep encounters that include Crystal Lizards will not show up if you don't have Iron Keep.  Encounters that contain invaders will not show up if you don't have Phantoms.
-
-### What happened to the Hungry Mimic and Voracious Mimic?
-
-They are no longer valid alternatives to an invader due to the new Mimic from The Sunless City.  Honestly, I think the new Mimic design is better so the Hungry Mimic and Voracious Mimic are just relics of the past, now.
 
 ### How do you decide what enemies to swap in?
 

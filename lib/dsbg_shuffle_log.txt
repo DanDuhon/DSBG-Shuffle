@@ -1,0 +1,2149 @@
+19/02/2024 11:41:14|DEBUG|[__init__] Initiating application
+19/02/2024 11:41:14|DEBUG|[set_encounter_list] Start of set_encounter_list
+19/02/2024 11:41:14|DEBUG|[set_encounter_list] End of set_encounter_list
+19/02/2024 11:41:14|DEBUG|[generate_treasure_soul_cost] Start of generate_treasure_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:14|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:15|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[mean_soul_cost] End of mean_soul_cost
+19/02/2024 11:41:16|DEBUG|[generate_treasure_soul_cost] End of generate_treasure_soul_cost
+19/02/2024 11:41:16|DEBUG|[create_buttons] Start of create_buttons
+19/02/2024 11:41:16|DEBUG|[create_buttons] End of create_buttons
+19/02/2024 11:41:16|DEBUG|[create_tabs] Start of create_tabs
+19/02/2024 11:41:16|DEBUG|[create_tabs] End of create_tabs
+19/02/2024 11:41:16|DEBUG|[create_encounters_treeview] Start of create_encounters_treeview
+19/02/2024 11:41:16|DEBUG|[create_encounters_treeview] End of create_encounters_treeview
+19/02/2024 11:41:16|DEBUG|[create_campaign_treeview] Start of create_campaign_treeview
+19/02/2024 11:41:16|DEBUG|[create_campaign_treeview] End of create_campaign_treeview
+19/02/2024 11:41:16|DEBUG|[create_event_treeviews] Start of create_event_treeviews
+19/02/2024 11:41:16|DEBUG|[create_event_treeviews] End of create_event_treeviews
+19/02/2024 11:41:16|DEBUG|[create_encounter_frame] Start of create_encounter_frame
+19/02/2024 11:41:16|DEBUG|[create_encounter_frame] End of create_encounter_frame
+19/02/2024 11:41:16|DEBUG|[create_menu] Start of create_menu
+19/02/2024 11:41:16|DEBUG|[create_menu] End of create_menu
+19/02/2024 11:41:16|DEBUG|[set_bindings_buttons_menus] Start of set_bindings_buttons_menus: enable=True
+19/02/2024 11:41:16|DEBUG|[set_bindings_buttons_menus] End of set_bindings_buttons_menus
+19/02/2024 11:41:16|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:16|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Alonne Bow Knight.png
+19/02/2024 11:41:16|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:16|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:16|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Alonne Bow Knight.png
+19/02/2024 11:41:16|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:16|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:16|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Alonne Bow Knight.png
+19/02/2024 11:41:16|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:16|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:16|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Alonne Bow Knight rule bg.jpg
+19/02/2024 11:41:17|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:17|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:17|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Alonne Bow Knight rule bg.jpg
+19/02/2024 11:41:17|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:17|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:17|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Alonne Knight Captain.png
+19/02/2024 11:41:17|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:17|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:17|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Alonne Knight Captain.png
+19/02/2024 11:41:17|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:17|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:17|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Alonne Knight Captain.png
+19/02/2024 11:41:17|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:17|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:17|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Alonne Knight Captain rule bg.jpg
+19/02/2024 11:41:17|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:17|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:17|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Alonne Knight Captain rule bg.jpg
+19/02/2024 11:41:17|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:17|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:17|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Alonne Sword Knight.png
+19/02/2024 11:41:17|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:17|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:17|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Alonne Sword Knight.png
+19/02/2024 11:41:17|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:17|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:17|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Alonne Sword Knight.png
+19/02/2024 11:41:17|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:17|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:17|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Alonne Sword Knight rule bg.jpg
+19/02/2024 11:41:17|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:17|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:17|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Alonne Sword Knight rule bg.jpg
+19/02/2024 11:41:17|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:17|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:17|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Black Hollow Mage.png
+19/02/2024 11:41:17|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:17|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:17|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Black Hollow Mage.png
+19/02/2024 11:41:17|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:17|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:17|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Black Hollow Mage.png
+19/02/2024 11:41:17|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:17|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:17|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Black Hollow Mage rule bg.jpg
+19/02/2024 11:41:17|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:17|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:17|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Black Hollow Mage rule bg.jpg
+19/02/2024 11:41:17|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:17|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:17|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Bonewheel Skeleton.png
+19/02/2024 11:41:17|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:17|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:17|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Bonewheel Skeleton.png
+19/02/2024 11:41:17|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:17|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:17|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Bonewheel Skeleton.png
+19/02/2024 11:41:17|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:17|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:17|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Bonewheel Skeleton rule bg.jpg
+19/02/2024 11:41:17|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:17|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:17|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Bonewheel Skeleton rule bg.jpg
+19/02/2024 11:41:17|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:17|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:17|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Crossbow Hollow.png
+19/02/2024 11:41:17|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:17|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:17|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Crossbow Hollow.png
+19/02/2024 11:41:17|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:17|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:17|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Crossbow Hollow.png
+19/02/2024 11:41:17|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:17|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:17|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Crossbow Hollow rule bg.jpg
+19/02/2024 11:41:17|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:17|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:17|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Crossbow Hollow rule bg.jpg
+19/02/2024 11:41:17|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:17|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:17|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Crow Demon.png
+19/02/2024 11:41:17|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:17|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:17|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Crow Demon.png
+19/02/2024 11:41:17|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:17|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:17|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Crow Demon.png
+19/02/2024 11:41:17|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:17|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:17|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Crow Demon rule bg.jpg
+19/02/2024 11:41:17|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:17|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:17|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Crow Demon rule bg.jpg
+19/02/2024 11:41:17|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:17|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:17|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Demonic Foliage.png
+19/02/2024 11:41:17|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:17|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:17|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Demonic Foliage.png
+19/02/2024 11:41:17|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:17|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:17|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Demonic Foliage.png
+19/02/2024 11:41:17|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:17|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:17|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Demonic Foliage rule bg.jpg
+19/02/2024 11:41:17|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:17|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:17|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Demonic Foliage rule bg.jpg
+19/02/2024 11:41:18|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:18|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:18|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Engorged Zombie.png
+19/02/2024 11:41:18|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:18|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:18|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Engorged Zombie.png
+19/02/2024 11:41:18|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:18|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:18|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Engorged Zombie.png
+19/02/2024 11:41:18|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:18|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:18|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Engorged Zombie rule bg.jpg
+19/02/2024 11:41:18|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:18|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:18|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Engorged Zombie rule bg.jpg
+19/02/2024 11:41:18|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:18|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:18|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Falchion Skeleton.png
+19/02/2024 11:41:18|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:18|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:18|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Falchion Skeleton.png
+19/02/2024 11:41:18|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:18|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:18|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Falchion Skeleton.png
+19/02/2024 11:41:18|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:18|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:18|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Falchion Skeleton rule bg.jpg
+19/02/2024 11:41:18|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:18|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:18|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Falchion Skeleton rule bg.jpg
+19/02/2024 11:41:18|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:18|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:18|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Firebomb Hollow.png
+19/02/2024 11:41:18|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:18|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:18|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Firebomb Hollow.png
+19/02/2024 11:41:18|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:18|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:18|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Firebomb Hollow.png
+19/02/2024 11:41:18|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:18|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:18|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Firebomb Hollow rule bg.jpg
+19/02/2024 11:41:18|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:18|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:18|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Firebomb Hollow rule bg.jpg
+19/02/2024 11:41:18|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:18|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:18|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Giant Skeleton Archer.png
+19/02/2024 11:41:18|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:18|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:18|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Giant Skeleton Archer.png
+19/02/2024 11:41:18|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:18|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:18|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Giant Skeleton Archer.png
+19/02/2024 11:41:18|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:18|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:18|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Giant Skeleton Archer rule bg.jpg
+19/02/2024 11:41:18|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:18|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:18|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Giant Skeleton Archer rule bg.jpg
+19/02/2024 11:41:18|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:18|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:18|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Giant Skeleton Soldier.png
+19/02/2024 11:41:18|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:18|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:18|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Giant Skeleton Soldier.png
+19/02/2024 11:41:18|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:18|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:18|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Giant Skeleton Soldier.png
+19/02/2024 11:41:18|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:18|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:18|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Giant Skeleton Soldier rule bg.jpg
+19/02/2024 11:41:18|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:18|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:18|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Giant Skeleton Soldier rule bg.jpg
+19/02/2024 11:41:18|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:18|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:18|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Hollow Soldier.png
+19/02/2024 11:41:18|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:18|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:18|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Hollow Soldier.png
+19/02/2024 11:41:18|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:18|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:18|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Hollow Soldier.png
+19/02/2024 11:41:18|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:18|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:18|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Hollow Soldier rule bg.jpg
+19/02/2024 11:41:18|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:18|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:18|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Hollow Soldier rule bg.jpg
+19/02/2024 11:41:18|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:18|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:18|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Ironclad Soldier.png
+19/02/2024 11:41:18|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:18|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:18|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Ironclad Soldier.png
+19/02/2024 11:41:18|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:18|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:18|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Ironclad Soldier.png
+19/02/2024 11:41:18|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:18|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:18|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Ironclad Soldier rule bg.jpg
+19/02/2024 11:41:18|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:18|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:18|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Ironclad Soldier rule bg.jpg
+19/02/2024 11:41:19|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Large Hollow Soldier.png
+19/02/2024 11:41:19|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Large Hollow Soldier.png
+19/02/2024 11:41:19|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Large Hollow Soldier.png
+19/02/2024 11:41:19|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Large Hollow Soldier rule bg.jpg
+19/02/2024 11:41:19|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Large Hollow Soldier rule bg.jpg
+19/02/2024 11:41:19|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Mushroom Child.png
+19/02/2024 11:41:19|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Mushroom Child.png
+19/02/2024 11:41:19|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Mushroom Child.png
+19/02/2024 11:41:19|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Mushroom Child rule bg.jpg
+19/02/2024 11:41:19|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Mushroom Child rule bg.jpg
+19/02/2024 11:41:19|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Mushroom Parent.png
+19/02/2024 11:41:19|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Mushroom Parent.png
+19/02/2024 11:41:19|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Mushroom Parent.png
+19/02/2024 11:41:19|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Mushroom Parent rule bg.jpg
+19/02/2024 11:41:19|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Mushroom Parent rule bg.jpg
+19/02/2024 11:41:19|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Necromancer.png
+19/02/2024 11:41:19|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Necromancer.png
+19/02/2024 11:41:19|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Necromancer.png
+19/02/2024 11:41:19|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Necromancer rule bg.jpg
+19/02/2024 11:41:19|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Necromancer rule bg.jpg
+19/02/2024 11:41:19|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Phalanx.png
+19/02/2024 11:41:19|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Phalanx.png
+19/02/2024 11:41:19|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Phalanx.png
+19/02/2024 11:41:19|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Phalanx rule bg.jpg
+19/02/2024 11:41:19|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Phalanx rule bg.jpg
+19/02/2024 11:41:19|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Phalanx Hollow.png
+19/02/2024 11:41:19|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Phalanx Hollow.png
+19/02/2024 11:41:19|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Phalanx Hollow.png
+19/02/2024 11:41:19|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Phalanx Hollow rule bg.jpg
+19/02/2024 11:41:19|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Phalanx Hollow rule bg.jpg
+19/02/2024 11:41:19|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Plow Scarecrow.png
+19/02/2024 11:41:19|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Plow Scarecrow.png
+19/02/2024 11:41:19|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Plow Scarecrow.png
+19/02/2024 11:41:19|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Plow Scarecrow rule bg.jpg
+19/02/2024 11:41:19|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Plow Scarecrow rule bg.jpg
+19/02/2024 11:41:19|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Sentinel.png
+19/02/2024 11:41:19|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Sentinel.png
+19/02/2024 11:41:19|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Sentinel.png
+19/02/2024 11:41:19|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Sentinel rule bg.jpg
+19/02/2024 11:41:19|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Sentinel rule bg.jpg
+19/02/2024 11:41:19|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Shears Scarecrow.png
+19/02/2024 11:41:19|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Shears Scarecrow.png
+19/02/2024 11:41:19|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Shears Scarecrow.png
+19/02/2024 11:41:19|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:19|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Shears Scarecrow rule bg.jpg
+19/02/2024 11:41:20|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Shears Scarecrow rule bg.jpg
+19/02/2024 11:41:20|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Silver Knight Greatbowman.png
+19/02/2024 11:41:20|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Silver Knight Greatbowman.png
+19/02/2024 11:41:20|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Silver Knight Greatbowman.png
+19/02/2024 11:41:20|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Silver Knight Greatbowman rule bg.jpg
+19/02/2024 11:41:20|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Silver Knight Greatbowman rule bg.jpg
+19/02/2024 11:41:20|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Silver Knight Spearman.png
+19/02/2024 11:41:20|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Silver Knight Spearman.png
+19/02/2024 11:41:20|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Silver Knight Spearman.png
+19/02/2024 11:41:20|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Silver Knight Spearman rule bg.jpg
+19/02/2024 11:41:20|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Silver Knight Spearman rule bg.jpg
+19/02/2024 11:41:20|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Silver Knight Swordsman.png
+19/02/2024 11:41:20|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Silver Knight Swordsman.png
+19/02/2024 11:41:20|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Silver Knight Swordsman.png
+19/02/2024 11:41:20|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Silver Knight Swordsman rule bg.jpg
+19/02/2024 11:41:20|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Silver Knight Swordsman rule bg.jpg
+19/02/2024 11:41:20|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Skeleton Archer.png
+19/02/2024 11:41:20|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Skeleton Archer.png
+19/02/2024 11:41:20|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Skeleton Archer.png
+19/02/2024 11:41:20|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Skeleton Archer rule bg.jpg
+19/02/2024 11:41:20|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Skeleton Archer rule bg.jpg
+19/02/2024 11:41:20|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Skeleton Beast.png
+19/02/2024 11:41:20|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Skeleton Beast.png
+19/02/2024 11:41:20|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Skeleton Beast.png
+19/02/2024 11:41:20|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Skeleton Beast rule bg.jpg
+19/02/2024 11:41:20|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Skeleton Beast rule bg.jpg
+19/02/2024 11:41:20|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Skeleton Soldier.png
+19/02/2024 11:41:20|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Skeleton Soldier.png
+19/02/2024 11:41:20|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Skeleton Soldier.png
+19/02/2024 11:41:20|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Skeleton Soldier rule bg.jpg
+19/02/2024 11:41:20|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Skeleton Soldier rule bg.jpg
+19/02/2024 11:41:20|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Snow Rat.png
+19/02/2024 11:41:20|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Snow Rat.png
+19/02/2024 11:41:20|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Snow Rat.png
+19/02/2024 11:41:20|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Snow Rat rule bg.jpg
+19/02/2024 11:41:20|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Snow Rat rule bg.jpg
+19/02/2024 11:41:20|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Stone Guardian.png
+19/02/2024 11:41:20|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Stone Guardian.png
+19/02/2024 11:41:20|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Stone Guardian.png
+19/02/2024 11:41:20|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:20|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Stone Guardian rule bg.jpg
+19/02/2024 11:41:21|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Stone Guardian rule bg.jpg
+19/02/2024 11:41:21|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Stone Knight.png
+19/02/2024 11:41:21|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Stone Knight.png
+19/02/2024 11:41:21|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Stone Knight.png
+19/02/2024 11:41:21|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Stone Knight rule bg.jpg
+19/02/2024 11:41:21|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Stone Knight rule bg.jpg
+19/02/2024 11:41:21|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Mimic.png
+19/02/2024 11:41:21|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Mimic.png
+19/02/2024 11:41:21|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Mimic.png
+19/02/2024 11:41:21|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Mimic rule bg.jpg
+19/02/2024 11:41:21|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Mimic rule bg.jpg
+19/02/2024 11:41:21|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Armorer Dennis.png
+19/02/2024 11:41:21|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Armorer Dennis.png
+19/02/2024 11:41:21|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Armorer Dennis.png
+19/02/2024 11:41:21|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Fencer Sharron.png
+19/02/2024 11:41:21|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Fencer Sharron.png
+19/02/2024 11:41:21|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Fencer Sharron.png
+19/02/2024 11:41:21|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Invader Brylex.png
+19/02/2024 11:41:21|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Invader Brylex.png
+19/02/2024 11:41:21|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Invader Brylex.png
+19/02/2024 11:41:21|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Kirk, Knight of Thorns.png
+19/02/2024 11:41:21|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Kirk, Knight of Thorns.png
+19/02/2024 11:41:21|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Kirk, Knight of Thorns.png
+19/02/2024 11:41:21|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Longfinger Kirk.png
+19/02/2024 11:41:21|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Longfinger Kirk.png
+19/02/2024 11:41:21|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Longfinger Kirk.png
+19/02/2024 11:41:21|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Maldron the Assassin.png
+19/02/2024 11:41:21|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Maldron the Assassin.png
+19/02/2024 11:41:21|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Maldron the Assassin.png
+19/02/2024 11:41:21|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Maneater Mildred.png
+19/02/2024 11:41:21|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Maneater Mildred.png
+19/02/2024 11:41:21|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Maneater Mildred.png
+19/02/2024 11:41:21|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Marvelous Chester.png
+19/02/2024 11:41:21|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Marvelous Chester.png
+19/02/2024 11:41:21|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Marvelous Chester.png
+19/02/2024 11:41:21|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Melinda the Butcher.png
+19/02/2024 11:41:21|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Melinda the Butcher.png
+19/02/2024 11:41:21|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Melinda the Butcher.png
+19/02/2024 11:41:21|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Oliver the Collector.png
+19/02/2024 11:41:21|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Oliver the Collector.png
+19/02/2024 11:41:21|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Oliver the Collector.png
+19/02/2024 11:41:21|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Paladin Leeroy.png
+19/02/2024 11:41:21|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Paladin Leeroy.png
+19/02/2024 11:41:21|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Paladin Leeroy.png
+19/02/2024 11:41:21|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Xanthous King Jeremiah.png
+19/02/2024 11:41:21|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Xanthous King Jeremiah.png
+19/02/2024 11:41:21|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Xanthous King Jeremiah.png
+19/02/2024 11:41:21|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Hungry Mimic.png
+19/02/2024 11:41:21|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Hungry Mimic.png
+19/02/2024 11:41:21|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Hungry Mimic.png
+19/02/2024 11:41:21|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Voracious Mimic.png
+19/02/2024 11:41:21|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:21|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Voracious Mimic.png
+19/02/2024 11:41:22|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:22|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:22|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Voracious Mimic.png
+19/02/2024 11:41:22|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:22|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:22|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\enemy_node_2.png
+19/02/2024 11:41:22|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:22|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:22|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\bleed.png
+19/02/2024 11:41:22|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:22|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:22|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\barrage.png
+19/02/2024 11:41:22|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:22|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:22|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\bitter_cold.png
+19/02/2024 11:41:22|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:22|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:22|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\darkness.png
+19/02/2024 11:41:22|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:22|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:22|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\eerie.png
+19/02/2024 11:41:22|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:22|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:22|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\gang_alonne.png
+19/02/2024 11:41:22|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:22|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:22|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\gang_hollow.png
+19/02/2024 11:41:22|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:22|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:22|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\gang_silver_knight.png
+19/02/2024 11:41:22|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:22|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:22|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\gang_skeleton.png
+19/02/2024 11:41:22|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:22|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:22|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\hidden.png
+19/02/2024 11:41:22|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:22|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:22|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\illusion.png
+19/02/2024 11:41:22|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:22|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:22|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\mimic_keyword.png
+19/02/2024 11:41:22|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:22|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:22|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\onslaught.png
+19/02/2024 11:41:22|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:22|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:22|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\poison_mist.png
+19/02/2024 11:41:22|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:22|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:22|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\snowstorm.png
+19/02/2024 11:41:22|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:22|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:22|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\timer.png
+19/02/2024 11:41:22|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:41:22|DEBUG|[create_image] Start of create_image
+19/02/2024 11:41:22|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\trial.png
+19/02/2024 11:41:22|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:46:29|DEBUG|[random_encounter] Start of random_encounter
+19/02/2024 11:46:29|DEBUG|[load_encounter] Start of load_encounter
+19/02/2024 11:46:29|DEBUG|[load_encounter] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_encounters\Puppet Master4.json
+19/02/2024 11:46:29|DEBUG|[shuffle_enemies] Start of shuffle_enemies
+19/02/2024 11:46:29|DEBUG|[edit_encounter_card] Start of edit_encounter_card
+19/02/2024 11:46:29|DEBUG|[create_image] Start of create_image
+19/02/2024 11:46:29|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Puppet Master.jpg
+19/02/2024 11:46:29|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:46:29|DEBUG|[edit_encounter_card] New enemies: [17, 12]
+19/02/2024 11:46:29|DEBUG|[edit_encounter_card] Pasting Mushroom Child image onto encounter at (300, 323).
+19/02/2024 11:46:29|DEBUG|[edit_encounter_card] Pasting Giant Skeleton Archer image onto encounter at (329, 323).
+19/02/2024 11:46:29|DEBUG|[apply_keyword_tooltips] Start of apply_keyword_tooltips
+19/02/2024 11:46:29|DEBUG|[apply_keyword_tooltips] 	End of apply_keyword_tooltips
+19/02/2024 11:46:29|DEBUG|[puppet_master] Start of puppet_master
+19/02/2024 11:46:29|DEBUG|[create_tooltip] Start of create_tooltip
+19/02/2024 11:46:29|DEBUG|[create_tooltip] 	End of create_tooltip
+19/02/2024 11:46:29|DEBUG|[create_tooltip] Start of create_tooltip
+19/02/2024 11:46:29|DEBUG|[create_tooltip] 	End of create_tooltip
+19/02/2024 11:46:29|DEBUG|[pick_treasure] Start of pick_treasure
+19/02/2024 11:46:29|DEBUG|[pick_treasure] End of pick_treasure
+19/02/2024 11:46:29|DEBUG|[puppet_master] 	End of puppet_master
+19/02/2024 11:46:29|DEBUG|[edit_encounter_card] 	End of edit_encounter_card
+19/02/2024 11:46:29|DEBUG|[shuffle_enemies] 	End of shuffle_enemies
+19/02/2024 11:46:29|DEBUG|[load_encounter] 	End of load_encounter
+19/02/2024 11:46:29|DEBUG|[random_encounter] 	End of random_encounter
+19/02/2024 11:46:31|DEBUG|[shuffle_enemies] Start of shuffle_enemies
+19/02/2024 11:46:31|DEBUG|[edit_encounter_card] Start of edit_encounter_card
+19/02/2024 11:46:31|DEBUG|[create_image] Start of create_image
+19/02/2024 11:46:31|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Puppet Master.jpg
+19/02/2024 11:46:32|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:46:32|DEBUG|[edit_encounter_card] New enemies: [13, 19]
+19/02/2024 11:46:32|DEBUG|[edit_encounter_card] Pasting Giant Skeleton Soldier image onto encounter at (300, 323).
+19/02/2024 11:46:32|DEBUG|[edit_encounter_card] Pasting Necromancer image onto encounter at (329, 323).
+19/02/2024 11:46:32|DEBUG|[apply_keyword_tooltips] Start of apply_keyword_tooltips
+19/02/2024 11:46:32|DEBUG|[apply_keyword_tooltips] 	End of apply_keyword_tooltips
+19/02/2024 11:46:32|DEBUG|[puppet_master] Start of puppet_master
+19/02/2024 11:46:32|DEBUG|[create_tooltip] Start of create_tooltip
+19/02/2024 11:46:32|DEBUG|[create_tooltip] 	End of create_tooltip
+19/02/2024 11:46:32|DEBUG|[create_tooltip] Start of create_tooltip
+19/02/2024 11:46:32|DEBUG|[create_tooltip] 	End of create_tooltip
+19/02/2024 11:46:32|DEBUG|[pick_treasure] Start of pick_treasure
+19/02/2024 11:46:32|DEBUG|[pick_treasure] End of pick_treasure
+19/02/2024 11:46:32|DEBUG|[puppet_master] 	End of puppet_master
+19/02/2024 11:46:32|DEBUG|[edit_encounter_card] 	End of edit_encounter_card
+19/02/2024 11:46:32|DEBUG|[shuffle_enemies] 	End of shuffle_enemies
+19/02/2024 11:46:49|DEBUG|[load_encounter] Start of load_encounter
+19/02/2024 11:46:49|DEBUG|[load_encounter] 	No encounter selected
+19/02/2024 11:46:49|DEBUG|[load_encounter] 	End of load_encounter
+19/02/2024 11:46:51|DEBUG|[load_encounter] Start of load_encounter
+19/02/2024 11:46:51|DEBUG|[load_encounter] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_encounters\Cloak and Feathers4.json
+19/02/2024 11:46:51|DEBUG|[shuffle_enemies] Start of shuffle_enemies
+19/02/2024 11:46:51|DEBUG|[edit_encounter_card] Start of edit_encounter_card
+19/02/2024 11:46:51|DEBUG|[create_image] Start of create_image
+19/02/2024 11:46:51|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Cloak and Feathers.jpg
+19/02/2024 11:46:51|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:46:51|DEBUG|[edit_encounter_card] New enemies: [7]
+19/02/2024 11:46:51|DEBUG|[edit_encounter_card] Pasting Crow Demon image onto encounter at (300, 323).
+19/02/2024 11:46:51|DEBUG|[apply_keyword_tooltips] Start of apply_keyword_tooltips
+19/02/2024 11:46:51|DEBUG|[apply_keyword_tooltips] 	End of apply_keyword_tooltips
+19/02/2024 11:46:51|DEBUG|[cloak_and_feathers] Start of cloak_and_feathers
+19/02/2024 11:46:51|DEBUG|[create_tooltip] Start of create_tooltip
+19/02/2024 11:46:51|DEBUG|[create_tooltip] 	End of create_tooltip
+19/02/2024 11:46:51|DEBUG|[cloak_and_feathers] 	End of cloak_and_feathers
+19/02/2024 11:46:51|DEBUG|[edit_encounter_card] 	End of edit_encounter_card
+19/02/2024 11:46:51|DEBUG|[shuffle_enemies] 	End of shuffle_enemies
+19/02/2024 11:46:51|DEBUG|[load_encounter] 	End of load_encounter
+19/02/2024 11:46:55|DEBUG|[load_encounter] Start of load_encounter
+19/02/2024 11:46:55|DEBUG|[load_encounter] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_encounters\Frozen Sentries4.json
+19/02/2024 11:46:55|DEBUG|[shuffle_enemies] Start of shuffle_enemies
+19/02/2024 11:46:55|DEBUG|[edit_encounter_card] Start of edit_encounter_card
+19/02/2024 11:46:55|DEBUG|[create_image] Start of create_image
+19/02/2024 11:46:55|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Frozen Sentries.jpg
+19/02/2024 11:46:55|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:46:55|DEBUG|[edit_encounter_card] New enemies: [14, 14]
+19/02/2024 11:46:55|DEBUG|[edit_encounter_card] Pasting Hollow Soldier image onto encounter at (300, 323).
+19/02/2024 11:46:55|DEBUG|[edit_encounter_card] Pasting Hollow Soldier image onto encounter at (300, 352).
+19/02/2024 11:46:55|DEBUG|[apply_keyword_tooltips] Start of apply_keyword_tooltips
+19/02/2024 11:46:55|DEBUG|[create_tooltip] Start of create_tooltip
+19/02/2024 11:46:55|DEBUG|[create_tooltip] 	End of create_tooltip
+19/02/2024 11:46:55|DEBUG|[apply_keyword_tooltips] 	End of apply_keyword_tooltips
+19/02/2024 11:46:55|DEBUG|[edit_encounter_card] 	End of edit_encounter_card
+19/02/2024 11:46:55|DEBUG|[shuffle_enemies] 	End of shuffle_enemies
+19/02/2024 11:46:55|DEBUG|[load_encounter] 	End of load_encounter
+19/02/2024 11:46:57|DEBUG|[shuffle_enemies] Start of shuffle_enemies
+19/02/2024 11:46:57|DEBUG|[edit_encounter_card] Start of edit_encounter_card
+19/02/2024 11:46:57|DEBUG|[create_image] Start of create_image
+19/02/2024 11:46:57|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Frozen Sentries.jpg
+19/02/2024 11:46:57|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:46:57|DEBUG|[edit_encounter_card] New enemies: [21, 21]
+19/02/2024 11:46:57|DEBUG|[edit_encounter_card] Pasting Phalanx Hollow image onto encounter at (300, 323).
+19/02/2024 11:46:57|DEBUG|[edit_encounter_card] Pasting Phalanx Hollow image onto encounter at (300, 352).
+19/02/2024 11:46:57|DEBUG|[apply_keyword_tooltips] Start of apply_keyword_tooltips
+19/02/2024 11:46:57|DEBUG|[create_tooltip] Start of create_tooltip
+19/02/2024 11:46:57|DEBUG|[create_tooltip] 	End of create_tooltip
+19/02/2024 11:46:57|DEBUG|[apply_keyword_tooltips] 	End of apply_keyword_tooltips
+19/02/2024 11:46:57|DEBUG|[edit_encounter_card] 	End of edit_encounter_card
+19/02/2024 11:46:57|DEBUG|[shuffle_enemies] 	End of shuffle_enemies
+19/02/2024 11:46:58|DEBUG|[shuffle_enemies] Start of shuffle_enemies
+19/02/2024 11:46:58|DEBUG|[edit_encounter_card] Start of edit_encounter_card
+19/02/2024 11:46:58|DEBUG|[create_image] Start of create_image
+19/02/2024 11:46:58|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Frozen Sentries.jpg
+19/02/2024 11:46:58|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:46:58|DEBUG|[edit_encounter_card] New enemies: [14, 14]
+19/02/2024 11:46:58|DEBUG|[edit_encounter_card] Pasting Hollow Soldier image onto encounter at (300, 323).
+19/02/2024 11:46:58|DEBUG|[edit_encounter_card] Pasting Hollow Soldier image onto encounter at (300, 352).
+19/02/2024 11:46:58|DEBUG|[apply_keyword_tooltips] Start of apply_keyword_tooltips
+19/02/2024 11:46:58|DEBUG|[create_tooltip] Start of create_tooltip
+19/02/2024 11:46:58|DEBUG|[create_tooltip] 	End of create_tooltip
+19/02/2024 11:46:58|DEBUG|[apply_keyword_tooltips] 	End of apply_keyword_tooltips
+19/02/2024 11:46:58|DEBUG|[edit_encounter_card] 	End of edit_encounter_card
+19/02/2024 11:46:58|DEBUG|[shuffle_enemies] 	End of shuffle_enemies
+19/02/2024 11:46:58|DEBUG|[shuffle_enemies] Start of shuffle_enemies
+19/02/2024 11:46:58|DEBUG|[edit_encounter_card] Start of edit_encounter_card
+19/02/2024 11:46:58|DEBUG|[create_image] Start of create_image
+19/02/2024 11:46:58|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Frozen Sentries.jpg
+19/02/2024 11:46:58|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:46:58|DEBUG|[edit_encounter_card] New enemies: [14, 21]
+19/02/2024 11:46:58|DEBUG|[edit_encounter_card] Pasting Hollow Soldier image onto encounter at (300, 323).
+19/02/2024 11:46:58|DEBUG|[edit_encounter_card] Pasting Phalanx Hollow image onto encounter at (300, 352).
+19/02/2024 11:46:58|DEBUG|[apply_keyword_tooltips] Start of apply_keyword_tooltips
+19/02/2024 11:46:58|DEBUG|[create_tooltip] Start of create_tooltip
+19/02/2024 11:46:58|DEBUG|[create_tooltip] 	End of create_tooltip
+19/02/2024 11:46:58|DEBUG|[apply_keyword_tooltips] 	End of apply_keyword_tooltips
+19/02/2024 11:46:58|DEBUG|[edit_encounter_card] 	End of edit_encounter_card
+19/02/2024 11:46:58|DEBUG|[shuffle_enemies] 	End of shuffle_enemies
+19/02/2024 11:50:42|DEBUG|[shuffle_enemies] Start of shuffle_enemies
+19/02/2024 11:50:42|DEBUG|[edit_encounter_card] Start of edit_encounter_card
+19/02/2024 11:50:42|DEBUG|[create_image] Start of create_image
+19/02/2024 11:50:42|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Frozen Sentries.jpg
+19/02/2024 11:50:42|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:50:42|DEBUG|[edit_encounter_card] New enemies: [14, 14]
+19/02/2024 11:50:42|DEBUG|[edit_encounter_card] Pasting Hollow Soldier image onto encounter at (300, 323).
+19/02/2024 11:50:42|DEBUG|[edit_encounter_card] Pasting Hollow Soldier image onto encounter at (300, 352).
+19/02/2024 11:50:42|DEBUG|[apply_keyword_tooltips] Start of apply_keyword_tooltips
+19/02/2024 11:50:42|DEBUG|[create_tooltip] Start of create_tooltip
+19/02/2024 11:50:42|DEBUG|[create_tooltip] 	End of create_tooltip
+19/02/2024 11:50:42|DEBUG|[apply_keyword_tooltips] 	End of apply_keyword_tooltips
+19/02/2024 11:50:42|DEBUG|[edit_encounter_card] 	End of edit_encounter_card
+19/02/2024 11:50:42|DEBUG|[shuffle_enemies] 	End of shuffle_enemies
+19/02/2024 11:50:43|DEBUG|[shuffle_enemies] Start of shuffle_enemies
+19/02/2024 11:50:43|DEBUG|[edit_encounter_card] Start of edit_encounter_card
+19/02/2024 11:50:43|DEBUG|[create_image] Start of create_image
+19/02/2024 11:50:43|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Frozen Sentries.jpg
+19/02/2024 11:50:43|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:50:43|DEBUG|[edit_encounter_card] New enemies: [21, 21]
+19/02/2024 11:50:43|DEBUG|[edit_encounter_card] Pasting Phalanx Hollow image onto encounter at (300, 323).
+19/02/2024 11:50:43|DEBUG|[edit_encounter_card] Pasting Phalanx Hollow image onto encounter at (300, 352).
+19/02/2024 11:50:43|DEBUG|[apply_keyword_tooltips] Start of apply_keyword_tooltips
+19/02/2024 11:50:43|DEBUG|[create_tooltip] Start of create_tooltip
+19/02/2024 11:50:43|DEBUG|[create_tooltip] 	End of create_tooltip
+19/02/2024 11:50:43|DEBUG|[apply_keyword_tooltips] 	End of apply_keyword_tooltips
+19/02/2024 11:50:43|DEBUG|[edit_encounter_card] 	End of edit_encounter_card
+19/02/2024 11:50:43|DEBUG|[shuffle_enemies] 	End of shuffle_enemies
+19/02/2024 11:50:44|DEBUG|[load_encounter] Start of load_encounter
+19/02/2024 11:50:44|DEBUG|[load_encounter] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_encounters\Frozen Sentries4.json
+19/02/2024 11:50:44|DEBUG|[shuffle_enemies] Start of shuffle_enemies
+19/02/2024 11:50:44|DEBUG|[edit_encounter_card] Start of edit_encounter_card
+19/02/2024 11:50:44|DEBUG|[create_image] Start of create_image
+19/02/2024 11:50:44|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Frozen Sentries.jpg
+19/02/2024 11:50:44|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:50:44|DEBUG|[edit_encounter_card] New enemies: [14, 21]
+19/02/2024 11:50:44|DEBUG|[edit_encounter_card] Pasting Hollow Soldier image onto encounter at (300, 323).
+19/02/2024 11:50:44|DEBUG|[edit_encounter_card] Pasting Phalanx Hollow image onto encounter at (300, 352).
+19/02/2024 11:50:44|DEBUG|[apply_keyword_tooltips] Start of apply_keyword_tooltips
+19/02/2024 11:50:44|DEBUG|[create_tooltip] Start of create_tooltip
+19/02/2024 11:50:44|DEBUG|[create_tooltip] 	End of create_tooltip
+19/02/2024 11:50:44|DEBUG|[apply_keyword_tooltips] 	End of apply_keyword_tooltips
+19/02/2024 11:50:44|DEBUG|[edit_encounter_card] 	End of edit_encounter_card
+19/02/2024 11:50:44|DEBUG|[shuffle_enemies] 	End of shuffle_enemies
+19/02/2024 11:50:44|DEBUG|[load_encounter] 	End of load_encounter
+19/02/2024 11:52:21|DEBUG|[add_card_to_campaign] Start of add_card_to_campaign
+19/02/2024 11:52:21|DEBUG|[add_card_to_campaign] End of add_card_to_campaign
+19/02/2024 11:52:23|DEBUG|[load_event] Start of load_event
+19/02/2024 11:52:23|DEBUG|[load_event] End of load_event (core set selected)
+19/02/2024 11:52:24|DEBUG|[load_event] Start of load_event
+19/02/2024 11:52:24|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 11:52:25|DEBUG|[add_event_to_deck] Start of add_event_to_deck
+19/02/2024 11:52:25|DEBUG|[sort_event_deck_treeview] Start of sort_event_deck_treeview
+19/02/2024 11:52:25|DEBUG|[sort_event_deck_treeview] End of sort_event_deck_treeview
+19/02/2024 11:52:25|DEBUG|[add_event_to_deck] End of add_event_to_deck
+19/02/2024 11:52:26|DEBUG|[draw_from_event_deck] Start of draw_from_event_deck
+19/02/2024 11:52:26|DEBUG|[load_event] Start of load_event
+19/02/2024 11:52:26|DEBUG|[create_image] Start of create_image
+19/02/2024 11:52:26|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Lost Envoy.jpg
+19/02/2024 11:52:26|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:52:26|DEBUG|[load_event] End of load_event
+19/02/2024 11:52:26|DEBUG|[sort_event_deck_treeview] Start of sort_event_deck_treeview
+19/02/2024 11:52:26|DEBUG|[sort_event_deck_treeview] End of sort_event_deck_treeview
+19/02/2024 11:52:26|DEBUG|[draw_from_event_deck] End of draw_from_event_deck
+19/02/2024 11:52:28|DEBUG|[load_event] Start of load_event
+19/02/2024 11:52:28|DEBUG|[create_image] Start of create_image
+19/02/2024 11:52:28|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Lost Envoy.jpg
+19/02/2024 11:52:28|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:52:28|DEBUG|[load_event] End of load_event
+19/02/2024 11:52:28|DEBUG|[load_event] Start of load_event
+19/02/2024 11:52:28|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 11:52:28|DEBUG|[load_event] Start of load_event
+19/02/2024 11:52:28|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 11:52:28|DEBUG|[load_event] Start of load_event
+19/02/2024 11:52:28|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 11:52:28|DEBUG|[load_event] Start of load_event
+19/02/2024 11:52:28|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 11:52:28|DEBUG|[load_event] Start of load_event
+19/02/2024 11:52:28|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 11:52:28|DEBUG|[load_event] Start of load_event
+19/02/2024 11:52:28|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 11:52:28|DEBUG|[load_event] Start of load_event
+19/02/2024 11:52:28|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 11:52:28|DEBUG|[load_event] Start of load_event
+19/02/2024 11:52:28|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 11:52:28|DEBUG|[load_event] Start of load_event
+19/02/2024 11:52:28|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 11:52:28|DEBUG|[load_event] Start of load_event
+19/02/2024 11:52:28|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 11:52:28|DEBUG|[load_event] Start of load_event
+19/02/2024 11:52:28|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 11:52:28|DEBUG|[load_event] Start of load_event
+19/02/2024 11:52:28|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 11:52:28|DEBUG|[load_event] Start of load_event
+19/02/2024 11:52:28|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 11:52:28|DEBUG|[load_event] Start of load_event
+19/02/2024 11:52:28|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 11:52:28|DEBUG|[load_event] Start of load_event
+19/02/2024 11:52:28|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 11:52:28|DEBUG|[load_event] Start of load_event
+19/02/2024 11:52:28|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 11:52:28|DEBUG|[load_event] Start of load_event
+19/02/2024 11:52:28|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 11:52:28|DEBUG|[load_event] Start of load_event
+19/02/2024 11:52:28|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 11:52:28|DEBUG|[load_event] Start of load_event
+19/02/2024 11:52:28|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 11:52:28|DEBUG|[load_event] Start of load_event
+19/02/2024 11:52:28|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 11:52:28|DEBUG|[load_event] Start of load_event
+19/02/2024 11:52:28|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 11:52:28|DEBUG|[load_event] Start of load_event
+19/02/2024 11:52:28|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 11:52:28|DEBUG|[load_event] Start of load_event
+19/02/2024 11:52:28|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 11:52:28|DEBUG|[load_event] Start of load_event
+19/02/2024 11:52:28|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 11:52:28|DEBUG|[load_event] Start of load_event
+19/02/2024 11:52:28|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 11:52:28|DEBUG|[load_event] Start of load_event
+19/02/2024 11:52:28|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 11:52:28|DEBUG|[load_event] Start of load_event
+19/02/2024 11:52:28|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 11:52:28|DEBUG|[load_event] Start of load_event
+19/02/2024 11:52:28|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 11:52:28|DEBUG|[load_event] Start of load_event
+19/02/2024 11:52:28|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 11:52:28|DEBUG|[load_event] Start of load_event
+19/02/2024 11:52:28|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 11:52:28|DEBUG|[load_event] Start of load_event
+19/02/2024 11:52:28|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 11:52:28|DEBUG|[load_event] Start of load_event
+19/02/2024 11:52:28|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 11:52:28|DEBUG|[load_event] Start of load_event
+19/02/2024 11:52:28|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 11:52:28|DEBUG|[load_event] Start of load_event
+19/02/2024 11:52:28|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 11:52:28|DEBUG|[load_event] Start of load_event
+19/02/2024 11:52:28|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 11:52:28|DEBUG|[load_event] Start of load_event
+19/02/2024 11:52:28|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 11:52:28|DEBUG|[load_event] Start of load_event
+19/02/2024 11:52:28|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 11:52:28|DEBUG|[load_event] Start of load_event
+19/02/2024 11:52:28|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 11:52:28|DEBUG|[load_event] Start of load_event
+19/02/2024 11:52:28|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 11:52:28|DEBUG|[load_event] Start of load_event
+19/02/2024 11:52:28|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 11:52:28|DEBUG|[load_event] Start of load_event
+19/02/2024 11:52:28|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 11:52:28|DEBUG|[load_event] Start of load_event
+19/02/2024 11:52:28|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 11:52:28|DEBUG|[load_event] Start of load_event
+19/02/2024 11:52:28|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 11:52:28|DEBUG|[load_event] Start of load_event
+19/02/2024 11:52:28|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 11:52:28|DEBUG|[load_event] Start of load_event
+19/02/2024 11:52:28|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 11:52:28|DEBUG|[load_event] Start of load_event
+19/02/2024 11:52:28|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 11:52:28|DEBUG|[load_event] Start of load_event
+19/02/2024 11:52:28|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 11:52:28|DEBUG|[load_event] Start of load_event
+19/02/2024 11:52:28|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 11:52:28|DEBUG|[load_event] Start of load_event
+19/02/2024 11:52:28|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 11:52:28|DEBUG|[load_event] Start of load_event
+19/02/2024 11:52:28|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 11:52:28|DEBUG|[load_event] Start of load_event
+19/02/2024 11:52:28|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 11:52:28|DEBUG|[load_event] Start of load_event
+19/02/2024 11:52:28|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 11:52:34|DEBUG|[add_card_to_campaign] Start of add_card_to_campaign
+19/02/2024 11:52:34|DEBUG|[add_card_to_campaign] End of add_card_to_campaign
+19/02/2024 11:52:41|DEBUG|[add_boss_to_campaign] Start of add_boss_to_campaign
+19/02/2024 11:52:41|DEBUG|[add_boss_to_campaign] End of add_boss_to_campaign
+19/02/2024 11:52:47|DEBUG|[load_campaign_card] Start of load_campaign_card
+19/02/2024 11:52:47|DEBUG|[load_campaign_card] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_encounters\Frozen Sentries4.json
+19/02/2024 11:52:47|DEBUG|[edit_encounter_card] Start of edit_encounter_card
+19/02/2024 11:52:47|DEBUG|[create_image] Start of create_image
+19/02/2024 11:52:47|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Frozen Sentries.jpg
+19/02/2024 11:52:47|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:52:47|DEBUG|[edit_encounter_card] New enemies: [14, 21]
+19/02/2024 11:52:47|DEBUG|[edit_encounter_card] Pasting Hollow Soldier image onto encounter at (300, 323).
+19/02/2024 11:52:47|DEBUG|[edit_encounter_card] Pasting Phalanx Hollow image onto encounter at (300, 352).
+19/02/2024 11:52:47|DEBUG|[apply_keyword_tooltips] Start of apply_keyword_tooltips
+19/02/2024 11:52:47|DEBUG|[create_tooltip] Start of create_tooltip
+19/02/2024 11:52:47|DEBUG|[create_tooltip] 	End of create_tooltip
+19/02/2024 11:52:47|DEBUG|[apply_keyword_tooltips] 	End of apply_keyword_tooltips
+19/02/2024 11:52:47|DEBUG|[edit_encounter_card] 	End of edit_encounter_card
+19/02/2024 11:52:47|DEBUG|[load_campaign_card] End of load_campaign_card
+19/02/2024 11:52:51|DEBUG|[load_campaign_card] Start of load_campaign_card
+19/02/2024 11:52:51|DEBUG|[create_image] Start of create_image
+19/02/2024 11:52:51|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Asylum Demon.jpg
+19/02/2024 11:52:51|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:52:51|DEBUG|[load_campaign_card] End of load_campaign_card
+19/02/2024 11:52:55|DEBUG|[load_campaign_card] Start of load_campaign_card
+19/02/2024 11:52:55|DEBUG|[load_event] Start of load_event
+19/02/2024 11:52:55|DEBUG|[create_image] Start of create_image
+19/02/2024 11:52:55|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Lost Envoy.jpg
+19/02/2024 11:52:55|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:52:55|DEBUG|[load_event] End of load_event
+19/02/2024 11:52:55|DEBUG|[load_campaign_card] End of load_campaign_card
+19/02/2024 11:52:56|DEBUG|[load_campaign_card] Start of load_campaign_card
+19/02/2024 11:52:56|DEBUG|[load_campaign_card] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_encounters\Frozen Sentries4.json
+19/02/2024 11:52:56|DEBUG|[edit_encounter_card] Start of edit_encounter_card
+19/02/2024 11:52:56|DEBUG|[create_image] Start of create_image
+19/02/2024 11:52:56|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Frozen Sentries.jpg
+19/02/2024 11:52:56|DEBUG|[create_image] 	End of create_image
+19/02/2024 11:52:56|DEBUG|[edit_encounter_card] New enemies: [14, 21]
+19/02/2024 11:52:56|DEBUG|[edit_encounter_card] Pasting Hollow Soldier image onto encounter at (300, 323).
+19/02/2024 11:52:56|DEBUG|[edit_encounter_card] Pasting Phalanx Hollow image onto encounter at (300, 352).
+19/02/2024 11:52:56|DEBUG|[apply_keyword_tooltips] Start of apply_keyword_tooltips
+19/02/2024 11:52:56|DEBUG|[create_tooltip] Start of create_tooltip
+19/02/2024 11:52:56|DEBUG|[create_tooltip] 	End of create_tooltip
+19/02/2024 11:52:56|DEBUG|[apply_keyword_tooltips] 	End of apply_keyword_tooltips
+19/02/2024 11:52:56|DEBUG|[edit_encounter_card] 	End of edit_encounter_card
+19/02/2024 11:52:56|DEBUG|[load_campaign_card] End of load_campaign_card
+19/02/2024 12:09:37|DEBUG|[load_event] Start of load_event
+19/02/2024 12:09:37|DEBUG|[create_image] Start of create_image
+19/02/2024 12:09:37|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Blacksmith's Trial.jpg
+19/02/2024 12:09:37|DEBUG|[create_image] 	End of create_image
+19/02/2024 12:09:37|DEBUG|[load_event] End of load_event
+19/02/2024 12:09:37|DEBUG|[load_event] Start of load_event
+19/02/2024 12:09:37|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 12:09:38|DEBUG|[delete_event_from_deck] Start of delete_event_from_deck
+19/02/2024 12:09:38|DEBUG|[delete_event_from_deck] End of delete_event_from_deck
+19/02/2024 12:09:38|DEBUG|[load_event] Start of load_event
+19/02/2024 12:09:38|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 12:09:38|DEBUG|[load_event] Start of load_event
+19/02/2024 12:09:38|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 12:09:38|DEBUG|[load_event] Start of load_event
+19/02/2024 12:09:38|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 12:09:38|DEBUG|[load_event] Start of load_event
+19/02/2024 12:09:38|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 12:09:38|DEBUG|[load_event] Start of load_event
+19/02/2024 12:09:38|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 12:09:38|DEBUG|[load_event] Start of load_event
+19/02/2024 12:09:38|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 12:09:38|DEBUG|[load_event] Start of load_event
+19/02/2024 12:09:38|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 12:09:38|DEBUG|[load_event] Start of load_event
+19/02/2024 12:09:38|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 12:09:38|DEBUG|[load_event] Start of load_event
+19/02/2024 12:09:38|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 12:09:38|DEBUG|[load_event] Start of load_event
+19/02/2024 12:09:38|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 12:09:38|DEBUG|[load_event] Start of load_event
+19/02/2024 12:09:38|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 12:09:38|DEBUG|[load_event] Start of load_event
+19/02/2024 12:09:38|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 12:09:38|DEBUG|[load_event] Start of load_event
+19/02/2024 12:09:38|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 12:09:38|DEBUG|[load_event] Start of load_event
+19/02/2024 12:09:38|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 12:09:38|DEBUG|[load_event] Start of load_event
+19/02/2024 12:09:38|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 12:09:38|DEBUG|[load_event] Start of load_event
+19/02/2024 12:09:38|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 12:09:38|DEBUG|[load_event] Start of load_event
+19/02/2024 12:09:38|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 12:09:38|DEBUG|[load_event] Start of load_event
+19/02/2024 12:09:38|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 12:09:38|DEBUG|[load_event] Start of load_event
+19/02/2024 12:09:38|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 12:09:38|DEBUG|[load_event] Start of load_event
+19/02/2024 12:09:38|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 12:09:38|DEBUG|[load_event] Start of load_event
+19/02/2024 12:09:38|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 12:09:38|DEBUG|[load_event] Start of load_event
+19/02/2024 12:09:38|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 12:09:38|DEBUG|[load_event] Start of load_event
+19/02/2024 12:09:38|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 12:09:38|DEBUG|[load_event] Start of load_event
+19/02/2024 12:09:38|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 12:09:38|DEBUG|[load_event] Start of load_event
+19/02/2024 12:09:38|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 12:09:38|DEBUG|[load_event] Start of load_event
+19/02/2024 12:09:38|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 12:09:38|DEBUG|[load_event] Start of load_event
+19/02/2024 12:09:38|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 12:09:38|DEBUG|[load_event] Start of load_event
+19/02/2024 12:09:38|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 12:09:38|DEBUG|[load_event] Start of load_event
+19/02/2024 12:09:38|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 12:09:38|DEBUG|[load_event] Start of load_event
+19/02/2024 12:09:38|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 12:09:38|DEBUG|[load_event] Start of load_event
+19/02/2024 12:09:38|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 12:09:38|DEBUG|[load_event] Start of load_event
+19/02/2024 12:09:38|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 12:09:38|DEBUG|[load_event] Start of load_event
+19/02/2024 12:09:38|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 12:09:38|DEBUG|[load_event] Start of load_event
+19/02/2024 12:09:38|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 12:09:38|DEBUG|[load_event] Start of load_event
+19/02/2024 12:09:38|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 12:09:38|DEBUG|[load_event] Start of load_event
+19/02/2024 12:09:38|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 12:09:38|DEBUG|[load_event] Start of load_event
+19/02/2024 12:09:38|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 12:09:38|DEBUG|[load_event] Start of load_event
+19/02/2024 12:09:38|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 12:09:44|DEBUG|[load_event] Start of load_event
+19/02/2024 12:09:44|DEBUG|[load_event] End of load_event (core set selected)
+19/02/2024 12:09:45|DEBUG|[load_event] Start of load_event
+19/02/2024 12:09:45|DEBUG|[load_event] End of load_event (core set selected)
+19/02/2024 12:09:47|DEBUG|[load_event] Start of load_event
+19/02/2024 12:09:47|DEBUG|[load_event] End of load_event (core set selected)
+19/02/2024 12:09:48|DEBUG|[load_event] Start of load_event
+19/02/2024 12:09:48|DEBUG|[create_image] Start of create_image
+19/02/2024 12:09:48|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Alluring Skull.jpg
+19/02/2024 12:09:48|DEBUG|[create_image] 	End of create_image
+19/02/2024 12:09:48|DEBUG|[load_event] End of load_event
+19/02/2024 12:09:52|DEBUG|[load_event] Start of load_event
+19/02/2024 12:09:52|DEBUG|[create_image] Start of create_image
+19/02/2024 12:09:52|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Unhallowed Offering.jpg
+19/02/2024 12:09:52|DEBUG|[create_image] 	End of create_image
+19/02/2024 12:09:52|DEBUG|[load_event] End of load_event
+19/02/2024 12:10:00|DEBUG|[load_event] Start of load_event
+19/02/2024 12:10:00|DEBUG|[load_event] End of load_event (core set selected)
+19/02/2024 12:10:02|DEBUG|[load_event] Start of load_event
+19/02/2024 12:10:02|DEBUG|[create_image] Start of create_image
+19/02/2024 12:10:02|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Unhallowed Offering.jpg
+19/02/2024 12:10:02|DEBUG|[create_image] 	End of create_image
+19/02/2024 12:10:02|DEBUG|[load_event] End of load_event
+19/02/2024 12:10:25|DEBUG|[load_event] Start of load_event
+19/02/2024 12:10:25|DEBUG|[load_event] End of load_event (core set selected)
+19/02/2024 12:10:26|DEBUG|[load_event] Start of load_event
+19/02/2024 12:10:26|DEBUG|[load_event] End of load_event (core set selected)
+19/02/2024 12:11:01|DEBUG|[load_event] Start of load_event
+19/02/2024 12:11:01|DEBUG|[load_event] End of load_event (core set selected)
+19/02/2024 12:11:03|DEBUG|[load_event] Start of load_event
+19/02/2024 12:11:03|DEBUG|[load_event] End of load_event (core set selected)
+19/02/2024 12:12:24|DEBUG|[load_event] Start of load_event
+19/02/2024 12:12:24|DEBUG|[load_event] End of load_event (core set selected)
+19/02/2024 12:12:24|DEBUG|[load_event] Start of load_event
+19/02/2024 12:12:24|DEBUG|[load_event] End of load_event (core set selected)
+19/02/2024 12:12:27|DEBUG|[load_event] Start of load_event
+19/02/2024 12:12:27|DEBUG|[create_image] Start of create_image
+19/02/2024 12:12:27|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Unhallowed Offering.jpg
+19/02/2024 12:12:27|DEBUG|[create_image] 	End of create_image
+19/02/2024 12:12:27|DEBUG|[load_event] End of load_event
+19/02/2024 12:12:44|DEBUG|[load_event] Start of load_event
+19/02/2024 12:12:44|DEBUG|[load_event] End of load_event (core set selected)
+19/02/2024 12:12:45|DEBUG|[load_event] Start of load_event
+19/02/2024 12:12:45|DEBUG|[load_event] End of load_event (core set selected)
+19/02/2024 12:12:46|DEBUG|[load_event] Start of load_event
+19/02/2024 12:12:46|DEBUG|[load_event] End of load_event (core set selected)
+19/02/2024 12:12:46|DEBUG|[load_event] Start of load_event
+19/02/2024 12:12:46|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 12:12:47|DEBUG|[add_event_to_deck] Start of add_event_to_deck
+19/02/2024 12:12:47|DEBUG|[sort_event_deck_treeview] Start of sort_event_deck_treeview
+19/02/2024 12:12:47|DEBUG|[sort_event_deck_treeview] End of sort_event_deck_treeview
+19/02/2024 12:12:47|DEBUG|[add_event_to_deck] End of add_event_to_deck
+19/02/2024 12:13:21|DEBUG|[load_event] Start of load_event
+19/02/2024 12:13:21|DEBUG|[load_event] End of load_event (core set selected)
+19/02/2024 12:13:27|DEBUG|[load_event] Start of load_event
+19/02/2024 12:13:27|DEBUG|[load_event] End of load_event (core set selected)
+19/02/2024 12:13:30|DEBUG|[load_event] Start of load_event
+19/02/2024 12:13:30|DEBUG|[load_event] End of load_event (core set selected)
+19/02/2024 12:14:23|DEBUG|[load_event] Start of load_event
+19/02/2024 12:14:23|DEBUG|[load_event] End of load_event (core set selected)
+19/02/2024 12:14:24|DEBUG|[load_event] Start of load_event
+19/02/2024 12:14:24|DEBUG|[load_event] End of load_event (core set selected)
+19/02/2024 12:14:26|DEBUG|[load_event] Start of load_event
+19/02/2024 12:14:26|DEBUG|[load_event] End of load_event (core set selected)
+19/02/2024 12:14:37|DEBUG|[load_event] Start of load_event
+19/02/2024 12:14:37|DEBUG|[load_event] End of load_event (core set selected)
+19/02/2024 12:14:38|DEBUG|[load_event] Start of load_event
+19/02/2024 12:14:38|DEBUG|[load_event] End of load_event (core set selected)
+19/02/2024 12:14:40|DEBUG|[load_event] Start of load_event
+19/02/2024 12:14:40|DEBUG|[create_image] Start of create_image
+19/02/2024 12:14:40|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Unhallowed Offering.jpg
+19/02/2024 12:14:40|DEBUG|[create_image] 	End of create_image
+19/02/2024 12:14:40|DEBUG|[load_event] End of load_event
+19/02/2024 12:14:48|DEBUG|[draw_from_event_deck] Start of draw_from_event_deck
+19/02/2024 12:14:48|DEBUG|[load_event] Start of load_event
+19/02/2024 12:14:48|DEBUG|[create_image] Start of create_image
+19/02/2024 12:14:48|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Rare Vagrant.jpg
+19/02/2024 12:14:48|DEBUG|[create_image] 	End of create_image
+19/02/2024 12:14:48|DEBUG|[load_event] End of load_event
+19/02/2024 12:14:48|DEBUG|[sort_event_deck_treeview] Start of sort_event_deck_treeview
+19/02/2024 12:14:48|DEBUG|[sort_event_deck_treeview] End of sort_event_deck_treeview
+19/02/2024 12:14:48|DEBUG|[draw_from_event_deck] End of draw_from_event_deck
+19/02/2024 12:14:48|DEBUG|[draw_from_event_deck] Start of draw_from_event_deck
+19/02/2024 12:14:48|DEBUG|[load_event] Start of load_event
+19/02/2024 12:14:48|DEBUG|[create_image] Start of create_image
+19/02/2024 12:14:48|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Repair Powder.jpg
+19/02/2024 12:14:48|DEBUG|[create_image] 	End of create_image
+19/02/2024 12:14:48|DEBUG|[load_event] End of load_event
+19/02/2024 12:14:48|DEBUG|[sort_event_deck_treeview] Start of sort_event_deck_treeview
+19/02/2024 12:14:48|DEBUG|[sort_event_deck_treeview] End of sort_event_deck_treeview
+19/02/2024 12:14:48|DEBUG|[draw_from_event_deck] End of draw_from_event_deck
+19/02/2024 12:14:49|DEBUG|[draw_from_event_deck] Start of draw_from_event_deck
+19/02/2024 12:14:49|DEBUG|[load_event] Start of load_event
+19/02/2024 12:14:49|DEBUG|[create_image] Start of create_image
+19/02/2024 12:14:49|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Blacksmith's Trial.jpg
+19/02/2024 12:14:49|DEBUG|[create_image] 	End of create_image
+19/02/2024 12:14:49|DEBUG|[load_event] End of load_event
+19/02/2024 12:14:49|DEBUG|[sort_event_deck_treeview] Start of sort_event_deck_treeview
+19/02/2024 12:14:49|DEBUG|[sort_event_deck_treeview] End of sort_event_deck_treeview
+19/02/2024 12:14:49|DEBUG|[draw_from_event_deck] End of draw_from_event_deck
+19/02/2024 12:14:50|DEBUG|[draw_from_event_deck] Start of draw_from_event_deck
+19/02/2024 12:14:50|DEBUG|[load_event] Start of load_event
+19/02/2024 12:14:50|DEBUG|[create_image] Start of create_image
+19/02/2024 12:14:50|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Obscured Knowledge.jpg
+19/02/2024 12:14:50|DEBUG|[create_image] 	End of create_image
+19/02/2024 12:14:50|DEBUG|[load_event] End of load_event
+19/02/2024 12:14:50|DEBUG|[sort_event_deck_treeview] Start of sort_event_deck_treeview
+19/02/2024 12:14:50|DEBUG|[sort_event_deck_treeview] End of sort_event_deck_treeview
+19/02/2024 12:14:50|DEBUG|[draw_from_event_deck] End of draw_from_event_deck
+19/02/2024 12:14:51|DEBUG|[draw_from_event_deck] Start of draw_from_event_deck
+19/02/2024 12:14:51|DEBUG|[load_event] Start of load_event
+19/02/2024 12:14:51|DEBUG|[create_image] Start of create_image
+19/02/2024 12:14:51|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Hearty Bonfire Ascetic.jpg
+19/02/2024 12:14:51|DEBUG|[create_image] 	End of create_image
+19/02/2024 12:14:51|DEBUG|[load_event] End of load_event
+19/02/2024 12:14:51|DEBUG|[sort_event_deck_treeview] Start of sort_event_deck_treeview
+19/02/2024 12:14:51|DEBUG|[sort_event_deck_treeview] End of sort_event_deck_treeview
+19/02/2024 12:14:51|DEBUG|[draw_from_event_deck] End of draw_from_event_deck
+19/02/2024 12:14:55|DEBUG|[load_event] Start of load_event
+19/02/2024 12:14:55|DEBUG|[create_image] Start of create_image
+19/02/2024 12:14:55|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Hearty Bonfire Ascetic.jpg
+19/02/2024 12:14:55|DEBUG|[create_image] 	End of create_image
+19/02/2024 12:14:55|DEBUG|[load_event] End of load_event
+19/02/2024 12:14:55|DEBUG|[load_event] Start of load_event
+19/02/2024 12:14:55|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 12:21:50|DEBUG|[add_card_to_campaign] Start of add_card_to_campaign
+19/02/2024 12:21:50|DEBUG|[add_card_to_campaign] End of add_card_to_campaign (nothing done)
+19/02/2024 12:21:58|DEBUG|[add_card_to_campaign] Start of add_card_to_campaign
+19/02/2024 12:21:58|DEBUG|[add_card_to_campaign] End of add_card_to_campaign
+19/02/2024 12:22:02|DEBUG|[load_campaign_card] Start of load_campaign_card
+19/02/2024 12:22:02|DEBUG|[load_event] Start of load_event
+19/02/2024 12:22:02|DEBUG|[create_image] Start of create_image
+19/02/2024 12:22:02|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Hearty Bonfire Ascetic.jpg
+19/02/2024 12:22:02|DEBUG|[create_image] 	End of create_image
+19/02/2024 12:22:02|DEBUG|[load_event] End of load_event
+19/02/2024 12:22:02|DEBUG|[load_campaign_card] End of load_campaign_card
+19/02/2024 12:22:03|DEBUG|[delete_card_from_campaign] Start of delete_card_from_campaign
+19/02/2024 12:22:03|DEBUG|[delete_card_from_campaign] End of delete_card_from_campaign
+19/02/2024 12:22:03|DEBUG|[load_campaign_card] Start of load_campaign_card
+19/02/2024 12:22:03|DEBUG|[load_campaign_card] End of load_campaign_card (not updating image)
+19/02/2024 12:23:16|DEBUG|[load_event] Start of load_event
+19/02/2024 12:23:16|DEBUG|[load_event] End of load_event (not updating image)
+19/02/2024 12:23:19|DEBUG|[load_encounter] Start of load_encounter
+19/02/2024 12:23:19|DEBUG|[load_encounter] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_encounters\Frozen Sentries4.json
+19/02/2024 12:23:19|DEBUG|[shuffle_enemies] Start of shuffle_enemies
+19/02/2024 12:23:19|DEBUG|[edit_encounter_card] Start of edit_encounter_card
+19/02/2024 12:23:19|DEBUG|[create_image] Start of create_image
+19/02/2024 12:23:19|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Frozen Sentries.jpg
+19/02/2024 12:23:19|DEBUG|[create_image] 	End of create_image
+19/02/2024 12:23:19|DEBUG|[edit_encounter_card] New enemies: [14, 14]
+19/02/2024 12:23:19|DEBUG|[edit_encounter_card] Pasting Hollow Soldier image onto encounter at (300, 323).
+19/02/2024 12:23:19|DEBUG|[edit_encounter_card] Pasting Hollow Soldier image onto encounter at (300, 352).
+19/02/2024 12:23:19|DEBUG|[apply_keyword_tooltips] Start of apply_keyword_tooltips
+19/02/2024 12:23:19|DEBUG|[create_tooltip] Start of create_tooltip
+19/02/2024 12:23:19|DEBUG|[create_tooltip] 	End of create_tooltip
+19/02/2024 12:23:19|DEBUG|[apply_keyword_tooltips] 	End of apply_keyword_tooltips
+19/02/2024 12:23:19|DEBUG|[edit_encounter_card] 	End of edit_encounter_card
+19/02/2024 12:23:19|DEBUG|[shuffle_enemies] 	End of shuffle_enemies
+19/02/2024 12:23:19|DEBUG|[load_encounter] 	End of load_encounter
+19/02/2024 12:23:21|DEBUG|[add_card_to_campaign] Start of add_card_to_campaign
+19/02/2024 12:23:21|DEBUG|[add_card_to_campaign] End of add_card_to_campaign (nothing done)
+19/02/2024 12:23:40|DEBUG|[add_card_to_campaign] Start of add_card_to_campaign
+19/02/2024 12:23:40|DEBUG|[add_card_to_campaign] End of add_card_to_campaign
+19/02/2024 12:34:01|DEBUG|[<module>] Closing application
