@@ -126,7 +126,7 @@ try:
                     "Sentinel (V1)": {"button": None, "value": tk.IntVar(), "parent": "Dark Souls The Board Game", "children": [], "displayName": "Sentinel (V1)"},
                     "Silver Knight Greatbowman (V1)": {"button": None, "value": tk.IntVar(), "parent": "Dark Souls The Board Game", "children": [], "displayName": "Silver Knight Greatbowman (V1)"},
                     "Silver Knight Swordsman (V1)": {"button": None, "value": tk.IntVar(), "parent": "Dark Souls The Board Game", "children": [], "displayName": "Silver Knight Swordsman (V1)"},
-                    "Darkroot": {"button": None, "value": tk.IntVar(), "parent": None, "children": [], "displayName": "Darkroot"},
+                    "Darkroot": {"button": None, "value": tk.IntVar(), "parent": None, "children": [], "displayName": "Darkroot (V1)"},
                     "Demonic Foliage (V1)": {"button": None, "value": tk.IntVar(), "parent": "Darkroot", "children": [], "displayName": "Demonic Foliage (V1)"},
                     "Mushroom Child (V1)": {"button": None, "value": tk.IntVar(), "parent": "Darkroot", "children": [], "displayName": "Mushroom Child (V1)"},
                     "Mushroom Parent (V1)": {"button": None, "value": tk.IntVar(), "parent": "Darkroot", "children": [], "displayName": "Mushroom Parent (V1)"},

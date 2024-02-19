@@ -159,7 +159,8 @@ class HelpWindow(object):
         self.helpTextFrame = ttk.Frame(top, padding=(0, 0, 0, 10))
         self.helpTextFrame.grid(row=0, column=0, padx=15, pady=(10, 0), sticky="w")
 
-        helpText = "Encounters Tab\n"
+        helpText = "There's a wiki on the Github page now!\n\n"
+        helpText += "Encounters Tab\n"
         helpText += "You can either select an encounter from the list or click the \"Random\n"
         helpText += "Level x\" buttons. Once an encounter card has been loaded, you can click\n"
         helpText += "on the card or use the \"s\" key to reshuffle the encounter's enemies and\n"
