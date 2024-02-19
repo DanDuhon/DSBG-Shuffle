@@ -60,9 +60,9 @@ try:
                 self.numberOfCharacters = len(self.charactersActive)
                 self.availableCoreSets = coreSets & self.availableExpansions
 
-                self.v1Expansions = {"Dark Souls The Board Game", "Darkroot", "Executioner Chariot", "Explorers", "Iron Keep"} if "v1" in self.settings["encounterTypes"] else set()
-                self.v2Expansions = (self.allExpansions - self.v1Expansions - self.level4Expansions) if "v2" in self.settings["encounterTypes"] else set()
-                self.expansionsForRandomEncounters = (self.v1Expansions | self.v2Expansions | (self.level4Expansions if "Level 4 Encounters" in self.settings["availableExpansions"] else set())) & self.allExpansions
+                self.v1Expansions = {"Dark Souls The Board Game", "Darkroot", "Executioner Chariot", "Explorers", "Iron Keep"}
+                self.v2Expansions = (self.allExpansions - self.v1Expansions - self.level4Expansions)
+                self.expansionsForRandomEncounters = ((self.v1Expansions if "v1" in self.settings["encounterTypes"] else set()) | (self.v2Expansions if "v2" in self.settings["encounterTypes"] else set()) | (self.level4Expansions if "Level 4 Encounters" in self.settings["availableExpansions"] else set())) & self.allExpansions
                 self.set_encounter_list()
 
                 root.withdraw()
@@ -1417,7 +1417,13 @@ try:
                         tvParents[encounters[e]["expansion"]] = {"exp": tvData[-1][1]}
                         x += 1
 
+                    if encounters[e]["expansion"] == "Executioner Chariot" and encounters[e]["level"] < 4 and "v1"not in self.settings["encounterTypes"]:
+                        continue
+
                     if encounters[e]["level"] == 4 and "level4" not in self.settings["encounterTypes"]:
+                        continue
+                    
+                    if encounters[e]["level"] < 4 and ["level4"] == self.settings["encounterTypes"]:
                         continue
 
                     if encounters[e]["level"] not in tvParents[encounters[e]["expansion"]]:
@@ -1659,6 +1665,11 @@ try:
                 if "level4" not in self.settings["encounterTypes"]:
                     self.fileMenu.entryconfig("Random Level 4 Encounter", state=tk.DISABLED)
 
+                if ["level4"] == self.settings["encounterTypes"]:
+                    self.fileMenu.entryconfig("Random Level 1 Encounter", state=tk.DISABLED)
+                    self.fileMenu.entryconfig("Random Level 2 Encounter", state=tk.DISABLED)
+                    self.fileMenu.entryconfig("Random Level 3 Encounter", state=tk.DISABLED)
+
                 log("End of set_bindings_buttons_menus")
             except Exception as e:
                 error_popup(root, e)
@@ -1683,6 +1694,10 @@ try:
                 self.l4 = ttk.Button(self.buttonsFrame, text="Random Level 4", width=16, command=lambda x=4: self.random_encounter(level=x))
                 if "level4" not in self.settings["encounterTypes"]:
                     self.l4["state"] = "disabled"
+                if ["level4"] == self.settings["encounterTypes"]:
+                    self.l1["state"] = "disabled"
+                    self.l2["state"] = "disabled"
+                    self.l3["state"] = "disabled"
                 self.l5 = ttk.Button(self.buttonsFrame, text="Add to Campaign", width=16, command=self.add_card_to_campaign)
                 self.buttons.add(self.l1)
                 self.buttons.add(self.l2)
@@ -1751,11 +1766,11 @@ try:
             try:
                 log("Start of keybind_call: call=" + call)
 
-                if call == "1":
+                if call == "1" and self.settings["encounterTypes"] != ["level4"]:
                     self.random_encounter(level=1)
-                elif call == "2":
+                elif call == "2" and self.settings["encounterTypes"] != ["level4"]:
                     self.random_encounter(level=2)
-                elif call == "3":
+                elif call == "3" and self.settings["encounterTypes"] != ["level4"]:
                     self.random_encounter(level=3)
                 elif call == "4" and "level4" in self.settings["encounterTypes"]:
                     self.random_encounter(level=4)
@@ -1848,6 +1863,15 @@ try:
                     self.l4["state"] = "disabled"
                 else:
                     self.l4["state"] = "enabled"
+                
+                if ["level4"] == self.settings["encounterTypes"]:
+                    self.l1["state"] = "disabled"
+                    self.l2["state"] = "disabled"
+                    self.l3["state"] = "disabled"
+                else:
+                    self.l1["state"] = "enabled"
+                    self.l2["state"] = "enabled"
+                    self.l3["state"] = "enabled"
 
                 log("End of settings_window")
             except Exception as e:
