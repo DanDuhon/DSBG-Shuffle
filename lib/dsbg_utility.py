@@ -313,5 +313,11 @@ def log(message, exception=False):
         adapter.debug(message, caller=calframe[1][3])
 
 
+def error_popup(root, e):
+    log(e, exception=True)
+    p = PopupWindow(root, "Error detected!\n\nPlease open a Github issue describing what you were doing\nand include the dsbg_shuffle_log file!  Thanks!", firstButton="Ok")
+    root.wait_window(p)
+
+
 def do_nothing(event=None):
     pass

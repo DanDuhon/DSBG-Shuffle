@@ -18,28 +18,24 @@ try:
     from dsbg_settings import SettingsWindow
     from dsbg_tooltip_reference import tooltipText
     from dsbg_treasure import generate_treasure_soul_cost, populate_treasure_tiers, pick_treasure, treasureSwapEncounters, treasures
-    from dsbg_utility import CreateToolTip, HelpWindow, PopupWindow, enable_binding, center, do_nothing, log
+    from dsbg_utility import CreateToolTip, HelpWindow, PopupWindow, enable_binding, center, do_nothing, log, error_popup
 
 
-    try:
-        if platform.system() == "Windows":
-            pathSep = "\\"
-        else:
-            pathSep = "/"
+    if platform.system() == "Windows":
+        pathSep = "\\"
+    else:
+        pathSep = "/"
 
-        baseFolder = path.dirname(__file__).replace("\\lib".replace("\\", pathSep), "")
-        if platform.system() == "Windows":
-            font = ImageFont.truetype(baseFolder + "\\lib\\Adobe Caslon Pro Semibold.ttf", 12)
-        else:
-            font = ImageFont.truetype("./Adobe Caslon Pro Semibold.ttf", 12)
+    baseFolder = path.dirname(__file__).replace("\\lib".replace("\\", pathSep), "")
+    if platform.system() == "Windows":
+        font = ImageFont.truetype(baseFolder + "\\lib\\Adobe Caslon Pro Semibold.ttf", 12)
+    else:
+        font = ImageFont.truetype("./Adobe Caslon Pro Semibold.ttf", 12)
 
-        allEnemies = {enemy: {} for enemy in enemiesDict}
+    allEnemies = {enemy: {} for enemy in enemiesDict}
 
-        with open(baseFolder + "\\lib\\dsbg_shuffle_encounters.json".replace("\\", pathSep)) as encountersFile:
-            encounters = load(encountersFile)
-    except Exception as e:
-        log(e, exception=True)
-        raise
+    with open(baseFolder + "\\lib\\dsbg_shuffle_encounters.json".replace("\\", pathSep)) as encountersFile:
+        encounters = load(encountersFile)
 
 
     class Application(ttk.Frame):
@@ -55,6 +51,7 @@ try:
 
                 self.selected = None
                 self.allExpansions = set([encounters[encounter]["expansion"] for encounter in encounters])
+                self.level4Expansions = set([encounters[encounter]["expansion"] for encounter in encounters if encounters[encounter]["level"] == 4])
                 self.availableExpansions = set(self.settings["availableExpansions"])
                 self.enabledEnemies = set([enemiesDict[enemy.replace(" (V1)", "")].id for enemy in self.settings["enabledEnemies"] if enemy not in self.allExpansions])
                 if "Phantoms" in self.availableExpansions:
@@ -63,9 +60,9 @@ try:
                 self.numberOfCharacters = len(self.charactersActive)
                 self.availableCoreSets = coreSets & self.availableExpansions
 
-                self.v1Expansions = {"Dark Souls The Board Game", "Darkroot", "Executioner Chariot", "Explorers", "Iron Keep"} if "v1" in self.settings["randomEncounterTypes"] else set()
-                self.v2Expansions = (self.allExpansions - self.v1Expansions) if "v2" in self.settings["randomEncounterTypes"] else set()
-                self.expansionsForRandomEncounters = (self.v1Expansions | self.v2Expansions) & self.allExpansions
+                self.v1Expansions = {"Dark Souls The Board Game", "Darkroot", "Executioner Chariot", "Explorers", "Iron Keep"} if "v1" in self.settings["encounterTypes"] else set()
+                self.v2Expansions = (self.allExpansions - self.v1Expansions - self.level4Expansions) if "v2" in self.settings["encounterTypes"] else set()
+                self.expansionsForRandomEncounters = (self.v1Expansions | self.v2Expansions | (self.level4Expansions if "Level 4 Encounters" in self.settings["availableExpansions"] else set())) & self.allExpansions
                 self.set_encounter_list()
 
                 root.withdraw()
@@ -394,7 +391,7 @@ try:
                 self.newTiles = dict()
                 self.rewardTreasure = None
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -484,7 +481,7 @@ try:
 
                 log("End of add_card_to_campaign")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -521,7 +518,7 @@ try:
 
                 log("End of add_boss_to_campaign")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -551,7 +548,7 @@ try:
 
                 log("End of delete_card_from_campaign")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -575,7 +572,7 @@ try:
 
                 log("End of save_campaign (saved to " + str(campaignFile) + ")")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -628,7 +625,7 @@ try:
 
                 log("End of load_campaign (loaded from " + str(campaignFile) + ")")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -646,7 +643,7 @@ try:
 
                 log("End of move_up")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -664,7 +661,7 @@ try:
 
                 log("End of move_down")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -721,7 +718,7 @@ try:
 
                 log("End of load_campaign_card")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -752,7 +749,7 @@ try:
 
                 log("End of save_event_deck (saved to " + str(deckFile) + ")")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -810,7 +807,7 @@ try:
 
                 log("End of load_event_deck (loaded from " + str(deckFile) + ")")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -827,7 +824,7 @@ try:
 
                 log("End of sort_event_deck_treeview")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -864,7 +861,7 @@ try:
 
                 log("End of add_event_to_deck")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -902,7 +899,7 @@ try:
 
                 log("End of delete_event_from_deck")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -933,7 +930,7 @@ try:
 
                 log("End of reset_event_deck")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -962,7 +959,7 @@ try:
 
                 log("End of draw_from_event_deck")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -1005,7 +1002,7 @@ try:
 
                 log("End of return_event_card_to_deck")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -1047,7 +1044,7 @@ try:
 
                 log("End of return_event_card_to_bottom")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
         def return_event_card_to_top(self, event=None):
@@ -1088,7 +1085,7 @@ try:
 
                 log("End of return_event_card_to_top")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -1244,7 +1241,7 @@ try:
 
                 log("End of print_encounters")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -1258,26 +1255,16 @@ try:
 
                 # Set the list of encounters based on available expansions.
                 self.encounterList = [encounter for encounter in encounters if (
-                    (
-                        (self.availableExpansions & {"Phantoms",}
-                            or encounter not in encountersWithInvaders)
-                        and any([frozenset(expCombo).issubset(self.availableExpansions) for expCombo in encounters[encounter]["expansionCombos"]])
-                    )
-                    )]
-
-                # These are for the bigger encounters.
-                for encounter in encounters:
-                    if type(encounters[encounter]["expansionCombos"]) == dict:
-                        if all([
-                            any([frozenset(expCombo).issubset(self.availableExpansions) for expCombo in encounters[encounter]["expansionCombos"]["1"]]),
-                            any([frozenset(expCombo).issubset(self.availableExpansions) for expCombo in encounters[encounter]["expansionCombos"]["2"]]),
-                            True if "3" not in encounters[encounter]["expansionCombos"] else any([frozenset(expCombo).issubset(self.availableExpansions) for expCombo in encounters[encounter]["expansionCombos"]["3"]])
-                            ]):
-                            self.encounterList.append(encounter)
+                    all([
+                        any([frozenset(expCombo).issubset(self.availableExpansions) for expCombo in encounters[encounter]["expansionCombos"]["1"]]),
+                        any([frozenset(expCombo).issubset(self.availableExpansions) for expCombo in encounters[encounter]["expansionCombos"]["2"]]),
+                        True if "3" not in encounters[encounter]["expansionCombos"] else any([frozenset(expCombo).issubset(self.availableExpansions) for expCombo in encounters[encounter]["expansionCombos"]["3"]]),
+                        encounters[encounter]["expansion"] in ((self.v1Expansions if "v1" in self.settings["encounterTypes"] else set()) | (self.v2Expansions if "v2" in self.settings["encounterTypes"] else set()) | (self.level4Expansions if "level4" in self.settings["encounterTypes"] else set()))
+                            ]))]
 
                 log("End of set_encounter_list")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -1379,7 +1366,7 @@ try:
 
                 log("End of create_tabs")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -1430,6 +1417,9 @@ try:
                         tvParents[encounters[e]["expansion"]] = {"exp": tvData[-1][1]}
                         x += 1
 
+                    if encounters[e]["level"] == 4 and "level4" not in self.settings["encounterTypes"]:
+                        continue
+
                     if encounters[e]["level"] not in tvParents[encounters[e]["expansion"]]:
                         tvData.append((tvParents[encounters[e]["expansion"]]["exp"], x, "Level " + str(encounters[e]["level"]), False))
                         tvParents[encounters[e]["expansion"]][encounters[e]["level"]] = tvData[-1][1]
@@ -1448,7 +1438,7 @@ try:
 
                 log("End of create_encounters_treeview")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -1483,7 +1473,7 @@ try:
 
                 log("End of create_campaign_treeview")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -1547,7 +1537,7 @@ try:
 
                 log("End of create_event_treeviews")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -1596,7 +1586,7 @@ try:
 
                 log("End of load_event")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -1622,7 +1612,7 @@ try:
 
                 log("End of create_encounter_frame")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -1666,9 +1656,12 @@ try:
                     self.fileMenu.entryconfig("Shuffle Enemies", state=tk.DISABLED)
                     self.fileMenu.entryconfig("Add to Campaign", state=tk.DISABLED)
 
+                if "level4" not in self.settings["encounterTypes"]:
+                    self.fileMenu.entryconfig("Random Level 4 Encounter", state=tk.DISABLED)
+
                 log("End of set_bindings_buttons_menus")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -1688,6 +1681,8 @@ try:
                 self.l2 = ttk.Button(self.buttonsFrame, text="Random Level 2", width=16, command=lambda x=2: self.random_encounter(level=x))
                 self.l3 = ttk.Button(self.buttonsFrame, text="Random Level 3", width=16, command=lambda x=3: self.random_encounter(level=x))
                 self.l4 = ttk.Button(self.buttonsFrame, text="Random Level 4", width=16, command=lambda x=4: self.random_encounter(level=x))
+                if "level4" not in self.settings["encounterTypes"]:
+                    self.l4["state"] = "disabled"
                 self.l5 = ttk.Button(self.buttonsFrame, text="Add to Campaign", width=16, command=self.add_card_to_campaign)
                 self.buttons.add(self.l1)
                 self.buttons.add(self.l2)
@@ -1702,7 +1697,7 @@ try:
 
                 log("End of create_buttons")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -1737,13 +1732,13 @@ try:
 
                 log("End of create_menu")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
         def keybind_call(self, call, event=None):
             """
-            Keyboard shortcut for creating a new set of word bingo cards.
+            Keyboard shortcuts.
 
             Required Parameters:
                 call: String
@@ -1762,7 +1757,7 @@ try:
                     self.random_encounter(level=2)
                 elif call == "3":
                     self.random_encounter(level=3)
-                elif call == "4":
+                elif call == "4" and "level4" in self.settings["encounterTypes"]:
                     self.random_encounter(level=4)
                 elif call == "s":
                     self.shuffle_enemies()
@@ -1773,7 +1768,7 @@ try:
 
                 log("End of keybind_call")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -1806,7 +1801,7 @@ try:
                     self.treeviewEncounters.destroy()
                     self.availableExpansions = set(self.settings["availableExpansions"])
                     self.availableCoreSets = coreSets & self.availableExpansions
-                    self.expansionsForRandomEncounters = self.allExpansions & (self.v1Expansions if "v1" in self.settings["randomEncounterTypes"] else set() | self.v2Expansions if "v2" in self.settings["randomEncounterTypes"] else set())
+                    self.expansionsForRandomEncounters = self.allExpansions & ((self.v1Expansions if "v1" in self.settings["encounterTypes"] else set()) | (self.v2Expansions if "v2" in self.settings["encounterTypes"] else set()))
                     self.charactersActive = set(self.settings["charactersActive"])
                     self.numberOfCharacters = len(self.charactersActive)
                     self.set_encounter_list()
@@ -1823,6 +1818,10 @@ try:
                     
                         if oldCustomEnemyList != self.settings["customEnemyList"] and self.settings["customEnemyList"]:
                             progress.label.config(text = "Applying custom enemy list...")
+
+                            self.enabledEnemies = set([enemiesDict[enemy.replace(" (V1)", "")].id for enemy in self.settings["enabledEnemies"] if enemy not in self.allExpansions])
+                            if "Phantoms" in self.availableExpansions:
+                                self.enabledEnemies = self.enabledEnemies.union(set([enemy for enemy in enemyIds if "Phantoms" in enemyIds[enemy].expansions]))
 
                             encountersToRemove = set()
                             for encounter in self.encounterList:
@@ -1844,10 +1843,15 @@ try:
                         progress.destroy()
 
                 self.set_bindings_buttons_menus(True)
+                
+                if "level4" not in self.settings["encounterTypes"]:
+                    self.l4["state"] = "disabled"
+                else:
+                    self.l4["state"] = "enabled"
 
                 log("End of settings_window")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -1865,7 +1869,7 @@ try:
 
                 log("End of settings_window")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -1978,7 +1982,7 @@ try:
 
                 return image
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -2005,7 +2009,7 @@ try:
 
                 log("\tEnd of random_encounter")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -2089,7 +2093,7 @@ try:
 
                 log("\tEnd of load_encounter")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -2139,7 +2143,7 @@ try:
 
                 log("\tEnd of shuffle_enemies")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -2328,7 +2332,7 @@ try:
 
                 log("\tEnd of edit_encounter_card")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -2350,7 +2354,7 @@ try:
 
                 log("\tEnd of create_tooltip")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -2376,7 +2380,7 @@ try:
 
                 log("\tEnd of apply_keyword_tooltips")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -2410,7 +2414,7 @@ try:
 
                 log("\tEnd of abandoned_and_forgotten")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -2426,7 +2430,7 @@ try:
 
                 log("\tEnd of aged_sentinel")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -2448,7 +2452,7 @@ try:
 
                 log("\tEnd of castle_break_in")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -2462,7 +2466,7 @@ try:
 
                 log("\tEnd of central_plaza")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -2476,7 +2480,7 @@ try:
 
                 log("\tEnd of cloak_and_feathers")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -2490,7 +2494,7 @@ try:
 
                 log("\tEnd of cold_snap")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -2504,7 +2508,7 @@ try:
 
                 log("\tEnd of corrupted_hovel")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -2534,7 +2538,7 @@ try:
 
                 log("\tEnd of corvian_host")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -2548,7 +2552,7 @@ try:
 
                 log("\tEnd of dark_alleyway")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -2569,7 +2573,7 @@ try:
 
                 log("\tEnd of dark_resurrection")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -2586,7 +2590,7 @@ try:
 
                 log("\tEnd of deathly_freeze")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -2601,7 +2605,7 @@ try:
 
                 log("\tEnd of deathly_magic")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -2627,7 +2631,7 @@ try:
 
                 log("\tEnd of deathly_tolls")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -2649,7 +2653,7 @@ try:
 
                 log("\tEnd of depths_of_the_cathedral")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -2674,7 +2678,7 @@ try:
 
                 log("\tEnd of distant_tower")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -2710,7 +2714,7 @@ try:
 
                 log("\tEnd of eye_of_the_storm")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -2743,7 +2747,7 @@ try:
 
                 log("\tEnd of flooded_fortress")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -2770,7 +2774,7 @@ try:
 
                 log("\tEnd of frozen_revolutions")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -2799,7 +2803,7 @@ try:
 
                 log("\tEnd of giants_coffin")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -2819,7 +2823,7 @@ try:
 
                 log("\tEnd of gleaming_silver")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -2841,7 +2845,7 @@ try:
 
                 log("\tEnd of gnashing_beaks")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -2862,7 +2866,7 @@ try:
 
                 log("\tEnd of grave_matters")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -2877,7 +2881,7 @@ try:
 
                 log("\tEnd of grim_reunion")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -2899,7 +2903,7 @@ try:
 
                 log("\tEnd of hanging_rafters")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -2928,7 +2932,7 @@ try:
 
                 log("\tEnd of in_deep_water")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -2949,7 +2953,7 @@ try:
 
                 log("\tEnd of inhospitable_ground")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -2969,7 +2973,7 @@ try:
 
                 log("\tEnd of lakeview_refuge")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -2995,7 +2999,7 @@ try:
 
                 log("\tEnd of monstrous_maw")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -3020,7 +3024,7 @@ try:
 
                 log("\tEnd of no_safe_haven")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -3041,7 +3045,7 @@ try:
 
                 log("\tEnd of painted_passage")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -3055,7 +3059,7 @@ try:
 
                 log("\tEnd of parish_church")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -3077,7 +3081,7 @@ try:
 
                 log("\tEnd of parish_gates")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -3096,7 +3100,7 @@ try:
 
                 log("\tEnd of pitch_black")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -3124,7 +3128,7 @@ try:
 
                 log("\tEnd of puppet_master")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -3145,7 +3149,7 @@ try:
 
                 log("\tEnd of rain_of_filth")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -3171,7 +3175,7 @@ try:
 
                 log("\tEnd of shattered_keep")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -3187,7 +3191,7 @@ try:
 
                 log("\tEnd of skeletal_spokes")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -3213,7 +3217,7 @@ try:
 
                 log("\tEnd of skeleton_overlord")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -3229,7 +3233,7 @@ try:
 
                 log("\tEnd of tempting_maw")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -3258,7 +3262,7 @@ try:
 
                 log("\tEnd of the_abandoned_chest")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -3284,7 +3288,7 @@ try:
 
                 log("\tEnd of the_beast_from_the_depths")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -3302,7 +3306,7 @@ try:
 
                 log("\tEnd of the_bell_tower")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -3321,7 +3325,7 @@ try:
 
                 log("\tEnd of the_first_bastion")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -3343,7 +3347,7 @@ try:
 
                 log("\tEnd of the_fountainhead")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -3357,7 +3361,7 @@ try:
 
                 log("\tEnd of the_grand_hall")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -3384,7 +3388,7 @@ try:
 
                 log("\tEnd of the_iron_golem")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -3400,7 +3404,7 @@ try:
 
                 log("\tEnd of the_last_bastion")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -3426,7 +3430,7 @@ try:
 
                 log("\tEnd of the_locked_grave")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -3447,7 +3451,7 @@ try:
 
                 log("\tEnd of the_shine_of_gold")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -3475,7 +3479,7 @@ try:
 
                 log("\tEnd of the_skeleton_ball")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -3493,7 +3497,7 @@ try:
 
                 log("\tEnd of trecherous_tower")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -3521,7 +3525,7 @@ try:
 
                 log("\tEnd of trophy_room")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -3543,7 +3547,7 @@ try:
 
                 log("\tEnd of twilight_falls")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -3576,7 +3580,7 @@ try:
 
                 log("\tEnd of undead_sanctum")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
         def unseen_scurrying(self):
@@ -3596,7 +3600,7 @@ try:
 
                 log("\tEnd of unseen_scurrying")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -3617,7 +3621,7 @@ try:
 
                 log("\tEnd of urns_of_the_fallen")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 
@@ -3644,7 +3648,7 @@ try:
 
                 log("\tEnd of velkas_chosen")
             except Exception as e:
-                log(e, exception=True)
+                error_popup(root, e)
                 raise
 
 

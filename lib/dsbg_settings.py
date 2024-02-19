@@ -6,8 +6,7 @@ try:
     from json import load, dump
 
     from dsbg_characters import soulCost
-    from dsbg_treasure import generate_treasure_soul_cost, populate_treasure_tiers, treasures
-    from dsbg_utility import VerticalScrolledFrame, PopupWindow, CreateToolTip, center, log
+    from dsbg_utility import VerticalScrolledFrame, CreateToolTip, center, log
 
 
     if platform.system() == "Windows":
@@ -21,7 +20,7 @@ try:
     class SettingsWindow(object):
         """
         Window in which the user selects which expansions they own and whether they want to see
-        V1, V1, or both styles of encounters when being shown random encounters.
+        V1, V1, or both styles of encounters when being shown encounters.
         """
         def __init__(self, root, coreSets):
             try:
@@ -46,7 +45,7 @@ try:
                 self.create_enemies_tab()
                 self.create_characters_pane(top)
                 self.create_treasure_swap_pane(top)
-                self.create_random_encounters_pane(top)
+                self.create_shown_encounters_pane(top)
                 self.create_update_check_pane(top)
                 self.create_buttons(top)
 
@@ -129,7 +128,7 @@ try:
                     "Silver Knight Swordsman (V1)": {"button": None, "value": tk.IntVar(), "parent": "Dark Souls The Board Game", "children": [], "displayName": "Silver Knight Swordsman (V1)"},
                     "Darkroot": {"button": None, "value": tk.IntVar(), "parent": None, "children": [], "displayName": "Darkroot"},
                     "Demonic Foliage (V1)": {"button": None, "value": tk.IntVar(), "parent": "Darkroot", "children": [], "displayName": "Demonic Foliage (V1)"},
-                    "Mushroom Child (V1)": {"button": None, "value": tk.IntVar(), "parent": "Darkroot", "children": [], "displayName": "Mushroom Parent (V1)"},
+                    "Mushroom Child (V1)": {"button": None, "value": tk.IntVar(), "parent": "Darkroot", "children": [], "displayName": "Mushroom Child (V1)"},
                     "Mushroom Parent (V1)": {"button": None, "value": tk.IntVar(), "parent": "Darkroot", "children": [], "displayName": "Mushroom Parent (V1)"},
                     "Plow Scarecrow (V1)": {"button": None, "value": tk.IntVar(), "parent": "Darkroot", "children": [], "displayName": "Plow Scarecrow (V1)"},
                     "Shears Scarecrow (V1)": {"button": None, "value": tk.IntVar(), "parent": "Darkroot", "children": [], "displayName": "Shears Scarecrow (V1)"},
@@ -227,25 +226,29 @@ try:
                 raise
 
 
-        def create_random_encounters_pane(self, parent):
+        def create_shown_encounters_pane(self, parent):
             try:
-                log("Start of create_random_encounters_pane")
+                log("Start of create_shown_encounters_pane")
 
-                self.randomEncounters = {
+                self.shownEncounters = {
                     "v1": {"button": None, "value": tk.IntVar()},
-                    "v2": {"button": None, "value": tk.IntVar()}
+                    "v2": {"button": None, "value": tk.IntVar()},
+                    "level4": {"button": None, "value": tk.IntVar()}
                 }
 
-                self.randomEncounterFrame = ttk.LabelFrame(parent, text="Random Encounters Shown", padding=(20, 10))
-                self.randomEncounterFrame.grid(row=1, column=5, padx=(20, 10), pady=(20, 10), sticky="nsew")
-                self.randomEncounters["v1"]["value"].set(1 if "v1" in self.settings["randomEncounterTypes"] else 0)
-                self.randomEncounters["v2"]["value"].set(1 if "v2" in self.settings["randomEncounterTypes"] else 0)
-                self.randomEncounters["v1"]["button"] = ttk.Checkbutton(self.randomEncounterFrame, text="V1 Encounters", variable=self.randomEncounters["v1"]["value"])
-                self.randomEncounters["v2"]["button"] = ttk.Checkbutton(self.randomEncounterFrame, text="V2 Encounters", variable=self.randomEncounters["v2"]["value"])
-                self.randomEncounters["v1"]["button"].grid(row=0, column=0, padx=5, pady=10, sticky="nsew")
-                self.randomEncounters["v2"]["button"].grid(row=1, column=0, padx=5, pady=10, sticky="nsew")
+                self.shownEncounterFrame = ttk.LabelFrame(parent, text="Encounters Shown", padding=(20, 10))
+                self.shownEncounterFrame.grid(row=1, column=5, padx=(20, 10), pady=(20, 10), sticky="nsew")
+                self.shownEncounters["v1"]["value"].set(1 if "v1" in self.settings["encounterTypes"] else 0)
+                self.shownEncounters["v2"]["value"].set(1 if "v2" in self.settings["encounterTypes"] else 0)
+                self.shownEncounters["level4"]["value"].set(1 if "level4" in self.settings["encounterTypes"] else 0)
+                self.shownEncounters["v1"]["button"] = ttk.Checkbutton(self.shownEncounterFrame, text="V1 Encounters", variable=self.shownEncounters["v1"]["value"])
+                self.shownEncounters["v2"]["button"] = ttk.Checkbutton(self.shownEncounterFrame, text="V2 Encounters", variable=self.shownEncounters["v2"]["value"])
+                self.shownEncounters["level4"]["button"] = ttk.Checkbutton(self.shownEncounterFrame, text="Level 4 Encounters", variable=self.shownEncounters["level4"]["value"])
+                self.shownEncounters["v1"]["button"].grid(row=0, column=0, padx=5, pady=10, sticky="nsew")
+                self.shownEncounters["v2"]["button"].grid(row=1, column=0, padx=5, pady=10, sticky="nsew")
+                self.shownEncounters["level4"]["button"].grid(row=2, column=0, padx=5, pady=10, sticky="nsew")
 
-                log("End of create_random_encounters_pane")
+                log("End of create_shown_encounters_pane")
             except Exception as e:
                 log(e, exception=True)
                 raise
@@ -329,7 +332,7 @@ try:
             try:
                 log("Start of toggle_expansion")
 
-                if expansion in {"Characters Expansion", "Phantoms"}:
+                if expansion in {"Characters Expansion", "Phantoms", "Level 4 Encounters"}:
                     log("End of toggle_expansion (Characters expansion, nothing to do)")
                     return
 
@@ -411,8 +414,8 @@ try:
                     log("End of quit_with_save")
                     return
 
-                if all([self.randomEncounters[i]["value"].get() == 0 for i in self.randomEncounters]):
-                    self.errLabel.config(text="You need to check at least one box in the \"Random Encounters Shown\" section!")
+                if all([self.shownEncounters[i]["value"].get() == 0 for i in self.shownEncounters]):
+                    self.errLabel.config(text="You need to check at least one box in the \"Encounters Shown\" section!")
                     log("End of quit_with_save")
                     return
 
@@ -439,7 +442,7 @@ try:
                 else:
                     customEnemyList = []
 
-                randomEncounterTypes = set([s for s in self.randomEncounters if self.randomEncounters[s]["value"].get() == 1])
+                encounterTypes = set([s for s in self.shownEncounters if self.shownEncounters[s]["value"].get() == 1])
                 charactersActive = set([s for s in self.charactersActive if self.charactersActive[s]["value"].get() == 1])
 
                 newSettings = {
@@ -447,7 +450,7 @@ try:
                     "availableExpansions": list(expansionsActive),
                     "enabledEnemies": list(enabledEnemies),
                     "customEnemyList": customEnemyList,
-                    "randomEncounterTypes": list(randomEncounterTypes),
+                    "encounterTypes": list(encounterTypes),
                     "charactersActive": list(charactersActive),
                     "treasureSwapOption": self.treasureSwapOption.get(),
                     "updateCheck": "on" if self.updateCheck["value"].get() == 1 else "off"
