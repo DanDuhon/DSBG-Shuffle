@@ -50,7 +50,7 @@ try:
                     root.tk.call("set_theme", "light")
 
                 self.selected = None
-                self.allExpansions = set([encounters[encounter]["expansion"] for encounter in encounters])
+                self.allExpansions = set([encounters[encounter]["expansion"] for encounter in encounters]) | set(["Phantoms"])
                 self.level4Expansions = set([encounters[encounter]["expansion"] for encounter in encounters if encounters[encounter]["level"] == 4])
                 self.availableExpansions = set(self.settings["availableExpansions"])
                 self.enabledEnemies = set([enemiesDict[enemy.replace(" (V1)", "")].id for enemy in self.settings["enabledEnemies"] if enemy not in self.allExpansions])

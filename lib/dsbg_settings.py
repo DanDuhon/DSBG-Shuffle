@@ -140,12 +140,27 @@ try:
                     "Falchion Skeleton (V1)": {"button": None, "value": tk.IntVar(), "parent": "Executioner Chariot", "children": [], "displayName": "Falchion Skeleton (V1)"},
                     "Explorers": {"button": None, "value": tk.IntVar(), "parent": None, "children": [], "displayName": "Explorers (V1)"},
                     "Firebomb Hollow (V1)": {"button": None, "value": tk.IntVar(), "parent": "Explorers", "children": [], "displayName": "Firebomb Hollow (V1)"},
+                    "Hungry Mimic (V1)": {"button": None, "value": tk.IntVar(), "parent": "Explorers", "children": [], "displayName": "Hungry Mimic (V1)"},
+                    "Voracious Mimic (V1)": {"button": None, "value": tk.IntVar(), "parent": "Explorers", "children": [], "displayName": "Voracious Mimic (V1)"},
                     "Silver Knight Spearman (V1)": {"button": None, "value": tk.IntVar(), "parent": "Explorers", "children": [], "displayName": "Silver Knight Spearman (V1)"},
                     "Iron Keep": {"button": None, "value": tk.IntVar(), "parent": None, "children": [], "displayName": "Iron Keep (V1)"},
                     "Alonne Bow Knight (V1)": {"button": None, "value": tk.IntVar(), "parent": "Iron Keep", "children": [], "displayName": "Alonne Bow Knight (V1)"},
                     "Alonne Knight Captain (V1)": {"button": None, "value": tk.IntVar(), "parent": "Iron Keep", "children": [], "displayName": "Alonne Knight Captain (V1)"},
                     "Alonne Sword Knight (V1)": {"button": None, "value": tk.IntVar(), "parent": "Iron Keep", "children": [], "displayName": "Alonne Sword Knight (V1)"},
-                    "Ironclad Soldier (V1)": {"button": None, "value": tk.IntVar(), "parent": "Iron Keep", "children": [], "displayName": "Ironclad Soldier (V1)"}
+                    "Ironclad Soldier (V1)": {"button": None, "value": tk.IntVar(), "parent": "Iron Keep", "children": [], "displayName": "Ironclad Soldier (V1)"},
+                    "Phantoms": {"button": None, "value": tk.IntVar(), "parent": None, "children": [], "displayName": "Phantoms (V1)"},
+                    "Armorer Dennis (V1)": {"button": None, "value": tk.IntVar(), "parent": "Phantoms", "children": [], "displayName": "Armorer Dennis (V1)"},
+                    "Fencer Sharron (V1)": {"button": None, "value": tk.IntVar(), "parent": "Phantoms", "children": [], "displayName": "Fencer Sharron (V1)"},
+                    "Invader Brylex (V1)": {"button": None, "value": tk.IntVar(), "parent": "Phantoms", "children": [], "displayName": "Invader Brylex (V1)"},
+                    "Kirk, Knight of Thorns (V1)": {"button": None, "value": tk.IntVar(), "parent": "Phantoms", "children": [], "displayName": "Kirk, Knight of Thorns (V1)"},
+                    "Longfinger Kirk (V1)": {"button": None, "value": tk.IntVar(), "parent": "Phantoms", "children": [], "displayName": "Longfinger Kirk (V1)"},
+                    "Maldron the Assassin (V1)": {"button": None, "value": tk.IntVar(), "parent": "Phantoms", "children": [], "displayName": "Maldron the Assassin (V1)"},
+                    "Maneater Mildred (V1)": {"button": None, "value": tk.IntVar(), "parent": "Phantoms", "children": [], "displayName": "Maneater Mildred (V1)"},
+                    "Marvelous Chester (V1)": {"button": None, "value": tk.IntVar(), "parent": "Phantoms", "children": [], "displayName": "Marvelous Chester (V1)"},
+                    "Melinda the Butcher (V1)": {"button": None, "value": tk.IntVar(), "parent": "Phantoms", "children": [], "displayName": "Melinda the Butcher (V1)"},
+                    "Oliver the Collector (V1)": {"button": None, "value": tk.IntVar(), "parent": "Phantoms", "children": [], "displayName": "Oliver the Collector (V1)"},
+                    "Paladin Leeroy (V1)": {"button": None, "value": tk.IntVar(), "parent": "Phantoms", "children": [], "displayName": "Paladin Leeroy (V1)"},
+                    "Xanthous King Jeremiah (V1)": {"button": None, "value": tk.IntVar(), "parent": "Phantoms", "children": [], "displayName": "Xanthous King Jeremiah (V1)"},
                 }
 
                 self.enemiesTab = VerticalScrolledFrame(self.notebook)
@@ -190,7 +205,7 @@ try:
                 }
 
                 self.characterFrame = ttk.LabelFrame(parent, text="Characters Being Played (up to 4)", padding=(20, 10))
-                self.characterFrame.grid(row=0, column=3, padx=(20, 10), pady=(20, 10), sticky="nsew", rowspan=3, columnspan=2)
+                self.characterFrame.grid(row=0, column=3, padx=(20, 10), pady=(20, 10), sticky="nsew", rowspan=3)
                 for i, character in enumerate(self.charactersActive):
                     self.charactersActive[character]["value"].set(1 if character in self.settings["charactersActive"] else 0)
                     self.charactersActive[character]["button"] = ttk.Checkbutton(self.characterFrame, text=character, variable=self.charactersActive[character]["value"], command=self.check_max_characters)
@@ -206,18 +221,16 @@ try:
             try:
                 log("Start of create_invaders_pane")
 
-                self.invaders = {"button": None, "value": tk.IntVar(), "tooltipText": "If enabled, invaders can take the place of enemies."}
                 self.invadersFrame = ttk.LabelFrame(parent, text="Include Invaders", padding=(20, 10))
-                self.invadersFrame.grid(row=3, column=3, padx=(20, 10), pady=(20, 10), sticky="nsew", columnspan=2)
-                self.invaders["value"].set(1 if "on" in self.settings["invadersEnabled"] else 0)
-                self.invaders["button"] = ttk.Checkbutton(self.invadersFrame, text="Enable Invaders", variable=self.invaders["value"])
-                self.invaders["button"].grid(row=0, column=0, padx=5, pady=10, sticky="nsew", columnspan=2)
-                CreateToolTip(self.invaders["button"], self.invaders["tooltipText"])
+                self.invadersFrame.grid(row=0, column=4, padx=(20, 10), pady=(20, 10), sticky="nsew")
+                self.invadersLabel = ttk.Label(self.invadersFrame, text="Max invaders allowed", justify="center", font=("-size", 12))
+                self.invadersLabel.grid(row=0, column=0, padx=5, pady=10, sticky="nsew")
                 
-                self.maxInvaders = tk.IntVar()
-                self.maxInvaders.set(self.settings["maxInvaders"])
-                self.invadersScale = ttk.LabeledScale(self.invadersFrame, from_=0, to=14, variable=self.maxInvaders)
-                self.invadersScale.grid(row=1, column=0, padx=(20, 10), pady=(20, 0), sticky="ew")
+                self.maxInvaders = {"scale": None, "value": tk.IntVar(), "tooltipText": "This many invaders can take the place of enemies."}
+                self.maxInvaders["value"].set(self.settings["maxInvaders"])
+                self.maxInvaders["scale"] = ttk.LabeledScale(self.invadersFrame, from_=0, to=14, variable=self.maxInvaders["value"])
+                self.maxInvaders["scale"].grid(row=1, column=0, padx=5, pady=10, sticky="nsew")
+                CreateToolTip(self.invadersLabel, self.maxInvaders["tooltipText"])
 
                 log("End of create_invaders_pane")
             except Exception as e:
@@ -238,7 +251,7 @@ try:
 
                 self.treasureSwapOption = tk.StringVar(value=self.settings["treasureSwapOption"])
                 self.treasureSwapFrame = ttk.LabelFrame(parent, text="Treasure Swap Options", padding=(20, 10))
-                self.treasureSwapFrame.grid(row=0, column=5, padx=(20, 10), pady=(20, 10), sticky="nsew")
+                self.treasureSwapFrame.grid(row=1, column=4, padx=(20, 10), pady=(20, 10), sticky="nsew", rowspan=2)
                 for i, option in enumerate(self.treasureSwapOptions):
                     self.treasureSwapOptions[option]["button"] = ttk.Radiobutton(self.treasureSwapFrame, text=option, variable=self.treasureSwapOption, value=option)
                     self.treasureSwapOptions[option]["button"].grid(row=i, column=0, padx=5, pady=10, sticky="nsew")
@@ -261,7 +274,7 @@ try:
                 }
 
                 self.shownEncounterFrame = ttk.LabelFrame(parent, text="Encounters Shown", padding=(20, 10))
-                self.shownEncounterFrame.grid(row=1, column=5, padx=(20, 10), pady=(20, 10), sticky="nsew")
+                self.shownEncounterFrame.grid(row=0, column=5, padx=(20, 10), pady=(20, 10), sticky="nsew")
                 self.shownEncounters["v1"]["value"].set(1 if "v1" in self.settings["encounterTypes"] else 0)
                 self.shownEncounters["v2"]["value"].set(1 if "v2" in self.settings["encounterTypes"] else 0)
                 self.shownEncounters["level4"]["value"].set(1 if "level4" in self.settings["encounterTypes"] else 0)
@@ -284,7 +297,7 @@ try:
 
                 self.updateCheck = {"button": None, "value": tk.IntVar(), "tooltipText": "If enabled, makes an API call to Github once a month when the app is opened to check for a new version.\n\nThe app won't download anything or update itself but will let you know if there's a new version."}
                 self.updateCheckFrame = ttk.LabelFrame(parent, text="Check For Updates", padding=(20, 10))
-                self.updateCheckFrame.grid(row=3, column=5, padx=(20, 10), pady=(20, 10), sticky="nsew")
+                self.updateCheckFrame.grid(row=1, column=5, padx=(20, 10), pady=(20, 10), sticky="nsew", rowspan=2)
                 self.updateCheck["value"].set(1 if "on" in self.settings["updateCheck"] else 0)
                 self.updateCheck["button"] = ttk.Checkbutton(self.updateCheckFrame, text="Check for updates", variable=self.updateCheck["value"])
                 self.updateCheck["button"].grid(row=0, column=0, padx=5, pady=10, sticky="nsew")
@@ -356,8 +369,8 @@ try:
             try:
                 log("Start of toggle_expansion")
 
-                if expansion in {"Characters Expansion", "Phantoms", "Level 4 Encounters"}:
-                    log("End of toggle_expansion (Characters expansion, nothing to do)")
+                if expansion in {"Characters Expansion", "Level 4 Encounters"}:
+                    log("End of toggle_expansion (Characters Expansion or Level 4 Encounters, nothing to do)")
                     return
 
                 self.enemies[expansion]["value"].set(self.expansions[expansion]["value"].get())
@@ -478,8 +491,7 @@ try:
                     "charactersActive": list(charactersActive),
                     "treasureSwapOption": self.treasureSwapOption.get(),
                     "updateCheck": "on" if self.updateCheck["value"].get() == 1 else "off",
-                    "invadersEnabled": "on" if self.invaders["value"].get() == 1 else "off",
-                    "maxInvaders": self.maxInvaders.get()
+                    "maxInvaders": self.maxInvaders["value"].get()
                 }
 
                 if newSettings != self.settings:
