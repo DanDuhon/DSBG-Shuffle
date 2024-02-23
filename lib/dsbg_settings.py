@@ -44,6 +44,7 @@ try:
                 self.create_expansion_tab()
                 self.create_enemies_tab()
                 self.create_characters_pane(top)
+                self.create_invaders_pane(top)
                 self.create_treasure_swap_pane(top)
                 self.create_shown_encounters_pane(top)
                 self.create_update_check_pane(top)
@@ -189,13 +190,36 @@ try:
                 }
 
                 self.characterFrame = ttk.LabelFrame(parent, text="Characters Being Played (up to 4)", padding=(20, 10))
-                self.characterFrame.grid(row=0, column=3, padx=(20, 10), pady=(20, 10), sticky="nsew", rowspan=4, columnspan=2)
-                for i, enemy in enumerate(self.charactersActive):
-                    self.charactersActive[enemy]["value"].set(1 if enemy in self.settings["charactersActive"] else 0)
-                    self.charactersActive[enemy]["button"] = ttk.Checkbutton(self.characterFrame, text=enemy, variable=self.charactersActive[enemy]["value"], command=self.check_max_characters)
-                    self.charactersActive[enemy]["button"].grid(row=i, column=0, padx=5, pady=10, sticky="nsew")
+                self.characterFrame.grid(row=0, column=3, padx=(20, 10), pady=(20, 10), sticky="nsew", rowspan=3, columnspan=2)
+                for i, character in enumerate(self.charactersActive):
+                    self.charactersActive[character]["value"].set(1 if character in self.settings["charactersActive"] else 0)
+                    self.charactersActive[character]["button"] = ttk.Checkbutton(self.characterFrame, text=character, variable=self.charactersActive[character]["value"], command=self.check_max_characters)
+                    self.charactersActive[character]["button"].grid(row=i, column=0, padx=5, pady=10, sticky="nsew")
 
                 log("End of create_characters_pane")
+            except Exception as e:
+                log(e, exception=True)
+                raise
+
+
+        def create_invaders_pane(self, parent):
+            try:
+                log("Start of create_invaders_pane")
+
+                self.invaders = {"button": None, "value": tk.IntVar(), "tooltipText": "If enabled, invaders can take the place of enemies."}
+                self.invadersFrame = ttk.LabelFrame(parent, text="Include Invaders", padding=(20, 10))
+                self.invadersFrame.grid(row=3, column=3, padx=(20, 10), pady=(20, 10), sticky="nsew", columnspan=2)
+                self.invaders["value"].set(1 if "on" in self.settings["invadersEnabled"] else 0)
+                self.invaders["button"] = ttk.Checkbutton(self.invadersFrame, text="Enable Invaders", variable=self.invaders["value"])
+                self.invaders["button"].grid(row=0, column=0, padx=5, pady=10, sticky="nsew", columnspan=2)
+                CreateToolTip(self.invaders["button"], self.invaders["tooltipText"])
+                
+                self.maxInvaders = tk.IntVar()
+                self.maxInvaders.set(self.settings["maxInvaders"])
+                self.invadersScale = ttk.LabeledScale(self.invadersFrame, from_=0, to=14, variable=self.maxInvaders)
+                self.invadersScale.grid(row=1, column=0, padx=(20, 10), pady=(20, 0), sticky="ew")
+
+                log("End of create_invaders_pane")
             except Exception as e:
                 log(e, exception=True)
                 raise
@@ -453,7 +477,9 @@ try:
                     "encounterTypes": list(encounterTypes),
                     "charactersActive": list(charactersActive),
                     "treasureSwapOption": self.treasureSwapOption.get(),
-                    "updateCheck": "on" if self.updateCheck["value"].get() == 1 else "off"
+                    "updateCheck": "on" if self.updateCheck["value"].get() == 1 else "off",
+                    "invadersEnabled": "on" if self.invaders["value"].get() == 1 else "off",
+                    "maxInvaders": self.maxInvaders.get()
                 }
 
                 if newSettings != self.settings:

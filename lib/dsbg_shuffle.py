@@ -2092,21 +2092,21 @@ try:
                         self.selected["alternatives"] = {"1": []}
                         for expansionCombo in alts["alternatives"]["1"]:
                             if set(expansionCombo.split(",")).issubset(self.availableExpansions):
-                                self.selected["alternatives"]["1"] += [alt for alt in alts["alternatives"]["1"][expansionCombo] if set(alt).issubset(self.enabledEnemies)]
+                                self.selected["alternatives"]["1"] += [alt for alt in alts["alternatives"]["1"][expansionCombo] if set(alt).issubset(self.enabledEnemies) and [enemyIds[a].expansions for a in alt].count(set(["Phantoms"])) <= self.settings["maxInvaders"]]
                     if "2" in alts["alternatives"]:
                         self.selected["alternatives"]["2"] = []
                         for expansionCombo in alts["alternatives"].get("2", []):
                             if set(expansionCombo.split(",")).issubset(self.availableExpansions):
-                                self.selected["alternatives"]["2"] += [alt for alt in alts["alternatives"]["2"][expansionCombo] if set(alt).issubset(self.enabledEnemies)]
+                                self.selected["alternatives"]["2"] += [alt for alt in alts["alternatives"]["2"][expansionCombo] if set(alt).issubset(self.enabledEnemies) and [enemyIds[a].expansions for a in alt].count(set(["Phantoms"])) <= self.settings["maxInvaders"]]
                     if "3" in alts["alternatives"]:
                         self.selected["alternatives"]["3"] = []
                         for expansionCombo in alts["alternatives"].get("3", []):
                             if set(expansionCombo.split(",")).issubset(self.availableExpansions):
-                                self.selected["alternatives"]["3"] += [alt for alt in alts["alternatives"]["3"][expansionCombo] if set(alt).issubset(self.enabledEnemies)]
+                                self.selected["alternatives"]["3"] += [alt for alt in alts["alternatives"]["3"][expansionCombo] if set(alt).issubset(self.enabledEnemies) and [enemyIds[a].expansions for a in alt].count(set(["Phantoms"])) <= self.settings["maxInvaders"]]
                 else:
                     for expansionCombo in alts["alternatives"]:
                         if set(expansionCombo.split(",")).issubset(self.availableExpansions):
-                            self.selected["alternatives"] += [alt for alt in alts["alternatives"][expansionCombo] if set(alt).issubset(self.enabledEnemies)]
+                            self.selected["alternatives"] += [alt for alt in alts["alternatives"][expansionCombo] if set(alt).issubset(self.enabledEnemies) and [enemyIds[a].expansions for a in alt].count(set(["Phantoms"])) <= self.settings["maxInvaders"]]
 
                 self.newTiles = dict()
 
@@ -3677,13 +3677,6 @@ try:
 
 
     coreSets = {"Dark Souls The Board Game", "Painted World of Ariamis", "Tomb of Giants", "The Sunless City"}
-    encountersWithInvaders = {
-        "Blazing Furnace",
-        "Brume Tower",
-        "Courtyard of Lothric",
-        "Fortress Gates",
-        "Sewers of Lordran"
-    }
 
     root = tk.Tk()
     root.withdraw()
