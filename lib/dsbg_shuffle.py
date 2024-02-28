@@ -143,9 +143,8 @@ try:
                     allEnemies[enemy]["imageOld"] = self.create_image(enemy + ".png", "enemyOld")
                     allEnemies[enemy]["imageOldLevel4"] = self.create_image(enemy + ".png", "enemyOldLevel4")
                     allEnemies[enemy]["imageNew"] = self.create_image(enemy + ".png", "enemyNew")
-                    if "Phantoms" not in enemiesDict[enemy].expansions:
-                        allEnemies[enemy]["image text"] = self.create_image(enemy + ".png", "enemyText")
-                        allEnemies[enemy]["image text" if self.forPrinting else "photo image text"] = ImageTk.PhotoImage(self.create_image(enemy + ".png", "enemyText"))
+                    allEnemies[enemy]["image text"] = self.create_image(enemy + ".png", "enemyText")
+                    allEnemies[enemy]["image text" if self.forPrinting else "photo image text"] = ImageTk.PhotoImage(self.create_image(enemy + ".png", "enemyText"))
 
                 # If specific enemies (rather than just expansions) are toggled on or off, do extra work
                 # to make sure all encounters are still valid.
@@ -2097,12 +2096,12 @@ try:
                         self.selected["alternatives"]["2"] = []
                         for expansionCombo in alts["alternatives"].get("2", []):
                             if set(expansionCombo.split(",")).issubset(self.availableExpansions):
-                                self.selected["alternatives"]["2"] += [alt for alt in alts["alternatives"]["2"][expansionCombo] if set(alt).issubset(self.enabledEnemies) and [enemyIds[a].expansions for a in alt].count(set(["Phantoms"])) <= self.settings["maxInvaders"] and not set([a for a in alt if enemyIds[a].expansions == set(["Phantoms"])]) & set(self.selected["alternatives"]["1"])]
+                                self.selected["alternatives"]["2"] += [alt for alt in alts["alternatives"]["2"][expansionCombo] if set(alt).issubset(self.enabledEnemies) and [enemyIds[a].expansions for a in alt].count(set(["Phantoms"])) <= self.settings["maxInvaders"]]
                     if "3" in alts["alternatives"]:
                         self.selected["alternatives"]["3"] = []
                         for expansionCombo in alts["alternatives"].get("3", []):
                             if set(expansionCombo.split(",")).issubset(self.availableExpansions):
-                                self.selected["alternatives"]["3"] += [alt for alt in alts["alternatives"]["3"][expansionCombo] if set(alt).issubset(self.enabledEnemies) and [enemyIds[a].expansions for a in alt].count(set(["Phantoms"])) <= self.settings["maxInvaders"] and not set([a for a in alt if enemyIds[a].expansions == set(["Phantoms"])]) & set(self.selected["alternatives"]["1"] + self.selected["alternatives"]["2"])]
+                                self.selected["alternatives"]["3"] += [alt for alt in alts["alternatives"]["3"][expansionCombo] if set(alt).issubset(self.enabledEnemies) and [enemyIds[a].expansions for a in alt].count(set(["Phantoms"])) <= self.settings["maxInvaders"]]
                 else:
                     for expansionCombo in alts["alternatives"]:
                         if set(expansionCombo.split(",")).issubset(self.availableExpansions):
@@ -2146,10 +2145,11 @@ try:
                 # feels like the program isn't doing anything.
                 oldEnemies = [e for e in self.newEnemies]
                 if "1" in self.selected["alternatives"]:
-                    self.newEnemies = (
-                        choice(self.selected["alternatives"]["1"])
-                        + (choice(self.selected["alternatives"]["2"]) if "2" in self.selected["alternatives"] else [])
-                        + (choice(self.selected["alternatives"]["3"]) if "3" in self.selected["alternatives"] else []))
+                    tile1Enemies = choice(self.selected["alternatives"]["1"])
+                    tile2Enemies = choice([alt for alt in self.selected["alternatives"]["2"] if not set([a for a in alt if enemyIds[a].expansions == set(["Phantoms"])]) & set(tile1Enemies)])
+                    tile3Enemies = choice([alt for alt in self.selected["alternatives"]["3"] if not set([a for a in alt if enemyIds[a].expansions == set(["Phantoms"])]) & set(tile1Enemies) and  not set([a for a in alt if enemyIds[a].expansions == set(["Phantoms"])]) & set(tile2Enemies)])
+
+                    self.newEnemies = tile1Enemies + tile2Enemies + tile3Enemies
                 else:
                     self.newEnemies = choice(self.selected["alternatives"])
                 # Check to see if there are multiple alternatives.
