@@ -13,7 +13,7 @@ try:
     from random import choice, shuffle
     from tkinter import filedialog, ttk
 
-    from dsbg_enemies import enemyIds, enemiesDict, bosses
+    from dsbg_enemies import enemyIds, enemiesDict, bosses, behaviors
     from dsbg_events import events
     from dsbg_settings import SettingsWindow
     from dsbg_tooltip_reference import tooltipText
@@ -103,6 +103,19 @@ try:
                 self.currentEvent = None
                 self.currentEventNum = 0
                 self.eventDeck = []
+
+                # Load the enemy variants file.
+                with open(baseFolder + "\\lib\\dsbg_shuffle_difficulty.json", "r") as f:
+                    enemyDifficulty = load(f)
+
+                self.variants = {}
+                for enemy in enemyDifficulty:
+                    self.variants[enemy] = {1: {}, 2: {}, 3: {}, 4: {}}
+                    for x in range(1, 5):
+                        for diffInc in enemyDifficulty[enemy][str(x)]:
+                            self.variants[enemy][x][float(diffInc)] = {}
+                            for defKey in enemyDifficulty[enemy][str(x)][diffInc]:
+                                self.variants[enemy][x][float(diffInc)][frozenset(defKey.split(","))] = enemyDifficulty[enemy][str(x)][diffInc][defKey]
                 
                 progress.label.config(text="Loading treasure...")
                 if self.settings["treasureSwapOption"] in {"Similar Soul Cost", "Tier Based"}:
@@ -124,6 +137,9 @@ try:
                 self.scrollbarTreeviewEventDeck = ttk.Scrollbar(self.eventTabEventDeckTreeviewFrame)
                 self.scrollbarTreeviewEventDeck.pack(side="right", fill="y")
                 self.create_event_treeviews()
+                self.scrollbarTreeviewVariants = ttk.Scrollbar(self.variantsTab)
+                self.scrollbarTreeviewVariants.pack(side="right", fill="y")
+                self.create_variants_treeview()
                 self.create_encounter_frame()
                 self.create_menu()
                 self.set_bindings_buttons_menus(True)
@@ -1363,11 +1379,56 @@ try:
                 self.topEventButton = ttk.Button(self.eventTabButtonsFrame3, text="Return To Top", width=16, command=self.return_event_card_to_top)
                 self.topEventButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
 
+                self.variantsTab = ttk.Frame(self.notebook)
+                self.notebook.add(self.variantsTab, text="Behavior Variants")
+                self.variantsTabButtonsFrame = ttk.Frame(self.variantsTab)
+                self.variantsTabButtonsFrame.pack()
+                self.variantsTabTreeviewFrame = ttk.Frame(self.variantsTab)
+                self.variantsTabTreeviewFrame.pack(fill="both", expand=True)
+
+                vcmd = (self.register(self.callback))
+
+                labelText = tk.StringVar()
+                labelText.set("Difficulty Modifier")
+                self.diffLabel = ttk.Label(self.variantsTabButtonsFrame, text="Difficulty Modifier: +")
+                self.diffLabel.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+                self.diffEntry = ttk.Entry(self.variantsTabButtonsFrame, width=5, validate="all", validatecommand=(vcmd, "%P"))
+                self.diffEntry.pack(side=tk.LEFT, anchor=tk.CENTER, pady=5)
+                labelText2 = tk.StringVar()
+                labelText2.set("%")
+                self.diffLabel2 = ttk.Label(self.variantsTabButtonsFrame, text="%")
+                self.diffLabel2.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+                self.applyModButton = ttk.Button(self.variantsTabButtonsFrame, text="Apply Modifier", width=16, command=do_nothing)
+                self.applyModButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+                # self.printEncounters = ttk.Button(self.variantsTabButtonsFrame, text="Export to PDF", width=16, command=do_nothing)
+                # self.printEncounters.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+                # self.moveUpButton = ttk.Button(self.variantsTabButtonsFrame, text="Move Up", width=16, command=do_nothing)
+                # self.moveUpButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+                # self.moveDownButton = ttk.Button(self.variantsTabButtonsFrame, text="Move Down", width=16, command=do_nothing)
+                # self.moveDownButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+
                 log("End of create_tabs")
             except Exception as e:
                 error_popup(root, e)
                 raise
 
+
+        def callback(self, P):
+            """
+            Validates whether the input for enemy difficulty is an integer.
+            """
+            try:
+                log("Start of callback")
+
+                if (str.isdigit(P) or str(P) == "") and len(P) <= 4:
+                    log("End of callback")
+                    return True
+                else:
+                    log("End of callback")
+                    return False
+            except Exception as e:
+                error_popup(root, e)
+                raise
 
         def create_encounters_treeview(self):
             """
@@ -1545,6 +1606,90 @@ try:
                 error_popup(root, e)
                 raise
 
+        def create_variants_treeview(self):
+            """
+            Create the behavior variants treeview, where a user can select an
+            enemy or behavior and see variants based on a selected difficulty modifier.
+            """
+            try:
+                log("Start of create_variants_treeview")
+
+                self.treeviewVariants = ttk.Treeview(
+                    self.variantsTab,
+                    selectmode="browse",
+                    columns=("Name"),
+                    yscrollcommand=self.scrollbarTreeviewVariants.set,
+                    height=29 if root.winfo_screenheight() > 1000 else 20
+                )
+
+                self.treeviewVariants.pack(expand=True, fill="both")
+                self.scrollbarTreeviewVariants.config(command=self.treeviewVariants.yview)
+
+                self.treeviewVariants.column("#0", anchor="w")
+                self.treeviewVariants.heading("#0", text="  Name", anchor="w")
+                
+                self.treeviewVariants.insert(parent="", index="end", iid="All", text="All", tags=False, open=True)
+                self.treeviewVariants.insert(parent="All", index="end", iid="Enemies", text="Enemies", tags=False)
+                self.treeviewVariants.insert(parent="All", index="end", iid="Invaders & Explorers Mimics", text="Invaders & Explorers Mimics", tags=False)
+                self.treeviewVariants.insert(parent="All", index="end", iid="Mini Bosses", text="Mini Bosses", tags=False)
+                self.treeviewVariants.insert(parent="All", index="end", iid="Main Bosses", text="Main Bosses", tags=False)
+                self.treeviewVariants.insert(parent="All", index="end", iid="Mega Bosses", text="Mega Bosses", tags=False)
+
+                for enemy in sorted(list(enemiesDict.keys())):
+                    self.treeviewVariants.insert(parent="Invaders & Explorers Mimics" if "Phantoms" in enemiesDict[enemy].expansions else "Enemies", index="end", iid=enemy, text=enemy, tags=True)
+                    
+                for enemy in sorted(list(bosses.keys())):
+                    self.treeviewVariants.insert(parent=bosses[enemy]["level"] + "es", index="end", iid=enemy, text=enemy, tags=True)
+
+                for enemy in behaviors:
+                    for behavior in behaviors[enemy]:
+                        self.treeviewVariants.insert(parent=enemy, index="end", iid=enemy + " - " + behavior, text=behavior, tags=True)
+
+                self.treeviewVariants.bind("<<TreeviewSelect>>", self.load_variant_card)
+
+                log("End of create_variants_treeview")
+            except Exception as e:
+                error_popup(root, e)
+                raise
+
+
+        def load_variant_card(self, event=None, variant=None):
+            try:
+                log("Start of load_variant_card")
+
+                self.treeviewVariants.unbind("<<TreeviewSelect>>")
+
+                # If this behavior was clicked on, get that information.
+                if event:
+                    tree = event.widget
+                    if not tree.item(tree.selection()[0])["tags"][0]:
+                        log("\tNo variant selected")
+                        self.treeviewVariants.bind("<<TreeviewSelect>>", self.load_variant_card)
+                        log("\tEnd of load_variant_card")
+                        return
+                    self.selectedVariant = (
+                        tree.selection()[0]
+                        + (" - data" if tree.parent(tree.selection()[0]) in {"Enemies", "Invaders & Explorers Mimics", "Mini Bosses", "Main Bosses", "Mega Bosses"} else ""))
+                else:
+                    self.selectedVariant = variant
+
+                # Remove keyword tooltips from the previous image shown, if there are any.
+                for tooltip in self.tooltips:
+                    tooltip.destroy()
+
+                # Create and display the variant image.
+                self.variantPhotoImage = self.create_image(self.selectedVariant + ".jpg", "encounter", 4)
+                self.encounterPhotoImage = ImageTk.PhotoImage(self.encounterImage)
+                self.encounter.image = self.encounterPhotoImage
+                self.encounter.config(image=self.encounterPhotoImage)
+
+                self.treeviewVariants.bind("<<TreeviewSelect>>", self.load_variant_card)
+
+                log("End of load_variant_card")
+            except Exception as e:
+                error_popup(root, e)
+                raise
+
 
         def load_event(self, event=None, campaign=False):
             try:
@@ -1634,12 +1779,12 @@ try:
                 log("Start of set_bindings_buttons_menus: enable=" + str(enable))
 
                 if enable:
-                    enable_binding("Key-1", lambda x: self.keybind_call("1"), root)
-                    enable_binding("Key-2", lambda x: self.keybind_call("2"), root)
-                    enable_binding("Key-3", lambda x: self.keybind_call("3"), root)
-                    enable_binding("Key-4", lambda x: self.keybind_call("4"), root)
-                    enable_binding("s", self.shuffle_enemies, root)
-                    enable_binding("c", self.add_card_to_campaign, root)
+                    enable_binding("Control-Key-1", lambda x: self.keybind_call("1"), root)
+                    enable_binding("Control-Key-2", lambda x: self.keybind_call("2"), root)
+                    enable_binding("Control-Key-3", lambda x: self.keybind_call("3"), root)
+                    enable_binding("Control-Key-4", lambda x: self.keybind_call("4"), root)
+                    enable_binding("Control-s", self.shuffle_enemies, root)
+                    enable_binding("Control-c", self.add_card_to_campaign, root)
                     enable_binding("Control-q", lambda x: self.keybind_call("q"), root)
                     self.fileMenu.entryconfig("Random Level 1 Encounter", state=tk.NORMAL)
                     self.fileMenu.entryconfig("Random Level 2 Encounter", state=tk.NORMAL)
@@ -1724,12 +1869,12 @@ try:
 
                 menuBar = tk.Menu()
                 self.fileMenu = tk.Menu(menuBar, tearoff=0)
-                self.fileMenu.add_command(label="Random Level 1 Encounter", command=lambda x=1: self.random_encounter(level=x), accelerator="1")
-                self.fileMenu.add_command(label="Random Level 2 Encounter", command=lambda x=2: self.random_encounter(level=x), accelerator="2")
-                self.fileMenu.add_command(label="Random Level 3 Encounter", command=lambda x=3: self.random_encounter(level=x), accelerator="3")
-                self.fileMenu.add_command(label="Random Level 4 Encounter", command=lambda x=4: self.random_encounter(level=x), accelerator="4")
-                self.fileMenu.add_command(label="Shuffle Enemies", command=self.shuffle_enemies, accelerator="s")
-                self.fileMenu.add_command(label="Add to Campaign", command=self.add_card_to_campaign, accelerator="c")
+                self.fileMenu.add_command(label="Random Level 1 Encounter", command=lambda x=1: self.random_encounter(level=x), accelerator="Ctrl+1")
+                self.fileMenu.add_command(label="Random Level 2 Encounter", command=lambda x=2: self.random_encounter(level=x), accelerator="Ctrl+2")
+                self.fileMenu.add_command(label="Random Level 3 Encounter", command=lambda x=3: self.random_encounter(level=x), accelerator="Ctrl+3")
+                self.fileMenu.add_command(label="Random Level 4 Encounter", command=lambda x=4: self.random_encounter(level=x), accelerator="Ctrl+4")
+                self.fileMenu.add_command(label="Shuffle Enemies", command=self.shuffle_enemies, accelerator="Ctrl+S")
+                self.fileMenu.add_command(label="Add to Campaign", command=self.add_card_to_campaign, accelerator="Ctrl+C")
                 self.fileMenu.add_separator()
                 self.fileMenu.add_command(label="Quit", command=root.quit, accelerator="Ctrl+Q")
                 menuBar.add_cascade(label="File", menu=self.fileMenu)

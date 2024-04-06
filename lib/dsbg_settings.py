@@ -322,14 +322,14 @@ try:
                 self.saveButton.grid(column=0, row=0, padx=5)
                 self.cancelButton.grid(column=1, row=0, padx=5)
 
-                self.themeButtonFrame = ttk.Frame(parent, padding=(0, 0, 0, 10))
-                self.themeButtonFrame.grid(row=5, column=5, padx=15, pady=(10, 0), sticky="e", columnspan=2)
-                self.themeButtonFrame.columnconfigure(index=0, weight=1)
+                # self.themeButtonFrame = ttk.Frame(parent, padding=(0, 0, 0, 10))
+                # self.themeButtonFrame.grid(row=5, column=5, padx=15, pady=(10, 0), sticky="e", columnspan=2)
+                # self.themeButtonFrame.columnconfigure(index=0, weight=1)
 
-                self.lightTheme = {"button": None, "value": tk.IntVar()}
-                self.lightTheme["value"].set(0 if self.settings["theme"] == "dark" else 1)
-                self.lightTheme["button"] = ttk.Button(self.themeButtonFrame, text="Switch to light theme" if self.lightTheme["value"].get() == 0 else "Switch to dark theme", command=self.switch_theme)
-                self.lightTheme["button"].grid(column=3, row=0, columnspan=2)
+                # self.lightTheme = {"button": None, "value": tk.IntVar()}
+                # self.lightTheme["value"].set(0 if self.settings["theme"] == "dark" else 1)
+                # self.lightTheme["button"] = ttk.Button(self.themeButtonFrame, text="Switch to light theme" if self.lightTheme["value"].get() == 0 else "Switch to dark theme", command=self.switch_theme)
+                # self.lightTheme["button"].grid(column=3, row=0, columnspan=2)
 
                 log("End of create_buttons")
             except Exception as e:
