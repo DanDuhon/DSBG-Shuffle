@@ -16,6 +16,30 @@ try:
     enemiesDict = {}
     reach = []
 
+    modIdLookup = {
+    1: "dodge1",
+    2: "dodge2",
+    3: "damage1",
+    4: "damage2",
+    5: "damage3",
+    6: "damage4",
+    7: "armor1",
+    8: "armor2",
+    9: "resist1",
+    10: "resist2",
+    11: "health1",
+    12: "health2",
+    13: "health3",
+    14: "health4",
+    15: "repeat",
+    16: "magic",
+    17: "bleed",
+    18: "frostbite",
+    19: "poison",
+    20: "stagger",
+    21: "physical"
+}
+
 
     class Enemy:
         def __init__(self, id, name, expansions, difficulty, health=None, toughness=0) -> None:
@@ -106,7 +130,7 @@ try:
         "Dancer of the Boreal Valley": {"name": "Dancer of the Boreal Valley", "type": "boss", "level": "Main Boss", "expansions": set(["Dark Souls The Board Game"])},
         "Gravelord Nito": {"name": "Gravelord Nito", "type": "boss", "level": "Main Boss", "expansions": set(["Tomb of Giants"])},
         "Great Grey Wolf Sif": {"name": "Great Grey Wolf Sif", "type": "boss", "level": "Main Boss", "expansions": set(["Darkroot"])},
-        "Ornstein and Smough": {"name": "Ornstein and Smough", "type": "boss", "level": "Main Boss", "expansions": set(["Dark Souls The Board Game", "The Sunless City"])},
+        "Ornstein & Smough": {"name": "Ornstein & Smough", "type": "boss", "level": "Main Boss", "expansions": set(["Dark Souls The Board Game", "The Sunless City"])},
         "Sir Alonne": {"name": "Sir Alonne", "type": "boss", "level": "Main Boss", "expansions": set(["Iron Keep"])},
         "Smelter Demon": {"name": "Smelter Demon", "type": "boss", "level": "Main Boss", "expansions": set(["Iron Keep"])},
         "The Pursuer": {"name": "The Pursuer", "type": "boss", "level": "Main Boss", "expansions": set(["Explorers"])},
@@ -150,7 +174,7 @@ try:
         "Dancer of the Boreal Valley": ["Ash Cloud", "Backhand Blade Swipe", "Blade Dance", "Deadly Grasp", "Double Slash", "Flashing Blade", "Lunging Thrust", "Plunging Assault", "Plunging Attack", "Sweeping Blade Swipe", "Triple Slash", "Uppercut", "Whirling Blades"],
         "Gravelord Nito": ["Creeping Death", "Death Grip", "Death Wave", "Deathly Strike", "Deathly Thrust", "Death's Embrace", "Entrophy", "Gravelord Greatsword", "Lunging Cleave", "Miasma", "Sword Slam", "Sword Sweep", "Toxicity"],
         "Great Grey Wolf Sif": ["Cyclone Strikes", "Dashing Slice", "Evasive Strike", "Feral Onslaught", "Limping Strike", "Pouncing Assault", "Saveage Retreat", "Sidestep Cleave", "Sidestep Slash", "Slashing Assault", "Slashing Retreat", "Spinning Slash", "Sword Slam", "Upward Slash"],
-        "Ornstein and Smough": ["Evasive Sweep & Trampling Charge", "Gliding Stab & Hammer Smash", "Lightning Bolt & Jumping Slam", "Spear Slam & Hammer Sweep", "Swiping Combo & Bonzai Drop", "Charged Swiping Combo", "Electric Clash", "High Voltage", "Lightning Stab", "Charged Charge", "Electric Bonzai Drop", "Electric Hammer Smash", "Jumping Volt Slam", "Lightning Sweep"],
+        "Ornstein & Smough": ["Evasive Sweep & Trampling Charge", "Gliding Stab & Hammer Smash", "Lightning Bolt & Jumping Slam", "Spear Slam & Hammer Sweep", "Swiping Combo & Bonzai Drop", "Charged Swiping Combo", "Electric Clash", "High Voltage", "Lightning Stab", "Charged Charge", "Electric Bonzai Drop", "Electric Hammer Smash", "Jumping Volt Slam", "Lightning Sweep"],
         "Sir Alonne": ["Charging Katana Lunge", "Charging Katana Slash", "Dark Wave", "Double Slash Combo", "Fast Katana Lunge", "Katana Plunge", "Left Sidestep Slash", "Life Drain", "Lunging Slash Combo", "Right Sidestep Slash", "Stab & Slash Combo", "Stabbing Slash Combo", "Triple Slash Combo"],
         "Smelter Demon": ["Double Sweep", "Fiery Blast", "Fiery Explosion", "Flame Wave", "Flaming Double Sweep", "Flaming Impalement Strike", "Flaming Overhead Chop", "Flaming Sweeping Slash", "Leaping Impalement Strike", "Lunging Strike", "Overhead Chop", "Sweeping Slash"],
         "The Pursuer": ["Cursed Impale", "Dark Magic", "Overhead Cleave", "Rising Blade Swing", "Shield Bash", "Shield Smash", "Stabbing Strike", "Wide Blade Swing"],
@@ -161,7 +185,7 @@ try:
         "Manus, Father of the Abyss": ["Abyss Cage", "Abyss Rain", "Back Swipe", "Catalyst Smash", "Catalyst Strike", "Crushing Palm", "Dark Orb Barrage", "Descending Darkness", "Diving Slam", "Extended Sweep", "Frenzied Attacks", "Ground Slam", "Ring of Darkfire", "Sweeping Strike"],
         "Old Iron King": ["Bash", "Double Fist Pound", "Double Swipe", "Fire Beam (Front)", "Fire Beam (Left)", "Fire Beam (Right)", "Firestorm", "Fist Pound", "Magma Blast", "Searing Blast", "Shockwave", "Swipe"],
         "Stray Demon": ["Crushing Leaps", "Delayed Hammer Drive", "Ground Pound", "Hammer Blast", "Hammer Drive", "Leaping Hammer Smash", "Lumbering Swings", "Mighty Hammer Smash", "Retreating Sweep", "Shockwave", "Sidestep Left Sweep", "Sidestep Right Sweep", "Sweeping Strikes"],
-        "The Four Kings": ["Blazing Wrath", "Cautious Arrow Mass", "Downward Slash", "Evasive Abyss Arrow", "Evasive Slash", "Executioner's Slash", "Forward Thrust", "Homing Arrow Mass", "Horizontal Slash", "Into the Abyss", "Lifedrain Death Grasp", "Lifedrain Grab", "Pinpoint Homing Arrow", "Precision Slash", "Shockwave", "Thrust & Retreat", "Unerring Thrust", "Upward Slash", "Wrath of the Kings"],
+        "The Four Kings": ["Blazing Wrath", "Cautious Arrow Mass", "Downward Slash", "Evasive Abyss Arrow", "Evasive Slash", "Executioner's Slash", "Forward Thrust", "Homing Arrow Mass", "Horizontal Slash", "Into the Abyss", "Lifedrain Death Grasp", "Lifedrain Grab", "Pinpoint Homing Arrows", "Precision Slash", "Shockwave", "Thrust & Retreat", "Unerring Thrust", "Upward Slash", "Wrath of the Kings"],
         "The Last Giant": ["Arm Club Backhand", "Arm Club Sweep", "Arm Smash", "Armed Swings", "Backhand Strike", "Backstep Stomp", "Beat You With It", "Clubbing Blow", "Falling Slam", "Heavy Swings", "Left Foot Stomp", "Overhead Smash", "Right Foot Stomp", "Stomp Rush", "Sweeping Strike", "Triple Stomp"],
         "Vordt of the Boreal Valley": ["Backhand Swipe", "Berserk Rush", "Berserk Trample", "Crushing Charge", "Double Swipe", "Frostbreath", "Hammerfist Combo", "Hammerfist", "Handle Slam", "Jump Rush", "Mace Thrust", "Retreating Sweep", "Shove Left", "Shove Right", "Tracking Charge", "Trampling Charge", "Wild Swings"]
     }

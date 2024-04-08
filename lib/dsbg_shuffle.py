@@ -5,15 +5,17 @@ try:
     import requests
     import sys
     import tkinter as tk
+    from bisect import bisect, bisect_left
     from collections import Counter
     from fpdf import FPDF
     from json import load, dump
     from PIL import Image, ImageTk, ImageFont, ImageDraw
+    from math import ceil
     from os import path
     from random import choice, shuffle
     from tkinter import filedialog, ttk
 
-    from dsbg_enemies import enemyIds, enemiesDict, bosses, behaviors
+    from dsbg_enemies import enemyIds, enemiesDict, bosses, behaviors, modIdLookup
     from dsbg_events import events
     from dsbg_settings import SettingsWindow
     from dsbg_tooltip_reference import tooltipText
@@ -148,6 +150,8 @@ try:
                 self.encountersToPrint = []
 
                 self.campaign = []
+
+                self.currentVariants = {}
 
                 # Create images
                 progress.label.config(text = "Loading images... ")
@@ -1388,24 +1392,15 @@ try:
 
                 vcmd = (self.register(self.callback))
 
-                labelText = tk.StringVar()
-                labelText.set("Difficulty Modifier")
                 self.diffLabel = ttk.Label(self.variantsTabButtonsFrame, text="Difficulty Modifier: +")
-                self.diffLabel.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-                self.diffEntry = ttk.Entry(self.variantsTabButtonsFrame, width=5, validate="all", validatecommand=(vcmd, "%P"))
+                self.diffLabel.pack(side=tk.LEFT, anchor=tk.CENTER, pady=5)
+                self.entryText = tk.StringVar()
+                self.diffEntry = ttk.Entry(self.variantsTabButtonsFrame, textvariable=self.entryText, width=5, validate="all", validatecommand=(vcmd, "%P"))
                 self.diffEntry.pack(side=tk.LEFT, anchor=tk.CENTER, pady=5)
-                labelText2 = tk.StringVar()
-                labelText2.set("%")
                 self.diffLabel2 = ttk.Label(self.variantsTabButtonsFrame, text="%")
-                self.diffLabel2.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-                self.applyModButton = ttk.Button(self.variantsTabButtonsFrame, text="Apply Modifier", width=16, command=do_nothing)
+                self.diffLabel2.pack(side=tk.LEFT, anchor=tk.CENTER, pady=5)
+                self.applyModButton = ttk.Button(self.variantsTabButtonsFrame, text="Apply Modifier", width=16, command=self.apply_difficulty_modifier)
                 self.applyModButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-                # self.printEncounters = ttk.Button(self.variantsTabButtonsFrame, text="Export to PDF", width=16, command=do_nothing)
-                # self.printEncounters.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-                # self.moveUpButton = ttk.Button(self.variantsTabButtonsFrame, text="Move Up", width=16, command=do_nothing)
-                # self.moveUpButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-                # self.moveDownButton = ttk.Button(self.variantsTabButtonsFrame, text="Move Down", width=16, command=do_nothing)
-                # self.moveDownButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
 
                 log("End of create_tabs")
             except Exception as e:
@@ -1606,6 +1601,96 @@ try:
                 error_popup(root, e)
                 raise
 
+
+        def apply_difficulty_modifier(self):
+            """
+            Find the appropriate variants for the entered difficulty.
+            """
+            try:
+                log("Start of apply_difficulty_modifier")
+
+                tree = self.treeviewVariants
+                if not tree.selection():
+                    log("End of apply_difficulty_modifier (nothing selected)")
+                    return
+                
+                if not self.entryText.get():
+                    log("End of apply_difficulty_modifier (no mod entered)")
+                    return
+
+                diffKey = 1.0 + (float(self.entryText.get()) / 100)
+                diffKey = (ceil((diffKey * 10) / 2.0) * 2) / 10
+                start = tree.focus()
+
+                # Selected enemy name - generate variants for all enemy behaviors.
+                if tree.item(start)["tags"] and start in self.variants:
+                    self.pick_enemy_variants_enemy(start, diffKey)
+                # Generate different variant for selected behavior.
+                elif " - " in start:
+                    startReal = start[:start.index(" - ")]
+                    diffKeyIndex = bisect_left(list(self.variants[startReal][self.numberOfCharacters].keys()), diffKey)
+                    diffKeyReal = list(self.variants[startReal][self.numberOfCharacters].keys())[diffKeyIndex]
+
+                    if "defKey" not in self.currentVariants.get(startReal, {}):
+                        defKey = choice(list(self.variants[startReal][self.numberOfCharacters][diffKeyReal].keys()))
+                        self.currentVariants[startReal] = {"defKey": defKey}
+                        self.pick_enemy_variants_behavior(startReal, start[start.index(" - ")+3:], diffKeyReal, defKey)
+                    else:
+                        defKey = self.currentVariants[startReal]["defKey"]
+                        curVariant = self.currentVariants[startReal].get(start[start.index(" - ")+3:], None)
+                        while (curVariant == self.currentVariants[startReal].get(start[start.index(" - ")+3:], 0)
+                            and len(self.variants[startReal][self.numberOfCharacters][diffKeyReal][defKey]) > 1):
+                            self.pick_enemy_variants_behavior(startReal, start[start.index(" - ")+3:], diffKeyReal, defKey)
+                elif start in {"Enemies", "Invaders & Explorers Mimics", "Mini Bosses", "Main Bosses", "Mega Bosses"}:
+                    for child in tree.get_children(start):
+                        self.pick_enemy_variants_enemy(child, diffKey)
+                elif start == "All":
+                    for child in tree.get_children(start):
+                        for subChild in tree.get_children(child):
+                            self.pick_enemy_variants_enemy(subChild, diffKey)
+
+                log("End of apply_difficulty_modifier")
+            except Exception as e:
+                error_popup(root, e)
+                raise
+
+
+        def pick_enemy_variants_enemy(self, start, diffKey):
+            """
+            Find the appropriate variants for the entered difficulty.
+            """
+            try:
+                log("Start of pick_enemy_variants_enemy")
+
+                diffKeyIndex = bisect_left(list(self.variants[start][self.numberOfCharacters].keys()), diffKey)
+                diffKeyReal = list(self.variants[start][self.numberOfCharacters].keys())[diffKeyIndex]
+                defKey = choice(list(self.variants[start][self.numberOfCharacters][diffKeyReal].keys()))
+                self.currentVariants[start] = {"defKey": defKey}
+
+                for behavior in self.variants[start][self.numberOfCharacters][diffKeyReal][defKey]:
+                    self.pick_enemy_variants_behavior(start, behavior, diffKeyReal, defKey)
+                
+                log("End of pick_enemy_variants_enemy")
+            except Exception as e:
+                error_popup(root, e)
+                raise
+
+
+        def pick_enemy_variants_behavior(self, start, behavior, diffKeyReal, defKey):
+            """
+            Find the appropriate variants for the entered difficulty.
+            """
+            try:
+                log("Start of pick_enemy_variants_behavior")
+
+                self.currentVariants[start][behavior] = choice(list(self.variants[start][self.numberOfCharacters][diffKeyReal][defKey][behavior]))
+                
+                log("End of pick_enemy_variants_behavior")
+            except Exception as e:
+                error_popup(root, e)
+                raise
+            
+
         def create_variants_treeview(self):
             """
             Create the behavior variants treeview, where a user can select an
@@ -1677,15 +1762,37 @@ try:
                 for tooltip in self.tooltips:
                     tooltip.destroy()
 
+                if self.selectedVariant == "Guardian Dragon - Cage Grasp Inferno" and any([modIdLookup[m] == "physical" for m in self.currentVariants.get("Guardian Dragon", {}).get("Cage Grasp Inferno", set())]):
+                    self.selectedVariant = "Guardian Dragon - Cage Grasp Inferno (physical)"
+                elif self.selectedVariant == "Guardian Dragon - Cage Grasp Inferno":
+                    self.selectedVariant = "Guardian Dragon - Cage Grasp Inferno (magic)"
+
                 # Create and display the variant image.
                 self.variantPhotoImage = self.create_image(self.selectedVariant + ".jpg", "encounter", 4)
                 self.encounterPhotoImage = ImageTk.PhotoImage(self.encounterImage)
                 self.encounter.image = self.encounterPhotoImage
                 self.encounter.config(image=self.encounterPhotoImage)
 
+                self.edit_variant_card()
+
                 self.treeviewVariants.bind("<<TreeviewSelect>>", self.load_variant_card)
 
                 log("End of load_variant_card")
+            except Exception as e:
+                error_popup(root, e)
+                raise
+
+
+        def edit_variant_card(self, event=None):
+            try:
+                log("Start of edit_variant_card")
+
+                self.selectedVariant
+
+                # log("Pasting " + enemyIds[self.newEnemies[s]].name + " image onto encounter at " + str((x, y)) + ".")
+                # self.encounterImage.paste(im=image, box=(x, y), mask=image)
+
+                log("End of edit_variant_card")
             except Exception as e:
                 error_popup(root, e)
                 raise
@@ -2066,7 +2173,7 @@ try:
                 log("Start of create_image")
 
                 if imageType == "encounter":
-                    if imageFileName == "Ornstein and Smough.jpg":
+                    if imageFileName == "Ornstein & Smough.jpg" or imageFileName == "Ornstein & Smough - data.jpg":
                         width = 305
                         height = 850
                     elif level < 4 and expansion in {"Dark Souls The Board Game", "Iron Keep", "Darkroot", "Explorers", "Executioner Chariot"}:
@@ -2107,8 +2214,6 @@ try:
                         image = Image.open(imagePath).resize((22, 22), Image.Resampling.LANCZOS)
                     elif imageType == "resurrection":
                         image = Image.open(imagePath).resize((9, 17), Image.Resampling.LANCZOS)
-                    elif imageType == "playerCount":
-                        image = Image.open(imagePath).resize((12, 12), Image.Resampling.LANCZOS)
                     elif imageType == "enemyNode":
                         image = Image.open(imagePath).resize((12, 12), Image.Resampling.LANCZOS)
                     elif imageType == "condition":
