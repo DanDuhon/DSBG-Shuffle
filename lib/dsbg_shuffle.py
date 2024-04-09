@@ -5,7 +5,7 @@ try:
     import requests
     import sys
     import tkinter as tk
-    from bisect import bisect, bisect_left
+    from bisect import bisect_left
     from collections import Counter
     from fpdf import FPDF
     from json import load, dump
@@ -15,7 +15,8 @@ try:
     from random import choice, shuffle
     from tkinter import filedialog, ttk
 
-    from dsbg_enemies import enemyIds, enemiesDict, bosses, behaviors, modIdLookup
+    from dsbg_shuffle_behaviors import behaviors, behaviorDetail
+    from dsbg_enemies import enemyIds, enemiesDict, bosses, modIdLookup
     from dsbg_events import events
     from dsbg_settings import SettingsWindow
     from dsbg_tooltip_reference import tooltipText
@@ -31,8 +32,12 @@ try:
     baseFolder = path.dirname(__file__).replace("\\lib".replace("\\", pathSep), "")
     if platform.system() == "Windows":
         font = ImageFont.truetype(baseFolder + "\\lib\\Adobe Caslon Pro Semibold.ttf", 12)
+        font2 = ImageFont.truetype(baseFolder + "\\lib\\OptimusPrinceps.ttf", 24)
+        font3 = ImageFont.truetype(baseFolder + "\\lib\\OptimusPrinceps.ttf", 30)
     else:
         font = ImageFont.truetype("./Adobe Caslon Pro Semibold.ttf", 12)
+        font2 = ImageFont.truetype("./OptimusPrinceps.ttf", 24)
+        font3 = ImageFont.truetype("./OptimusPrinceps.ttf", 30)
 
     allEnemies = {enemy: {} for enemy in enemiesDict}
 
@@ -117,7 +122,7 @@ try:
                         for diffInc in enemyDifficulty[enemy][str(x)]:
                             self.variants[enemy][x][float(diffInc)] = {}
                             for defKey in enemyDifficulty[enemy][str(x)][diffInc]:
-                                self.variants[enemy][x][float(diffInc)][frozenset(defKey.split(","))] = enemyDifficulty[enemy][str(x)][diffInc][defKey]
+                                self.variants[enemy][x][float(diffInc)][frozenset([""] if not defKey else [int(k) for k in defKey.split(",")])] = enemyDifficulty[enemy][str(x)][diffInc][defKey]
                 
                 progress.label.config(text="Loading treasure...")
                 if self.settings["treasureSwapOption"] in {"Similar Soul Cost", "Tier Based"}:
@@ -192,7 +197,21 @@ try:
 
                 # Icons
                 self.enemyNode2 = self.create_image("enemy_node_2.png", "enemyNode")
-                self.bleed = self.create_image("bleed.png", "condition")
+                self.attack = {
+                    "physical": {},
+                    "magic": {},
+                    "push": {}
+                }
+                for x in range(2, 14):
+                    for y in ["physical", "magic", "push"]:
+                        self.attack[y][x] = self.create_image("attack_" + y + "_" + str(x) + ".png", y if y == "push" else "attack")
+                self.bleed = self.create_image("bleed.png", "bleed")
+                self.frostbite = self.create_image("frostbite.png", "frostbite")
+                self.poison = self.create_image("poison.png", "poison")
+                self.stagger = self.create_image("stagger.png", "stagger")
+                self.repeat = {}
+                for x in range(2, 6):
+                    self.repeat[x] = self.create_image("repeat_" + str(x) + ".png", "repeat")
 
                 # Keywords
                 self.barrage = self.create_image("barrage.png", "barrage")
@@ -1629,6 +1648,7 @@ try:
                 elif " - " in start:
                     startReal = start[:start.index(" - ")]
                     diffKeyIndex = bisect_left(list(self.variants[startReal][self.numberOfCharacters].keys()), diffKey)
+                    diffKeyIndex -= 1 if diffKeyIndex > len(list(self.variants[start][self.numberOfCharacters].keys())) - 1 else 0
                     diffKeyReal = list(self.variants[startReal][self.numberOfCharacters].keys())[diffKeyIndex]
 
                     if "defKey" not in self.currentVariants.get(startReal, {}):
@@ -1649,6 +1669,9 @@ try:
                         for subChild in tree.get_children(child):
                             self.pick_enemy_variants_enemy(subChild, diffKey)
 
+                if self.selectedVariant:
+                    self.load_variant_card(variant=self.selectedVariant)
+
                 log("End of apply_difficulty_modifier")
             except Exception as e:
                 error_popup(root, e)
@@ -1663,6 +1686,7 @@ try:
                 log("Start of pick_enemy_variants_enemy")
 
                 diffKeyIndex = bisect_left(list(self.variants[start][self.numberOfCharacters].keys()), diffKey)
+                diffKeyIndex -= 1 if diffKeyIndex > len(list(self.variants[start][self.numberOfCharacters].keys())) - 1 else 0
                 diffKeyReal = list(self.variants[start][self.numberOfCharacters].keys())[diffKeyIndex]
                 defKey = choice(list(self.variants[start][self.numberOfCharacters][diffKeyReal].keys()))
                 self.currentVariants[start] = {"defKey": defKey}
@@ -1676,14 +1700,14 @@ try:
                 raise
 
 
-        def pick_enemy_variants_behavior(self, start, behavior, diffKeyReal, defKey):
+        def pick_enemy_variants_behavior(self, start, behavior, diffKey, defKey):
             """
             Find the appropriate variants for the entered difficulty.
             """
             try:
                 log("Start of pick_enemy_variants_behavior")
 
-                self.currentVariants[start][behavior] = choice(list(self.variants[start][self.numberOfCharacters][diffKeyReal][defKey][behavior]))
+                self.currentVariants[start][behavior] = choice(list(self.variants[start][self.numberOfCharacters][diffKey][defKey][behavior]))
                 
                 log("End of pick_enemy_variants_behavior")
             except Exception as e:
@@ -1732,6 +1756,10 @@ try:
 
                 self.treeviewVariants.bind("<<TreeviewSelect>>", self.load_variant_card)
 
+                self.treeviewVariants.selection_set("All")
+                self.treeviewVariants.focus_set()
+                self.treeviewVariants.focus("All")
+
                 log("End of create_variants_treeview")
             except Exception as e:
                 error_popup(root, e)
@@ -1769,9 +1797,6 @@ try:
 
                 # Create and display the variant image.
                 self.variantPhotoImage = self.create_image(self.selectedVariant + ".jpg", "encounter", 4)
-                self.encounterPhotoImage = ImageTk.PhotoImage(self.encounterImage)
-                self.encounter.image = self.encounterPhotoImage
-                self.encounter.config(image=self.encounterPhotoImage)
 
                 self.edit_variant_card()
 
@@ -1787,10 +1812,189 @@ try:
             try:
                 log("Start of edit_variant_card")
 
-                self.selectedVariant
+                enemy = self.selectedVariant[:self.selectedVariant.index(" - ")] if " - " in self.selectedVariant else None
+                behavior = self.selectedVariant[self.selectedVariant.index(" - ")+3:] if " - " in self.selectedVariant else None
 
-                # log("Pasting " + enemyIds[self.newEnemies[s]].name + " image onto encounter at " + str((x, y)) + ".")
-                # self.encounterImage.paste(im=image, box=(x, y), mask=image)
+                healthAddition = 0
+
+                imageWithText = ImageDraw.Draw(self.encounterImage)
+
+                # Boss and invader behavior card.
+                if behavior and behavior != "data":
+                    dodge = behaviorDetail[enemy][behavior]["dodge"]
+                    repeat = behaviorDetail[enemy][behavior].get("repeat", 1)
+                    actions = {}
+                    for position in ["left", "middle", "right"]:
+                        if position in behaviorDetail[enemy][behavior]:
+                            if "effect" in behaviorDetail[enemy][behavior][position]:
+                                actions[position] = {"effect": []}
+                                actions[position]["effect"] = [e for e in behaviorDetail[enemy][behavior][position]["effect"]]
+                            else:
+                                actions[position] = behaviorDetail[enemy][behavior][position].copy()
+
+                    if enemy in self.currentVariants and behavior in self.currentVariants[enemy]:
+                        mods = set([modIdLookup[m] for m in list(self.currentVariants[enemy][behavior])])
+                        for mod in mods:
+                            dodge += int(mod[-1]) if "dodge" in mod else 0
+                            repeat += 1 if "repeat" in mod else 0
+                            newConditionAdded = False
+
+                            # For behaviors that do not already cause a condition.
+                            if (
+                                mod in {"bleed", "frostbite", "poison", "stagger"}
+                                and "effect" not in actions["middle"]
+                                and "effect" not in actions["right"]
+                                ):
+                                for position in ["middle", "right"]:
+                                    if not actions[position]:
+                                        actions[position]["effect"] = [mod]
+                                        newConditionAdded = True
+                                        break
+
+                            if newConditionAdded:
+                                continue
+
+                            for position in ["left", "middle", "right"]:
+                                if position in actions:
+                                    if "damage" in actions[position]:
+                                        actions[position]["damage"] += int(mod[-1]) if "damage" in mod else 0
+                                    if "type" in actions[position]:
+                                        actions[position]["type"] = mod if mod in {"physical", "magic"} else actions[position]["type"]
+                                    # For behaviors that already cause a condition.
+                                    if "effect" in actions[position] and mod in {"bleed", "frostbite", "poison", "stagger"} and mod not in actions[position]["effect"]:
+                                        actions[position]["effect"].append(mod)
+
+                    imageWithText.text((267, 233), str(dodge), "black", font2)
+
+                    if repeat > 1:
+                        image = self.repeat[repeat]
+                        self.encounterImage.paste(im=image, box=(126, 225), mask=image)
+                                        
+                    for position in ["left", "middle", "right"]:
+                        if position not in actions or not actions[position]:
+                            continue
+                        if "type" in actions[position] and (actions[position]["type"] == "physical" or actions[position]["type"] == "magic"):
+                            x = 12 if position == "left" else 107 if position == "middle" else 202
+                            image = self.attack[actions[position]["type"]][actions[position]["damage"]]
+                            log("Pasting " + actions[position]["type"] + " attack image onto variant at " + str((x, 280)) + ".")
+                            self.encounterImage.paste(im=image, box=(x, 280), mask=image)
+                        elif "type" in actions[position] and actions[position]["type"] == "push":
+                            x = 15 if position == "left" else 110 if position == "middle" else 206
+                            image = self.attack[actions[position]["type"]][actions[position]["damage"]]
+                            log("Pasting " + actions[position]["type"] + " attack image onto variant at " + str((x, 283)) + ".")
+                            self.encounterImage.paste(im=image, box=(x, 283), mask=image)
+                        elif "effect" in actions[position]:
+                            for i, effect in enumerate(actions[position]["effect"]):
+                                if effect == "bleed":
+                                    image = self.bleed
+                                    posMod = 0
+                                elif effect == "frostbite":
+                                    image = self.frostbite
+                                    posMod = 10
+                                elif effect == "poison":
+                                    image = self.poison
+                                    posMod = 20
+                                elif effect == "stagger":
+                                    image = self.stagger
+                                    posMod = 0
+                                else:
+                                    continue
+
+                                x = posMod + (107 if position == "middle" else 210)
+                                self.encounterImage.paste(im=image, box=(x, 283 + (i * 45)), mask=image)
+                # Boss and invader data card.
+                elif behavior == "data" and "behavior" not in behaviorDetail[enemy]:
+                    health = behaviorDetail[enemy]["health"]
+                    armor = behaviorDetail[enemy]["armor"]
+                    resist = behaviorDetail[enemy]["resist"]
+                    heatup = []
+                    if "heatup1" in behaviorDetail[enemy]:
+                        heatup.append(behaviorDetail[enemy]["heatup1"])
+                        heatup.append(behaviorDetail[enemy]["heatup2"])
+                    elif "heatup" in behaviorDetail[enemy]:
+                        heatup.append(behaviorDetail[enemy]["heatup"])
+
+                    if enemy in self.currentVariants:
+                        mods = set([modIdLookup[m] for m in list(self.currentVariants[enemy]["defKey"])])
+                        for mod in mods:
+                            healthAddition = int(mod[-1]) if "health" in mod else 0
+                            health += healthAddition
+                            armor += int(mod[-1]) if "armor" in mod else 0
+                            resist += int(mod[-1]) if "resist" in mod else 0
+                            for h in heatup:
+                                h += int(mod[-1]) if "health" in mod else 0
+
+                    imageWithText.text((252 + (4 if health < 10 else 0), 35), str(health), "white", font2)
+                    imageWithText.text((130, 245), str(armor), "white", font3)
+                    imageWithText.text((154, 245), str(resist), "black", font3)
+
+                    if heatup:
+                        if enemy == "Vordt of the Boreal Valley":
+                            pass
+                        else:
+                            imageWithText.text((242 + (4 if heatup[0] < 10 else 0), 245), str(heatup[0]), "black", font2)
+
+                    if enemy == "Maldron the Assassin":
+                        imageWithText.text((132 + (4 if health < 10 else 0), 340), str(health), "black", font)
+                    elif enemy == "Paladin Leeroy":
+                        imageWithText.text((184, 340), str(2 + healthAddition), "black", font)
+                # Regular enemies.
+                elif behavior == "data" and "behavior" in behaviorDetail[enemy]:
+                    health = behaviorDetail[enemy]["health"]
+                    armor = behaviorDetail[enemy]["armor"]
+                    resist = behaviorDetail[enemy]["resist"]
+                    dodge = behaviorDetail[enemy]["behavior"]["dodge"]
+                    repeat = behaviorDetail[enemy]["behavior"].get("repeat", 1)
+                    actions = {}
+                    for position in ["left", "middle", "right"]:
+                        if position in behaviorDetail[enemy]["behavior"]:
+                            actions[position] = behaviorDetail[enemy]["behavior"][position]
+
+                    if enemy in self.currentVariants:
+                        mods = set([modIdLookup[m] for m in list(self.currentVariants[enemy][""])])
+                        
+                        for mod in mods:
+                            health += int(mod[-1]) if "health" in mod else 0
+                            armor += int(mod[-1]) if "armor" in mod else 0
+                            resist += int(mod[-1]) if "resist" in mod else 0
+                            dodge += int(mod[-1]) if "dodge" in mod else 0
+                            repeat += 1 if "repeat" in mod else 0
+                            newConditionAdded = False
+
+                            # For behaviors that do not already cause a condition.
+                            if (
+                                mod in {"bleed", "frostbite", "poison", "stagger"}
+                                and "effect" not in actions["middle"]
+                                and "effect" not in actions["right"]
+                                ):
+                                for position in ["middle", "right"]:
+                                    if position in actions and not actions[position]:
+                                        actions[position]["effect"] = [mod]
+                                        newConditionAdded = True
+                                        break
+
+                            if newConditionAdded:
+                                continue
+
+                            for position in ["left", "middle", "right"]:
+                                if position in actions:
+                                    if "damage" in actions[position]:
+                                        actions[position]["damage"] += int(mod[-1]) if "damage" in mod else 0
+                                    if "type" in actions[position]:
+                                        actions[position]["type"] = mod if mod in {"physical", "magic"} else actions[position]["type"]
+                                    # For behaviors that already cause a condition.
+                                    if "effect" in actions[position] and mod in {"bleed", "frostbite", "poison", "stagger"} and mod not in actions[position]["effect"]:
+                                        actions[position]["effect"].append(mod)
+
+                    imageWithText = ImageDraw.Draw(self.encounterImage)
+
+                    imageWithText.text((252 + (4 if health < 10 else 0), 35), str(health), "white", font2)
+                    imageWithText.text((130, 245), str(armor), "white", font3)
+                    imageWithText.text((154, 245), str(resist), "black", font3)
+
+                self.encounterPhotoImage = ImageTk.PhotoImage(self.encounterImage)
+                self.encounter.image = self.encounterPhotoImage
+                self.encounter.config(image=self.encounterPhotoImage)
 
                 log("End of edit_variant_card")
             except Exception as e:
@@ -2216,8 +2420,20 @@ try:
                         image = Image.open(imagePath).resize((9, 17), Image.Resampling.LANCZOS)
                     elif imageType == "enemyNode":
                         image = Image.open(imagePath).resize((12, 12), Image.Resampling.LANCZOS)
-                    elif imageType == "condition":
-                        image = Image.open(imagePath).resize((13, 13), Image.Resampling.LANCZOS)
+                    elif imageType == "attack":
+                        image = Image.open(imagePath).resize((85, 91), Image.Resampling.LANCZOS)
+                    elif imageType == "repeat":
+                        image = Image.open(imagePath).resize((48, 48), Image.Resampling.LANCZOS)
+                    elif imageType == "push":
+                        image = Image.open(imagePath).resize((26, 32), Image.Resampling.LANCZOS)
+                    elif imageType == "bleed":
+                        image = Image.open(imagePath).resize((38, 40), Image.Resampling.LANCZOS)
+                    elif imageType == "frostbite":
+                        image = Image.open(imagePath).resize((47, 50), Image.Resampling.LANCZOS)
+                    elif imageType == "poison":
+                        image = Image.open(imagePath).resize((30, 40), Image.Resampling.LANCZOS)
+                    elif imageType == "stagger":
+                        image = Image.open(imagePath).resize((37, 40), Image.Resampling.LANCZOS)
                     elif imageType == "barrage":
                         image = Image.open(imagePath).resize((41, 13), Image.Resampling.LANCZOS)
                     elif imageType == "bitterCold":
