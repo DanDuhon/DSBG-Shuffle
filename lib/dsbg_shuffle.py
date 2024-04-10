@@ -1648,7 +1648,7 @@ try:
                 elif " - " in start:
                     startReal = start[:start.index(" - ")]
                     diffKeyIndex = bisect_left(list(self.variants[startReal][self.numberOfCharacters].keys()), diffKey)
-                    diffKeyIndex -= 1 if diffKeyIndex > len(list(self.variants[start][self.numberOfCharacters].keys())) - 1 else 0
+                    diffKeyIndex -= 1 if diffKeyIndex > len(list(self.variants[startReal][self.numberOfCharacters].keys())) - 1 else 0
                     diffKeyReal = list(self.variants[startReal][self.numberOfCharacters].keys())[diffKeyIndex]
 
                     if "defKey" not in self.currentVariants.get(startReal, {}):
@@ -1657,10 +1657,7 @@ try:
                         self.pick_enemy_variants_behavior(startReal, start[start.index(" - ")+3:], diffKeyReal, defKey)
                     else:
                         defKey = self.currentVariants[startReal]["defKey"]
-                        curVariant = self.currentVariants[startReal].get(start[start.index(" - ")+3:], None)
-                        while (curVariant == self.currentVariants[startReal].get(start[start.index(" - ")+3:], 0)
-                            and len(self.variants[startReal][self.numberOfCharacters][diffKeyReal][defKey]) > 1):
-                            self.pick_enemy_variants_behavior(startReal, start[start.index(" - ")+3:], diffKeyReal, defKey)
+                        self.pick_enemy_variants_enemy(startReal, diffKey)
                 elif start in {"Enemies", "Invaders & Explorers Mimics", "Mini Bosses", "Main Bosses", "Mega Bosses"}:
                     for child in tree.get_children(start):
                         self.pick_enemy_variants_enemy(child, diffKey)
@@ -1707,7 +1704,17 @@ try:
             try:
                 log("Start of pick_enemy_variants_behavior")
 
-                self.currentVariants[start][behavior] = choice(list(self.variants[start][self.numberOfCharacters][diffKey][defKey][behavior]))
+                curVariant = self.currentVariants[start].get(behavior, 1)
+
+                while (
+                    len(self.currentVariants[start].get(behavior, [])) == 0
+                    or (
+                        behavior in self.currentVariants[start]
+                        and len(self.currentVariants[start][behavior]) > 1
+                        and curVariant == self.currentVariants[start][behavior]
+                        )
+                    ):
+                    self.currentVariants[start][behavior] = choice(list(self.variants[start][self.numberOfCharacters][diffKey][defKey][behavior]))
                 
                 log("End of pick_enemy_variants_behavior")
             except Exception as e:
@@ -1890,18 +1897,24 @@ try:
                                     posMod = 0
                                 elif effect == "frostbite":
                                     image = self.frostbite
-                                    posMod = 10
+                                    posMod = 0
                                 elif effect == "poison":
                                     image = self.poison
-                                    posMod = 20
+                                    posMod = 0
                                 elif effect == "stagger":
                                     image = self.stagger
+                                    posMod = 0
+                                elif effect == "corrosion":
+                                    image = self.corrosion
+                                    posMod = 0
+                                elif effect == "calamity":
+                                    image = self.calamity
                                     posMod = 0
                                 else:
                                     continue
 
-                                x = posMod + (107 if position == "middle" else 210)
-                                self.encounterImage.paste(im=image, box=(x, 283 + (i * 45)), mask=image)
+                                x = posMod + (120 if position == "middle" else 220)
+                                self.encounterImage.paste(im=image, box=(x, 275 + (i * 50)), mask=image)
                 # Boss and invader data card.
                 elif behavior == "data" and "behavior" not in behaviorDetail[enemy]:
                     health = behaviorDetail[enemy]["health"]
@@ -2427,13 +2440,17 @@ try:
                     elif imageType == "push":
                         image = Image.open(imagePath).resize((26, 32), Image.Resampling.LANCZOS)
                     elif imageType == "bleed":
-                        image = Image.open(imagePath).resize((38, 40), Image.Resampling.LANCZOS)
+                        image = Image.open(imagePath).resize((44, 50), Image.Resampling.LANCZOS)
                     elif imageType == "frostbite":
-                        image = Image.open(imagePath).resize((47, 50), Image.Resampling.LANCZOS)
+                        image = Image.open(imagePath).resize((46, 50), Image.Resampling.LANCZOS)
                     elif imageType == "poison":
-                        image = Image.open(imagePath).resize((30, 40), Image.Resampling.LANCZOS)
+                        image = Image.open(imagePath).resize((37, 50), Image.Resampling.LANCZOS)
                     elif imageType == "stagger":
-                        image = Image.open(imagePath).resize((37, 40), Image.Resampling.LANCZOS)
+                        image = Image.open(imagePath).resize((52, 56), Image.Resampling.LANCZOS)
+                    elif imageType == "calamity":
+                        image = Image.open(imagePath).resize((51, 50), Image.Resampling.LANCZOS)
+                    elif imageType == "corrosion":
+                        image = Image.open(imagePath).resize((49, 50), Image.Resampling.LANCZOS)
                     elif imageType == "barrage":
                         image = Image.open(imagePath).resize((41, 13), Image.Resampling.LANCZOS)
                     elif imageType == "bitterCold":
