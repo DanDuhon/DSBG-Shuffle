@@ -12,7 +12,7 @@ try:
         "Maneater Mildred": ["Butcher Chop", "Butchery", "Death Blow", "Executioner Strike", "Guillotine"],
         "Marvelous Chester": ["Crossbow Snipe", "Crossbow Volley", "Spinning Low Kick", "Throwing Knife Flurry", "Throwing Knife Volley"],
         "Melinda the Butcher": ["Cleaving Strikes", "Double Smash", "Greataxe Sweep", "Jumping Cleave", "Sweeping Advance"],
-        "Oliver the Collector": ["Bone Fish Punches", "Majestic Greatsword Slash", "Minotaur Helm Charge", "Puzzling Stone Sword Strike", "Ricard's Rapier Thrust", "Santier's Spear Lunge", "Smelter Hammer Whirlwind"],
+        "Oliver the Collector": ["Bone Fist Punches", "Majestic Greatsword Slash", "Minotaur Helm Charge", "Puzzling Stone Sword Strike", "Ricard's Rapier Thrust", "Santier's Spear Lunge", "Smelter Hammer Whirlwind"],
         "Paladin Leeroy": ["Advancing Grant Slam", "Grant Slam Withdrawal", "Sanctus Shield Dash", "Sanctus Shield Slam", "Wrath of the Gods"],
         "Voracious Mimic": ["Aggressive Grab", "Charging Chomp", "Heavy Punch", "Leaping Spin Kick", "Raking Slash", "Stomping Kick", "Vicious Chomp"],
         "Xanthous King Jeremiah": ["Chaos Fire Whip", "Chaos Storm", "Fiery Retreat", "Great Chaos Fireball", "Whiplash"],
@@ -23,24 +23,24 @@ try:
         "Heavy Knight": ["Charging Chop", "Defensive Chop", "Defensive Swipe", "Double Chop", "Double Slash", "Overhead Chop", "Shield Smash", "Shield Swipe", "Slashing Blade"],
         "Old Dragonslayer": ["Darkness Bolt", "Darkness Falls", "Leaping Darkness", "Lunging Combo", "Massive Sweep", "Skewering Charge", "Spear Lunge", "Spear Sweep"],
         "Titanite Demon": ["Double Pole Crush", "Double Swing", "Grab & Smash", "Lightning Bolt", "Sweeping Strike", "Tail Whip", "Vaulting Slam", "Vicious Swing"],
-        "Winged Knight": ["Backhand Shaft Strike", "Charging Assault", "Diagonal Uppercut", "Double Slash", "Overhand Strike", "Pillars of Light", "Sweeping Blade Swing", "Whirlwind"],
+        "Winged Knight": ["Backhand Shaft Strike", "Charging Assault", "Diagonal Uppercut", "Double Slash", "Overhand Smash", "Pillars of Light", "Sweeping Blade Swing", "Whirlwind"],
         "Artorias": ["Abyss Assault", "Abyss Sludge", "Charging Slash", "Heavy Thrust", "Leaping Fury", "Lunging Cleave", "Overhead Cleave", "Retreating Strike", "Somersault Slam", "Somersault Strike", "Spinning Slash", "Steadfast Leap", "Wrath of the Abyss"],
         "Crossbreed Priscilla": ["Backslash", "Blizzard", "Double Lunge", "Double Slash", "Double Strike", "Flanking Slash", "Icy Blast", "Mournful Gaze", "Scythe Slash", "Scythe Strike", "Scything Lunge", "Scything Withdrawal", "Snowstorm"],
         "Dancer of the Boreal Valley": ["Ash Cloud", "Backhand Blade Swipe", "Blade Dance", "Deadly Grasp", "Double Slash", "Flashing Blade", "Lunging Thrust", "Plunging Assault", "Plunging Attack", "Sweeping Blade Swipe", "Triple Slash", "Uppercut", "Whirling Blades"],
-        "Gravelord Nito": ["Creeping Death", "Death Grip", "Death Wave", "Deathly Strike", "Deathly Thrust", "Death's Embrace", "Entrophy", "Gravelord Greatsword", "Lunging Cleave", "Miasma", "Sword Slam", "Sword Sweep", "Toxicity"],
-        "Great Grey Wolf Sif": ["Cyclone Strikes", "Dashing Slice", "Evasive Strike", "Feral Onslaught", "Limping Strike", "Pouncing Assault", "Saveage Retreat", "Sidestep Cleave", "Sidestep Slash", "Slashing Assault", "Slashing Retreat", "Spinning Slash", "Sword Slam", "Upward Slash"],
-        "Ornstein & Smough": ["Evasive Sweep & Trampling Charge", "Gliding Stab & Hammer Smash", "Lightning Bolt & Jumping Slam", "Spear Slam & Hammer Sweep", "Swiping Combo & Bonzai Drop", "Charged Swiping Combo", "Electric Clash", "High Voltage", "Lightning Stab", "Charged Charge", "Electric Bonzai Drop", "Electric Hammer Smash", "Jumping Volt Slam", "Lightning Sweep"],
+        "Gravelord Nito": ["Creeping Death", "Death Grip", "Death Wave", "Deathly Strike", "Deathly Thrust", "Death's Embrace", "Entropy", "Gravelord Greatsword", "Lunging Cleave", "Miasma", "Sword Slam", "Sword Sweep", "Toxicity"],
+        "Great Grey Wolf Sif": ["Cyclone Strikes", "Dashing Slice", "Evasive Strike", "Feral Onslaught", "Limping Strike", "Pouncing Assault", "Savage Retreat", "Sidestep Cleave", "Sidestep Slash", "Slashing Assault", "Slashing Retreat", "Spinning Slash", "Sword Slam", "Upward Slash"],
+        "Ornstein & Smough": ["Evasive Sweep & Trampling Charge", "Gliding Stab & Hammer Smash", "Lightning Bolt & Jumping Slam", "Spear Slam & Hammer Sweep", "Swiping Combo & Bonzai Drop", "Charged Bolt", "Charged Swiping Combo", "Electric Clash", "High Voltage", "Lightning Stab", "Charged Charge", "Electric Bonzai Drop", "Electric Hammer Smash", "Jumping Volt Slam", "Lightning Sweep"],
         "Sir Alonne": ["Charging Katana Lunge", "Charging Katana Slash", "Dark Wave", "Double Slash Combo", "Fast Katana Lunge", "Katana Plunge", "Left Sidestep Slash", "Life Drain", "Lunging Slash Combo", "Right Sidestep Slash", "Stab & Slash Combo", "Stabbing Slash Combo", "Triple Slash Combo"],
-        "Smelter Demon": ["Double Sweep", "Fiery Blast", "Fiery Explosion", "Flame Wave", "Flaming Double Sweep", "Flaming Impalement Strike", "Flaming Overhead Chop", "Flaming Sweeping Slash", "Leaping Impalement Strike", "Lunging Strike", "Overhead Chop", "Sweeping Slash"],
+        "Smelter Demon": ["Double Sweep", "Fiery Blast", "Fiery Explosion", "Flame Wave", "Flaming Double Sweep", "Flaming Impalement Strike", "Flaming Lunging Strike", "Flaming Overhead Chop", "Flaming Sweeping Slash", "Leaping Impalement Strike", "Lunging Strike", "Overhead Chop", "Sweeping Slash"],
         "The Pursuer": ["Cursed Impale", "Dark Magic", "Overhead Cleave", "Rising Blade Swing", "Shield Bash", "Shield Smash", "Stabbing Strike", "Wide Blade Swing"],
         "Black Dragon Kalameet": ["Conflagration", "Consuming Blaze", "Evasive Tail Whip", "Flame Feint", "Head Strike", "Hellfire Barrage", "Hellfire Blast", "Mark of Calamity", "Rising Inferno", "Rush Strike", "Sweeping Flame", "Swooping Charge", "Tail Sweep"],
-        "Executioner Chariot": ["Advancing Back Kick", "Back Kick", "Charging Breath", "Charging Ram", "Deadly Breath", "Engulfing Darkness", "Headbutt", "Merciless Charge", "Rearing Charge", "Roiling Darkness", "Stomp Rush", "Trampling Charge"],
+        "Executioner Chariot": ["Advancing Back Kick", "Back Kick", "Charging Breath", "Charging Ram", "Deadly Breath", "Death Race", "Engulfing Darkness", "Headbutt", "Merciless Charge", "Rearing Charge", "Roiling Darkness", "Stomp Rush", "Trampling Charge"],
         "Gaping Dragon": ["Claw Swipe", "Corrosive Ooze (Front)", "Corrosive Ooze (Front Left)", "Corrosive Ooze (Front Right)", "Corrosive Ooze (Front Right Left)", "Crawling Charge", "Flying Smash", "Gorge", "Right Hook", "Stomach Slam", "Stomp Slam", "Tail Whip", "Triple Stomp"],
-        "Guardian Dragon": ["Cage Grasp Inferno", "Charging Flame", "Fire Breath", "Fire Sweep", "Fireball", "Leaping Breath", "Left Stomp", "Right Stomp", "Tail Sweep"],
+        "Guardian Dragon": ["Bite", "Cage Grasp Inferno", "Charging Flame", "Fire Breath", "Fire Sweep", "Fireball", "Leaping Breath", "Left Stomp", "Right Stomp", "Tail Sweep"],
         "Manus, Father of the Abyss": ["Abyss Cage", "Abyss Rain", "Back Swipe", "Catalyst Smash", "Catalyst Strike", "Crushing Palm", "Dark Orb Barrage", "Descending Darkness", "Diving Slam", "Extended Sweep", "Frenzied Attacks", "Ground Slam", "Ring of Darkfire", "Sweeping Strike"],
         "Old Iron King": ["Bash", "Double Fist Pound", "Double Swipe", "Fire Beam (Front)", "Fire Beam (Left)", "Fire Beam (Right)", "Firestorm", "Fist Pound", "Magma Blast", "Searing Blast", "Shockwave", "Swipe"],
         "Stray Demon": ["Crushing Leaps", "Delayed Hammer Drive", "Ground Pound", "Hammer Blast", "Hammer Drive", "Leaping Hammer Smash", "Lumbering Swings", "Mighty Hammer Smash", "Retreating Sweep", "Shockwave", "Sidestep Left Sweep", "Sidestep Right Sweep", "Sweeping Strikes"],
-        "The Four Kings": ["Blazing Wrath", "Cautious Arrow Mass", "Downward Slash", "Evasive Abyss Arrow", "Evasive Slash", "Executioner's Slash", "Forward Thrust", "Homing Arrow Mass", "Horizontal Slash", "Into the Abyss", "Lifedrain Death Grasp", "Lifedrain Grab", "Pinpoint Homing Arrows", "Precision Slash", "Shockwave", "Thrust & Retreat", "Unerring Thrust", "Upward Slash", "Wrath of the Kings"],
+        "The Four Kings": ["Blazing Wrath", "Cautious Arrow Mass", "Downward Slash", "Evasive Abyss Arrow", "Evasive Slash", "Executioner's Slash", "Forward Thrust", "Homing Abyss Arrow", "Homing Arrow Mass", "Horizontal Slash", "Into the Abyss", "Lifedrain Death Grasp", "Lifedrain Grab", "Pinpoint Homing Arrows", "Precision Slash", "Shockwave", "Thrust & Retreat", "Unerring Thrust", "Upward Slash", "Wrath of the Kings"],
         "The Last Giant": ["Arm Club Backhand", "Arm Club Sweep", "Arm Smash", "Armed Swings", "Backhand Strike", "Backstep Stomp", "Beat You With It", "Clubbing Blow", "Falling Slam", "Heavy Swings", "Left Foot Stomp", "Overhead Smash", "Right Foot Stomp", "Stomp Rush", "Sweeping Strike", "Triple Stomp"],
         "Vordt of the Boreal Valley": ["Backhand Swipe", "Berserk Rush", "Berserk Trample", "Crushing Charge", "Double Swipe", "Frostbreath", "Hammerfist Combo", "Hammerfist", "Handle Slam", "Jump Rush", "Mace Thrust", "Retreating Sweep", "Shove Left", "Shove Right", "Tracking Charge", "Trampling Charge", "Wild Swings"]
     }
@@ -1010,7 +1010,7 @@ try:
             "heatup": 13,
             "armor": 2,
             "resist": 3,
-            "Overhead Slash": {
+            "Overhand Slash": {
                 "dodge": 1,
                 "middle": {"type": "physical", "damage": 5},
                 "right": {}
@@ -1652,54 +1652,57 @@ try:
                 "resist": 2
             },
             "Gliding Stab & Hammer Smash": {
-                "top": {
+                "Gliding Stab": {
                     "dodge": 3,
-                    "middle": {"type": "physical", "damage": 5}
+                    "right": {"type": "physical", "damage": 5}
                 },
-                "bottom": {
+                "Hammer Smash": {
                     "dodge": 1,
-                    "middle": {"type": "physical", "damage": 5}
+                    "right": {"type": "physical", "damage": 5}
                 }
             },
             "Evasive Sweep & Trampling Charge": {
-                "top": {
+                "Evasive Sweep": {
                     "dodge": 2,
-                    "middle": {"type": "physical", "damage": 4}
+                    "right": {"type": "physical", "damage": 4}
                 },
-                "bottom": {
+                "Trampling Charge": {
+                    "dodge": 1,
+                    "left": {"type": "push", "damage": 5},
+                    "right": {}
                 }
             },
             "Spear Slam & Hammer Sweep": {
-                "top": {
+                "Spear Slam": {
                     "dodge": 1,
-                    "middle": {"type": "physical", "damage": 5}
+                    "right": {"type": "physical", "damage": 5}
                 },
-                "bottom": {
+                "Hammer Sweep": {
                     "dodge": 1,
                     "left": {"type": "physical", "damage": 5}
                 }
             },
             "Swiping Combo & Bonzai Drop": {
-                "top": {
+                "Swiping Combo": {
                     "dodge": 1,
                     "repeat": 2,
-                    "middle": {"type": "physical", "damage": 5}
+                    "right": {"type": "physical", "damage": 5}
                 },
-                "bottom": {
+                "Bonzai Drop": {
                     "dodge": 2,
                     "left": {"type": "push", "damage": 5},
-                    "middle": {}
+                    "right": {}
                 }
             },
             "Lightning Bolt & Jumping Slam": {
-                "top": {
+                "Lightning Bolt": {
                     "dodge": 1,
                     "left": {"type": "magic", "damage": 5},
-                    "middle": {}
+                    "right": {}
                 },
-                "bottom": {
+                "Jumping Slam": {
                     "dodge": 1,
-                    "middle": {"type": "physical", "damage": 6}
+                    "right": {"type": "physical", "damage": 6}
                 }
             },
             "Charged Swiping Combo": {
@@ -1818,7 +1821,7 @@ try:
                 "middle": {"type": "physical", "damage": 7},
                 "right": {}
             },
-            "Sweeping Blade Strike": {
+            "Sweeping Blade Swipe": {
                 "dodge": 2,
                 "right": {"type": "physical", "damage": 7}
             },
