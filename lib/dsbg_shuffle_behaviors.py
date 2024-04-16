@@ -225,7 +225,7 @@ try:
         "Mushroom Parent": {
             "behavior": {
                 "dodge": 1,
-                "left": {"type": "physical", "damage": 6},
+                "left": {"type": "push", "damage": 6},
                 "middle": {"effect": ["stagger"]},
                 "right": {}
             },
@@ -247,6 +247,7 @@ try:
             "behavior": {
                 "dodge": 1,
                 "left": {"type": "physical", "damage": 5},
+                "middle": {},
                 "right": {}
             },
             "health": 5,
@@ -257,6 +258,7 @@ try:
             "behavior": {
                 "dodge": 1,
                 "left": {"type": "physical", "damage": 4},
+                "middle": {},
                 "right": {}
             },
             "health": 1,
@@ -297,7 +299,7 @@ try:
             "behavior": {
                 "dodge": 1,
                 "left": {"type": "physical", "damage": 4},
-                "right": {}
+                "middle": {}
             },
             "health": 1,
             "armor": 2,
@@ -307,6 +309,7 @@ try:
             "behavior": {
                 "dodge": 2,
                 "left": {"type": "physical", "damage": 6},
+                "middle": {},
                 "right": {}
             },
             "health": 1,
@@ -327,7 +330,7 @@ try:
             "behavior": {
                 "dodge": 1,
                 "left": {"type": "physical", "damage": 4},
-                "right": {}
+                "middle": {}
             },
             "health": 1,
             "armor": 1,
@@ -337,6 +340,7 @@ try:
             "behavior": {
                 "dodge": 2,
                 "left": {"type": "push", "damage": 4},
+                "middle": {},
                 "right": {"repeat": 2}
             },
             "health": 5,
@@ -544,10 +548,10 @@ try:
             "Spider Fang Web Blast": {
                 "dodge": 2,
                 "left": {"type": "magic", "damage": 5},
-                "right": {}
+                "middle": {}
             },
             "Dual Sword Assault": {
-                "dodge": 2,
+                "dodge": 1,
                 "repeat": 2,
                 "middle": {"type": "physical", "damage": 5},
                 "right": {}
@@ -617,7 +621,7 @@ try:
             "Overhead Chop": {
                 "dodge": 1,
                 "middle": {"type": "physical", "damage": 4},
-                "right": {"effect": ["stagger"]}
+                "right": {"effect": ["bleed"]}
             },
             "Barbed Sword Thrust": {
                 "dodge": 1,
@@ -772,13 +776,13 @@ try:
                 "dodge": 1,
                 "repeat": 2,
                 "left": {"type": "physical", "damage": 4},
-                "right": {}
+                "middle": {}
             },
             "Jumping Cleave": {
                 "dodge": 1,
                 "repeat": 3,
                 "left": {"type": "physical", "damage": 3},
-                "right": {}
+                "middle": {}
             },
             "Greataxe Sweep": {
                 "dodge": 2,
@@ -834,7 +838,7 @@ try:
             "Ricard's Rapier Thrust": {
                 "dodge": 2,
                 "left": {"type": "physical", "damage": 4},
-                "right": {}
+                "middle": {}
             }
         },
         "Paladin Leeroy": {
@@ -958,7 +962,7 @@ try:
             "resist": 1,
             "Leaping Hammer Smash": {
                 "dodge": 1,
-                "left": {"type": "push", "damage": 5},
+                "left": {"type": "push", "damage": 4},
                 "right": {}
             },
             "Ground Pound": {
@@ -1190,6 +1194,7 @@ try:
             },
             "Double Chop": {
                 "dodge": 1,
+                "repeat": 2,
                 "left": {"type": "physical", "damage": 5},
                 "middle": {"effect": ["stagger"]}
             },
@@ -1578,7 +1583,7 @@ try:
             },
             "Sword Slam": {
                 "dodge": 2,
-                "middle": {"type": "physical", "damage": 5},
+                "middle": {"type": "physical", "damage": 6},
                 "right": {"effect": ["stagger"]}
             },
             "Evasive Strike": {
@@ -1631,6 +1636,7 @@ try:
             },
             "Savage Retreat": {
                 "dodge": 2,
+                "repeat": 3,
                 "left": {"type": "physical", "damage": 6},
                 "middle": {"effect": ["stagger"]}
             },
@@ -1771,7 +1777,7 @@ try:
             "resist": 2,
             "Blade Dance": {
                 "dodge": 1,
-                "repeat": 3,
+                "repeat": 2,
                 "right": {"type": "physical", "damage": 5}
             },
             "Plunging Assault": {
@@ -1840,7 +1846,7 @@ try:
             "health": 25,
             "heatup": 15,
             "armor": 3,
-            "resist": 2,
+            "resist": 3,
             "Somersault Slam": {
                 "dodge": 1,
                 "middle": {"type": "magic", "damage": 5},
@@ -2137,7 +2143,7 @@ try:
                 "middle": {"type": "physical", "damage": 5},
                 "right": {}
             },
-            "health": 100,
+            "health": 25,
             "armor": 2,
             "resist": 2,
             "Upward Slash": {
@@ -2362,22 +2368,18 @@ try:
                 "right": {}
             },
             "Left Stomp": {
-                "dodge": 1,
+                "dodge": 2,
                 "left": {"type": "physical", "damage": 6},
                 "middle": {"effect": ["stagger"]}
             },
             "Right Stomp": {
-                "dodge": 1,
+                "dodge": 2,
                 "left": {"type": "physical", "damage": 6},
                 "middle": {"effect": ["stagger"]}
             },
-            "Cage Grasp Inferno (magic)": {
+            "Cage Grasp Inferno": {
                 "dodge": 1,
                 "left": {"type": "magic", "damage": 5}
-            },
-            "Cage Grasp Inferno (physical)": {
-                "dodge": 1,
-                "left": {"type": "physical", "damage": 5}
             }
         },
         "Gaping Dragon": {
@@ -2463,8 +2465,8 @@ try:
                 "right": {}
             },
             "health": 42,
-            "heatup1": 28,
-            "heatup2": 14,
+            "heatup1": 14,
+            "heatup2": 28,
             "armor": 3,
             "resist": 3,
             "Tracking Charge": {
@@ -2694,7 +2696,7 @@ try:
                 "right": {"type": "magic", "damage": 6}
             }
         },
-        "Executioner's Chariot": {
+        "Executioner Chariot": {
             "Death Race": {
                 "dodge": 1,
                 "left": {"type": "physical", "damage": 7},

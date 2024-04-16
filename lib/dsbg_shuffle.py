@@ -54,8 +54,8 @@ try:
                 with open(baseFolder + "\\lib\\dsbg_shuffle_settings.json".replace("\\", pathSep)) as settingsFile:
                     self.settings = load(settingsFile)
 
-                if self.settings["theme"] == "light":
-                    root.tk.call("set_theme", "light")
+                # if self.settings["theme"] == "light":
+                #     root.tk.call("set_theme", "light")
 
                 self.selected = None
                 self.selectedVariant = None
@@ -119,6 +119,7 @@ try:
                 self.campaign = []
 
                 self.currentVariants = {}
+                self.lockedVariants = {}
                 
                 progress.label.config(text="Loading treasure...")
                 if self.settings["treasureSwapOption"] in {"Similar Soul Cost", "Tier Based"}:
@@ -196,8 +197,10 @@ try:
                 self.scrollbarTreeviewEventDeck = ttk.Scrollbar(self.eventTabEventDeckTreeviewFrame)
                 self.scrollbarTreeviewEventDeck.pack(side="right", fill="y")
                 self.create_event_treeviews()
-                self.scrollbarTreeviewVariants = ttk.Scrollbar(self.variantsTab)
-                self.scrollbarTreeviewVariants.pack(side="right", fill="y")
+                self.scrollbartreeviewVariantsList = ttk.Scrollbar(self.variantsListTreeviewFrame)
+                self.scrollbartreeviewVariantsList.pack(side="right", fill="y")
+                self.scrollbartreeviewVariantsLocked = ttk.Scrollbar(self.variantsLockedTreeviewFrame)
+                self.scrollbartreeviewVariantsLocked.pack(side="right", fill="y")
                 self.create_variants_treeview()
                 self.create_encounter_frame()
                 self.create_menu()
@@ -220,9 +223,13 @@ try:
                 self.frostbite = self.create_image("frostbite.png", "frostbite")
                 self.poison = self.create_image("poison.png", "poison")
                 self.stagger = self.create_image("stagger.png", "stagger")
+                self.corrosion = self.create_image("corrosion.png", "corrosion")
+                self.calamity = self.create_image("calamity.png", "calamity")
                 self.repeat = {}
                 for x in range(2, 6):
                     self.repeat[x] = self.create_image("repeat_" + str(x) + ".png", "repeat")
+                self.sks_move = self.create_image("sks_move.png", "move")
+                self.phalanx_move = self.create_image("phalanx_move.png", "move")
 
                 # Keywords
                 self.barrage = self.create_image("barrage.png", "barrage")
@@ -1417,8 +1424,12 @@ try:
                 self.notebook.add(self.variantsTab, text="Behavior Variants")
                 self.variantsTabButtonsFrame = ttk.Frame(self.variantsTab)
                 self.variantsTabButtonsFrame.pack()
-                self.variantsTabTreeviewFrame = ttk.Frame(self.variantsTab)
-                self.variantsTabTreeviewFrame.pack(fill="both", expand=True)
+                self.variantsListTreeviewFrame = ttk.Frame(self.variantsTab)
+                self.variantsListTreeviewFrame.pack(fill="both", expand=True)
+                self.variantsTabButtonsFrame2 = ttk.Frame(self.variantsTab)
+                self.variantsTabButtonsFrame2.pack()
+                self.variantsLockedTreeviewFrame = ttk.Frame(self.variantsTab)
+                self.variantsLockedTreeviewFrame.pack(fill="both", expand=True)
 
                 vcmd = (self.register(self.callback))
 
@@ -1431,6 +1442,15 @@ try:
                 self.diffLabel2.pack(side=tk.LEFT, anchor=tk.CENTER, pady=5)
                 self.applyModButton = ttk.Button(self.variantsTabButtonsFrame, text="Apply Modifier", width=16, command=self.apply_difficulty_modifier)
                 self.applyModButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+                self.applyModButton = ttk.Button(self.variantsTabButtonsFrame, text="Lock Variant", width=16, command=self.lock_variant_card)
+                self.applyModButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+                
+                self.applyModButton2 = ttk.Button(self.variantsTabButtonsFrame2, text="Remove Variant(s)", width=16, command=self.delete_locked_variant)
+                self.applyModButton2.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+                self.applyModButton2 = ttk.Button(self.variantsTabButtonsFrame2, text="Images to PDF", width=16, command=do_nothing)
+                self.applyModButton2.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+                self.applyModButton2 = ttk.Button(self.variantsTabButtonsFrame2, text="Summary to PDF", width=16, command=do_nothing)
+                self.applyModButton2.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
 
                 log("End of create_tabs")
             except Exception as e:
@@ -1445,7 +1465,7 @@ try:
             try:
                 log("Start of callback")
 
-                if (str.isdigit(P) or str(P) == "") and len(P) <= 4:
+                if (str.isdigit(P) or str(P) == "") and len(P) <= 5:
                     log("End of callback")
                     return True
                 else:
@@ -1632,14 +1652,14 @@ try:
                 raise
 
 
-        def apply_difficulty_modifier(self):
+        def apply_difficulty_modifier(self, event=None):
             """
             Find the appropriate variants for the entered difficulty.
             """
             try:
                 log("Start of apply_difficulty_modifier")
 
-                tree = self.treeviewVariants
+                tree = self.treeviewVariantsList
                 if not tree.selection():
                     log("End of apply_difficulty_modifier (nothing selected)")
                     return
@@ -1647,6 +1667,8 @@ try:
                 if not self.entryText.get():
                     log("End of apply_difficulty_modifier (no mod entered)")
                     return
+                
+                progress = None
 
                 diffKey = 1.0 + (float(self.entryText.get()) / 100)
                 diffKey = (ceil((diffKey * 10) / 2.0) * 2) / 10
@@ -1670,25 +1692,35 @@ try:
                         defKey = self.currentVariants[startReal]["defKey"]
                         self.pick_enemy_variants_behavior(startReal, start[start.index(" - ")+3:], diffKeyReal, defKey)
                 elif start in {"Enemies", "Invaders & Explorers Mimics", "Mini Bosses", "Main Bosses", "Mega Bosses"}:
+                    progress = PopupWindow(root, labelText="Generating variants, please wait...", loadingImage=True)
                     for child in tree.get_children(start):
                         self.pick_enemy_variants_enemy(child, diffKey)
                 elif start == "All":
+                    progress = PopupWindow(root, labelText="Generating variants, please wait...", loadingImage=True)
                     for child in tree.get_children(start):
                         for subChild in tree.get_children(child):
                             self.pick_enemy_variants_enemy(subChild, diffKey)
 
+                # Recalculate the average difficulty mod for this row and its parents and children.
+                for child in tree.get_children(start):
+                    for subChild in tree.get_children(child):
+                        for subSubChild in tree.get_children(subChild):
+                            self.recalc_variant_average(tree, subSubChild)
+                        self.recalc_variant_average(tree, subChild)
+                    self.recalc_variant_average(tree, child)
+
+                if tree.parent(start):
+                    self.recalc_variant_average(tree, start)
+                    if tree.parent(tree.parent(start)):
+                        self.recalc_variant_average(tree, tree.parent(start))
+                        if tree.parent(tree.parent(tree.parent(start))):
+                            self.recalc_variant_average(tree, tree.parent(tree.parent(start)))
+
                 if self.selectedVariant:
                     self.load_variant_card(variant=self.selectedVariant)
 
-                for child in tree.get_children(start):
-                    self.recalc_variant_average(child)
-
-                if tree.parent(start):
-                    self.recalc_variant_average(start)
-                    if tree.parent(tree.parent(start)):
-                        self.recalc_variant_average(tree.parent(start))
-                        if tree.parent(tree.parent(tree.parent(start))):
-                            self.recalc_variant_average(tree.parent(tree.parent(start)))
+                if progress:
+                    progress.destroy()
 
                 log("End of apply_difficulty_modifier")
             except Exception as e:
@@ -1696,19 +1728,23 @@ try:
                 raise
 
 
-        def recalc_variant_average(self, start):
+        def recalc_variant_average(self, tree, start):
             """
             Calculate and display the rolled up average for a treeview parent row.
             """
             try:
                 log("Start of recalc_variant_average")
 
-                parent = self.treeviewVariants.parent(start)
+                parent = tree.parent(start)
                 diffAvg = []
-                for child in self.treeviewVariants.get_children(self.treeviewVariants.parent(start)):
-                    diffAvg.append(int(self.treeviewVariants.item(child)["values"][1]))
+                for child in tree.get_children(tree.parent(start)):
+                    if tree.item(child)["values"][1]:
+                        diffAvg.append(int(tree.item(child)["values"][1]))
                     
-                self.treeviewVariants.item(parent, values=(self.treeviewVariants.item(parent)["values"][0], int(round(mean(diffAvg))), self.treeviewVariants.item(parent)["values"][2]))
+                if tree == self.treeviewVariantsList:
+                    tree.item(parent, values=(tree.item(parent)["values"][0], int(round(mean(diffAvg))), tree.item(parent)["values"][2]))
+                else:
+                    tree.item(parent, values=(tree.item(parent)["values"][0], int(round(mean(diffAvg)))))
 
                 log("End of recalc_variant_average")
             except Exception as e:
@@ -1773,7 +1809,7 @@ try:
                         ):
                         self.currentVariants[start][behavior] = choice(self.variants[start][self.numberOfCharacters][diffKey][defKey][behavior])
                     
-                self.treeviewVariants.item(start + (" - " + behavior if behavior else ""), values=(self.treeviewVariants.item(start + (" - " + behavior if behavior else ""))["values"][0], int(round((diffKey - 1.0) * 100, -1)), self.treeviewVariants.item(start + (" - " + behavior if behavior else ""))["values"][2]))
+                self.treeviewVariantsList.item(start + (" - " + behavior if behavior else ""), values=(self.treeviewVariantsList.item(start + (" - " + behavior if behavior else ""))["values"][0], int(round((diffKey - 1.0) * 100, -1)), self.treeviewVariantsList.item(start + (" - " + behavior if behavior else ""))["values"][2]))
                 
                 log("End of pick_enemy_variants_behavior")
             except Exception as e:
@@ -1789,51 +1825,84 @@ try:
             try:
                 log("Start of create_variants_treeview")
 
-                self.treeviewVariants = ttk.Treeview(
-                    self.variantsTab,
+                self.treeviewVariantsList = ttk.Treeview(
+                    self.variantsListTreeviewFrame,
                     selectmode="browse",
                     columns=("Name", "Current Modifier", "Max Modifier"),
-                    yscrollcommand=self.scrollbarTreeviewVariants.set,
-                    height=29 if root.winfo_screenheight() > 1000 else 20
+                    yscrollcommand=self.scrollbartreeviewVariantsList.set,
+                    height=12 if root.winfo_screenheight() > 1000 else 20
                 )
 
-                self.treeviewVariants.pack(expand=True, fill="both")
-                self.scrollbarTreeviewVariants.config(command=self.treeviewVariants.yview)
+                self.treeviewVariantsList.pack(expand=True, fill="both")
+                self.scrollbartreeviewVariantsList.config(command=self.treeviewVariantsList.yview)
 
-                self.treeviewVariants.column('#0', width=50)
+                self.treeviewVariantsList.column('#0', width=50)
 
-                self.treeviewVariants.heading("Name", text="Name", anchor=tk.W)
-                self.treeviewVariants.heading("Current Modifier", text="Current Modifier", anchor=tk.W)
-                self.treeviewVariants.heading("Max Modifier", text="Max Modifier", anchor=tk.W)
-                self.treeviewVariants.column("Name", anchor=tk.W, width=300)
-                self.treeviewVariants.column("Current Modifier", anchor=tk.W)
-                self.treeviewVariants.column("Max Modifier", anchor=tk.W)
+                self.treeviewVariantsList.heading("Name", text="Name", anchor=tk.W)
+                self.treeviewVariantsList.heading("Current Modifier", text="Current Modifier", anchor=tk.W)
+                self.treeviewVariantsList.heading("Max Modifier", text="Max Modifier", anchor=tk.W)
+                self.treeviewVariantsList.column("Name", anchor=tk.W, width=300)
+                self.treeviewVariantsList.column("Current Modifier", anchor=tk.W)
+                self.treeviewVariantsList.column("Max Modifier", anchor=tk.W)
                 
-                self.treeviewVariants.insert(parent="", index="end", iid="All", values=("All", 0, ""), tags=False, open=True)
-                self.treeviewVariants.insert(parent="All", index="end", iid="Enemies", values=("    Enemies", 0, ""), tags=False)
-                self.treeviewVariants.insert(parent="All", index="end", iid="Invaders & Explorers Mimics", values=("    Invaders & Explorers Mimics", 0, ""), tags=False)
-                self.treeviewVariants.insert(parent="All", index="end", iid="Mini Bosses", values=("    Mini Bosses", 0, ""), tags=False)
-                self.treeviewVariants.insert(parent="All", index="end", iid="Main Bosses", values=("    Main Bosses", 0, ""), tags=False)
-                self.treeviewVariants.insert(parent="All", index="end", iid="Mega Bosses", values=("    Mega Bosses", 0, ""), tags=False)
+                self.treeviewVariantsList.insert(parent="", index="end", iid="All", values=("All", 0, ""), tags=False, open=True)
+                self.treeviewVariantsList.insert(parent="All", index="end", iid="Enemies", values=("    Enemies", 0, ""), tags=False)
+                if {"Phantoms", "Explorers"} & self.availableExpansions:
+                    self.treeviewVariantsList.insert(parent="All", index="end", iid="Invaders & Explorers Mimics", values=("    Invaders & Explorers Mimics", 0, ""), tags=False)
+                self.treeviewVariantsList.insert(parent="All", index="end", iid="Mini Bosses", values=("    Mini Bosses", 0, ""), tags=False)
+                self.treeviewVariantsList.insert(parent="All", index="end", iid="Main Bosses", values=("    Main Bosses", 0, ""), tags=False)
+                self.treeviewVariantsList.insert(parent="All", index="end", iid="Mega Bosses", values=("    Mega Bosses", 0, ""), tags=False)
 
-                for enemy in sorted(list(enemiesDict.keys())):
-                    maxDiff = int((max(list(self.variants[enemy][self.numberOfCharacters].keys())) - 1.0) * 100)
-                    self.treeviewVariants.insert(parent="Invaders & Explorers Mimics" if "Phantoms" in enemiesDict[enemy].expansions else "Enemies", index="end", iid=enemy, values=("        " + enemy, 0, maxDiff), tags=True)
+                for enemy in sorted([enemy for enemy in enemiesDict if enemiesDict[enemy].expansions & self.availableExpansions]):
+                    maxDiff = ceil((max(list(self.variants[enemy][self.numberOfCharacters].keys())) - 1.0) * 100)
+                    self.treeviewVariantsList.insert(parent="Invaders & Explorers Mimics" if "Phantoms" in enemiesDict[enemy].expansions else "Enemies", index="end", iid=enemy, values=("        " + enemy, 0, maxDiff), tags=True)
                     
-                for enemy in sorted(list(bosses.keys())):
-                    maxDiff = int((max(list(self.variants[enemy][self.numberOfCharacters].keys())) - 1.0) * 100)
-                    self.treeviewVariants.insert(parent=bosses[enemy]["level"] + "es", index="end", iid=enemy, values=("        " + enemy, 0, maxDiff), tags=True)
+                for enemy in sorted([enemy for enemy in bosses if bosses[enemy]["level"] == "Mega Boss" or enemy == "Asylum Demon" or bosses[enemy]["expansions"] & self.availableExpansions]):
+                    maxDiff = ceil((max(list(self.variants[enemy][self.numberOfCharacters].keys())) - 1.0) * 100)
+                    self.treeviewVariantsList.insert(parent=bosses[enemy]["level"] + "es", index="end", iid=enemy, values=("        " + enemy, 0, maxDiff), tags=True)
 
                 for enemy in behaviors:
+                    if enemy in bosses and bosses[enemy]["level"] != "Mega Boss" and enemy != "Asylum Demon" and not bosses[enemy]["expansions"] & self.availableExpansions:
+                        continue
+                    if enemy in enemiesDict and not enemiesDict[enemy].expansions & self.availableExpansions:
+                        continue
                     for behavior in behaviors[enemy]:
-                        maxDiff = int((max(list(self.variants[enemy][self.numberOfCharacters].keys())) - 1.0) * 100)
-                        self.treeviewVariants.insert(parent=enemy, index="end", iid=enemy + " - " + behavior, values=("            " + behavior, 0, maxDiff), tags=True)
+                        maxDiff = ceil((max(list(self.variants[enemy][self.numberOfCharacters].keys())) - 1.0) * 100)
+                        self.treeviewVariantsList.insert(parent=enemy, index="end", iid=enemy + " - " + behavior, values=("            " + behavior, 0, maxDiff), tags=True)
 
-                self.treeviewVariants.bind("<<TreeviewSelect>>", self.load_variant_card)
+                self.treeviewVariantsList.bind("<<TreeviewSelect>>", self.load_variant_card)
 
-                self.treeviewVariants.selection_set("All")
-                self.treeviewVariants.focus_set()
-                self.treeviewVariants.focus("All")
+                self.treeviewVariantsList.selection_set("All")
+                self.treeviewVariantsList.focus_set()
+                self.treeviewVariantsList.focus("All")
+
+                self.treeviewVariantsLocked = ttk.Treeview(
+                    self.variantsLockedTreeviewFrame,
+                    selectmode="browse",
+                    columns=("Name", "Current Modifier", "Max Modifier"),
+                    yscrollcommand=self.scrollbartreeviewVariantsLocked.set,
+                    height=12 if root.winfo_screenheight() > 1000 else 20
+                )
+
+                self.treeviewVariantsLocked.pack(expand=True, fill="both")
+                self.scrollbartreeviewVariantsLocked.config(command=self.treeviewVariantsLocked.yview)
+
+                self.treeviewVariantsLocked.column('#0', width=50)
+
+                self.treeviewVariantsLocked.heading("Name", text="Name", anchor=tk.W)
+                self.treeviewVariantsLocked.heading("Current Modifier", text="Current Modifier", anchor=tk.W)
+                self.treeviewVariantsLocked.column("Name", anchor=tk.W, width=300)
+                self.treeviewVariantsLocked.column("Current Modifier", anchor=tk.W)
+                
+                self.treeviewVariantsLocked.insert(parent="", index="end", iid="All", values=("All", ""), tags=False, open=True)
+                self.treeviewVariantsLocked.insert(parent="All", index="end", iid="Enemies", values=("    Enemies", ""), tags=False)
+                if {"Phantoms", "Explorers"} & self.availableExpansions:
+                    self.treeviewVariantsLocked.insert(parent="All", index="end", iid="Invaders & Explorers Mimics", values=("    Invaders & Explorers Mimics", ""), tags=False)
+                self.treeviewVariantsLocked.insert(parent="All", index="end", iid="Mini Bosses", values=("    Mini Bosses", ""), tags=False)
+                self.treeviewVariantsLocked.insert(parent="All", index="end", iid="Main Bosses", values=("    Main Bosses", ""), tags=False)
+                self.treeviewVariantsLocked.insert(parent="All", index="end", iid="Mega Bosses", values=("    Mega Bosses", ""), tags=False)
+
+                self.treeviewVariantsLocked.bind("<<TreeviewSelect>>", self.load_variant_card_locked)
 
                 log("End of create_variants_treeview")
             except Exception as e:
@@ -1844,31 +1913,45 @@ try:
         def load_variant_card(self, event=None, variant=None):
             try:
                 log("Start of load_variant_card")
-
-                self.treeviewVariants.unbind("<<TreeviewSelect>>")
+                
+                self.treeviewVariantsList.unbind("<<TreeviewSelect>>")
 
                 # If this behavior was clicked on, get that information.
                 if event:
                     tree = event.widget
+                    
+                    if not tree.selection():
+                        log("\tNo variant selected")
+                        log("\tEnd of load_variant_card")
+                        self.treeviewVariantsList.bind("<<TreeviewSelect>>", self.load_variant_card)
+                        return
+                    
+                    if self.treeviewVariantsLocked.selection():
+                        self.treeviewVariantsLocked.unbind("<<TreeviewSelect>>")
+                        self.treeviewVariantsLocked.selection_remove(self.treeviewVariantsLocked.selection()[0])
+                        self.treeviewVariantsLocked.bind("<<TreeviewSelect>>", self.load_variant_card_locked)
+                    
                     if not tree.item(tree.selection()[0])["tags"][0]:
                         log("\tNo variant selected")
-                        self.treeviewVariants.bind("<<TreeviewSelect>>", self.load_variant_card)
                         log("\tEnd of load_variant_card")
+                        self.treeviewVariantsList.bind("<<TreeviewSelect>>", self.load_variant_card)
                         return
+
                     self.selectedVariant = (
                         tree.selection()[0]
-                        + (" - data" if tree.parent(tree.selection()[0]) in {"Enemies", "Invaders & Explorers Mimics", "Mini Bosses", "Main Bosses", "Mega Bosses"} else ""))
+                        + (" - data" if tree.parent(tree.selection()[0]) in {
+                            "Enemies",
+                            "Invaders & Explorers Mimics",
+                            "Mini Bosses",
+                            "Main Bosses",
+                            "Mega Bosses"
+                            } else ""))
                 else:
                     self.selectedVariant = variant
 
                 # Remove keyword tooltips from the previous image shown, if there are any.
                 for tooltip in self.tooltips:
                     tooltip.destroy()
-
-                if self.selectedVariant == "Guardian Dragon - Cage Grasp Inferno" and any([modIdLookup[m] == "physical" for m in self.currentVariants.get("Guardian Dragon", {}).get("Cage Grasp Inferno", set())]):
-                    self.selectedVariant = "Guardian Dragon - Cage Grasp Inferno (physical)"
-                elif self.selectedVariant == "Guardian Dragon - Cage Grasp Inferno":
-                    self.selectedVariant = "Guardian Dragon - Cage Grasp Inferno (magic)"
 
                 # Create and display the variant image.
                 self.variantPhotoImage = self.create_image(self.selectedVariant + ".jpg", "encounter", 4)
@@ -1878,7 +1961,9 @@ try:
                 else:
                     self.edit_variant_card()
 
-                self.treeviewVariants.bind("<<TreeviewSelect>>", self.load_variant_card)
+                self.encounter.bind("<Button 1>", self.apply_difficulty_modifier)
+                
+                self.treeviewVariantsList.bind("<<TreeviewSelect>>", self.load_variant_card)
 
                 log("End of load_variant_card")
             except Exception as e:
@@ -1886,195 +1971,82 @@ try:
                 raise
 
 
-        def edit_variant_card(self, event=None):
+        def load_variant_card_locked(self, event=None, variant=None):
+            try:
+                log("Start of load_variant_card")
+                
+                self.treeviewVariantsLocked.unbind("<<TreeviewSelect>>")
+
+                # If this behavior was clicked on, get that information.
+                if event:
+                    tree = event.widget
+
+                    if not tree.selection():
+                        log("\tNo variant selected")
+                        log("\tEnd of load_variant_card")
+                        self.treeviewVariantsLocked.bind("<<TreeviewSelect>>", self.load_variant_card_locked)
+                        return
+                    
+                    if self.treeviewVariantsList.selection():
+                        self.treeviewVariantsList.unbind("<<TreeviewSelect>>")
+                        self.treeviewVariantsList.selection_remove(self.treeviewVariantsList.selection()[0])
+                        self.treeviewVariantsList.bind("<<TreeviewSelect>>", self.load_variant_card)
+
+                    if not tree.item(tree.selection()[0])["tags"][0]:
+                        log("\tNo variant selected")
+                        log("\tEnd of load_variant_card")
+                        self.treeviewVariantsLocked.bind("<<TreeviewSelect>>", self.load_variant_card_locked)
+                        return
+
+                    name = tree.selection()[0][:tree.selection()[0].index("_")]
+                    mods = [modIdLookup[m] for m in list(self.lockedVariants[tree.selection()[0]]) if m]
+
+                    self.selectedVariant = (
+                        name
+                        + (" - data" if tree.parent(tree.selection()[0]) in {
+                            "Enemies",
+                            "Invaders & Explorers Mimics",
+                            "Mini Bosses",
+                            "Main Bosses",
+                            "Mega Bosses"
+                            } else ""))
+                else:
+                    self.selectedVariant = variant
+
+                # Remove keyword tooltips from the previous image shown, if there are any.
+                for tooltip in self.tooltips:
+                    tooltip.destroy()
+
+                # Create and display the variant image.
+                self.variantPhotoImage = self.create_image(self.selectedVariant + ".jpg", "encounter", 4)
+
+                if "Ornstein & Smough" in self.selectedVariant and (self.selectedVariant.count("&") == 2 or "data" in self.selectedVariant):
+                    self.edit_variant_card_os(variant=mods)
+                else:
+                    self.edit_variant_card(variant=mods)
+
+                self.encounter.bind("<Button 1>", self.apply_difficulty_modifier)
+                
+                self.treeviewVariantsLocked.bind("<<TreeviewSelect>>", self.load_variant_card_locked)
+
+                log("End of load_variant_card")
+            except Exception as e:
+                error_popup(root, e)
+                raise
+
+
+        def edit_variant_card(self, variant=None, event=None):
             try:
                 log("Start of edit_variant_card")
 
                 enemy = self.selectedVariant[:self.selectedVariant.index(" - ")] if " - " in self.selectedVariant else None
                 behavior = self.selectedVariant[self.selectedVariant.index(" - ")+3:] if " - " in self.selectedVariant else None
 
-                healthAddition = 0
-
-                imageWithText = ImageDraw.Draw(self.encounterImage)
-
-                # Boss and invader behavior card.
-                if behavior and behavior != "data":
-                    dodge = behaviorDetail[enemy][behavior]["dodge"]
-                    repeat = behaviorDetail[enemy][behavior].get("repeat", 1)
-                    actions = {}
-                    for position in ["left", "middle", "right"]:
-                        if position in behaviorDetail[enemy][behavior]:
-                            if "effect" in behaviorDetail[enemy][behavior][position]:
-                                actions[position] = {"effect": []}
-                                actions[position]["effect"] = [e for e in behaviorDetail[enemy][behavior][position]["effect"]]
-                            else:
-                                actions[position] = behaviorDetail[enemy][behavior][position].copy()
-
-                    if enemy in self.currentVariants and behavior in self.currentVariants[enemy]:
-                        mods = set([modIdLookup[m] for m in list(self.currentVariants[enemy][behavior])])
-                        for mod in mods:
-                            dodge += int(mod[-1]) if "dodge" in mod else 0
-                            repeat += 1 if "repeat" in mod else 0
-                            newConditionAdded = False
-
-                            # For behaviors that do not already cause a condition.
-                            if (
-                                mod in {"bleed", "frostbite", "poison", "stagger"}
-                                and "effect" not in actions["middle"]
-                                and "effect" not in actions["right"]
-                                ):
-                                for position in ["middle", "right"]:
-                                    if not actions[position]:
-                                        actions[position]["effect"] = [mod]
-                                        newConditionAdded = True
-                                        break
-
-                            if newConditionAdded:
-                                continue
-
-                            for position in ["left", "middle", "right"]:
-                                if position in actions:
-                                    if "damage" in actions[position]:
-                                        actions[position]["damage"] += int(mod[-1]) if "damage" in mod else 0
-                                    if "type" in actions[position]:
-                                        actions[position]["type"] = mod if mod in {"physical", "magic"} else actions[position]["type"]
-                                    # For behaviors that already cause a condition.
-                                    if "effect" in actions[position] and mod in {"bleed", "frostbite", "poison", "stagger"} and mod not in actions[position]["effect"]:
-                                        actions[position]["effect"].append(mod)
-
-                    imageWithText.text((267, 233), str(dodge), "black", font2)
-
-                    if repeat > 1:
-                        image = self.repeat[repeat]
-                        self.encounterImage.paste(im=image, box=(126, 225), mask=image)
-                                        
-                    for position in ["left", "middle", "right"]:
-                        if position not in actions or not actions[position]:
-                            continue
-                        if "type" in actions[position] and (actions[position]["type"] == "physical" or actions[position]["type"] == "magic"):
-                            x = 12 if position == "left" else 107 if position == "middle" else 202
-                            image = self.attack[actions[position]["type"]][actions[position]["damage"]]
-                            log("Pasting " + actions[position]["type"] + " attack image onto variant at " + str((x, 280)) + ".")
-                            self.encounterImage.paste(im=image, box=(x, 280), mask=image)
-                        elif "type" in actions[position] and actions[position]["type"] == "push":
-                            x = 15 if position == "left" else 110 if position == "middle" else 206
-                            image = self.attack[actions[position]["type"]][actions[position]["damage"]]
-                            log("Pasting " + actions[position]["type"] + " attack image onto variant at " + str((x, 283)) + ".")
-                            self.encounterImage.paste(im=image, box=(x, 283), mask=image)
-                        elif "effect" in actions[position]:
-                            for i, effect in enumerate(actions[position]["effect"]):
-                                if effect == "bleed":
-                                    image = self.bleed
-                                    posMod = 0
-                                elif effect == "frostbite":
-                                    image = self.frostbite
-                                    posMod = 0
-                                elif effect == "poison":
-                                    image = self.poison
-                                    posMod = 0
-                                elif effect == "stagger":
-                                    image = self.stagger
-                                    posMod = 0
-                                elif effect == "corrosion":
-                                    image = self.corrosion
-                                    posMod = 0
-                                elif effect == "calamity":
-                                    image = self.calamity
-                                    posMod = 0
-                                else:
-                                    continue
-
-                                x = posMod + (120 if position == "middle" else 220)
-                                self.encounterImage.paste(im=image, box=(x, 275 + (i * 50)), mask=image)
-                # Boss and invader data card.
-                elif behavior == "data" and "behavior" not in behaviorDetail[enemy]:
-                    health = behaviorDetail[enemy]["health"]
-                    armor = behaviorDetail[enemy]["armor"]
-                    resist = behaviorDetail[enemy]["resist"]
-                    heatup = []
-                    if "heatup1" in behaviorDetail[enemy]:
-                        heatup.append(behaviorDetail[enemy]["heatup1"])
-                        heatup.append(behaviorDetail[enemy]["heatup2"])
-                    elif "heatup" in behaviorDetail[enemy]:
-                        heatup.append(behaviorDetail[enemy]["heatup"])
-
-                    if enemy in self.currentVariants:
-                        mods = set([modIdLookup[m] for m in list(self.currentVariants[enemy]["defKey"]) if m])
-                        for mod in mods:
-                            healthAddition = int(mod[-1]) if "health" in mod else 0
-                            health += healthAddition
-                            armor += int(mod[-1]) if "armor" in mod else 0
-                            resist += int(mod[-1]) if "resist" in mod else 0
-                            for h in heatup:
-                                h += int(mod[-1]) if "health" in mod else 0
-
-                    imageWithText.text((252 + (4 if health < 10 else 0), 35), str(health), "white", font2)
-                    imageWithText.text((130, 245), str(armor), "white", font3)
-                    imageWithText.text((154, 245), str(resist), "black", font3)
-
-                    if heatup:
-                        if enemy == "Vordt of the Boreal Valley":
-                            pass
-                        else:
-                            imageWithText.text((242 + (4 if heatup[0] < 10 else 0), 245), str(heatup[0]), "black", font2)
-
-                    if enemy == "Maldron the Assassin":
-                        imageWithText.text((132 + (4 if health < 10 else 0), 340), str(health), "black", font)
-                    elif enemy == "Paladin Leeroy":
-                        imageWithText.text((184, 340), str(2 + healthAddition), "black", font)
-                # Regular enemies.
-                elif behavior == "data" and "behavior" in behaviorDetail[enemy]:
-                    health = behaviorDetail[enemy]["health"]
-                    armor = behaviorDetail[enemy]["armor"]
-                    resist = behaviorDetail[enemy]["resist"]
-                    dodge = behaviorDetail[enemy]["behavior"]["dodge"]
-                    repeat = behaviorDetail[enemy]["behavior"].get("repeat", 1)
-                    actions = {}
-                    for position in ["left", "middle", "right"]:
-                        if position in behaviorDetail[enemy]["behavior"]:
-                            actions[position] = behaviorDetail[enemy]["behavior"][position]
-
-                    if enemy in self.currentVariants:
-                        mods = set([modIdLookup[m] for m in list(self.currentVariants[enemy][""])])
-                        
-                        for mod in mods:
-                            health += int(mod[-1]) if "health" in mod else 0
-                            armor += int(mod[-1]) if "armor" in mod else 0
-                            resist += int(mod[-1]) if "resist" in mod else 0
-                            dodge += int(mod[-1]) if "dodge" in mod else 0
-                            repeat += 1 if "repeat" in mod else 0
-                            newConditionAdded = False
-
-                            # For behaviors that do not already cause a condition.
-                            if (
-                                mod in {"bleed", "frostbite", "poison", "stagger"}
-                                and "effect" not in actions["middle"]
-                                and "effect" not in actions["right"]
-                                ):
-                                for position in ["middle", "right"]:
-                                    if position in actions and not actions[position]:
-                                        actions[position]["effect"] = [mod]
-                                        newConditionAdded = True
-                                        break
-
-                            if newConditionAdded:
-                                continue
-
-                            for position in ["left", "middle", "right"]:
-                                if position in actions:
-                                    if "damage" in actions[position]:
-                                        actions[position]["damage"] += int(mod[-1]) if "damage" in mod else 0
-                                    if "type" in actions[position]:
-                                        actions[position]["type"] = mod if mod in {"physical", "magic"} else actions[position]["type"]
-                                    # For behaviors that already cause a condition.
-                                    if "effect" in actions[position] and mod in {"bleed", "frostbite", "poison", "stagger"} and mod not in actions[position]["effect"]:
-                                        actions[position]["effect"].append(mod)
-
-                    imageWithText = ImageDraw.Draw(self.encounterImage)
-
-                    imageWithText.text((252 + (4 if health < 10 else 0), 35), str(health), "white", font2)
-                    imageWithText.text((130, 245), str(armor), "white", font3)
-                    imageWithText.text((154, 245), str(resist), "black", font3)
+                if behavior == "data":
+                    self.edit_variant_card_data(enemy, variant=variant)
+                
+                if behavior != "data" or "behavior" in behaviorDetail[enemy]:
+                    self.edit_variant_card_behavior(variant=variant)
 
                 self.encounterPhotoImage = ImageTk.PhotoImage(self.encounterImage)
                 self.encounter.image = self.encounterPhotoImage
@@ -2086,226 +2058,606 @@ try:
                 raise
 
 
-        def edit_variant_card_os(self, event=None):
+        def lock_variant_card(self, event=None):
             try:
-                log("Start of edit_variant_card_os")
+                log("Start of lock_variant_card")
 
-                enemy = self.selectedVariant[:self.selectedVariant.index(" - ")] if " - " in self.selectedVariant else None
-                behavior = self.selectedVariant[self.selectedVariant.index(" - ")+3:] if " - " in self.selectedVariant else None
+                tree = self.treeviewVariantsList
+                treeLocked = self.treeviewVariantsLocked
+                iidForAvg = tree.focus()
 
-                healthAddition = 0
+                if not tree.selection():
+                    log("End of lock_variant_card (nothing done)")
+                    return
+                
+                v = tree.item(tree.selection()[0])["values"]
+
+                if not v[1]:
+                    log("End of lock_variant_card (nothing done)")
+                    return
+                
+                if tree.focus() == "Enemies":
+                    for child in tree.get_children(tree.focus()):
+                        v = tree.item(child)["values"]
+                        modList = [v for v in self.currentVariants[child][[k for k in list(self.currentVariants[child].keys()) if k != "defKey"][0]]]
+                        iidChild = child + "_" + ",".join([str(v) for v in modList])
+
+                        if iidChild in self.lockedVariants:
+                            continue
+                        
+                        self.lockedVariants[iidChild] = modList
+                        contents = [treeLocked.item(child)["values"][0] for child in treeLocked.get_children("Enemies")]
+                        treeLocked.insert(parent="Enemies", index=bisect_left(contents, v[0]), iid=iidChild, values=(v[0], v[1]), tags=True)
+                elif tree.focus() in {"Invaders & Explorers Mimics", "Mini Bosses", "Main Bosses", "Mega Bosses"}:
+                    for e in tree.get_children(tree.focus()):
+                        v = tree.item(e)["values"]
+                        modList = [v for v in self.currentVariants[e][[k for k in list(self.currentVariants[e].keys()) if k != "defKey"][0]]]
+                        iid = e + "_" + ",".join([str(v) for v in modList])
+                        iidForAvg = iid
+
+                        if iid in self.lockedVariants:
+                            log("End of lock_variant_card (nothing done)")
+                            continue
+                        
+                        self.lockedVariants[iid] = modList
+                        contents = [treeLocked.item(child)["values"][0] for child in treeLocked.get_children(tree.parent(e))]
+                        treeLocked.insert(parent=tree.parent(e), index=bisect_left(contents, v[0]), iid=iid, values=(v[0], v[1]), tags=True)
+                        
+                        for child in tree.get_children(e):
+                            if " - " in child:
+                                enemy = child[:child.index(" - ")]
+                                behavior = child[child.index(" - ")+3:]
+                                
+                            v = tree.item(child)["values"]
+                            modList = [v for v in self.currentVariants[enemy][behavior]]
+                            iidChild = child + "_" + ",".join([str(v) for v in modList])
+
+                            if iidChild in self.lockedVariants:
+                                continue
+                            
+                            self.lockedVariants[iidChild] = modList
+                            contents = [treeLocked.item(child)["values"][0] for child in treeLocked.get_children(tree.parent(tree.focus()))]
+                            treeLocked.insert(parent=iid, index=bisect_left(contents, v[0]), iid=iidChild, values=(v[0], v[1]), tags=True)
+                elif tree.focus() == "All":
+                    for cat in tree.get_children("All"):
+                        for e in tree.get_children(cat):
+                            modList = [v for v in self.currentVariants[e][[k for k in list(self.currentVariants[e].keys()) if k != "defKey"][0]]]
+                            iid = e + "_" + ",".join([str(v) for v in modList])
+                            iidForAvg = iid
+
+                            if iid in self.lockedVariants:
+                                log("End of lock_variant_card (nothing done)")
+                                continue
+                            
+                            self.lockedVariants[iid] = modList
+                            contents = [treeLocked.item(child)["values"][0] for child in treeLocked.get_children(tree.parent(cat))]
+                            treeLocked.insert(parent=tree.parent(cat), index=bisect_left(contents, v[0]), iid=iid, values=(v[0], v[1]), tags=True)
+                            
+                            for child in tree.get_children(e):
+                                if " - " in child:
+                                    enemy = child[:child.index(" - ")]
+                                    behavior = child[child.index(" - ")+3:]
+                                    
+                                v = tree.item(child)["values"]
+                                modList = [v for v in self.currentVariants[enemy][behavior]]
+                                iidChild = child + "_" + ",".join([str(v) for v in modList])
+
+                                if iidChild in self.lockedVariants:
+                                    continue
+                                
+                                self.lockedVariants[iidChild] = modList
+                                contents = [treeLocked.item(child)["values"][0] for child in treeLocked.get_children(tree.parent(e))]
+                                treeLocked.insert(parent=tree.iid, index=bisect_left(contents, v[0]), iid=iidChild, values=(v[0], v[1]), tags=True)
+                elif tree.get_children(tree.focus()) or " - " in tree.focus():
+                    if " - " in tree.focus():
+                        focus = tree.parent(tree.focus())
+                        v = tree.item(focus)["values"]
+                    else:
+                        focus = tree.focus()
+
+                    modList = list(self.currentVariants[focus]["defKey"])
+                    iid = focus + "_" + ",".join([str(v) for v in modList])
+                    print(iid)
+                    iidForAvg = iid
+
+                    if iid not in self.lockedVariants:
+                        self.lockedVariants[iid] = modList
+                        contents = [treeLocked.item(child)["values"][0] for child in treeLocked.get_children(tree.parent(tree.focus()))]
+                        treeLocked.insert(parent=tree.parent(focus), index=bisect_left(contents, iid), iid=iid, values=(v[0], v[1]), tags=True)
+                        #treeLocked.insert(parent=tree.parent(focus), index="end", iid=iid, values=(v[0], v[1]), tags=True)
+                    
+                    for child in tree.get_children(focus):
+                        if " - " in child:
+                            enemy = child[:child.index(" - ")]
+                            behavior = child[child.index(" - ")+3:]
+                            
+                        v = tree.item(child)["values"]
+                        modList = [v for v in self.currentVariants[enemy][behavior]]
+                        iidChild = child + "_" + ",".join([str(v) for v in modList])
+
+                        if iidChild in self.lockedVariants:
+                            continue
+                        
+                        self.lockedVariants[iidChild] = modList
+                        contents = [treeLocked.item(child)["values"][0] for child in treeLocked.get_children(iid)]
+                        treeLocked.insert(parent=iid, index=bisect_left(contents, iidChild), iid=iidChild, values=(v[0], v[1]), tags=True)
+                else:
+                    modList = [v for v in self.currentVariants[tree.focus()][[k for k in list(self.currentVariants[tree.focus()].keys()) if k != "defKey"][0]]]
+                    iid = tree.focus() + "_" + ",".join([str(v) for v in modList])
+                    iidForAvg = iid
+
+                    if iid in self.lockedVariants:
+                        log("End of lock_variant_card (nothing done)")
+                        return
+                    
+                    if tree.parent(tree.focus()) not in self.lockedVariants:
+                        p = PopupWindow(root, "You have to lock {} first before locking specific behaviors!".format(tree.parent(tree.focus())), firstButton="Ok")
+                        root.wait_window(p)
+                        return
+                    
+                    self.lockedVariants[iid] = modList
+                    contents = [treeLocked.item(child)["values"][0] for child in treeLocked.get_children(tree.parent(tree.focus()))]
+                    treeLocked.insert(parent=tree.parent(tree.focus()), index=bisect_left(contents, v[0]), iid=iid, values=(v[0], v[1]), tags=True)
+
+                # Recalculate the average difficulty mod for this row and its parents and children.
+                for child in treeLocked.get_children(iidForAvg):
+                    for subChild in treeLocked.get_children(child):
+                        for subSubChild in treeLocked.get_children(subChild):
+                            self.recalc_variant_average(treeLocked, subSubChild)
+                        self.recalc_variant_average(treeLocked, subChild)
+                    self.recalc_variant_average(treeLocked, child)
+
+                if treeLocked.parent(iidForAvg):
+                    self.recalc_variant_average(treeLocked, iidForAvg)
+                    if treeLocked.parent(treeLocked.parent(iidForAvg)):
+                        self.recalc_variant_average(treeLocked, treeLocked.parent(iidForAvg))
+                        if treeLocked.parent(treeLocked.parent(treeLocked.parent(iidForAvg))):
+                            self.recalc_variant_average(treeLocked, treeLocked.parent(treeLocked.parent(iidForAvg)))
+
+                log("End of lock_variant_card")
+            except Exception as e:
+                error_popup(root, e)
+                raise
+
+
+        def delete_locked_variant(self, variant=None):
+            """
+            Delete a variant from the locked list.
+
+            Optional Parameters:
+                event: tkinter.Event
+                    The tkinter Event that is the trigger.
+            """
+            try:
+                log("Start of delete_locked_variant")
+                
+                tree = self.treeviewVariantsLocked
+                
+                # If the button is clicked with no selection, do nothing.
+                if not tree.selection():
+                    log("End of delete_locked_variant (nothing done)")
+                    return
+                
+                parent = tree.parent(tree.selection()[0])
+                
+                # Remove the deleted variants from the treeview.
+                for child in tree.get_children(tree.selection()[0]):
+                    for subChild in tree.get_children(child):
+                        for subSubChild in tree.get_children(subChild):
+                            if subSubChild in self.lockedVariants:
+                                del self.lockedVariants[subSubChild]
+                                
+                            if subSubChild not in {"All", "Enemies", "Invaders & Explorers Mimics", "Mini Bosses", "Main Bosses", "Mega Bosses"}:
+                                tree.delete(subSubChild)
+
+                        if subChild in self.lockedVariants:
+                            del self.lockedVariants[subChild]
+                            
+                        if subChild not in {"All", "Enemies", "Invaders & Explorers Mimics", "Mini Bosses", "Main Bosses", "Mega Bosses"}:
+                            tree.delete(subChild)
+
+                    if child in self.lockedVariants:
+                        del self.lockedVariants[child]
+                        
+                    if child not in {"All", "Enemies", "Invaders & Explorers Mimics", "Mini Bosses", "Main Bosses", "Mega Bosses"}:
+                        tree.delete(child)
+
+                if tree.selection()[0] in self.lockedVariants:
+                    del self.lockedVariants[tree.selection()[0]]
+                    
+                if tree.selection()[0] not in {"All", "Enemies", "Invaders & Explorers Mimics", "Mini Bosses", "Main Bosses", "Mega Bosses"}:
+                    tree.delete(tree.selection()[0])
+
+                # Recalculate the average difficulty mod for this row and its parents and children.
+                for child in tree.get_children("All"):
+                    if not tree.get_children(child):
+                        tree.item(child, values=(tree.item(child)["values"][0], ""))
+                        continue
+                    self.recalc_variant_average(tree, child)
+                    for subChild in tree.get_children(child):
+                        self.recalc_variant_average(tree, subChild)
+                        for subSubChild in tree.get_children(subChild):
+                            self.recalc_variant_average(tree, subSubChild)
+
+                if not any([tree.item(child)["values"][1] for child in tree.get_children("All")]):
+                    tree.item("All", values=("All", ""))
+                elif parent:
+                    self.recalc_variant_average(tree, parent)
+                    if tree.parent(tree.parent(parent)):
+                        self.recalc_variant_average(tree, tree.parent(parent))
+
+                # Remove the image displaying a deleted item.
+                self.encounter.config(image="")
+
+                log("End of delete_locked_variant")
+            except Exception as e:
+                error_popup(root, e)
+                raise
+
+
+        def edit_variant_card_data(self, enemy, variant=None, event=None):
+            try:
+                log("Start of edit_variant_card_data")
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
 
-                # Behaviors
-                if behavior and behavior != "data":
-                    # Ornstein
-                    behaviorO = behavior[:behavior.index(" & ")]
-                    dodgeO = behaviorDetail[enemy][behavior][behaviorO]["dodge"]
-                    repeatO = behaviorDetail[enemy][behavior][behaviorO].get("repeat", 1)
-                    actionsO = {}
-                    for position in ["left", "right"]:
-                        if position in behaviorDetail[enemy][behavior][behaviorO]:
-                            if "effect" in behaviorDetail[enemy][behavior][behaviorO][position]:
-                                actionsO[position] = {"effect": []}
-                                actionsO[position]["effect"] = [e for e in behaviorDetail[enemy][behavior][behaviorO][position]["effect"]]
+                healthAddition = 0
+                health = behaviorDetail[enemy]["health"]
+                armor = behaviorDetail[enemy]["armor"]
+                resist = behaviorDetail[enemy]["resist"]
+                heatup = []
+                if "heatup1" in behaviorDetail[enemy]:
+                    heatup.append(behaviorDetail[enemy]["heatup1"])
+                    heatup.append(behaviorDetail[enemy]["heatup2"])
+                elif "heatup" in behaviorDetail[enemy]:
+                    heatup.append(behaviorDetail[enemy]["heatup"])
+
+                if variant:
+                    for mod in variant:
+                        healthAddition = int(mod[-1]) if "health" in mod else 0
+                        health += healthAddition
+                        armor += int(mod[-1]) if "armor" in mod else 0
+                        resist += int(mod[-1]) if "resist" in mod else 0
+                        if healthAddition:
+                            heatup = [h + healthAddition for h in heatup]
+                elif enemy in self.currentVariants:
+                    mods = [modIdLookup[m] for m in list(self.currentVariants[enemy]["defKey"]) if m]
+                    for mod in mods:
+                        healthAddition = int(mod[-1]) if "health" in mod else 0
+                        health += healthAddition
+                        armor += int(mod[-1]) if "armor" in mod else 0
+                        resist += int(mod[-1]) if "resist" in mod else 0
+                        if healthAddition:
+                            heatup = [h + healthAddition for h in heatup]
+
+                imageWithText.text((252 + (4 if health < 10 else 0), 35), str(health), "white", font2)
+                imageWithText.text((130, 245 - (10 if "behavior" in behaviorDetail[enemy] else 0)), str(armor), "white", font3)
+                imageWithText.text((154, 245 - (10 if "behavior" in behaviorDetail[enemy] else 0)), str(resist), "black", font3)
+
+                if heatup:
+                    if enemy == "Vordt of the Boreal Valley":
+                        imageWithText.text((189, 245), str(heatup[0]), "black", font2)
+                        imageWithText.text((242, 245), str(heatup[1]), "black", font2)
+                    else:
+                        imageWithText.text((242 + (4 if heatup[0] < 10 else 0), 245), str(heatup[0]), "black", font2)
+
+                if enemy == "Maldron the Assassin":
+                    imageWithText.text((132 + (4 if health < 10 else 0), 340), str(health), "black", font)
+                elif enemy == "Paladin Leeroy":
+                    imageWithText.text((184, 340), str(2 + healthAddition), "black", font)
+
+                log("End of edit_variant_card_data")
+            except Exception as e:
+                error_popup(root, e)
+                raise
+
+
+        def edit_variant_card_behavior(self, variant=None, event=None):
+            try:
+                log("Start of edit_variant_card_behavior")
+
+                enemy = self.selectedVariant[:self.selectedVariant.index(" - ")] if " - " in self.selectedVariant else None
+                if "behavior" in behaviorDetail[enemy]:
+                    behavior = "behavior"
+                else:
+                    behavior = self.selectedVariant[self.selectedVariant.index(" - ")+3:] if " - " in self.selectedVariant else None
+
+                dodge = behaviorDetail[enemy][behavior]["dodge"]
+                repeat = behaviorDetail[enemy][behavior].get("repeat", 1)
+                actions = {}
+                for position in ["left", "middle", "right"]:
+                    if position in behaviorDetail[enemy][behavior]:
+                        if "effect" in behaviorDetail[enemy][behavior][position]:
+                            actions[position] = {"effect": []}
+                            actions[position]["effect"] = [e for e in behaviorDetail[enemy][behavior][position]["effect"]]
+                        else:
+                            actions[position] = behaviorDetail[enemy][behavior][position].copy()
+
+                if variant:
+                    dodge, repeat, actions = self.apply_mods_to_actions(enemy, behavior, dodge, repeat, actions, variant)
+                elif enemy in self.currentVariants and ("" if behavior == "behavior" else behavior) in self.currentVariants[enemy]:
+                    dodge, repeat, actions = self.apply_mods_to_actions(enemy, behavior, dodge, repeat, actions)
+
+                self.add_components_to_variant_card_behavior(enemy, behavior, dodge, repeat, actions)
+
+                log("End of edit_variant_card_behavior")
+            except Exception as e:
+                error_popup(root, e)
+                raise
+
+
+        def add_components_to_variant_card_behavior(self, enemy, behavior, dodge, repeat, actions, event=None):
+            try:
+                log("Start of add_components_to_variant_card_behavior")
+
+                imageWithText = ImageDraw.Draw(self.encounterImage)
+                imageWithText.text((267, 233), str(dodge), "black", font2)
+
+                if repeat > 1 and behavior != "behavior":
+                    image = self.repeat[repeat]
+                    self.encounterImage.paste(im=image, box=(126, 225), mask=image)
+                                    
+                for position in ["left", "middle", "right"]:
+                    if position not in actions or not actions[position]:
+                        continue
+                    if "type" in actions[position] and (actions[position]["type"] == "physical" or actions[position]["type"] == "magic") and "Cage Grasp Inferno" not in behavior:
+                        x = 12 if position == "left" else 107 if position == "middle" else 202
+                        image = self.attack[actions[position]["type"]][actions[position]["damage"]]
+                        log("Pasting " + actions[position]["type"] + " attack image onto variant at " + str((x, 280)) + ".")
+                        self.encounterImage.paste(im=image, box=(x, 280), mask=image)
+                    elif "Cage Grasp Inferno" in behavior:
+                        image = self.attack[actions[position]["type"]][actions[position]["damage"]]
+                        log("Pasting " + actions[position]["type"] + " attack image onto variant at " + str((-10, 340)) + ".")
+                        self.encounterImage.paste(im=image, box=(-13, 343), mask=image)
+                    elif "type" in actions[position] and actions[position]["type"] == "push":
+                        x = 15 if position == "left" else 110 if position == "middle" else 206
+                        image = self.attack[actions[position]["type"]][actions[position]["damage"]]
+                        log("Pasting " + actions[position]["type"] + " attack image onto variant at " + str((x, 283)) + ".")
+                        self.encounterImage.paste(im=image, box=(x, 283), mask=image)
+                    elif "repeat" in actions[position]:
+                        x = 127 if position == "middle" else 238
+                        image = self.repeat[actions[position]["repeat"]]
+                        log("Pasting repeat image onto variant at " + str((x, 300)) + ".")
+                        self.encounterImage.paste(im=image, box=(x, 300), mask=image)
+                    elif "effect" in actions[position]:
+                        for i, effect in enumerate(actions[position]["effect"]):
+                            if effect == "bleed":
+                                image = self.bleed
+                            elif effect == "frostbite":
+                                image = self.frostbite
+                            elif effect == "poison":
+                                image = self.poison
+                            elif effect == "stagger":
+                                image = self.stagger
+                            elif effect == "corrosion":
+                                image = self.corrosion
+                            elif effect == "calamity":
+                                image = self.calamity
                             else:
-                                actionsO[position] = behaviorDetail[enemy][behavior][behaviorO][position].copy()
-
-                    if enemy in self.currentVariants and behavior in self.currentVariants[enemy]:
-                        mods = set([modIdLookup[m] for m in list(self.currentVariants[enemy][behavior][behaviorO])])
-                        for mod in mods:
-                            dodgeO += int(mod[-1]) if "dodge" in mod else 0
-                            repeatO += 1 if "repeat" in mod else 0
-                            newConditionAdded = False
-
-                            # For behaviors that do not already cause a condition.
-                            if (
-                                mod in {"bleed", "frostbite", "poison", "stagger"}
-                                and "effect" not in actionsO["right"]
-                                ):
-                                if not actionsO["right"]:
-                                    actionsO["right"]["effect"] = [mod]
-                                    newConditionAdded = True
-                                    break
-
-                            if newConditionAdded:
                                 continue
 
-                            for position in ["left", "right"]:
-                                if position in actionsO:
-                                    if "damage" in actionsO[position]:
-                                        actionsO[position]["damage"] += int(mod[-1]) if "damage" in mod else 0
-                                    if "type" in actionsO[position]:
-                                        actionsO[position]["type"] = mod if mod in {"physical", "magic"} else actionsO[position]["type"]
-                                    # For behaviors that already cause a condition.
-                                    if "effect" in actionsO[position] and mod in {"bleed", "frostbite", "poison", "stagger"} and mod not in actionsO[position]["effect"]:
-                                        actionsO[position]["effect"].append(mod)
+                            x = 130 if position == "middle" else 240
+                            self.encounterImage.paste(im=image, box=(x, 275 + (i * 50)), mask=image)
+                
+                if enemy in {"Phalanx", "Phalanx Hollow", "Silver Knight Spearman"}:
+                    x = 115 if "repeat" in actions["right"] else 209
+                    image = self.sks_move if enemy == "Silver Knight Spearman" else self.phalanx_move
+                    log("Pasting move image onto variant at " + str((x, 285)) + ".")
+                    self.encounterImage.paste(im=image, box=(x, 285), mask=image)
 
-                    imageWithText.text((267, 15), str(dodgeO), "black", font2)
+                log("End of add_components_to_variant_card_behavior")
+            except Exception as e:
+                error_popup(root, e)
+                raise
 
-                    if repeatO > 1:
-                        image = self.repeat[repeatO]
-                        self.encounterImage.paste(im=image, box=(17, 145), mask=image)
-                                        
-                    for position in ["left", "right"]:
-                        if position not in actionsO or not actionsO[position]:
-                            continue
-                        if "type" in actionsO[position] and (actionsO[position]["type"] == "physical" or actionsO[position]["type"] == "magic"):
-                            x = 107 if position == "left" else 202
-                            image = self.attack[actionsO[position]["type"]][actionsO[position]["damage"]]
-                            log("Pasting " + actionsO[position]["type"] + " attack image onto variant at " + str((x, 63)) + ".")
-                            self.encounterImage.paste(im=image, box=(x, 63), mask=image)
-                        elif "effect" in actionsO[position]:
-                            for i, effect in enumerate(actionsO[position]["effect"]):
-                                if effect == "bleed":
-                                    image = self.bleed
-                                    posMod = 0
-                                elif effect == "frostbite":
-                                    image = self.frostbite
-                                    posMod = 0
-                                elif effect == "poison":
-                                    image = self.poison
-                                    posMod = 0
-                                elif effect == "stagger":
-                                    image = self.stagger
-                                    posMod = 0
-                                elif effect == "corrosion":
-                                    image = self.corrosion
-                                    posMod = 0
-                                elif effect == "calamity":
-                                    image = self.calamity
-                                    posMod = 0
-                                else:
-                                    continue
 
-                                x = posMod + (120 if position == "left" else 220)
-                                self.encounterImage.paste(im=image, box=(x, 275 + (i * 50)), mask=image)
+        def apply_mods_to_actions(self, enemy, behavior, dodge, repeat, actions, variant=None, event=None):
+            try:
+                log("Start of apply_mods_to_actions")
 
-                    # Smough
-                    behaviorS = behavior[behavior.index(" & ")+3:]
-                    dodgeS = behaviorDetail[enemy][behavior][behaviorS]["dodge"]
-                    repeatS = behaviorDetail[enemy][behavior][behaviorS].get("repeat", 1)
-                    actionsS = {}
-                    for position in ["left", "right"]:
-                        if position in behaviorDetail[enemy][behavior][behaviorS]:
-                            if "effect" in behaviorDetail[enemy][behavior][behaviorS][position]:
-                                actionsS[position] = {"effect": []}
-                                actionsS[position]["effect"] = [e for e in behaviorDetail[enemy][behavior][behaviorS][position]["effect"]]
-                            else:
-                                actionsS[position] = behaviorDetail[enemy][behavior][behaviorS][position].copy()
+                behavior = "" if behavior == "behavior" else behavior
 
-                    if enemy in self.currentVariants and behavior in self.currentVariants[enemy]:
-                        mods = set([modIdLookup[m] for m in list(self.currentVariants[enemy][behavior][behaviorS])])
-                        for mod in mods:
-                            dodgeS += int(mod[-1]) if "dodge" in mod else 0
-                            repeatS += 1 if "repeat" in mod else 0
-                            newConditionAdded = False
+                if variant:
+                    mods = variant
+                else:
+                    mods = sorted([modIdLookup[m] for m in list(self.currentVariants[enemy][behavior])], key=lambda x: 1 if x == "repeat" else 0)
+                for mod in mods:
+                    dodge += int(mod[-1]) if "dodge" in mod else 0
+                    repeat += 1 if "repeat" in mod else 0
+                    newConditionAdded = False
 
-                            # For behaviors that do not already cause a condition.
-                            if (
-                                mod in {"bleed", "frostbite", "poison", "stagger"}
-                                and "effect" not in actionsS["right"]
-                                ):
-                                if not actionsS["right"]:
-                                    actionsS["right"]["effect"] = [mod]
-                                    newConditionAdded = True
-                                    break
+                    # For behaviors that do not already cause a condition.
+                    if (
+                        mod in {"bleed", "frostbite", "poison", "stagger"}
+                        and "effect" not in actions.get("middle", {})
+                        and "effect" not in actions.get("right", {})
+                        ):
+                        for position in ["middle", "right"]:
+                            if position in actions and not actions[position]:
+                                actions[position]["effect"] = [mod]
+                                newConditionAdded = True
+                                break
 
-                            if newConditionAdded:
+                    if newConditionAdded:
+                        continue
+
+                    repeatAdded = False if behavior == "" else True
+
+                    for position in ["left", "middle", "right"]:
+                        if position in actions:
+                            if "damage" in actions[position]:
+                                actions[position]["damage"] += int(mod[-1]) if "damage" in mod else 0
+                                actions[position]["type"] = mod if mod in {"physical", "magic"} else actions[position]["type"]
+                            elif actions[position]:
                                 continue
-
-                            for position in ["left", "right"]:
-                                if position in actionsS:
-                                    if "damage" in actionsS[position]:
-                                        actionsS[position]["damage"] += int(mod[-1]) if "damage" in mod else 0
-                                    if "type" in actionsS[position]:
-                                        actionsS[position]["type"] = mod if mod in {"physical", "magic"} else actionsS[position]["type"]
-                                    # For behaviors that already cause a condition.
-                                    if "effect" in actionsS[position] and mod in {"bleed", "frostbite", "poison", "stagger"} and mod not in actionsS[position]["effect"]:
-                                        actionsS[position]["effect"].append(mod)
-
-                    imageWithText.text((267, 377), str(dodgeS), "black", font2)
-
-                    if repeatS > 1:
-                        image = self.repeat[repeatS]
-                        self.encounterImage.paste(im=image, box=(240, 310), mask=image)
-                                        
-                    for position in ["left", "right"]:
-                        if position not in actionsS or not actionsS[position]:
-                            continue
-                        if "type" in actionsS[position] and (actionsS[position]["type"] == "physical" or actionsS[position]["type"] == "magic"):
-                            x = 107 if position == "left" else 202
-                            image = self.attack[actionsS[position]["type"]][actionsS[position]["damage"]]
-                            log("Pasting " + actionsS[position]["type"] + " attack image onto variant at " + str((x, 63)) + ".")
-                            self.encounterImage.paste(im=image, box=(x, 63), mask=image)
-                        elif "type" in actionsS[position] and actionsS[position]["type"] == "push":
-                            x = 15 if position == "left" else 110
-                            image = self.attack[actionsS[position]["type"]][actionsS[position]["damage"]]
-                            log("Pasting " + actionsS[position]["type"] + " attack image onto variant at " + str((x, 244)) + ".")
-                            self.encounterImage.paste(im=image, box=(x, 244), mask=image)
-                        elif "effect" in actionsS[position]:
-                            for i, effect in enumerate(actionsS[position]["effect"]):
-                                if effect == "bleed":
-                                    image = self.bleed
-                                    posMod = 0
-                                elif effect == "frostbite":
-                                    image = self.frostbite
-                                    posMod = 0
-                                elif effect == "poison":
-                                    image = self.poison
-                                    posMod = 0
-                                elif effect == "stagger":
-                                    image = self.stagger
-                                    posMod = 0
-                                elif effect == "corrosion":
-                                    image = self.corrosion
-                                    posMod = 0
-                                elif effect == "calamity":
-                                    image = self.calamity
-                                    posMod = 0
-                                else:
+                            elif not actions[position] and "repeat" in mod and not repeatAdded:
+                                # These enemies have their move shifted if they get a repeat.
+                                if enemy in {"Phalanx", "Phalanx Hollow", "Silver Knight Spearman"} and position == "middle":
                                     continue
+                                actions[position] = {"repeat": repeat + 1}
+                                repeatAdded = True
+                            # For behaviors that already cause a condition.
+                            elif "effect" in actions[position] and mod in {"bleed", "frostbite", "poison", "stagger"} and mod not in actions[position]["effect"]:
+                                actions[position]["effect"].append(mod)
 
-                                x = posMod + (120 if position == "left" else 220)
-                                self.encounterImage.paste(im=image, box=(x, 275 + (i * 50)), mask=image)
-                # Boss and invader data card.
-                elif behavior == "data" and "behavior" not in behaviorDetail[enemy]:
-                    healthO = behaviorDetail[enemy]["Ornstein"]["health"]
-                    armorO = behaviorDetail[enemy]["Ornstein"]["armor"]
-                    resistO = behaviorDetail[enemy]["Ornstein"]["resist"]
-                    healthS = behaviorDetail[enemy]["Smough"]["health"]
-                    armorS = behaviorDetail[enemy]["Smough"]["armor"]
-                    resistS = behaviorDetail[enemy]["Smough"]["resist"]
+                log("End of apply_mods_to_actions")
 
-                    if enemy in self.currentVariants:
-                        mods = set([modIdLookup[m] for m in list(self.currentVariants[enemy]["defKey"])])
-                        for mod in mods:
-                            healthAddition = int(mod[-1]) if "health" in mod else 0
-                            healthO += healthAddition
-                            armorO += int(mod[-1]) if "armor" in mod else 0
-                            resistO += int(mod[-1]) if "resist" in mod else 0
-                            healthS += healthAddition
-                            armorS += int(mod[-1]) if "armor" in mod else 0
-                            resistS += int(mod[-1]) if "resist" in mod else 0
+                return dodge, repeat, actions
+            except Exception as e:
+                error_popup(root, e)
+                raise
 
-                    imageWithText.text((246, 245), "0", "black", font2)
-                    imageWithText.text((252, 35), str(healthO), "white", font2)
-                    imageWithText.text((130, 245), str(armorO), "white", font3)
-                    imageWithText.text((154, 245), str(resistO), "black", font3)
-                    imageWithText.text((248, 340), str(10 + healthAddition), "black", font)
 
-                    imageWithText.text((246, 669), "0", "black", font2)
-                    imageWithText.text((252, 459), str(healthS), "white", font2)
-                    imageWithText.text((130, 669), str(armorS), "white", font3)
-                    imageWithText.text((154, 669), str(resistS), "black", font3)
-                    imageWithText.text((248, 764), str(15 + healthAddition), "black", font)
+        def edit_variant_card_os(self, event=None):
+            try:
+                log("Start of edit_variant_card")
+
+                if "data" in self.selectedVariant:
+                    self.edit_variant_card_data_os()
+                else:
+                    self.edit_variant_card_behavior_os()
 
                 self.encounterPhotoImage = ImageTk.PhotoImage(self.encounterImage)
                 self.encounter.image = self.encounterPhotoImage
                 self.encounter.config(image=self.encounterPhotoImage)
 
-                log("End of edit_variant_card_os")
+                log("End of edit_variant_card")
+            except Exception as e:
+                error_popup(root, e)
+                raise
+
+
+        def edit_variant_card_data_os(self, event=None):
+            try:
+                log("Start of edit_variant_card_data")
+
+                imageWithText = ImageDraw.Draw(self.encounterImage)
+
+                healthAddition = 0
+                healthO = behaviorDetail["Ornstein & Smough"]["Ornstein"]["health"]
+                armorO = behaviorDetail["Ornstein & Smough"]["Ornstein"]["armor"]
+                resistO = behaviorDetail["Ornstein & Smough"]["Ornstein"]["resist"]
+                healthS = behaviorDetail["Ornstein & Smough"]["Smough"]["health"]
+                armorS = behaviorDetail["Ornstein & Smough"]["Smough"]["armor"]
+                resistS = behaviorDetail["Ornstein & Smough"]["Smough"]["resist"]
+
+                if "Ornstein & Smough" in self.currentVariants:
+                    mods = [modIdLookup[m] for m in list(self.currentVariants["Ornstein & Smough"]["defKey"])]
+                    for mod in mods:
+                        healthAddition = int(mod[-1]) if "health" in mod else 0
+                        healthO += healthAddition
+                        armorO += int(mod[-1]) if "armor" in mod else 0
+                        resistO += int(mod[-1]) if "resist" in mod else 0
+                        healthS += healthAddition
+                        armorS += int(mod[-1]) if "armor" in mod else 0
+                        resistS += int(mod[-1]) if "resist" in mod else 0
+
+                imageWithText.text((246, 245), "0", "black", font2)
+                imageWithText.text((252, 35), str(healthO), "white", font2)
+                imageWithText.text((130, 245), str(armorO), "white", font3)
+                imageWithText.text((154, 245), str(resistO), "black", font3)
+                imageWithText.text((248, 340), str(10 + healthAddition), "black", font)
+
+                imageWithText.text((246, 669), "0", "black", font2)
+                imageWithText.text((252, 459), str(healthS), "white", font2)
+                imageWithText.text((130, 669), str(armorS), "white", font3)
+                imageWithText.text((154, 669), str(resistS), "black", font3)
+                imageWithText.text((248, 764), str(15 + healthAddition), "black", font)
+
+                log("End of edit_variant_card_data")
+            except Exception as e:
+                error_popup(root, e)
+                raise
+
+
+        def edit_variant_card_behavior_os(self, event=None):
+            try:
+                log("Start of edit_variant_card_behavior")
+
+                enemy = self.selectedVariant[:self.selectedVariant.index(" - ")] if " - " in self.selectedVariant else None
+                behavior = self.selectedVariant[self.selectedVariant.index(" - ")+3:] if " - " in self.selectedVariant else None
+                behaviorSplit = behavior.split(" & ")
+
+                for i, b in enumerate(behaviorSplit):
+                    dodge = behaviorDetail[enemy][behavior][b]["dodge"]
+                    repeat = behaviorDetail[enemy][behavior][b].get("repeat", 1)
+                    actions = {}
+                    for position in ["left", "right"]:
+                        if position in behaviorDetail[enemy][behavior][b]:
+                            actions[position] = behaviorDetail[enemy][behavior][b][position].copy()
+
+                    if enemy in self.currentVariants and behavior in self.currentVariants[enemy]:
+                        dodge, repeat, actions = self.apply_mods_to_actions_os(enemy, behavior, b, dodge, repeat, actions, i)
+
+                    self.add_components_to_variant_card_behavior_os(dodge, repeat, actions, i)
+
+                log("End of edit_variant_card_behavior")
+            except Exception as e:
+                error_popup(root, e)
+                raise
+
+
+        def add_components_to_variant_card_behavior_os(self, dodge, repeat, actions, id, event=None):
+            try:
+                log("Start of add_components_to_variant_card_behavior")
+
+                imageWithText = ImageDraw.Draw(self.encounterImage)
+                if id == 0:
+                    imageWithText.text((267, 15), str(dodge), "black", font2)
+                else:
+                    imageWithText.text((267, 377), str(dodge), "black", font2)
+
+                if repeat > 1 and id == 0:
+                    image = self.repeat[repeat]
+                    self.encounterImage.paste(im=image, box=(17, 145), mask=image)
+                elif repeat > 1:
+                    image = self.repeat[repeat]
+                    self.encounterImage.paste(im=image, box=(240, 310), mask=image)
+                                    
+                for position in ["left", "right"]:
+                    if position not in actions or not actions[position]:
+                        continue
+                    if "type" in actions[position] and (actions[position]["type"] == "physical" or actions[position]["type"] == "magic"):
+                        if id == 0:
+                            x = 107 if position == "left" else 202
+                            y = 63
+                        else:
+                            x = 12 if position == "left" else 107
+                            y = 242
+                        image = self.attack[actions[position]["type"]][actions[position]["damage"]]
+                        log("Pasting " + actions[position]["type"] + " attack image onto variant at " + str((x, y)) + ".")
+                        self.encounterImage.paste(im=image, box=(x, y), mask=image)
+                    elif "type" in actions[position] and actions[position]["type"] == "push":
+                        x = 15 if position == "left" else 110
+                        image = self.attack[actions[position]["type"]][actions[position]["damage"]]
+                        log("Pasting " + actions[position]["type"] + " attack image onto variant at " + str((x, 244)) + ".")
+                        self.encounterImage.paste(im=image, box=(x, 244), mask=image)
+
+                log("End of add_components_to_variant_card_behavior")
+            except Exception as e:
+                error_popup(root, e)
+                raise
+
+
+        def apply_mods_to_actions_os(self, enemy, behavior, b, dodge, repeat, actions, id, event=None):
+            try:
+                log("Start of apply_mods_to_actions_os")
+
+                mods = [modIdLookup[m] for m in list(self.currentVariants[enemy][behavior][b])]
+                for mod in mods:
+                    dodge += int(mod[-1]) if "dodge" in mod else 0
+                    repeat += 1 if "repeat" in mod else 0
+
+                    for position in ["left", "right"]:
+                        if position in actions:
+                            if "damage" in actions[position]:
+                                actions[position]["damage"] += int(mod[-1]) if "damage" in mod else 0
+                            if "type" in actions[position]:
+                                actions[position]["type"] = mod if mod in {"physical", "magic"} else actions[position]["type"]
+
+                log("End of apply_mods_to_actions_os")
+
+                return dodge, repeat, actions
             except Exception as e:
                 error_popup(root, e)
                 raise
@@ -2578,13 +2930,18 @@ try:
                     self.encounter.config(image="")
                     self.treeviewEncounters.pack_forget()
                     self.treeviewEncounters.destroy()
+                    self.treeviewVariantsList.pack_forget()
+                    self.treeviewVariantsList.destroy()
                     self.availableExpansions = set(self.settings["availableExpansions"])
                     self.availableCoreSets = coreSets & self.availableExpansions
                     self.expansionsForRandomEncounters = self.allExpansions & ((self.v1Expansions if "v1" in self.settings["encounterTypes"] else set()) | (self.v2Expansions if "v2" in self.settings["encounterTypes"] else set()))
                     self.charactersActive = set(self.settings["charactersActive"])
                     self.numberOfCharacters = len(self.charactersActive)
+                    self.selectedVariant = None
+                    self.currentVariants = {}
                     self.set_encounter_list()
                     self.create_encounters_treeview()
+                    self.create_variants_treeview()
 
                     # Recalculate the average soul cost of treasure.
                     if (oldTreasureSwapOption != self.settings["treasureSwapOption"] and self.settings["treasureSwapOption"] in {"Similar Soul Cost", "Tier Based"}) or (oldCustomEnemyList != self.settings["customEnemyList"] and self.settings["customEnemyList"]):
@@ -2731,6 +3088,8 @@ try:
                         image = Image.open(imagePath).resize((12, 12), Image.Resampling.LANCZOS)
                     elif imageType == "attack":
                         image = Image.open(imagePath).resize((85, 91), Image.Resampling.LANCZOS)
+                    elif imageType == "move":
+                        image = Image.open(imagePath).resize((75, 75), Image.Resampling.LANCZOS)
                     elif imageType == "repeat":
                         image = Image.open(imagePath).resize((48, 48), Image.Resampling.LANCZOS)
                     elif imageType == "push":
@@ -2840,6 +3199,7 @@ try:
                     if not tree.item(tree.selection())["tags"][0]:
                         log("\tNo encounter selected")
                         self.treeviewEncounters.bind("<<TreeviewSelect>>", self.load_encounter)
+                        self.encounter.bind("<Button 1>", self.shuffle_enemies)
                         log("\tEnd of load_encounter")
                         return
                     encounterName = tree.item(tree.selection())["text"]
@@ -2851,6 +3211,7 @@ try:
                     if encounters[encounterName] == self.selected:
                         self.shuffle_enemies()
                         self.treeviewEncounters.bind("<<TreeviewSelect>>", self.load_encounter)
+                        self.encounter.bind("<Button 1>", self.shuffle_enemies)
                         log("\tEnd of load_encounter")
                         return
 

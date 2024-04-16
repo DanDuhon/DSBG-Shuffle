@@ -410,27 +410,27 @@ try:
                 raise
 
 
-        def switch_theme(self, root, event=None):
-            """
-            Changes the theme from dark to light or vice versa.
+        # def switch_theme(self, root, event=None):
+        #     """
+        #     Changes the theme from dark to light or vice versa.
 
-            Optional Parameters:
-                event: tkinter.Event
-                    The tkinter Event that is the trigger.
-            """
-            try:
-                log("Start of switch_theme")
+        #     Optional Parameters:
+        #         event: tkinter.Event
+        #             The tkinter Event that is the trigger.
+        #     """
+        #     try:
+        #         log("Start of switch_theme")
 
-                self.lightTheme["value"].set(0 if self.lightTheme["value"].get() == 1 else 1)
-                self.settings["theme"] = "light" if self.lightTheme["value"].get() == 1 else "dark"
-                root.tk.call("set_theme", "light" if self.lightTheme["value"].get() == 1 else "dark")
-                self.lightTheme["button"]["text"] = "Switch to light theme" if self.lightTheme["value"].get() == 0 else "Switch to dark (souls) theme"
-                self.errLabel.config(text="To keep this theme when you open the program again, you need to click Save!")
+        #         self.lightTheme["value"].set(0 if self.lightTheme["value"].get() == 1 else 1)
+        #         self.settings["theme"] = "light" if self.lightTheme["value"].get() == 1 else "dark"
+        #         root.tk.call("set_theme", "light" if self.lightTheme["value"].get() == 1 else "dark")
+        #         self.lightTheme["button"]["text"] = "Switch to light theme" if self.lightTheme["value"].get() == 0 else "Switch to dark (souls) theme"
+        #         self.errLabel.config(text="To keep this theme when you open the program again, you need to click Save!")
 
-                log("End of switch_theme")
-            except Exception as e:
-                log(e, exception=True)
-                raise
+        #         log("End of switch_theme")
+        #     except Exception as e:
+        #         log(e, exception=True)
+        #         raise
 
 
         def quit_with_save(self, coreSets, event=None):
@@ -483,7 +483,6 @@ try:
                 charactersActive = set([s for s in self.charactersActive if self.charactersActive[s]["value"].get() == 1])
 
                 newSettings = {
-                    "theme": "light" if self.lightTheme["value"].get() == 1 else "dark",
                     "availableExpansions": list(expansionsActive),
                     "enabledEnemies": list(enabledEnemies),
                     "customEnemyList": customEnemyList,
