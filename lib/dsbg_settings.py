@@ -64,7 +64,6 @@ try:
             try:
                 log("Start of create_expansion_tab")
 
-                # These are the only expansions that matter - the ones that add enemies, regular treasure, or characters.
                 self.expansions = {
                     "Painted World of Ariamis": {"button": None, "value": tk.IntVar(), "displayName": "Painted World of Ariamis (V2 Core Set)"},
                     "The Sunless City": {"button": None, "value": tk.IntVar(), "displayName": "The Sunless City (V2 Core Set)"},
@@ -73,9 +72,17 @@ try:
                     "Darkroot": {"button": None, "value": tk.IntVar(), "displayName": "Darkroot (V1)"},
                     "Explorers": {"button": None, "value": tk.IntVar(), "displayName": "Explorers (V1)"},
                     "Iron Keep": {"button": None, "value": tk.IntVar(), "displayName": "Iron Keep (V1)"},
+                    "Characters Expansion": {"button": None, "value": tk.IntVar(), "displayName": "Characters Expansion (V1)"},
                     "Phantoms": {"button": None, "value": tk.IntVar(), "displayName": "Phantoms (V1)"},
-                    "Executioner Chariot": {"button": None, "value": tk.IntVar(), "displayName": "Executioner Chariot (V1)"},
-                    "Characters Expansion": {"button": None, "value": tk.IntVar(), "displayName": "Characters Expansion (V1)"}
+                    "Asylum Demon": {"button": None, "value": tk.IntVar(), "displayName": "Asylum Demon"},
+                    "Black Dragon Kalameet": {"button": None, "value": tk.IntVar(), "displayName": "Black Dragon Kalameet"},
+                    "Executioner Chariot": {"button": None, "value": tk.IntVar(), "displayName": "Executioner Chariot"},
+                    "Gaping Dragon": {"button": None, "value": tk.IntVar(), "displayName": "Gaping Dragon"},
+                    "Manus, Father of the Abyss": {"button": None, "value": tk.IntVar(), "displayName": "Manus, Father of the Abyss"},
+                    "Old Iron King": {"button": None, "value": tk.IntVar(), "displayName": "Old Iron King"},
+                    "Vordt of the Boreal Valley": {"button": None, "value": tk.IntVar(), "displayName": "Vordt of the Boreal Valley"},
+                    "The Four Kings": {"button": None, "value": tk.IntVar(), "displayName": "The Four Kings"},
+                    "The Last Giant": {"button": None, "value": tk.IntVar(), "displayName": "The Last Giant"}
                 }
 
                 self.expansionTab = VerticalScrolledFrame(self.notebook)
@@ -87,6 +94,14 @@ try:
                     
                 self.expansions["Phantoms"]["value"].set(1 if "Phantoms" in self.settings["availableExpansions"] else 0)
                 self.expansions["Characters Expansion"]["value"].set(1 if "Characters Expansion" in self.settings["availableExpansions"] else 0)
+                self.expansions["Asylum Demon"]["value"].set(1 if "Asylum Demon" in self.settings["availableExpansions"] else 0)
+                self.expansions["Black Dragon Kalameet"]["value"].set(1 if "Black Dragon Kalameet" in self.settings["availableExpansions"] else 0)
+                self.expansions["Gaping Dragon"]["value"].set(1 if "Gaping Dragon" in self.settings["availableExpansions"] else 0)
+                self.expansions["Manus, Father of the Abyss"]["value"].set(1 if "Manus, Father of the Abyss" in self.settings["availableExpansions"] else 0)
+                self.expansions["Old Iron King"]["value"].set(1 if "Old Iron King" in self.settings["availableExpansions"] else 0)
+                self.expansions["Vordt of the Boreal Valley"]["value"].set(1 if "Vordt of the Boreal Valley" in self.settings["availableExpansions"] else 0)
+                self.expansions["The Four Kings"]["value"].set(1 if "The Four Kings" in self.settings["availableExpansions"] else 0)
+                self.expansions["The Last Giant"]["value"].set(1 if "The Last Giant" in self.settings["availableExpansions"] else 0)
 
                 log("End of create_expansion_tab")
             except Exception as e:
@@ -369,7 +384,18 @@ try:
             try:
                 log("Start of toggle_expansion")
 
-                if expansion in {"Characters Expansion", "Level 4 Encounters"}:
+                if expansion in {
+                    "Characters Expansion",
+                    "Level 4 Encounters",
+                    "Asylum Demon",
+                    "Black Dragon Kalameet",
+                    "Gaping Dragon",
+                    "Manus, Father of the Abyss",
+                    "Old Iron King",
+                    "Vordt of the Boreal Valley",
+                    "The Four Kings",
+                    "The Last Giant"
+                    }:
                     log("End of toggle_expansion (Characters Expansion or Level 4 Encounters, nothing to do)")
                     return
 

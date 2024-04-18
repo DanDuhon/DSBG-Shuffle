@@ -92,20 +92,20 @@ try:
                 self.encounterScrollbar = ttk.Scrollbar(root)
                 self.encounterScrollbar.pack(side=tk.RIGHT, fill=tk.Y)
 
-                self.bossMenu = [
+                self.bossMenuItems = [
                     "Select Boss",
                     "--Mini Bosses--"
                     ]
-                for boss in [boss for boss in bosses if bosses[boss]["level"] == "Mini Boss"]:
-                    self.bossMenu.append(bosses[boss]["name"])
+                for boss in [boss for boss in bosses if bosses[boss]["level"] == "Mini Boss" and bosses[boss]["expansions"] & self.availableExpansions]:
+                    self.bossMenuItems.append(bosses[boss]["name"])
 
-                self.bossMenu.append("--Main Bosses--")
-                for boss in [boss for boss in bosses if bosses[boss]["level"] == "Main Boss"]:
-                    self.bossMenu.append(bosses[boss]["name"])
+                self.bossMenuItems.append("--Main Bosses--")
+                for boss in [boss for boss in bosses if bosses[boss]["level"] == "Main Boss" and bosses[boss]["expansions"] & self.availableExpansions]:
+                    self.bossMenuItems.append(bosses[boss]["name"])
 
-                self.bossMenu.append("--Mega Bosses--")
-                for boss in [boss for boss in bosses if bosses[boss]["level"] == "Mega Boss"]:
-                    self.bossMenu.append(bosses[boss]["name"])
+                self.bossMenuItems.append("--Mega Bosses--")
+                for boss in [boss for boss in bosses if bosses[boss]["level"] == "Mega Boss" and bosses[boss]["expansions"] & self.availableExpansions]:
+                    self.bossMenuItems.append(bosses[boss]["name"])
 
                 self.selectedBoss = tk.StringVar()
                 
@@ -536,6 +536,41 @@ try:
                     self.campaign.append(card)
 
                 log("End of add_card_to_campaign")
+            except Exception as e:
+                error_popup(root, e)
+                raise
+
+
+        def add_random_boss_to_campaign(self, level):
+            """
+            Adds a random boss to the campaign, visible in the campaign treeview.
+            """
+            try:
+                log("Start of add_random_boss_to_campaign")
+
+                availableBosses = [boss for boss in bosses if bosses[boss]["level"] == level and bosses[boss]["expansions"] & self.availableExpansions]
+                selectedBoss = choice(availableBosses)
+
+                # Multiples need a different iid in the treeview, so append a number.
+                if selectedBoss + "_0" not in self.treeviewCampaign.get_children():
+                    self.treeviewCampaign.insert(parent="", iid=selectedBoss + "_0", values=(selectedBoss, "Boss", bosses[selectedBoss]["level"]), index="end")
+                    iidSuffix = "_0"
+                else:
+                    i = max([int(item[item.rindex("_") + 1:]) for item in self.treeviewCampaign.get_children() if item[:item.rindex("_")] == selectedBoss])
+                    self.treeviewCampaign.insert(parent="", iid=selectedBoss + "_" + str(i+1), values=(selectedBoss, "Boss", bosses[selectedBoss]["level"]), index="end")
+                    iidSuffix = "_" + str(i+1)
+
+                # Build the dictionary that will be saved to JSON if this campaign is saved.
+                card = {
+                    "name": selectedBoss,
+                    "type": "boss",
+                    "level": level,
+                    "iid": selectedBoss + iidSuffix
+                }
+
+                self.campaign.append(card)
+
+                log("End of add_random_boss_to_campaign")
             except Exception as e:
                 error_popup(root, e)
                 raise
@@ -1214,7 +1249,7 @@ try:
                 pdf = FPDF(unit="mm")
                 pdf.set_margins(buffer, buffer, buffer)
 
-                progress = PopupWindow(root, labelText="Creating a PDF...", progressBar=True, progressMax=encounterCount, loadingImage=True)
+                progress = PopupWindow(root, labelText="Creating PDF...", progressBar=True, progressMax=encounterCount, loadingImage=True)
 
                 # Loop through the card lists and add them to pages.
                 for e, encounterList in enumerate(encountersToPrint):
@@ -1280,7 +1315,7 @@ try:
                 progress.destroy()
 
                 # Prompt user to save the file.
-                pdfOutput = filedialog.asksaveasfile(mode="w", initialdir=baseFolder + "\\lib\\dsbg_shuffle_pdfs".replace("\\", pathSep), defaultextension=".pdf")
+                pdfOutput = filedialog.asksaveasfile(mode="w", initialdir=baseFolder + "\\lib\\dsbg_shuffle_exports".replace("\\", pathSep), defaultextension=".pdf")
 
                 # If they canceled it, do nothing.
                 if not pdfOutput:
@@ -1296,6 +1331,181 @@ try:
                 self.forPrinting = False
 
                 log("End of print_encounters")
+            except Exception as e:
+                error_popup(root, e)
+                raise
+
+
+        def print_variant_cards(self):
+            """
+            Export variant cards to a PDF.
+            """
+            try:
+                log("Start of print_variant_cards")
+
+                # Add cards to a list associated with their type/size.
+                variantsToPrint = []
+                l = [k for k in self.lockedVariants.keys() if "Ornstein & Smough_" not in k]
+                for i in range(0, len(l), 9):
+                    variantsToPrint.append(l[i:i+9])
+
+                if [k for k in self.lockedVariants.keys() if "Ornstein & Smough_" in k]:
+                    variantsToPrint.append([k for k in self.lockedVariants.keys() if "Ornstein & Smough_" in k])
+
+                progress = PopupWindow(root, labelText="Creating PDF...", progressBar=True, progressMax=len(l), loadingImage=True)
+                p = 0
+
+                width = 63
+                height = 88
+                standardCards = 8
+                columnBreaks = {2, 5}
+
+                buffer = 5
+                pdf = FPDF(unit="mm")
+                pdf.set_margins(buffer, buffer, buffer)
+
+                # Loop through the card list and add them to pages.
+                for page in variantsToPrint:
+                    pdf.add_page()
+                    x = buffer
+                    y = buffer
+                    pdf.set_x(x)
+                    pdf.set_y(y)
+
+                    for i, variant in enumerate(page):
+                        # Create the variant card.
+                        self.load_variant_card_locked(variant=variant)
+
+                        # Stage the encounter image
+                        imageStage = ImageTk.getimage(self.encounterPhotoImage)
+
+                        imageStage.save(baseFolder + "\\lib\\dsbg_shuffle_image_staging\\".replace("\\", pathSep) + variant + ".png")
+
+                        log("\tAdding " + variant + " to PDF at (" + str(x) + ", " + str(y) + ") with width of " + str(width))
+                        pdf.image(baseFolder + "\\lib\\dsbg_shuffle_image_staging\\".replace("\\", pathSep) + variant + ".png", x=x, y=y, type="PNG", w=width)
+
+                        if i < standardCards:
+                            if i in columnBreaks:
+                                x += width + buffer
+                                y = buffer
+                            else:
+                                y += height + buffer
+                        elif i == standardCards:
+                            x += width + buffer
+                            y = buffer
+                        else:
+                            y += width + buffer
+
+                        p += 1
+                        progress.progressVar.set(p)
+                        root.update_idletasks()
+
+                progress.destroy()
+
+                # Prompt user to save the file.
+                pdfOutput = filedialog.asksaveasfile(mode="w", initialdir=baseFolder + "\\lib\\dsbg_shuffle_exports".replace("\\", pathSep), defaultextension=".pdf")
+
+                # If they canceled it, do nothing.
+                if not pdfOutput:
+                    log("End of print_variant_cards (nothing done)")
+                    return
+                
+                progress = PopupWindow(root, labelText="Saving PDF, please wait...", loadingImage=True)
+
+                pdf.output(pdfOutput.name)
+
+                progress.destroy()
+
+                log("End of print_variant_cards")
+            except Exception as e:
+                error_popup(root, e)
+                raise
+
+
+        def print_variant_summary(self):
+            """
+            Export variant cards to a PDF.
+            """
+            try:
+                log("Start of print_variant_summary")
+
+                friendlyMod = {
+                    "dodge1": "+1 dodge",
+                    "dodge2": "+2 dodge",
+                    "damage1": "+1 damage",
+                    "damage2": "+2 damage",
+                    "damage3": "+3 damage",
+                    "damage4": "+4 damage",
+                    "armor1": "+1 armor",
+                    "armor2": "+1 armor",
+                    "resist1": "+1 resist",
+                    "resist2": "+2 resist",
+                    "health1": "+1 health & heat-up value",
+                    "health2": "+2 health & heat-up value",
+                    "health3": "+3 health & heat-up value",
+                    "health4": "+4 health & heat-up value",
+                    "repeat": "+1 repeat",
+                    "magic": "deals magic damage",
+                    "bleed": "add Bleed",
+                    "frostbite": "add Frostbite",
+                    "poison": "add Poison",
+                    "stagger": "add Stagger",
+                    "physical": "deals physical damage",
+                    "": ""
+                    }
+
+                summary = ""
+                for variant in self.lockedVariants:
+                    name = variant[:variant.index("_")]
+                    if "Ornstein & Smough - " in name and "&" in name[name.index(" - "):]:
+                        mods = ", ".join([friendlyMod[modIdLookup.get(m, "")] for m in self.lockedVariants[variant][0] if modIdLookup.get(m, "") not in {
+                            "armor1",
+                            "armor2",
+                            "resist1",
+                            "resist2",
+                            "health1",
+                            "health2",
+                            "health3",
+                            "health4"
+                        }])
+                        summary += "\t{}: {}\n".format(name[name.index(" - ")+3:name.index(" & ", name.index(" - ")+3)], mods if mods else "no changes")
+
+                        mods = ", ".join([friendlyMod[modIdLookup.get(m, "")] for m in self.lockedVariants[variant][1] if modIdLookup.get(m, "") not in {
+                            "armor1",
+                            "armor2",
+                            "resist1",
+                            "resist2",
+                            "health1",
+                            "health2",
+                            "health3",
+                            "health4"
+                        }])
+                        summary += "\t{}: {}\n".format(name[name.index(" & ", name.index(" - ")+3)+3:], mods if mods else "no changes")
+                    else:
+                        mods = ", ".join([friendlyMod[modIdLookup.get(m, "")] for m in self.lockedVariants[variant] if ("-" not in name or modIdLookup.get(m, "") not in {
+                            "armor1",
+                            "armor2",
+                            "resist1",
+                            "resist2",
+                            "health1",
+                            "health2",
+                            "health3",
+                            "health4"
+                        })])
+                        summary += ("\t" if "-" in name else "") + "{}: {}\n".format(name[name.index(" - ")+3:] if "-" in name else name, mods if mods else "no changes")
+
+                # Prompt user to save the file.
+                output = filedialog.asksaveasfile(mode="w", initialdir=baseFolder + "\\lib\\dsbg_shuffle_exports".replace("\\", pathSep), defaultextension=".txt")
+
+                # If they canceled it, do nothing.
+                if not output:
+                    log("End of print_variant_summary (nothing done)")
+                    return
+                
+                with open(output.name, "w") as o:
+                    o.write(summary)
+
+                log("End of print_variant_summary")
             except Exception as e:
                 error_popup(root, e)
                 raise
@@ -1361,28 +1571,37 @@ try:
                 self.campaignTabButtonsFrame.pack()
                 self.campaignTabButtonsFrame2 = ttk.Frame(self.campaignTab)
                 self.campaignTabButtonsFrame2.pack()
+                self.campaignTabButtonsFrame3 = ttk.Frame(self.campaignTab)
+                self.campaignTabButtonsFrame3.pack()
                 self.campaignTabTreeviewFrame = ttk.Frame(self.campaignTab)
                 self.campaignTabTreeviewFrame.pack(fill="both", expand=True)
+                
+                self.loadButton = ttk.Button(self.campaignTabButtonsFrame, text="Load Campaign", width=16, command=self.load_campaign)
+                self.loadButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+                self.saveButton = ttk.Button(self.campaignTabButtonsFrame, text="Save Campaign", width=16, command=self.save_campaign)
+                self.saveButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
 
-                self.deleteButton = ttk.Button(self.campaignTabButtonsFrame, text="Remove Card", width=16, command=self.delete_card_from_campaign)
+                self.deleteButton = ttk.Button(self.campaignTabButtonsFrame2, text="Remove Card", width=16, command=self.delete_card_from_campaign)
                 self.deleteButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-                self.printEncounters = ttk.Button(self.campaignTabButtonsFrame, text="Export to PDF", width=16, command=self.print_encounters)
+                self.printEncounters = ttk.Button(self.campaignTabButtonsFrame2, text="Export to PDF", width=16, command=self.print_encounters)
                 self.printEncounters.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-                self.moveUpButton = ttk.Button(self.campaignTabButtonsFrame, text="Move Up", width=16, command=self.move_up)
+                self.moveUpButton = ttk.Button(self.campaignTabButtonsFrame2, text="Move Up", width=16, command=self.move_up)
                 self.moveUpButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-                self.moveDownButton = ttk.Button(self.campaignTabButtonsFrame, text="Move Down", width=16, command=self.move_down)
+                self.moveDownButton = ttk.Button(self.campaignTabButtonsFrame2, text="Move Down", width=16, command=self.move_down)
                 self.moveDownButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
 
-                self.loadButton = ttk.Button(self.campaignTabButtonsFrame2, text="Load Campaign", width=16, command=self.load_campaign)
-                self.loadButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-                self.saveButton = ttk.Button(self.campaignTabButtonsFrame2, text="Save Campaign", width=16, command=self.save_campaign)
-                self.saveButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-                self.bossMenu = ttk.Combobox(self.campaignTabButtonsFrame2, state="readonly", values=self.bossMenu, textvariable=self.selectedBoss)
+                self.bossMenu = ttk.Combobox(self.campaignTabButtonsFrame3, state="readonly", values=self.bossMenuItems, textvariable=self.selectedBoss)
                 self.bossMenu.current(0)
                 self.bossMenu.config(width=17)
                 self.bossMenu.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-                self.addBossButton = ttk.Button(self.campaignTabButtonsFrame2, text="Add Boss", width=16, command=self.add_boss_to_campaign)
+                self.addBossButton = ttk.Button(self.campaignTabButtonsFrame3, text="Add Boss", width=17, command=self.add_boss_to_campaign)
                 self.addBossButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+                self.randomMiniBossButton = ttk.Button(self.campaignTabButtonsFrame3, text="Random Mini Boss", width=17, command=lambda x="Mini Boss": self.add_random_boss_to_campaign(level=x))
+                self.randomMiniBossButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+                self.randomMiniBossButton = ttk.Button(self.campaignTabButtonsFrame3, text="Random Main Boss", width=17, command=lambda x="Main Boss": self.add_random_boss_to_campaign(level=x))
+                self.randomMiniBossButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+                self.randomMiniBossButton = ttk.Button(self.campaignTabButtonsFrame3, text="Random Mega Boss", width=17, command=lambda x="Mega Boss": self.add_random_boss_to_campaign(level=x))
+                self.randomMiniBossButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
                 
                 self.eventTab = ttk.Frame(self.notebook)
                 self.notebook.add(self.eventTab, text="Events")
@@ -1447,9 +1666,13 @@ try:
                 
                 self.applyModButton2 = ttk.Button(self.variantsTabButtonsFrame2, text="Remove Variant(s)", width=16, command=self.delete_locked_variant)
                 self.applyModButton2.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-                self.applyModButton2 = ttk.Button(self.variantsTabButtonsFrame2, text="Images to PDF", width=16, command=do_nothing)
+                self.applyModButton2 = ttk.Button(self.variantsTabButtonsFrame2, text="Save Variants", width=16, command=self.save_variants)
                 self.applyModButton2.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-                self.applyModButton2 = ttk.Button(self.variantsTabButtonsFrame2, text="Summary to PDF", width=16, command=do_nothing)
+                self.applyModButton2 = ttk.Button(self.variantsTabButtonsFrame2, text="Load Variants", width=16, command=self.load_variants)
+                self.applyModButton2.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+                self.applyModButton2 = ttk.Button(self.variantsTabButtonsFrame2, text="Images to PDF", width=16, command=self.print_variant_cards)
+                self.applyModButton2.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+                self.applyModButton2 = ttk.Button(self.variantsTabButtonsFrame2, text="Summary to PDF", width=16, command=self.print_variant_summary)
                 self.applyModButton2.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
 
                 log("End of create_tabs")
@@ -1668,7 +1891,7 @@ try:
                     log("End of apply_difficulty_modifier (no mod entered)")
                     return
                 
-                progress = None
+                progress = PopupWindow(root, labelText="Generating variants, please wait...", loadingImage=True)
 
                 diffKey = 1.0 + (float(self.entryText.get()) / 100)
                 diffKey = (ceil((diffKey * 10) / 2.0) * 2) / 10
@@ -1692,11 +1915,9 @@ try:
                         defKey = self.currentVariants[startReal]["defKey"]
                         self.pick_enemy_variants_behavior(startReal, start[start.index(" - ")+3:], diffKeyReal, defKey)
                 elif start in {"Enemies", "Invaders & Explorers Mimics", "Mini Bosses", "Main Bosses", "Mega Bosses"}:
-                    progress = PopupWindow(root, labelText="Generating variants, please wait...", loadingImage=True)
                     for child in tree.get_children(start):
                         self.pick_enemy_variants_enemy(child, diffKey)
                 elif start == "All":
-                    progress = PopupWindow(root, labelText="Generating variants, please wait...", loadingImage=True)
                     for child in tree.get_children(start):
                         for subChild in tree.get_children(child):
                             self.pick_enemy_variants_enemy(subChild, diffKey)
@@ -1719,8 +1940,7 @@ try:
                 if self.selectedVariant:
                     self.load_variant_card(variant=self.selectedVariant)
 
-                if progress:
-                    progress.destroy()
+                progress.destroy()
 
                 log("End of apply_difficulty_modifier")
             except Exception as e:
@@ -1789,6 +2009,12 @@ try:
                 if start == "Ornstein & Smough" and "&" in behavior:
                     behaviorO = behavior[:behavior.index(" & ")]
                     behaviorS = behavior[behavior.index(" & ")+3:]
+
+                    if defKey not in self.variants[start][self.numberOfCharacters][diffKey]:
+                        p = PopupWindow(root, "The difficulty modifier you chose is incompatible with the\ndifficulty modifiers on other behaviors.\n\nPlease try a different difficulty modifier or change the difficulty\nmodifier at the {} level.".format(start, start), firstButton="Ok")
+                        root.wait_window(p)
+                        return
+
                     self.currentVariants[start][behavior] = {
                         behaviorO: choice(list(self.variants[start][self.numberOfCharacters][diffKey][defKey][behaviorO])),
                         behaviorS: choice(list(self.variants[start][self.numberOfCharacters][diffKey][defKey][behaviorS]))
@@ -1946,8 +2172,10 @@ try:
                             "Main Bosses",
                             "Mega Bosses"
                             } else ""))
-                else:
+                elif "_" in self.selectedVariant:
                     self.selectedVariant = variant
+                else:
+                    variant = None
 
                 # Remove keyword tooltips from the previous image shown, if there are any.
                 for tooltip in self.tooltips:
@@ -1957,9 +2185,9 @@ try:
                 self.variantPhotoImage = self.create_image(self.selectedVariant + ".jpg", "encounter", 4)
 
                 if "Ornstein & Smough" in self.selectedVariant and (self.selectedVariant.count("&") == 2 or "data" in self.selectedVariant):
-                    self.edit_variant_card_os()
+                    self.edit_variant_card_os(variant=variant)
                 else:
-                    self.edit_variant_card()
+                    self.edit_variant_card(variant=variant)
 
                 self.encounter.bind("<Button 1>", self.apply_difficulty_modifier)
                 
@@ -1973,7 +2201,7 @@ try:
 
         def load_variant_card_locked(self, event=None, variant=None):
             try:
-                log("Start of load_variant_card")
+                log("Start of load_variant_card_locked")
                 
                 self.treeviewVariantsLocked.unbind("<<TreeviewSelect>>")
 
@@ -1983,7 +2211,7 @@ try:
 
                     if not tree.selection():
                         log("\tNo variant selected")
-                        log("\tEnd of load_variant_card")
+                        log("\tEnd of load_variant_card_locked")
                         self.treeviewVariantsLocked.bind("<<TreeviewSelect>>", self.load_variant_card_locked)
                         return
                     
@@ -1999,7 +2227,15 @@ try:
                         return
 
                     name = tree.selection()[0][:tree.selection()[0].index("_")]
-                    mods = [modIdLookup[m] for m in list(self.lockedVariants[tree.selection()[0]]) if m]
+
+                    # Account for Ornstein & Smough behaviors.
+                    if type(self.lockedVariants[tree.selection()[0]][0]) == list:
+                        mods = [
+                            [modIdLookup[m] for m in list(self.lockedVariants[tree.selection()[0]][0]) if m],
+                            [modIdLookup[m] for m in list(self.lockedVariants[tree.selection()[0]][1]) if m]
+                            ]
+                    else:
+                        mods = [modIdLookup[m] for m in list(self.lockedVariants[tree.selection()[0]]) if m]
 
                     self.selectedVariant = (
                         name
@@ -2011,7 +2247,26 @@ try:
                             "Mega Bosses"
                             } else ""))
                 else:
-                    self.selectedVariant = variant
+                    name = variant[:variant.index("_")]
+
+                    # Account for Ornstein & Smough behaviors.
+                    if type(self.lockedVariants[variant][0]) == list:
+                        mods = [
+                            [modIdLookup[m] for m in list(self.lockedVariants[variant][0]) if m],
+                            [modIdLookup[m] for m in list(self.lockedVariants[variant][1]) if m]
+                            ]
+                    else:
+                        mods = [modIdLookup[m] for m in list(self.lockedVariants[variant]) if m]
+
+                    self.selectedVariant = (
+                        name
+                        + (" - data" if self.treeviewVariantsLocked.parent(variant) in {
+                            "Enemies",
+                            "Invaders & Explorers Mimics",
+                            "Mini Bosses",
+                            "Main Bosses",
+                            "Mega Bosses"
+                            } else ""))
 
                 # Remove keyword tooltips from the previous image shown, if there are any.
                 for tooltip in self.tooltips:
@@ -2029,7 +2284,7 @@ try:
                 
                 self.treeviewVariantsLocked.bind("<<TreeviewSelect>>", self.load_variant_card_locked)
 
-                log("End of load_variant_card")
+                log("End of load_variant_card_locked")
             except Exception as e:
                 error_popup(root, e)
                 raise
@@ -2061,6 +2316,8 @@ try:
         def lock_variant_card(self, event=None):
             try:
                 log("Start of lock_variant_card")
+                
+                progress = PopupWindow(root, labelText="Locking variants, please wait...", loadingImage=True)
 
                 tree = self.treeviewVariantsList
                 treeLocked = self.treeviewVariantsLocked
@@ -2091,7 +2348,7 @@ try:
                 elif tree.focus() in {"Invaders & Explorers Mimics", "Mini Bosses", "Main Bosses", "Mega Bosses"}:
                     for e in tree.get_children(tree.focus()):
                         v = tree.item(e)["values"]
-                        modList = [v for v in self.currentVariants[e][[k for k in list(self.currentVariants[e].keys()) if k != "defKey"][0]]]
+                        modList = list(self.currentVariants[e]["defKey"])
                         iid = e + "_" + ",".join([str(v) for v in modList])
                         iidForAvg = iid
 
@@ -2109,29 +2366,43 @@ try:
                                 behavior = child[child.index(" - ")+3:]
                                 
                             v = tree.item(child)["values"]
-                            modList = [v for v in self.currentVariants[enemy][behavior]]
-                            iidChild = child + "_" + ",".join([str(v) for v in modList])
+                        
+                            if enemy == "Ornstein & Smough" and "&" in behavior:
+                                modList1 = [v for v in self.currentVariants[enemy][behavior][behavior[:behavior.index(" & ")]]]
+                                modList2 = [v for v in self.currentVariants[enemy][behavior][behavior[behavior.index(" & ")+3:]]]
+                                iidChild = child + "_" + ",".join([str(v) for v in modList1]) + "_" + ",".join([str(v) for v in modList2])
+                            else:
+                                modList = [v for v in self.currentVariants[enemy][behavior]]
+                                iidChild = child + "_" + ",".join([str(v) for v in modList])
 
                             if iidChild in self.lockedVariants:
                                 continue
                             
-                            self.lockedVariants[iidChild] = modList
-                            contents = [treeLocked.item(child)["values"][0] for child in treeLocked.get_children(tree.parent(tree.focus()))]
+                            if enemy == "Ornstein & Smough" and "&" in behavior:
+                                self.lockedVariants[iidChild] = [modList1, modList2]
+                            else:
+                                self.lockedVariants[iidChild] = modList
+
+                            contents = [treeLocked.item(child)["values"][0] for child in treeLocked.get_children(iid)]
                             treeLocked.insert(parent=iid, index=bisect_left(contents, v[0]), iid=iidChild, values=(v[0], v[1]), tags=True)
                 elif tree.focus() == "All":
+                    iidForAvg = "All"
                     for cat in tree.get_children("All"):
                         for e in tree.get_children(cat):
-                            modList = [v for v in self.currentVariants[e][[k for k in list(self.currentVariants[e].keys()) if k != "defKey"][0]]]
+                            v = tree.item(e)["values"]
+                            if cat == "Enemies":
+                                modList = [v for v in self.currentVariants[e][[k for k in list(self.currentVariants[e].keys()) if k != "defKey"][0]]]
+                            else:
+                                modList = list(self.currentVariants[e]["defKey"])
                             iid = e + "_" + ",".join([str(v) for v in modList])
-                            iidForAvg = iid
 
                             if iid in self.lockedVariants:
                                 log("End of lock_variant_card (nothing done)")
                                 continue
                             
                             self.lockedVariants[iid] = modList
-                            contents = [treeLocked.item(child)["values"][0] for child in treeLocked.get_children(tree.parent(cat))]
-                            treeLocked.insert(parent=tree.parent(cat), index=bisect_left(contents, v[0]), iid=iid, values=(v[0], v[1]), tags=True)
+                            contents = [treeLocked.item(child)["values"][0] for child in treeLocked.get_children(cat)]
+                            treeLocked.insert(parent=cat, index=bisect_left(contents, v[0]), iid=iid, values=(v[0], v[1]), tags=True)
                             
                             for child in tree.get_children(e):
                                 if " - " in child:
@@ -2139,15 +2410,25 @@ try:
                                     behavior = child[child.index(" - ")+3:]
                                     
                                 v = tree.item(child)["values"]
-                                modList = [v for v in self.currentVariants[enemy][behavior]]
-                                iidChild = child + "_" + ",".join([str(v) for v in modList])
+                        
+                                if enemy == "Ornstein & Smough" and "&" in behavior:
+                                    modList1 = [v for v in self.currentVariants[enemy][behavior][behavior[:behavior.index(" & ")]]]
+                                    modList2 = [v for v in self.currentVariants[enemy][behavior][behavior[behavior.index(" & ")+3:]]]
+                                    iidChild = child + "_" + ",".join([str(v) for v in modList1]) + "_" + ",".join([str(v) for v in modList2])
+                                else:
+                                    modList = [v for v in self.currentVariants[enemy][behavior]]
+                                    iidChild = child + "_" + ",".join([str(v) for v in modList])
 
                                 if iidChild in self.lockedVariants:
                                     continue
                                 
-                                self.lockedVariants[iidChild] = modList
-                                contents = [treeLocked.item(child)["values"][0] for child in treeLocked.get_children(tree.parent(e))]
-                                treeLocked.insert(parent=tree.iid, index=bisect_left(contents, v[0]), iid=iidChild, values=(v[0], v[1]), tags=True)
+                                if enemy == "Ornstein & Smough" and "&" in behavior:
+                                    self.lockedVariants[iidChild] = [modList1, modList2]
+                                else:
+                                    self.lockedVariants[iidChild] = modList
+
+                                contents = [treeLocked.item(child)["values"][0] for child in treeLocked.get_children(iid)]
+                                treeLocked.insert(parent=iid, index=bisect_left(contents, v[0]), iid=iidChild, values=(v[0], v[1]), tags=True)
                 elif tree.get_children(tree.focus()) or " - " in tree.focus():
                     if " - " in tree.focus():
                         focus = tree.parent(tree.focus())
@@ -2157,14 +2438,12 @@ try:
 
                     modList = list(self.currentVariants[focus]["defKey"])
                     iid = focus + "_" + ",".join([str(v) for v in modList])
-                    print(iid)
                     iidForAvg = iid
 
                     if iid not in self.lockedVariants:
                         self.lockedVariants[iid] = modList
-                        contents = [treeLocked.item(child)["values"][0] for child in treeLocked.get_children(tree.parent(tree.focus()))]
+                        contents = [treeLocked.item(child)["values"][0] for child in treeLocked.get_children(tree.parent(tree.focus()))] if treeLocked.exists(tree.parent(tree.focus())) else []
                         treeLocked.insert(parent=tree.parent(focus), index=bisect_left(contents, iid), iid=iid, values=(v[0], v[1]), tags=True)
-                        #treeLocked.insert(parent=tree.parent(focus), index="end", iid=iid, values=(v[0], v[1]), tags=True)
                     
                     for child in tree.get_children(focus):
                         if " - " in child:
@@ -2172,14 +2451,24 @@ try:
                             behavior = child[child.index(" - ")+3:]
                             
                         v = tree.item(child)["values"]
-                        modList = [v for v in self.currentVariants[enemy][behavior]]
-                        iidChild = child + "_" + ",".join([str(v) for v in modList])
+                        
+                        if enemy == "Ornstein & Smough" and "&" in behavior:
+                            modList1 = [v for v in self.currentVariants[enemy][behavior][behavior[:behavior.index(" & ")]]]
+                            modList2 = [v for v in self.currentVariants[enemy][behavior][behavior[behavior.index(" & ")+3:]]]
+                            iidChild = child + "_" + ",".join([str(v) for v in modList1]) + "_" + ",".join([str(v) for v in modList2])
+                        else:
+                            modList = [v for v in self.currentVariants[enemy][behavior]]
+                            iidChild = child + "_" + ",".join([str(v) for v in modList])
 
                         if iidChild in self.lockedVariants:
                             continue
-                        
-                        self.lockedVariants[iidChild] = modList
-                        contents = [treeLocked.item(child)["values"][0] for child in treeLocked.get_children(iid)]
+                            
+                        if enemy == "Ornstein & Smough" and "&" in behavior:
+                            self.lockedVariants[iidChild] = [modList1, modList2]
+                        else:
+                            self.lockedVariants[iidChild] = modList
+                            
+                        contents = treeLocked.get_children(iid)
                         treeLocked.insert(parent=iid, index=bisect_left(contents, iidChild), iid=iidChild, values=(v[0], v[1]), tags=True)
                 else:
                     modList = [v for v in self.currentVariants[tree.focus()][[k for k in list(self.currentVariants[tree.focus()].keys()) if k != "defKey"][0]]]
@@ -2188,11 +2477,6 @@ try:
 
                     if iid in self.lockedVariants:
                         log("End of lock_variant_card (nothing done)")
-                        return
-                    
-                    if tree.parent(tree.focus()) not in self.lockedVariants:
-                        p = PopupWindow(root, "You have to lock {} first before locking specific behaviors!".format(tree.parent(tree.focus())), firstButton="Ok")
-                        root.wait_window(p)
                         return
                     
                     self.lockedVariants[iid] = modList
@@ -2213,6 +2497,8 @@ try:
                         self.recalc_variant_average(treeLocked, treeLocked.parent(iidForAvg))
                         if treeLocked.parent(treeLocked.parent(treeLocked.parent(iidForAvg))):
                             self.recalc_variant_average(treeLocked, treeLocked.parent(treeLocked.parent(iidForAvg)))
+                            
+                progress.destroy()
 
                 log("End of lock_variant_card")
             except Exception as e:
@@ -2233,15 +2519,19 @@ try:
                 
                 tree = self.treeviewVariantsLocked
                 
+                if variant:
+                    target = variant
                 # If the button is clicked with no selection, do nothing.
-                if not tree.selection():
+                elif not tree.selection():
                     log("End of delete_locked_variant (nothing done)")
                     return
+                else:
+                    target = tree.selection()[0]
                 
-                parent = tree.parent(tree.selection()[0])
+                parent = tree.parent(target)
                 
                 # Remove the deleted variants from the treeview.
-                for child in tree.get_children(tree.selection()[0]):
+                for child in tree.get_children(target):
                     for subChild in tree.get_children(child):
                         for subSubChild in tree.get_children(subChild):
                             if subSubChild in self.lockedVariants:
@@ -2262,11 +2552,11 @@ try:
                     if child not in {"All", "Enemies", "Invaders & Explorers Mimics", "Mini Bosses", "Main Bosses", "Mega Bosses"}:
                         tree.delete(child)
 
-                if tree.selection()[0] in self.lockedVariants:
-                    del self.lockedVariants[tree.selection()[0]]
+                if target in self.lockedVariants:
+                    del self.lockedVariants[target]
                     
-                if tree.selection()[0] not in {"All", "Enemies", "Invaders & Explorers Mimics", "Mini Bosses", "Main Bosses", "Mega Bosses"}:
-                    tree.delete(tree.selection()[0])
+                if target not in {"All", "Enemies", "Invaders & Explorers Mimics", "Mini Bosses", "Main Bosses", "Mega Bosses"}:
+                    tree.delete(target)
 
                 # Recalculate the average difficulty mod for this row and its parents and children.
                 for child in tree.get_children("All"):
@@ -2312,15 +2602,7 @@ try:
                 elif "heatup" in behaviorDetail[enemy]:
                     heatup.append(behaviorDetail[enemy]["heatup"])
 
-                if variant:
-                    for mod in variant:
-                        healthAddition = int(mod[-1]) if "health" in mod else 0
-                        health += healthAddition
-                        armor += int(mod[-1]) if "armor" in mod else 0
-                        resist += int(mod[-1]) if "resist" in mod else 0
-                        if healthAddition:
-                            heatup = [h + healthAddition for h in heatup]
-                elif enemy in self.currentVariants:
+                if enemy in self.currentVariants:
                     mods = [modIdLookup[m] for m in list(self.currentVariants[enemy]["defKey"]) if m]
                     for mod in mods:
                         healthAddition = int(mod[-1]) if "health" in mod else 0
@@ -2374,6 +2656,7 @@ try:
                             actions[position] = behaviorDetail[enemy][behavior][position].copy()
 
                 if variant:
+                    print(variant)
                     dodge, repeat, actions = self.apply_mods_to_actions(enemy, behavior, dodge, repeat, actions, variant)
                 elif enemy in self.currentVariants and ("" if behavior == "behavior" else behavior) in self.currentVariants[enemy]:
                     dodge, repeat, actions = self.apply_mods_to_actions(enemy, behavior, dodge, repeat, actions)
@@ -2461,6 +2744,7 @@ try:
                     mods = variant
                 else:
                     mods = sorted([modIdLookup[m] for m in list(self.currentVariants[enemy][behavior])], key=lambda x: 1 if x == "repeat" else 0)
+
                 for mod in mods:
                     dodge += int(mod[-1]) if "dodge" in mod else 0
                     repeat += 1 if "repeat" in mod else 0
@@ -2482,23 +2766,27 @@ try:
                         continue
 
                     repeatAdded = False if behavior == "" else True
+                    if any(["repeat" in actions[position] for position in actions]):
+                        repeatAdded = True
 
                     for position in ["left", "middle", "right"]:
                         if position in actions:
                             if "damage" in actions[position]:
                                 actions[position]["damage"] += int(mod[-1]) if "damage" in mod else 0
-                                actions[position]["type"] = mod if mod in {"physical", "magic"} else actions[position]["type"]
+                                actions[position]["type"] = mod if mod in {"physical", "magic"} and actions[position]["type"] != "push" else actions[position]["type"]
+                            elif "repeat" in actions[position] and "repeat" in mod:
+                                actions[position]["repeat"] += 1
+                            # For behaviors that already cause a condition.
+                            elif "effect" in actions[position] and mod in {"bleed", "frostbite", "poison", "stagger"} and mod not in actions[position]["effect"]:
+                                actions[position]["effect"].append(mod)
                             elif actions[position]:
                                 continue
                             elif not actions[position] and "repeat" in mod and not repeatAdded:
                                 # These enemies have their move shifted if they get a repeat.
                                 if enemy in {"Phalanx", "Phalanx Hollow", "Silver Knight Spearman"} and position == "middle":
                                     continue
-                                actions[position] = {"repeat": repeat + 1}
+                                actions[position] = {"repeat": repeat}
                                 repeatAdded = True
-                            # For behaviors that already cause a condition.
-                            elif "effect" in actions[position] and mod in {"bleed", "frostbite", "poison", "stagger"} and mod not in actions[position]["effect"]:
-                                actions[position]["effect"].append(mod)
 
                 log("End of apply_mods_to_actions")
 
@@ -2508,14 +2796,14 @@ try:
                 raise
 
 
-        def edit_variant_card_os(self, event=None):
+        def edit_variant_card_os(self, variant=None, event=None):
             try:
                 log("Start of edit_variant_card")
 
                 if "data" in self.selectedVariant:
-                    self.edit_variant_card_data_os()
+                    self.edit_variant_card_data_os(variant=variant)
                 else:
-                    self.edit_variant_card_behavior_os()
+                    self.edit_variant_card_behavior_os(variant=variant)
 
                 self.encounterPhotoImage = ImageTk.PhotoImage(self.encounterImage)
                 self.encounter.image = self.encounterPhotoImage
@@ -2527,7 +2815,7 @@ try:
                 raise
 
 
-        def edit_variant_card_data_os(self, event=None):
+        def edit_variant_card_data_os(self, variant=None, event=None):
             try:
                 log("Start of edit_variant_card_data")
 
@@ -2542,7 +2830,7 @@ try:
                 resistS = behaviorDetail["Ornstein & Smough"]["Smough"]["resist"]
 
                 if "Ornstein & Smough" in self.currentVariants:
-                    mods = [modIdLookup[m] for m in list(self.currentVariants["Ornstein & Smough"]["defKey"])]
+                    mods = [modIdLookup[m] for m in list(self.currentVariants["Ornstein & Smough"]["defKey"]) if m]
                     for mod in mods:
                         healthAddition = int(mod[-1]) if "health" in mod else 0
                         healthO += healthAddition
@@ -2570,7 +2858,7 @@ try:
                 raise
 
 
-        def edit_variant_card_behavior_os(self, event=None):
+        def edit_variant_card_behavior_os(self, variant=None, event=None):
             try:
                 log("Start of edit_variant_card_behavior")
 
@@ -2586,8 +2874,10 @@ try:
                         if position in behaviorDetail[enemy][behavior][b]:
                             actions[position] = behaviorDetail[enemy][behavior][b][position].copy()
 
-                    if enemy in self.currentVariants and behavior in self.currentVariants[enemy]:
-                        dodge, repeat, actions = self.apply_mods_to_actions_os(enemy, behavior, b, dodge, repeat, actions, i)
+                    if variant:
+                        dodge, repeat, actions = self.apply_mods_to_actions_os(enemy, behavior, b, dodge, repeat, actions, variant[i])
+                    elif enemy in self.currentVariants and behavior in self.currentVariants[enemy]:
+                        dodge, repeat, actions = self.apply_mods_to_actions_os(enemy, behavior, b, dodge, repeat, actions)
 
                     self.add_components_to_variant_card_behavior_os(dodge, repeat, actions, i)
 
@@ -2639,11 +2929,15 @@ try:
                 raise
 
 
-        def apply_mods_to_actions_os(self, enemy, behavior, b, dodge, repeat, actions, id, event=None):
+        def apply_mods_to_actions_os(self, enemy, behavior, b, dodge, repeat, actions, variant=None, event=None):
             try:
                 log("Start of apply_mods_to_actions_os")
 
-                mods = [modIdLookup[m] for m in list(self.currentVariants[enemy][behavior][b])]
+                if variant:
+                    mods = variant
+                else:
+                    mods = [modIdLookup[m] for m in list(self.currentVariants[enemy][behavior][b])]
+
                 for mod in mods:
                     dodge += int(mod[-1]) if "dodge" in mod else 0
                     repeat += 1 if "repeat" in mod else 0
@@ -2658,6 +2952,129 @@ try:
                 log("End of apply_mods_to_actions_os")
 
                 return dodge, repeat, actions
+            except Exception as e:
+                error_popup(root, e)
+                raise
+
+
+        def save_variants(self):
+            """
+            Save locked variants to a JSON file that can be loaded later.
+            """
+            try:
+                log("Start of save_variants")
+
+                # Prompt user to save the file.
+                fileName = filedialog.asksaveasfile(mode="w", initialdir=baseFolder + "\\lib\\dsbg_shuffle_saved_variants".replace("\\", pathSep), defaultextension=".json")
+
+                # If they canceled it, do nothing.
+                if not fileName:
+                    log("End of save_variants (nothing done)")
+                    return
+                
+                tree = self.treeviewVariantsLocked
+                
+                variantData = {
+                    "lockedVariants": self.lockedVariants,
+                    "Enemies": [],
+                    "Invaders & Explorers Mimics": [],
+                    "Mini Bosses": [],
+                    "Main Bosses": [],
+                    "Mega Bosses": []
+                    }
+                
+                for cat in variantData:
+                    if cat == "lockedVariants":
+                        continue
+                    for child in tree.get_children(cat):
+                        variantData[cat].append((tree.parent(child), child, tree.item(child)))
+                        for subChild in tree.get_children(child):
+                            variantData[cat].append((tree.parent(subChild), subChild, tree.item(subChild)))
+
+                with open(fileName.name, "w") as variantFile:
+                    dump(variantData, variantFile)
+
+                log("End of save_variants (saved to " + str(variantFile) + ")")
+            except Exception as e:
+                error_popup(root, e)
+                raise
+
+
+        def load_variants(self):
+            """
+            Load variants from a JSON file, clearing the current locked variants treeview and replacing
+            it with the data from the JSON file.
+            """
+            try:
+                log("Start of load_variants")
+
+                # Prompt the user to find the campaign file.
+                variantFile = filedialog.askopenfilename(initialdir=baseFolder + "\\lib\\dsbg_shuffle_saved_variants".replace("\\", pathSep), filetypes = [(".json", ".json")])
+
+                # If the user did not select a file, do nothing.
+                if not variantFile:
+                    log("End of load_variants (file dialog canceled)")
+                    return
+                
+                # If the user did not select a JSON file, notify them that that was an invalid file.
+                if os.path.splitext(variantFile)[1] != ".json":
+                    self.set_bindings_buttons_menus(False)
+                    PopupWindow(self.master, labelText="Invalid DSBG-Shuffle variants file.", firstButton="Ok")
+                    self.set_bindings_buttons_menus(True)
+                    log("End of load_variants (invalid file)")
+                    return
+                
+                progress = PopupWindow(root, labelText="Loading variants, please wait...", loadingImage=True)
+                
+                log("Loading file " + variantFile)
+
+                with open(variantFile, "r") as f:
+                    variantData = load(f)
+
+                tree = self.treeviewVariantsLocked
+                treeList = self.treeviewVariantsList
+
+                itemCheck = ["lockedVariants", "Enemies", "Invaders & Explorers Mimics", "Mini Bosses", "Main Bosses", "Mega Bosses"]
+
+                for cat in itemCheck:
+                    if treeList.exists(cat):
+                        for enemy in treeList.get_children(cat):
+                            itemCheck.append(enemy)
+                            for behavior in treeList.get_children(enemy):
+                                itemCheck.append(behavior)
+
+                itemCheck = set(itemCheck)
+
+                # Check to see if there are any invalid names in the JSON file.
+                # This is about as sure as I can be that you can't load random JSON into the app.
+                if any([v not in itemCheck for v in variantData]):
+                    self.set_bindings_buttons_menus(False)
+                    PopupWindow(self.master, labelText="Invalid DSBG-Shuffle variant file.", firstButton="Ok")
+                    self.set_bindings_buttons_menus(True)
+                    log("End of load_variants (invalid file)")
+                    return
+                
+                # Remove existing locked variants.
+                self.delete_locked_variant("All")
+
+                # Create the locked variant treeview rows.
+                self.lockedVariants = variantData["lockedVariants"]
+                for item in variantData:
+                    if treeList.exists(item):
+                        for subItem in variantData[item]:
+                            tree.insert(parent=subItem[0], iid=subItem[1], values=subItem[2]["values"], index="end")
+
+                # Recalculate the average difficulty mod for this row and its parents and children.
+                for child in tree.get_children("All"):
+                    for subChild in tree.get_children(child):
+                        for subSubChild in tree.get_children(subChild):
+                            self.recalc_variant_average(tree, subSubChild)
+                        self.recalc_variant_average(tree, subChild)
+                    self.recalc_variant_average(tree, child)
+
+                progress.destroy()
+
+                log("End of load_variants (loaded from " + str(variantFile) + ")")
             except Exception as e:
                 error_popup(root, e)
                 raise
@@ -2942,6 +3359,25 @@ try:
                     self.set_encounter_list()
                     self.create_encounters_treeview()
                     self.create_variants_treeview()
+
+                    self.bossMenuItems = [
+                        "Select Boss",
+                        "--Mini Bosses--"
+                        ]
+                    for boss in [boss for boss in bosses if bosses[boss]["level"] == "Mini Boss" and bosses[boss]["expansions"] & self.availableExpansions]:
+                        self.bossMenuItems.append(bosses[boss]["name"])
+
+                    self.bossMenuItems.append("--Main Bosses--")
+                    for boss in [boss for boss in bosses if bosses[boss]["level"] == "Main Boss" and bosses[boss]["expansions"] & self.availableExpansions]:
+                        self.bossMenuItems.append(bosses[boss]["name"])
+
+                    self.bossMenuItems.append("--Mega Bosses--")
+                    for boss in [boss for boss in bosses if bosses[boss]["level"] == "Mega Boss" and bosses[boss]["expansions"] & self.availableExpansions]:
+                        self.bossMenuItems.append(bosses[boss]["name"])
+
+                    self.bossMenu["values"] = self.bossMenuItems
+
+                    self.selectedBoss.set("Select Boss")
 
                     # Recalculate the average soul cost of treasure.
                     if (oldTreasureSwapOption != self.settings["treasureSwapOption"] and self.settings["treasureSwapOption"] in {"Similar Soul Cost", "Tier Based"}) or (oldCustomEnemyList != self.settings["customEnemyList"] and self.settings["customEnemyList"]):

@@ -935,7 +935,7 @@ try:
             "Spear Sweep": {
                 "dodge": 2,
                 "left": {"type": "physical", "damage": 4},
-                "right": {}
+                "middle": {}
             },
             "Darkness Falls": {
                 "dodge": 1,
