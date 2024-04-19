@@ -149,7 +149,7 @@ try:
                     progress.progressVar.set(i)
                     root.update_idletasks()
                     
-                    with open(baseFolder + "\\lib\\dsbg_shuffle_difficulty_" + enemy + ".json", "r") as f:
+                    with open(baseFolder + "\\lib\\dsbg_shuffle_difficulty\\dsbg_shuffle_difficulty_" + enemy + ".json", "r") as f:
                         enemyDifficulty = load(f)
 
                     self.variants[enemy] = {1: {}, 2: {}, 3: {}, 4: {}}
@@ -1890,12 +1890,22 @@ try:
                 if not self.entryText.get():
                     log("End of apply_difficulty_modifier (no mod entered)")
                     return
-                
-                progress = PopupWindow(root, labelText="Generating variants, please wait...", loadingImage=True)
+
+                if event:
+                    variantName = None
+                    if " - data" in self.selectedVariant:
+                        variantName = self.selectedVariant[:self.selectedVariant.index(" - data")]
+                    tree.selection_set(variantName if variantName else self.selectedVariant)
+                    tree.focus_set()
+                    tree.focus(variantName if variantName else self.selectedVariant)
 
                 diffKey = 1.0 + (float(self.entryText.get()) / 100)
                 diffKey = (ceil((diffKey * 10) / 2.0) * 2) / 10
                 start = tree.focus()
+                
+                progress = None
+                if start in {"All", "Enemies", "Invaders & Explorers Mimics", "Mini Bosses", "Main Bosses", "Mega Bosses"}:
+                    progress = PopupWindow(root, labelText="Generating variants, please wait...", loadingImage=True)
 
                 # Selected enemy name - generate variants for all enemy behaviors.
                 if tree.item(start)["tags"] and start in self.variants:
@@ -1940,7 +1950,8 @@ try:
                 if self.selectedVariant:
                     self.load_variant_card(variant=self.selectedVariant)
 
-                progress.destroy()
+                if progress:
+                    progress.destroy()
 
                 log("End of apply_difficulty_modifier")
             except Exception as e:
@@ -2656,7 +2667,6 @@ try:
                             actions[position] = behaviorDetail[enemy][behavior][position].copy()
 
                 if variant:
-                    print(variant)
                     dodge, repeat, actions = self.apply_mods_to_actions(enemy, behavior, dodge, repeat, actions, variant)
                 elif enemy in self.currentVariants and ("" if behavior == "behavior" else behavior) in self.currentVariants[enemy]:
                     dodge, repeat, actions = self.apply_mods_to_actions(enemy, behavior, dodge, repeat, actions)

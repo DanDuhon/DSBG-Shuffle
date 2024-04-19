@@ -899,7 +899,7 @@ try:
             "Fiery Retreat": {
                 "dodge": 2,
                 "left": {"type": "magic", "damage": 4},
-                "right": {}
+                "middle": {}
             },
             "Whiplash": {
                 "dodge": 1,
@@ -1022,7 +1022,7 @@ try:
             "Sweeping Strike": {
                 "dodge": 1,
                 "left": {"type": "physical", "damage": 5},
-                "right": {}
+                "middle": {}
             },
             "Chilling Thrust": {
                 "dodge": 2,
