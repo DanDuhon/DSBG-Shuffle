@@ -39,7 +39,7 @@ class Tester():
         for encounter in encounters:
             # if encounter != "Deathly Freeze":
             #     continue
-            # if encounter == "The Grand Hall":
+            # if encounter == "Pitch Black":
             #     skip = False
             # if skip:
             #     continue
@@ -88,13 +88,13 @@ class Tester():
         """
         encounterName = encounter
             
-        self.characterCount = charCnt
+        self.numberOfCharacters = charCnt
         self.selected = encounters[encounterName]
         self.selected["difficultyMod"] = {}
         self.selected["restrictRanged"] = {}
 
         # Get the possible alternative enemies from the encounter's file.
-        with open(baseFolder + "\\lib\\dsbg_shuffle_encounters\\" + encounterName + str(self.characterCount) + ".json") as alternativesFile:
+        with open(baseFolder + "\\lib\\dsbg_shuffle_encounters\\" + encounterName + str(self.numberOfCharacters) + ".json") as alternativesFile:
             alts = load(alternativesFile)
 
         self.selected["alternatives"] = []
@@ -171,17 +171,21 @@ class Tester():
         # the level of the encounter, and where on the original encounter card enemies were found.
         s = 0
         for slotNum, slot in enumerate(enemySlots):
+            # These are the slot numbers for spawns. Skip over these enemies.
+            if slotNum in {4, 7, 10}:
+                s += slot
+                continue
             for e in range(slot):
-                self.newTiles[1 if slotNum < 4 else 2 if slotNum < 6 else 3][slotNum - (0 if slotNum < 4 else 4 if slotNum < 6 else 6)].append(enemyIds[self.newEnemies[s]].name)
+                self.newTiles[1 if slotNum < 4 else 2 if slotNum < 7 else 3][slotNum - (0 if slotNum < 4 else 5 if slotNum < 7 else 8)].append(enemyIds[self.newEnemies[s]].name)
                 if level == 4:
-                    x = 116 + (43 * e) - (3 if enemyIds[self.newEnemies[s]].name == "Advanced Invader" else 0)
-                    y = 78 + (47 * slotNum)
+                    x = 116 + (43 * e) - (3 if "Phantoms" in enemyIds[self.newEnemies[s]].expansions else 0)
+                    y = 78 + (47 * slotNum) - ((1 * (4 - slotNum)) if "Phantoms" in enemyIds[self.newEnemies[s]].expansions else 0)
                 elif expansion in {"Dark Souls The Board Game", "Iron Keep", "Darkroot", "Explorers", "Executioner Chariot"}:
                     x = 67 + (40 * e)
                     y = 66 + (46 * slotNum)
                 else:
                     x = 300 + (29 * e)
-                    y = 323 + (29 * (slotNum - (0 if slotNum < 4 else 4 if slotNum < 6 else 6))) + (((1 if slotNum < 4 else 2 if slotNum < 6 else 3) - 1) * 122)
+                    y = 323 + (29 * (slotNum - (0 if slotNum < 4 else 5 if slotNum < 7 else 8))) + (((1 if slotNum < 4 else 2 if slotNum < 7 else 3) - 1) * 122)
 
                 s += 1
 
@@ -295,7 +299,7 @@ class Tester():
 
 
     def central_plaza(self):
-        target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])]].name
+        target = enemyIds[self.newEnemies[4]].name
 
 
     def cloak_and_feathers(self):
@@ -319,18 +323,18 @@ class Tester():
 
 
     def deathly_freeze(self):
-        deathlyFreezeTile1 = [enemy.replace(" (TSC)", "") for enemy in self.newTiles[1][0] + self.newTiles[1][1]]
-        deathlyFreezeTile2 = [enemy.replace(" (TSC)", "") for enemy in self.newTiles[2][0] + self.newTiles[2][1]]
+        deathlyFreezeTile1 = [enemy for enemy in self.newTiles[1][0] + self.newTiles[1][1]]
+        deathlyFreezeTile2 = [enemy for enemy in self.newTiles[2][0] + self.newTiles[2][1]]
         overlap = set(deathlyFreezeTile1) & set(deathlyFreezeTile2)
-        target = sorted([enemy for enemy in overlap if deathlyFreezeTile1.count(enemy) + deathlyFreezeTile2.count(enemy) > 1], key=lambda x: (-enemiesDict[x].toughness, enemiesDict[x].difficulty[self.characterCount]), reverse=True)[0]
+        target = sorted([enemy for enemy in overlap if deathlyFreezeTile1.count(enemy) + deathlyFreezeTile2.count(enemy) == 2], key=lambda x: (-enemiesDict[x].difficultyTiers[self.selected["level"]]["toughness"], enemiesDict[x].difficultyTiers[self.selected["level"]]["difficulty"][self.numberOfCharacters]), reverse=True)[0]
 
 
     def deathly_magic(self):
-        target = sorted([enemy for enemy in self.newTiles[1][0] + self.newTiles[1][1] if (self.newTiles[1][0] + self.newTiles[1][1]).count(enemy) == 1], key=lambda x: enemiesDict[x].difficulty[self.characterCount], reverse=True)[0]
+        target = sorted([enemy for enemy in self.newTiles[1][0] + self.newTiles[1][1] if (self.newTiles[1][0] + self.newTiles[1][1]).count(enemy) == 1], key=lambda x: enemiesDict[x].difficultyTiers[self.selected["level"]]["difficulty"][self.numberOfCharacters], reverse=True)[0]
 
 
     def deathly_tolls(self):
-        target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])]].name
+        target = enemyIds[self.newEnemies[7]].name
         
         gang = Counter([enemyIds[enemy].gang for enemy in self.newEnemies if enemyIds[enemy].gang]).most_common(1)[0][0]
         if gang not in ["Alonne", "Hollow", "Silver Knight", "Skeleton"]:
@@ -350,7 +354,7 @@ class Tester():
     def eye_of_the_storm(self):
         fourTarget = [enemyIds[enemy].name for enemy in self.newEnemies if self.newEnemies.count(enemy) == 4]
         targets = list(set([enemyIds[enemy].name for enemy in self.newEnemies if self.newEnemies.count(enemy) == 2]))
-        target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])]].name
+        target = enemyIds[self.newEnemies[5]].name
 
 
     def flooded_fortress(self):
@@ -364,30 +368,34 @@ class Tester():
 
 
     def giants_coffin(self):
-        target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])]].name
-        target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])+1]].name
+        target = enemyIds[self.newEnemies[4]].name
+        target = enemyIds[self.newEnemies[5]].name
 
 
     def gleaming_silver(self):
-        targets = list(set(sorted(self.newEnemies, key=lambda x: enemyIds[x].difficulty[self.characterCount])[1:-1]))
+        targets = [enemyIds[enemy].name for enemy in list(set(sorted(self.newEnemies, key=lambda x: enemyIds[x].difficultyTiers[self.selected["level"]]["difficulty"][self.numberOfCharacters])[1:-1]))]
+        target = enemyIds[self.newEnemies[5]].name
 
 
     def gnashing_beaks(self):
-        target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])]].name
-        target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])+1]].name
+        target = enemyIds[self.newEnemies[2]].name
+        target = enemyIds[self.newEnemies[3]].name
+        target = enemyIds[self.newEnemies[4]].name
 
 
     def grim_reunion(self):
-        target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])]].name
+        target = enemyIds[self.newEnemies[10]].name
 
 
     def in_deep_water(self):
-        target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])]].name
+        target = enemyIds[self.newEnemies[4]].name
+        target = enemyIds[self.newEnemies[5]].name
 
 
     def lakeview_refuge(self):
-        target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])]].name
-        target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])+1]].name
+        target = enemyIds[self.newEnemies[-(self.numberOfCharacters + 1)]].name
+        for i, enemy in enumerate(self.newEnemies[-self.numberOfCharacters:]):
+            target = enemyIds[enemy].name
 
 
     def monstrous_maw(self):
@@ -399,18 +407,19 @@ class Tester():
 
 
     def parish_church(self):
-        target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])]].name
+        target = enemyIds[self.newEnemies[10]].name
 
 
     def parish_gates(self):
-        target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])]].name
+        target = enemyIds[self.newEnemies[3]].name
+        target = enemyIds[self.newEnemies[4]].name
 
 
     def pitch_black(self):
         tile1Enemies = self.newTiles[1][0] + self.newTiles[1][1]
         tile2Enemies = self.newTiles[2][0] + self.newTiles[2][1]
-        target = sorted([enemy for enemy in tile1Enemies if tile1Enemies.count(enemy) == 1], key=lambda x: enemiesDict[x].difficulty[self.characterCount], reverse=True)[0]
-        target = sorted([enemy for enemy in tile2Enemies if tile2Enemies.count(enemy) == 1], key=lambda x: enemiesDict[x].difficulty[self.characterCount], reverse=True)[0]
+        target = sorted([enemy for enemy in tile1Enemies if tile1Enemies.count(enemy) == 1], key=lambda x: enemiesDict[x].difficultyTiers[self.selected["level"]]["difficulty"][self.numberOfCharacters], reverse=True)[0]
+        target = sorted([enemy for enemy in tile2Enemies if tile2Enemies.count(enemy) == 1], key=lambda x: enemiesDict[x].difficultyTiers[self.selected["level"]]["difficulty"][self.numberOfCharacters], reverse=True)[0]
 
 
     def puppet_master(self):
@@ -419,7 +428,7 @@ class Tester():
 
 
     def shattered_keep(self):
-        target = self.newTiles[1][1][0]
+        targets = set([self.newTiles[1][0][1], self.newTiles[1][1][0], self.newTiles[1][1][1]])
 
 
     def skeletal_spokes(self):
@@ -427,17 +436,18 @@ class Tester():
 
 
     def skeleton_overlord(self):
-        target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])]].name
+        target = enemyIds[self.newEnemies[1]].name
+        target = enemyIds[self.newEnemies[2]].name
         target = self.newTiles[1][0][0]
 
 
     def tempting_maw(self):
-        target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])]].name
+        target = enemyIds[self.newEnemies[4]].name
 
 
     def the_abandoned_chest(self):
-        target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])]].name
-        target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])+1]].name
+        target = enemyIds[self.newEnemies[4]].name
+        target = enemyIds[self.newEnemies[5]].name
 
 
     def the_beast_from_the_depths(self):
@@ -445,13 +455,12 @@ class Tester():
 
 
     def the_bell_tower(self):
-        target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])]].name
+        target = enemyIds[self.newEnemies[2]].name
+        target = enemyIds[self.newEnemies[3]].name
 
 
     def the_first_bastion(self):
-        target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])]].name
-        target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])+1]].name
-        target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])+2]].name
+        targets = sorted([enemyIds[enemy].name for enemy in self.newEnemies[-3:]], key=lambda x: (-enemiesDict[x].difficultyTiers[self.selected["level"]]["toughness"], enemiesDict[x].difficultyTiers[self.selected["level"]]["difficulty"][self.numberOfCharacters]))
 
 
     def the_fountainhead(self):
@@ -461,7 +470,7 @@ class Tester():
 
 
     def the_grand_hall(self):
-        target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])]].name
+        target = enemyIds[self.newEnemies[7]].name
 
 
     def the_iron_golem(self):
@@ -469,15 +478,16 @@ class Tester():
 
 
     def the_last_bastion(self):
-        target = sorted([enemy for enemy in self.newTiles[1][0] + self.newTiles[1][1]], key=lambda x: enemiesDict[x].difficulty[self.characterCount])[0]
+        target = sorted([enemy for enemy in self.newTiles[1][0] + self.newTiles[1][1]], key=lambda x: enemiesDict[x].difficultyTiers[self.selected["level"]]["difficulty"][self.numberOfCharacters])[0]
 
 
     def the_locked_grave(self):
-        target = enemyIds[self.newEnemies[sum(self.selected["enemySlots"])]].name
+        target = enemyIds[self.newEnemies[7]].name
 
 
     def the_shine_of_gold(self):
         target = self.newTiles[1][1][0]
+        target = self.newTiles[1][0][0]
 
 
     def the_skeleton_ball(self):
@@ -492,7 +502,7 @@ class Tester():
 
 
     def trophy_room(self):
-        target = self.newTiles[2][0][0]
+        target = set([self.newTiles[2][0][0], self.newTiles[2][1][0]])
 
 
     def twilight_falls(self):
@@ -508,7 +518,7 @@ class Tester():
 
 
     def velkas_chosen(self):
-        target = sorted([enemy for enemy in self.newTiles[2][0] + self.newTiles[2][1]], key=lambda x: enemiesDict[x].difficulty[self.characterCount], reverse=True)[0]
+        target = sorted([enemy for enemy in self.newTiles[2][0] + self.newTiles[2][1]], key=lambda x: enemiesDict[x].difficultyTiers[self.selected["level"]]["difficulty"][self.numberOfCharacters], reverse=True)[0]
 
 
 

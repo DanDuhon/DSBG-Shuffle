@@ -3523,7 +3523,7 @@ try:
                         image = Image.open(imagePath).resize((27, 27), Image.Resampling.LANCZOS)
                     elif imageType == "enemyOldLevel4":
                         if "Phantoms" in enemiesDict[imageFileName[:-4]].expansions:
-                            image = Image.open(imagePath).resize((38, 38), Image.Resampling.LANCZOS)
+                            image = Image.open(imagePath).resize((34, 34), Image.Resampling.LANCZOS)
                         else:
                             image = Image.open(imagePath).resize((32, 32), Image.Resampling.LANCZOS)
                     elif imageType == "enemyNew":
@@ -3798,8 +3798,8 @@ try:
                     for e in range(slot):
                         self.newTiles[1 if slotNum < 4 else 2 if slotNum < 7 else 3][slotNum - (0 if slotNum < 4 else 5 if slotNum < 7 else 8)].append(enemyIds[self.newEnemies[s]].name)
                         if level == 4:
-                            x = 116 + (43 * e) - (3 if "Phantoms" in enemyIds[self.newEnemies[s]].expansions else 0)
-                            y = 78 + (47 * slotNum) - ((1 * (4 - slotNum)) if "Phantoms" in enemyIds[self.newEnemies[s]].expansions else 0)
+                            x = 116 + (43 * e) - (1 if "Phantoms" in enemyIds[self.newEnemies[s]].expansions else 0)
+                            y = 78 + (47 * slotNum) - ((1 * (2 - slotNum)) if "Phantoms" in enemyIds[self.newEnemies[s]].expansions else 0)
                             imageType = "imageOldLevel4"
                         elif expansion in {"Dark Souls The Board Game", "Iron Keep", "Darkroot", "Explorers", "Executioner Chariot"}:
                             x = 67 + (40 * e)
@@ -4194,7 +4194,7 @@ try:
                 deathlyFreezeTile1 = [enemy for enemy in self.newTiles[1][0] + self.newTiles[1][1]]
                 deathlyFreezeTile2 = [enemy for enemy in self.newTiles[2][0] + self.newTiles[2][1]]
                 overlap = set(deathlyFreezeTile1) & set(deathlyFreezeTile2)
-                target = sorted([enemy for enemy in overlap if deathlyFreezeTile1.count(enemy) + deathlyFreezeTile2.count(enemy) == 2], key=lambda x: (-enemiesDict[x].toughness, enemiesDict[x].difficulty[self.numberOfCharacters]), reverse=True)[0]
+                target = sorted([enemy for enemy in overlap if deathlyFreezeTile1.count(enemy) + deathlyFreezeTile2.count(enemy) == 2], key=lambda x: (-enemiesDict[x].difficultyTiers[self.selected["level"]]["toughness"], enemiesDict[x].difficultyTiers[self.selected["level"]]["difficulty"][self.numberOfCharacters]), reverse=True)[0]
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=141, y=242)
 
@@ -4208,7 +4208,7 @@ try:
             try:
                 log("Start of deathly_magic")
 
-                target = sorted([enemy for enemy in self.newTiles[1][0] + self.newTiles[1][1] if (self.newTiles[1][0] + self.newTiles[1][1]).count(enemy) == 1], key=lambda x: enemiesDict[x].difficulty[self.numberOfCharacters], reverse=True)[0]
+                target = sorted([enemy for enemy in self.newTiles[1][0] + self.newTiles[1][1] if (self.newTiles[1][0] + self.newTiles[1][1]).count(enemy) == 1], key=lambda x: enemiesDict[x].difficultyTiers[self.selected["level"]]["difficulty"][self.numberOfCharacters], reverse=True)[0]
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=65, y=147)
                 self.create_tooltip(tooltipDict=tooltipDict, x=274, y=196)
@@ -4421,7 +4421,7 @@ try:
             try:
                 log("Start of gleaming_silver")
 
-                targets = [enemyIds[enemy].name for enemy in list(set(sorted(self.newEnemies, key=lambda x: enemyIds[x].difficulty[self.numberOfCharacters])[1:-1]))]
+                targets = [enemyIds[enemy].name for enemy in list(set(sorted(self.newEnemies, key=lambda x: enemyIds[x].difficultyTiers[self.selected["level"]]["difficulty"][self.numberOfCharacters])[1:-1]))]
 
                 for i, target in enumerate(targets):
                     tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
@@ -4701,10 +4701,10 @@ try:
 
                 tile1Enemies = self.newTiles[1][0] + self.newTiles[1][1]
                 tile2Enemies = self.newTiles[2][0] + self.newTiles[2][1]
-                target = sorted([enemy for enemy in tile1Enemies if tile1Enemies.count(enemy) == 1], key=lambda x: enemiesDict[x].difficulty[self.numberOfCharacters], reverse=True)[0]
+                target = sorted([enemy for enemy in tile1Enemies if tile1Enemies.count(enemy) == 1], key=lambda x: enemiesDict[x].difficultyTiers[self.selected["level"]]["difficulty"][self.numberOfCharacters], reverse=True)[0]
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=65, y=147)
-                target = sorted([enemy for enemy in tile2Enemies if tile2Enemies.count(enemy) == 1], key=lambda x: enemiesDict[x].difficulty[self.numberOfCharacters], reverse=True)[0]
+                target = sorted([enemy for enemy in tile2Enemies if tile2Enemies.count(enemy) == 1], key=lambda x: enemiesDict[x].difficultyTiers[self.selected["level"]]["difficulty"][self.numberOfCharacters], reverse=True)[0]
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=222, y=147)
 
@@ -4924,7 +4924,7 @@ try:
             try:
                 log("Start of the_first_bastion")
 
-                targets = sorted([enemyIds[enemy].name for enemy in self.newEnemies[-3:]], key=lambda x: (-enemiesDict[x].toughness, enemiesDict[x].difficulty[self.numberOfCharacters]))
+                targets = sorted([enemyIds[enemy].name for enemy in self.newEnemies[-3:]], key=lambda x: (-enemiesDict[x].difficultyTiers[self.selected["level"]]["toughness"], enemiesDict[x].difficultyTiers[self.selected["level"]]["difficulty"][self.numberOfCharacters]))
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[targets[0]]["image text" if self.forPrinting else "photo image text"], "imageName": targets[0]}
                 self.create_tooltip(tooltipDict=tooltipDict, x=362, y=212)
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[targets[1]]["image text" if self.forPrinting else "photo image text"], "imageName": targets[1]}
@@ -5006,7 +5006,7 @@ try:
             try:
                 log("Start of the_last_bastion")
 
-                target = sorted([enemy for enemy in self.newTiles[1][0] + self.newTiles[1][1]], key=lambda x: enemiesDict[x].difficulty[self.numberOfCharacters])[0]
+                target = sorted([enemy for enemy in self.newTiles[1][0] + self.newTiles[1][1]], key=lambda x: enemiesDict[x].difficultyTiers[self.selected["level"]]["difficulty"][self.numberOfCharacters])[0]
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=215, y=227)
                 self.create_tooltip(tooltipDict=tooltipDict, x=316, y=250)
@@ -5239,7 +5239,7 @@ try:
             try:
                 log("Start of velkas_chosen")
 
-                target = sorted([enemy for enemy in self.newTiles[2][0] + self.newTiles[2][1]], key=lambda x: enemiesDict[x].difficulty[self.numberOfCharacters], reverse=True)[0]
+                target = sorted([enemy for enemy in self.newTiles[2][0] + self.newTiles[2][1]], key=lambda x: enemiesDict[x].difficultyTiers[self.selected["level"]]["difficulty"][self.numberOfCharacters], reverse=True)[0]
                 tooltipDict = {"image" if self.forPrinting else "photo image": allEnemies[target]["image text" if self.forPrinting else "photo image text"], "imageName": target}
                 self.create_tooltip(tooltipDict=tooltipDict, x=65, y=147)
                 self.create_tooltip(tooltipDict=tooltipDict, x=298, y=195)
