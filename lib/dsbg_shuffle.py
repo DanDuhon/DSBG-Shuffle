@@ -546,7 +546,7 @@ try:
             Adds a random boss to the campaign, visible in the campaign treeview.
             """
             try:
-                log("Start of add_random_boss_to_campaign")
+                log("Start of add_random_boss_to_campaign, level={}".format(str(level)))
 
                 availableBosses = [boss for boss in bosses if bosses[boss]["level"] == level and bosses[boss]["expansions"] & self.availableExpansions]
                 selectedBoss = choice(availableBosses)
@@ -1964,7 +1964,7 @@ try:
             Calculate and display the rolled up average for a treeview parent row.
             """
             try:
-                log("Start of recalc_variant_average")
+                log("Start of recalc_variant_average, tree={}, start={}".format(str(tree), str(start)))
 
                 parent = tree.parent(start)
                 diffAvg = []
@@ -1988,7 +1988,7 @@ try:
             Find the appropriate variants for the entered difficulty.
             """
             try:
-                log("Start of pick_enemy_variants_enemy")
+                log("Start of pick_enemy_variants_enemy, start={}, diffKey={}".format(str(start), str(diffKey)))
 
                 diffKeyIndex = bisect_left(list(self.variants[start][self.numberOfCharacters].keys()), diffKey)
                 diffKeyIndex -= 1 if diffKeyIndex > len(list(self.variants[start][self.numberOfCharacters].keys())) - 1 else 0
@@ -2149,7 +2149,7 @@ try:
 
         def load_variant_card(self, event=None, variant=None):
             try:
-                log("Start of load_variant_card")
+                log("Start of load_variant_card, variant={}".format(str(variant)))
                 
                 self.treeviewVariantsList.unbind("<<TreeviewSelect>>")
 
@@ -2212,7 +2212,7 @@ try:
 
         def load_variant_card_locked(self, event=None, variant=None):
             try:
-                log("Start of load_variant_card_locked")
+                log("Start of load_variant_card_locked, variant={}".format(str(variant)))
                 
                 self.treeviewVariantsLocked.unbind("<<TreeviewSelect>>")
 
@@ -2303,7 +2303,7 @@ try:
 
         def edit_variant_card(self, variant=None, event=None):
             try:
-                log("Start of edit_variant_card")
+                log("Start of edit_variant_card, variant={}".format(str(variant)))
 
                 enemy = self.selectedVariant[:self.selectedVariant.index(" - ")] if " - " in self.selectedVariant else None
                 behavior = self.selectedVariant[self.selectedVariant.index(" - ")+3:] if " - " in self.selectedVariant else None
@@ -2526,7 +2526,7 @@ try:
                     The tkinter Event that is the trigger.
             """
             try:
-                log("Start of delete_locked_variant")
+                log("Start of delete_locked_variant, variant={}".format(str(variant)))
                 
                 tree = self.treeviewVariantsLocked
                 
@@ -2598,7 +2598,7 @@ try:
 
         def edit_variant_card_data(self, enemy, variant=None, event=None):
             try:
-                log("Start of edit_variant_card_data")
+                log("Start of edit_variant_card_data, variant={}".format(str(variant)))
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
 
@@ -2647,7 +2647,7 @@ try:
 
         def edit_variant_card_behavior(self, variant=None, event=None):
             try:
-                log("Start of edit_variant_card_behavior")
+                log("Start of edit_variant_card_behavior, variant={}".format(str(variant)))
 
                 enemy = self.selectedVariant[:self.selectedVariant.index(" - ")] if " - " in self.selectedVariant else None
                 if "behavior" in behaviorDetail[enemy]:
@@ -2681,7 +2681,7 @@ try:
 
         def add_components_to_variant_card_behavior(self, enemy, behavior, dodge, repeat, actions, event=None):
             try:
-                log("Start of add_components_to_variant_card_behavior")
+                log("Start of add_components_to_variant_card_behavior, enemy={}, behavior={}, dodge={}, repeat={}, actions={}".format(str(enemy), str(behavior), str(dodge), str(repeat), str(actions)))
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
                 imageWithText.text((267, 233), str(dodge), "black", font2)
@@ -2746,7 +2746,7 @@ try:
 
         def apply_mods_to_actions(self, enemy, behavior, dodge, repeat, actions, variant=None, event=None):
             try:
-                log("Start of apply_mods_to_actions")
+                log("Start of apply_mods_to_actions, enemy={}, behavior={}, dodge={}, repeat={}, actions={}, variant={}".format(str(enemy), str(behavior), str(dodge), str(repeat), str(actions), str(variant)))
 
                 behavior = "" if behavior == "behavior" else behavior
 
@@ -2808,7 +2808,7 @@ try:
 
         def edit_variant_card_os(self, variant=None, event=None):
             try:
-                log("Start of edit_variant_card")
+                log("Start of edit_variant_card, variant={}".format(str(variant)))
 
                 if "data" in self.selectedVariant:
                     self.edit_variant_card_data_os(variant=variant)
@@ -2827,7 +2827,7 @@ try:
 
         def edit_variant_card_data_os(self, variant=None, event=None):
             try:
-                log("Start of edit_variant_card_data")
+                log("Start of edit_variant_card_data, variant={}".format(str(variant)))
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
 
@@ -2870,7 +2870,7 @@ try:
 
         def edit_variant_card_behavior_os(self, variant=None, event=None):
             try:
-                log("Start of edit_variant_card_behavior")
+                log("Start of edit_variant_card_behavior, variant={}".format(str(variant)))
 
                 enemy = self.selectedVariant[:self.selectedVariant.index(" - ")] if " - " in self.selectedVariant else None
                 behavior = self.selectedVariant[self.selectedVariant.index(" - ")+3:] if " - " in self.selectedVariant else None
@@ -2899,7 +2899,7 @@ try:
 
         def add_components_to_variant_card_behavior_os(self, dodge, repeat, actions, id, event=None):
             try:
-                log("Start of add_components_to_variant_card_behavior")
+                log("Start of add_components_to_variant_card_behavior, dodge={}, repeat={}, actions={}, id={}".format(str(dodge), str(repeat), str(actions), str(id)))
 
                 imageWithText = ImageDraw.Draw(self.encounterImage)
                 if id == 0:
@@ -2941,7 +2941,7 @@ try:
 
         def apply_mods_to_actions_os(self, enemy, behavior, b, dodge, repeat, actions, variant=None, event=None):
             try:
-                log("Start of apply_mods_to_actions_os")
+                log("Start of apply_mods_to_actions_os, enemy={}, behavior={}, b={}, dodge={}, repeat={}, actions={}, variant={}".format(str(enemy), str(behavior), str(b), str(dodge), str(repeat), str(actions), str(variant)))
 
                 if variant:
                     mods = variant
@@ -3092,7 +3092,7 @@ try:
 
         def load_event(self, event=None, campaign=False):
             try:
-                log("Start of load_event")
+                log("Start of load_event, campaign={}", str(campaign))
                 
                 # Get the event selected.
                 if event:
@@ -3486,7 +3486,7 @@ try:
                     Default: None
             """
             try:
-                log("Start of create_image")
+                log("Start of create_image, imageFileName={}, imageType={}, level={}, expansion={}".format(str(imageFileName), str(imageType), str(level), str(expansion)))
 
                 if imageType == "encounter":
                     if imageFileName == "Ornstein & Smough.jpg" or imageFileName == "Ornstein & Smough - data.jpg":
@@ -3607,7 +3607,7 @@ try:
                     Default: None
             """
             try:
-                log("Start of random_encounter")
+                log("Start of random_encounter, level={}".format(str(level)))
 
                 self.load_encounter(encounter=choice([encounter for encounter in self.encounterList if (
                     encounters[encounter]["level"] == level
@@ -3634,7 +3634,7 @@ try:
                     Default: None
             """
             try:
-                log("Start of load_encounter")
+                log("Start of load_encounter, event={}, encounter={}, customEnemyListCheck={}".format(str(event), str(encounter), str(customEnemyListCheck)))
 
                 if not customEnemyListCheck:
                     self.treeviewEncounters.unbind("<<TreeviewSelect>>")
@@ -3775,7 +3775,7 @@ try:
                     The slots on the card in which enemies are found.
             """
             try:
-                log("Start of edit_encounter_card")
+                log("Start of edit_encounter_card, name={}, expansion={}, level={}, enemySlots={}".format(str(name), str(expansion), str(level), str(enemySlots)))
 
                 self.encounterPhotoImage = self.create_image(name + ".jpg", "encounter", level, expansion)
 
@@ -3951,7 +3951,7 @@ try:
             Create a label and tooltip that will be placed and later removed.
             """
             try:
-                log("Start of create_tooltip")
+                log("Start of create_tooltip, tooltipDict={}, x={}, y={}".format(str(tooltipDict), str(x), str(y)))
 
                 if self.forPrinting:
                     convertedImage = tooltipDict["image"].convert("RGBA")
@@ -3974,7 +3974,7 @@ try:
             the original word and create a tooltip that shows up when mousing over the keyword image.
             """
             try:
-                log("Start of apply_keyword_tooltips")
+                log("Start of apply_keyword_tooltips, name={}, set={}".format(str(name), str(set)))
 
                 for tooltip in self.tooltips:
                     tooltip.destroy()
@@ -3995,19 +3995,27 @@ try:
 
 
         def new_treasure_name(self, newTreasure):
-            treasureLines = {}
-            if newTreasure.count(" ") > 2:
-                breakIdx = newTreasure.rfind(" ", 0, newTreasure.rfind(" ") - 1)
-                treasureLines[0] = newTreasure[:breakIdx]
-                treasureLines[1] = newTreasure[breakIdx+1:]
-            elif newTreasure.count(" ") > 0 and len(newTreasure) >= 15:
-                lastSpaceIdx = newTreasure.rfind(" ")
-                treasureLines[0] = newTreasure[:lastSpaceIdx]
-                treasureLines[1] = newTreasure[lastSpaceIdx+1:]
-            else:
-                treasureLines[0] = newTreasure
+            try:
+                log("Start of new_treasure_name, newTreasure={}".format(str(newTreasure)))
 
-            return treasureLines
+                treasureLines = {}
+                if newTreasure.count(" ") > 2:
+                    breakIdx = newTreasure.rfind(" ", 0, newTreasure.rfind(" ") - 1)
+                    treasureLines[0] = newTreasure[:breakIdx]
+                    treasureLines[1] = newTreasure[breakIdx+1:]
+                elif newTreasure.count(" ") > 0 and len(newTreasure) >= 15:
+                    lastSpaceIdx = newTreasure.rfind(" ")
+                    treasureLines[0] = newTreasure[:lastSpaceIdx]
+                    treasureLines[1] = newTreasure[lastSpaceIdx+1:]
+                else:
+                    treasureLines[0] = newTreasure
+
+                log("\tEnd of new_treasure_name, returning {}".format(str(treasureLines)))
+
+                return treasureLines
+            except Exception as e:
+                error_popup(root, e)
+                raise
 
 
         def abandoned_and_forgotten(self):
