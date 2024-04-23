@@ -6,7 +6,8 @@ from random import choice
 import types
 import platform
 
-from dsbg_enemies import enemyIds, enemiesDict
+from dsbg_shuffle_behaviors import behaviorDetail
+from dsbg_enemies import enemyIds, enemiesDict, modIdLookup
 
 if platform.system() == "Windows":
     pathSep = "\\"
@@ -34,6 +35,7 @@ class Tester():
         self.selected = None
         self.newEnemies = []
         self.newTiles = dict()
+        self.currentVariants = {}
         skip = True
 
         for encounter in encounters:
@@ -519,6 +521,47 @@ class Tester():
 
     def velkas_chosen(self):
         target = sorted([enemy for enemy in self.newTiles[2][0] + self.newTiles[2][1]], key=lambda x: enemiesDict[x].difficultyTiers[self.selected["level"]]["difficulty"][self.numberOfCharacters], reverse=True)[0]
+
+
+    def load_variant_card(self, event=None, variant=None):
+        if "Ornstein & Smough" in variant and (variant.count("&") == 2 or "data" in variant):
+            self.edit_variant_card_os(variant=variant)
+        else:
+            self.edit_variant_card(variant=variant)
+
+
+    def edit_variant_card(self, variant=None, event=None):
+        enemy = variant[:variant.index(" - ")] if " - " in variant else None
+        behavior = variant[variant.index(" - ")+3:] if " - " in variant else None
+
+        if behavior == "data":
+            self.edit_variant_card_data(enemy, variant=variant)
+        
+        if behavior != "data" or "behavior" in behaviorDetail[enemy]:
+            self.edit_variant_card_behavior(variant=variant)
+
+
+    def edit_variant_card_data(self, enemy, variant=None, event=None):
+        healthAddition = 0
+        health = behaviorDetail[enemy]["health"]
+        armor = behaviorDetail[enemy]["armor"]
+        resist = behaviorDetail[enemy]["resist"]
+        heatup = []
+        if "heatup1" in behaviorDetail[enemy]:
+            heatup.append(behaviorDetail[enemy]["heatup1"])
+            heatup.append(behaviorDetail[enemy]["heatup2"])
+        elif "heatup" in behaviorDetail[enemy]:
+            heatup.append(behaviorDetail[enemy]["heatup"])
+
+        if enemy in self.currentVariants:
+            mods = [modIdLookup[m] for m in list(self.currentVariants[enemy]["defKey"]) if m]
+            for mod in mods:
+                healthAddition = int(mod[-1]) if "health" in mod else 0
+                health += healthAddition
+                armor += int(mod[-1]) if "armor" in mod else 0
+                resist += int(mod[-1]) if "resist" in mod else 0
+                if healthAddition:
+                    heatup = [h + healthAddition for h in heatup]
 
 
 
