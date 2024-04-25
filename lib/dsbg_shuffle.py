@@ -54,9 +54,6 @@ try:
                 with open(baseFolder + "\\lib\\dsbg_shuffle_settings.json".replace("\\", pathSep)) as settingsFile:
                     self.settings = load(settingsFile)
 
-                # if self.settings["theme"] == "light":
-                #     root.tk.call("set_theme", "light")
-
                 self.selected = None
                 self.selectedVariant = None
                 self.allExpansions = set([encounters[encounter]["expansion"] for encounter in encounters]) | set(["Phantoms"])

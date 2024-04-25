@@ -337,14 +337,9 @@ try:
                 self.saveButton.grid(column=0, row=0, padx=5)
                 self.cancelButton.grid(column=1, row=0, padx=5)
 
-                # self.themeButtonFrame = ttk.Frame(parent, padding=(0, 0, 0, 10))
-                # self.themeButtonFrame.grid(row=5, column=5, padx=15, pady=(10, 0), sticky="e", columnspan=2)
-                # self.themeButtonFrame.columnconfigure(index=0, weight=1)
-
-                # self.lightTheme = {"button": None, "value": tk.IntVar()}
-                # self.lightTheme["value"].set(0 if self.settings["theme"] == "dark" else 1)
-                # self.lightTheme["button"] = ttk.Button(self.themeButtonFrame, text="Switch to light theme" if self.lightTheme["value"].get() == 0 else "Switch to dark theme", command=self.switch_theme)
-                # self.lightTheme["button"].grid(column=3, row=0, columnspan=2)
+                self.themeButtonFrame = ttk.Frame(parent, padding=(0, 0, 0, 10))
+                self.themeButtonFrame.grid(row=5, column=5, padx=15, pady=(10, 0), sticky="e", columnspan=2)
+                self.themeButtonFrame.columnconfigure(index=0, weight=1)
 
                 log("End of create_buttons")
             except Exception as e:
@@ -434,29 +429,6 @@ try:
             except Exception as e:
                 log(e, exception=True)
                 raise
-
-
-        # def switch_theme(self, root, event=None):
-        #     """
-        #     Changes the theme from dark to light or vice versa.
-
-        #     Optional Parameters:
-        #         event: tkinter.Event
-        #             The tkinter Event that is the trigger.
-        #     """
-        #     try:
-        #         log("Start of switch_theme")
-
-        #         self.lightTheme["value"].set(0 if self.lightTheme["value"].get() == 1 else 1)
-        #         self.settings["theme"] = "light" if self.lightTheme["value"].get() == 1 else "dark"
-        #         root.tk.call("set_theme", "light" if self.lightTheme["value"].get() == 1 else "dark")
-        #         self.lightTheme["button"]["text"] = "Switch to light theme" if self.lightTheme["value"].get() == 0 else "Switch to dark (souls) theme"
-        #         self.errLabel.config(text="To keep this theme when you open the program again, you need to click Save!")
-
-        #         log("End of switch_theme")
-        #     except Exception as e:
-        #         log(e, exception=True)
-        #         raise
 
 
         def quit_with_save(self, coreSets, event=None):
