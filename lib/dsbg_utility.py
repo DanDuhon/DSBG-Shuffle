@@ -139,8 +139,8 @@ class PopupWindow(tk.Toplevel):
 
         if progressBar:
             self.progressVar = tk.DoubleVar()
-            progressBar = ttk.Progressbar(self.popupFrame, variable=self.progressVar, maximum=progressMax, length=150)
-            progressBar.grid(row=3, column=0, columnspan=2)
+            self.progressBar = ttk.Progressbar(self.popupFrame, variable=self.progressVar, maximum=progressMax, length=150)
+            self.progressBar.grid(row=3, column=0, columnspan=2)
 
         center(self)
         self.attributes('-alpha', 1.0)

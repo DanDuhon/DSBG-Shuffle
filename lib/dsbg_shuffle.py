@@ -183,6 +183,7 @@ try:
                     self.scrollbarTreeviewCampaign.pack(side="right", fill="y")
 
                 progress.label.config(text = "Praising the sun... ")
+                progress.progressBar.grid_forget()
                 root.update_idletasks()
                 self.create_buttons()
                 self.create_tabs()
@@ -1904,8 +1905,6 @@ try:
                 start = tree.focus()
                 
                 progress = None
-                if start in {"All", "Enemies", "Invaders & Explorers Mimics", "Mini Bosses", "Main Bosses", "Mega Bosses"}:
-                    progress = PopupWindow(root, labelText="Generating variants, please wait...", loadingImage=True)
 
                 # Selected enemy name - generate variants for all enemy behaviors.
                 if tree.item(start)["tags"] and start in self.variants:
@@ -1925,13 +1924,46 @@ try:
                         defKey = self.currentVariants[startReal]["defKey"]
                         self.pick_enemy_variants_behavior(startReal, start[start.index(" - ")+3:], diffKeyReal, defKey)
                 elif start in {"Enemies", "Invaders & Explorers Mimics", "Mini Bosses", "Main Bosses", "Mega Bosses"}:
+                    if start == "Enemies":
+                        progress = PopupWindow(root, labelText="Generating variants...", progressBar=True, progressMax=len(tree.get_children("Enemies")), loadingImage=True)
+                    else:
+                        progressMax = 0
+                        for child in tree.get_children(start):
+                            progressMax += len(tree.get_children(child))
+
+                        progress = PopupWindow(root, labelText="Generating variants...", progressBar=True, progressMax=progressMax, loadingImage=True)
+
+                    i = 0
+
                     for child in tree.get_children(start):
+                        if start == "Enemies":
+                            i += 1
+                        else:
+                            i += len(tree.get_children(child))
+                        progress.progressVar.set(i)
+                        root.update_idletasks()
                         self.pick_enemy_variants_enemy(child, diffKey)
                 elif start == "All":
+                    progressMax = 0
+                    for child in tree.get_children("All"):
+                        for subChild in tree.get_children(child):
+                            progressMax += len(tree.get_children(subChild))
+
+                    progress = PopupWindow(root, labelText="Generating variants...", progressBar=True, progressMax=progressMax + len(set(self.currentVariants.keys()) & set(tree.get_children("Enemies"))), loadingImage=True)
+
+                    i = 0
+
                     for child in tree.get_children(start):
                         for subChild in tree.get_children(child):
+                            i += len(tree.get_children(subChild))
+                            progress.progressVar.set(i)
+                            root.update_idletasks()
                             self.pick_enemy_variants_enemy(subChild, diffKey)
 
+                if progress:
+                    progress.label.config(text = "Calculating difficulty averages...")
+                    progress.progressBar.grid_forget()
+                    root.update_idletasks()
                 # Recalculate the average difficulty mod for this row and its parents and children.
                 for child in tree.get_children(start):
                     for subChild in tree.get_children(child):
@@ -2328,7 +2360,7 @@ try:
             try:
                 log("Start of lock_variant_card")
                 
-                progress = PopupWindow(root, labelText="Locking variants, please wait...", loadingImage=True)
+                progress = None
 
                 tree = self.treeviewVariantsList
                 treeLocked = self.treeviewVariantsLocked
@@ -2345,7 +2377,11 @@ try:
                     return
                 
                 if tree.focus() == "Enemies":
-                    for child in tree.get_children(tree.focus()):
+                    progress = PopupWindow(root, labelText="Locking variants...", progressBar=True, progressMax=len(tree.get_children("Enemies")), loadingImage=True)
+
+                    for i, child in enumerate(tree.get_children(tree.focus())):
+                        progress.progressVar.set(i)
+                        root.update_idletasks()
                         v = tree.item(child)["values"]
                         modList = [v for v in self.currentVariants[child][[k for k in list(self.currentVariants[child].keys()) if k != "defKey"][0]]]
                         iidChild = child + "_" + ",".join([str(v) for v in modList])
@@ -2357,6 +2393,13 @@ try:
                         contents = [treeLocked.item(child)["values"][0] for child in treeLocked.get_children("Enemies")]
                         treeLocked.insert(parent="Enemies", index=bisect_left(contents, v[0]), iid=iidChild, values=(v[0], v[1]), tags=True)
                 elif tree.focus() in {"Invaders & Explorers Mimics", "Mini Bosses", "Main Bosses", "Mega Bosses"}:
+                    progressMax = 0
+                    for child in tree.get_children(tree.focus()):
+                        progressMax += len([c for c in tree.get_children(child) if c != "defKey"])
+
+                    progress = PopupWindow(root, labelText="Locking variants...", progressBar=True, progressMax=progressMax, loadingImage=True)
+                    
+                    i = 0
                     for e in tree.get_children(tree.focus()):
                         v = tree.item(e)["values"]
                         modList = list(self.currentVariants[e]["defKey"])
@@ -2372,6 +2415,9 @@ try:
                         treeLocked.insert(parent=tree.parent(e), index=bisect_left(contents, v[0]), iid=iid, values=(v[0], v[1]), tags=True)
                         
                         for child in tree.get_children(e):
+                            i += 1
+                            progress.progressVar.set(i)
+                            root.update_idletasks()
                             if " - " in child:
                                 enemy = child[:child.index(" - ")]
                                 behavior = child[child.index(" - ")+3:]
@@ -2397,12 +2443,23 @@ try:
                             contents = [treeLocked.item(child)["values"][0] for child in treeLocked.get_children(iid)]
                             treeLocked.insert(parent=iid, index=bisect_left(contents, v[0]), iid=iidChild, values=(v[0], v[1]), tags=True)
                 elif tree.focus() == "All":
+                    progressMax = 0
+                    for child in tree.get_children("All"):
+                        for subChild in tree.get_children(child):
+                            progressMax += len(tree.get_children(subChild))
+
+                    progress = PopupWindow(root, labelText="Locking variants...", progressBar=True, progressMax=progressMax + len(set(self.currentVariants.keys()) & set(tree.get_children("Enemies"))), loadingImage=True)
+
+                    i = 0
                     iidForAvg = "All"
                     for cat in tree.get_children("All"):
                         for e in tree.get_children(cat):
                             v = tree.item(e)["values"]
                             if cat == "Enemies":
                                 modList = [v for v in self.currentVariants[e][[k for k in list(self.currentVariants[e].keys()) if k != "defKey"][0]]]
+                                i += 1
+                                progress.progressVar.set(i)
+                                root.update_idletasks()
                             else:
                                 modList = list(self.currentVariants[e]["defKey"])
                             iid = e + "_" + ",".join([str(v) for v in modList])
@@ -2416,6 +2473,9 @@ try:
                             treeLocked.insert(parent=cat, index=bisect_left(contents, v[0]), iid=iid, values=(v[0], v[1]), tags=True)
                             
                             for child in tree.get_children(e):
+                                i += 1
+                                progress.progressVar.set(i)
+                                root.update_idletasks()
                                 if " - " in child:
                                     enemy = child[:child.index(" - ")]
                                     behavior = child[child.index(" - ")+3:]
@@ -2494,6 +2554,10 @@ try:
                     contents = [treeLocked.item(child)["values"][0] for child in treeLocked.get_children(tree.parent(tree.focus()))]
                     treeLocked.insert(parent=tree.parent(tree.focus()), index=bisect_left(contents, v[0]), iid=iid, values=(v[0], v[1]), tags=True)
 
+                if progress:
+                    progress.label.config(text = "Calculating difficulty averages...")
+                    progress.progressBar.grid_forget()
+                    root.update_idletasks()
                 # Recalculate the average difficulty mod for this row and its parents and children.
                 for child in treeLocked.get_children(iidForAvg):
                     for subChild in treeLocked.get_children(child):
@@ -2509,7 +2573,8 @@ try:
                         if treeLocked.parent(treeLocked.parent(treeLocked.parent(iidForAvg))):
                             self.recalc_variant_average(treeLocked, treeLocked.parent(treeLocked.parent(iidForAvg)))
                             
-                progress.destroy()
+                if progress:
+                    progress.destroy()
 
                 log("End of lock_variant_card")
             except Exception as e:
