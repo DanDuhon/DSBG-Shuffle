@@ -1,20 +1,10 @@
 try:
-    import platform
     import tkinter as tk
     from tkinter import ttk
-    from os import path
     from json import load, dump
 
-    from dsbg_characters import soulCost
-    from dsbg_utility import VerticalScrolledFrame, CreateToolTip, center, log
-
-
-    if platform.system() == "Windows":
-        pathSep = "\\"
-    else:
-        pathSep = "/"
-
-    baseFolder = path.dirname(__file__).replace("\\lib".replace("\\", pathSep), "")
+    from dsbg_shuffle_characters import soulCost
+    from dsbg_shuffle_utility import VerticalScrolledFrame, CreateToolTip, center, log, baseFolder, pathSep
 
 
     class SettingsWindow(object):

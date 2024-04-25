@@ -34,8 +34,12 @@ else:
 baseFolder = path.dirname(__file__).replace("\\lib".replace("\\", pathSep), "")
 if windowsOs:
     font = ImageFont.truetype(baseFolder + "\\lib\\Adobe Caslon Pro Semibold.ttf", 12)
+    font2 = ImageFont.truetype(baseFolder + "\\lib\\OptimusPrinceps.ttf", 24)
+    font3 = ImageFont.truetype(baseFolder + "\\lib\\OptimusPrinceps.ttf", 30)
 else:
     font = ImageFont.truetype("./Adobe Caslon Pro Semibold.ttf", 12)
+    font2 = ImageFont.truetype("./OptimusPrinceps.ttf", 24)
+    font3 = ImageFont.truetype("./OptimusPrinceps.ttf", 30)
 
 
 class CreateToolTip(object):

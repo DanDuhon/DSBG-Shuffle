@@ -1,5 +1,5 @@
 try:
-    from dsbg_utility import log
+    from dsbg_shuffle_utility import log
     
     behaviors = {
         "Armorer Dennis": ["Soul Flash", "Soul Greatsword", "Soul Spear Launch", "Soul Vortex", "Upward Slash"],

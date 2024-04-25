@@ -1,16 +1,7 @@
 try:
-    import platform
-    from os import path
-    
-    from dsbg_utility import log
+    from dsbg_shuffle_utility import log, baseFolder, pathSep
 
 
-    if platform.system() == "Windows":
-        pathSep = "\\"
-    else:
-        pathSep = "/"
-
-    baseFolder = path.dirname(__file__).replace("\\lib".replace("\\", pathSep), "")
     enemies = []
     enemyIds = {}
     enemiesDict = {}

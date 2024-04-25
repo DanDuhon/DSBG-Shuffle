@@ -2,8 +2,8 @@ try:
     from math import floor
     from random import choice
 
-    from dsbg_characters import mean_soul_cost, soulCost
-    from dsbg_utility import log
+    from dsbg_shuffle_characters import mean_soul_cost, soulCost
+    from dsbg_shuffle_utility import log
 
 
     treasures = {
@@ -285,7 +285,7 @@ try:
             maxInt = max([len(soulCost[c]["intelligence"]) for c in charactersActive])
             maxFai = max([len(soulCost[c]["faith"]) for c in charactersActive])
 
-            i = 0
+            i = progress.progressVar.get()
 
             for t in [t for t in treasures if not treasures[t]["character"] or treasures[t]["character"] in charactersActive]:
                 if progress:

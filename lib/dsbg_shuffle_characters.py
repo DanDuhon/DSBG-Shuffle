@@ -2,7 +2,7 @@ try:
     from statistics import mean
 
     from lookup_table import LookupTable
-    from dsbg_utility import log
+    from dsbg_shuffle_utility import log
 
 
     soulCost = {

@@ -1,6 +1,6 @@
 try:
-    from dsbg_enemies import enemies
-    from dsbg_utility import log
+    from dsbg_shuffle_enemies import enemies
+    from dsbg_shuffle_utility import log
 
 
     tooltipText = {

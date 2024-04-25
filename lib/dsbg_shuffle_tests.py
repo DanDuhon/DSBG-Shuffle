@@ -1,20 +1,13 @@
-from os import path
 from json import load
 from itertools import product
 from collections import Counter
 from random import choice
 import types
-import platform
 
-from dsbg_shuffle_behaviors import behaviorDetail, behaviors
-from dsbg_enemies import enemyIds, enemiesDict, modIdLookup, bosses
+from dsbg_shuffle_behaviors import behaviorDetail
+from dsbg_shuffle_enemies import enemyIds, enemiesDict, modIdLookup, bosses
+from dsbg_shuffle_utility import baseFolder, pathSep
 
-if platform.system() == "Windows":
-    pathSep = "\\"
-else:
-    pathSep = "/"
-
-baseFolder = path.dirname(__file__).replace("\\lib".replace("\\", pathSep), "")
 
 with open(baseFolder + "\\lib\\dsbg_shuffle_enemies.json".replace("\\", pathSep)) as enemiesFile:
     enemies = load(enemiesFile)
