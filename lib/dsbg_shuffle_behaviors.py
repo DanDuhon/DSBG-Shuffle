@@ -2379,7 +2379,8 @@ try:
             },
             "Cage Grasp Inferno": {
                 "dodge": 1,
-                "left": {"type": "magic", "damage": 5}
+                "left": {"type": "magic", "damage": 5},
+                "middle": {}
             }
         },
         "Gaping Dragon": {

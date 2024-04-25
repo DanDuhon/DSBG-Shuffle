@@ -78,12 +78,19 @@ class Tester():
         for enemy in self.variants:
             # if "Ornstein" not in enemy:
             #     continue
+            # if "Guardian Dragon" in enemy:
+            #     skip = False
+            # if skip:
+            #     continue
             print(enemy)
             for x in range(1, 5):
                 for diff in self.variants[enemy][x]:
                     for defKey in self.variants[enemy][x][diff]:
                         for behavior in self.variants[enemy][x][diff][defKey]:
-                            self.load_variant(enemy, x, behavior, diff, defKey)
+                            # if behavior in {"Feral Onslaught", "Savage Retreat"}:
+                            #     continue
+                            for variant in self.variants[enemy][x][diff][defKey][behavior]:
+                                self.load_variant(enemy, behavior, defKey, variant)
 
         for encounter in encounters:
             # if encounter != "Deathly Freeze":
@@ -570,53 +577,29 @@ class Tester():
         target = sorted([enemy for enemy in self.newTiles[2][0] + self.newTiles[2][1]], key=lambda x: enemiesDict[x].difficultyTiers[self.selected["level"]]["difficulty"][self.numberOfCharacters], reverse=True)[0]
 
 
-    def load_variant(self, enemy, charNum, behavior, diffKey, defKey):
-        variant = enemy + " - " + behavior
-        self.currentVariants[enemy] = {"defKey": defKey}
-        self.pick_enemy_variants_behavior(enemy, charNum, behavior, diffKey, defKey)
-        self.load_variant_card(variant=variant)
-
-
-    def pick_enemy_variants_behavior(self, start, charNum, behavior, diffKey, defKey):
-        if start == "Ornstein & Smough":
-            behavior = [k for k in behaviors[start] if behavior in k][0]
-
-        if start == "Ornstein & Smough" and "&" in behavior:
-            behaviorO = behavior[:behavior.index(" & ")]
-            behaviorS = behavior[behavior.index(" & ")+3:]
-
-            self.currentVariants[start][behavior] = {
-                behaviorO: choice(list(self.variants[start][charNum][diffKey][defKey][behaviorO])),
-                behaviorS: choice(list(self.variants[start][charNum][diffKey][defKey][behaviorS]))
-            }
-        else:
-            self.currentVariants[start][behavior] = choice(self.variants[start][charNum][diffKey][defKey][behavior])
+    def load_variant(self, enemy, behavior, defKey, variant):
+        self.currentVariants[enemy] = {"defKey": defKey, behavior: [variant]}
+        self.load_variant_card(enemy, behavior, variant)
     
     
-    def load_variant_card(self, event=None, variant=None):
-        if "Ornstein & Smough" in variant:# and variant[variant.index(" - ")+3:] in osBehaviorLookup:
-            self.edit_variant_card_os(variant=variant)
+    def load_variant_card(self, enemy, behavior, variant):
+        if "Ornstein & Smough" in enemy:
+            self.edit_variant_card_os(enemy, behavior, variant)
         else:
-            self.edit_variant_card(variant=variant)
+            self.edit_variant_card(enemy, behavior, variant)
 
 
-    def edit_variant_card(self, variant=None, event=None):
-        enemy = variant[:variant.index(" - ")] if " - " in variant else None
-        behavior = variant[variant.index(" - ")+3:] if " - " in variant else None
-
-        self.edit_variant_card_data(enemy, variant=variant)
-        self.edit_variant_card_behavior(variant=variant)
+    def edit_variant_card(self, enemy, behavior, variant):
+        self.edit_variant_card_data(enemy, variant)
+        self.edit_variant_card_behavior(enemy, behavior, variant)
 
 
-    def edit_variant_card_os(self, variant=None, event=None):
-        enemy = variant[:variant.index(" - ")] if " - " in variant else None
-        behavior = variant[variant.index(" - ")+3:] if " - " in variant else None
-
-        self.edit_variant_card_data_os(enemy, variant=variant)
-        self.edit_variant_card_behavior_os(variant=variant)
+    def edit_variant_card_os(self, enemy, behavior, variant):
+        self.edit_variant_card_data_os(enemy, variant)
+        self.edit_variant_card_behavior_os(enemy, behavior, variant)
 
 
-    def edit_variant_card_data(self, enemy, variant=None, event=None):
+    def edit_variant_card_data(self, enemy, variant):
         healthAddition = 0
         health = behaviorDetail[enemy]["health"]
         armor = behaviorDetail[enemy]["armor"]
@@ -628,7 +611,7 @@ class Tester():
         elif "heatup" in behaviorDetail[enemy]:
             heatup.append(behaviorDetail[enemy]["heatup"])
 
-        mods = [modIdLookup[m] for m in list(self.currentVariants[enemy]["defKey"]) if m]
+        mods = [modIdLookup[m] for m in variant if m]
         for mod in mods:
             healthAddition = int(mod[-1]) if "health" in mod else 0
             health += healthAddition
@@ -645,7 +628,7 @@ class Tester():
             raise
 
 
-    def edit_variant_card_data_os(self, enemy, variant=None, event=None):
+    def edit_variant_card_data_os(self, enemy, variant):
         healthAddition = 0
         healthO = behaviorDetail["Ornstein & Smough"]["Ornstein"]["health"]
         armorO = behaviorDetail["Ornstein & Smough"]["Ornstein"]["armor"]
@@ -654,7 +637,7 @@ class Tester():
         armorS = behaviorDetail["Ornstein & Smough"]["Smough"]["armor"]
         resistS = behaviorDetail["Ornstein & Smough"]["Smough"]["resist"]
 
-        mods = [modIdLookup[m] for m in list(self.currentVariants["Ornstein & Smough"]["defKey"]) if m]
+        mods = [modIdLookup[m] for m in variant if m]
         for mod in mods:
             healthAddition = int(mod[-1]) if "health" in mod else 0
             healthO += healthAddition
@@ -678,14 +661,10 @@ class Tester():
             raise
 
 
-    def edit_variant_card_behavior(self, variant=None, event=None):
-        enemy = variant[:variant.index(" - ")] if " - " in variant else None
-        if "behavior" in behaviorDetail[enemy]:
+    def edit_variant_card_behavior(self, enemy, behavior, variant):
+        mods = [modIdLookup[m] for m in variant if m]
+        if behavior == "":
             behavior = "behavior"
-        else:
-            behavior = variant[variant.index(" - ")+3:] if " - " in variant else None
-
-        mods = [modIdLookup[m] for m in list(self.currentVariants[enemy]["defKey"]) if m]
 
         dodge = behaviorDetail[enemy][behavior]["dodge"]
         repeat = behaviorDetail[enemy][behavior].get("repeat", 1)
@@ -723,7 +702,7 @@ class Tester():
                     "type" in actions[position]
                     and actions[position]["type"] != "push"
                     and set(mods) & {"physical", "magic"}
-                    and actions[position]["type"] != set(mods) & {"physical", "magic"}
+                    and actions[position]["type"] != list(set(mods) & {"physical", "magic"})[0]
                     ):
                     raise
                 if (
@@ -734,83 +713,83 @@ class Tester():
                     raise
 
 
-    def edit_variant_card_behavior_os(self, variant=None, event=None):
-        enemy = variant[:variant.index(" - ")] if " - " in variant else None
-        behavior = osBehaviorLookup[variant[variant.index(" - ")+3:]] if " - " in variant else None
-        behaviorSplit = behavior.split(" & ")
+    def edit_variant_card_behavior_os(self, enemy, behavior, variant):
+        behaviorOs = osBehaviorLookup[behavior]
 
-        for i, b in enumerate(behaviorSplit):
-            mods = [modIdLookup[m] for m in list(self.currentVariants[enemy]["defKey"]) if m]
-            if "&" in behavior:
-                dodge = behaviorDetail[enemy][behavior][b]["dodge"]
-                repeat = behaviorDetail[enemy][behavior][b].get("repeat", 1)
+        mods = [modIdLookup[m] for m in variant if m]
+        if mods == ['health3', 'poison']:
+            pass
+    
+        if "&" in behaviorOs:
+            dodge = behaviorDetail[enemy][behaviorOs][behavior]["dodge"]
+            repeat = behaviorDetail[enemy][behaviorOs][behavior].get("repeat", 1)
+        else:
+            dodge = behaviorDetail[enemy][behaviorOs]["dodge"]
+            repeat = behaviorDetail[enemy][behaviorOs].get("repeat", 1)
+        actions = {}
+        for position in ["left", "right"]:
+            if "&" in behaviorOs:
+                if position in behaviorDetail[enemy][behaviorOs][behavior]:
+                    actions[position] = behaviorDetail[enemy][behaviorOs][behavior][position].copy()
             else:
-                dodge = behaviorDetail[enemy][behavior]["dodge"]
-                repeat = behaviorDetail[enemy][behavior].get("repeat", 1)
-            actions = {}
-            for position in ["left", "right"]:
-                if "&" in behavior:
-                    if position in behaviorDetail[enemy][behavior][b]:
-                        actions[position] = behaviorDetail[enemy][behavior][b][position].copy()
-                else:
-                    if position in behaviorDetail[enemy][behavior]:
-                        actions[position] = behaviorDetail[enemy][behavior][position].copy()
+                if position in behaviorDetail[enemy][behaviorOs]:
+                    actions[position] = behaviorDetail[enemy][behaviorOs][position].copy()
 
-            dodge, repeat, actions = self.apply_mods_to_actions_os(enemy, behavior, b, dodge, repeat, actions, variant[i])
+        dodge, repeat, actions = self.apply_mods_to_actions_os(enemy, behaviorOs, behavior, dodge, repeat, actions, variant)
 
-            if "&" in behavior:
+        if "&" in behaviorOs:
+            if (
+                behaviorDetail[enemy][behaviorOs][behavior]["dodge"] + max([0] + [int(mod[-1]) if "dodge" in mod else 0 for mod in mods]) != dodge
+                or behaviorDetail[enemy][behaviorOs][behavior].get("repeat", 1) + max([0] + [1 if "repeat" in mod else 0 for mod in mods]) != repeat
+            ):
+                raise
+        else:
+            if (
+                behaviorDetail[enemy][behaviorOs]["dodge"] + max([0] + [int(mod[-1]) if "dodge" in mod else 0 for mod in mods]) != dodge
+                or behaviorDetail[enemy][behaviorOs].get("repeat", 1) + max([0] + [1 if "repeat" in mod else 0 for mod in mods]) != repeat
+            ):
+                raise
+        if {"bleed", "frostbite", "poison", "stagger"} & set(mods) and not any(["effect" in actions[position] for position in actions]):
+            raise
+        if "bleed" in mods and not any(["bleed" in actions[position]["effect"] for position in actions if "effect" in actions[position]]):
+            raise
+        if "frostbite" in mods and not any(["frostbite" in actions[position]["effect"] for position in actions if "effect" in actions[position]]):
+            raise
+        if "poison" in mods and not any(["poison" in actions[position]["effect"] for position in actions if "effect" in actions[position]]):
+            raise
+        if "stagger" in mods and not any(["stagger" in actions[position]["effect"] for position in actions if "effect" in actions[position]]):
+            raise
+        if any([len(actions[position]["effect"]) > 2 for position in actions if "effect" in actions[position]]):
+            raise
+        for position in ["left", "middle", "right"]:
+            if position in actions:
                 if (
-                    behaviorDetail[enemy][behavior][b]["dodge"] + max([0] + [int(mod[-1]) if "dodge" in mod else 0 for mod in mods]) != dodge
-                    or behaviorDetail[enemy][behavior][b].get("repeat", 1) + max([0] + [1 if "repeat" in mod else 0 for mod in mods]) != repeat
-                ):
+                    "type" in actions[position]
+                    and actions[position]["type"] != "push"
+                    and set(mods) & {"physical", "magic"}
+                    and actions[position]["type"] != list(set(mods) & {"physical", "magic"})[0]
+                    ):
                     raise
-            else:
-                if (
-                    behaviorDetail[enemy][behavior]["dodge"] + max([0] + [int(mod[-1]) if "dodge" in mod else 0 for mod in mods]) != dodge
-                    or behaviorDetail[enemy][behavior].get("repeat", 1) + max([0] + [1 if "repeat" in mod else 0 for mod in mods]) != repeat
-                ):
-                    raise
-            if {"bleed", "frostbite", "poison", "stagger"} & set(mods) and not any(["effect" in actions[position] for position in actions]):
-                raise
-            if "bleed" in mods and not any(["bleed" in actions[position]["effect"] for position in actions if "effect" in actions[position]]):
-                raise
-            if "frostbite" in mods and not any(["frostbite" in actions[position]["effect"] for position in actions if "effect" in actions[position]]):
-                raise
-            if "poison" in mods and not any(["poison" in actions[position]["effect"] for position in actions if "effect" in actions[position]]):
-                raise
-            if "stagger" in mods and not any(["stagger" in actions[position]["effect"] for position in actions if "effect" in actions[position]]):
-                raise
-            if any([len(actions[position]["effect"]) > 2 for position in actions if "effect" in actions[position]]):
-                raise
-            for position in ["left", "middle", "right"]:
-                if position in actions:
+                if "&" in behaviorOs:
                     if (
-                        "type" in actions[position]
-                        and actions[position]["type"] != "push"
-                        and set(mods) & {"physical", "magic"}
-                        and actions[position]["type"] != set(mods) & {"physical", "magic"}
+                        "damage" in actions[position]
+                        and "damage" in set([mod[:-1] for mod in mods])
+                        and behaviorDetail[enemy][behaviorOs][behavior][position]["damage"] + max([0] + [int(mod[-1]) if "damage" in mod else 0 for mod in mods]) != actions[position]["damage"]
                         ):
                         raise
-                    if "&" in behavior:
-                        if (
-                            "damage" in actions[position]
-                            and "damage" in set([mod[:-1] for mod in mods])
-                            and behaviorDetail[enemy][behavior][b][position]["damage"] + max([0] + [int(mod[-1]) if "damage" in mod else 0 for mod in mods]) != actions[position]["damage"]
-                            ):
-                            raise
-                    else:
-                        if (
-                            "damage" in actions[position]
-                            and "damage" in set([mod[:-1] for mod in mods])
-                            and behaviorDetail[enemy][behavior][position]["damage"] + max([0] + [int(mod[-1]) if "damage" in mod else 0 for mod in mods]) != actions[position]["damage"]
-                            ):
-                            raise
+                else:
+                    if (
+                        "damage" in actions[position]
+                        and "damage" in set([mod[:-1] for mod in mods])
+                        and behaviorDetail[enemy][behavior][position]["damage"] + max([0] + [int(mod[-1]) if "damage" in mod else 0 for mod in mods]) != actions[position]["damage"]
+                        ):
+                        raise
 
 
-    def apply_mods_to_actions(self, enemy, behavior, dodge, repeat, actions, variant=None, event=None):
+    def apply_mods_to_actions(self, enemy, behavior, dodge, repeat, actions, variant=None):
         behavior = "" if behavior == "behavior" else behavior
 
-        mods = variant
+        mods = [modIdLookup[m] for m in variant if m]
 
         for mod in mods:
             dodge += int(mod[-1]) if "dodge" in mod else 0
@@ -858,12 +837,25 @@ class Tester():
         return dodge, repeat, actions
 
 
-    def apply_mods_to_actions_os(self, enemy, behavior, b, dodge, repeat, actions, variant=None, event=None):
-        mods = variant
+    def apply_mods_to_actions_os(self, enemy, behavior, b, dodge, repeat, actions, variant=None):
+        mods = [modIdLookup[m] for m in variant if m]
 
         for mod in mods:
             dodge += int(mod[-1]) if "dodge" in mod else 0
             repeat += 1 if "repeat" in mod else 0
+            newConditionAdded = False
+
+            # For behaviors that do not already cause a condition.
+            if (
+                mod in {"bleed", "frostbite", "poison", "stagger"}
+                and "effect" not in actions.get("right", {})
+                ):
+                if "right" in actions and not actions["right"]:
+                    actions["right"]["effect"] = [mod]
+                    newConditionAdded = True
+
+            if newConditionAdded:
+                continue
 
             for position in ["left", "right"]:
                 if position in actions:
@@ -871,6 +863,9 @@ class Tester():
                         actions[position]["damage"] += int(mod[-1]) if "damage" in mod else 0
                     if "type" in actions[position]:
                         actions[position]["type"] = mod if mod in {"physical", "magic"} else actions[position]["type"]
+                    # For behaviors that already cause a condition.
+                    elif "effect" in actions[position] and mod in {"bleed", "frostbite", "poison", "stagger"} and mod not in actions[position]["effect"]:
+                        actions[position]["effect"].append(mod)
 
         return dodge, repeat, actions
 

@@ -2699,9 +2699,28 @@ try:
                         log("Pasting " + actions[position]["type"] + " attack image onto variant at " + str((x, 280)) + ".")
                         self.encounterImage.paste(im=image, box=(x, 280), mask=image)
                     elif "Cage Grasp Inferno" in behavior:
-                        image = self.attack[actions[position]["type"]][actions[position]["damage"]]
-                        log("Pasting " + actions[position]["type"] + " attack image onto variant at " + str((-10, 340)) + ".")
-                        self.encounterImage.paste(im=image, box=(-13, 343), mask=image)
+                        if "type" in actions[position]:
+                            image = self.attack[actions[position]["type"]][actions[position]["damage"]]
+                            log("Pasting " + actions[position]["type"] + " attack image onto variant at " + str((-13, 343)) + ".")
+                            self.encounterImage.paste(im=image, box=(-13, 343), mask=image)
+                        elif "effect" in actions[position]:
+                            for i, effect in enumerate(actions[position]["effect"]):
+                                if effect == "bleed":
+                                    image = self.bleed
+                                elif effect == "frostbite":
+                                    image = self.frostbite
+                                elif effect == "poison":
+                                    image = self.poison
+                                elif effect == "stagger":
+                                    image = self.stagger
+                                elif effect == "corrosion":
+                                    image = self.corrosion
+                                elif effect == "calamity":
+                                    image = self.calamity
+                                else:
+                                    continue
+
+                                self.encounterImage.paste(im=image, box=(80 + (i * 50), 363), mask=image)
                     elif "type" in actions[position] and actions[position]["type"] == "push":
                         x = 15 if position == "left" else 110 if position == "middle" else 206
                         image = self.attack[actions[position]["type"]][actions[position]["damage"]]
@@ -2951,6 +2970,19 @@ try:
                 for mod in mods:
                     dodge += int(mod[-1]) if "dodge" in mod else 0
                     repeat += 1 if "repeat" in mod else 0
+                    newConditionAdded = False
+
+                    # For behaviors that do not already cause a condition.
+                    if (
+                        mod in {"bleed", "frostbite", "poison", "stagger"}
+                        and "effect" not in actions.get("right", {})
+                        ):
+                        if "right" in actions and not actions["right"]:
+                            actions[position]["effect"] = [mod]
+                            newConditionAdded = True
+
+                    if newConditionAdded:
+                        continue
 
                     for position in ["left", "right"]:
                         if position in actions:
@@ -2958,6 +2990,9 @@ try:
                                 actions[position]["damage"] += int(mod[-1]) if "damage" in mod else 0
                             if "type" in actions[position]:
                                 actions[position]["type"] = mod if mod in {"physical", "magic"} else actions[position]["type"]
+                            # For behaviors that already cause a condition.
+                            elif "effect" in actions[position] and mod in {"bleed", "frostbite", "poison", "stagger"} and mod not in actions[position]["effect"]:
+                                actions[position]["effect"].append(mod)
 
                 log("End of apply_mods_to_actions_os")
 
@@ -3543,7 +3578,7 @@ try:
                     elif imageType == "bleed":
                         image = Image.open(imagePath).resize((44, 50), Image.Resampling.LANCZOS)
                     elif imageType == "frostbite":
-                        image = Image.open(imagePath).resize((46, 50), Image.Resampling.LANCZOS)
+                        image = Image.open(imagePath).resize((55, 56), Image.Resampling.LANCZOS)
                     elif imageType == "poison":
                         image = Image.open(imagePath).resize((37, 50), Image.Resampling.LANCZOS)
                     elif imageType == "stagger":
