@@ -71,22 +71,22 @@ try:
                 # Create images
                 self.progress.label.config(text = "Loading images... ")
                 # Enemies
-                for enemy in self.allEnemies:
-                    i += 6
-                    self.progress.progressVar.set(i)
-                    root.update_idletasks()
-                    self.allEnemies[enemy]["imageOld"] = self.create_image(enemy + ".png", "enemyOld")
-                    self.allEnemies[enemy]["imageOldLevel4"] = self.create_image(enemy + ".png", "enemyOldLevel4")
-                    self.allEnemies[enemy]["imageNew"] = self.create_image(enemy + ".png", "enemyNew")
-                    self.allEnemies[enemy]["image text"] = self.create_image(enemy + ".png", "enemyText")
-                    self.allEnemies[enemy]["image text" if self.forPrinting else "photo image text"] = ImageTk.PhotoImage(self.create_image(enemy + ".png", "enemyText"))
+                # for enemy in self.allEnemies:
+                #     i += 6
+                #     self.progress.progressVar.set(i)
+                #     root.update_idletasks()
+                #     self.allEnemies[enemy]["imageOld"] = self.create_image(enemy + ".png", "enemyOld")
+                #     self.allEnemies[enemy]["imageOldLevel4"] = self.create_image(enemy + ".png", "enemyOldLevel4")
+                #     self.allEnemies[enemy]["imageNew"] = self.create_image(enemy + ".png", "enemyNew")
+                #     self.allEnemies[enemy]["image text"] = self.create_image(enemy + ".png", "enemyText")
+                #     self.allEnemies[enemy]["image text" if self.forPrinting else "photo image text"] = ImageTk.PhotoImage(self.create_image(enemy + ".png", "enemyText"))
                 
-                self.progress.label.config(text="Loading treasure...")
-                if self.settings["treasureSwapOption"] in {"Similar Soul Cost", "Tier Based"}:
-                    generate_treasure_soul_cost(self.availableExpansions, self.charactersActive, root, self.progress)
-                i = len([t for t in treasures if not treasures[t]["character"] or treasures[t]["character"] in self.charactersActive])
-                if self.settings["treasureSwapOption"] == "Tier Based":
-                    populate_treasure_tiers(self.availableExpansions, self.charactersActive)
+                # self.progress.label.config(text="Loading treasure...")
+                # if self.settings["treasureSwapOption"] in {"Similar Soul Cost", "Tier Based"}:
+                #     generate_treasure_soul_cost(self.availableExpansions, self.charactersActive, root, self.progress)
+                # i = len([t for t in treasures if not treasures[t]["character"] or treasures[t]["character"] in self.charactersActive])
+                # if self.settings["treasureSwapOption"] == "Tier Based":
+                #     populate_treasure_tiers(self.availableExpansions, self.charactersActive)
 
                 # Icons
                 self.enemyNode2 = self.create_image("enemy_node_2.png", "enemyNode")
@@ -184,7 +184,7 @@ try:
                 self.pane.grid_rowconfigure(index=0, weight=1)
                 self.paned.add(self.pane, weight=1)
 
-                self.notebook = ttk.Notebook(self.paned)
+                self.notebook = ttk.Notebook(self.paned, width=600)
                 self.notebook.pack(fill="both", expand=True)
 
                 self.encounterTab = EncountersFrame(root=root, app=self)

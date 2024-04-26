@@ -268,7 +268,7 @@ try:
                     selectmode="browse",
                     columns=("Name"),
                     yscrollcommand=self.scrollbarTreeviewEncounters.set,
-                    height=29 if self.root.winfo_screenheight() > 1000 else 20
+                    height=28 if self.root.winfo_screenheight() > 1000 else 19
                 )
 
                 self.treeviewEncounters.pack(expand=True, fill="both")

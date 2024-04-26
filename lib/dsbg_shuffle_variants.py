@@ -53,6 +53,8 @@ try:
             self.variantsListTreeviewFrame.pack(fill="both", expand=True)
             self.variantsTabButtonsFrame2 = ttk.Frame(self)
             self.variantsTabButtonsFrame2.pack()
+            self.variantsTabButtonsFrame3 = ttk.Frame(self)
+            self.variantsTabButtonsFrame3.pack()
             self.variantsLockedTreeviewFrame = ttk.Frame(self)
             self.variantsLockedTreeviewFrame.pack(fill="both", expand=True)
             self.scrollbartreeviewVariantsList = ttk.Scrollbar(self.variantsListTreeviewFrame)
@@ -80,9 +82,9 @@ try:
             self.saveButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
             self.loadButton = ttk.Button(self.variantsTabButtonsFrame2, text="Load Variants", width=16, command=self.load_variants)
             self.loadButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-            self.imagesPdfButton = ttk.Button(self.variantsTabButtonsFrame2, text="Images to PDF", width=16, command=self.print_variant_cards)
+            self.imagesPdfButton = ttk.Button(self.variantsTabButtonsFrame3, text="Images to PDF", width=16, command=self.print_variant_cards)
             self.imagesPdfButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-            self.summaryPdfButton = ttk.Button(self.variantsTabButtonsFrame2, text="Summary to PDF", width=16, command=self.print_variant_summary)
+            self.summaryPdfButton = ttk.Button(self.variantsTabButtonsFrame3, text="Summary to PDF", width=16, command=self.print_variant_summary)
             self.summaryPdfButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
 
             self.create_variants_treeview()
@@ -109,7 +111,7 @@ try:
                     selectmode="browse",
                     columns=("Name", "Current Modifier", "Max Modifier"),
                     yscrollcommand=self.scrollbartreeviewVariantsList.set,
-                    height=12 if self.root.winfo_screenheight() > 1000 else 20
+                    height=11 if self.root.winfo_screenheight() > 1000 else 9
                 )
 
                 self.treeviewVariantsList.pack(expand=True, fill="both")
@@ -121,8 +123,8 @@ try:
                 self.treeviewVariantsList.heading("Current Modifier", text="Current Modifier", anchor=tk.W)
                 self.treeviewVariantsList.heading("Max Modifier", text="Max Modifier", anchor=tk.W)
                 self.treeviewVariantsList.column("Name", anchor=tk.W, width=300)
-                self.treeviewVariantsList.column("Current Modifier", anchor=tk.W)
-                self.treeviewVariantsList.column("Max Modifier", anchor=tk.W)
+                self.treeviewVariantsList.column("Current Modifier", anchor=tk.W, width=90)
+                self.treeviewVariantsList.column("Max Modifier", anchor=tk.W, width=90)
                 
                 self.treeviewVariantsList.insert(parent="", index="end", iid="All", values=("All", 0, ""), tags=False, open=True)
                 self.treeviewVariantsList.insert(parent="All", index="end", iid="Enemies", values=("    Enemies", 0, ""), tags=False)
@@ -160,7 +162,7 @@ try:
                     selectmode="browse",
                     columns=("Name", "Current Modifier", "Max Modifier"),
                     yscrollcommand=self.scrollbartreeviewVariantsLocked.set,
-                    height=12 if self.root.winfo_screenheight() > 1000 else 20
+                    height=11 if self.root.winfo_screenheight() > 1000 else 9
                 )
 
                 self.treeviewVariantsLocked.pack(expand=True, fill="both")

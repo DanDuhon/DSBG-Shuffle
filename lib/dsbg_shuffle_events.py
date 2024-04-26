@@ -6,7 +6,7 @@ try:
     from random import shuffle
     from tkinter import filedialog, ttk
 
-    from dsbg_shuffle_utility import PopupWindow, error_popup, log, baseFolder, pathSep
+    from dsbg_shuffle_utility import PopupWindow, error_popup, log, baseFolder, pathSep 
 
 
     events = {
@@ -104,23 +104,24 @@ try:
                 self.treeviewEventList = ttk.Treeview(
                     self.eventTabEventListTreeviewFrame,
                     selectmode="extended",
-                    columns=("Event List", "Name", "Count"),
+                    columns=("Core Set", "Name", "Count"),
                     yscrollcommand=self.scrollbarTreeviewEventList.set,
                     height=12 if self.root.winfo_screenheight() > 1000 else 10
                 )
                 
                 self.treeviewEventList.pack(expand=True, fill="both")
                 self.scrollbarTreeviewEventList.config(command=self.treeviewEventList.yview)
+                
+                #minwidth = self.treeviewEventList.column("#0", option="minwidth")
+                self.treeviewEventList.column("#0", width=30)
+                self.treeviewEventList.column("#1", width=155)
 
-                minwidth = self.treeviewEventList.column('#0', option='minwidth')
-                self.treeviewEventList.column('#0', width=minwidth)
-
-                self.treeviewEventList.heading("Event List", text="Event List", anchor=tk.W)
+                self.treeviewEventList.heading("Core Set", text="Core Set", anchor=tk.W)
                 self.treeviewEventList.heading("Name", text="Name", anchor=tk.W)
                 self.treeviewEventList.heading("Count", text="Count", anchor=tk.W)
-                self.treeviewEventList.column("Event List", anchor=tk.W, width=150)
-                self.treeviewEventList.column("Name", anchor=tk.W, width=180)
-                self.treeviewEventList.column("Count", anchor=tk.W, width=98)
+                self.treeviewEventList.column("Core Set", anchor=tk.W)
+                self.treeviewEventList.column("Name", anchor=tk.W)
+                self.treeviewEventList.column("Count", anchor=tk.W)
                 
                 self.treeviewEventList.bind("<<TreeviewSelect>>", self.load_event)
                 self.treeviewEventList.bind("<Control-a>", lambda *args: self.treeviewEventList.selection_add(self.treeviewEventList.get_children()))

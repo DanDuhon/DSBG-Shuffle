@@ -43,6 +43,8 @@ try:
             self.campaignTabButtonsFrame2.pack()
             self.campaignTabButtonsFrame3 = ttk.Frame(self)
             self.campaignTabButtonsFrame3.pack()
+            self.campaignTabButtonsFrame4 = ttk.Frame(self)
+            self.campaignTabButtonsFrame4.pack()
             self.campaignTabTreeviewFrame = ttk.Frame(self)
             self.campaignTabTreeviewFrame.pack(fill="both", expand=True)
             
@@ -53,8 +55,6 @@ try:
 
             self.deleteButton = ttk.Button(self.campaignTabButtonsFrame2, text="Remove Card", width=16, command=self.delete_card_from_campaign)
             self.deleteButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-            self.printEncounters = ttk.Button(self.campaignTabButtonsFrame2, text="Export to PDF", width=16, command=self.print_encounters)
-            self.printEncounters.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
             self.moveUpButton = ttk.Button(self.campaignTabButtonsFrame2, text="Move Up", width=16, command=self.move_up)
             self.moveUpButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
             self.moveDownButton = ttk.Button(self.campaignTabButtonsFrame2, text="Move Down", width=16, command=self.move_down)
@@ -64,13 +64,16 @@ try:
             self.bossMenu.current(0)
             self.bossMenu.config(width=17)
             self.bossMenu.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-            self.addBossButton = ttk.Button(self.campaignTabButtonsFrame3, text="Add Boss", width=17, command=self.add_boss_to_campaign)
+            self.addBossButton = ttk.Button(self.campaignTabButtonsFrame3, text="Add Boss", width=16, command=self.add_boss_to_campaign)
             self.addBossButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-            self.randomMiniBossButton = ttk.Button(self.campaignTabButtonsFrame3, text="Random Mini Boss", width=17, command=lambda x="Mini Boss": self.add_random_boss_to_campaign(level=x))
+            self.printEncounters = ttk.Button(self.campaignTabButtonsFrame3, text="Export to PDF", width=16, command=self.print_encounters)
+            self.printEncounters.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+
+            self.randomMiniBossButton = ttk.Button(self.campaignTabButtonsFrame4, text="Add Mini Boss", width=16, command=lambda x="Mini Boss": self.add_random_boss_to_campaign(level=x))
             self.randomMiniBossButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-            self.randomMiniBossButton = ttk.Button(self.campaignTabButtonsFrame3, text="Random Main Boss", width=17, command=lambda x="Main Boss": self.add_random_boss_to_campaign(level=x))
+            self.randomMiniBossButton = ttk.Button(self.campaignTabButtonsFrame4, text="Add Main Boss", width=16, command=lambda x="Main Boss": self.add_random_boss_to_campaign(level=x))
             self.randomMiniBossButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-            self.randomMiniBossButton = ttk.Button(self.campaignTabButtonsFrame3, text="Random Mega Boss", width=17, command=lambda x="Mega Boss": self.add_random_boss_to_campaign(level=x))
+            self.randomMiniBossButton = ttk.Button(self.campaignTabButtonsFrame4, text="Add Mega Boss", width=16, command=lambda x="Mega Boss": self.add_random_boss_to_campaign(level=x))
             self.randomMiniBossButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
         
             self.scrollbarTreeviewCampaign = ttk.Scrollbar(self.campaignTabTreeviewFrame)
@@ -90,7 +93,7 @@ try:
                     selectmode="extended",
                     columns=("Name", "Type", "Level"),
                     yscrollcommand=self.scrollbarTreeviewCampaign.set,
-                    height=29 if self.root.winfo_screenheight() > 1000 else 20,
+                    height=23 if self.root.winfo_screenheight() > 1000 else 14,
                     show=["headings"]
                 )
 
