@@ -115,6 +115,7 @@ try:
                 #minwidth = self.treeviewEventList.column("#0", option="minwidth")
                 self.treeviewEventList.column("#0", width=30)
                 self.treeviewEventList.column("#1", width=155)
+                self.treeviewEventList.column("#2", width=170)
 
                 self.treeviewEventList.heading("Core Set", text="Core Set", anchor=tk.W)
                 self.treeviewEventList.heading("Name", text="Name", anchor=tk.W)

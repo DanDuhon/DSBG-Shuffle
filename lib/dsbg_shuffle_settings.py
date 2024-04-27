@@ -1,5 +1,6 @@
 try:
     import tkinter as tk
+    import webbrowser
     from tkinter import ttk
     from json import load, dump
 
@@ -327,9 +328,13 @@ try:
                 self.saveButton.grid(column=0, row=0, padx=5)
                 self.cancelButton.grid(column=1, row=0, padx=5)
 
-                self.themeButtonFrame = ttk.Frame(parent, padding=(0, 0, 0, 10))
-                self.themeButtonFrame.grid(row=5, column=5, padx=15, pady=(10, 0), sticky="e", columnspan=2)
-                self.themeButtonFrame.columnconfigure(index=0, weight=1)
+                self.wikiButtonFrame = ttk.Frame(parent, padding=(0, 0, 0, 10))
+                self.wikiButtonFrame.grid(row=5, column=5, padx=15, pady=(10, 0), sticky="e", columnspan=2)
+                self.wikiButtonFrame.columnconfigure(index=0, weight=1)
+                
+                # Link to the wiki
+                wikiLink = ttk.Button(self.wikiButtonFrame, text="Open the wiki", width=16, command=lambda x="https://github.com/DanDuhon/DSBG-Shuffle/wiki/Settings/": webbrowser.open_new(x))
+                wikiLink.grid(column=1, row=1)
 
                 log("End of create_buttons")
             except Exception as e:
