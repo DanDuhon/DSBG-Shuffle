@@ -10,9 +10,37 @@ try:
     from statistics import mean
     from tkinter import filedialog, ttk
 
-    from dsbg_shuffle_enemies import bosses, enemiesDict, modIdLookup
+    from dsbg_shuffle_enemies import bosses, enemiesDict
     from dsbg_shuffle_behaviors import behaviorDetail, behaviors
     from dsbg_shuffle_utility import PopupWindow, error_popup, log, baseFolder, font, font2, font3, pathSep
+
+
+    modIdLookup = {
+        1: "dodge1",
+        2: "dodge2",
+        3: "damage1",
+        4: "damage2",
+        5: "damage3",
+        6: "damage4",
+        7: "armor1",
+        8: "armor2",
+        9: "resist1",
+        10: "resist2",
+        11: "health1",
+        12: "health2",
+        13: "health3",
+        14: "health4",
+        15: "repeat",
+        16: "magic",
+        17: "bleed",
+        18: "frostbite",
+        19: "poison",
+        20: "stagger",
+        21: "physical",
+        22: "armor resist1",
+        23: "damage health1",
+        24: "damage health2"
+        }
 
 
     class VariantsFrame(ttk.Frame):
@@ -1006,10 +1034,6 @@ try:
                                     image = self.app.poison
                                 elif effect == "stagger":
                                     image = self.app.stagger
-                                elif effect == "corrosion":
-                                    image = self.app.corrosion
-                                elif effect == "calamity":
-                                    image = self.app.calamity
                                 else:
                                     continue
 
@@ -1026,23 +1050,28 @@ try:
                         self.app.displayImage.paste(im=image, box=(x, 300), mask=image)
                     elif "effect" in actions[position]:
                         for i, effect in enumerate(actions[position]["effect"]):
+                            xOffset = 0
                             if effect == "bleed":
                                 image = self.app.bleed
                             elif effect == "frostbite":
                                 image = self.app.frostbite
+                                xOffset = -9
                             elif effect == "poison":
                                 image = self.app.poison
                             elif effect == "stagger":
                                 image = self.app.stagger
+                                xOffset = -5
                             elif effect == "corrosion":
                                 image = self.app.corrosion
+                                xOffset = -4
                             elif effect == "calamity":
                                 image = self.app.calamity
+                                xOffset = -6
                             else:
                                 continue
 
-                            x = 130 if position == "middle" else 240
-                            self.app.displayImage.paste(im=image, box=(x, 275 + (i * 50)), mask=image)
+                            x = (130 if position == "middle" else 240) + xOffset
+                            self.app.displayImage.paste(im=image, box=(x, 280 + (i * 50)), mask=image)
                 
                 if enemy in {"Phalanx", "Phalanx Hollow", "Silver Knight Spearman"}:
                     x = 115 if "repeat" in actions["right"] else 209

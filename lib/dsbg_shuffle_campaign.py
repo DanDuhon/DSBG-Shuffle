@@ -564,7 +564,7 @@ try:
 
                             # Create the encounter card with saved enemies and tooltips.
                             self.app.encounterTab.newEnemies = campaignEncounter[0]["enemies"]
-                            self.edit_encounter_card(campaignEncounter[0]["name"], campaignEncounter[0]["expansion"], campaignEncounter[0]["level"], alts["enemySlots"])
+                            self.app.encounterTab.edit_encounter_card(campaignEncounter[0]["name"], campaignEncounter[0]["expansion"], campaignEncounter[0]["level"], alts["enemySlots"])
 
                             # Stage the encounter image
                             log("\tStaging " + encounter["name"] + ", level " + str(encounter["level"]) + " from " + encounter["expansion"])

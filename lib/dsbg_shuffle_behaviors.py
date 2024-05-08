@@ -533,7 +533,7 @@ try:
             "Puzzling Stone Sword Whip": {
                 "dodge": 1,
                 "left": {"type": "physical", "damage": 6},
-                "right": {}
+                "middle": {}
             },
             "Spider Fang Sword Strike": {
                 "dodge": 1,
@@ -821,7 +821,7 @@ try:
             "Majestic Greatsword Slash": {
                 "dodge": 2,
                 "left": {"type": "push", "damage": 4},
-                "right": {}
+                "middle": {}
             },
             "Santier's Spear Lunge": {
                 "dodge": 1,
@@ -963,7 +963,7 @@ try:
             "Leaping Hammer Smash": {
                 "dodge": 1,
                 "left": {"type": "push", "damage": 4},
-                "right": {}
+                "middle": {}
             },
             "Ground Pound": {
                 "dodge": 1,
@@ -984,7 +984,7 @@ try:
             "Retreating Sweep": {
                 "dodge": 1,
                 "left": {"type": "physical", "damage": 4},
-                "right": {}
+                "middle": {}
             },
             "Lumbering Swings": {
                 "dodge": 1,
@@ -1033,7 +1033,7 @@ try:
                 "dodge": 1,
                 "repeat": 2,
                 "left": {"type": "physical", "damage": 4},
-                "right": {"effect": ["frostbite"]}
+                "middle": {"effect": ["frostbite"]}
             },
             "Lunging Triple Slash": {
                 "dodge": 1,
@@ -1093,7 +1093,7 @@ try:
             "Diagonal Uppercut": {
                 "dodge": 1,
                 "left": {"type": "physical", "damage": 5},
-                "right": {}
+                "middle": {}
             },
             "Charging Assault": {
                 "dodge": 2,
@@ -1303,7 +1303,7 @@ try:
                 "dodge": 1,
                 "repeat": 2,
                 "left": {"type": "physical", "damage": 6},
-                "right": {}
+                "middle": {}
             },
             "health": 22,
             "heatup": 11,
@@ -1534,7 +1534,7 @@ try:
             "Deathly Strike": {
                 "dodge": 1,
                 "left": {"type": "physical", "damage": 5},
-                "right": {}
+                "middle": {}
             },
             "Toxicity": {
                 "dodge": 1,
@@ -1997,7 +1997,7 @@ try:
             "Leaping Hammer Smash": {
                 "dodge": 2,
                 "left": {"type": "push", "damage": 6},
-                "right": {}
+                "middle": {}
             },
             "Ground Pound": {
                 "dodge": 1,
@@ -2018,7 +2018,7 @@ try:
             "Retreating Sweep": {
                 "dodge": 2,
                 "left": {"type": "physical", "damage": 6},
-                "right": {}
+                "middle": {}
             },
             "Lumbering Swings": {
                 "dodge": 1,

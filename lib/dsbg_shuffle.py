@@ -287,6 +287,23 @@ try:
                 raise
 
 
+        def open_wiki(self):
+            """
+            Opens the wiki to the appropriate page.
+            """
+            try:
+                log("Start of open_wiki")
+
+                tab = self.notebook.tab(self.notebook.select(), "text")
+                log("Opening https://github.com/DanDuhon/DSBG-Shuffle/wiki/" + tab)
+                webbrowser.open_new("https://github.com/DanDuhon/DSBG-Shuffle/wiki/" + tab)
+                
+                log("End of open_wiki")
+            except Exception as e:
+                error_popup(root, e)
+                raise
+
+
         def create_buttons(self):
             """
             Create the buttons on the main screen.
@@ -322,7 +339,7 @@ try:
                 self.l5.grid(column=0, row=1, padx=5, pady=5)
 
                 # Link to the wiki
-                wikiLink = ttk.Button(self.buttonsFrame, text="Open the wiki", width=16, command=lambda x="https://github.com/DanDuhon/DSBG-Shuffle/wiki/" + self.notebook.tab(self.notebook.select(), "text"): webbrowser.open_new(x))
+                wikiLink = ttk.Button(self.buttonsFrame, text="Open the wiki", width=16, command=self.open_wiki)
                 wikiLink.grid(column=1, row=1)
                 
                 log("End of create_buttons")

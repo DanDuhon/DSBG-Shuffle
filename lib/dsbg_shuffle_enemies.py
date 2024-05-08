@@ -7,30 +7,6 @@ try:
     enemiesDict = {}
     reach = []
 
-    modIdLookup = {
-    1: "dodge1",
-    2: "dodge2",
-    3: "damage1",
-    4: "damage2",
-    5: "damage3",
-    6: "damage4",
-    7: "armor1",
-    8: "armor2",
-    9: "resist1",
-    10: "resist2",
-    11: "health1",
-    12: "health2",
-    13: "health3",
-    14: "health4",
-    15: "repeat",
-    16: "magic",
-    17: "bleed",
-    18: "frostbite",
-    19: "poison",
-    20: "stagger",
-    21: "physical"
-}
-
 
     class Enemy:
         def __init__(self, id, name, expansions, difficultyTiers, health=None) -> None:
