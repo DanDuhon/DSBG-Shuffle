@@ -35,7 +35,7 @@ try:
             for boss in [boss for boss in bosses if bosses[boss]["level"] == "Mega Boss" and bosses[boss]["expansions"] & self.app.availableExpansions]:
                 self.bossMenuItems.append(bosses[boss]["name"])
 
-            self.app.selectedBoss = tk.StringVar()
+            self.selectedBoss = tk.StringVar()
 
             self.campaignTabButtonsFrame = ttk.Frame(self)
             self.campaignTabButtonsFrame.pack()
@@ -69,7 +69,7 @@ try:
             self.randomMiniBossButton = ttk.Button(self.campaignTabButtonsFrame3, text="Add Mega Boss", width=16, command=lambda x="Mega Boss": self.add_random_boss_to_campaign(level=x))
             self.randomMiniBossButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
 
-            self.bossMenu = ttk.Combobox(self.campaignTabButtonsFrame4, state="readonly", values=self.bossMenuItems, textvariable=self.app.selectedBoss)
+            self.bossMenu = ttk.Combobox(self.campaignTabButtonsFrame4, state="readonly", values=self.bossMenuItems, textvariable=self.selectedBoss)
             self.bossMenu.current(0)
             self.bossMenu.config(width=17)
             self.bossMenu.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
@@ -232,25 +232,25 @@ try:
                 log("Start of add_boss_to_campaign")
 
                 # If a menu item that isn't a boss (e.g. --Mini Boss--) is selected in the combobox, don't do anything.
-                if self.app.selectedBoss.get() not in bosses:
+                if self.selectedBoss.get() not in bosses:
                     log("End of add_boss_to_campaign (nothing done)")
                     return
 
                 # Multiples need a different iid in the treeview, so append a number.
-                if self.app.selectedBoss.get() + "_0" not in self.treeviewCampaign.get_children():
-                    self.treeviewCampaign.insert(parent="", iid=self.app.selectedBoss.get() + "_0", values=(self.app.selectedBoss.get(), "Boss", bosses[self.app.selectedBoss.get()]["level"]), index="end")
+                if self.selectedBoss.get() + "_0" not in self.treeviewCampaign.get_children():
+                    self.treeviewCampaign.insert(parent="", iid=self.selectedBoss.get() + "_0", values=(self.selectedBoss.get(), "Boss", bosses[self.selectedBoss.get()]["level"]), index="end")
                     iidSuffix = "_0"
                 else:
-                    i = max([int(item[item.rindex("_") + 1:]) for item in self.treeviewCampaign.get_children() if item[:item.rindex("_")] == self.app.selectedBoss.get()])
-                    self.treeviewCampaign.insert(parent="", iid=self.app.selectedBoss.get() + "_" + str(i+1), values=(self.app.selectedBoss.get(), "Boss", bosses[self.app.selectedBoss.get()]["level"]), index="end")
+                    i = max([int(item[item.rindex("_") + 1:]) for item in self.treeviewCampaign.get_children() if item[:item.rindex("_")] == self.selectedBoss.get()])
+                    self.treeviewCampaign.insert(parent="", iid=self.selectedBoss.get() + "_" + str(i+1), values=(self.selectedBoss.get(), "Boss", bosses[self.selectedBoss.get()]["level"]), index="end")
                     iidSuffix = "_" + str(i+1)
 
                 # Build the dictionary that will be saved to JSON if this campaign is saved.
                 card = {
-                    "name": self.app.selectedBoss.get(),
+                    "name": self.selectedBoss.get(),
                     "type": "boss",
-                    "level": bosses[self.app.selectedBoss.get()]["level"],
-                    "iid": self.app.selectedBoss.get() + iidSuffix
+                    "level": bosses[self.selectedBoss.get()]["level"],
+                    "iid": self.selectedBoss.get() + iidSuffix
                 }
 
                 self.campaign.append(card)
@@ -453,7 +453,7 @@ try:
                     self.app.display.image = self.app.displayPhotoImage
                     self.app.display.config(image=self.app.displayPhotoImage)
                 elif campaignCard["type"] == "event":
-                    self.app.load_event(campaign=True)
+                    self.app.eventTab.load_event(campaign=True, treeviewCampaign=tree)
 
                 log("End of load_campaign_card")
             except Exception as e:
@@ -470,13 +470,15 @@ try:
 
                 self.forPrinting = True
                 self.encountersToPrint = []
-                campaignEncounters = [e for e in self.campaign if e["name"] not in bosses]
+                campaignEncounters = [e for e in self.campaign if e["type"] == "encounter"]
+
+                if not campaignEncounters:
+                    log("End of print_encounters (nothing done)")
+                    p = PopupWindow(self.root, "There are no encounter cards to print!", firstButton="Ok")
+                    self.root.wait_window(p)
+                    return
 
                 for encounter in campaignEncounters:
-                    # Skip event cards
-                    if encounter["type"] != "encounter":
-                        continue
-
                     # These are the card sizes in mm
                     if encounter["expansion"] in {
                         "Dark Souls The Board Game",

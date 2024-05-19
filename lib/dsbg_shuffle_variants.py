@@ -112,7 +112,7 @@ try:
             self.loadButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
             self.imagesPdfButton = ttk.Button(self.variantsTabButtonsFrame3, text="Images to PDF", width=16, command=self.print_variant_cards)
             self.imagesPdfButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-            self.summaryPdfButton = ttk.Button(self.variantsTabButtonsFrame3, text="Summary to PDF", width=16, command=self.print_variant_summary)
+            self.summaryPdfButton = ttk.Button(self.variantsTabButtonsFrame3, text="Summary to File", width=16, command=self.print_variant_summary)
             self.summaryPdfButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
 
             self.create_variants_treeview()
@@ -137,7 +137,7 @@ try:
                 self.treeviewVariantsList = ttk.Treeview(
                     self.variantsListTreeviewFrame,
                     selectmode="browse",
-                    columns=("Name", "Current Modifier", "Max Modifier"),
+                    columns=("Name", "Current Modifier"),
                     yscrollcommand=self.scrollbartreeviewVariantsList.set,
                     height=11 if self.root.winfo_screenheight() > 1000 else 9
                 )
@@ -149,10 +149,8 @@ try:
 
                 self.treeviewVariantsList.heading("Name", text="Name", anchor=tk.W)
                 self.treeviewVariantsList.heading("Current Modifier", text="Current Modifier", anchor=tk.W)
-                self.treeviewVariantsList.heading("Max Modifier", text="Max Modifier", anchor=tk.W)
                 self.treeviewVariantsList.column("Name", anchor=tk.W, width=300)
                 self.treeviewVariantsList.column("Current Modifier", anchor=tk.W, width=90)
-                self.treeviewVariantsList.column("Max Modifier", anchor=tk.W, width=90)
                 
                 self.treeviewVariantsList.insert(parent="", index="end", iid="All", values=("All", 0, ""), tags=False, open=True)
                 self.treeviewVariantsList.insert(parent="All", index="end", iid="Enemies", values=("    Enemies", 0, ""), tags=False)
@@ -164,7 +162,7 @@ try:
 
                 for enemy in sorted([enemy for enemy in enemiesDict if enemiesDict[enemy].expansions & self.app.availableExpansions]):
                     maxDiff = ceil((max(list(self.variants[enemy][self.app.numberOfCharacters].keys())) - 1.0) * 100)
-                    self.treeviewVariantsList.insert(parent="Invaders & Explorers Mimics" if "Phantoms" in enemiesDict[enemy].expansions else "Enemies", index="end", iid=enemy, values=("        " + enemy, 0, maxDiff), tags=True)
+                    self.treeviewVariantsList.insert(parent="Invaders & Explorers Mimics" if "Phantoms" in enemiesDict[enemy].expansions or enemiesDict[enemy].name in {"Hungry Mimic", "Voracious Mimic"} else "Enemies", index="end", iid=enemy, values=("        " + enemy, 0, maxDiff), tags=True)
                     
                 for enemy in sorted([enemy for enemy in bosses if bosses[enemy]["level"] == "Mega Boss" or enemy == "Asylum Demon" or bosses[enemy]["expansions"] & self.app.availableExpansions]):
                     maxDiff = ceil((max(list(self.variants[enemy][self.app.numberOfCharacters].keys())) - 1.0) * 100)
@@ -185,33 +183,34 @@ try:
                 self.treeviewVariantsList.focus_set()
                 self.treeviewVariantsList.focus("All")
 
-                self.treeviewVariantsLocked = ttk.Treeview(
-                    self.variantsLockedTreeviewFrame,
-                    selectmode="browse",
-                    columns=("Name", "Current Modifier", "Max Modifier"),
-                    yscrollcommand=self.scrollbartreeviewVariantsLocked.set,
-                    height=11 if self.root.winfo_screenheight() > 1000 else 9
-                )
+                if not hasattr(self, "treeviewVariantsLocked"):
+                    self.treeviewVariantsLocked = ttk.Treeview(
+                        self.variantsLockedTreeviewFrame,
+                        selectmode="browse",
+                        columns=("Name", "Current Modifier"),
+                        yscrollcommand=self.scrollbartreeviewVariantsLocked.set,
+                        height=11 if self.root.winfo_screenheight() > 1000 else 9
+                    )
 
-                self.treeviewVariantsLocked.pack(expand=True, fill="both")
-                self.scrollbartreeviewVariantsLocked.config(command=self.treeviewVariantsLocked.yview)
+                    self.treeviewVariantsLocked.pack(expand=True, fill="both")
+                    self.scrollbartreeviewVariantsLocked.config(command=self.treeviewVariantsLocked.yview)
 
-                self.treeviewVariantsLocked.column('#0', width=50)
+                    self.treeviewVariantsLocked.column('#0', width=50)
 
-                self.treeviewVariantsLocked.heading("Name", text="Name", anchor=tk.W)
-                self.treeviewVariantsLocked.heading("Current Modifier", text="Current Modifier", anchor=tk.W)
-                self.treeviewVariantsLocked.column("Name", anchor=tk.W, width=300)
-                self.treeviewVariantsLocked.column("Current Modifier", anchor=tk.W)
-                
-                self.treeviewVariantsLocked.insert(parent="", index="end", iid="All", values=("All", ""), tags=False, open=True)
-                self.treeviewVariantsLocked.insert(parent="All", index="end", iid="Enemies", values=("    Enemies", ""), tags=False)
-                if {"Phantoms", "Explorers"} & self.app.availableExpansions:
-                    self.treeviewVariantsLocked.insert(parent="All", index="end", iid="Invaders & Explorers Mimics", values=("    Invaders & Explorers Mimics", ""), tags=False)
-                self.treeviewVariantsLocked.insert(parent="All", index="end", iid="Mini Bosses", values=("    Mini Bosses", ""), tags=False)
-                self.treeviewVariantsLocked.insert(parent="All", index="end", iid="Main Bosses", values=("    Main Bosses", ""), tags=False)
-                self.treeviewVariantsLocked.insert(parent="All", index="end", iid="Mega Bosses", values=("    Mega Bosses", ""), tags=False)
+                    self.treeviewVariantsLocked.heading("Name", text="Name", anchor=tk.W)
+                    self.treeviewVariantsLocked.heading("Current Modifier", text="Current Modifier", anchor=tk.W)
+                    self.treeviewVariantsLocked.column("Name", anchor=tk.W, width=300)
+                    self.treeviewVariantsLocked.column("Current Modifier", anchor=tk.W)
+                    
+                    self.treeviewVariantsLocked.insert(parent="", index="end", iid="All", values=("All", ""), tags=False, open=True)
+                    self.treeviewVariantsLocked.insert(parent="All", index="end", iid="Enemies", values=("    Enemies", ""), tags=False)
+                    if {"Phantoms", "Explorers"} & self.app.availableExpansions:
+                        self.treeviewVariantsLocked.insert(parent="All", index="end", iid="Invaders & Explorers Mimics", values=("    Invaders & Explorers Mimics", ""), tags=False)
+                    self.treeviewVariantsLocked.insert(parent="All", index="end", iid="Mini Bosses", values=("    Mini Bosses", ""), tags=False)
+                    self.treeviewVariantsLocked.insert(parent="All", index="end", iid="Main Bosses", values=("    Main Bosses", ""), tags=False)
+                    self.treeviewVariantsLocked.insert(parent="All", index="end", iid="Mega Bosses", values=("    Mega Bosses", ""), tags=False)
 
-                self.treeviewVariantsLocked.bind("<<TreeviewSelect>>", self.load_variant_card_locked)
+                    self.treeviewVariantsLocked.bind("<<TreeviewSelect>>", self.load_variant_card_locked)
 
                 log("End of create_variants_treeview")
             except Exception as e:
@@ -401,7 +400,7 @@ try:
                     tree.focus(variantName if variantName else self.selectedVariant)
 
                 diffKey = 1.0 + (float(self.entryText.get()) / 100)
-                diffKey = (ceil((diffKey * 10) / 2.0) * 2) / 10
+                diffKey = ceil((diffKey * 10)) / 10
                 start = tree.focus()
                 
                 progress = None
@@ -635,6 +634,8 @@ try:
                     for i, child in enumerate(tree.get_children(tree.focus())):
                         progress.progressVar.set(i)
                         self.root.update_idletasks()
+                        if child not in self.currentVariants:
+                            continue
                         v = tree.item(child)["values"]
                         modList = [v for v in self.currentVariants[child][[k for k in list(self.currentVariants[child].keys()) if k != "defKey"][0]]]
                         iidChild = child + "_" + ",".join([str(v) for v in modList])
@@ -1429,7 +1430,7 @@ try:
                 for item in variantData:
                     if treeList.exists(item):
                         for subItem in variantData[item]:
-                            tree.insert(parent=subItem[0], iid=subItem[1], values=subItem[2]["values"], index="end")
+                            tree.insert(parent=subItem[0], iid=subItem[1], values=subItem[2]["values"], index="end", tags=True)
 
                 # Recalculate the average difficulty mod for this row and its parents and children.
                 for child in tree.get_children("All"):
@@ -1487,8 +1488,8 @@ try:
                         # Create the variant card.
                         self.load_variant_card_locked(variant=variant)
 
-                        # Stage the encounter image
-                        imageStage = ImageTk.getimage(self.encounterPhotoImage)
+                        # Stage the image.
+                        imageStage = ImageTk.getimage(self.app.displayPhotoImage)
 
                         imageStage.save(baseFolder + "\\lib\\dsbg_shuffle_image_staging\\".replace("\\", pathSep) + variant + ".png")
 
@@ -1562,6 +1563,9 @@ try:
                     "poison": "add Poison",
                     "stagger": "add Stagger",
                     "physical": "deals physical damage",
+                    "damage health1": "+1 damage, +1 health",
+                    "damage health2": "+2 damage, +2 health",
+                    "armor resist1": "+1 armor, +1 resist",
                     "": ""
                     }
 
@@ -1574,6 +1578,7 @@ try:
                             "armor2",
                             "resist1",
                             "resist2",
+                            "armor resist1",
                             "health1",
                             "health2",
                             "health3",
@@ -1586,6 +1591,7 @@ try:
                             "armor2",
                             "resist1",
                             "resist2",
+                            "armor resist1",
                             "health1",
                             "health2",
                             "health3",
@@ -1598,11 +1604,16 @@ try:
                             "armor2",
                             "resist1",
                             "resist2",
+                            "armor resist1",
                             "health1",
                             "health2",
                             "health3",
                             "health4"
                         })])
+
+                        if "-" in name:
+                            mods = mods.replace(", +1 health", "").replace(", +2 health", "")
+
                         summary += ("\t" if "-" in name else "") + "{}: {}\n".format(name[name.index(" - ")+3:] if "-" in name else name, mods if mods else "no changes")
 
                 # Prompt user to save the file.

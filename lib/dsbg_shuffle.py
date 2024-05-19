@@ -51,7 +51,7 @@ try:
 
                 root.withdraw()
                 i = 0
-                self.progress = PopupWindow(root, labelText="Starting up...", progressBar=True, progressMax=(len(self.allEnemies)*6) + (len(list(enemiesDict.keys()) + list(bosses.keys()))*3) + len([t for t in treasures if not treasures[t]["character"] or treasures[t]["character"] in self.charactersActive]) + (len(self.encounterList) if self.settings["customEnemyList"] else 0), loadingImage=True)
+                self.progress = PopupWindow(root, labelText="Starting up...", progressBar=True, progressMax=(len(self.allEnemies)*6) + (len(list(enemiesDict.keys()) + list(bosses.keys()))*3) + len([t for t in treasures if not treasures[t]["character"] or treasures[t]["character"] in self.charactersActive]), loadingImage=True)
 
                 # Delete images from staging
                 folder = baseFolder + "\\lib\\dsbg_shuffle_image_staging".replace("\\", pathSep)
@@ -186,12 +186,6 @@ try:
                 self.notebook = ttk.Notebook(self.paned, width=600)
                 self.notebook.pack(fill="both", expand=True)
 
-                self.encounterTab = EncountersFrame(root=root, app=self)
-                for index in [0, 1]:
-                    self.encounterTab.columnconfigure(index=index, weight=1)
-                    self.encounterTab.rowconfigure(index=index, weight=1)
-                self.notebook.add(self.encounterTab, text="Encounters")
-
                 self.campaignTab = CampaignFrame(root=root, app=self)
                 self.notebook.add(self.campaignTab, text="Campaign")
                 
@@ -200,6 +194,14 @@ try:
 
                 self.variantsTab = VariantsFrame(root=root, app=self)
                 self.notebook.add(self.variantsTab, text="Behavior Variants")
+
+                self.encounterTab = EncountersFrame(root=root, app=self)
+                for index in [0, 1]:
+                    self.encounterTab.columnconfigure(index=index, weight=1)
+                    self.encounterTab.rowconfigure(index=index, weight=1)
+                self.notebook.insert(0, self.encounterTab, text="Encounters")
+
+                self.notebook.select(0)
 
                 log("End of create_tabs")
             except Exception as e:
@@ -444,15 +446,15 @@ try:
                     self.selected = None
                     self.rewardTreasure = None
                     self.display.config(image="")
-                    self.treeviewEncounters.pack_forget()
-                    self.treeviewEncounters.destroy()
+                    self.encounterTab.treeviewEncounters.pack_forget()
+                    self.encounterTab.treeviewEncounters.destroy()
                     self.availableExpansions = set(self.settings["availableExpansions"])
                     self.availableCoreSets = self.coreSets & self.availableExpansions
                     self.expansionsForRandomEncounters = self.allExpansions & ((self.v1Expansions if "v1" in self.settings["encounterTypes"] else set()) | (self.v2Expansions if "v2" in self.settings["encounterTypes"] else set()))
                     self.charactersActive = set(self.settings["charactersActive"])
                     self.numberOfCharacters = len(self.charactersActive)
-                    self.set_encounter_list()
-                    self.create_encounters_treeview()
+                    self.encounterTab.set_encounter_list()
+                    self.encounterTab.create_encounters_treeview()
                     self.variantsTab.reset_treeview()
 
                     self.bossMenuItems = [
@@ -470,40 +472,42 @@ try:
                     for boss in [boss for boss in bosses if bosses[boss]["level"] == "Mega Boss" and bosses[boss]["expansions"] & self.availableExpansions]:
                         self.bossMenuItems.append(bosses[boss]["name"])
 
-                    self.bossMenu["values"] = self.bossMenuItems
+                    self.campaignTab.bossMenu["values"] = self.bossMenuItems
 
-                    self.selectedBoss.set("Select Boss")
+                    self.campaignTab.selectedBoss.set("Select Boss")
 
                     # Recalculate the average soul cost of treasure.
                     if (oldTreasureSwapOption != self.settings["treasureSwapOption"] and self.settings["treasureSwapOption"] in {"Similar Soul Cost", "Tier Based"}) or (oldCustomEnemyList != self.settings["customEnemyList"] and self.settings["customEnemyList"]):
                         i = 0
-                        progress = PopupWindow(root, labelText="Reloading treasure...", progressBar=True, progressMax=(len([t for t in treasures if not treasures[t]["character"] or treasures[t]["character"] in self.charactersActive]) if oldTreasureSwapOption != self.settings["treasureSwapOption"] and self.settings["treasureSwapOption"] in {"Similar Soul Cost", "Tier Based"} else 0) + (len(self.encounterList) if oldCustomEnemyList != self.settings["customEnemyList"] and self.settings["customEnemyList"] else 0), loadingImage=True)
+                        progress = PopupWindow(root, labelText="Reloading treasure...", progressBar=True, progressMax=len([t for t in treasures if not treasures[t]["character"] or treasures[t]["character"] in self.charactersActive]), loadingImage=True)
                         if oldTreasureSwapOption != self.settings["treasureSwapOption"] and self.settings["treasureSwapOption"] in {"Similar Soul Cost", "Tier Based"}:
                             i = generate_treasure_soul_cost(self.availableExpansions, self.charactersActive, root, progress)
                             if self.settings["treasureSwapOption"] == "Tier Based":
                                 populate_treasure_tiers(self.availableExpansions, self.charactersActive)
+                        progress.destroy()
                     
-                        if oldCustomEnemyList != self.settings["customEnemyList"] and self.settings["customEnemyList"]:
-                            progress.label.config(text = "Applying custom enemy list...")
+                    if oldCustomEnemyList != self.settings["customEnemyList"] and self.settings["customEnemyList"]:
+                        i = 0
+                        progress = PopupWindow(root, labelText="Applying custom enemy list...", progressBar=True, progressMax=len(self.encounterTab.encounterList), loadingImage=True)
+                        
+                        self.enabledEnemies = set([enemiesDict[enemy.replace(" (V1)", "")].id for enemy in self.settings["enabledEnemies"] if enemy not in self.allExpansions])
+                        if "Phantoms" in self.availableExpansions:
+                            self.enabledEnemies = self.enabledEnemies.union(set([enemy for enemy in enemyIds if "Phantoms" in enemyIds[enemy].expansions]))
 
-                            self.enabledEnemies = set([enemiesDict[enemy.replace(" (V1)", "")].id for enemy in self.settings["enabledEnemies"] if enemy not in self.allExpansions])
-                            if "Phantoms" in self.availableExpansions:
-                                self.enabledEnemies = self.enabledEnemies.union(set([enemy for enemy in enemyIds if "Phantoms" in enemyIds[enemy].expansions]))
+                        self.encountersToRemove = set()
+                        for encounter in self.encounterTab.encounterList:
+                            i += 1
+                            progress.progressVar.set(i)
+                            root.update_idletasks()
+                            self.encounterTab.load_encounter(encounter=encounter, customEnemyListCheck=True)
+                            if all([not set(alt).issubset(self.enabledEnemies) for alt in self.selected["alternatives"]]):
+                                self.encountersToRemove.add(encounter)
 
-                            self.encountersToRemove = set()
-                            for encounter in self.encounterList:
-                                i += 1
-                                progress.progressVar.set(i)
-                                root.update_idletasks()
-                                self.load_encounter(encounter=encounter, customEnemyListCheck=True)
-                                if all([not set(alt).issubset(self.enabledEnemies) for alt in self.selected["alternatives"]]):
-                                    self.encountersToRemove.add(encounter)
-
-                            self.encounterList = list(set(self.encounterList) - self.encountersToRemove)
-                            
-                            self.treeviewEncounters.pack_forget()
-                            self.treeviewEncounters.destroy()
-                            self.create_encounters_treeview()
+                        self.encounterTab.encounterList = list(set(self.encounterTab.encounterList) - self.encountersToRemove)
+                        
+                        self.encounterTab.treeviewEncounters.pack_forget()
+                        self.encounterTab.treeviewEncounters.destroy()
+                        self.encounterTab.create_encounters_treeview()
 
                         progress.destroy()
 

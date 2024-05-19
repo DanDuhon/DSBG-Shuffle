@@ -7,7 +7,7 @@ try:
 
     from dsbg_shuffle_enemies import enemiesDict, enemyIds
     from dsbg_shuffle_treasure import pick_treasure, treasureSwapEncounters
-    from dsbg_shuffle_utility import do_nothing, error_popup, log, baseFolder, font, pathSep
+    from dsbg_shuffle_utility import PopupWindow, do_nothing, error_popup, log, baseFolder, font, pathSep
 
 
     class EncountersFrame(ttk.Frame):
@@ -24,7 +24,9 @@ try:
             # If specific enemies (rather than just expansions) are toggled on or off, do extra work
             # to make sure all encounters are still valid.
             if self.app.settings["customEnemyList"]:
-                self.app.progress.label.config(text = "Applying custom enemy list...")
+                i = 0
+                self.app.progress.destroy()
+                self.app.progress = PopupWindow(root, labelText="Applying custom enemy list...", progressBar=True, progressMax=len(self.encounterList), loadingImage=True)
                 self.encountersToRemove = set()
                 for encounter in self.encounterList:
                     i += 1
@@ -412,26 +414,9 @@ try:
                 self.app.selected["enemySlots"] = alts["enemySlots"]
 
                 # Use only alternative enemies for expansions and enemies the user has activated in the settings.
-                if "1" in alts["alternatives"]:
-                    if "1" in alts["alternatives"]:
-                        self.app.selected["alternatives"] = {"1": []}
-                        for expansionCombo in alts["alternatives"]["1"]:
-                            if set(expansionCombo.split(",")).issubset(self.app.availableExpansions):
-                                self.app.selected["alternatives"]["1"] += [alt for alt in alts["alternatives"]["1"][expansionCombo] if set(alt).issubset(self.app.enabledEnemies) and [enemyIds[a].expansions for a in alt].count(set(["Phantoms"])) <= self.app.settings["maxInvaders"]]
-                    if "2" in alts["alternatives"]:
-                        self.app.selected["alternatives"]["2"] = []
-                        for expansionCombo in alts["alternatives"].get("2", []):
-                            if set(expansionCombo.split(",")).issubset(self.app.availableExpansions):
-                                self.app.selected["alternatives"]["2"] += [alt for alt in alts["alternatives"]["2"][expansionCombo] if set(alt).issubset(self.app.enabledEnemies) and [enemyIds[a].expansions for a in alt].count(set(["Phantoms"])) <= self.app.settings["maxInvaders"]]
-                    if "3" in alts["alternatives"]:
-                        self.app.selected["alternatives"]["3"] = []
-                        for expansionCombo in alts["alternatives"].get("3", []):
-                            if set(expansionCombo.split(",")).issubset(self.app.availableExpansions):
-                                self.app.selected["alternatives"]["3"] += [alt for alt in alts["alternatives"]["3"][expansionCombo] if set(alt).issubset(self.app.enabledEnemies) and [enemyIds[a].expansions for a in alt].count(set(["Phantoms"])) <= self.app.settings["maxInvaders"]]
-                else:
-                    for expansionCombo in alts["alternatives"]:
-                        if set(expansionCombo.split(",")).issubset(self.app.availableExpansions):
-                            self.app.selected["alternatives"] += [alt for alt in alts["alternatives"][expansionCombo] if set(alt).issubset(self.app.enabledEnemies) and [enemyIds[a].expansions for a in alt].count(set(["Phantoms"])) <= self.app.settings["maxInvaders"]]
+                for expansionCombo in alts["alternatives"]:
+                    if set(expansionCombo.split(",")).issubset(self.app.availableExpansions):
+                        self.app.selected["alternatives"] += [alt for alt in alts["alternatives"][expansionCombo] if set(alt).issubset(self.app.enabledEnemies) and sum([1 for a in alt if enemyIds[a].expansions == set(["Phantoms"]) or enemyIds[a].name in {"Hungry Mimic", "Voracious Mimic"}]) <= self.app.settings["maxInvaders"]]
 
                 self.newTiles = dict()
 
@@ -470,24 +455,11 @@ try:
                 # Make sure a new set of enemies is chosen each time, otherwise it
                 # feels like the program isn't doing anything.
                 oldEnemies = [e for e in self.newEnemies]
-                if "1" in self.app.selected["alternatives"]:
-                    tile1Enemies = choice(self.app.selected["alternatives"]["1"])
-                    tile2Enemies = choice([alt for alt in self.app.selected["alternatives"]["2"] if not set([a for a in alt if enemyIds[a].expansions == set(["Phantoms"])]) & set(tile1Enemies)])
-                    tile3Enemies = choice([alt for alt in self.app.selected["alternatives"]["3"] if not set([a for a in alt if enemyIds[a].expansions == set(["Phantoms"])]) & set(tile1Enemies) and  not set([a for a in alt if enemyIds[a].expansions == set(["Phantoms"])]) & set(tile2Enemies)])
-
-                    self.newEnemies = tile1Enemies + tile2Enemies + tile3Enemies
-                else:
-                    self.newEnemies = choice(self.app.selected["alternatives"])
+                self.newEnemies = choice(self.app.selected["alternatives"])
                 # Check to see if there are multiple alternatives.
                 if len(set([tuple(a) for a in self.app.selected["alternatives"]])) > 1:
                     while self.newEnemies == oldEnemies:
-                        if "1" in self.app.selected["alternatives"]:
-                            self.newEnemies = (
-                                choice(self.app.selected["alternatives"]["1"])
-                                + (choice(self.app.selected["alternatives"]["2"]) if "2" in self.app.selected["alternatives"] else [])
-                                + (choice(self.app.selected["alternatives"]["3"]) if "3" in self.app.selected["alternatives"] else []))
-                        else:
-                            self.newEnemies = choice(self.app.selected["alternatives"])
+                        self.newEnemies = choice(self.app.selected["alternatives"])
 
                 self.edit_encounter_card(self.app.selected["name"], self.app.selected["expansion"], self.app.selected["level"], self.app.selected["enemySlots"])
 
@@ -580,9 +552,9 @@ try:
                 elif name == "Dark Resurrection":
                     self.dark_resurrection()
                 elif name == "Deathly Freeze":
-                    self.deathly_freeze()
+                    self.deathly_freeze(level)
                 elif name == "Deathly Magic":
-                    self.deathly_magic()
+                    self.deathly_magic(level)
                 elif name == "Deathly Tolls":
                     self.deathly_tolls()
                 elif name == "Depths of the Cathedral":
@@ -598,7 +570,7 @@ try:
                 elif name == "Giant's Coffin":
                     self.giants_coffin()
                 elif name == "Gleaming Silver":
-                    self.gleaming_silver()
+                    self.gleaming_silver(level)
                 elif name == "Gnashing Beaks":
                     self.gnashing_beaks()
                 elif name == "Grave Matters":
@@ -624,7 +596,7 @@ try:
                 elif name == "Parish Gates":
                     self.parish_gates()
                 elif name == "Pitch Black":
-                    self.pitch_black()
+                    self.pitch_black(level)
                 elif name == "Puppet Master":
                     self.puppet_master()
                 elif name == "Rain of Filth":
@@ -644,7 +616,7 @@ try:
                 elif name == "The Bell Tower":
                     self.the_bell_tower()
                 elif name == "The First Bastion":
-                    self.the_first_bastion()
+                    self.the_first_bastion(level)
                 elif name == "The Fountainhead":
                     self.the_fountainhead()
                 elif name == "The Grand Hall":
@@ -652,7 +624,7 @@ try:
                 elif name == "The Iron Golem":
                     self.the_iron_golem()
                 elif name == "The Last Bastion":
-                    self.the_last_bastion()
+                    self.the_last_bastion(level)
                 elif name == "The Locked Grave":
                     self.the_locked_grave()
                 elif name == "The Shine of Gold":
@@ -672,7 +644,7 @@ try:
                 elif name == "Urns of the Fallen":
                     self.urns_of_the_fallen()
                 elif name == "Velka's Chosen":
-                    self.velkas_chosen()
+                    self.velkas_chosen(level)
 
                 self.app.displayPhotoImage = ImageTk.PhotoImage(self.app.displayImage)
                 self.app.display.image = self.app.displayPhotoImage
@@ -913,14 +885,14 @@ try:
                 raise
 
 
-        def deathly_freeze(self):
+        def deathly_freeze(self, level):
             try:
                 log("Start of deathly_freeze")
 
                 deathlyFreezeTile1 = [enemy for enemy in self.newTiles[1][0] + self.newTiles[1][1]]
                 deathlyFreezeTile2 = [enemy for enemy in self.newTiles[2][0] + self.newTiles[2][1]]
                 overlap = set(deathlyFreezeTile1) & set(deathlyFreezeTile2)
-                target = sorted([enemy for enemy in overlap if deathlyFreezeTile1.count(enemy) + deathlyFreezeTile2.count(enemy) == 2], key=lambda x: (-enemiesDict[x].difficultyTiers[self.app.selected["level"]]["toughness"], enemiesDict[x].difficultyTiers[self.app.selected["level"]]["difficulty"][self.app.numberOfCharacters]), reverse=True)[0]
+                target = sorted([enemy for enemy in overlap if deathlyFreezeTile1.count(enemy) + deathlyFreezeTile2.count(enemy) == 2], key=lambda x: (-enemiesDict[x].difficultyTiers[level]["toughness"], enemiesDict[x].difficultyTiers[level]["difficulty"][self.app.numberOfCharacters]), reverse=True)[0]
                 tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.allEnemies[target]["image text" if self.app.forPrinting else "photo image text"], "imageName": target}
                 self.app.create_tooltip(tooltipDict=tooltipDict, x=141, y=242)
 
@@ -930,11 +902,11 @@ try:
                 raise
 
 
-        def deathly_magic(self):
+        def deathly_magic(self, level):
             try:
                 log("Start of deathly_magic")
 
-                target = sorted([enemy for enemy in self.newTiles[1][0] + self.newTiles[1][1] if (self.newTiles[1][0] + self.newTiles[1][1]).count(enemy) == 1], key=lambda x: enemiesDict[x].difficultyTiers[self.app.selected["level"]]["difficulty"][self.app.numberOfCharacters], reverse=True)[0]
+                target = sorted([enemy for enemy in self.newTiles[1][0] + self.newTiles[1][1] if (self.newTiles[1][0] + self.newTiles[1][1]).count(enemy) == 1], key=lambda x: enemiesDict[x].difficultyTiers[level]["difficulty"][self.app.numberOfCharacters], reverse=True)[0]
                 tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.allEnemies[target]["image text" if self.app.forPrinting else "photo image text"], "imageName": target}
                 self.app.create_tooltip(tooltipDict=tooltipDict, x=65, y=147)
                 self.app.create_tooltip(tooltipDict=tooltipDict, x=274, y=196)
@@ -955,13 +927,13 @@ try:
 
                 gang = Counter([enemyIds[enemy].gang for enemy in self.newEnemies if enemyIds[enemy].gang]).most_common(1)[0][0]
                 if gang == "Alonne":
-                    tooltipDict = {"image" if self.app.forPrinting else "image" if self.app.forPrinting else "photo image": self.gangAlonne if self.app.forPrinting else self.gangAlonnePhoto, "imageName": "gang"}
+                    tooltipDict = {"image" if self.app.forPrinting else "image" if self.app.forPrinting else "photo image": self.app.gangAlonne if self.app.forPrinting else self.app.gangAlonnePhoto, "imageName": "gang"}
                 elif gang == "Hollow":
-                    tooltipDict = {"image" if self.app.forPrinting else "image" if self.app.forPrinting else "photo image": self.gangHollow if self.app.forPrinting else self.gangHollowPhoto, "imageName": "gang"}
+                    tooltipDict = {"image" if self.app.forPrinting else "image" if self.app.forPrinting else "photo image": self.app.gangHollow if self.app.forPrinting else self.app.gangHollowPhoto, "imageName": "gang"}
                 elif gang == "Silver Knight":
-                    tooltipDict = {"image" if self.app.forPrinting else "image" if self.app.forPrinting else "photo image": self.gangSilverKnight if self.app.forPrinting else self.gangSilverKnightPhoto, "imageName": "gang"}
+                    tooltipDict = {"image" if self.app.forPrinting else "image" if self.app.forPrinting else "photo image": self.app.gangSilverKnight if self.app.forPrinting else self.app.gangSilverKnightPhoto, "imageName": "gang"}
                 elif gang == "Skeleton":
-                    tooltipDict = {"image" if self.app.forPrinting else "image" if self.app.forPrinting else "photo image": self.gangSkeleton if self.app.forPrinting else self.gangSkeletonPhoto, "imageName": "gang"}
+                    tooltipDict = {"image" if self.app.forPrinting else "image" if self.app.forPrinting else "photo image": self.app.gangSkeleton if self.app.forPrinting else self.app.gangSkeletonPhoto, "imageName": "gang"}
 
                 self.app.create_tooltip(tooltipDict=tooltipDict, x=142, y=245)
 
@@ -977,13 +949,13 @@ try:
 
                 gang = Counter([enemyIds[enemy].gang for enemy in self.newEnemies if enemyIds[enemy].gang]).most_common(1)[0][0]
                 if gang == "Alonne":
-                    tooltipDict = {"image" if self.app.forPrinting else "photo image": self.gangAlonne if self.app.forPrinting else self.gangAlonnePhoto, "imageName": "gang"}
+                    tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.gangAlonne if self.app.forPrinting else self.app.gangAlonnePhoto, "imageName": "gang"}
                 elif gang == "Hollow":
-                    tooltipDict = {"image" if self.app.forPrinting else "photo image": self.gangHollow if self.app.forPrinting else self.gangHollowPhoto, "imageName": "gang"}
+                    tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.gangHollow if self.app.forPrinting else self.app.gangHollowPhoto, "imageName": "gang"}
                 elif gang == "Silver Knight":
-                    tooltipDict = {"image" if self.app.forPrinting else "image" if self.app.forPrinting else "photo image": self.gangSilverKnight if self.app.forPrinting else self.gangSilverKnightPhoto, "imageName": "gang"}
+                    tooltipDict = {"image" if self.app.forPrinting else "image" if self.app.forPrinting else "photo image": self.app.gangSilverKnight if self.app.forPrinting else self.app.gangSilverKnightPhoto, "imageName": "gang"}
                 elif gang == "Skeleton":
-                    tooltipDict = {"image" if self.app.forPrinting else "photo image": self.gangSkeleton if self.app.forPrinting else self.gangSkeletonPhoto, "imageName": "gang"}
+                    tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.gangSkeleton if self.app.forPrinting else self.app.gangSkeletonPhoto, "imageName": "gang"}
 
                 self.app.create_tooltip(tooltipDict=tooltipDict, x=142, y=214)
 
@@ -1043,7 +1015,7 @@ try:
                 tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.allEnemies[target]["image text" if self.app.forPrinting else "photo image text"], "imageName": target}
                 self.app.create_tooltip(tooltipDict=tooltipDict, x=65, y=147)
                 self.app.create_tooltip(tooltipDict=tooltipDict, x=228, y=281)
-                self.app.displayImage.paste(im=self.enemyNode2, box=(263, 281), mask=self.enemyNode2)
+                self.app.displayImage.paste(im=self.app.enemyNode2, box=(263, 281), mask=self.app.enemyNode2)
                 imageWithText.text((140, 255), text1, "black", font)
                 imageWithText.text((140, 268), text2, "black", font)
                 imageWithText.text((140, 282), text3, "black", font)
@@ -1071,13 +1043,13 @@ try:
 
                 gang = Counter([enemyIds[enemy].gang for enemy in self.newEnemies if enemyIds[enemy].gang]).most_common(1)[0][0]
                 if gang == "Alonne":
-                    tooltipDict = {"image" if self.app.forPrinting else "photo image": self.gangAlonne if self.app.forPrinting else self.gangAlonnePhoto, "imageName": "gang"}
+                    tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.gangAlonne if self.app.forPrinting else self.app.gangAlonnePhoto, "imageName": "gang"}
                 elif gang == "Hollow":
-                    tooltipDict = {"image" if self.app.forPrinting else "photo image": self.gangHollow if self.app.forPrinting else self.gangHollowPhoto, "imageName": "gang"}
+                    tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.gangHollow if self.app.forPrinting else self.app.gangHollowPhoto, "imageName": "gang"}
                 elif gang == "Silver Knight":
-                    tooltipDict = {"image" if self.app.forPrinting else "image" if self.app.forPrinting else "photo image": self.gangSilverKnight if self.app.forPrinting else self.gangSilverKnightPhoto, "imageName": "gang"}
+                    tooltipDict = {"image" if self.app.forPrinting else "image" if self.app.forPrinting else "photo image": self.app.gangSilverKnight if self.app.forPrinting else self.app.gangSilverKnightPhoto, "imageName": "gang"}
                 elif gang == "Skeleton":
-                    tooltipDict = {"image" if self.app.forPrinting else "photo image": self.gangSkeleton if self.app.forPrinting else self.gangSkeletonPhoto, "imageName": "gang"}
+                    tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.gangSkeleton if self.app.forPrinting else self.app.gangSkeletonPhoto, "imageName": "gang"}
 
                 self.app.create_tooltip(tooltipDict=tooltipDict, x=142, y=215)
 
@@ -1143,11 +1115,11 @@ try:
                 raise
 
 
-        def gleaming_silver(self):
+        def gleaming_silver(self, level):
             try:
                 log("Start of gleaming_silver")
 
-                targets = [enemyIds[enemy].name for enemy in list(set(sorted(self.newEnemies, key=lambda x: enemyIds[x].difficultyTiers[self.app.selected["level"]]["difficulty"][self.app.numberOfCharacters])[1:-1]))]
+                targets = [enemyIds[enemy].name for enemy in list(set(sorted(self.newEnemies, key=lambda x: enemyIds[x].difficultyTiers[level]["difficulty"][self.app.numberOfCharacters])[1:-1]))]
 
                 for i, target in enumerate(targets):
                     tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.allEnemies[target]["image text" if self.app.forPrinting else "photo image text"], "imageName": target}
@@ -1421,16 +1393,16 @@ try:
                 raise
 
 
-        def pitch_black(self):
+        def pitch_black(self, level):
             try:
                 log("Start of pitch_black")
 
                 tile1Enemies = self.newTiles[1][0] + self.newTiles[1][1]
                 tile2Enemies = self.newTiles[2][0] + self.newTiles[2][1]
-                target = sorted([enemy for enemy in tile1Enemies if tile1Enemies.count(enemy) == 1], key=lambda x: enemiesDict[x].difficultyTiers[self.app.selected["level"]]["difficulty"][self.app.numberOfCharacters], reverse=True)[0]
+                target = sorted([enemy for enemy in tile1Enemies if tile1Enemies.count(enemy) == 1], key=lambda x: enemiesDict[x].difficultyTiers[level]["difficulty"][self.app.numberOfCharacters], reverse=True)[0]
                 tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.allEnemies[target]["image text" if self.app.forPrinting else "photo image text"], "imageName": target}
                 self.app.create_tooltip(tooltipDict=tooltipDict, x=65, y=147)
-                target = sorted([enemy for enemy in tile2Enemies if tile2Enemies.count(enemy) == 1], key=lambda x: enemiesDict[x].difficultyTiers[self.app.selected["level"]]["difficulty"][self.app.numberOfCharacters], reverse=True)[0]
+                target = sorted([enemy for enemy in tile2Enemies if tile2Enemies.count(enemy) == 1], key=lambda x: enemiesDict[x].difficultyTiers[level]["difficulty"][self.app.numberOfCharacters], reverse=True)[0]
                 tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.allEnemies[target]["image text" if self.app.forPrinting else "photo image text"], "imageName": target}
                 self.app.create_tooltip(tooltipDict=tooltipDict, x=222, y=147)
 
@@ -1646,11 +1618,11 @@ try:
                 raise
 
 
-        def the_first_bastion(self):
+        def the_first_bastion(self, level):
             try:
                 log("Start of the_first_bastion")
 
-                targets = sorted([enemyIds[enemy].name for enemy in self.newEnemies[-3:]], key=lambda x: (-enemiesDict[x].difficultyTiers[self.app.selected["level"]]["toughness"], enemiesDict[x].difficultyTiers[self.app.selected["level"]]["difficulty"][self.app.numberOfCharacters]))
+                targets = sorted([enemyIds[enemy].name for enemy in self.newEnemies[-3:]], key=lambda x: (-enemiesDict[x].difficultyTiers[level]["toughness"], enemiesDict[x].difficultyTiers[level]["difficulty"][self.app.numberOfCharacters]))
                 tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.allEnemies[targets[0]]["image text" if self.app.forPrinting else "photo image text"], "imageName": targets[0]}
                 self.app.create_tooltip(tooltipDict=tooltipDict, x=362, y=212)
                 tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.allEnemies[targets[1]]["image text" if self.app.forPrinting else "photo image text"], "imageName": targets[1]}
@@ -1671,13 +1643,13 @@ try:
 
                 gang = Counter([enemyIds[enemy].gang for enemy in self.newEnemies if enemyIds[enemy].gang]).most_common(1)[0][0]
                 if gang == "Alonne":
-                    tooltipDict = {"image" if self.app.forPrinting else "photo image": self.gangAlonne if self.app.forPrinting else self.gangAlonnePhoto, "imageName": "gang"}
+                    tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.gangAlonne if self.app.forPrinting else self.app.gangAlonnePhoto, "imageName": "gang"}
                 elif gang == "Hollow":
-                    tooltipDict = {"image" if self.app.forPrinting else "photo image": self.gangHollow if self.app.forPrinting else self.gangHollowPhoto, "imageName": "gang"}
+                    tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.gangHollow if self.app.forPrinting else self.app.gangHollowPhoto, "imageName": "gang"}
                 elif gang == "Silver Knight":
-                    tooltipDict = {"image" if self.app.forPrinting else "image" if self.app.forPrinting else "photo image": self.gangSilverKnight if self.app.forPrinting else self.gangSilverKnightPhoto, "imageName": "gang"}
+                    tooltipDict = {"image" if self.app.forPrinting else "image" if self.app.forPrinting else "photo image": self.app.gangSilverKnight if self.app.forPrinting else self.app.gangSilverKnightPhoto, "imageName": "gang"}
                 elif gang == "Skeleton":
-                    tooltipDict = {"image" if self.app.forPrinting else "photo image": self.gangSkeleton if self.app.forPrinting else self.gangSkeletonPhoto, "imageName": "gang"}
+                    tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.gangSkeleton if self.app.forPrinting else self.app.gangSkeletonPhoto, "imageName": "gang"}
 
                 self.app.create_tooltip(tooltipDict=tooltipDict, x=142, y=200)
 
@@ -1728,11 +1700,11 @@ try:
                 raise
 
 
-        def the_last_bastion(self):
+        def the_last_bastion(self, level):
             try:
                 log("Start of the_last_bastion")
 
-                target = sorted([enemy for enemy in self.newTiles[1][0] + self.newTiles[1][1]], key=lambda x: enemiesDict[x].difficultyTiers[self.app.selected["level"]]["difficulty"][self.app.numberOfCharacters])[0]
+                target = sorted([enemy for enemy in self.newTiles[1][0] + self.newTiles[1][1]], key=lambda x: enemiesDict[x].difficultyTiers[level]["difficulty"][self.app.numberOfCharacters])[0]
                 tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.allEnemies[target]["image text" if self.app.forPrinting else "photo image text"], "imageName": target}
                 self.app.create_tooltip(tooltipDict=tooltipDict, x=215, y=227)
                 self.app.create_tooltip(tooltipDict=tooltipDict, x=316, y=250)
@@ -1871,13 +1843,13 @@ try:
 
                 gang = Counter([enemyIds[enemy].gang for enemy in self.newEnemies if enemyIds[enemy].gang]).most_common(1)[0][0]
                 if gang == "Alonne":
-                    tooltipDict = {"image" if self.app.forPrinting else "photo image": self.gangAlonne if self.app.forPrinting else self.gangAlonnePhoto, "imageName": "gang"}
+                    tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.gangAlonne if self.app.forPrinting else self.app.gangAlonnePhoto, "imageName": "gang"}
                 elif gang == "Hollow":
-                    tooltipDict = {"image" if self.app.forPrinting else "photo image": self.gangHollow if self.app.forPrinting else self.gangHollowPhoto, "imageName": "gang"}
+                    tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.gangHollow if self.app.forPrinting else self.app.gangHollowPhoto, "imageName": "gang"}
                 elif gang == "Silver Knight":
-                    tooltipDict = {"image" if self.app.forPrinting else "image" if self.app.forPrinting else "photo image": self.gangSilverKnight if self.app.forPrinting else self.gangSilverKnightPhoto, "imageName": "gang"}
+                    tooltipDict = {"image" if self.app.forPrinting else "image" if self.app.forPrinting else "photo image": self.app.gangSilverKnight if self.app.forPrinting else self.app.gangSilverKnightPhoto, "imageName": "gang"}
                 elif gang == "Skeleton":
-                    tooltipDict = {"image" if self.app.forPrinting else "photo image": self.gangSkeleton if self.app.forPrinting else self.gangSkeletonPhoto, "imageName": "gang"}
+                    tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.gangSkeleton if self.app.forPrinting else self.app.gangSkeletonPhoto, "imageName": "gang"}
 
                 self.app.create_tooltip(tooltipDict=tooltipDict, x=142, y=214)
 
@@ -1893,13 +1865,13 @@ try:
 
                 gang = Counter([enemyIds[enemy].gang for enemy in self.newEnemies if enemyIds[enemy].gang]).most_common(1)[0][0]
                 if gang == "Alonne":
-                    tooltipDict = {"image" if self.app.forPrinting else "photo image": self.gangAlonne if self.app.forPrinting else self.gangAlonnePhoto, "imageName": "gang"}
+                    tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.gangAlonne if self.app.forPrinting else self.app.gangAlonnePhoto, "imageName": "gang"}
                 elif gang == "Hollow":
-                    tooltipDict = {"image" if self.app.forPrinting else "photo image": self.gangHollow if self.app.forPrinting else self.gangHollowPhoto, "imageName": "gang"}
+                    tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.gangHollow if self.app.forPrinting else self.app.gangHollowPhoto, "imageName": "gang"}
                 elif gang == "Silver Knight":
-                    tooltipDict = {"image" if self.app.forPrinting else "image" if self.app.forPrinting else "photo image": self.gangSilverKnight if self.app.forPrinting else self.gangSilverKnightPhoto, "imageName": "gang"}
+                    tooltipDict = {"image" if self.app.forPrinting else "image" if self.app.forPrinting else "photo image": self.app.gangSilverKnight if self.app.forPrinting else self.app.gangSilverKnightPhoto, "imageName": "gang"}
                 elif gang == "Skeleton":
-                    tooltipDict = {"image" if self.app.forPrinting else "photo image": self.gangSkeleton if self.app.forPrinting else self.gangSkeletonPhoto, "imageName": "gang"}
+                    tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.gangSkeleton if self.app.forPrinting else self.app.gangSkeletonPhoto, "imageName": "gang"}
 
                 self.app.create_tooltip(tooltipDict=tooltipDict, x=142, y=214)
 
@@ -1961,11 +1933,11 @@ try:
                 raise
 
 
-        def velkas_chosen(self):
+        def velkas_chosen(self, level):
             try:
                 log("Start of velkas_chosen")
 
-                target = sorted([enemy for enemy in self.newTiles[2][0] + self.newTiles[2][1]], key=lambda x: enemiesDict[x].difficultyTiers[self.app.selected["level"]]["difficulty"][self.app.numberOfCharacters], reverse=True)[0]
+                target = sorted([enemy for enemy in self.newTiles[2][0] + self.newTiles[2][1]], key=lambda x: enemiesDict[x].difficultyTiers[level]["difficulty"][self.app.numberOfCharacters], reverse=True)[0]
                 tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.allEnemies[target]["image text" if self.app.forPrinting else "photo image text"], "imageName": target}
                 self.app.create_tooltip(tooltipDict=tooltipDict, x=65, y=147)
                 self.app.create_tooltip(tooltipDict=tooltipDict, x=298, y=195)
