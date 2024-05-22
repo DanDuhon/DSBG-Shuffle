@@ -1,12 +1,12 @@
 from json import load
-from itertools import product
 from collections import Counter
 from random import choice
 import types
 
 from dsbg_shuffle_behaviors import behaviorDetail
-from dsbg_shuffle_enemies import enemyIds, enemiesDict, modIdLookup, bosses
+from dsbg_shuffle_enemies import enemyIds, enemiesDict, bosses
 from dsbg_shuffle_utility import baseFolder, pathSep
+from dsbg_shuffle_variants import modIdLookup
 
 
 with open(baseFolder + "\\lib\\dsbg_shuffle_enemies.json".replace("\\", pathSep)) as enemiesFile:
@@ -102,22 +102,10 @@ class Tester():
         self.rewardTreasure = None
 
         oldEnemies = [e for e in self.newEnemies]
-        if "1" in self.selected["alternatives"]:
-            self.newEnemies = (
-                choice(self.selected["alternatives"]["1"])
-                + (choice(self.selected["alternatives"]["2"]) if "2" in self.selected["alternatives"] else [])
-                + (choice(self.selected["alternatives"]["3"]) if "3" in self.selected["alternatives"] else []))
-        else:
-            self.newEnemies = choice(self.selected["alternatives"])
+        self.newEnemies = choice(self.selected["alternatives"])
         if len(set([tuple(a) for a in self.selected["alternatives"]])) > 1:
             while self.newEnemies == oldEnemies:
-                if "1" in self.selected["alternatives"]:
-                    self.newEnemies = (
-                        choice(self.selected["alternatives"]["1"])
-                        + (choice(self.selected["alternatives"]["2"]) if "2" in self.selected["alternatives"] else [])
-                        + (choice(self.selected["alternatives"]["3"]) if "3" in self.selected["alternatives"] else []))
-                else:
-                    self.newEnemies = choice(self.selected["alternatives"])
+                self.newEnemies = choice(self.selected["alternatives"])
 
         self.edit_encounter_card(self.selected["name"], self.selected["expansion"], self.selected["level"], self.selected["enemySlots"])
 
@@ -149,33 +137,11 @@ class Tester():
         self.selected["alternatives"] = []
         self.selected["enemySlots"] = alts["enemySlots"]
 
-        if "3" in alts["alternatives"]:
-            toCombine1 = []
-            toCombine2 = []
-            toCombine3 = []
-            for expansionCombo in alts["alternatives"]["1"]:
-                toCombine1 += alts["alternatives"]["1"][expansionCombo]
-            for expansionCombo in alts["alternatives"]["2"]:
-                toCombine2 += alts["alternatives"]["2"][expansionCombo]
-            for expansionCombo in alts["alternatives"]["3"]:
-                toCombine3 += alts["alternatives"]["3"][expansionCombo]
-            self.selected["alternatives"] = (p[0] + p[1] + p[2] for p in product(toCombine1, toCombine2, toCombine3))
-            print(encounter + " (" + str(len(toCombine1) * len(toCombine2) * len(toCombine3)) + ")")
-        elif "2" in alts["alternatives"]:
-            toCombine1 = []
-            toCombine2 = []
-            for expansionCombo in alts["alternatives"]["1"]:
-                toCombine1 += alts["alternatives"]["1"][expansionCombo]
-            for expansionCombo in alts["alternatives"]["2"]:
-                toCombine2 += alts["alternatives"]["2"][expansionCombo]
-            self.selected["alternatives"] = (p[0] + p[1] for p in product(toCombine1, toCombine2))
-            print(encounter + " (" + str(len(toCombine1) * len(toCombine2)) + ")")
-        else:
-            for expansionCombo in alts["alternatives"]:
-                self.selected["alternatives"] += alts["alternatives"][expansionCombo]
-                
-            x = len(self.selected["alternatives"])
-            print(encounter + " (" + str(x) + ")")
+        for expansionCombo in alts["alternatives"]:
+            self.selected["alternatives"] += alts["alternatives"][expansionCombo]
+            
+        x = len(self.selected["alternatives"])
+        print(encounter + " (" + str(x) + ")")
 
         self.newTiles = dict()
 

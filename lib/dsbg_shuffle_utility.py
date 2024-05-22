@@ -150,65 +150,6 @@ class PopupWindow(tk.Toplevel):
         self.attributes('-alpha', 1.0)
 
 
-class HelpWindow(object):
-    """
-    Window that just displays text about how to use the app.
-    """
-    def __init__(self, master):
-        top = self.top = tk.Toplevel(master)
-        top.attributes('-alpha', 0.0)
-        top.wait_visibility()
-        top.grab_set_global()
-
-        self.helpTextFrame = ttk.Frame(top, padding=(0, 0, 0, 10))
-        self.helpTextFrame.grid(row=0, column=0, padx=15, pady=(10, 0), sticky="w")
-
-        helpText = "There's a wiki on the Github page now!\n\n"
-        helpText += "Encounters Tab\n"
-        helpText += "You can either select an encounter from the list or click the \"Random\n"
-        helpText += "Level x\" buttons. Once an encounter card has been loaded, you can click\n"
-        helpText += "on the card or use the \"s\" key to reshuffle the encounter's enemies and\n"
-        helpText += "treasure reward, if any.\n\n"
-        helpText += "If you try to shuffle the enemies and nothing happens, there's probably\n"
-        helpText += "only one combination available! Many encounters with a single enemy have\n"
-        helpText += "no alternatives, even with all sets activated.\n\n"
-        helpText += "Mousing over keywords (in bold and italics) and icons in the Objectives\n"
-        helpText += "and Special Rules sections will display the name or rules for that keyword.\n\n"
-        helpText += "Campaign Tab\n"
-        helpText += "You can build your own campaign by adding encounters and/or events to it.\n"
-        helpText += "You can also save and load campaigns. Encounters added to a campaign\n"
-        helpText += "are frozen so you cannot shuffle the enemies. You can also print (non-boss)\n"
-        helpText += "encounter cards in the campaign. Front side only so use sleeves!\n\n"
-        helpText += "Events Tab\n"
-        helpText += "Here you can browse event cards and build an event deck. Event cards are\n"
-        helpText += "listed in the upper box and the event deck is in the lower box. Events can\n"
-        helpText += "be added individually or via core set. Event cards are limited in number\n"
-        helpText += "to how many are found in a single core set (e.g. the deck can't contain\n"
-        helpText += "more than two Firekeeper's Boon cards).\n\n"
-        helpText += "Using the Draw Event Card button will display a random card from the deck\n"
-        helpText += "that hasn't been drawn yet. It will also keep track of what cards were\n"
-        helpText += "drawn and in what order. Cards can be returned to the top or bottom of\n"
-        helpText += "the deck or shuffled back in. The reset button shuffles all drawn cards\n"
-        helpText += "back into the deck.\n\n"
-        helpText += "Settings\n"
-        helpText += "In the settings menu, you can enable the different core sets/expansions.\n"
-        helpText += "These are the only sets listed on purpose as they are the ones that add\n"
-        helpText += "non-boss enemies, additional characters, or common treasure.\n"
-        helpText += "Some settings have tooltips, so hover over them for an explanation!"
-        self.helpTextLabel = ttk.Label(self.helpTextFrame, text=helpText)
-        self.helpTextLabel.grid()
-
-        self.helpButtonsFrame = ttk.Frame(top, padding=(0, 0, 0, 10))
-        self.helpButtonsFrame.grid(row=1, column=0, padx=15, pady=(10, 0), sticky="w")
-        self.helpButtonsFrame.columnconfigure(index=0, weight=1)
-
-        self.okButton = ttk.Button(self.helpButtonsFrame, text="OK", width=14, command=self.top.destroy)
-        self.okButton.grid(column=0, row=0, padx=5)
-
-        center(top)
-        top.attributes('-alpha', 1.0)
-
-
 class VerticalScrolledFrame(ttk.Frame):
     """A pure Tkinter scrollable frame that actually works!
     * Use the "interior" attribute to place widgets inside the scrollable frame.

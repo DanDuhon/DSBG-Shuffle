@@ -233,7 +233,7 @@ try:
                 self.invadersLabel.grid(row=0, column=0, padx=5, pady=10, sticky="nsew")
                 
                 self.maxInvaders = {"scale": None, "value": tk.IntVar(), "tooltipText": "This many invaders can take the place of enemies."}
-                self.maxInvaders["scale"] = ttk.LabeledScale(self.invadersFrame, from_=0, to=14, variable=self.maxInvaders["value"])
+                self.maxInvaders["scale"] = ttk.LabeledScale(self.invadersFrame, from_=0, to=5, variable=self.maxInvaders["value"])
                 self.maxInvaders["value"].set(self.settings["maxInvaders"])
                 self.maxInvaders["scale"].grid(row=1, column=0, padx=5, pady=10, sticky="nsew")
                 CreateToolTip(self.invadersLabel, self.maxInvaders["tooltipText"])

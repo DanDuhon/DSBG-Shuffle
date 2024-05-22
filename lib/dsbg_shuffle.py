@@ -16,7 +16,7 @@ try:
     from dsbg_shuffle_settings import SettingsWindow
     from dsbg_shuffle_tooltip_reference import tooltipText
     from dsbg_shuffle_treasure import generate_treasure_soul_cost, populate_treasure_tiers, pick_treasure, treasureSwapEncounters, treasures
-    from dsbg_shuffle_utility import CreateToolTip, HelpWindow, PopupWindow, enable_binding, center, do_nothing, log, error_popup, baseFolder, font, pathSep
+    from dsbg_shuffle_utility import CreateToolTip, PopupWindow, enable_binding, center, do_nothing, log, error_popup, baseFolder, font, pathSep
     from dsbg_shuffle_variants import VariantsFrame
 
 
@@ -373,10 +373,6 @@ try:
                 self.optionsMenu.add_command(label="View/Change Settings", command=self.settings_window)
                 menuBar.add_cascade(label="Settings", menu=self.optionsMenu)
 
-                self.helpMenu = tk.Menu(menuBar, tearoff=0)
-                self.helpMenu.add_command(label="How to use ", command=self.help_window)
-                menuBar.add_cascade(label="Help", menu=self.helpMenu)
-
                 root.config(menu=menuBar)
 
                 log("End of create_menu")
@@ -526,24 +522,6 @@ try:
                     self.l1["state"] = "enabled"
                     self.l2["state"] = "enabled"
                     self.l3["state"] = "enabled"
-
-                log("End of settings_window")
-            except Exception as e:
-                error_popup(root, e)
-                raise
-
-
-        def help_window(self):
-            """
-            Display the help window, which shows basic usage information.
-            """
-            try:
-                log("Start of settings_window")
-
-                self.set_bindings_buttons_menus(False)
-                h = HelpWindow(root)
-                self.wait_window(h.top)
-                self.set_bindings_buttons_menus(True)
 
                 log("End of settings_window")
             except Exception as e:

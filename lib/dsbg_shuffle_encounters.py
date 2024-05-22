@@ -412,6 +412,7 @@ try:
 
                 self.app.selected["alternatives"] = []
                 self.app.selected["enemySlots"] = alts["enemySlots"]
+                self.newEnemies = []
 
                 # Use only alternative enemies for expansions and enemies the user has activated in the settings.
                 for expansionCombo in alts["alternatives"]:
@@ -455,6 +456,8 @@ try:
                 # Make sure a new set of enemies is chosen each time, otherwise it
                 # feels like the program isn't doing anything.
                 oldEnemies = [e for e in self.newEnemies]
+                if not self.app.selected["alternatives"]:
+                    pass
                 self.newEnemies = choice(self.app.selected["alternatives"])
                 # Check to see if there are multiple alternatives.
                 if len(set([tuple(a) for a in self.app.selected["alternatives"]])) > 1:

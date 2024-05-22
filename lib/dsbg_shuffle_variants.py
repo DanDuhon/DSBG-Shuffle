@@ -416,12 +416,13 @@ try:
                     diffKeyReal = list(self.variants[startReal][self.app.numberOfCharacters].keys())[diffKeyIndex]
 
                     if "defKey" not in self.currentVariants.get(startReal, {}):
-                        defKey = choice(list(self.variants[startReal][self.app.numberOfCharacters][diffKeyReal].keys()))
+                        defKey = frozenset({'',})#choice(list(self.variants[startReal][self.app.numberOfCharacters][diffKeyReal].keys()))
                         self.currentVariants[startReal] = {"defKey": defKey}
-                        self.pick_enemy_variants_enemy(startReal, diffKeyReal)
+                        #self.pick_enemy_variants_enemy(startReal, diffKeyReal)
                     else:
                         defKey = self.currentVariants[startReal]["defKey"]
-                        self.pick_enemy_variants_behavior(startReal, start[start.index(" - ")+3:], diffKeyReal, defKey)
+                    
+                    self.pick_enemy_variants_behavior(startReal, start[start.index(" - ")+3:], diffKeyReal, defKey)
                 elif start in {"Enemies", "Invaders & Explorers Mimics", "Mini Bosses", "Main Bosses", "Mega Bosses"}:
                     if start == "Enemies":
                         progress = PopupWindow(self.root, labelText="Generating variants...", progressBar=True, progressMax=len(tree.get_children("Enemies")), loadingImage=True)
@@ -502,6 +503,11 @@ try:
                 for child in tree.get_children(tree.parent(start)):
                     if tree.item(child)["values"][1]:
                         diffAvg.append(int(tree.item(child)["values"][1]))
+                    else:
+                        diffAvg.append(0)
+
+                if not diffAvg:
+                    return
                     
                 if tree == self.treeviewVariantsList:
                     tree.item(parent, values=(tree.item(parent)["values"][0], int(round(mean(diffAvg))), tree.item(parent)["values"][2]))
