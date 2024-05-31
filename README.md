@@ -3,6 +3,8 @@ A program to shuffle the enemies in an encounter.  Allows new combinations of en
 
 The idea behind this program is to provide backwards and forwards compatibility for Dark Souls The Board Game.  When the new core sets came out, they made no references to the older content. The encounter design of the new core sets are much more interesting than the old design, and I believe people should be able to use their existing enemies in this new design (or bring new enemies into the older encounters as well).  That's what I aim to accomplish here.  Users should be able to select which core sets/expansions that contain enemies.  This will inform which encounters are available (more on that later).
 
+It also contains ways to build campaigns, event card management, and enemy behavior variants.
+
 
 
 ## How to run/Installation
@@ -13,10 +15,6 @@ The idea behind this program is to provide backwards and forwards compatibility 
 
 ## Roadmap
 Future official expansions.
-
-Continued refinement of enemy difficulty scores.
-
-Enemy/boss changes for NG+ runs or just increasing challenge level.
 
 Maybe a v2 campaign generator.
 
