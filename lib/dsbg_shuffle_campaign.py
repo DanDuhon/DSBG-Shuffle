@@ -284,6 +284,7 @@ try:
 
                 # Remove the image displaying a deleted card.
                 self.app.display.config(image="")
+                self.app.display2.config(image="")
 
                 log("End of delete_card_from_campaign")
             except Exception as e:

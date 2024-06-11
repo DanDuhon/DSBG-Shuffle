@@ -9,14 +9,15 @@ try:
     from PIL import Image, ImageTk
     from tkinter import ttk
 
+    from dsbg_shuffle_behavior_decks import BehaviorDeckFrame
     from dsbg_shuffle_campaign import CampaignFrame
     from dsbg_shuffle_encounters import EncountersFrame
     from dsbg_shuffle_enemies import enemyIds, enemiesDict, bosses
     from dsbg_shuffle_events import EventsFrame
     from dsbg_shuffle_settings import SettingsWindow
     from dsbg_shuffle_tooltip_reference import tooltipText
-    from dsbg_shuffle_treasure import generate_treasure_soul_cost, populate_treasure_tiers, pick_treasure, treasureSwapEncounters, treasures
-    from dsbg_shuffle_utility import CreateToolTip, PopupWindow, enable_binding, center, do_nothing, log, error_popup, baseFolder, font, pathSep
+    from dsbg_shuffle_treasure import generate_treasure_soul_cost, populate_treasure_tiers, treasures
+    from dsbg_shuffle_utility import CreateToolTip, PopupWindow, enable_binding, center, do_nothing, log, error_popup, baseFolder, pathSep
     from dsbg_shuffle_variants import VariantsFrame
 
 
@@ -195,6 +196,9 @@ try:
                 self.variantsTab = VariantsFrame(root=root, app=self)
                 self.notebook.add(self.variantsTab, text="Behavior Variants")
 
+                self.behaviorDeckTab = BehaviorDeckFrame(root=root, app=self)
+                self.notebook.add(self.behaviorDeckTab, text="Behavior Decks")
+
                 self.encounterTab = EncountersFrame(root=root, app=self)
                 for index in [0, 1]:
                     self.encounterTab.columnconfigure(index=index, weight=1)
@@ -228,6 +232,8 @@ try:
 
                 self.display = ttk.Label(self.displayFrame)
                 self.display.grid(column=0, row=0, sticky="nsew")
+                self.display2 = ttk.Label(self.displayFrame)
+                self.display2.grid(column=0, row=1, sticky="nsew")
 
                 log("End of create_display_frame")
             except Exception as e:
@@ -442,6 +448,7 @@ try:
                     self.selected = None
                     self.rewardTreasure = None
                     self.display.config(image="")
+                    self.display2.config(image="")
                     self.encounterTab.treeviewEncounters.pack_forget()
                     self.encounterTab.treeviewEncounters.destroy()
                     self.availableExpansions = set(self.settings["availableExpansions"])
@@ -452,6 +459,7 @@ try:
                     self.encounterTab.set_encounter_list()
                     self.encounterTab.create_encounters_treeview()
                     self.variantsTab.reset_treeview()
+                    self.behaviorDeckTab.reset_treeview()
 
                     self.bossMenuItems = [
                         "Select Boss",

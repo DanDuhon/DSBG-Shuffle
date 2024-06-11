@@ -41,6 +41,11 @@ try:
         23: "damage health1",
         24: "damage health2"
         }
+    
+    dataCardMods = {m for m in modIdLookup if (
+        "armor" in modIdLookup[m]
+        or "resist" in modIdLookup[m]
+        or "health" in modIdLookup[m])}
 
 
     class VariantsFrame(ttk.Frame):
@@ -77,18 +82,20 @@ try:
 
             self.variantsTabButtonsFrame = ttk.Frame(self)
             self.variantsTabButtonsFrame.pack()
-            self.variantsListTreeviewFrame = ttk.Frame(self)
-            self.variantsListTreeviewFrame.pack(fill="both", expand=True)
             self.variantsTabButtonsFrame2 = ttk.Frame(self)
             self.variantsTabButtonsFrame2.pack()
+            self.variantsListTreeviewFrame = ttk.Frame(self)
+            self.variantsListTreeviewFrame.pack(fill="both", expand=True)
             self.variantsTabButtonsFrame3 = ttk.Frame(self)
             self.variantsTabButtonsFrame3.pack()
+            self.variantsTabButtonsFrame4 = ttk.Frame(self)
+            self.variantsTabButtonsFrame4.pack()
             self.variantsLockedTreeviewFrame = ttk.Frame(self)
             self.variantsLockedTreeviewFrame.pack(fill="both", expand=True)
-            self.scrollbartreeviewVariantsList = ttk.Scrollbar(self.variantsListTreeviewFrame)
-            self.scrollbartreeviewVariantsList.pack(side="right", fill="y")
-            self.scrollbartreeviewVariantsLocked = ttk.Scrollbar(self.variantsLockedTreeviewFrame)
-            self.scrollbartreeviewVariantsLocked.pack(side="right", fill="y")
+            self.scrollbarTreeviewVariantsList = ttk.Scrollbar(self.variantsListTreeviewFrame)
+            self.scrollbarTreeviewVariantsList.pack(side="right", fill="y")
+            self.scrollbarTreeviewVariantsLocked = ttk.Scrollbar(self.variantsLockedTreeviewFrame)
+            self.scrollbarTreeviewVariantsLocked.pack(side="right", fill="y")
             
             vcmd = (self.register(self.callback))
 
@@ -101,18 +108,20 @@ try:
             self.diffLabel2.pack(side=tk.LEFT, anchor=tk.CENTER, pady=5)
             self.applyModButton = ttk.Button(self.variantsTabButtonsFrame, text="Apply Modifier", width=16, command=self.apply_difficulty_modifier)
             self.applyModButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-            self.lockButton = ttk.Button(self.variantsTabButtonsFrame, text="Lock Variant", width=16, command=self.lock_variant_card)
+            self.lockButton = ttk.Button(self.variantsTabButtonsFrame2, text="Lock Variant", width=16, command=self.lock_variant_card)
+            self.lockButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+            self.lockButton = ttk.Button(self.variantsTabButtonsFrame2, text="Remove Variant", width=16, command=self.remove_variant_card)
             self.lockButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
             
-            self.removeButton = ttk.Button(self.variantsTabButtonsFrame2, text="Remove Variant(s)", width=16, command=self.delete_locked_variant)
+            self.removeButton = ttk.Button(self.variantsTabButtonsFrame3, text="Remove Variant(s)", width=16, command=self.delete_locked_variant)
             self.removeButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-            self.saveButton = ttk.Button(self.variantsTabButtonsFrame2, text="Save Variants", width=16, command=self.save_variants)
+            self.saveButton = ttk.Button(self.variantsTabButtonsFrame3, text="Save Variants", width=16, command=self.save_variants)
             self.saveButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-            self.loadButton = ttk.Button(self.variantsTabButtonsFrame2, text="Load Variants", width=16, command=self.load_variants)
+            self.loadButton = ttk.Button(self.variantsTabButtonsFrame3, text="Load Variants", width=16, command=self.load_variants)
             self.loadButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-            self.imagesPdfButton = ttk.Button(self.variantsTabButtonsFrame3, text="Images to PDF", width=16, command=self.print_variant_cards)
+            self.imagesPdfButton = ttk.Button(self.variantsTabButtonsFrame4, text="Images to PDF", width=16, command=self.print_variant_cards)
             self.imagesPdfButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-            self.summaryPdfButton = ttk.Button(self.variantsTabButtonsFrame3, text="Summary to File", width=16, command=self.print_variant_summary)
+            self.summaryPdfButton = ttk.Button(self.variantsTabButtonsFrame4, text="Summary to File", width=16, command=self.print_variant_summary)
             self.summaryPdfButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
 
             self.create_variants_treeview()
@@ -138,12 +147,12 @@ try:
                     self.variantsListTreeviewFrame,
                     selectmode="browse",
                     columns=("Name", "Current Modifier"),
-                    yscrollcommand=self.scrollbartreeviewVariantsList.set,
+                    yscrollcommand=self.scrollbarTreeviewVariantsList.set,
                     height=11 if self.root.winfo_screenheight() > 1000 else 9
                 )
 
                 self.treeviewVariantsList.pack(expand=True, fill="both")
-                self.scrollbartreeviewVariantsList.config(command=self.treeviewVariantsList.yview)
+                self.scrollbarTreeviewVariantsList.config(command=self.treeviewVariantsList.yview)
 
                 self.treeviewVariantsList.column('#0', width=50)
 
@@ -152,30 +161,29 @@ try:
                 self.treeviewVariantsList.column("Name", anchor=tk.W, width=300)
                 self.treeviewVariantsList.column("Current Modifier", anchor=tk.W, width=90)
                 
-                self.treeviewVariantsList.insert(parent="", index="end", iid="All", values=("All", 0, ""), tags=False, open=True)
-                self.treeviewVariantsList.insert(parent="All", index="end", iid="Enemies", values=("    Enemies", 0, ""), tags=False)
+                self.treeviewVariantsList.insert(parent="", index="end", iid="All", values=("All", 0), tags=False, open=True)
+                self.treeviewVariantsList.insert(parent="All", index="end", iid="Enemies", values=("    Enemies", 0), tags=False)
                 if {"Phantoms", "Explorers"} & self.app.availableExpansions:
-                    self.treeviewVariantsList.insert(parent="All", index="end", iid="Invaders & Explorers Mimics", values=("    Invaders & Explorers Mimics", 0, ""), tags=False)
-                self.treeviewVariantsList.insert(parent="All", index="end", iid="Mini Bosses", values=("    Mini Bosses", 0, ""), tags=False)
-                self.treeviewVariantsList.insert(parent="All", index="end", iid="Main Bosses", values=("    Main Bosses", 0, ""), tags=False)
-                self.treeviewVariantsList.insert(parent="All", index="end", iid="Mega Bosses", values=("    Mega Bosses", 0, ""), tags=False)
+                    self.treeviewVariantsList.insert(parent="All", index="end", iid="Invaders & Explorers Mimics", values=("    Invaders & Explorers Mimics", 0), tags=False)
+                self.treeviewVariantsList.insert(parent="All", index="end", iid="Mini Bosses", values=("    Mini Bosses", 0), tags=False)
+                self.treeviewVariantsList.insert(parent="All", index="end", iid="Main Bosses", values=("    Main Bosses", 0), tags=False)
+                self.treeviewVariantsList.insert(parent="All", index="end", iid="Mega Bosses", values=("    Mega Bosses", 0), tags=False)
 
                 for enemy in sorted([enemy for enemy in enemiesDict if enemiesDict[enemy].expansions & self.app.availableExpansions]):
-                    maxDiff = ceil((max(list(self.variants[enemy][self.app.numberOfCharacters].keys())) - 1.0) * 100)
-                    self.treeviewVariantsList.insert(parent="Invaders & Explorers Mimics" if "Phantoms" in enemiesDict[enemy].expansions or enemiesDict[enemy].name in {"Hungry Mimic", "Voracious Mimic"} else "Enemies", index="end", iid=enemy, values=("        " + enemy, 0, maxDiff), tags=True)
+                    self.treeviewVariantsList.insert(parent="Invaders & Explorers Mimics" if "Phantoms" in enemiesDict[enemy].expansions or enemiesDict[enemy].name in {"Hungry Mimic", "Voracious Mimic"} else "Enemies", index="end", iid=enemy, values=("        " + enemy, 0), tags=True)
                     
                 for enemy in sorted([enemy for enemy in bosses if bosses[enemy]["level"] == "Mega Boss" or enemy == "Asylum Demon" or bosses[enemy]["expansions"] & self.app.availableExpansions]):
-                    maxDiff = ceil((max(list(self.variants[enemy][self.app.numberOfCharacters].keys())) - 1.0) * 100)
-                    self.treeviewVariantsList.insert(parent=bosses[enemy]["level"] + "es", index="end", iid=enemy, values=("        " + enemy, 0, maxDiff), tags=True)
+                    self.treeviewVariantsList.insert(parent=bosses[enemy]["level"] + "es", index="end", iid=enemy, values=("        " + enemy, 0), tags=True)
 
                 for enemy in behaviors:
+                    if "(" in enemy:
+                        continue
                     if enemy in bosses and bosses[enemy]["level"] != "Mega Boss" and enemy != "Asylum Demon" and not bosses[enemy]["expansions"] & self.app.availableExpansions:
                         continue
                     if enemy in enemiesDict and not enemiesDict[enemy].expansions & self.app.availableExpansions:
                         continue
                     for behavior in behaviors[enemy]:
-                        maxDiff = ceil((max(list(self.variants[enemy][self.app.numberOfCharacters].keys())) - 1.0) * 100)
-                        self.treeviewVariantsList.insert(parent=enemy, index="end", iid=enemy + " - " + behavior, values=("            " + behavior, 0, maxDiff), tags=True)
+                        self.treeviewVariantsList.insert(parent=enemy, index="end", iid=enemy + " - " + behavior, values=("            " + behavior, 0), tags=True)
 
                 self.treeviewVariantsList.bind("<<TreeviewSelect>>", self.load_variant_card)
 
@@ -188,12 +196,12 @@ try:
                         self.variantsLockedTreeviewFrame,
                         selectmode="browse",
                         columns=("Name", "Current Modifier"),
-                        yscrollcommand=self.scrollbartreeviewVariantsLocked.set,
+                        yscrollcommand=self.scrollbarTreeviewVariantsLocked.set,
                         height=11 if self.root.winfo_screenheight() > 1000 else 9
                     )
 
                     self.treeviewVariantsLocked.pack(expand=True, fill="both")
-                    self.scrollbartreeviewVariantsLocked.config(command=self.treeviewVariantsLocked.yview)
+                    self.scrollbarTreeviewVariantsLocked.config(command=self.treeviewVariantsLocked.yview)
 
                     self.treeviewVariantsLocked.column('#0', width=50)
 
@@ -218,7 +226,7 @@ try:
                 raise
 
 
-        def load_variant_card(self, event=None, variant=None):
+        def load_variant_card(self, event=None, variant=None, armorerDennis=False, oldIronKing=False, deckDataCard=False):
             """
             Load a variant card that was selected (or passed in).
             """
@@ -257,10 +265,8 @@ try:
                             "Main Bosses",
                             "Mega Bosses"
                             } else ""))
-                elif "_" in self.selectedVariant:
-                    self.selectedVariant = variant
                 else:
-                    variant = None
+                    self.selectedVariant = variant
 
                 # Remove keyword tooltips from the previous image shown, if there are any.
                 for tooltip in self.app.tooltips:
@@ -272,7 +278,7 @@ try:
                 if "Ornstein & Smough" in self.selectedVariant and (self.selectedVariant.count("&") == 2 or "data" in self.selectedVariant):
                     self.edit_variant_card_os(variant=variant)
                 else:
-                    self.edit_variant_card(variant=variant)
+                    self.edit_variant_card(variant=variant, armorerDennis=armorerDennis, oldIronKing=oldIronKing, deckDataCard=deckDataCard)
 
                 self.app.display.bind("<Button 1>", self.apply_difficulty_modifier)
                 
@@ -284,7 +290,7 @@ try:
                 raise
 
 
-        def load_variant_card_locked(self, event=None, variant=None):
+        def load_variant_card_locked(self, event=None, variant=None, armorerDennis=False, oldIronKing=False, deckDataCard=False):
             try:
                 log("Start of load_variant_card_locked, variant={}".format(str(variant)))
                 
@@ -331,6 +337,9 @@ try:
                             "Main Bosses",
                             "Mega Bosses"
                             } else ""))
+                elif "_" not in variant:
+                    self.load_variant_card(variant=variant, armorerDennis=armorerDennis, oldIronKing=oldIronKing, deckDataCard=deckDataCard)
+                    return
                 else:
                     name = variant[:variant.index("_")]
 
@@ -363,7 +372,7 @@ try:
                 if "Ornstein & Smough" in self.selectedVariant and (self.selectedVariant.count("&") == 2 or "data" in self.selectedVariant):
                     self.edit_variant_card_os(variant=mods)
                 else:
-                    self.edit_variant_card(variant=mods)
+                    self.edit_variant_card(variant=mods, armorerDennis=armorerDennis, oldIronKing=oldIronKing)
 
                 self.app.display.bind("<Button 1>", self.apply_difficulty_modifier)
                 
@@ -416,7 +425,7 @@ try:
                     diffKeyReal = list(self.variants[startReal][self.app.numberOfCharacters].keys())[diffKeyIndex]
 
                     if "defKey" not in self.currentVariants.get(startReal, {}):
-                        defKey = frozenset({'',})#choice(list(self.variants[startReal][self.app.numberOfCharacters][diffKeyReal].keys()))
+                        defKey = choice(list(self.variants[startReal][self.app.numberOfCharacters][diffKeyReal].keys()))
                         self.currentVariants[startReal] = {"defKey": defKey}
                         #self.pick_enemy_variants_enemy(startReal, diffKeyReal)
                     else:
@@ -509,10 +518,7 @@ try:
                 if not diffAvg:
                     return
                     
-                if tree == self.treeviewVariantsList:
-                    tree.item(parent, values=(tree.item(parent)["values"][0], int(round(mean(diffAvg))), tree.item(parent)["values"][2]))
-                else:
-                    tree.item(parent, values=(tree.item(parent)["values"][0], int(round(mean(diffAvg)))))
+                tree.item(parent, values=(tree.item(parent)["values"][0], int(round(mean(diffAvg)))))
 
                 log("End of recalc_variant_average")
             except Exception as e:
@@ -583,7 +589,7 @@ try:
                         ):
                         self.currentVariants[start][behavior] = choice(self.variants[start][self.app.numberOfCharacters][diffKey][defKey][behavior])
                     
-                self.treeviewVariantsList.item(start + (" - " + behavior if behavior else ""), values=(self.treeviewVariantsList.item(start + (" - " + behavior if behavior else ""))["values"][0], int(round((diffKey - 1.0) * 100, -1)), self.treeviewVariantsList.item(start + (" - " + behavior if behavior else ""))["values"][2]))
+                self.treeviewVariantsList.item(start + (" - " + behavior if behavior else ""), values=(self.treeviewVariantsList.item(start + (" - " + behavior if behavior else ""))["values"][0], int(round((diffKey - 1.0) * 100, -1))))
                 
                 log("End of pick_enemy_variants_behavior")
             except Exception as e:
@@ -591,7 +597,7 @@ try:
                 raise
 
 
-        def edit_variant_card(self, variant=None, event=None):
+        def edit_variant_card(self, variant=None, event=None, armorerDennis=False, oldIronKing=False, deckDataCard=False):
             try:
                 log("Start of edit_variant_card, variant={}".format(str(variant)))
 
@@ -602,11 +608,16 @@ try:
                     self.edit_variant_card_data(enemy, variant=variant)
                 
                 if behavior != "data" or "behavior" in behaviorDetail[enemy]:
-                    self.edit_variant_card_behavior(variant=variant)
+                    self.edit_variant_card_behavior(variant=variant, armorerDennis=armorerDennis, oldIronKing=oldIronKing)
 
                 self.app.displayPhotoImage = ImageTk.PhotoImage(self.app.displayImage)
-                self.app.display.image = self.app.displayPhotoImage
-                self.app.display.config(image=self.app.displayPhotoImage)
+
+                if deckDataCard:
+                    self.app.display2.image = self.app.displayPhotoImage
+                    self.app.display2.config(image=self.app.displayPhotoImage)
+                else:
+                    self.app.display.image = self.app.displayPhotoImage
+                    self.app.display.config(image=self.app.displayPhotoImage)
 
                 log("End of edit_variant_card")
             except Exception as e:
@@ -702,6 +713,8 @@ try:
 
                             contents = [treeLocked.item(child)["values"][0] for child in treeLocked.get_children(iid)]
                             treeLocked.insert(parent=iid, index=bisect_left(contents, v[0]), iid=iidChild, values=(v[0], v[1]), tags=True)
+
+                        self.app.behaviorDeckTab.set_decks(enemy=e, skipClear=True)
                 elif tree.focus() == "All":
                     progressMax = 0
                     for child in tree.get_children("All"):
@@ -760,6 +773,9 @@ try:
 
                                 contents = [treeLocked.item(child)["values"][0] for child in treeLocked.get_children(iid)]
                                 treeLocked.insert(parent=iid, index=bisect_left(contents, v[0]), iid=iidChild, values=(v[0], v[1]), tags=True)
+                                
+                            if e in self.app.behaviorDeckTab.decks:
+                                self.app.behaviorDeckTab.set_decks(enemy=e, skipClear=True)
                 elif tree.get_children(tree.focus()) or " - " in tree.focus():
                     if " - " in tree.focus():
                         focus = tree.parent(tree.focus())
@@ -787,6 +803,8 @@ try:
                             modList1 = [v for v in self.currentVariants[enemy][behavior][behavior[:behavior.index(" & ")]]]
                             modList2 = [v for v in self.currentVariants[enemy][behavior][behavior[behavior.index(" & ")+3:]]]
                             iidChild = child + "_" + ",".join([str(v) for v in modList1]) + "_" + ",".join([str(v) for v in modList2])
+                        elif behavior not in self.currentVariants[enemy]:
+                            continue
                         else:
                             modList = [v for v in self.currentVariants[enemy][behavior]]
                             iidChild = child + "_" + ",".join([str(v) for v in modList])
@@ -801,6 +819,8 @@ try:
                             
                         contents = treeLocked.get_children(iid)
                         treeLocked.insert(parent=iid, index=bisect_left(contents, iidChild), iid=iidChild, values=(v[0], v[1]), tags=True)
+                        
+                    self.app.behaviorDeckTab.set_decks(enemy=focus, skipClear=True)
                 else:
                     modList = [v for v in self.currentVariants[tree.focus()][[k for k in list(self.currentVariants[tree.focus()].keys()) if k != "defKey"][0]]]
                     iid = tree.focus() + "_" + ",".join([str(v) for v in modList])
@@ -813,6 +833,8 @@ try:
                     self.lockedVariants[iid] = modList
                     contents = [treeLocked.item(child)["values"][0] for child in treeLocked.get_children(tree.parent(tree.focus()))]
                     treeLocked.insert(parent=tree.parent(tree.focus()), index=bisect_left(contents, v[0]), iid=iid, values=(v[0], v[1]), tags=True)
+                    
+                    self.app.behaviorDeckTab.set_decks(enemy=e, skipClear=True)
 
                 if progress:
                     progress.label.config(text = "Calculating difficulty averages...")
@@ -837,6 +859,97 @@ try:
                     progress.destroy()
 
                 log("End of lock_variant_card")
+            except Exception as e:
+                error_popup(self.root, e)
+                raise
+
+
+        def remove_variant_card(self, variant=None):
+            try:
+                log("Start of remove_variant_card, variant={}".format(str(variant)))
+                
+                tree = self.treeviewVariantsList
+                
+                if variant:
+                    target = variant
+                # If the button is clicked with no selection, do nothing.
+                elif not tree.selection():
+                    log("End of remove_variant_card (nothing done)")
+                    return
+                else:
+                    target = tree.selection()[0]
+                
+                # Remove the deleted variants from the treeview.
+                if target == "All":
+                    self.currentVariants = {}
+                    tree.item(target, values=(tree.item(target)["values"][0], 0))
+                    for child in tree.get_children(target):
+                        tree.item(child, values=(tree.item(child)["values"][0], 0))
+                        for subChild in tree.get_children(child):
+                            tree.item(subChild, values=(tree.item(subChild)["values"][0], 0))
+                            for subSubChild in tree.get_children(subChild):
+                                tree.item(subSubChild, values=(tree.item(subSubChild)["values"][0], 0))
+                else:
+                    for child in tree.get_children(target):
+                        parent = tree.parent(child)
+
+                        if " - " in child:
+                            childReal = child[child.index(" - ")+3:]
+                        else:
+                            childReal = child
+
+                        for subChild in tree.get_children(child):
+                            if " - " in subChild:
+                                subChildReal = subChild[subChild.index(" - ")+3:]
+                            else:
+                                subChildReal = subChild
+
+                            if childReal in self.currentVariants and subChildReal in self.currentVariants[childReal]:
+                                del self.currentVariants[childReal][subChildReal]
+                                tree.item(subChild, values=(tree.item(subChild)["values"][0], 0))
+
+                        if childReal in self.currentVariants:
+                            del self.currentVariants[childReal]
+                            tree.item(child, values=(tree.item(child)["values"][0], 0))
+
+                        if parent in self.currentVariants and childReal in self.currentVariants[parent]:
+                            del self.currentVariants[parent][childReal]
+                            tree.item(child, values=(tree.item(child)["values"][0], 0))
+
+                    if " - " in target:
+                        parent = target[:target.index(" - ")]
+                        child = target[target.index(" - ")+3:]
+                        if child in self.currentVariants[parent]:
+                            del self.currentVariants[parent][child]
+                            tree.item(target, values=(tree.item(target)["values"][0], 0))
+                    else:
+                        if target in self.currentVariants:
+                            del self.currentVariants[target]
+                            tree.item(target, values=(tree.item(target)["values"][0], 0))
+
+                progress = PopupWindow(self.root, labelText="Calculating difficulty averages...", loadingImage=True)
+                # Recalculate the average difficulty mod for this row and its parents and children.
+                for child in tree.get_children(target):
+                    for subChild in tree.get_children(child):
+                        for subSubChild in tree.get_children(subChild):
+                            self.recalc_variant_average(tree, subSubChild)
+                        self.recalc_variant_average(tree, subChild)
+                    self.recalc_variant_average(tree, child)
+
+                if tree.parent(target):
+                    self.recalc_variant_average(tree, target)
+                    if tree.parent(tree.parent(target)):
+                        self.recalc_variant_average(tree, tree.parent(target))
+                        if tree.parent(tree.parent(tree.parent(target))):
+                            self.recalc_variant_average(tree, tree.parent(tree.parent(target)))
+
+                # Remove the image displaying a deleted item.
+                self.app.display.config(image="")
+                self.app.display2.config(image="")
+
+                progress.destroy()
+
+                log("End of remove_variant_card")
             except Exception as e:
                 error_popup(self.root, e)
                 raise
@@ -915,6 +1028,7 @@ try:
 
                 # Remove the image displaying a deleted item.
                 self.app.display.config(image="")
+                self.app.display2.config(image="")
 
                 progress.destroy()
 
@@ -941,9 +1055,17 @@ try:
                 elif "heatup" in behaviorDetail[enemy]:
                     heatup.append(behaviorDetail[enemy]["heatup"])
 
-                if enemy in self.currentVariants:
+                if type(variant) != list and enemy in self.currentVariants:
                     mods = [modIdLookup[m] for m in list(self.currentVariants[enemy]["defKey"]) if m]
                     for mod in mods:
+                        healthAddition = int(mod[-1]) if "health" in mod else 0
+                        health += healthAddition
+                        armor += int(mod[-1]) if "armor" in mod else 0
+                        resist += int(mod[-1]) if "resist" in mod else 0
+                        if healthAddition:
+                            heatup = [h + healthAddition for h in heatup]
+                elif variant:
+                    for mod in variant:
                         healthAddition = int(mod[-1]) if "health" in mod else 0
                         health += healthAddition
                         armor += int(mod[-1]) if "armor" in mod else 0
@@ -973,7 +1095,7 @@ try:
                 raise
 
 
-        def edit_variant_card_behavior(self, variant=None, event=None):
+        def edit_variant_card_behavior(self, variant=None, event=None, armorerDennis=False, oldIronKing=False):
             try:
                 log("Start of edit_variant_card_behavior, variant={}".format(str(variant)))
 
@@ -983,7 +1105,7 @@ try:
                 else:
                     behavior = self.selectedVariant[self.selectedVariant.index(" - ")+3:] if " - " in self.selectedVariant else None
 
-                dodge = behaviorDetail[enemy][behavior]["dodge"]
+                dodge = behaviorDetail[enemy][behavior]["dodge"] + (1 if armorerDennis else 0) + (1 if oldIronKing and "Fire Beam" in behavior else 0)
                 repeat = behaviorDetail[enemy][behavior].get("repeat", 1)
                 actions = {}
                 for position in ["left", "middle", "right"]:
@@ -993,6 +1115,8 @@ try:
                             actions[position]["effect"] = [e for e in behaviorDetail[enemy][behavior][position]["effect"]]
                         else:
                             actions[position] = behaviorDetail[enemy][behavior][position].copy()
+                            if "Fire Beam" in behavior and "damage" in actions[position] and oldIronKing:
+                                actions[position]["damage"] += 1
 
                 if variant:
                     dodge, repeat, actions = self.apply_mods_to_actions(enemy, behavior, dodge, repeat, actions, variant)

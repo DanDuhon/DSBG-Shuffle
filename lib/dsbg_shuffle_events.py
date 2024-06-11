@@ -381,6 +381,7 @@ try:
 
                 # Remove the image displaying a deleted encounter.
                 self.app.display.config(image="")
+                self.app.display2.config(image="")
 
                 shuffle(self.eventDeck)
 
@@ -409,6 +410,7 @@ try:
 
                 # Remove the image displaying a deleted encounter.
                 self.app.display.config(image="")
+                self.app.display2.config(image="")
                 
                 self.currentEvent = None
                 self.currentEventNum = 0
@@ -475,6 +477,7 @@ try:
 
                 shuffle(self.eventDeck)
                 self.app.display.config(image="")
+                self.app.display2.config(image="")
                 # Reduce the Drawn Order value of more recently drawn cards by 1.
                 for eventCard in self.treeviewEventDeck.get_children():
                     if self.treeviewEventDeck.item(eventCard)["values"][1] and self.treeviewEventDeck.item(eventCard)["values"][1] > self.treeviewEventDeck.item(card)["values"][1]:
@@ -519,6 +522,7 @@ try:
                 self.eventDeck.remove(card)
                 self.eventDeck.append(card)
                 self.app.display.config(image="")
+                self.app.display2.config(image="")
                 # Reduce the Drawn Order value of more recently drawn cards by 1.
                 for eventCard in self.treeviewEventDeck.get_children():
                     if self.treeviewEventDeck.item(eventCard)["values"][1] and self.treeviewEventDeck.item(eventCard)["values"][1] > self.treeviewEventDeck.item(card)["values"][1]:
@@ -560,6 +564,7 @@ try:
                 self.eventDeck.remove(card)
                 self.eventDeck.insert(0, card)
                 self.app.display.config(image="")
+                self.app.display2.config(image="")
                 # Reduce the Drawn Order value of more recently drawn cards by 1.
                 for eventCard in self.treeviewEventDeck.get_children():
                     if self.treeviewEventDeck.item(eventCard)["values"][1] and self.treeviewEventDeck.item(eventCard)["values"][1] > self.treeviewEventDeck.item(card)["values"][1]:

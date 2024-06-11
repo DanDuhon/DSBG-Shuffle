@@ -108,13 +108,19 @@ class PopupWindow(tk.Toplevel):
         secondButton: Boolean
             Whether to show the second button.
 
+        yesButton: Boolean
+            Whether to show the yes button.
+
+        noButton: Boolean
+            Whether to show the no button.
+
         progressBar: Boolean
             Whether to show the progress bar for app loading.
 
         loadingImage: Boolean
             Whether to show the loading image.
     """
-    def __init__(self, root, labelText=None, firstButton=False, secondButton=False, progressBar=False, progressMax=None, loadingImage=False):
+    def __init__(self, root, labelText=None, firstButton=False, secondButton=False, yesButton=False, noButton=False, ornsteinButton=False, smoughButton=False, progressBar=False, progressMax=None, loadingImage=False):
         tk.Toplevel.__init__(self, root)
         self.attributes('-alpha', 0.0)
         self.popupFrame = ttk.Frame(self, padding=(20, 10))
@@ -124,6 +130,7 @@ class PopupWindow(tk.Toplevel):
         self.wait_visibility()
         self.grab_set_global()
         self.label.focus_force()
+        self.answer = None
 
         if firstButton:
             button = ttk.Button(self.popupFrame, text="OK", command=self.destroy)
@@ -133,6 +140,22 @@ class PopupWindow(tk.Toplevel):
             button2 = ttk.Button(self.popupFrame, text="Quit and take me there!", command=root.destroy)
             button2.grid(column=1, row=2, padx=20, pady=20)
             button2.bind("<Button 1>", lambda e: webbrowser.open_new("https://github.com/DanDuhon/DSBG-Shuffle/releases"))
+
+        if yesButton:
+            button = ttk.Button(self.popupFrame, text="Yes", command=self.yes)
+            button.grid(column=0, row=2, padx=20, pady=20)
+
+        if noButton:
+            button = ttk.Button(self.popupFrame, text="No", command=self.no)
+            button.grid(column=1, row=2, padx=20, pady=20)
+
+        if ornsteinButton:
+            button = ttk.Button(self.popupFrame, text="Ornstein", command=self.ornstein)
+            button.grid(column=0, row=2, padx=20, pady=20)
+
+        if smoughButton:
+            button = ttk.Button(self.popupFrame, text="Smough", command=self.smough)
+            button.grid(column=1, row=2, padx=20, pady=20)
 
         if loadingImage:
             loadingImage = ImageTk.PhotoImage(Image.open(baseFolder + "\\lib\\bonfire.png".replace("\\", pathSep)), Image.Resampling.LANCZOS)
@@ -148,6 +171,26 @@ class PopupWindow(tk.Toplevel):
 
         center(self)
         self.attributes('-alpha', 1.0)
+
+
+    def yes(self):
+        self.destroy()
+        self.answer = True
+
+
+    def no(self):
+        self.destroy()
+        self.answer = False
+
+
+    def ornstein(self):
+        self.destroy()
+        self.answer = "ornstein"
+
+
+    def smough(self):
+        self.destroy()
+        self.answer = "smough"
 
 
 class VerticalScrolledFrame(ttk.Frame):

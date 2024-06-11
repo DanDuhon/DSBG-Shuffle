@@ -9,13 +9,14 @@ try:
 
 
     class Enemy:
-        def __init__(self, id, name, expansions, difficultyTiers, health=None) -> None:
+        def __init__(self, id, name, expansions, difficultyTiers, cards=1, health=None) -> None:
             enemiesDict[name] = self
             enemies.append(self)
             enemyIds[id] = self
             self.id = id
             self.name = name
             self.expansions = expansions
+            self.cards = cards
             self.difficultyTiers = difficultyTiers
             
             self.imagePath = baseFolder + "\\lib\\dsbg_shuffle_images\\".replace("\\", pathSep) + name + ".png"
@@ -66,49 +67,49 @@ try:
     Enemy(id=32, name="Stone Guardian", expansions=set(["Darkroot"]), difficultyTiers={1: {"toughness": 665, "difficulty": {1: 3620, 2: 3898.46, 3: 4176.92, 4: 4519.64}}, 2: {"toughness": 1653, "difficulty": {1: 557.98, 2: 600.91, 3: 643.83, 4: 696.66}}, 3: {"toughness": 6893, "difficulty": {1: 238.19, 2: 256.51, 3: 274.83, 4: 297.38}}})
     Enemy(id=33, name="Stone Knight", expansions=set(["Darkroot"]), difficultyTiers={1: {"toughness": 373, "difficulty": {1: 2623.97, 2: 2623.97, 3: 2623.97, 4: 2623.97}}, 2: {"toughness": 778, "difficulty": {1: 648.59, 2: 648.59, 3: 648.59, 4: 648.59}}, 3: {"toughness": 4555, "difficulty": {1: 160.26, 2: 160.26, 3: 160.26, 4: 160.26}}})
     Enemy(id=34, name="Mimic", expansions=set(["The Sunless City"]), difficultyTiers={1: {"toughness": 1837, "difficulty": {1: 1720.54, 2: 1720.54, 3: 1720.54, 4: 1720.54}}, 2: {"toughness": 4019, "difficulty": {1: 381.1, 2: 381.1, 3: 381.1, 4: 381.1}}, 3: {"toughness": 14351, "difficulty": {1: 247.38, 2: 247.38, 3: 247.38, 4: 247.38}}})
-    Enemy(id=35, name="Armorer Dennis", expansions=set(["Phantoms"]), difficultyTiers={1: {"toughness": 484, "difficulty": {1: 4088.87, 2: 4228.3, 3: 4367.73, 4: 4539.33}}, 2: {"toughness": 1098.4, "difficulty": {1: 449.89, 2: 465.46, 3: 481.03, 4: 500.2}}, 3: {"toughness": 4143.8, "difficulty": {1: 93.2, 2: 96.1, 3: 99, 4: 102.57}}})
-    Enemy(id=36, name="Fencer Sharron", expansions=set(["Phantoms"]), difficultyTiers={1: {"toughness": 461.57, "difficulty": {1: 14740.26, 2: 14970.91, 3: 15201.57, 4: 15485.45}}, 2: {"toughness": 1037.29, "difficulty": {1: 1516.23, 2: 1540.31, 3: 1564.39, 4: 1594.03}}, 3: {"toughness": 3922, "difficulty": {1: 419.34, 2: 426.43, 3: 433.52, 4: 442.25}}})
-    Enemy(id=37, name="Invader Brylex", expansions=set(["Phantoms"]), difficultyTiers={1: {"toughness": 243, "difficulty": {1: 39532.2, 2: 41207.45, 3: 42882.71, 4: 44944.56}}, 2: {"toughness": 647, "difficulty": {1: 3377, 2: 3519.2, 3: 3661.4, 4: 3836.41}}, 3: {"toughness": 2870, "difficulty": {1: 683.98, 2: 711.25, 3: 738.52, 4: 772.08}}})
-    Enemy(id=38, name="Kirk, Knight of Thorns", expansions=set(["Phantoms"]), difficultyTiers={1: {"toughness": 809, "difficulty": {1: 4926.93, 2: 5093.36, 3: 5259.8, 4: 5464.65}}, 2: {"toughness": 1793, "difficulty": {1: 565.47, 2: 585.06, 3: 604.65, 4: 628.76}}, 3: {"toughness": 6574, "difficulty": {1: 135.38, 2: 139.67, 3: 143.95, 4: 149.23}}})
-    Enemy(id=39, name="Longfinger Kirk", expansions=set(["Phantoms"]), difficultyTiers={1: {"toughness": 257, "difficulty": {1: 41717.95, 2: 42690, 3: 43662.04, 4: 44858.41}}, 2: {"toughness": 685, "difficulty": {1: 4077.99, 2: 4170.72, 3: 4263.45, 4: 4377.58}}, 3: {"toughness": 3114, "difficulty": {1: 1022.33, 2: 1042.04, 3: 1061.74, 4: 1085.99}}})
-    Enemy(id=40, name="Maldron the Assassin", expansions=set(["Phantoms"]), difficultyTiers={1: {"toughness": 736, "difficulty": {1: 10897.77, 2: 11173, 3: 11448.24, 4: 11786.99}}, 2: {"toughness": 1653, "difficulty": {1: 1117.42, 2: 1144.46, 3: 1171.49, 4: 1204.76}}, 3: {"toughness": 6166, "difficulty": {1: 360.72, 2: 369.52, 3: 378.31, 4: 389.14}}})
-    Enemy(id=41, name="Maneater Mildred", expansions=set(["Phantoms"]), difficultyTiers={1: {"toughness": 539.8, "difficulty": {1: 9249.26, 2: 9960.74, 3: 10672.22, 4: 11547.89}}, 2: {"toughness": 1238.6, "difficulty": {1: 766.43, 2: 825.38, 3: 884.34, 4: 956.9}}, 3: {"toughness": 4719.6, "difficulty": {1: 220.58, 2: 237.55, 3: 254.52, 4: 275.4}}})
-    Enemy(id=42, name="Marvelous Chester", expansions=set(["Phantoms"]), difficultyTiers={1: {"toughness": 498, "difficulty": {1: 22633.74, 2: 22767.14, 3: 22900.55, 4: 23064.74}}, 2: {"toughness": 1141, "difficulty": {1: 2408.75, 2: 2422.85, 3: 2436.95, 4: 2454.31}}, 3: {"toughness": 4195, "difficulty": {1: 690.26, 2: 695.31, 3: 700.37, 4: 706.59}}})
-    Enemy(id=43, name="Melinda the Butcher", expansions=set(["Phantoms"]), difficultyTiers={1: {"toughness": 794.6, "difficulty": {1: 4702.3, 2: 4900.97, 3: 5099.65, 4: 5344.17}}, 2: {"toughness": 1655.8, "difficulty": {1: 413.09, 2: 431.73, 3: 450.38, 4: 473.33}}, 3: {"toughness": 5673.8, "difficulty": {1: 128.67, 2: 134.4, 3: 140.14, 4: 147.2}}})
-    Enemy(id=44, name="Oliver the Collector", expansions=set(["Phantoms"]), difficultyTiers={1: {"toughness": 673, "difficulty": {1: 8335.64, 2: 8639.14, 3: 8942.64, 4: 9316.19}}, 2: {"toughness": 1455.43, "difficulty": {1: 756.43, 2: 783.07, 3: 809.72, 4: 842.52}}, 3: {"toughness": 5516.71, "difficulty": {1: 198.14, 2: 204.2, 3: 210.26, 4: 217.71}}})
-    Enemy(id=45, name="Paladin Leeroy", expansions=set(["Phantoms"]), difficultyTiers={1: {"toughness": 270, "difficulty": {1: 20568.05, 2: 21930.22, 3: 23292.39, 4: 24968.91}}, 2: {"toughness": 656, "difficulty": {1: 1940.78, 2: 2068.03, 3: 2195.28, 4: 2351.9}}, 3: {"toughness": 3026.2, "difficulty": {1: 426.57, 2: 452.9, 3: 479.24, 4: 511.65}}})
-    Enemy(id=46, name="Xanthous King Jeremiah", expansions=set(["Phantoms"]), difficultyTiers={1: {"toughness": 4118.5, "difficulty": {1: 2962.7, 2: 3150.28, 3: 3337.87, 4: 3568.74}}, 2: {"toughness": 8824, "difficulty": {1: 339.59, 2: 361.11, 3: 382.63, 4: 409.12}}, 3: {"toughness": 14598, "difficulty": {1: 94.64, 2: 100.5, 3: 106.36, 4: 113.58}}})
-    Enemy(id=47, name="Hungry Mimic", expansions=set(["Explorers"]), difficultyTiers={1: {"toughness": 527, "difficulty": {1: 9931.96, 2: 10292.55, 3: 10653.15, 4: 11096.96}}, 2: {"toughness": 1213, "difficulty": {1: 937.57, 2: 971.39, 3: 1005.2, 4: 1046.81}}, 3: {"toughness": 4568, "difficulty": {1: 274.56, 2: 283.97, 3: 293.39, 4: 304.98}}})
-    Enemy(id=48, name="Voracious Mimic", expansions=set(["Explorers"]), difficultyTiers={1: {"toughness": 203, "difficulty": {1: 35862.17, 2: 37113.2, 3: 38364.22, 4: 39903.94}}, 2: {"toughness": 537, "difficulty": {1: 3260.64, 2: 3373.7, 3: 3486.75, 4: 3625.9}}, 3: {"toughness": 2460, "difficulty": {1: 771.94, 2: 797.13, 3: 822.33, 4: 853.34}}})
+    Enemy(id=35, name="Armorer Dennis", expansions=set(["Phantoms"]), cards=4, difficultyTiers={1: {"toughness": 484, "difficulty": {1: 4088.87, 2: 4228.3, 3: 4367.73, 4: 4539.33}}, 2: {"toughness": 1098.4, "difficulty": {1: 449.89, 2: 465.46, 3: 481.03, 4: 500.2}}, 3: {"toughness": 4143.8, "difficulty": {1: 93.2, 2: 96.1, 3: 99, 4: 102.57}}})
+    Enemy(id=36, name="Fencer Sharron", expansions=set(["Phantoms"]), cards=5, difficultyTiers={1: {"toughness": 461.57, "difficulty": {1: 14740.26, 2: 14970.91, 3: 15201.57, 4: 15485.45}}, 2: {"toughness": 1037.29, "difficulty": {1: 1516.23, 2: 1540.31, 3: 1564.39, 4: 1594.03}}, 3: {"toughness": 3922, "difficulty": {1: 419.34, 2: 426.43, 3: 433.52, 4: 442.25}}})
+    Enemy(id=37, name="Invader Brylex", expansions=set(["Phantoms"]), cards=3, difficultyTiers={1: {"toughness": 243, "difficulty": {1: 39532.2, 2: 41207.45, 3: 42882.71, 4: 44944.56}}, 2: {"toughness": 647, "difficulty": {1: 3377, 2: 3519.2, 3: 3661.4, 4: 3836.41}}, 3: {"toughness": 2870, "difficulty": {1: 683.98, 2: 711.25, 3: 738.52, 4: 772.08}}})
+    Enemy(id=38, name="Kirk, Knight of Thorns", expansions=set(["Phantoms"]), cards=3, difficultyTiers={1: {"toughness": 809, "difficulty": {1: 4926.93, 2: 5093.36, 3: 5259.8, 4: 5464.65}}, 2: {"toughness": 1793, "difficulty": {1: 565.47, 2: 585.06, 3: 604.65, 4: 628.76}}, 3: {"toughness": 6574, "difficulty": {1: 135.38, 2: 139.67, 3: 143.95, 4: 149.23}}})
+    Enemy(id=39, name="Longfinger Kirk", expansions=set(["Phantoms"]), cards=3, difficultyTiers={1: {"toughness": 257, "difficulty": {1: 41717.95, 2: 42690, 3: 43662.04, 4: 44858.41}}, 2: {"toughness": 685, "difficulty": {1: 4077.99, 2: 4170.72, 3: 4263.45, 4: 4377.58}}, 3: {"toughness": 3114, "difficulty": {1: 1022.33, 2: 1042.04, 3: 1061.74, 4: 1085.99}}})
+    Enemy(id=40, name="Maldron the Assassin", expansions=set(["Phantoms"]), cards=3, difficultyTiers={1: {"toughness": 736, "difficulty": {1: 10897.77, 2: 11173, 3: 11448.24, 4: 11786.99}}, 2: {"toughness": 1653, "difficulty": {1: 1117.42, 2: 1144.46, 3: 1171.49, 4: 1204.76}}, 3: {"toughness": 6166, "difficulty": {1: 360.72, 2: 369.52, 3: 378.31, 4: 389.14}}})
+    Enemy(id=41, name="Maneater Mildred", expansions=set(["Phantoms"]), cards=3, difficultyTiers={1: {"toughness": 539.8, "difficulty": {1: 9249.26, 2: 9960.74, 3: 10672.22, 4: 11547.89}}, 2: {"toughness": 1238.6, "difficulty": {1: 766.43, 2: 825.38, 3: 884.34, 4: 956.9}}, 3: {"toughness": 4719.6, "difficulty": {1: 220.58, 2: 237.55, 3: 254.52, 4: 275.4}}})
+    Enemy(id=42, name="Marvelous Chester", expansions=set(["Phantoms"]), cards=3, difficultyTiers={1: {"toughness": 498, "difficulty": {1: 22633.74, 2: 22767.14, 3: 22900.55, 4: 23064.74}}, 2: {"toughness": 1141, "difficulty": {1: 2408.75, 2: 2422.85, 3: 2436.95, 4: 2454.31}}, 3: {"toughness": 4195, "difficulty": {1: 690.26, 2: 695.31, 3: 700.37, 4: 706.59}}})
+    Enemy(id=43, name="Melinda the Butcher", expansions=set(["Phantoms"]), cards=3, difficultyTiers={1: {"toughness": 794.6, "difficulty": {1: 4702.3, 2: 4900.97, 3: 5099.65, 4: 5344.17}}, 2: {"toughness": 1655.8, "difficulty": {1: 413.09, 2: 431.73, 3: 450.38, 4: 473.33}}, 3: {"toughness": 5673.8, "difficulty": {1: 128.67, 2: 134.4, 3: 140.14, 4: 147.2}}})
+    Enemy(id=44, name="Oliver the Collector", expansions=set(["Phantoms"]), cards=3, difficultyTiers={1: {"toughness": 673, "difficulty": {1: 8335.64, 2: 8639.14, 3: 8942.64, 4: 9316.19}}, 2: {"toughness": 1455.43, "difficulty": {1: 756.43, 2: 783.07, 3: 809.72, 4: 842.52}}, 3: {"toughness": 5516.71, "difficulty": {1: 198.14, 2: 204.2, 3: 210.26, 4: 217.71}}})
+    Enemy(id=45, name="Paladin Leeroy", expansions=set(["Phantoms"]), cards=3, difficultyTiers={1: {"toughness": 270, "difficulty": {1: 20568.05, 2: 21930.22, 3: 23292.39, 4: 24968.91}}, 2: {"toughness": 656, "difficulty": {1: 1940.78, 2: 2068.03, 3: 2195.28, 4: 2351.9}}, 3: {"toughness": 3026.2, "difficulty": {1: 426.57, 2: 452.9, 3: 479.24, 4: 511.65}}})
+    Enemy(id=46, name="Xanthous King Jeremiah", expansions=set(["Phantoms"]), cards=3, difficultyTiers={1: {"toughness": 4118.5, "difficulty": {1: 2962.7, 2: 3150.28, 3: 3337.87, 4: 3568.74}}, 2: {"toughness": 8824, "difficulty": {1: 339.59, 2: 361.11, 3: 382.63, 4: 409.12}}, 3: {"toughness": 14598, "difficulty": {1: 94.64, 2: 100.5, 3: 106.36, 4: 113.58}}})
+    Enemy(id=47, name="Hungry Mimic", expansions=set(["Explorers"]), cards=4, difficultyTiers={1: {"toughness": 527, "difficulty": {1: 9931.96, 2: 10292.55, 3: 10653.15, 4: 11096.96}}, 2: {"toughness": 1213, "difficulty": {1: 937.57, 2: 971.39, 3: 1005.2, 4: 1046.81}}, 3: {"toughness": 4568, "difficulty": {1: 274.56, 2: 283.97, 3: 293.39, 4: 304.98}}})
+    Enemy(id=48, name="Voracious Mimic", expansions=set(["Explorers"]), cards=4, difficultyTiers={1: {"toughness": 203, "difficulty": {1: 35862.17, 2: 37113.2, 3: 38364.22, 4: 39903.94}}, 2: {"toughness": 537, "difficulty": {1: 3260.64, 2: 3373.7, 3: 3486.75, 4: 3625.9}}, 3: {"toughness": 2460, "difficulty": {1: 771.94, 2: 797.13, 3: 822.33, 4: 853.34}}})
 
     bosses = {
-        "Asylum Demon": {"name": "Asylum Demon", "type": "boss", "level": "Mini Boss", "expansions": set(["Asylum Demon"])},
-        "Black Knight": {"name": "Black Knight", "type": "boss", "level": "Mini Boss", "expansions": set(["Tomb of Giants"])},
-        "Boreal Outrider Knight": {"name": "Boreal Outrider Knight", "type": "boss", "level": "Mini Boss", "expansions": set(["Dark Souls The Board Game"])},
-        "Gargoyle": {"name": "Gargoyle", "type": "boss", "level": "Mini Boss", "expansions": set(["Dark Souls The Board Game"])},
-        "Heavy Knight": {"name": "Heavy Knight", "type": "boss", "level": "Mini Boss", "expansions": set(["Painted World of Ariamis"])},
-        "Old Dragonslayer": {"name": "Old Dragonslayer", "type": "boss", "level": "Mini Boss", "expansions": set(["Explorers"])},
-        "Titanite Demon": {"name": "Titanite Demon", "type": "boss", "level": "Mini Boss", "expansions": set(["Dark Souls The Board Game", "The Sunless City"])},
-        "Winged Knight": {"name": "Winged Knight", "type": "boss", "level": "Mini Boss", "expansions": set(["Dark Souls The Board Game"])},
-        "Artorias": {"name": "Artorias", "type": "boss", "level": "Main Boss", "expansions": set(["Darkroot"])},
-        "Crossbreed Priscilla": {"name": "Crossbreed Priscilla", "type": "boss", "level": "Main Boss", "expansions": set(["Painted World of Ariamis"])},
-        "Dancer of the Boreal Valley": {"name": "Dancer of the Boreal Valley", "type": "boss", "level": "Main Boss", "expansions": set(["Dark Souls The Board Game"])},
-        "Gravelord Nito": {"name": "Gravelord Nito", "type": "boss", "level": "Main Boss", "expansions": set(["Tomb of Giants"])},
-        "Great Grey Wolf Sif": {"name": "Great Grey Wolf Sif", "type": "boss", "level": "Main Boss", "expansions": set(["Darkroot"])},
-        "Ornstein & Smough": {"name": "Ornstein & Smough", "type": "boss", "level": "Main Boss", "expansions": set(["Dark Souls The Board Game", "The Sunless City"])},
-        "Sir Alonne": {"name": "Sir Alonne", "type": "boss", "level": "Main Boss", "expansions": set(["Iron Keep"])},
-        "Smelter Demon": {"name": "Smelter Demon", "type": "boss", "level": "Main Boss", "expansions": set(["Iron Keep"])},
-        "The Pursuer": {"name": "The Pursuer", "type": "boss", "level": "Main Boss", "expansions": set(["Explorers"])},
-        "Black Dragon Kalameet": {"name": "Black Dragon Kalameet", "type": "boss", "level": "Mega Boss", "expansions": set(["Black Dragon Kalameet"])},
-        "Executioner Chariot": {"name": "Executioner Chariot", "type": "boss", "level": "Mega Boss", "expansions": set(["Executioner Chariot"])},
-        "Gaping Dragon": {"name": "Gaping Dragon", "type": "boss", "level": "Mega Boss", "expansions": set(["Gaping Dragon"])},
-        "Guardian Dragon": {"name": "Guardian Dragon", "type": "boss", "level": "Mega Boss", "expansions": set(["Guardian Dragon"])},
-        "Manus, Father of the Abyss": {"name": "Manus, Father of the Abyss", "type": "boss", "level": "Mega Boss", "expansions": set(["Manus, Father of the Abyss"])},
-        "Old Iron King": {"name": "Old Iron King", "type": "boss", "level": "Mega Boss", "expansions": set(["Old Iron King"])},
-        "Stray Demon": {"name": "Stray Demon", "type": "boss", "level": "Mega Boss", "expansions": set(["Asylum Demon"])},
-        "The Four Kings": {"name": "The Four Kings", "type": "boss", "level": "Mega Boss", "expansions": set(["The Four Kings"])},
-        "The Last Giant": {"name": "The Last Giant", "type": "boss", "level": "Mega Boss", "expansions": set(["The Last Giant"])},
-        "Vordt of the Boreal Valley": {"name": "Vordt of the Boreal Valley", "type": "boss", "level": "Mega Boss", "expansions": set(["Vordt of the Boreal Valley"])}
+        "Asylum Demon": {"name": "Asylum Demon", "type": "boss", "level": "Mini Boss", "expansions": set(["Asylum Demon"]), "cards": 4},
+        "Black Knight": {"name": "Black Knight", "type": "boss", "level": "Mini Boss", "expansions": set(["Tomb of Giants"]), "cards": 4},
+        "Boreal Outrider Knight": {"name": "Boreal Outrider Knight", "type": "boss", "level": "Mini Boss", "expansions": set(["Dark Souls The Board Game"]), "cards": 4},
+        "Gargoyle": {"name": "Gargoyle", "type": "boss", "level": "Mini Boss", "expansions": set(["Dark Souls The Board Game"]), "cards": 4},
+        "Heavy Knight": {"name": "Heavy Knight", "type": "boss", "level": "Mini Boss", "expansions": set(["Painted World of Ariamis"]), "cards": 4},
+        "Old Dragonslayer": {"name": "Old Dragonslayer", "type": "boss", "level": "Mini Boss", "expansions": set(["Explorers"]), "cards": 4},
+        "Titanite Demon": {"name": "Titanite Demon", "type": "boss", "level": "Mini Boss", "expansions": set(["Dark Souls The Board Game", "The Sunless City"]), "cards": 4},
+        "Winged Knight": {"name": "Winged Knight", "type": "boss", "level": "Mini Boss", "expansions": set(["Dark Souls The Board Game"]), "cards": 4},
+        "Artorias": {"name": "Artorias", "type": "boss", "level": "Main Boss", "expansions": set(["Darkroot"]), "cards": 5},
+        "Crossbreed Priscilla": {"name": "Crossbreed Priscilla", "type": "boss", "level": "Main Boss", "expansions": set(["Painted World of Ariamis"]), "cards": 5},
+        "Dancer of the Boreal Valley": {"name": "Dancer of the Boreal Valley", "type": "boss", "level": "Main Boss", "expansions": set(["Dark Souls The Board Game"]), "cards": 5},
+        "Gravelord Nito": {"name": "Gravelord Nito", "type": "boss", "level": "Main Boss", "expansions": set(["Tomb of Giants"]), "cards": 5},
+        "Great Grey Wolf Sif": {"name": "Great Grey Wolf Sif", "type": "boss", "level": "Main Boss", "expansions": set(["Darkroot"]), "cards": 5},
+        "Ornstein & Smough": {"name": "Ornstein & Smough", "type": "boss", "level": "Main Boss", "expansions": set(["Dark Souls The Board Game", "The Sunless City"]), "cards": 5},
+        "Sir Alonne": {"name": "Sir Alonne", "type": "boss", "level": "Main Boss", "expansions": set(["Iron Keep"]), "cards": 5},
+        "Smelter Demon": {"name": "Smelter Demon", "type": "boss", "level": "Main Boss", "expansions": set(["Iron Keep"]), "cards": 5},
+        "The Pursuer": {"name": "The Pursuer", "type": "boss", "level": "Main Boss", "expansions": set(["Explorers"]), "cards": 8},
+        "Black Dragon Kalameet": {"name": "Black Dragon Kalameet", "type": "boss", "level": "Mega Boss", "expansions": set(["Black Dragon Kalameet"]), "cards": 6},
+        "Executioner Chariot": {"name": "Executioner Chariot", "type": "boss", "level": "Mega Boss", "expansions": set(["Executioner Chariot"]), "cards": 5},
+        "Gaping Dragon": {"name": "Gaping Dragon", "type": "boss", "level": "Mega Boss", "expansions": set(["Gaping Dragon"]), "cards": 6},
+        "Guardian Dragon": {"name": "Guardian Dragon", "type": "boss", "level": "Mega Boss", "expansions": set(["Guardian Dragon"]), "cards": 5},
+        "Manus, Father of the Abyss": {"name": "Manus, Father of the Abyss", "type": "boss", "level": "Mega Boss", "expansions": set(["Manus, Father of the Abyss"]), "cards": 5},
+        "Old Iron King": {"name": "Old Iron King", "type": "boss", "level": "Mega Boss", "expansions": set(["Old Iron King"]), "cards": 6},
+        "Stray Demon": {"name": "Stray Demon", "type": "boss", "level": "Mega Boss", "expansions": set(["Asylum Demon"]), "cards": 6},
+        "The Four Kings": {"name": "The Four Kings", "type": "boss", "level": "Mega Boss", "expansions": set(["The Four Kings"]), "cards": 4},
+        "The Last Giant": {"name": "The Last Giant", "type": "boss", "level": "Mega Boss", "expansions": set(["The Last Giant"]), "cards": 6},
+        "Vordt of the Boreal Valley": {"name": "Vordt of the Boreal Valley", "type": "boss", "level": "Mega Boss", "expansions": set(["Vordt of the Boreal Valley"]), "cards": 0}
     }
 
 except Exception as e:
