@@ -483,7 +483,7 @@ try:
                 else:
                     self.decks[selection]["healthMod"] -= 1
 
-                self.app.variantsTab.load_variant_card_locked(variant=selection[:selection.index(" (")] if "Vordt" in selection else selection + " - data", deckDataCard=True, healthMod=self.decks[self.treeviewDecks.selection()[0]]["healthMod"])
+                self.app.variantsTab.load_variant_card_locked(variant=(selection[:selection.index(" (")] if "Vordt" in selection else selection) + " - data", deckDataCard=True, healthMod=self.decks[self.treeviewDecks.selection()[0]]["healthMod"])
 
                 currentHealth = (
                     self.decks[selection]["healthMod"]
