@@ -651,6 +651,9 @@ try:
                 self.app.display.image = self.app.displayPhotoImage
                 if not self.app.forPrinting:
                     self.app.display.config(image=self.app.displayPhotoImage)
+                    self.app.display2.config(image="")
+                    self.app.display2.bind("<Button 1>", do_nothing)
+                    self.app.display2.bind("<Button 3>", do_nothing)
                 self.app.display.bind("<Button 1>", self.shuffle_enemies)
 
                 log("\tEnd of edit_encounter_card")

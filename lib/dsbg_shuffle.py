@@ -220,7 +220,7 @@ try:
             try:
                 log("Start of create_display_frame")
 
-                self.displayCanvas = tk.Canvas(self, width=410, yscrollcommand=self.displayScrollbar.set)
+                self.displayCanvas = tk.Canvas(self, width=820, yscrollcommand=self.displayScrollbar.set)
                 self.displayFrame = ttk.Frame(self.displayCanvas)
                 self.displayFrame.columnconfigure(index=0, weight=1, minsize=410)
                 self.displayCanvas.grid(row=0, column=4, padx=10, pady=(10, 0), sticky="nsew", rowspan=2)
@@ -233,7 +233,7 @@ try:
                 self.display = ttk.Label(self.displayFrame)
                 self.display.grid(column=0, row=0, sticky="nsew")
                 self.display2 = ttk.Label(self.displayFrame)
-                self.display2.grid(column=0, row=1, sticky="nsew")
+                self.display2.grid(column=1, row=0, sticky="nsew")
 
                 log("End of create_display_frame")
             except Exception as e:

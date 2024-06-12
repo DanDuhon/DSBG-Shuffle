@@ -9,7 +9,7 @@ try:
 
     from dsbg_shuffle_enemies import bosses
     from dsbg_shuffle_events import events
-    from dsbg_shuffle_utility import PopupWindow, error_popup, log, baseFolder, pathSep
+    from dsbg_shuffle_utility import PopupWindow, do_nothing, error_popup, log, baseFolder, pathSep
 
 
     class CampaignFrame(ttk.Frame):
@@ -285,6 +285,8 @@ try:
                 # Remove the image displaying a deleted card.
                 self.app.display.config(image="")
                 self.app.display2.config(image="")
+                self.app.display2.bind("<Button 1>", do_nothing)
+                self.app.display2.bind("<Button 3>", do_nothing)
 
                 log("End of delete_card_from_campaign")
             except Exception as e:

@@ -12,7 +12,7 @@ try:
 
     from dsbg_shuffle_enemies import bosses, enemiesDict
     from dsbg_shuffle_behaviors import behaviorDetail, behaviors
-    from dsbg_shuffle_utility import PopupWindow, error_popup, log, baseFolder, font, font2, font3, pathSep
+    from dsbg_shuffle_utility import PopupWindow, do_nothing, error_popup, log, baseFolder, font, font2, font3, pathSep
 
 
     modIdLookup = {
@@ -226,7 +226,7 @@ try:
                 raise
 
 
-        def load_variant_card(self, event=None, variant=None, armorerDennis=False, oldIronKing=False, deckDataCard=False):
+        def load_variant_card(self, event=None, variant=None, armorerDennis=False, oldIronKing=False, deckDataCard=False, healthMod=0):
             """
             Load a variant card that was selected (or passed in).
             """
@@ -278,7 +278,7 @@ try:
                 if "Ornstein & Smough" in self.selectedVariant and (self.selectedVariant.count("&") == 2 or "data" in self.selectedVariant):
                     self.edit_variant_card_os(variant=variant)
                 else:
-                    self.edit_variant_card(variant=variant, armorerDennis=armorerDennis, oldIronKing=oldIronKing, deckDataCard=deckDataCard)
+                    self.edit_variant_card(variant=variant, armorerDennis=armorerDennis, oldIronKing=oldIronKing, deckDataCard=deckDataCard, healthMod=healthMod)
 
                 self.app.display.bind("<Button 1>", self.apply_difficulty_modifier)
                 
@@ -290,7 +290,7 @@ try:
                 raise
 
 
-        def load_variant_card_locked(self, event=None, variant=None, armorerDennis=False, oldIronKing=False, deckDataCard=False):
+        def load_variant_card_locked(self, event=None, variant=None, armorerDennis=False, oldIronKing=False, deckDataCard=False, healthMod=0):
             try:
                 log("Start of load_variant_card_locked, variant={}".format(str(variant)))
                 
@@ -338,7 +338,7 @@ try:
                             "Mega Bosses"
                             } else ""))
                 elif "_" not in variant:
-                    self.load_variant_card(variant=variant, armorerDennis=armorerDennis, oldIronKing=oldIronKing, deckDataCard=deckDataCard)
+                    self.load_variant_card(variant=variant, armorerDennis=armorerDennis, oldIronKing=oldIronKing, deckDataCard=deckDataCard, healthMod=healthMod)
                     return
                 else:
                     name = variant[:variant.index("_")]
@@ -372,7 +372,7 @@ try:
                 if "Ornstein & Smough" in self.selectedVariant and (self.selectedVariant.count("&") == 2 or "data" in self.selectedVariant):
                     self.edit_variant_card_os(variant=mods)
                 else:
-                    self.edit_variant_card(variant=mods, armorerDennis=armorerDennis, oldIronKing=oldIronKing)
+                    self.edit_variant_card(variant=mods, armorerDennis=armorerDennis, oldIronKing=oldIronKing, healthMod=healthMod)
 
                 self.app.display.bind("<Button 1>", self.apply_difficulty_modifier)
                 
@@ -427,7 +427,6 @@ try:
                     if "defKey" not in self.currentVariants.get(startReal, {}):
                         defKey = choice(list(self.variants[startReal][self.app.numberOfCharacters][diffKeyReal].keys()))
                         self.currentVariants[startReal] = {"defKey": defKey}
-                        #self.pick_enemy_variants_enemy(startReal, diffKeyReal)
                     else:
                         defKey = self.currentVariants[startReal]["defKey"]
                     
@@ -452,6 +451,7 @@ try:
                         progress.progressVar.set(i)
                         self.root.update_idletasks()
                         self.pick_enemy_variants_enemy(child, diffKey)
+                        self.app.display.config(image="")
                 elif start == "All":
                     progressMax = 0
                     for child in tree.get_children("All"):
@@ -468,6 +468,9 @@ try:
                             progress.progressVar.set(i)
                             self.root.update_idletasks()
                             self.pick_enemy_variants_enemy(subChild, diffKey)
+                            
+
+                    self.app.display.config(image="")
 
                 if progress:
                     progress.label.config(text = "Calculating difficulty averages...")
@@ -541,6 +544,8 @@ try:
 
                 for behavior in self.variants[start][self.app.numberOfCharacters][diffKeyReal][defKey]:
                     self.pick_enemy_variants_behavior(start, behavior, diffKeyReal, defKey)
+                    
+                self.app.display.config(image="")
                 
                 log("End of pick_enemy_variants_enemy")
             except Exception as e:
@@ -555,6 +560,10 @@ try:
             try:
                 log("Start of pick_enemy_variants_behavior (start={}, behavior={}, diffKey={}, defKey={})".format(start, behavior, str(diffKey), str(defKey)))
 
+                if behavior in {"Back Dash", "Forward Dash"}:
+                    log("End of pick_enemy_variants_behavior (nothing done)")
+                    return
+                
                 if start == "Ornstein & Smough":
                     behavior = [k for k in behaviors[start] if behavior in k][0]
 
@@ -597,7 +606,7 @@ try:
                 raise
 
 
-        def edit_variant_card(self, variant=None, event=None, armorerDennis=False, oldIronKing=False, deckDataCard=False):
+        def edit_variant_card(self, variant=None, event=None, armorerDennis=False, oldIronKing=False, deckDataCard=False, healthMod=0):
             try:
                 log("Start of edit_variant_card, variant={}".format(str(variant)))
 
@@ -605,7 +614,7 @@ try:
                 behavior = self.selectedVariant[self.selectedVariant.index(" - ")+3:] if " - " in self.selectedVariant else None
 
                 if behavior == "data":
-                    self.edit_variant_card_data(enemy, variant=variant)
+                    self.edit_variant_card_data(enemy, variant=variant, healthMod=healthMod)
                 
                 if behavior != "data" or "behavior" in behaviorDetail[enemy]:
                     self.edit_variant_card_behavior(variant=variant, armorerDennis=armorerDennis, oldIronKing=oldIronKing)
@@ -616,8 +625,12 @@ try:
                     self.app.display2.image = self.app.displayPhotoImage
                     self.app.display2.config(image=self.app.displayPhotoImage)
                 else:
-                    self.app.display.image = self.app.displayPhotoImage
-                    self.app.display.config(image=self.app.displayPhotoImage)
+                    if behavior == "data":
+                        self.app.display2.image = self.app.displayPhotoImage
+                        self.app.display2.config(image=self.app.displayPhotoImage)
+                    else:
+                        self.app.display.image = self.app.displayPhotoImage
+                        self.app.display.config(image=self.app.displayPhotoImage)
 
                 log("End of edit_variant_card")
             except Exception as e:
@@ -689,9 +702,13 @@ try:
                             i += 1
                             progress.progressVar.set(i)
                             self.root.update_idletasks()
+
                             if " - " in child:
                                 enemy = child[:child.index(" - ")]
                                 behavior = child[child.index(" - ")+3:]
+
+                            if behavior in {"Back Dash", "Forward Dash"}:
+                                continue
                                 
                             v = tree.item(child)["values"]
                         
@@ -749,9 +766,13 @@ try:
                                 i += 1
                                 progress.progressVar.set(i)
                                 self.root.update_idletasks()
+
                                 if " - " in child:
                                     enemy = child[:child.index(" - ")]
                                     behavior = child[child.index(" - ")+3:]
+
+                                if behavior in {"Back Dash", "Forward Dash"}:
+                                    continue
                                     
                                 v = tree.item(child)["values"]
                         
@@ -796,6 +817,9 @@ try:
                         if " - " in child:
                             enemy = child[:child.index(" - ")]
                             behavior = child[child.index(" - ")+3:]
+
+                        if behavior in {"Back Dash", "Forward Dash"}:
+                            continue
                             
                         v = tree.item(child)["values"]
                         
@@ -820,7 +844,11 @@ try:
                         contents = treeLocked.get_children(iid)
                         treeLocked.insert(parent=iid, index=bisect_left(contents, iidChild), iid=iidChild, values=(v[0], v[1]), tags=True)
                         
-                    self.app.behaviorDeckTab.set_decks(enemy=focus, skipClear=True)
+                    if "Vordt" in focus:
+                        self.app.behaviorDeckTab.set_decks(enemy="Vordt of the Boreal Valley (move)", skipClear=True)
+                        self.app.behaviorDeckTab.set_decks(enemy="Vordt of the Boreal Valley (attack)", skipClear=True)
+                    else:
+                        self.app.behaviorDeckTab.set_decks(enemy=focus, skipClear=True)
                 else:
                     modList = [v for v in self.currentVariants[tree.focus()][[k for k in list(self.currentVariants[tree.focus()].keys()) if k != "defKey"][0]]]
                     iid = tree.focus() + "_" + ",".join([str(v) for v in modList])
@@ -946,6 +974,8 @@ try:
                 # Remove the image displaying a deleted item.
                 self.app.display.config(image="")
                 self.app.display2.config(image="")
+                self.app.display2.bind("<Button 1>", do_nothing)
+                self.app.display2.bind("<Button 3>", do_nothing)
 
                 progress.destroy()
 
@@ -1029,6 +1059,8 @@ try:
                 # Remove the image displaying a deleted item.
                 self.app.display.config(image="")
                 self.app.display2.config(image="")
+                self.app.display2.bind("<Button 1>", do_nothing)
+                self.app.display2.bind("<Button 3>", do_nothing)
 
                 progress.destroy()
 
@@ -1038,7 +1070,7 @@ try:
                 raise
 
 
-        def edit_variant_card_data(self, enemy, variant=None, event=None):
+        def edit_variant_card_data(self, enemy, variant=None, event=None, healthMod=0):
             try:
                 log("Start of edit_variant_card_data, variant={}".format(str(variant)))
 
@@ -1072,6 +1104,9 @@ try:
                         resist += int(mod[-1]) if "resist" in mod else 0
                         if healthAddition:
                             heatup = [h + healthAddition for h in heatup]
+
+                if health + healthMod >= 0:
+                    health += healthMod
 
                 imageWithText.text((252 + (4 if health < 10 else 0), 35), str(health), "white", font2)
                 imageWithText.text((130, 245 - (10 if "behavior" in behaviorDetail[enemy] else 0)), str(armor), "white", font3)
@@ -1222,10 +1257,13 @@ try:
 
                 behavior = "" if behavior == "behavior" else behavior
 
-                if variant:
+                if type(variant) == list:
                     mods = variant
-                else:
+                elif enemy in self.currentVariants:
                     mods = sorted([modIdLookup[m] for m in list(self.currentVariants[enemy][behavior])], key=lambda x: 1 if x == "repeat" else 0)
+                else:
+                    log("End of apply_mods_to_actions (nothing to do)")
+                    return dodge, repeat, actions
 
                 for mod in mods:
                     dodge += int(mod[-1]) if "dodge" in mod else 0
@@ -1288,8 +1326,13 @@ try:
                     self.edit_variant_card_behavior_os(variant=variant)
 
                 self.app.displayPhotoImage = ImageTk.PhotoImage(self.app.displayImage)
-                self.app.display.image = self.app.displayPhotoImage
-                self.app.display.config(image=self.app.displayPhotoImage)
+                
+                if "data" in self.selectedVariant:
+                    self.app.display2.image = self.app.displayPhotoImage
+                    self.app.display2.config(image=self.app.displayPhotoImage)
+                else:
+                    self.app.display.image = self.app.displayPhotoImage
+                    self.app.display.config(image=self.app.displayPhotoImage)
 
                 log("End of edit_variant_card")
             except Exception as e:

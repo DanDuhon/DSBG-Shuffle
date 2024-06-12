@@ -5,8 +5,8 @@ try:
 
     from dsbg_shuffle_enemies import bosses, enemiesDict
     from dsbg_shuffle_behaviors import behaviorDetail, behaviors
-    from dsbg_shuffle_utility import PopupWindow, error_popup, log
-    from dsbg_shuffle_variants import dataCardMods
+    from dsbg_shuffle_utility import PopupWindow, do_nothing, error_popup, log
+    from dsbg_shuffle_variants import dataCardMods, modIdLookup
 
 
     class BehaviorDeckFrame(ttk.Frame):
@@ -46,7 +46,8 @@ try:
                     "curIndex": 0,
                     "custom": False,
                     "heatup": 0 if enemy in "Old Dragonslayer" else 1 if enemy == "The Four Kings" else False,
-                    "lastCardDrawn": None
+                    "lastCardDrawn": None,
+                    "healthMod": 0
                     }
                 
                 if enemy == "Smelter Demon":
@@ -116,10 +117,9 @@ try:
                     self.treeviewDecks.insert(parent=bosses[enemy]["level"] + "es", index="end", iid=enemy, values=("    " + enemy, bosses[enemy]["cards"]), tags=True)
 
                 if "Vordt of the Boreal Valley" in self.app.availableExpansions:
-                    self.treeviewDecks.insert(parent="Mega Bosses", index="end", iid="Vordt of the Boreal Valley (move)", values=("    Vordt of the Boreal Valley (move)", 3), tags=True)
-                    self.treeviewDecks.insert(parent="Mega Bosses", index="end", iid="Vordt of the Boreal Valley (attack)", values=("    Vordt of the Boreal Valley (attack)", 4), tags=True)
+                    self.treeviewDecks.insert(parent="Mega Bosses", index="end", iid="Vordt of the Boreal Valley (move)", values=("    Vordt of the Boreal Valley (move)", 4), tags=True)
+                    self.treeviewDecks.insert(parent="Mega Bosses", index="end", iid="Vordt of the Boreal Valley (attack)", values=("    Vordt of the Boreal Valley (attack)", 3), tags=True)
 
-                
                 self.treeviewDecks.bind("<<TreeviewSelect>>", self.display_deck_cards)
 
                 log("End of create_deck_treeview")
@@ -135,9 +135,10 @@ try:
                 lookupName = enemy if "(" not in enemy else enemy[:enemy.index(" (")]
 
                 behaviorsWithDupes = behaviors
-                behaviorsWithDupes["The Pursuer"].append("Stabbing Strike")
-                behaviorsWithDupes["The Pursuer"].append("Wide Blade Swing")
-                behaviorsWithDupes["The Pursuer"].append("Wide Blade Swing")
+                if enemy == "The Pursuer":
+                    behaviorsWithDupes["The Pursuer"].append("Stabbing Strike")
+                    behaviorsWithDupes["The Pursuer"].append("Wide Blade Swing")
+                    behaviorsWithDupes["The Pursuer"].append("Wide Blade Swing")
 
                 nonHeatupCards = [b for b in behaviorsWithDupes[enemy] if (
                     (
@@ -161,9 +162,11 @@ try:
                 if enemy in enemiesDict:
                     deck = sample(nonHeatupCards, enemiesDict[enemy].cards)
                 elif "(move)" in enemy: # Vordt
-                    deck = sample(nonHeatupCards, 3)
-                elif "(attack)" in enemy: # Vordt
                     deck = sample(nonHeatupCards, 4)
+                elif "(attack)" in enemy: # Vordt
+                    deck = sample(nonHeatupCards, 3)
+                elif enemy == "Executioner Chariot":
+                    deck = sample(nonHeatupCards, 4) + [choice([b for b in behaviors[enemy] if behaviorDetail[lookupName][b].get("heatup", False)])]
                 elif enemy == "Gaping Dragon":
                     deck = sample(nonHeatupCards, 3)
                     deck += ["Stomach Slam", "Stomach Slam", choice([b for b in behaviors[enemy] if behaviorDetail[lookupName][b].get("heatup", False)])]
@@ -204,6 +207,8 @@ try:
                     # Remove the displayed item.
                     self.app.display.config(image="")
                     self.app.display2.config(image="")
+                    self.app.display2.bind("<Button 1>", do_nothing)
+                    self.app.display2.bind("<Button 3>", do_nothing)
 
                 if not enemy:
                     enemy = self.treeviewDecks.selection()[0]
@@ -271,6 +276,8 @@ try:
                     log("End of draw_behavior_card (nothing done)")
                     return
                 
+                self.display_deck_cards()
+                
                 if self.decks[selection]["curIndex"] == len(self.decks[selection]["deck"]):
                     self.decks[selection]["curIndex"] = 0
 
@@ -278,6 +285,12 @@ try:
                 cardToDraw = variantSelection + " - " + self.decks[selection]["deck"][self.decks[selection]["curIndex"]]
                 
                 if variantSelection in set([v[:v.index("_")] for v in self.app.variantsTab.lockedVariants]) and cardToDraw in set([v[:v.index("_")] for v in self.app.variantsTab.lockedVariants]):
+                    if not [v[v.index("_"):] for v in self.app.variantsTab.lockedVariants if (
+                        cardToDraw in v
+                        and (self.decks[selection]["defKey"] == "" or set([int(x) for x in v[v.index("_")+1:].split(",")]).issuperset(set([int(x) for x in self.decks[selection]["defKey"].split(",")])))
+                        and (self.decks[selection]["defKey"] != "" or not set([int(x) for x in v[v.index("_")+1:].split(",")]) & dataCardMods))]:
+                        pass
+                    
                     variant = cardToDraw + choice([v[v.index("_"):] for v in self.app.variantsTab.lockedVariants if (
                         cardToDraw in v
                         and (self.decks[selection]["defKey"] == "" or set([int(x) for x in v[v.index("_")+1:].split(",")]).issuperset(set([int(x) for x in self.decks[selection]["defKey"].split(",")])))
@@ -314,8 +327,7 @@ try:
             try:
                 log("Start of display_deck_cards")
 
-                tree = event.widget
-                selection = tree.selection()[0]
+                selection = self.treeviewDecks.selection()[0]
 
                 if selection in self.decks:
                     # Remove keyword tooltips from the previous image shown, if there are any.
@@ -326,9 +338,13 @@ try:
                     self.app.display.config(image="")
                     self.app.display2.config(image="")
 
-                    self.app.variantsTab.load_variant_card_locked(variant=selection + " - data", deckDataCard=True)
                     if self.decks[selection]["lastCardDrawn"]:
                         self.app.variantsTab.load_variant_card_locked(variant=self.decks[selection]["lastCardDrawn"])
+                    selection = selection[:selection.index(" (")] if "Vordt" in selection else selection
+                    self.app.variantsTab.load_variant_card_locked(variant=selection + " - data", deckDataCard=True, healthMod=self.decks[self.treeviewDecks.selection()[0]]["healthMod"])
+
+                    self.app.display2.bind("<Button 1>", self.lower_health)
+                    self.app.display2.bind("<Button 3>", self.raise_health)
 
                 log("End of display_deck_cards")
             except Exception as e:
@@ -349,7 +365,6 @@ try:
 
                 # Remove the displayed item.
                 self.app.display.config(image="")
-                self.app.display2.config(image="")
 
                 if selection not in self.decks or not self.decks[selection]["lastCardDrawn"]:
                     log("End of draw_behavior_card (nothing done)")
@@ -371,14 +386,16 @@ try:
                 raise
                 
 
-        def heatup(self):
+        def heatup(self, selection=None):
             try:
                 log("Start of heatup")
 
-                selection = self.treeviewDecks.selection()[0]
+                if not selection:
+                    selection = self.treeviewDecks.selection()[0]
 
                 if (
                     not selection
+                    or selection == "Executioner Chariot"
                     or (selection == "Old Dragonslayer" and self.decks[selection]["heatup"] > 2)
                     or (selection == "The Four Kings" and self.decks[selection]["heatup"] > 3)
                     or (type(self.decks[selection]["heatup"]) == bool and self.decks[selection]["heatup"])
@@ -399,7 +416,6 @@ try:
 
                 # Remove the displayed item.
                 self.app.display.config(image="")
-                self.app.display2.config(image="")
 
                 if selection == "Oliver the Collector":
                     self.decks[selection]["deck"] = self.decks[selection]["heatupCards"]
@@ -430,8 +446,7 @@ try:
                     self.decks[selection]["deck"] += sample(self.decks[selection]["heatupCards"][self.decks[selection]["heatup"]], 2)
                 elif selection == "The Last Giant":
                     self.decks[selection]["deck"] = list(set(self.decks[selection]["deck"]) - set([b for b in behaviors[selection] if behaviorDetail[selection][b].get("arm", False)]))
-                    self.decks[selection]["deck"] += sample(self.decks[selection]["heatupCards"], 3)
-                    self.decks[selection]["deck"] += ["Falling Slam"]
+                    self.decks[selection]["deck"] += self.decks[selection]["heatupCards"]
                 else:
                     self.decks[selection]["deck"] += self.decks[selection]["heatupCards"]
                     self.decks[selection]["heatup"] = True
@@ -443,6 +458,91 @@ try:
                 self.treeviewDecks.item(selection, values=(self.treeviewDecks.item(selection)["values"][0], len(self.decks[selection]["deck"]) - self.decks[selection]["curIndex"]))
 
                 log("End of heatup")
+            except Exception as e:
+                error_popup(self.root, e)
+                raise
+                
+
+        def lower_health(self, event=None):
+            try:
+                log("Start of lower_health")
+
+                selection = self.treeviewDecks.selection()[0]
+
+                if selection == "The Four Kings" or (
+                    self.decks[selection]["healthMod"]
+                    + behaviorDetail[selection[:selection.index(" (")] if "Vordt" in selection else selection]["health"]
+                    + ([int(modIdLookup[m][-1]) for m in list(self.app.variantsTab.currentVariants[selection[:selection.index(" (")] if "Vordt" in selection else selection]["defKey"]) if "health" in modIdLookup[m]][0] if (selection[:selection.index(" (")] if "Vordt" in selection else selection) in self.app.variantsTab.currentVariants else 0)
+                    ) == 0:
+                    log("End of lower_health (nothing done)")
+                    return
+
+                if "Vordt" in selection:
+                    self.decks["Vordt of the Boreal Valley (move)"]["healthMod"] -= 1
+                    self.decks["Vordt of the Boreal Valley (attack)"]["healthMod"] -= 1
+                else:
+                    self.decks[selection]["healthMod"] -= 1
+
+                self.app.variantsTab.load_variant_card_locked(variant=selection[:selection.index(" (")] if "Vordt" in selection else selection + " - data", deckDataCard=True, healthMod=self.decks[self.treeviewDecks.selection()[0]]["healthMod"])
+
+                currentHealth = (
+                    self.decks[selection]["healthMod"]
+                    + behaviorDetail[selection[:selection.index(" (")] if "Vordt" in selection else selection]["health"]
+                    + ([int(modIdLookup[m][-1]) for m in list(self.app.variantsTab.currentVariants[selection[:selection.index(" (")] if "Vordt" in selection else selection]["defKey"]) if "health" in modIdLookup[m]][0] if (selection[:selection.index(" (")] if "Vordt" in selection else selection) in self.app.variantsTab.currentVariants else 0)
+                )
+
+                if "Vordt" in selection:
+                    heatupPointVordt1 = (
+                        behaviorDetail["Vordt of the Boreal Valley"]["heatup1"]
+                        + ([int(modIdLookup[m][-1]) for m in list(self.app.variantsTab.currentVariants["Vordt of the Boreal Valley"]["defKey"]) if "health" in modIdLookup[m]][0] if "Vordt of the Boreal Valley" in self.app.variantsTab.currentVariants else 0)
+                    )
+                    heatupPointVordt2 = (
+                        behaviorDetail["Vordt of the Boreal Valley"]["heatup2"]
+                        + ([int(modIdLookup[m][-1]) for m in list(self.app.variantsTab.currentVariants["Vordt of the Boreal Valley"]["defKey"]) if "health" in modIdLookup[m]][0] if "Vordt of the Boreal Valley" in self.app.variantsTab.currentVariants else 0)
+                    )
+                    heatupPoint = -1
+                else:
+                    heatupPoint = (
+                        behaviorDetail[selection].get("heatup", 0)
+                        + (1000 if "heatup" not in behaviorDetail[selection] else 0)
+                        + ([int(modIdLookup[m][-1]) for m in list(self.app.variantsTab.currentVariants[selection]["defKey"]) if "health" in modIdLookup[m]][0] if selection in self.app.variantsTab.currentVariants else 0)
+                    )
+                    heatupPointVordt1 = -1
+                    heatupPointVordt2 = -1
+
+                if currentHealth == heatupPoint and not self.decks[selection]["heatup"]:
+                    self.heatup(selection)
+                elif currentHealth == heatupPointVordt1:
+                    self.heatup("Vordt of the Boreal Valley (attack)")
+                elif currentHealth == heatupPointVordt2:
+                    self.heatup("Vordt of the Boreal Valley (move)")
+
+                log("End of lower_health")
+            except Exception as e:
+                error_popup(self.root, e)
+                raise
+                
+
+        def raise_health(self, event=None):
+            try:
+                log("Start of raise_health")
+
+                selection = self.treeviewDecks.selection()[0]
+
+                if selection == "The Four Kings" or self.decks[selection]["healthMod"] == 0:
+                    log("End of raise_health (nothing done)")
+                    return
+
+                if "Vordt" in selection:
+                    self.decks["Vordt of the Boreal Valley (move)"]["healthMod"] += 1
+                    self.decks["Vordt of the Boreal Valley (attack)"]["healthMod"] += 1
+                    selection = selection[:selection.index(" (")] if "Vordt" in selection else selection
+                else:
+                    self.decks[selection]["healthMod"] += 1
+
+                self.app.variantsTab.load_variant_card_locked(variant=selection + " - data", deckDataCard=True, healthMod=self.decks[self.treeviewDecks.selection()[0]]["healthMod"])
+
+                log("End of raise_health")
             except Exception as e:
                 error_popup(self.root, e)
                 raise
