@@ -234,6 +234,8 @@ try:
                 self.display.grid(column=0, row=0, sticky="nsew")
                 self.display2 = ttk.Label(self.displayFrame)
                 self.display2.grid(column=1, row=0, sticky="nsew")
+                self.display3 = ttk.Label(self.displayFrame)
+                self.display3.grid(column=1, row=1, sticky="nsew")
 
                 log("End of create_display_frame")
             except Exception as e:
@@ -449,6 +451,7 @@ try:
                     self.rewardTreasure = None
                     self.display.config(image="")
                     self.display2.config(image="")
+                    self.display3.config(image="")
                     self.encounterTab.treeviewEncounters.pack_forget()
                     self.encounterTab.treeviewEncounters.destroy()
                     self.availableExpansions = set(self.settings["availableExpansions"])

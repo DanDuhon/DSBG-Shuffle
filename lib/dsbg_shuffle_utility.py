@@ -120,7 +120,7 @@ class PopupWindow(tk.Toplevel):
         loadingImage: Boolean
             Whether to show the loading image.
     """
-    def __init__(self, root, labelText=None, firstButton=False, secondButton=False, yesButton=False, noButton=False, ornsteinButton=False, smoughButton=False, progressBar=False, progressMax=None, loadingImage=False):
+    def __init__(self, root, labelText=None, firstButton=False, secondButton=False, yesButton=False, noButton=False, progressBar=False, progressMax=None, loadingImage=False):
         tk.Toplevel.__init__(self, root)
         self.attributes('-alpha', 0.0)
         self.popupFrame = ttk.Frame(self, padding=(20, 10))
@@ -149,14 +149,6 @@ class PopupWindow(tk.Toplevel):
             button = ttk.Button(self.popupFrame, text="No", command=self.no)
             button.grid(column=1, row=2, padx=20, pady=20)
 
-        if ornsteinButton:
-            button = ttk.Button(self.popupFrame, text="Ornstein", command=self.ornstein)
-            button.grid(column=0, row=2, padx=20, pady=20)
-
-        if smoughButton:
-            button = ttk.Button(self.popupFrame, text="Smough", command=self.smough)
-            button.grid(column=1, row=2, padx=20, pady=20)
-
         if loadingImage:
             loadingImage = ImageTk.PhotoImage(Image.open(baseFolder + "\\lib\\bonfire.png".replace("\\", pathSep)), Image.Resampling.LANCZOS)
             loadingLabel = ttk.Label(self.popupFrame)
@@ -181,16 +173,6 @@ class PopupWindow(tk.Toplevel):
     def no(self):
         self.destroy()
         self.answer = False
-
-
-    def ornstein(self):
-        self.destroy()
-        self.answer = "ornstein"
-
-
-    def smough(self):
-        self.destroy()
-        self.answer = "smough"
 
 
 class VerticalScrolledFrame(ttk.Frame):

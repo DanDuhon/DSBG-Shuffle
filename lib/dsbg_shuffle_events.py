@@ -382,8 +382,11 @@ try:
                 # Remove the image displaying a deleted encounter.
                 self.app.display.config(image="")
                 self.app.display2.config(image="")
+                self.app.display3.config(image="")
                 self.app.display2.bind("<Button 1>", do_nothing)
                 self.app.display2.bind("<Button 3>", do_nothing)
+                self.app.display3.bind("<Button 1>", do_nothing)
+                self.app.display3.bind("<Button 3>", do_nothing)
 
                 shuffle(self.eventDeck)
 
@@ -413,8 +416,11 @@ try:
                 # Remove the image displaying a deleted encounter.
                 self.app.display.config(image="")
                 self.app.display2.config(image="")
+                self.app.display3.config(image="")
                 self.app.display2.bind("<Button 1>", do_nothing)
                 self.app.display2.bind("<Button 3>", do_nothing)
+                self.app.display3.bind("<Button 1>", do_nothing)
+                self.app.display3.bind("<Button 3>", do_nothing)
                 
                 self.currentEvent = None
                 self.currentEventNum = 0
@@ -482,8 +488,11 @@ try:
                 shuffle(self.eventDeck)
                 self.app.display.config(image="")
                 self.app.display2.config(image="")
+                self.app.display3.config(image="")
                 self.app.display2.bind("<Button 1>", do_nothing)
                 self.app.display2.bind("<Button 3>", do_nothing)
+                self.app.display3.bind("<Button 1>", do_nothing)
+                self.app.display3.bind("<Button 3>", do_nothing)
 
                 # Reduce the Drawn Order value of more recently drawn cards by 1.
                 for eventCard in self.treeviewEventDeck.get_children():
@@ -530,8 +539,11 @@ try:
                 self.eventDeck.append(card)
                 self.app.display.config(image="")
                 self.app.display2.config(image="")
+                self.app.display3.config(image="")
                 self.app.display2.bind("<Button 1>", do_nothing)
                 self.app.display2.bind("<Button 3>", do_nothing)
+                self.app.display3.bind("<Button 1>", do_nothing)
+                self.app.display3.bind("<Button 3>", do_nothing)
 
                 # Reduce the Drawn Order value of more recently drawn cards by 1.
                 for eventCard in self.treeviewEventDeck.get_children():
@@ -575,8 +587,11 @@ try:
                 self.eventDeck.insert(0, card)
                 self.app.display.config(image="")
                 self.app.display2.config(image="")
+                self.app.display3.config(image="")
                 self.app.display2.bind("<Button 1>", do_nothing)
                 self.app.display2.bind("<Button 3>", do_nothing)
+                self.app.display3.bind("<Button 1>", do_nothing)
+                self.app.display3.bind("<Button 3>", do_nothing)
                 
                 # Reduce the Drawn Order value of more recently drawn cards by 1.
                 for eventCard in self.treeviewEventDeck.get_children():

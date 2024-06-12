@@ -226,7 +226,7 @@ try:
                 raise
 
 
-        def load_variant_card(self, event=None, variant=None, armorerDennis=False, oldIronKing=False, deckDataCard=False, healthMod=0):
+        def load_variant_card(self, event=None, variant=None, armorerDennis=False, oldIronKing=False, deckDataCard=False, healthMod=None):
             """
             Load a variant card that was selected (or passed in).
             """
@@ -272,13 +272,23 @@ try:
                 for tooltip in self.app.tooltips:
                     tooltip.destroy()
 
-                # Create and display the variant image.
-                self.variantPhotoImage = self.app.create_image(self.selectedVariant + ".jpg", "encounter", 4)
+                if ("Ornstein" in self.selectedVariant or "Smough" in self.selectedVariant) and (self.selectedVariant.count("&") == 2 or "data" in self.selectedVariant):
+                    if "data" not in self.selectedVariant:
+                        # Create and display the variant image.
+                        self.variantPhotoImage = self.app.create_image(self.selectedVariant + ".jpg", "encounter", 4)
 
-                if "Ornstein & Smough" in self.selectedVariant and (self.selectedVariant.count("&") == 2 or "data" in self.selectedVariant):
-                    self.edit_variant_card_os(variant=variant)
+                        self.edit_variant_card_os(variant=variant)
+                    else:
+                        for enemy in ["Ornstein", "Smough"]:
+                            # Create and display the variant image.
+                            self.variantPhotoImage = self.app.create_image(enemy + " - data.jpg", "encounter", 4)
+
+                            self.edit_variant_card_os(variant=variant, enemy=enemy, healthMod=healthMod)
                 else:
-                    self.edit_variant_card(variant=variant, armorerDennis=armorerDennis, oldIronKing=oldIronKing, deckDataCard=deckDataCard, healthMod=healthMod)
+                    # Create and display the variant image.
+                    self.variantPhotoImage = self.app.create_image(self.selectedVariant + ".jpg", "encounter", 4)
+
+                    self.edit_variant_card(variant=variant, armorerDennis=armorerDennis, oldIronKing=oldIronKing, healthMod=healthMod)
 
                 self.app.display.bind("<Button 1>", self.apply_difficulty_modifier)
                 
@@ -290,7 +300,7 @@ try:
                 raise
 
 
-        def load_variant_card_locked(self, event=None, variant=None, armorerDennis=False, oldIronKing=False, deckDataCard=False, healthMod=0):
+        def load_variant_card_locked(self, event=None, variant=None, armorerDennis=False, oldIronKing=False, deckDataCard=False, healthMod=None):
             try:
                 log("Start of load_variant_card_locked, variant={}".format(str(variant)))
                 
@@ -366,13 +376,23 @@ try:
                 for tooltip in self.app.tooltips:
                     tooltip.destroy()
 
-                # Create and display the variant image.
-                self.variantPhotoImage = self.app.create_image(self.selectedVariant + ".jpg", "encounter", 4)
+                if ("Ornstein" in self.selectedVariant or "Smough" in self.selectedVariant) and (self.selectedVariant.count("&") == 2 or "data" in self.selectedVariant):
+                    if "data" not in self.selectedVariant:
+                        # Create and display the variant image.
+                        self.variantPhotoImage = self.app.create_image(self.selectedVariant + ".jpg", "encounter", 4)
 
-                if "Ornstein & Smough" in self.selectedVariant and (self.selectedVariant.count("&") == 2 or "data" in self.selectedVariant):
-                    self.edit_variant_card_os(variant=mods)
+                        self.edit_variant_card_os(variant=variant)
+                    else:
+                        for enemy in ["Ornstein", "Smough"]:
+                            # Create and display the variant image.
+                            self.variantPhotoImage = self.app.create_image(enemy + " - data.jpg", "encounter", 4)
+
+                            self.edit_variant_card_os(variant=variant, enemy=enemy, healthMod=healthMod)
                 else:
-                    self.edit_variant_card(variant=mods, armorerDennis=armorerDennis, oldIronKing=oldIronKing, healthMod=healthMod)
+                    # Create and display the variant image.
+                    self.variantPhotoImage = self.app.create_image(self.selectedVariant + ".jpg", "encounter", 4)
+
+                    self.edit_variant_card(variant=variant, armorerDennis=armorerDennis, oldIronKing=oldIronKing, healthMod=healthMod)
 
                 self.app.display.bind("<Button 1>", self.apply_difficulty_modifier)
                 
@@ -615,6 +635,7 @@ try:
 
                 if behavior == "data":
                     self.edit_variant_card_data(enemy, variant=variant, healthMod=healthMod)
+                    self.app.display.config(image="")
                 
                 if behavior != "data" or "behavior" in behaviorDetail[enemy]:
                     self.edit_variant_card_behavior(variant=variant, armorerDennis=armorerDennis, oldIronKing=oldIronKing)
@@ -974,8 +995,11 @@ try:
                 # Remove the image displaying a deleted item.
                 self.app.display.config(image="")
                 self.app.display2.config(image="")
+                self.app.display3.config(image="")
                 self.app.display2.bind("<Button 1>", do_nothing)
                 self.app.display2.bind("<Button 3>", do_nothing)
+                self.app.display3.bind("<Button 1>", do_nothing)
+                self.app.display3.bind("<Button 3>", do_nothing)
 
                 progress.destroy()
 
@@ -1059,8 +1083,11 @@ try:
                 # Remove the image displaying a deleted item.
                 self.app.display.config(image="")
                 self.app.display2.config(image="")
+                self.app.display3.config(image="")
                 self.app.display2.bind("<Button 1>", do_nothing)
                 self.app.display2.bind("<Button 3>", do_nothing)
+                self.app.display3.bind("<Button 1>", do_nothing)
+                self.app.display3.bind("<Button 3>", do_nothing)
 
                 progress.destroy()
 
@@ -1105,7 +1132,7 @@ try:
                         if healthAddition:
                             heatup = [h + healthAddition for h in heatup]
 
-                if health + healthMod >= 0:
+                if healthMod and health + healthMod >= 0:
                     health += healthMod
 
                 imageWithText.text((252 + (4 if health < 10 else 0), 35), str(health), "white", font2)
@@ -1316,23 +1343,27 @@ try:
                 raise
 
 
-        def edit_variant_card_os(self, variant=None, event=None):
+        def edit_variant_card_os(self, enemy=None, variant=None, event=None, healthMod={"Ornstein": 0, "Smough": 0}):
             try:
-                log("Start of edit_variant_card, variant={}".format(str(variant)))
+                log("Start of edit_variant_card, enemy={}, variant={}".format(str(enemy), str(variant)))
 
                 if "data" in self.selectedVariant:
-                    self.edit_variant_card_data_os(variant=variant)
+                    self.edit_variant_card_data_os(variant=variant, enemy=enemy, healthMod=healthMod)
                 else:
                     self.edit_variant_card_behavior_os(variant=variant)
 
-                self.app.displayPhotoImage = ImageTk.PhotoImage(self.app.displayImage)
+                photoImage = ImageTk.PhotoImage(self.app.displayImage)
                 
                 if "data" in self.selectedVariant:
-                    self.app.display2.image = self.app.displayPhotoImage
-                    self.app.display2.config(image=self.app.displayPhotoImage)
+                    if enemy == "Ornstein":
+                        self.app.display2.image = photoImage
+                        self.app.display2.config(image=photoImage)
+                    else:
+                        self.app.display3.image = photoImage
+                        self.app.display3.config(image=photoImage)
                 else:
-                    self.app.display.image = self.app.displayPhotoImage
-                    self.app.display.config(image=self.app.displayPhotoImage)
+                    self.app.display.image = photoImage
+                    self.app.display.config(image=photoImage)
 
                 log("End of edit_variant_card")
             except Exception as e:
@@ -1340,42 +1371,33 @@ try:
                 raise
 
 
-        def edit_variant_card_data_os(self, variant=None, event=None):
+        def edit_variant_card_data_os(self, enemy, healthMod, variant=None, event=None):
             try:
                 log("Start of edit_variant_card_data, variant={}".format(str(variant)))
 
                 imageWithText = ImageDraw.Draw(self.app.displayImage)
 
                 healthAddition = 0
-                healthO = behaviorDetail["Ornstein & Smough"]["Ornstein"]["health"]
-                armorO = behaviorDetail["Ornstein & Smough"]["Ornstein"]["armor"]
-                resistO = behaviorDetail["Ornstein & Smough"]["Ornstein"]["resist"]
-                healthS = behaviorDetail["Ornstein & Smough"]["Smough"]["health"]
-                armorS = behaviorDetail["Ornstein & Smough"]["Smough"]["armor"]
-                resistS = behaviorDetail["Ornstein & Smough"]["Smough"]["resist"]
+                health = behaviorDetail["Ornstein & Smough"][enemy]["health"]
+                armor = behaviorDetail["Ornstein & Smough"][enemy]["armor"]
+                resist = behaviorDetail["Ornstein & Smough"][enemy]["resist"]
 
                 if "Ornstein & Smough" in self.currentVariants:
                     mods = [modIdLookup[m] for m in list(self.currentVariants["Ornstein & Smough"]["defKey"]) if m]
                     for mod in mods:
                         healthAddition = int(mod[-1]) if "health" in mod else 0
-                        healthO += healthAddition
-                        armorO += int(mod[-1]) if "armor" in mod else 0
-                        resistO += int(mod[-1]) if "resist" in mod else 0
-                        healthS += healthAddition
-                        armorS += int(mod[-1]) if "armor" in mod else 0
-                        resistS += int(mod[-1]) if "resist" in mod else 0
+                        health += healthAddition
+                        armor += int(mod[-1]) if "armor" in mod else 0
+                        resist += int(mod[-1]) if "resist" in mod else 0
+
+                if health + healthMod[enemy] >= 0:
+                    health += healthMod[enemy]
 
                 imageWithText.text((246, 245), "0", "black", font2)
-                imageWithText.text((252, 35), str(healthO), "white", font2)
-                imageWithText.text((130, 245), str(armorO), "white", font3)
-                imageWithText.text((154, 245), str(resistO), "black", font3)
-                imageWithText.text((248, 340), str(10 + healthAddition), "black", font)
-
-                imageWithText.text((246, 669), "0", "black", font2)
-                imageWithText.text((252, 459), str(healthS), "white", font2)
-                imageWithText.text((130, 669), str(armorS), "white", font3)
-                imageWithText.text((154, 669), str(resistS), "black", font3)
-                imageWithText.text((248, 764), str(15 + healthAddition), "black", font)
+                imageWithText.text((252, 35), str(health), "white", font2)
+                imageWithText.text((130, 245), str(armor), "white", font3)
+                imageWithText.text((154, 245), str(resist), "black", font3)
+                imageWithText.text((248, 340), str(10 + healthAddition + (5 if enemy == "Smough" else 0)), "black", font)
 
                 log("End of edit_variant_card_data")
             except Exception as e:

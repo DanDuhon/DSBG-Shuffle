@@ -335,7 +335,7 @@ try:
                 raise
 
 
-        def random_encounter(self, event=None, level=None):
+        def random_encounter(self, event=None, level=None, encounterList=None):
             """
             Picks a random encounter from the list of available encounters and displays it.
 
@@ -351,7 +351,10 @@ try:
             try:
                 log("Start of random_encounter, level={}".format(str(level)))
 
-                self.load_encounter(encounter=choice([encounter for encounter in self.encounterList if (
+                if not encounterList:
+                    encounterList = self.encounterList
+
+                self.load_encounter(encounter=choice([encounter for encounter in encounterList if (
                     self.app.encounters[encounter]["level"] == level
                     and (self.app.encounters[encounter]["expansion"] in self.expansionsForRandomEncounters
                         or self.app.encounters[encounter]["level"] == 4))]))
@@ -470,7 +473,7 @@ try:
                 raise
 
 
-        def edit_encounter_card(self, name, expansion, level, enemySlots):
+        def edit_encounter_card(self, name, expansion, level, enemySlots, right=False):
             """
             Modify the encounter card image with the new enemies and treasure reward, if applicable.
 
@@ -486,9 +489,13 @@ try:
 
                 enemySlots: List
                     The slots on the card in which enemies are found.
+
+            Optional Parameters:
+                right: Boolean
+                    Display on the right side of the display pane if True.
             """
             try:
-                log("Start of edit_encounter_card, name={}, expansion={}, level={}, enemySlots={}".format(str(name), str(expansion), str(level), str(enemySlots)))
+                log("Start of edit_encounter_card, name={}, expansion={}, level={}, enemySlots={}, right={}".format(str(name), str(expansion), str(level), str(enemySlots), str(right)))
 
                 self.app.displayPhotoImage = self.app.create_image(name + ".jpg", "encounter", level, expansion)
 
@@ -647,13 +654,22 @@ try:
                 elif name == "Velka's Chosen":
                     self.velkas_chosen(level)
 
-                self.app.displayPhotoImage = ImageTk.PhotoImage(self.app.displayImage)
-                self.app.display.image = self.app.displayPhotoImage
+                displayPhotoImage = ImageTk.PhotoImage(self.app.displayImage)
+
+                if right:
+                    self.app.display2.image = displayPhotoImage
+                    self.app.display2.config(image=displayPhotoImage)
+                else:
+                    self.app.display.image = displayPhotoImage
+                    self.app.display.config(image=displayPhotoImage)
+
                 if not self.app.forPrinting:
-                    self.app.display.config(image=self.app.displayPhotoImage)
-                    self.app.display2.config(image="")
+                    self.app.display.config(image=displayPhotoImage)
+                    self.app.display3.config(image="")
                     self.app.display2.bind("<Button 1>", do_nothing)
                     self.app.display2.bind("<Button 3>", do_nothing)
+                    self.app.display3.bind("<Button 1>", do_nothing)
+                    self.app.display3.bind("<Button 3>", do_nothing)
                 self.app.display.bind("<Button 1>", self.shuffle_enemies)
 
                 log("\tEnd of edit_encounter_card")

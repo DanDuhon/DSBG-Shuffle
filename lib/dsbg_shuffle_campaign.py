@@ -20,6 +20,20 @@ try:
             
             self.campaign = []
 
+            self.v2Campaign = {
+                1: [],
+                2: [],
+                3: [],
+                4: [],
+                "1cnt": 0,
+                "2cnt": 0,
+                "3cnt": 0,
+                "4cnt": 0,
+                "mini": False,
+                "main": False,
+                "mega": False
+            }
+
             self.bossMenuItems = [
                 "Select Boss",
                 "--Mini Bosses--"
@@ -45,6 +59,8 @@ try:
             self.campaignTabButtonsFrame3.pack()
             self.campaignTabButtonsFrame4 = ttk.Frame(self)
             self.campaignTabButtonsFrame4.pack()
+            self.campaignTabButtonsFrame5 = ttk.Frame(self)
+            self.campaignTabButtonsFrame5.pack()
             self.campaignTabTreeviewFrame = ttk.Frame(self)
             self.campaignTabTreeviewFrame.pack(fill="both", expand=True)
 
@@ -75,6 +91,11 @@ try:
             self.bossMenu.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
             self.addBossButton = ttk.Button(self.campaignTabButtonsFrame4, text="Add Boss", width=16, command=self.add_boss_to_campaign)
             self.addBossButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+
+            self.v1CampaignButton = ttk.Button(self.campaignTabButtonsFrame5, text="V1 Campaign", width=16, command=self.v1_campaign)
+            self.v1CampaignButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+            self.v2CampaignButton = ttk.Button(self.campaignTabButtonsFrame5, text="V2 Campaign", width=16, command=self.v2_campaign)
+            self.v2CampaignButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
         
             self.scrollbarTreeviewCampaign = ttk.Scrollbar(self.campaignTabTreeviewFrame)
             self.scrollbarTreeviewCampaign.pack(side="right", fill="y")
@@ -189,6 +210,30 @@ try:
                 raise
 
 
+        def add_card_to_v2_campaign_list(self, event=None):
+            """
+            Adds an encounter card to the v2 campaign generator list.
+            """
+            try:
+                log("Start of add_card_to_v2_campaign_list")
+
+                card = {
+                    "type": "encounter",
+                    "name": self.app.selected["name"] + (" (TSC)" if self.app.selected["expansion"] == "The Sunless City" and self.app.selected["name"] in set(["Broken Passageway", "Central Plaza"]) else ""),
+                    "expansion": self.app.selected["expansion"],
+                    "level": self.app.selected["level"],
+                    "enemies": self.app.encounterTab.newEnemies,
+                    "rewardTreasure": self.app.encounterTab.rewardTreasure
+                }
+
+                log("End of add_card_to_v2_campaign_list")
+
+                return card
+            except Exception as e:
+                error_popup(self.root, e)
+                raise
+
+
         def add_random_boss_to_campaign(self, level):
             """
             Adds a random boss to the campaign, visible in the campaign treeview.
@@ -197,6 +242,9 @@ try:
                 log("Start of add_random_boss_to_campaign, level={}".format(str(level)))
 
                 availableBosses = [boss for boss in bosses if bosses[boss]["level"] == level and bosses[boss]["expansions"] & self.app.availableExpansions]
+                if not availableBosses:
+                    log("End of add_random_boss_to_campaign (no bosses to choose from)")
+                    return
                 selectedBoss = choice(availableBosses)
 
                 # Multiples need a different iid in the treeview, so append a number.
@@ -285,8 +333,11 @@ try:
                 # Remove the image displaying a deleted card.
                 self.app.display.config(image="")
                 self.app.display2.config(image="")
+                self.app.display3.config(image="")
                 self.app.display2.bind("<Button 1>", do_nothing)
                 self.app.display2.bind("<Button 3>", do_nothing)
+                self.app.display3.bind("<Button 1>", do_nothing)
+                self.app.display3.bind("<Button 3>", do_nothing)
 
                 log("End of delete_card_from_campaign")
             except Exception as e:
@@ -389,14 +440,15 @@ try:
                 raise
 
 
-        def move_down(self):
+        def move_down(self, leaves=None):
             """
             Move an item down in the campaign treeview, with corresponding movement in the campaign list.
             """
             try:
                 log("Start of move_down")
 
-                leaves = self.treeviewCampaign.selection()
+                if not leaves:
+                    leaves = self.treeviewCampaign.selection()
                 for i in reversed(leaves):
                     self.treeviewCampaign.move(i, self.treeviewCampaign.parent(i), self.treeviewCampaign.index(i) + 1)
                     self.campaign.insert(self.treeviewCampaign.index(i) - 1, self.campaign.pop(self.treeviewCampaign.index(i)))
@@ -617,6 +669,158 @@ try:
                 self.forPrinting = False
 
                 log("End of print_encounters")
+            except Exception as e:
+                error_popup(self.root, e)
+                raise
+
+
+        def v1_campaign(self, event=None):
+            """
+            Generates a random V1 campaign.
+
+            Optional Parameters:
+                event: tkinter.Event
+                    The tkinter Event that is the trigger.
+            """
+            try:
+                log("Start of v1_campaign")
+
+                mega = False
+
+                encounterList = [encounter for encounter in self.app.encounters if (
+                    all([
+                        any([frozenset(expCombo).issubset(self.app.availableExpansions) for expCombo in self.app.encounters[encounter]["expansionCombos"]["1"]]),
+                        any([frozenset(expCombo).issubset(self.app.availableExpansions) for expCombo in self.app.encounters[encounter]["expansionCombos"]["2"]]),
+                        True if "3" not in self.app.encounters[encounter]["expansionCombos"] else any([frozenset(expCombo).issubset(self.app.availableExpansions) for expCombo in self.app.encounters[encounter]["expansionCombos"]["3"]]),
+                        self.app.encounters[encounter]["expansion"] in self.app.v1Expansions
+                            ]))]
+
+                self.add_random_boss_to_campaign(level="Mini Boss")
+                self.add_random_boss_to_campaign(level="Main Boss")
+                self.add_random_boss_to_campaign(level="Mega Boss")
+
+                if len(self.campaign) == 3:
+                    mega = True
+
+                for level in bosses[self.campaign[0]["name"]]["encounters"]:
+                    self.app.encounterTab.random_encounter(level=level, encounterList=encounterList)
+                    self.add_card_to_campaign()
+
+                for level in bosses[self.campaign[1]["name"]]["encounters"]:
+                    self.app.encounterTab.random_encounter(level=level, encounterList=encounterList)
+                    self.add_card_to_campaign()
+
+                if mega:
+                    for level in bosses[self.campaign[2]["name"]]["encounters"]:
+                        self.app.encounterTab.random_encounter(level=level, encounterList=encounterList)
+                        self.add_card_to_campaign()
+                        
+                    boss3 = (self.campaign[2]["name"] + "_0",)
+
+                    for _ in range(9):
+                        self.move_down(leaves=boss3)
+
+                boss1 = (self.campaign[0]["name"] + "_0",)
+                boss2 = (self.campaign[1]["name"] + "_0",)
+
+                for _ in range(8):
+                    self.move_down(leaves=boss2)
+
+                for _ in range(4):
+                    self.move_down(leaves=boss1)
+
+                log("End of v1_campaign")
+            except Exception as e:
+                error_popup(self.root, e)
+                raise
+
+
+        def v2_campaign(self, event=None):
+            """
+            Generates a random V2 campaign, piece by piece.
+
+            Optional Parameters:
+                event: tkinter.Event
+                    The tkinter Event that is the trigger.
+            """
+            try:
+                log("Start of v2_campaign")
+
+                mega = False
+
+                encounterList = [encounter for encounter in self.app.encounters if (
+                    all([
+                        any([frozenset(expCombo).issubset(self.app.availableExpansions) for expCombo in self.app.encounters[encounter]["expansionCombos"]["1"]]),
+                        any([frozenset(expCombo).issubset(self.app.availableExpansions) for expCombo in self.app.encounters[encounter]["expansionCombos"]["2"]]),
+                        True if "3" not in self.app.encounters[encounter]["expansionCombos"] else any([frozenset(expCombo).issubset(self.app.availableExpansions) for expCombo in self.app.encounters[encounter]["expansionCombos"]["3"]]),
+                        self.app.encounters[encounter]["expansion"] in self.app.v2Expansions
+                            ]))]
+
+                if not self.v2Campaign[1]:
+                    for _ in range(15):
+                        self.app.encounterTab.random_encounter(level=1, encounterList=encounterList)
+                        self.v2Campaign[1].append(self.add_card_to_v2_campaign_list())
+
+                    self.load_v2_campaign_card(self.v2Campaign[1][0])
+                    self.load_v2_campaign_card(self.v2Campaign[1][1], True)
+                    return
+
+                if not self.v2Campaign[2]:
+                    for _ in range(15):
+                        self.app.encounterTab.random_encounter(level=2, encounterList=encounterList)
+                        self.v2Campaign[2].append(self.add_card_to_v2_campaign_list())
+                    return
+
+                if not self.v2Campaign[3]:
+                    for _ in range(12):
+                        self.app.encounterTab.random_encounter(level=3, encounterList=encounterList)
+                        self.v2Campaign[3].append(self.add_card_to_v2_campaign_list())
+                    return
+
+                if not self.v2Campaign[4]:
+                    for _ in range(5):
+                        self.app.encounterTab.random_encounter(level=4, encounterList=encounterList)
+                        self.v2Campaign[4].append(self.add_card_to_v2_campaign_list())
+                    return
+
+                log("End of v2_campaign")
+            except Exception as e:
+                error_popup(self.root, e)
+                raise
+
+
+        def load_v2_campaign_card(self, card, right=False):
+            """
+            Display pre-generated v2 encounter card.
+
+            Optional Parameters:
+                event: tkinter.Event
+                    The tkinter Event that is the trigger.
+            """
+            try:
+                log("Start of load_v2_campaign_card")
+
+                self.app.selected = None
+                self.app.encounterTab.rewardTreasure = None
+                self.app.display.unbind("<Button 1>")
+                
+                # Remove keyword tooltips from the previous card shown, if there are any.
+                for tooltip in self.app.tooltips:
+                    tooltip.destroy()
+
+                self.app.encounterTab.rewardTreasure = card.get("rewardTreasure")
+
+                log("\tOpening " + baseFolder + "\\lib\\dsbg_shuffle_encounters\\".replace("\\", pathSep) + card["name"] + str(self.app.numberOfCharacters) + ".json")
+
+                # Get the enemy slots for this card.
+                with open(baseFolder + "\\lib\\dsbg_shuffle_encounters\\".replace("\\", pathSep) + card["name"] + str(self.app.numberOfCharacters) + ".json") as alternativesFile:
+                    alts = load(alternativesFile)
+
+                    # Create the encounter card with saved enemies and tooltips.
+                    self.app.encounterTab.newEnemies = card["enemies"]
+                    self.app.encounterTab.edit_encounter_card(card["name"], card["expansion"], card["level"], alts["enemySlots"], right=right)
+
+                log("End of load_v2_campaign_card")
             except Exception as e:
                 error_popup(self.root, e)
                 raise

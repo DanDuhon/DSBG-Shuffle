@@ -1698,12 +1698,14 @@ try:
             "Ornstein": {
                 "health": 20,
                 "armor": 3,
-                "resist": 3
+                "resist": 3,
+                "heatup": 0
             },
             "Smough": {
                 "health": 30,
                 "armor": 2,
-                "resist": 2
+                "resist": 2,
+                "heatup": 0
             },
             "Gliding Stab & Hammer Smash": {
                 "Gliding Stab": {
