@@ -669,7 +669,7 @@ try:
                 raise
 
 
-        def create_tooltip(self, tooltipDict, x, y):
+        def create_tooltip(self, tooltipDict, x, y, right=False):
             """
             Create a label and tooltip that will be placed and later removed.
             """
@@ -680,6 +680,7 @@ try:
                     convertedImage = tooltipDict["image"].convert("RGBA")
                     self.displayImage.paste(im=convertedImage, box=(x, y), mask=convertedImage)
                 else:
+                    x += 410 if right else 0
                     label = tk.Label(self.displayFrame, image=tooltipDict["photo image"], borderwidth=0, highlightthickness=0)
                     self.tooltips.append(label)
                     label.place(x=x, y=y)

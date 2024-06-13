@@ -210,7 +210,7 @@ try:
                 raise
 
 
-        def add_card_to_v2_campaign_list(self, event=None):
+        def add_card_to_v2_campaign_list(self, name, event=None):
             """
             Adds an encounter card to the v2 campaign generator list.
             """
@@ -219,7 +219,7 @@ try:
 
                 card = {
                     "type": "encounter",
-                    "name": self.app.selected["name"] + (" (TSC)" if self.app.selected["expansion"] == "The Sunless City" and self.app.selected["name"] in set(["Broken Passageway", "Central Plaza"]) else ""),
+                    "name": name,
                     "expansion": self.app.selected["expansion"],
                     "level": self.app.selected["level"],
                     "enemies": self.app.encounterTab.newEnemies,
@@ -757,12 +757,31 @@ try:
                             ]))]
 
                 if not self.v2Campaign[1]:
-                    for _ in range(15):
+                    for _ in range(2):
                         self.app.encounterTab.random_encounter(level=1, encounterList=encounterList)
+                        # Make sure we don't get two of the same name
+                        name = self.app.selected["name"] + (" (TSC)" if self.app.selected["expansion"] == "The Sunless City" and self.app.selected["name"] in set(["Broken Passageway", "Central Plaza"]) else "")
                         self.v2Campaign[1].append(self.add_card_to_v2_campaign_list())
+
+                    self.app.display.config(image="")
+                    self.app.display2.config(image="")
 
                     self.load_v2_campaign_card(self.v2Campaign[1][0])
                     self.load_v2_campaign_card(self.v2Campaign[1][1], True)
+
+                    self.v2Campaign = {
+                        1: [],
+                        2: [],
+                        3: [],
+                        4: [],
+                        "1cnt": 0,
+                        "2cnt": 0,
+                        "3cnt": 0,
+                        "4cnt": 0,
+                        "mini": False,
+                        "main": False,
+                        "mega": False
+                    }
                     return
 
                 if not self.v2Campaign[2]:
@@ -804,9 +823,10 @@ try:
                 self.app.encounterTab.rewardTreasure = None
                 self.app.display.unbind("<Button 1>")
                 
-                # Remove keyword tooltips from the previous card shown, if there are any.
-                for tooltip in self.app.tooltips:
-                    tooltip.destroy()
+                if not right:
+                    # Remove keyword tooltips from the previous card shown, if there are any.
+                    for tooltip in self.app.tooltips:
+                        tooltip.destroy()
 
                 self.app.encounterTab.rewardTreasure = card.get("rewardTreasure")
 
@@ -818,7 +838,7 @@ try:
 
                     # Create the encounter card with saved enemies and tooltips.
                     self.app.encounterTab.newEnemies = card["enemies"]
-                    self.app.encounterTab.edit_encounter_card(card["name"], card["expansion"], card["level"], alts["enemySlots"], right=right)
+                    self.app.encounterTab.edit_encounter_card(card["name"], card["expansion"], card["level"], alts["enemySlots"], right=right, campaignGen=True)
 
                 log("End of load_v2_campaign_card")
             except Exception as e:
