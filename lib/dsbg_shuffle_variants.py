@@ -13,7 +13,7 @@ try:
 
     from dsbg_shuffle_enemies import bosses, enemiesDict
     from dsbg_shuffle_behaviors import behaviorDetail, behaviors
-    from dsbg_shuffle_utility import PopupWindow, do_nothing, error_popup, log, baseFolder, font, font2, font3, pathSep
+    from dsbg_shuffle_utility import PopupWindow, clear_other_tab_images, error_popup, log, baseFolder, font, font2, font3, pathSep
 
 
     modIdLookup = {
@@ -111,11 +111,11 @@ try:
             self.applyModButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
             self.lockButton = ttk.Button(self.variantsTabButtonsFrame2, text="Lock Variant", width=16, command=self.lock_variant_card)
             self.lockButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-            self.Button = ttk.Button(self.variantsTabButtonsFrame2, text="Remove Variant", width=16, command=self.remove_variant_card)
+            self.removeButton = ttk.Button(self.variantsTabButtonsFrame2, text="Remove Variant", width=16, command=self.remove_variant_card)
             self.removeButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
             
-            self.removeButton = ttk.Button(self.variantsTabButtonsFrame3, text="Remove Variant(s)", width=16, command=self.delete_locked_variant)
-            self.removeButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+            self.removeLockedButton = ttk.Button(self.variantsTabButtonsFrame3, text="Remove Variant(s)", width=16, command=self.delete_locked_variant)
+            self.removeLockedButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
             self.saveButton = ttk.Button(self.variantsTabButtonsFrame3, text="Save Variants", width=16, command=self.save_variants)
             self.saveButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
             self.loadButton = ttk.Button(self.variantsTabButtonsFrame3, text="Load Variants", width=16, command=self.load_variants)
@@ -186,11 +186,11 @@ try:
                     for behavior in behaviors[enemy]:
                         self.treeviewVariantsList.insert(parent=enemy, index="end", iid=enemy + " - " + behavior, values=("            " + behavior, 0), tags=True)
 
-                self.treeviewVariantsList.bind("<<TreeviewSelect>>", self.load_variant_card)
-
                 self.treeviewVariantsList.selection_set("All")
                 self.treeviewVariantsList.focus_set()
                 self.treeviewVariantsList.focus("All")
+                    
+                self.treeviewVariantsList.bind("<<TreeviewSelect>>", self.load_variant_card)
 
                 if not hasattr(self, "treeviewVariantsLocked"):
                     self.treeviewVariantsLocked = ttk.Treeview(
@@ -218,8 +218,8 @@ try:
                     self.treeviewVariantsLocked.insert(parent="All", index="end", iid="Mini Bosses", values=("    Mini Bosses", ""), tags=False)
                     self.treeviewVariantsLocked.insert(parent="All", index="end", iid="Main Bosses", values=("    Main Bosses", ""), tags=False)
                     self.treeviewVariantsLocked.insert(parent="All", index="end", iid="Mega Bosses", values=("    Mega Bosses", ""), tags=False)
-
-                    self.treeviewVariantsLocked.bind("<<TreeviewSelect>>", self.load_variant_card_locked)
+                    
+                self.treeviewVariantsLocked.bind("<<TreeviewSelect>>", self.load_variant_card_locked)
 
                 log("End of create_variants_treeview")
             except Exception as e:
@@ -234,13 +234,10 @@ try:
             try:
                 log("Start of load_variant_card, variant={}, selfCall={}, forPrinting={}, armorerDennis={}, oldIronKing={}, pursuer={}, deckDataCard={}, healthMod={}, fromDeck={}".format(str(variant), str(selfCall), str(forPrinting), str(armorerDennis), str(oldIronKing), str(pursuer), str(deckDataCard), str(healthMod), str(fromDeck)))
 
-                if self.app.notebook.tab(self.app.notebook.select(), "text") == "Behavior Variants" and not selfCall:
-                    self.app.display.config(image="")
-                    self.app.display2.config(image="")
-                    self.app.display3.config(image="")
-                    self.app.displayImages["variants"][self.app.display] = None
-                    self.app.displayImages["variants"][self.app.display2] = None
-                    self.app.displayImages["variants"][self.app.display3] = None
+                self.treeviewVariantsList.unbind("<<TreeviewSelect>>")
+                self.treeviewVariantsLocked.unbind("<<TreeviewSelect>>")
+
+                clear_other_tab_images(self.app, "variants")
 
                 # If this behavior was clicked on, get that information.
                 if event:
@@ -250,17 +247,17 @@ try:
                         log("\tNo variant selected")
                         log("\tEnd of load_variant_card")
                         self.treeviewVariantsList.bind("<<TreeviewSelect>>", self.load_variant_card)
+                        self.treeviewVariantsLocked.bind("<<TreeviewSelect>>", self.load_variant_card_locked)
                         return
                     
                     if self.treeviewVariantsLocked.selection():
-                        self.treeviewVariantsLocked.unbind("<<TreeviewSelect>>")
                         self.treeviewVariantsLocked.selection_remove(self.treeviewVariantsLocked.selection()[0])
-                        self.treeviewVariantsLocked.bind("<<TreeviewSelect>>", self.load_variant_card_locked)
                     
                     if not tree.item(tree.selection()[0])["tags"][0]:
                         log("\tNo variant selected")
                         log("\tEnd of load_variant_card")
                         self.treeviewVariantsList.bind("<<TreeviewSelect>>", self.load_variant_card)
+                        self.treeviewVariantsLocked.bind("<<TreeviewSelect>>", self.load_variant_card_locked)
                         return
 
                     self.selectedVariant = (
@@ -300,7 +297,7 @@ try:
 
                     self.edit_variant_card(variant=variant, armorerDennis=armorerDennis, oldIronKing=oldIronKing, pursuer=pursuer, healthMod=healthMod)
 
-                if "data" not in self.selectedVariant and not self.app.displayImages["variants"][self.app.display2] and not forPrinting:
+                if "data" not in self.selectedVariant and self.app.displayImages["variants"][self.app.display2]["name"] != self.selectedVariant and not forPrinting:
                     self.load_variant_card(variant=self.selectedVariant[:self.selectedVariant.index(" - ")] + " - data", selfCall=originalSelection, armorerDennis=armorerDennis, oldIronKing=oldIronKing, pursuer=pursuer, deckDataCard=deckDataCard, healthMod=healthMod)
 
                 if not selfCall:
@@ -311,6 +308,9 @@ try:
 
                 if not fromDeck:
                     self.app.display2.bind("<Button 1>", self.apply_difficulty_modifier)
+                    
+                self.treeviewVariantsList.bind("<<TreeviewSelect>>", self.load_variant_card)
+                self.treeviewVariantsLocked.bind("<<TreeviewSelect>>", self.load_variant_card_locked)
 
                 log("End of load_variant_card")
             except Exception as e:
@@ -321,14 +321,11 @@ try:
         def load_variant_card_locked(self, event=None, variant=None, selfCall=None, forPrinting=False, armorerDennis=False, oldIronKing=False, pursuer=False, deckDataCard=False, healthMod=None, fromDeck=False):
             try:
                 log("Start of load_variant_card_locked, variant={}, selfCall={}, forPrinting={}, armorerDennis={}, oldIronKing={}, pursuer={}, deckDataCard={}, healthMod={}, fromDeck={}".format(str(variant), str(selfCall), str(forPrinting), str(armorerDennis), str(oldIronKing), str(pursuer), str(deckDataCard), str(healthMod), str(fromDeck)))
+                    
+                self.treeviewVariantsList.unbind("<<TreeviewSelect>>")
+                self.treeviewVariantsLocked.unbind("<<TreeviewSelect>>")
 
-                if self.app.notebook.tab(self.app.notebook.select(), "text") == "Behavior Variants" and not selfCall:
-                    self.app.display.config(image="")
-                    self.app.display2.config(image="")
-                    self.app.display3.config(image="")
-                    self.app.displayImages["variants"][self.app.display] = None
-                    self.app.displayImages["variants"][self.app.display2] = None
-                    self.app.displayImages["variants"][self.app.display3] = None
+                clear_other_tab_images(self.app, "variants")
 
                 # If this behavior was clicked on, get that information.
                 if event:
@@ -337,17 +334,17 @@ try:
                     if not tree.selection():
                         log("\tNo variant selected")
                         log("\tEnd of load_variant_card_locked")
+                        self.treeviewVariantsList.bind("<<TreeviewSelect>>", self.load_variant_card)
                         self.treeviewVariantsLocked.bind("<<TreeviewSelect>>", self.load_variant_card_locked)
                         return
                     
                     if self.treeviewVariantsList.selection():
-                        self.treeviewVariantsList.unbind("<<TreeviewSelect>>")
                         self.treeviewVariantsList.selection_remove(self.treeviewVariantsList.selection()[0])
-                        self.treeviewVariantsList.bind("<<TreeviewSelect>>", self.load_variant_card)
 
                     if not tree.item(tree.selection()[0])["tags"][0]:
                         log("\tNo variant selected")
                         log("\tEnd of load_variant_card")
+                        self.treeviewVariantsList.bind("<<TreeviewSelect>>", self.load_variant_card)
                         self.treeviewVariantsLocked.bind("<<TreeviewSelect>>", self.load_variant_card_locked)
                         return
 
@@ -421,7 +418,7 @@ try:
 
                     self.edit_variant_card(variant=variant, armorerDennis=armorerDennis, oldIronKing=oldIronKing, pursuer=pursuer, healthMod=healthMod)
 
-                if "data" not in self.selectedVariant and not self.app.displayImages["variants"][self.app.display2] and not forPrinting:
+                if "data" not in self.selectedVariant and self.app.displayImages["variants"][self.app.display2]["name"] != self.selectedVariant and not forPrinting:
                     self.load_variant_card_locked(variant=self.selectedVariant[:self.selectedVariant.index(" - ")] + " - data", selfCall=True, armorerDennis=armorerDennis, oldIronKing=oldIronKing, pursuer=pursuer, deckDataCard=deckDataCard, healthMod=healthMod)
 
                 if not selfCall:
@@ -432,6 +429,9 @@ try:
 
                 if not fromDeck:
                     self.app.display2.bind("<Button 1>", self.apply_difficulty_modifier)
+                    
+                self.treeviewVariantsList.bind("<<TreeviewSelect>>", self.load_variant_card)
+                self.treeviewVariantsLocked.bind("<<TreeviewSelect>>", self.load_variant_card_locked)
 
                 log("End of load_variant_card_locked")
             except Exception as e:
@@ -509,8 +509,7 @@ try:
                         progress.progressVar.set(i)
                         self.root.update_idletasks()
                         self.pick_enemy_variants_enemy(child, diffKey)
-                        self.app.display.config(image="")
-                        self.app.displayImages["variants"][self.app.display] = None
+                        clear_other_tab_images(self.app, "variants", self.app.display)
                 elif start == "All":
                     progressMax = 0
                     for child in tree.get_children("All"):
@@ -528,9 +527,7 @@ try:
                             self.root.update_idletasks()
                             self.pick_enemy_variants_enemy(subChild, diffKey)
                             
-
-                    self.app.display.config(image="")
-                    self.app.displayImages["variants"][self.app.display] = None
+                    clear_other_tab_images(self.app, "variants", self.app.display)
 
                 if progress:
                     progress.label.config(text = "Calculating difficulty averages...")
@@ -605,8 +602,7 @@ try:
                 for behavior in self.variants[start][self.app.numberOfCharacters][diffKeyReal][defKey]:
                     self.pick_enemy_variants_behavior(start, behavior, diffKeyReal, defKey)
                     
-                self.app.display.config(image="")
-                self.app.displayImages["variants"][self.app.display] = None
+                clear_other_tab_images(self.app, "variants", self.app.display)
                 
                 log("End of pick_enemy_variants_enemy")
             except Exception as e:
@@ -685,16 +681,19 @@ try:
                 if deckDataCard:
                     self.app.display2.image = displayPhotoImage
                     self.app.display2.config(image=displayPhotoImage)
-                    self.app.displayImages["variants"][self.app.display2] = displayPhotoImage
+                    self.app.displayImages["variants"][self.app.display2]["image"] = displayPhotoImage
+                    self.app.displayImages["variants"][self.app.display2]["name"] = self.selectedVariant
                 else:
                     if behavior == "data":
                         self.app.display2.image = displayPhotoImage
                         self.app.display2.config(image=displayPhotoImage)
-                        self.app.displayImages["variants"][self.app.display2] = displayPhotoImage
+                        self.app.displayImages["variants"][self.app.display2]["image"] = displayPhotoImage
+                        self.app.displayImages["variants"][self.app.display2]["name"] = self.selectedVariant
                     else:
                         self.app.display.image = displayPhotoImage
                         self.app.display.config(image=displayPhotoImage)
-                        self.app.displayImages["variants"][self.app.display] = displayPhotoImage
+                        self.app.displayImages["variants"][self.app.display]["image"] = displayPhotoImage
+                        self.app.displayImages["variants"][self.app.display]["name"] = self.selectedVariant
 
                 log("End of edit_variant_card")
             except Exception as e:
@@ -1038,12 +1037,7 @@ try:
                             self.recalc_variant_average(tree, tree.parent(tree.parent(target)))
 
                 # Remove the image displaying a deleted item.
-                self.app.display.config(image="")
-                self.app.display2.config(image="")
-                self.app.display3.config(image="")
-                self.app.displayImages["variants"][self.app.display] = None
-                self.app.displayImages["variants"][self.app.display2] = None
-                self.app.displayImages["variants"][self.app.display3] = None
+                clear_other_tab_images(self.app, "variants")
 
                 progress.destroy()
 
@@ -1125,12 +1119,7 @@ try:
                         self.recalc_variant_average(tree, tree.parent(parent))
 
                 # Remove the image displaying a deleted item.
-                self.app.display.config(image="")
-                self.app.display2.config(image="")
-                self.app.display3.config(image="")
-                self.app.displayImages["variants"][self.app.display] = None
-                self.app.displayImages["variants"][self.app.display2] = None
-                self.app.displayImages["variants"][self.app.display3] = None
+                clear_other_tab_images(self.app, "variants")
 
                 progress.destroy()
 
@@ -1408,15 +1397,18 @@ try:
                     if enemy == "Ornstein":
                         self.app.display2.image = photoImage
                         self.app.display2.config(image=photoImage)
-                        self.app.displayImages["variants"][self.app.display2] = photoImage
+                        self.app.displayImages["variants"][self.app.display2]["image"] = photoImage
+                        self.app.displayImages["variants"][self.app.display2]["name"] = self.selectedVariant
                     else:
                         self.app.display3.image = photoImage
                         self.app.display3.config(image=photoImage)
-                        self.app.displayImages["variants"][self.app.display3] = photoImage
+                        self.app.displayImages["variants"][self.app.display3]["image"] = photoImage
+                        self.app.displayImages["variants"][self.app.display3]["name"] = self.selectedVariant
                 else:
                     self.app.display.image = photoImage
                     self.app.display.config(image=photoImage)
-                    self.app.displayImages["variants"][self.app.display] = photoImage
+                    self.app.displayImages["variants"][self.app.display]["image"] = photoImage
+                    self.app.displayImages["variants"][self.app.display]["name"] = self.selectedVariant
 
                 log("End of edit_variant_card")
             except Exception as e:
@@ -1746,12 +1738,12 @@ try:
                             self.load_variant_card_locked(variant=variant, forPrinting=True)
 
                         # Stage the image.
-                        if self.app.displayImages["variants"][self.app.display]:
-                            self.add_card_to_pdf(variant, width, pdf, self.app.displayImages["variants"][self.app.display], x, y)
-                        if self.app.displayImages["variants"][self.app.display2] and "Ornstein & Smough_" in variant:
-                            self.add_card_to_pdf(variant, width, pdf, self.app.displayImages["variants"][self.app.display2], x, y, ornstein=True)
-                        elif self.app.displayImages["variants"][self.app.display2]:
-                            self.add_card_to_pdf(variant, width, pdf, self.app.displayImages["variants"][self.app.display2], x, y)
+                        if self.app.displayImages["variants"][self.app.display]["image"]:
+                            self.add_card_to_pdf(variant, width, pdf, self.app.displayImages["variants"][self.app.display]["image"], x, y)
+                        if self.app.displayImages["variants"][self.app.display2]["image"] and "Ornstein & Smough_" in variant:
+                            self.add_card_to_pdf(variant, width, pdf, self.app.displayImages["variants"][self.app.display2]["image"], x, y, ornstein=True)
+                        elif self.app.displayImages["variants"][self.app.display2]["image"]:
+                            self.add_card_to_pdf(variant, width, pdf, self.app.displayImages["variants"][self.app.display2]["image"], x, y)
 
                         if i < standardCards:
                             if i in columnBreaks:
@@ -1765,8 +1757,8 @@ try:
                         else:
                             y += width + buffer
 
-                        if self.app.displayImages["variants"][self.app.display3] and "Ornstein & Smough_" in variant:
-                            self.add_card_to_pdf(variant, width, pdf, self.app.displayImages["variants"][self.app.display3], x, y, smough=True)
+                        if self.app.displayImages["variants"][self.app.display3]["image"] and "Ornstein & Smough_" in variant:
+                            self.add_card_to_pdf(variant, width, pdf, self.app.displayImages["variants"][self.app.display3]["image"], x, y, smough=True)
 
                             i += 1
 

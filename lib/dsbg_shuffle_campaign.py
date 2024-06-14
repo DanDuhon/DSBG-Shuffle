@@ -329,9 +329,12 @@ try:
                 self.app.display.config(image="")
                 self.app.display2.config(image="")
                 self.app.display3.config(image="")
-                self.app.displayImages["encounters"][self.app.display] = None
-                self.app.displayImages["encounters"][self.app.display2] = None
-                self.app.displayImages["encounters"][self.app.display3] = None
+                self.app.displayImages["encounters"][self.app.display]["image"] = None
+                self.app.displayImages["encounters"][self.app.display2]["image"] = None
+                self.app.displayImages["encounters"][self.app.display3]["image"] = None
+                self.app.displayImages["encounters"][self.app.display]["name"] = None
+                self.app.displayImages["encounters"][self.app.display2]["name"] = None
+                self.app.displayImages["encounters"][self.app.display3]["name"] = None
 
                 log("End of delete_card_from_campaign")
             except Exception as e:
@@ -469,9 +472,12 @@ try:
                     self.app.display.config(image="")
                     self.app.display2.config(image="")
                     self.app.display3.config(image="")
-                    self.app.displayImages["encounters"][self.app.display] = None
-                    self.app.displayImages["encounters"][self.app.display2] = None
-                    self.app.displayImages["encounters"][self.app.display3] = None
+                    self.app.displayImages["encounters"][self.app.display]["image"] = None
+                    self.app.displayImages["encounters"][self.app.display2]["image"] = None
+                    self.app.displayImages["encounters"][self.app.display3]["image"] = None
+                    self.app.displayImages["encounters"][self.app.display]["name"] = None
+                    self.app.displayImages["encounters"][self.app.display2]["name"] = None
+                    self.app.displayImages["encounters"][self.app.display3]["name"] = None
 
                 self.app.selected = None
                 self.app.encounterTab.rewardTreasure = None
@@ -506,9 +512,9 @@ try:
                 elif campaignCard["type"] == "boss":
                     # Create and display the boss image.
                     self.app.create_image(campaignCard["name"] + ".jpg", "encounter", 4)
-                    self.app.displayImages["encounters"][self.app.display] = ImageTk.PhotoImage(self.app.displayImage)
-                    self.app.display.image = self.app.displayImages["encounters"][self.app.display]
-                    self.app.display.config(image=self.app.displayImages["encounters"][self.app.display])
+                    self.app.displayImages["encounters"][self.app.display]["image"] = ImageTk.PhotoImage(self.app.displayImage)
+                    self.app.display.image = self.app.displayImages["encounters"][self.app.display]["image"]
+                    self.app.display.config(image=self.app.displayImages["encounters"][self.app.display]["image"])
                 elif campaignCard["type"] == "event":
                     self.app.eventTab.load_event(campaign=True, treeviewCampaign=tree)
 
@@ -627,7 +633,7 @@ try:
 
                             # Stage the encounter image
                             log("\tStaging " + encounter["name"] + ", level " + str(encounter["level"]) + " from " + encounter["expansion"])
-                            imageStage = ImageTk.getimage(self.app.displayImages["encounters"][self.app.display])
+                            imageStage = ImageTk.getimage(self.app.displayImages["encounters"][self.app.display]["image"])
 
                             if i > standardCards:
                                 imageStage = imageStage.rotate(90, Image.NEAREST, expand=1)
@@ -767,8 +773,10 @@ try:
                 
                 self.app.display.config(image="")
                 self.app.display2.config(image="")
-                self.app.displayImages["encounters"][self.app.display] = None
-                self.app.displayImages["encounters"][self.app.display2] = None
+                self.app.displayImages["encounters"][self.app.display]["image"] = None
+                self.app.displayImages["encounters"][self.app.display2]["image"] = None
+                self.app.displayImages["encounters"][self.app.display]["name"] = None
+                self.app.displayImages["encounters"][self.app.display2]["name"] = None
 
                 mega = self.generate_v2_campaign_encounters()
 
@@ -828,7 +836,8 @@ try:
                 self.root.wait_window(p)
                 
                 self.app.display2.config(image="")
-                self.app.displayImages["encounters"][self.app.display2] = None
+                self.app.displayImages["encounters"][self.app.display2]["image"] = None
+                self.app.displayImages["encounters"][self.app.display2]["name"] = None
 
                 if p.answer:
                     self.load_v2_campaign_card(leftEncounter)
@@ -852,8 +861,10 @@ try:
                 
                 self.app.display.config(image="")
                 self.app.display2.config(image="")
-                self.app.displayImages["encounters"][self.app.display] = None
-                self.app.displayImages["encounters"][self.app.display2] = None
+                self.app.displayImages["encounters"][self.app.display]["image"] = None
+                self.app.displayImages["encounters"][self.app.display2]["image"] = None
+                self.app.displayImages["encounters"][self.app.display]["name"] = None
+                self.app.displayImages["encounters"][self.app.display2]["name"] = None
 
                 mega = True if any([boss for boss in bosses if (
                     bosses[boss]["level"] == "Mega Boss"

@@ -6,7 +6,7 @@ try:
 
     from dsbg_shuffle_enemies import bosses, enemiesDict
     from dsbg_shuffle_behaviors import behaviorDetail, behaviors
-    from dsbg_shuffle_utility import PopupWindow, error_popup, log
+    from dsbg_shuffle_utility import PopupWindow, clear_other_tab_images, error_popup, log
     from dsbg_shuffle_variants import dataCardMods, modIdLookup
 
 
@@ -211,12 +211,7 @@ try:
                         tooltip.destroy()
 
                     # Remove the displayed item.
-                    self.app.display.config(image="")
-                    self.app.display2.config(image="")
-                    self.app.display3.config(image="")
-                    self.app.displayImages["variants"][self.app.display] = None
-                    self.app.displayImages["variants"][self.app.display2] = None
-                    self.app.displayImages["variants"][self.app.display3] = None
+                    clear_other_tab_images(self.app, "variants")
 
                 if not enemy:
                     enemy = self.treeviewDecks.selection()[0]
@@ -346,12 +341,7 @@ try:
                         tooltip.destroy()
 
                     # Remove the displayed item.
-                    self.app.display.config(image="")
-                    self.app.display2.config(image="")
-                    self.app.display3.config(image="")
-                    self.app.displayImages["variants"][self.app.display] = None
-                    self.app.displayImages["variants"][self.app.display2] = None
-                    self.app.displayImages["variants"][self.app.display3] = None
+                    clear_other_tab_images(self.app, "variants")
 
                     if self.decks[selection]["lastCardDrawn"]:
                         self.app.variantsTab.load_variant_card_locked(variant=self.decks[selection]["lastCardDrawn"], fromDeck=True)
@@ -396,8 +386,7 @@ try:
                     tooltip.destroy()
 
                 # Remove the displayed item.
-                self.app.display.config(image="")
-                self.app.displayImages["variants"][self.app.display] = None
+                clear_other_tab_images(self.app, "variants", onlyDisplay=self.app.display)
 
                 if selection not in self.decks or not self.decks[selection]["lastCardDrawn"]:
                     log("End of draw_behavior_card (nothing done)")
@@ -448,8 +437,7 @@ try:
                     tooltip.destroy()
 
                 # Remove the displayed item.
-                self.app.display.config(image="")
-                self.app.displayImages["variants"][self.app.display] = None
+                clear_other_tab_images(self.app, "variants", onlyDisplay=self.app.display)
 
                 if selection == "Maldron the Assassin":
                     self.decks[selection]["healthMod"] += 8 + ([int(modIdLookup[m][-1]) for m in list(self.app.variantsTab.currentVariants[selection]["defKey"]) if "health" in modIdLookup[m]][0] if selection in self.app.variantsTab.currentVariants else 0)

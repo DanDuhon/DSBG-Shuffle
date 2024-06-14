@@ -660,16 +660,19 @@ try:
                 displayPhotoImage = ImageTk.PhotoImage(self.app.displayImage)
 
                 if right:
-                    self.app.displayImages["encounters"][self.app.display2] = displayPhotoImage
+                    self.app.displayImages["encounters"][self.app.display2]["name"] = name
+                    self.app.displayImages["encounters"][self.app.display2]["image"] = displayPhotoImage
                     self.app.display2.image = displayPhotoImage
                     self.app.display2.config(image=displayPhotoImage)
                 else:
-                    self.app.displayImages["encounters"][self.app.display] = displayPhotoImage
+                    self.app.displayImages["encounters"][self.app.display]["name"] = name
+                    self.app.displayImages["encounters"][self.app.display]["image"] = displayPhotoImage
                     self.app.display.image = displayPhotoImage
                     self.app.display.config(image=displayPhotoImage)
 
                 if not self.app.forPrinting and not campaignGen:
-                    self.app.displayImages["encounters"][self.app.display] = displayPhotoImage
+                    self.app.displayImages["encounters"][self.app.display]["name"] = name
+                    self.app.displayImages["encounters"][self.app.display]["image"] = displayPhotoImage
                     self.app.display.config(image=displayPhotoImage)
                     self.app.display2.config(image="")
                     self.app.display3.config(image="")

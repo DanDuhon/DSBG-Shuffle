@@ -231,27 +231,30 @@ try:
                 self.displayFrame.bind("<Configure>", lambda event, canvas=self.displayCanvas: self.on_frame_configure(canvas))
 
                 self.display = ttk.Label(self.displayFrame)
+                self.display.image = None
                 self.display.grid(column=0, row=0, sticky="nsew")
                 self.display2 = ttk.Label(self.displayFrame)
+                self.display2.image = None
                 self.display2.grid(column=1, row=0, sticky="nsew")
                 self.display3 = ttk.Label(self.displayFrame)
+                self.display3.image = None
                 self.display3.grid(column=1, row=1, sticky="nsew")
 
                 self.displayImages = {
                     "encounters": {
-                        self.display: None,
-                        self.display2: None,
-                        self.display3: None
+                        self.display: {"name": None, "image": None},
+                        self.display2: {"name": None, "image": None},
+                        self.display3: {"name": None, "image": None}
                     },
                     "events": {
-                        self.display: None,
-                        self.display2: None,
-                        self.display3: None
+                        self.display: {"name": None, "image": None},
+                        self.display2: {"name": None, "image": None},
+                        self.display3: {"name": None, "image": None}
                     },
                     "variants": {
-                        self.display: None,
-                        self.display2: None,
-                        self.display3: None
+                        self.display: {"name": None, "image": None},
+                        self.display2: {"name": None, "image": None},
+                        self.display3: {"name": None, "image": None}
                     }
                 }
 

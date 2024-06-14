@@ -308,6 +308,17 @@ def log(message, exception=False):
         adapter.debug(message, caller=calframe[1][3])
 
 
+def clear_other_tab_images(app, tab, onlyDisplay=None):
+    displays = [app.display, app.display2, app.display3]
+    for display in displays:
+        if onlyDisplay and display != onlyDisplay:
+            continue
+        if display.image and display.image != app.displayImages["variants"][display]:
+            display.config(image="")
+            app.displayImages[tab][display]["image"] = None
+            app.displayImages[tab][display]["name"] = None
+
+
 def error_popup(root, e):
     log(e, exception=True)
     p = PopupWindow(root, "Error detected!\n\nPlease open a Github issue describing what you were doing\nand include the dsbg_shuffle_log file!  Thanks!", firstButton="Ok")
