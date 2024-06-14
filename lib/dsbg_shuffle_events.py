@@ -164,6 +164,14 @@ try:
             try:
                 log("Start of load_event, campaign={}", str(campaign))
                 
+                if self.app.notebook.tab(self.app.notebook.select(), "text") == "Events":
+                    self.app.display.config(image="")
+                    self.app.display2.config(image="")
+                    self.app.display3.config(image="")
+                    self.app.displayImages["events"][self.app.display] = None
+                    self.app.displayImages["events"][self.app.display2] = None
+                    self.app.displayImages["events"][self.app.display3] = None
+                
                 # Get the event selected.
                 if event:
                     tree = event.widget
@@ -199,9 +207,10 @@ try:
 
                 # Create and display the event image.
                 self.app.create_image(events[eventSelected]["name"] + ".jpg", "encounter", 4)
-                self.app.displayPhotoImage = ImageTk.PhotoImage(self.app.displayImage)
-                self.app.display.image = self.app.displayPhotoImage
-                self.app.display.config(image=self.app.displayPhotoImage)
+                displayPhotoImage = ImageTk.PhotoImage(self.app.displayImage)
+                self.app.display.image = displayPhotoImage
+                self.app.display.config(image=displayPhotoImage)
+                self.app.displayImages["events"][self.app.display] = displayPhotoImage
 
                 log("End of load_event")
             except Exception as e:
@@ -383,10 +392,9 @@ try:
                 self.app.display.config(image="")
                 self.app.display2.config(image="")
                 self.app.display3.config(image="")
-                self.app.display2.bind("<Button 1>", do_nothing)
-                self.app.display2.bind("<Button 3>", do_nothing)
-                self.app.display3.bind("<Button 1>", do_nothing)
-                self.app.display3.bind("<Button 3>", do_nothing)
+                self.app.displayImages["events"][self.app.display] = None
+                self.app.displayImages["events"][self.app.display2] = None
+                self.app.displayImages["events"][self.app.display3] = None
 
                 shuffle(self.eventDeck)
 
@@ -417,10 +425,9 @@ try:
                 self.app.display.config(image="")
                 self.app.display2.config(image="")
                 self.app.display3.config(image="")
-                self.app.display2.bind("<Button 1>", do_nothing)
-                self.app.display2.bind("<Button 3>", do_nothing)
-                self.app.display3.bind("<Button 1>", do_nothing)
-                self.app.display3.bind("<Button 3>", do_nothing)
+                self.app.displayImages["events"][self.app.display] = None
+                self.app.displayImages["events"][self.app.display2] = None
+                self.app.displayImages["events"][self.app.display3] = None
                 
                 self.currentEvent = None
                 self.currentEventNum = 0
@@ -489,10 +496,9 @@ try:
                 self.app.display.config(image="")
                 self.app.display2.config(image="")
                 self.app.display3.config(image="")
-                self.app.display2.bind("<Button 1>", do_nothing)
-                self.app.display2.bind("<Button 3>", do_nothing)
-                self.app.display3.bind("<Button 1>", do_nothing)
-                self.app.display3.bind("<Button 3>", do_nothing)
+                self.app.displayImages["events"][self.app.display] = None
+                self.app.displayImages["events"][self.app.display2] = None
+                self.app.displayImages["events"][self.app.display3] = None
 
                 # Reduce the Drawn Order value of more recently drawn cards by 1.
                 for eventCard in self.treeviewEventDeck.get_children():
@@ -540,10 +546,9 @@ try:
                 self.app.display.config(image="")
                 self.app.display2.config(image="")
                 self.app.display3.config(image="")
-                self.app.display2.bind("<Button 1>", do_nothing)
-                self.app.display2.bind("<Button 3>", do_nothing)
-                self.app.display3.bind("<Button 1>", do_nothing)
-                self.app.display3.bind("<Button 3>", do_nothing)
+                self.app.displayImages["events"][self.app.display] = None
+                self.app.displayImages["events"][self.app.display2] = None
+                self.app.displayImages["events"][self.app.display3] = None
 
                 # Reduce the Drawn Order value of more recently drawn cards by 1.
                 for eventCard in self.treeviewEventDeck.get_children():
@@ -588,10 +593,9 @@ try:
                 self.app.display.config(image="")
                 self.app.display2.config(image="")
                 self.app.display3.config(image="")
-                self.app.display2.bind("<Button 1>", do_nothing)
-                self.app.display2.bind("<Button 3>", do_nothing)
-                self.app.display3.bind("<Button 1>", do_nothing)
-                self.app.display3.bind("<Button 3>", do_nothing)
+                self.app.displayImages["events"][self.app.display] = None
+                self.app.displayImages["events"][self.app.display2] = None
+                self.app.displayImages["events"][self.app.display3] = None
                 
                 # Reduce the Drawn Order value of more recently drawn cards by 1.
                 for eventCard in self.treeviewEventDeck.get_children():

@@ -24,14 +24,7 @@ try:
                 1: [],
                 2: [],
                 3: [],
-                4: [],
-                "1cnt": 0,
-                "2cnt": 0,
-                "3cnt": 0,
-                "4cnt": 0,
-                "mini": False,
-                "main": False,
-                "mega": False
+                4: []
             }
 
             self.bossMenuItems = [
@@ -96,6 +89,8 @@ try:
             self.v1CampaignButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
             self.v2CampaignButton = ttk.Button(self.campaignTabButtonsFrame5, text="V2 Campaign", width=16, command=self.v2_campaign)
             self.v2CampaignButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+            self.gravestoneButton = ttk.Button(self.campaignTabButtonsFrame5, text="V2 Gravestone", width=16, command=self.v2_campaign_gravestone)
+            self.gravestoneButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
         
             self.scrollbarTreeviewCampaign = ttk.Scrollbar(self.campaignTabTreeviewFrame)
             self.scrollbarTreeviewCampaign.pack(side="right", fill="y")
@@ -334,10 +329,9 @@ try:
                 self.app.display.config(image="")
                 self.app.display2.config(image="")
                 self.app.display3.config(image="")
-                self.app.display2.bind("<Button 1>", do_nothing)
-                self.app.display2.bind("<Button 3>", do_nothing)
-                self.app.display3.bind("<Button 1>", do_nothing)
-                self.app.display3.bind("<Button 3>", do_nothing)
+                self.app.displayImages["encounters"][self.app.display] = None
+                self.app.displayImages["encounters"][self.app.display2] = None
+                self.app.displayImages["encounters"][self.app.display3] = None
 
                 log("End of delete_card_from_campaign")
             except Exception as e:
@@ -471,6 +465,14 @@ try:
             try:
                 log("Start of load_campaign_card")
 
+                if self.app.notebook.tab(self.app.notebook.select(), "text") == "Campaign":
+                    self.app.display.config(image="")
+                    self.app.display2.config(image="")
+                    self.app.display3.config(image="")
+                    self.app.displayImages["encounters"][self.app.display] = None
+                    self.app.displayImages["encounters"][self.app.display2] = None
+                    self.app.displayImages["encounters"][self.app.display3] = None
+
                 self.app.selected = None
                 self.app.encounterTab.rewardTreasure = None
                 self.app.display.unbind("<Button 1>")
@@ -504,9 +506,9 @@ try:
                 elif campaignCard["type"] == "boss":
                     # Create and display the boss image.
                     self.app.create_image(campaignCard["name"] + ".jpg", "encounter", 4)
-                    self.app.displayPhotoImage = ImageTk.PhotoImage(self.app.displayImage)
-                    self.app.display.image = self.app.displayPhotoImage
-                    self.app.display.config(image=self.app.displayPhotoImage)
+                    self.app.displayImages["encounters"][self.app.display] = ImageTk.PhotoImage(self.app.displayImage)
+                    self.app.display.image = self.app.displayImages["encounters"][self.app.display]
+                    self.app.display.config(image=self.app.displayImages["encounters"][self.app.display])
                 elif campaignCard["type"] == "event":
                     self.app.eventTab.load_event(campaign=True, treeviewCampaign=tree)
 
@@ -625,7 +627,7 @@ try:
 
                             # Stage the encounter image
                             log("\tStaging " + encounter["name"] + ", level " + str(encounter["level"]) + " from " + encounter["expansion"])
-                            imageStage = ImageTk.getimage(self.app.displayPhotoImage)
+                            imageStage = ImageTk.getimage(self.app.displayImages["encounters"][self.app.display])
 
                             if i > standardCards:
                                 imageStage = imageStage.rotate(90, Image.NEAREST, expand=1)
@@ -685,8 +687,14 @@ try:
             try:
                 log("Start of v1_campaign")
 
-                mega = False
+                if self.campaign:
+                    PopupWindow(self.root, labelText="Please remove all campaign items first.", firstButton="Ok")
+                    return
 
+                mega = False
+                
+                progress = PopupWindow(self.root, labelText="Generating encounters...", loadingImage=True)
+                
                 encounterList = [encounter for encounter in self.app.encounters if (
                     all([
                         any([frozenset(expCombo).issubset(self.app.availableExpansions) for expCombo in self.app.encounters[encounter]["expansionCombos"]["1"]]),
@@ -729,6 +737,8 @@ try:
                 for _ in range(4):
                     self.move_down(leaves=boss1)
 
+                progress.destroy()
+
                 log("End of v1_campaign")
             except Exception as e:
                 error_popup(self.root, e)
@@ -738,71 +748,188 @@ try:
         def v2_campaign(self, event=None):
             """
             Generates a random V2 campaign, piece by piece.
-
-            Optional Parameters:
-                event: tkinter.Event
-                    The tkinter Event that is the trigger.
             """
             try:
                 log("Start of v2_campaign")
 
-                mega = False
+                level1Cnt = len([e for e in self.campaign if e["level"] == 1])
 
-                encounterList = [encounter for encounter in self.app.encounters if (
-                    all([
-                        any([frozenset(expCombo).issubset(self.app.availableExpansions) for expCombo in self.app.encounters[encounter]["expansionCombos"]["1"]]),
-                        any([frozenset(expCombo).issubset(self.app.availableExpansions) for expCombo in self.app.encounters[encounter]["expansionCombos"]["2"]]),
-                        True if "3" not in self.app.encounters[encounter]["expansionCombos"] else any([frozenset(expCombo).issubset(self.app.availableExpansions) for expCombo in self.app.encounters[encounter]["expansionCombos"]["3"]]),
-                        self.app.encounters[encounter]["expansion"] in self.app.v2Expansions
-                            ]))]
-
-                if not self.v2Campaign[1]:
-                    for _ in range(2):
-                        self.app.encounterTab.random_encounter(level=1, encounterList=encounterList)
-                        # Make sure we don't get two of the same name
-                        name = self.app.selected["name"] + (" (TSC)" if self.app.selected["expansion"] == "The Sunless City" and self.app.selected["name"] in set(["Broken Passageway", "Central Plaza"]) else "")
-                        self.v2Campaign[1].append(self.add_card_to_v2_campaign_list())
-
-                    self.app.display.config(image="")
-                    self.app.display2.config(image="")
-
-                    self.load_v2_campaign_card(self.v2Campaign[1][0])
-                    self.load_v2_campaign_card(self.v2Campaign[1][1], True)
-
+                if not self.campaign and level1Cnt > 0:
                     self.v2Campaign = {
                         1: [],
                         2: [],
                         3: [],
-                        4: [],
-                        "1cnt": 0,
-                        "2cnt": 0,
-                        "3cnt": 0,
-                        "4cnt": 0,
-                        "mini": False,
-                        "main": False,
-                        "mega": False
+                        4: []
                     }
+                elif [e for e in self.campaign if e["type"] != "event"] and level1Cnt == 0:
+                    PopupWindow(self.root, labelText="Please remove all campaign items first.", firstButton="Ok")
+                    return
+                
+                self.app.display.config(image="")
+                self.app.display2.config(image="")
+                self.app.displayImages["encounters"][self.app.display] = None
+                self.app.displayImages["encounters"][self.app.display2] = None
+
+                mega = self.generate_v2_campaign_encounters()
+
+                if level1Cnt < 3:
+                    self.v2_campaign_pick_encounter(1)
                     return
 
-                if not self.v2Campaign[2]:
-                    for _ in range(15):
-                        self.app.encounterTab.random_encounter(level=2, encounterList=encounterList)
-                        self.v2Campaign[2].append(self.add_card_to_v2_campaign_list())
+                if len([e for e in self.campaign if e["level"] == 2]) < 1:
+                    self.v2_campaign_pick_encounter(2)
+                    return
+                
+                if not [e for e in self.campaign if e["level"] == "Mini Boss"]:
+                    self.add_random_boss_to_campaign(level="Mini Boss")
                     return
 
-                if not self.v2Campaign[3]:
-                    for _ in range(12):
-                        self.app.encounterTab.random_encounter(level=3, encounterList=encounterList)
-                        self.v2Campaign[3].append(self.add_card_to_v2_campaign_list())
+                if len([e for e in self.campaign if e["level"] == 2]) < 3:
+                    self.v2_campaign_pick_encounter(2)
                     return
 
-                if not self.v2Campaign[4]:
-                    for _ in range(5):
-                        self.app.encounterTab.random_encounter(level=4, encounterList=encounterList)
-                        self.v2Campaign[4].append(self.add_card_to_v2_campaign_list())
+                if len([e for e in self.campaign if e["level"] == 3]) < 2:
+                    self.v2_campaign_pick_encounter(3)
                     return
+                
+                if not [e for e in self.campaign if e["level"] == "Main Boss"]:
+                    self.add_random_boss_to_campaign(level="Main Boss")
+                    return
+
+                if mega:
+                    if len([e for e in self.campaign if e["level"] == 4]) < 1:
+                        self.v2_campaign_pick_encounter(4)
+                        return
+                        
+                    if not [e for e in self.campaign if e["level"] == "Mega Boss"]:
+                        self.add_random_boss_to_campaign(level="Mega Boss")
+                        return
 
                 log("End of v2_campaign")
+            except Exception as e:
+                error_popup(self.root, e)
+                raise
+
+
+        def v2_campaign_pick_encounter(self, level):
+            """
+            Prompts the user to choose which encounter to keep.
+            """
+            try:
+                log("Start of generate_v2_campaign_encounters")
+
+                leftEncounter = self.v2Campaign[level].pop()
+                rightEncounter = self.v2Campaign[level].pop()
+
+                self.load_v2_campaign_card(leftEncounter)
+                self.load_v2_campaign_card(rightEncounter, True)
+            
+                p = PopupWindow(self.master, labelText="Which encounter do you want to play?", rightButton=True, leftButton=True)
+                self.root.wait_window(p)
+                
+                self.app.display2.config(image="")
+                self.app.displayImages["encounters"][self.app.display2] = None
+
+                if p.answer:
+                    self.load_v2_campaign_card(leftEncounter)
+                else:
+                    self.load_v2_campaign_card(rightEncounter)
+
+                self.add_card_to_campaign()
+
+                log("End of generate_v2_campaign_encounters")
+            except Exception as e:
+                error_popup(self.root, e)
+                raise
+
+
+        def generate_v2_campaign_encounters(self):
+            """
+            Generate encounters for the v2 campaign generator.
+            """
+            try:
+                log("Start of generate_v2_campaign_encounters")
+                
+                self.app.display.config(image="")
+                self.app.display2.config(image="")
+                self.app.displayImages["encounters"][self.app.display] = None
+                self.app.displayImages["encounters"][self.app.display2] = None
+
+                mega = True if any([boss for boss in bosses if (
+                    bosses[boss]["level"] == "Mega Boss"
+                    and bosses[boss]["expansions"] & self.app.availableExpansions)]) else False
+                level1Cnt = len([e for e in self.campaign if e["level"] == 1])
+                level2Cnt = len([e for e in self.campaign if e["level"] == 2])
+                level3Cnt = len([e for e in self.campaign if e["level"] == 3])
+                level4Cnt = len([e for e in self.campaign if e["level"] == 4])
+
+                if (
+                    (level1Cnt < 3 and len(self.v2Campaign[1]) < 2)
+                    or (level2Cnt < 3 and len(self.v2Campaign[2]) < 2)
+                    or (level3Cnt < 2 and len(self.v2Campaign[3]) < 2)
+                    or (mega and level4Cnt < 1 and len(self.v2Campaign[4]) < 2)
+                    ):
+                    progress = PopupWindow(self.root, labelText="Generating encounters...", loadingImage=True)
+
+                    if mega and level4Cnt < 1:
+                        encounterListLevel4 = [encounter for encounter in self.app.encounters if (
+                            all([
+                                any([frozenset(expCombo).issubset(self.app.availableExpansions) for expCombo in self.app.encounters[encounter]["expansionCombos"]["1"]]),
+                                any([frozenset(expCombo).issubset(self.app.availableExpansions) for expCombo in self.app.encounters[encounter]["expansionCombos"]["2"]]),
+                                True if "3" not in self.app.encounters[encounter]["expansionCombos"] else any([frozenset(expCombo).issubset(self.app.availableExpansions) for expCombo in self.app.encounters[encounter]["expansionCombos"]["3"]]),
+                                self.app.encounters[encounter]["level"] == 4
+                                    ]))]
+                
+                        self.v2_campaign_add_encounters(encounterListLevel4, 4, 1, 2)
+
+                    if (
+                        level1Cnt < 3
+                        or level2Cnt < 3
+                        or level3Cnt < 2
+                        ):
+                        encounterList = [encounter for encounter in self.app.encounters if (
+                            all([
+                                any([frozenset(expCombo).issubset(self.app.availableExpansions) for expCombo in self.app.encounters[encounter]["expansionCombos"]["1"]]),
+                                any([frozenset(expCombo).issubset(self.app.availableExpansions) for expCombo in self.app.encounters[encounter]["expansionCombos"]["2"]]),
+                                True if "3" not in self.app.encounters[encounter]["expansionCombos"] else any([frozenset(expCombo).issubset(self.app.availableExpansions) for expCombo in self.app.encounters[encounter]["expansionCombos"]["3"]]),
+                                self.app.encounters[encounter]["expansion"] in self.app.v2Expansions
+                                    ]))]
+
+                    if len([e for e in self.campaign if e["level"] == 1]) < 2:
+                        self.v2_campaign_add_encounters(encounterList, 1, 3, 6)
+
+                    if len([e for e in self.campaign if e["level"] == 2]) < 2:
+                        self.v2_campaign_add_encounters(encounterList, 2, 3, 6)
+
+                    if len([e for e in self.campaign if e["level"] == 3]) < 2:
+                        self.v2_campaign_add_encounters(encounterList, 3, 2, 4)
+
+                    progress.destroy()
+
+                log("End of generate_v2_campaign_encounters")
+
+                return mega
+            except Exception as e:
+                error_popup(self.root, e)
+                raise
+
+
+        def v2_campaign_add_encounters(self, encounterList, level, levelCnt, encCnt):
+            """
+            Generate encounters for the v2 campaign generator.
+            """
+            try:
+                log("Start of v2_campaign_add_encounters")
+                
+                while len(self.v2Campaign[level]) < (encCnt if len([e for e in self.campaign if e["level"] == level]) < levelCnt else 2):
+                    self.app.encounterTab.random_encounter(level=level, encounterList=encounterList)
+                    # Make sure we don't get two of the same name
+                    name = self.app.selected["name"] + (" (TSC)" if self.app.selected["expansion"] == "The Sunless City" and self.app.selected["name"] in set(["Broken Passageway", "Central Plaza"]) else "")
+                    if name in set([c["name"] for c in self.v2Campaign[level]]) or name in set([e["name"] for e in self.campaign]):
+                        continue
+                    self.v2Campaign[level].append(self.add_card_to_v2_campaign_list(name))
+
+                log("End of v2_campaign_add_encounters")
             except Exception as e:
                 error_popup(self.root, e)
                 raise
@@ -811,15 +938,11 @@ try:
         def load_v2_campaign_card(self, card, right=False):
             """
             Display pre-generated v2 encounter card.
-
-            Optional Parameters:
-                event: tkinter.Event
-                    The tkinter Event that is the trigger.
             """
             try:
                 log("Start of load_v2_campaign_card")
 
-                self.app.selected = None
+                self.app.selected = card
                 self.app.encounterTab.rewardTreasure = None
                 self.app.display.unbind("<Button 1>")
                 
@@ -841,6 +964,47 @@ try:
                     self.app.encounterTab.edit_encounter_card(card["name"], card["expansion"], card["level"], alts["enemySlots"], right=right, campaignGen=True)
 
                 log("End of load_v2_campaign_card")
+            except Exception as e:
+                error_popup(self.root, e)
+                raise
+
+
+        def v2_campaign_gravestone(self):
+            """
+            Display pre-generated v2 encounter card.
+            """
+            try:
+                log("Start of v2_campaign_gravestone")
+
+                if not len([e for e in self.campaign if e["level"] == 1]):
+                    log("End of v2_campaign_gravestone (nothing done)")
+                    return
+
+                mega = self.generate_v2_campaign_encounters()
+
+                if len([e for e in self.campaign if e["level"] == 1]) < 3:
+                    level = 1
+                elif len([e for e in self.campaign if e["level"] == 2]) < 3:
+                    level = 2
+                elif len([e for e in self.campaign if e["level"] == 3]) < 2:
+                    level = 3
+                elif mega and len([e for e in self.campaign if e["level"] == 4]) < 1:
+                    level = 4
+                else:
+                    log("End of v2_campaign_gravestone (nothing done)")
+                    return
+                
+                encounter = self.v2Campaign[level].pop()
+
+                self.load_v2_campaign_card(encounter)
+            
+                p = PopupWindow(self.master, labelText="Keep or discard this encounter card?", keepButton=True, discardButton=True)
+                self.root.wait_window(p)
+
+                if p.answer:
+                    self.v2Campaign[level].append(encounter)
+
+                log("End of v2_campaign_gravestone")
             except Exception as e:
                 error_popup(self.root, e)
                 raise

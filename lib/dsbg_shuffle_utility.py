@@ -120,7 +120,7 @@ class PopupWindow(tk.Toplevel):
         loadingImage: Boolean
             Whether to show the loading image.
     """
-    def __init__(self, root, labelText=None, firstButton=False, secondButton=False, yesButton=False, noButton=False, progressBar=False, progressMax=None, loadingImage=False):
+    def __init__(self, root, labelText=None, firstButton=False, secondButton=False, yesButton=False, noButton=False, ornsteinButton=False, smoughButton=False, leftButton=False, rightButton=False, keepButton=False, discardButton=False, progressBar=False, progressMax=None, loadingImage=False):
         tk.Toplevel.__init__(self, root)
         self.attributes('-alpha', 0.0)
         self.popupFrame = ttk.Frame(self, padding=(20, 10))
@@ -147,6 +147,30 @@ class PopupWindow(tk.Toplevel):
 
         if noButton:
             button = ttk.Button(self.popupFrame, text="No", command=self.no)
+            button.grid(column=1, row=2, padx=20, pady=20)
+
+        if leftButton:
+            button = ttk.Button(self.popupFrame, text="Left", command=self.yes)
+            button.grid(column=0, row=2, padx=20, pady=20)
+
+        if rightButton:
+            button = ttk.Button(self.popupFrame, text="Right", command=self.no)
+            button.grid(column=1, row=2, padx=20, pady=20)
+
+        if keepButton:
+            button = ttk.Button(self.popupFrame, text="Keep", command=self.yes)
+            button.grid(column=0, row=2, padx=20, pady=20)
+
+        if discardButton:
+            button = ttk.Button(self.popupFrame, text="Discard", command=self.no)
+            button.grid(column=1, row=2, padx=20, pady=20)
+
+        if ornsteinButton:
+            button = ttk.Button(self.popupFrame, text="Ornstein", command=self.yes)
+            button.grid(column=0, row=2, padx=20, pady=20)
+
+        if smoughButton:
+            button = ttk.Button(self.popupFrame, text="Smough", command=self.no)
             button.grid(column=1, row=2, padx=20, pady=20)
 
         if loadingImage:

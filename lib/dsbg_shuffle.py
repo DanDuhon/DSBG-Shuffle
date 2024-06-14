@@ -237,6 +237,24 @@ try:
                 self.display3 = ttk.Label(self.displayFrame)
                 self.display3.grid(column=1, row=1, sticky="nsew")
 
+                self.displayImages = {
+                    "encounters": {
+                        self.display: None,
+                        self.display2: None,
+                        self.display3: None
+                    },
+                    "events": {
+                        self.display: None,
+                        self.display2: None,
+                        self.display3: None
+                    },
+                    "variants": {
+                        self.display: None,
+                        self.display2: None,
+                        self.display3: None
+                    }
+                }
+
                 log("End of create_display_frame")
             except Exception as e:
                 error_popup(root, e)
@@ -452,6 +470,25 @@ try:
                     self.display.config(image="")
                     self.display2.config(image="")
                     self.display3.config(image="")
+
+                    self.displayImages = {
+                        "encounters": {
+                            self.display: None,
+                            self.display2: None,
+                            self.display3: None
+                        },
+                        "events": {
+                            self.display: None,
+                            self.display2: None,
+                            self.display3: None
+                        },
+                        "variants": {
+                            self.display: None,
+                            self.display2: None,
+                            self.display3: None
+                        }
+                    }
+
                     self.encounterTab.treeviewEncounters.pack_forget()
                     self.encounterTab.treeviewEncounters.destroy()
                     self.availableExpansions = set(self.settings["availableExpansions"])

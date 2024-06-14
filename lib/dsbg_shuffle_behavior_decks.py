@@ -6,7 +6,7 @@ try:
 
     from dsbg_shuffle_enemies import bosses, enemiesDict
     from dsbg_shuffle_behaviors import behaviorDetail, behaviors
-    from dsbg_shuffle_utility import PopupWindow, do_nothing, error_popup, log
+    from dsbg_shuffle_utility import PopupWindow, error_popup, log
     from dsbg_shuffle_variants import dataCardMods, modIdLookup
 
 
@@ -110,17 +110,16 @@ try:
                     self.treeviewDecks.insert(parent="", index="end", iid="Invaders & Explorers Mimics", values=("Invaders & Explorers Mimics", "", ""), tags=False)
                 self.treeviewDecks.insert(parent="", index="end", iid="Mini Bosses", values=("Mini Bosses", "", ""), tags=False)
                 self.treeviewDecks.insert(parent="", index="end", iid="Main Bosses", values=("Main Bosses", "", ""), tags=False)
-                self.treeviewDecks.insert(parent="", index="end", iid="Mega Bosses", values=("Mega Bosses", "", ""), tags=False)
+                if set([boss for boss in bosses if bosses[boss]["level"] == "Mega Boss"]) & self.app.availableExpansions:
+                    self.treeviewDecks.insert(parent="", index="end", iid="Mega Bosses", values=("Mega Bosses", "", ""), tags=False)
 
                 for enemy in sorted([enemy for enemy in enemiesDict if enemiesDict[enemy].expansions & self.app.availableExpansions and ("Phantoms" in enemiesDict[enemy].expansions or enemiesDict[enemy].name in {"Hungry Mimic", "Voracious Mimic"})]):
                     self.treeviewDecks.insert(parent="Invaders & Explorers Mimics", index="end", iid=enemy, values=("    " + enemy, enemiesDict[enemy].cards, "no"), tags=True)
                     
                 for enemy in sorted([enemy for enemy in bosses if (
-                    enemy != "Vordt of the Boreal Valley"
-                    and (
-                        bosses[enemy]["level"] == "Mega Boss"
-                        or enemy == "Asylum Demon"
-                        or bosses[enemy]["expansions"] & self.app.availableExpansions))]):
+                    bosses[enemy]["expansions"] & self.app.availableExpansions
+                    and enemy != "Vordt of the Boreal Valley"
+                    )]):
                     self.treeviewDecks.insert(parent=bosses[enemy]["level"] + "es", index="end", iid=enemy, values=("    " + enemy, bosses[enemy]["cards"]), tags=True)
 
                 if "Vordt of the Boreal Valley" in self.app.availableExpansions:
@@ -215,10 +214,9 @@ try:
                     self.app.display.config(image="")
                     self.app.display2.config(image="")
                     self.app.display3.config(image="")
-                    self.app.display2.bind("<Button 1>", do_nothing)
-                    self.app.display2.bind("<Button 3>", do_nothing)
-                    self.app.display3.bind("<Button 1>", do_nothing)
-                    self.app.display3.bind("<Button 3>", do_nothing)
+                    self.app.displayImages["variants"][self.app.display] = None
+                    self.app.displayImages["variants"][self.app.display2] = None
+                    self.app.displayImages["variants"][self.app.display3] = None
 
                 if not enemy:
                     enemy = self.treeviewDecks.selection()[0]
@@ -310,11 +308,13 @@ try:
                     variant = cardToDraw
                     
                 if selection == "Armorer Dennis" and self.decks[selection]["heatup"]:
-                    self.app.variantsTab.load_variant_card_locked(variant=variant, armorerDennis=True)
+                    self.app.variantsTab.load_variant_card_locked(variant=variant, armorerDennis=True, fromDeck=True)
+                elif selection == "The Pursuer" and self.decks[selection]["heatup"]:
+                    self.app.variantsTab.load_variant_card_locked(variant=variant, pursuer=True, fromDeck=True)
                 elif selection == "Old Iron King" and self.decks[selection]["heatup"]:
-                    self.app.variantsTab.load_variant_card_locked(variant=variant, oldIronKing=True)
+                    self.app.variantsTab.load_variant_card_locked(variant=variant, oldIronKing=True, fromDeck=True)
                 else:
-                    self.app.variantsTab.load_variant_card_locked(variant=variant)
+                    self.app.variantsTab.load_variant_card_locked(variant=variant, fromDeck=True)
                 
                 self.decks[selection]["lastCardDrawn"] = variant
 
@@ -349,23 +349,34 @@ try:
                     self.app.display.config(image="")
                     self.app.display2.config(image="")
                     self.app.display3.config(image="")
+                    self.app.displayImages["variants"][self.app.display] = None
+                    self.app.displayImages["variants"][self.app.display2] = None
+                    self.app.displayImages["variants"][self.app.display3] = None
 
                     if self.decks[selection]["lastCardDrawn"]:
-                        self.app.variantsTab.load_variant_card_locked(variant=self.decks[selection]["lastCardDrawn"])
+                        self.app.variantsTab.load_variant_card_locked(variant=self.decks[selection]["lastCardDrawn"], fromDeck=True)
 
                     if selection == "Ornstein & Smough":
-                        self.app.variantsTab.load_variant_card_locked(variant="Ornstein - data", deckDataCard=True, healthMod=self.decks[self.treeviewDecks.selection()[0]]["healthMod"])
-                        self.app.variantsTab.load_variant_card_locked(variant="Smough - data", deckDataCard=True, healthMod=self.decks[self.treeviewDecks.selection()[0]]["healthMod"])
+                        self.app.variantsTab.load_variant_card_locked(variant="Ornstein - data", deckDataCard=True, healthMod=self.decks[self.treeviewDecks.selection()[0]]["healthMod"], fromDeck=True)
+                        self.app.variantsTab.load_variant_card_locked(variant="Smough - data", deckDataCard=True, healthMod=self.decks[self.treeviewDecks.selection()[0]]["healthMod"], fromDeck=True)
                     else:
                         selection = selection[:selection.index(" (")] if "Vordt" in selection else selection
-                        self.app.variantsTab.load_variant_card_locked(variant=selection + " - data", deckDataCard=True, healthMod=self.decks[self.treeviewDecks.selection()[0]]["healthMod"])
+                        self.app.variantsTab.load_variant_card_locked(variant=selection + " - data", deckDataCard=True, healthMod=self.decks[self.treeviewDecks.selection()[0]]["healthMod"], fromDeck=True)
 
-                    self.app.display2.bind("<Button 1>", self.lower_health)
-                    self.app.display2.bind("<Button 3>", self.raise_health)
+                    self.app.display2.bind("<Button 1>", lambda event, x=1: self.lower_health(event=event, amount=x))
+                    self.app.display2.bind("<Shift-Button 1>", lambda event, x=5: self.lower_health(event=event, amount=x))
+                    self.app.display2.bind("<Button 3>", lambda event, x=1: self.raise_health(event=event, amount=x))
+                    self.app.display2.bind("<Shift-Button 3>", lambda event, x=5: self.raise_health(event=event, amount=x))
+                    self.app.display2.bind("<Control-1>", lambda event, x=1: self.raise_health(event=event, amount=x))
+                    self.app.display2.bind("<Shift-Control-1>", lambda event, x=5: self.raise_health(event=event, amount=x))
 
                     if selection == "Ornstein & Smough":
-                        self.app.display3.bind("<Button 1>", self.lower_health)
-                        self.app.display3.bind("<Button 3>", self.raise_health)
+                        self.app.display3.bind("<Button 1>", lambda event, x=1: self.lower_health(event=event, amount=x))
+                        self.app.display3.bind("<Shift-Button 1>", lambda event, x=5: self.lower_health(event=event, amount=x))
+                        self.app.display3.bind("<Button 3>", lambda event, x=1: self.raise_health(event=event, amount=x))
+                        self.app.display3.bind("<Shift-Button 3>", lambda event, x=5: self.raise_health(event=event, amount=x))
+                        self.app.display3.bind("<Control-1>", lambda event, x=1: self.raise_health(event=event, amount=x))
+                        self.app.display3.bind("<Shift-Control-1>", lambda event, x=5: self.raise_health(event=event, amount=x))
 
                 log("End of display_deck_cards")
             except Exception as e:
@@ -386,6 +397,7 @@ try:
 
                 # Remove the displayed item.
                 self.app.display.config(image="")
+                self.app.displayImages["variants"][self.app.display] = None
 
                 if selection not in self.decks or not self.decks[selection]["lastCardDrawn"]:
                     log("End of draw_behavior_card (nothing done)")
@@ -395,11 +407,11 @@ try:
                     pass
                 else:
                     if selection == "Armorer Dennis" and self.decks[selection]["heatup"]:
-                        self.app.variantsTab.load_variant_card_locked(variant=self.decks[selection]["lastCardDrawn"], armorerDennis=True)
+                        self.app.variantsTab.load_variant_card_locked(variant=self.decks[selection]["lastCardDrawn"], armorerDennis=True, fromDeck=True)
                     if selection == "Old Iron King" and self.decks[selection]["heatup"]:
-                        self.app.variantsTab.load_variant_card_locked(variant=self.decks[selection]["lastCardDrawn"], oldIronKing=True)
+                        self.app.variantsTab.load_variant_card_locked(variant=self.decks[selection]["lastCardDrawn"], oldIronKing=True, fromDeck=True)
                     else:
-                        self.app.variantsTab.load_variant_card_locked(variant=self.decks[selection]["lastCardDrawn"])
+                        self.app.variantsTab.load_variant_card_locked(variant=self.decks[selection]["lastCardDrawn"], fromDeck=True)
 
                 log("End of draw_behavior_card")
             except Exception as e:
@@ -437,6 +449,7 @@ try:
 
                 # Remove the displayed item.
                 self.app.display.config(image="")
+                self.app.displayImages["variants"][self.app.display] = None
 
                 if selection == "Maldron the Assassin":
                     self.decks[selection]["healthMod"] += 8 + ([int(modIdLookup[m][-1]) for m in list(self.app.variantsTab.currentVariants[selection]["defKey"]) if "health" in modIdLookup[m]][0] if selection in self.app.variantsTab.currentVariants else 0)
@@ -455,16 +468,27 @@ try:
                     self.decks[selection]["deck"] += self.decks[selection]["heatupCards"]
                     self.decks[selection]["heatup"] = True
                 elif selection == "Ornstein & Smough":
+                    if not osOption:
+                        p = PopupWindow(self.master, labelText="Which one is heating up?", ornsteinButton=True, smoughButton=True)
+                        self.root.wait_window(p)
+                        osOption = "Ornstein" if p.answer else "Smough"
+
                     self.decks[selection]["deck"] = self.decks[selection]["heatupCards"][osOption]
                     self.decks[selection]["heatup"] = True
+
+                    healthVariant = + ([int(modIdLookup[m][-1]) for m in list(self.app.variantsTab.currentVariants[selection]["defKey"]) if "health" in modIdLookup[m]][0] if (selection) in self.app.variantsTab.currentVariants else 0)
+
                     if osOption == "Ornstein":
-                        self.decks[selection]["healthMod"]["Ornstein"] += 10
+                        self.decks[selection]["healthMod"]["Ornstein"] += 10 + healthVariant
                         if self.decks[selection]["healthMod"]["Ornstein"] > 0:
                             self.decks[selection]["healthMod"]["Ornstein"] = 0
+                        self.decks[selection]["healthMod"]["Smough"] = -(behaviorDetail[selection]["Smough"]["health"] + healthVariant)
                     else:
-                        self.decks[selection]["healthMod"]["Smough"] += 15
+                        self.decks[selection]["healthMod"]["Smough"] += 15 + healthVariant
                         if self.decks[selection]["healthMod"]["Smough"] > 0:
                             self.decks[selection]["healthMod"]["Smough"] = 0
+                        self.decks[selection]["healthMod"]["Ornstein"] = -(
+                            behaviorDetail[selection]["Ornstein"]["health"] + healthVariant)
                 elif selection == "Smelter Demon":
                     self.decks[selection]["deck"] = self.decks[selection]["heatupCards"]
                     self.decks[selection]["heatup"] = True
@@ -498,37 +522,44 @@ try:
                 raise
                 
 
-        def lower_health(self, event=None):
+        def lower_health(self, amount, event=None):
             try:
                 log("Start of lower_health")
+
+                if self.app.notebook.tab(self.app.notebook.select(), "text") != "Behavior Decks":
+                    log("End of lower_health (nothing done)")
+                    return
 
                 selection = self.treeviewDecks.selection()[0]
 
                 osClicked = "Ornstein" if event.widget == self.app.display2 else "Smough" if event.widget == self.app.display3 else ""
 
-                if selection == "The Four Kings" or (
-                    (self.decks[selection]["healthMod"][osClicked] if selection == "Ornstein & Smough" else self.decks[selection]["healthMod"])
+                startingHealth = ((self.decks[selection]["healthMod"][osClicked] if selection == "Ornstein & Smough" else self.decks[selection]["healthMod"])
                     + behaviorDetail[selection[:selection.index(" (")] if "Vordt" in selection else selection].get("health", 0)
-                    + behaviorDetail[selection].get(osClicked, {}).get("health", 0)
+                    + behaviorDetail[selection[:selection.index(" (")] if "Vordt" in selection else selection].get(osClicked, {}).get("health", 0)
                     + ([int(modIdLookup[m][-1]) for m in list(self.app.variantsTab.currentVariants[selection[:selection.index(" (")] if "Vordt" in selection else selection]["defKey"]) if "health" in modIdLookup[m]][0] if (selection[:selection.index(" (")] if "Vordt" in selection else selection) in self.app.variantsTab.currentVariants else 0)
-                    ) == 0:
+                    )
+
+                if selection == "The Four Kings" or startingHealth == 0:
                     log("End of lower_health (nothing done)")
                     return
+                elif startingHealth - amount < 0:
+                    amount = startingHealth
 
                 if "Vordt" in selection:
-                    self.decks["Vordt of the Boreal Valley (move)"]["healthMod"] -= 1
-                    self.decks["Vordt of the Boreal Valley (attack)"]["healthMod"] -= 1
-                if selection == "Ornstein & Smough":
-                    self.decks[selection]["healthMod"][osClicked] -= 1
+                    self.decks["Vordt of the Boreal Valley (move)"]["healthMod"] -= amount
+                    self.decks["Vordt of the Boreal Valley (attack)"]["healthMod"] -= amount
+                elif selection == "Ornstein & Smough":
+                    self.decks[selection]["healthMod"][osClicked] -= amount
                 else:
-                    self.decks[selection]["healthMod"] -= 1
+                    self.decks[selection]["healthMod"] -= amount
 
-                self.app.variantsTab.load_variant_card_locked(variant=(selection[:selection.index(" (")] if "Vordt" in selection else selection) + " - data", deckDataCard=True, healthMod=self.decks[self.treeviewDecks.selection()[0]]["healthMod"])
+                self.app.variantsTab.load_variant_card_locked(variant=(selection[:selection.index(" (")] if "Vordt" in selection else selection) + " - data", deckDataCard=True, healthMod=self.decks[self.treeviewDecks.selection()[0]]["healthMod"], fromDeck=True)
 
                 currentHealth = (
                     (self.decks[selection]["healthMod"][osClicked] if selection == "Ornstein & Smough" else self.decks[selection]["healthMod"])
                     + behaviorDetail[selection[:selection.index(" (")] if "Vordt" in selection else selection].get("health", 0)
-                    + behaviorDetail[selection].get(osClicked, {}).get("health", 0)
+                    + behaviorDetail[selection[:selection.index(" (")] if "Vordt" in selection else selection].get(osClicked, {}).get("health", 0)
                     + ([int(modIdLookup[m][-1]) for m in list(self.app.variantsTab.currentVariants[selection[:selection.index(" (")] if "Vordt" in selection else selection]["defKey"]) if "health" in modIdLookup[m]][0] if (selection[:selection.index(" (")] if "Vordt" in selection else selection) in self.app.variantsTab.currentVariants else 0)
                 )
 
@@ -545,7 +576,7 @@ try:
                         behaviorDetail["Vordt of the Boreal Valley"]["heatup2"]
                         + ([int(modIdLookup[m][-1]) for m in list(self.app.variantsTab.currentVariants["Vordt of the Boreal Valley"]["defKey"]) if "health" in modIdLookup[m]][0] if "Vordt of the Boreal Valley" in self.app.variantsTab.currentVariants else 0)
                     )
-                if selection == "Ornstein & Smough":
+                elif selection == "Ornstein & Smough":
                     heatupPoint = 0
                 else:
                     heatupPoint = (
@@ -554,11 +585,11 @@ try:
                         + ([int(modIdLookup[m][-1]) for m in list(self.app.variantsTab.currentVariants[selection]["defKey"]) if "health" in modIdLookup[m]][0] if selection in self.app.variantsTab.currentVariants else 0)
                     )
 
-                if currentHealth == heatupPoint and not self.decks[selection]["heatup"]:
+                if startingHealth > heatupPoint and currentHealth <= heatupPoint and not self.decks[selection]["heatup"]:
                     self.heatup(selection, osOption=("Ornstein" if osClicked == "Smough" else "Smough") if osClicked else None)
-                elif currentHealth == heatupPointVordt1:
+                elif startingHealth > heatupPointVordt1 and currentHealth <= heatupPointVordt1 and not self.decks["Vordt of the Boreal Valley (attack)"]["heatup"]:
                     self.heatup("Vordt of the Boreal Valley (attack)")
-                elif currentHealth == heatupPointVordt2:
+                elif startingHealth > heatupPointVordt2 and currentHealth <= heatupPointVordt2 and not self.decks["Vordt of the Boreal Valley (move)"]["heatup"]:
                     self.heatup("Vordt of the Boreal Valley (move)")
 
                 log("End of lower_health")
@@ -567,28 +598,37 @@ try:
                 raise
                 
 
-        def raise_health(self, event=None):
+        def raise_health(self, amount, event=None):
             try:
                 log("Start of raise_health")
+
+                if self.app.notebook.tab(self.app.notebook.select(), "text") != "Behavior Decks":
+                    log("End of raise_health (nothing done)")
+                    return
 
                 selection = self.treeviewDecks.selection()[0]
 
                 osClicked = "Ornstein" if event.widget == self.app.display2 else "Smough" if event.widget == self.app.display3 else ""
 
-                if selection == "The Four Kings" or (self.decks[selection]["healthMod"][osClicked] if selection == "Ornstein & Smough" else self.decks[selection]["healthMod"]) == 0:
+                if (
+                    selection == "The Four Kings"
+                    or (self.decks[selection]["healthMod"][osClicked] if selection == "Ornstein & Smough" else self.decks[selection]["healthMod"]) == 0
+                    ):
                     log("End of raise_health (nothing done)")
                     return
+                elif self.decks[selection]["healthMod"][osClicked] if selection == "Ornstein & Smough" else self.decks[selection]["healthMod"] + amount > 0:
+                    amount = -(self.decks[selection]["healthMod"][osClicked] if selection == "Ornstein & Smough" else self.decks[selection]["healthMod"])
 
                 if "Vordt" in selection:
-                    self.decks["Vordt of the Boreal Valley (move)"]["healthMod"] += 1
-                    self.decks["Vordt of the Boreal Valley (attack)"]["healthMod"] += 1
+                    self.decks["Vordt of the Boreal Valley (move)"]["healthMod"] += amount
+                    self.decks["Vordt of the Boreal Valley (attack)"]["healthMod"] += amount
                     selection = selection[:selection.index(" (")] if "Vordt" in selection else selection
-                if selection == "Ornstein & Smough":
-                    self.decks[selection]["healthMod"][osClicked] += 1
+                elif selection == "Ornstein & Smough":
+                    self.decks[selection]["healthMod"][osClicked] += amount
                 else:
-                    self.decks[selection]["healthMod"] += 1
+                    self.decks[selection]["healthMod"] += amount
 
-                self.app.variantsTab.load_variant_card_locked(variant=selection + " - data", deckDataCard=True, healthMod=self.decks[self.treeviewDecks.selection()[0]]["healthMod"])
+                self.app.variantsTab.load_variant_card_locked(variant=selection + " - data", deckDataCard=True, healthMod=self.decks[self.treeviewDecks.selection()[0]]["healthMod"], fromDeck=True)
 
                 log("End of raise_health")
             except Exception as e:
