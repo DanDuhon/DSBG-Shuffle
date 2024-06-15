@@ -242,19 +242,19 @@ try:
 
                 self.displayImages = {
                     "encounters": {
-                        self.display: {"name": None, "image": None},
-                        self.display2: {"name": None, "image": None},
-                        self.display3: {"name": None, "image": None}
+                        self.display: {"name": None, "image": None, "activeTab": None},
+                        self.display2: {"name": None, "image": None, "activeTab": None},
+                        self.display3: {"name": None, "image": None, "activeTab": None}
                     },
                     "events": {
-                        self.display: {"name": None, "image": None},
-                        self.display2: {"name": None, "image": None},
-                        self.display3: {"name": None, "image": None}
+                        self.display: {"name": None, "image": None, "activeTab": None},
+                        self.display2: {"name": None, "image": None, "activeTab": None},
+                        self.display3: {"name": None, "image": None, "activeTab": None}
                     },
                     "variants": {
-                        self.display: {"name": None, "image": None},
-                        self.display2: {"name": None, "image": None},
-                        self.display3: {"name": None, "image": None}
+                        self.display: {"name": None, "image": None, "activeTab": None},
+                        self.display2: {"name": None, "image": None, "activeTab": None},
+                        self.display3: {"name": None, "image": None, "activeTab": None}
                     }
                 }
 
@@ -476,19 +476,19 @@ try:
 
                     self.displayImages = {
                         "encounters": {
-                            self.display: None,
-                            self.display2: None,
-                            self.display3: None
+                            self.display: {"name": None, "image": None, "activeTab": None},
+                            self.display2: {"name": None, "image": None, "activeTab": None},
+                            self.display3: {"name": None, "image": None, "activeTab": None}
                         },
                         "events": {
-                            self.display: None,
-                            self.display2: None,
-                            self.display3: None
+                            self.display: {"name": None, "image": None, "activeTab": None},
+                            self.display2: {"name": None, "image": None, "activeTab": None},
+                            self.display3: {"name": None, "image": None, "activeTab": None}
                         },
                         "variants": {
-                            self.display: None,
-                            self.display2: None,
-                            self.display3: None
+                            self.display: {"name": None, "image": None, "activeTab": None},
+                            self.display2: {"name": None, "image": None, "activeTab": None},
+                            self.display3: {"name": None, "image": None, "activeTab": None}
                         }
                     }
 

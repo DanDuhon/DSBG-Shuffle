@@ -308,15 +308,21 @@ def log(message, exception=False):
         adapter.debug(message, caller=calframe[1][3])
 
 
-def clear_other_tab_images(app, tab, onlyDisplay=None):
+# Compare names and pass in active tab too.
+def clear_other_tab_images(app, lookupTab, activeTab, onlyDisplay=None):
     displays = [app.display, app.display2, app.display3]
     for display in displays:
         if onlyDisplay and display != onlyDisplay:
             continue
-        if display.image and display.image != app.displayImages["variants"][display]:
+        if (
+            display.image
+            and display.image != app.displayImages[lookupTab][display]["image"]
+            and app.displayImages[lookupTab][display]["activeTab"] != activeTab
+            ):
             display.config(image="")
-            app.displayImages[tab][display]["image"] = None
-            app.displayImages[tab][display]["name"] = None
+            app.displayImages[lookupTab][display]["image"] = None
+            app.displayImages[lookupTab][display]["name"] = None
+            app.displayImages[lookupTab][display]["activeTab"] = None
 
 
 def error_popup(root, e):

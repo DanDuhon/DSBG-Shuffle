@@ -9,7 +9,7 @@ try:
 
     from dsbg_shuffle_enemies import bosses
     from dsbg_shuffle_events import events
-    from dsbg_shuffle_utility import PopupWindow, do_nothing, error_popup, log, baseFolder, pathSep
+    from dsbg_shuffle_utility import PopupWindow, clear_other_tab_images, error_popup, log, baseFolder, pathSep
 
 
     class CampaignFrame(ttk.Frame):
@@ -326,15 +326,8 @@ try:
                     self.treeviewCampaign.delete(item)
 
                 # Remove the image displaying a deleted card.
-                self.app.display.config(image="")
-                self.app.display2.config(image="")
-                self.app.display3.config(image="")
-                self.app.displayImages["encounters"][self.app.display]["image"] = None
-                self.app.displayImages["encounters"][self.app.display2]["image"] = None
-                self.app.displayImages["encounters"][self.app.display3]["image"] = None
-                self.app.displayImages["encounters"][self.app.display]["name"] = None
-                self.app.displayImages["encounters"][self.app.display2]["name"] = None
-                self.app.displayImages["encounters"][self.app.display3]["name"] = None
+                clear_other_tab_images(self.app, "encounters", "campaign")
+                clear_other_tab_images(self.app, "events", "campaign")
 
                 log("End of delete_card_from_campaign")
             except Exception as e:
@@ -469,15 +462,8 @@ try:
                 log("Start of load_campaign_card")
 
                 if self.app.notebook.tab(self.app.notebook.select(), "text") == "Campaign":
-                    self.app.display.config(image="")
-                    self.app.display2.config(image="")
-                    self.app.display3.config(image="")
-                    self.app.displayImages["encounters"][self.app.display]["image"] = None
-                    self.app.displayImages["encounters"][self.app.display2]["image"] = None
-                    self.app.displayImages["encounters"][self.app.display3]["image"] = None
-                    self.app.displayImages["encounters"][self.app.display]["name"] = None
-                    self.app.displayImages["encounters"][self.app.display2]["name"] = None
-                    self.app.displayImages["encounters"][self.app.display3]["name"] = None
+                    clear_other_tab_images(self.app, "encounters", "campaign")
+                    clear_other_tab_images(self.app, "events", "campaign")
 
                 self.app.selected = None
                 self.app.encounterTab.rewardTreasure = None
@@ -513,6 +499,7 @@ try:
                     # Create and display the boss image.
                     self.app.create_image(campaignCard["name"] + ".jpg", "encounter", 4)
                     self.app.displayImages["encounters"][self.app.display]["image"] = ImageTk.PhotoImage(self.app.displayImage)
+                    self.app.displayImages["encounters"][self.app.display]["activeTab"] = None
                     self.app.display.image = self.app.displayImages["encounters"][self.app.display]["image"]
                     self.app.display.config(image=self.app.displayImages["encounters"][self.app.display]["image"])
                 elif campaignCard["type"] == "event":
@@ -771,12 +758,7 @@ try:
                     PopupWindow(self.root, labelText="Please remove all campaign items first.", firstButton="Ok")
                     return
                 
-                self.app.display.config(image="")
-                self.app.display2.config(image="")
-                self.app.displayImages["encounters"][self.app.display]["image"] = None
-                self.app.displayImages["encounters"][self.app.display2]["image"] = None
-                self.app.displayImages["encounters"][self.app.display]["name"] = None
-                self.app.displayImages["encounters"][self.app.display2]["name"] = None
+                clear_other_tab_images(self.app, "encounters", "campaign")
 
                 mega = self.generate_v2_campaign_encounters()
 
@@ -835,9 +817,7 @@ try:
                 p = PopupWindow(self.master, labelText="Which encounter do you want to play?", rightButton=True, leftButton=True)
                 self.root.wait_window(p)
                 
-                self.app.display2.config(image="")
-                self.app.displayImages["encounters"][self.app.display2]["image"] = None
-                self.app.displayImages["encounters"][self.app.display2]["name"] = None
+                clear_other_tab_images(self.app, "encounters", "campaign", self.app.display2)
 
                 if p.answer:
                     self.load_v2_campaign_card(leftEncounter)
@@ -859,12 +839,8 @@ try:
             try:
                 log("Start of generate_v2_campaign_encounters")
                 
-                self.app.display.config(image="")
-                self.app.display2.config(image="")
-                self.app.displayImages["encounters"][self.app.display]["image"] = None
-                self.app.displayImages["encounters"][self.app.display2]["image"] = None
-                self.app.displayImages["encounters"][self.app.display]["name"] = None
-                self.app.displayImages["encounters"][self.app.display2]["name"] = None
+                clear_other_tab_images(self.app, "encounters", "campaign")
+                clear_other_tab_images(self.app, "events", "campaign")
 
                 mega = True if any([boss for boss in bosses if (
                     bosses[boss]["level"] == "Mega Boss"

@@ -7,7 +7,7 @@ try:
 
     from dsbg_shuffle_enemies import enemiesDict, enemyIds
     from dsbg_shuffle_treasure import pick_treasure, treasureSwapEncounters
-    from dsbg_shuffle_utility import PopupWindow, do_nothing, error_popup, log, baseFolder, font, pathSep
+    from dsbg_shuffle_utility import PopupWindow, clear_other_tab_images, do_nothing, error_popup, log, baseFolder, font, pathSep
 
 
     class EncountersFrame(ttk.Frame):
@@ -662,17 +662,20 @@ try:
                 if right:
                     self.app.displayImages["encounters"][self.app.display2]["name"] = name
                     self.app.displayImages["encounters"][self.app.display2]["image"] = displayPhotoImage
+                    self.app.displayImages["encounters"][self.app.display2]["activeTab"] = "encounters"
                     self.app.display2.image = displayPhotoImage
                     self.app.display2.config(image=displayPhotoImage)
                 else:
                     self.app.displayImages["encounters"][self.app.display]["name"] = name
                     self.app.displayImages["encounters"][self.app.display]["image"] = displayPhotoImage
+                    self.app.displayImages["encounters"][self.app.display]["activeTab"] = "encounters"
                     self.app.display.image = displayPhotoImage
                     self.app.display.config(image=displayPhotoImage)
 
                 if not self.app.forPrinting and not campaignGen:
                     self.app.displayImages["encounters"][self.app.display]["name"] = name
                     self.app.displayImages["encounters"][self.app.display]["image"] = displayPhotoImage
+                    self.app.displayImages["encounters"][self.app.display]["activeTab"] = "encounters"
                     self.app.display.config(image=displayPhotoImage)
                     self.app.display2.config(image="")
                     self.app.display3.config(image="")
