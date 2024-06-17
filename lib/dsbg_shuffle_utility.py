@@ -316,8 +316,8 @@ def clear_other_tab_images(app, lookupTab, activeTab, onlyDisplay=None):
             continue
         if (
             display.image
-            and display.image != app.displayImages[lookupTab][display]["image"]
-            and app.displayImages[lookupTab][display]["activeTab"] != activeTab
+            and (display.image != app.displayImages[lookupTab][display]["image"]
+                    or app.displayImages[lookupTab][display]["activeTab"] != activeTab)
             ):
             display.config(image="")
             app.displayImages[lookupTab][display]["image"] = None

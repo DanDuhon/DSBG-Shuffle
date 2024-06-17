@@ -255,6 +255,11 @@ try:
                         self.display: {"name": None, "image": None, "activeTab": None},
                         self.display2: {"name": None, "image": None, "activeTab": None},
                         self.display3: {"name": None, "image": None, "activeTab": None}
+                    },
+                    "variantsLocked": {
+                        self.display: {"name": None, "image": None, "activeTab": None},
+                        self.display2: {"name": None, "image": None, "activeTab": None},
+                        self.display3: {"name": None, "image": None, "activeTab": None}
                     }
                 }
 
@@ -486,6 +491,11 @@ try:
                             self.display3: {"name": None, "image": None, "activeTab": None}
                         },
                         "variants": {
+                            self.display: {"name": None, "image": None, "activeTab": None},
+                            self.display2: {"name": None, "image": None, "activeTab": None},
+                            self.display3: {"name": None, "image": None, "activeTab": None}
+                        },
+                        "variantsLocked": {
                             self.display: {"name": None, "image": None, "activeTab": None},
                             self.display2: {"name": None, "image": None, "activeTab": None},
                             self.display3: {"name": None, "image": None, "activeTab": None}
