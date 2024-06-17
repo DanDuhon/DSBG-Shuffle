@@ -1413,7 +1413,7 @@ try:
 
                 target = enemyIds[self.newEnemies[4]].name
                 tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.allEnemies[target]["image text" if self.app.forPrinting else "photo image text"], "imageName": target}
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=321, y=220, right=right)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=164, y=232, right=right)
                 self.app.create_tooltip(tooltipDict=tooltipDict, x=208, y=255, right=right)
                 self.app.create_tooltip(tooltipDict=tooltipDict, x=164, y=280, right=right)
 
