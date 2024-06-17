@@ -211,7 +211,7 @@ try:
                         tooltip.destroy()
 
                     # Remove the displayed item.
-                    clear_other_tab_images(self.app, "variants")
+                    clear_other_tab_images(self.app, "variantsLocked", "variantsLocked")
 
                 if not enemy:
                     enemy = self.treeviewDecks.selection()[0]
@@ -263,6 +263,9 @@ try:
 
                 if (enemy[:enemy.index(" (")] if "Vordt" in enemy else enemy) in set([v[:v.index("_")] for v in self.app.variantsTab.lockedVariants]):
                     self.decks[enemy]["defKey"] = choice([v[v.index("_")+1:] for v in self.app.variantsTab.lockedVariants if "-" not in v])
+
+                if not skipClear and self.treeviewDecks.selection():
+                    self.display_deck_cards()
 
                 log("End of set_decks")
             except Exception as e:
@@ -341,7 +344,7 @@ try:
                         tooltip.destroy()
 
                     # Remove the displayed item.
-                    clear_other_tab_images(self.app, "variants")
+                    clear_other_tab_images(self.app, "variantsLocked", "variantsLocked")
 
                     if self.decks[selection]["lastCardDrawn"]:
                         self.app.variantsTab.load_variant_card_locked(variant=self.decks[selection]["lastCardDrawn"], fromDeck=True)
@@ -386,7 +389,7 @@ try:
                     tooltip.destroy()
 
                 # Remove the displayed item.
-                clear_other_tab_images(self.app, "variants", onlyDisplay=self.app.display)
+                clear_other_tab_images(self.app, "variantsLocked", "variantsLocked", onlyDisplay=self.app.display)
 
                 if selection not in self.decks or not self.decks[selection]["lastCardDrawn"]:
                     log("End of draw_behavior_card (nothing done)")
@@ -437,7 +440,7 @@ try:
                     tooltip.destroy()
 
                 # Remove the displayed item.
-                clear_other_tab_images(self.app, "variants", onlyDisplay=self.app.display)
+                clear_other_tab_images(self.app, "variantsLocked", "variantsLocked", onlyDisplay=self.app.display)
 
                 if selection == "Maldron the Assassin":
                     self.decks[selection]["healthMod"] += 8 + ([int(modIdLookup[m][-1]) for m in list(self.app.variantsTab.currentVariants[selection]["defKey"]) if "health" in modIdLookup[m]][0] if selection in self.app.variantsTab.currentVariants else 0)
@@ -525,7 +528,7 @@ try:
                 startingHealth = ((self.decks[selection]["healthMod"][osClicked] if selection == "Ornstein & Smough" else self.decks[selection]["healthMod"])
                     + behaviorDetail[selection[:selection.index(" (")] if "Vordt" in selection else selection].get("health", 0)
                     + behaviorDetail[selection[:selection.index(" (")] if "Vordt" in selection else selection].get(osClicked, {}).get("health", 0)
-                    + ([int(modIdLookup[m][-1]) for m in list(self.app.variantsTab.currentVariants[selection[:selection.index(" (")] if "Vordt" in selection else selection]["defKey"]) if "health" in modIdLookup[m]][0] if (selection[:selection.index(" (")] if "Vordt" in selection else selection) in self.app.variantsTab.currentVariants else 0)
+                    + ([int(modIdLookup[m][-1]) for m in list(self.app.variantsTab.currentVariants[selection[:selection.index(" (")] if "Vordt" in selection else selection]["defKey"]) if "health" in modIdLookup.get(m, "")][0] if (selection[:selection.index(" (")] if "Vordt" in selection else selection) in self.app.variantsTab.currentVariants else 0)
                     )
 
                 if selection == "The Four Kings" or startingHealth == 0:
@@ -548,7 +551,7 @@ try:
                     (self.decks[selection]["healthMod"][osClicked] if selection == "Ornstein & Smough" else self.decks[selection]["healthMod"])
                     + behaviorDetail[selection[:selection.index(" (")] if "Vordt" in selection else selection].get("health", 0)
                     + behaviorDetail[selection[:selection.index(" (")] if "Vordt" in selection else selection].get(osClicked, {}).get("health", 0)
-                    + ([int(modIdLookup[m][-1]) for m in list(self.app.variantsTab.currentVariants[selection[:selection.index(" (")] if "Vordt" in selection else selection]["defKey"]) if "health" in modIdLookup[m]][0] if (selection[:selection.index(" (")] if "Vordt" in selection else selection) in self.app.variantsTab.currentVariants else 0)
+                    + ([int(modIdLookup[m][-1]) for m in list(self.app.variantsTab.currentVariants[selection[:selection.index(" (")] if "Vordt" in selection else selection]["defKey"]) if "health" in modIdLookup.get(m, "")][0] if (selection[:selection.index(" (")] if "Vordt" in selection else selection) in self.app.variantsTab.currentVariants else 0)
                 )
 
                 heatupPoint = -1
