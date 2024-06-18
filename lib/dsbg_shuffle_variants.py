@@ -1515,7 +1515,7 @@ try:
                     health += healthMod[enemy]
 
                 imageWithText.text((246, 245), "0", "black", font2)
-                imageWithText.text((252, 35), str(health), "white", font2)
+                imageWithText.text((252 + (4 if health < 10 else 0), 35), str(health), "white", font2)
                 imageWithText.text((130, 245), str(armor), "white", font3)
                 imageWithText.text((154, 245), str(resist), "black", font3)
                 imageWithText.text((248, 340), str(10 + healthAddition + (5 if enemy == "Smough" else 0)), "black", font)
