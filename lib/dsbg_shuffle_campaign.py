@@ -808,6 +808,9 @@ try:
             try:
                 log("Start of generate_v2_campaign_encounters")
 
+                if len(self.v2Campaign[level]) < 2:
+                    self.generate_v2_campaign_encounters()
+
                 leftEncounter = self.v2Campaign[level].pop()
                 rightEncounter = self.v2Campaign[level].pop()
 
@@ -858,7 +861,7 @@ try:
                     ):
                     progress = PopupWindow(self.root, labelText="Generating encounters...", loadingImage=True)
 
-                    if mega and level4Cnt < 1:
+                    if mega and level4Cnt < 1 and len(self.v2Campaign[4]) < 2:
                         encounterListLevel4 = [encounter for encounter in self.app.encounters if (
                             all([
                                 any([frozenset(expCombo).issubset(self.app.availableExpansions) for expCombo in self.app.encounters[encounter]["expansionCombos"]["1"]]),
@@ -882,14 +885,14 @@ try:
                                 self.app.encounters[encounter]["expansion"] in self.app.v2Expansions
                                     ]))]
 
-                    if len([e for e in self.campaign if e["level"] == 1]) < 2:
-                        self.v2_campaign_add_encounters(encounterList, 1, 3, 6)
+                        if len(self.v2Campaign[1]) < 2:
+                            self.v2_campaign_add_encounters(encounterList, 1, 3, 6)
 
-                    if len([e for e in self.campaign if e["level"] == 2]) < 2:
-                        self.v2_campaign_add_encounters(encounterList, 2, 3, 6)
+                        if len(self.v2Campaign[2]) < 2:
+                            self.v2_campaign_add_encounters(encounterList, 2, 3, 6)
 
-                    if len([e for e in self.campaign if e["level"] == 3]) < 2:
-                        self.v2_campaign_add_encounters(encounterList, 3, 2, 4)
+                        if len(self.v2Campaign[3]) < 2:
+                            self.v2_campaign_add_encounters(encounterList, 3, 2, 4)
 
                     progress.destroy()
 

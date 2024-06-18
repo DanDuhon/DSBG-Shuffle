@@ -7,7 +7,7 @@ try:
 
     from dsbg_shuffle_enemies import enemiesDict, enemyIds
     from dsbg_shuffle_treasure import pick_treasure, treasureSwapEncounters
-    from dsbg_shuffle_utility import PopupWindow, clear_other_tab_images, do_nothing, error_popup, log, baseFolder, font, pathSep
+    from dsbg_shuffle_utility import PopupWindow, clear_other_tab_images, error_popup, log, set_display_bindings_by_tab, baseFolder, font, pathSep
 
 
     class EncountersFrame(ttk.Frame):
@@ -381,6 +381,8 @@ try:
             try:
                 log("Start of load_encounter, event={}, encounter={}, customEnemyListCheck={}".format(str(event), str(encounter), str(customEnemyListCheck)))
 
+                clear_other_tab_images(self.app, "encounters", "encounters")
+
                 if not customEnemyListCheck:
                     self.treeviewEncounters.unbind("<<TreeviewSelect>>")
 
@@ -390,7 +392,7 @@ try:
                     if not tree.item(tree.selection())["tags"][0]:
                         log("\tNo encounter selected")
                         self.treeviewEncounters.bind("<<TreeviewSelect>>", self.load_encounter)
-                        self.app.display.bind("<Button 1>", self.shuffle_enemies)
+                        set_display_bindings_by_tab(self.app)
                         log("\tEnd of load_encounter")
                         return
                     encounterName = tree.item(tree.selection())["text"]
@@ -402,7 +404,7 @@ try:
                     if self.app.encounters[encounterName] == self.app.selected:
                         self.shuffle_enemies()
                         self.treeviewEncounters.bind("<<TreeviewSelect>>", self.load_encounter)
-                        self.app.display.bind("<Button 1>", self.shuffle_enemies)
+                        set_display_bindings_by_tab(self.app)
                         log("\tEnd of load_encounter")
                         return
 
@@ -427,7 +429,7 @@ try:
                 if not customEnemyListCheck:
                     self.shuffle_enemies()
                     self.treeviewEncounters.bind("<<TreeviewSelect>>", self.load_encounter)
-                    self.app.display.bind("<Button 1>", self.shuffle_enemies)
+                    set_display_bindings_by_tab(self.app)
 
                 log("\tEnd of load_encounter")
             except Exception as e:
@@ -447,10 +449,12 @@ try:
             try:
                 log("Start of shuffle_enemies")
 
-                self.app.display.bind("<Button 1>", do_nothing)
+                if self.app.notebook.tab(self.app.notebook.select(), "text") not in {"Encounters", "Campaign"}:
+                    log("End of shuffle_enemies (wrong tab)")
+                    return
+
                 if not self.app.selected:
                     log("\tNo encounter loaded - nothing to shuffle")
-                    self.app.display.bind("<Button 1>", self.shuffle_enemies)
                     log("\tEnd of shuffle_enemies")
                     return
 
@@ -679,7 +683,9 @@ try:
                     self.app.display.config(image=displayPhotoImage)
                     self.app.display2.config(image="")
                     self.app.display3.config(image="")
-                self.app.display.bind("<Button 1>", self.shuffle_enemies)
+
+                set_display_bindings_by_tab(self.app)
+
 
                 log("\tEnd of edit_encounter_card")
             except Exception as e:

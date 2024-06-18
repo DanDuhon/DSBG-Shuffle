@@ -128,8 +128,7 @@ class PopupWindow(tk.Toplevel):
         self.label = ttk.Label(self.popupFrame, text=labelText)
         self.label.grid(column=0, row=1, columnspan=2, padx=20, pady=20)
         self.wait_visibility()
-        self.grab_set_global()
-        self.label.focus_force()
+        self.grab_set()
         self.answer = None
 
         if firstButton:
@@ -308,7 +307,83 @@ def log(message, exception=False):
         adapter.debug(message, caller=calframe[1][3])
 
 
-# Compare names and pass in active tab too.
+def set_display_bindings_by_tab(app, smoughActive=False):
+    tab = app.notebook.tab(app.notebook.select(), "text")
+    # Don't change bindings on the campaign tab.
+    if tab == "Campaign":
+        return
+    
+    if tab == "Encounters":
+        app.display.bind("<Button 1>", app.encounterTab.shuffle_enemies)
+
+        app.display2.unbind("<Button 1>")
+        app.display2.unbind("<Shift-Button 1>")
+        app.display2.unbind("<Shift-Button 3>")
+        app.display2.unbind("<Control-1>")
+        app.display2.unbind("<Shift-Control-1>")
+
+        app.display3.unbind("<Button 1>")
+        app.display3.unbind("<Shift-Button 1>")
+        app.display3.unbind("<Shift-Button 3>")
+        app.display3.unbind("<Control-1>")
+        app.display3.unbind("<Shift-Control-1>")
+    elif tab == "Events":
+        app.display.unbind("<Button 1>")
+
+        app.display2.unbind("<Button 1>")
+        app.display2.unbind("<Shift-Button 1>")
+        app.display2.unbind("<Shift-Button 3>")
+        app.display2.unbind("<Control-1>")
+        app.display2.unbind("<Shift-Control-1>")
+
+        app.display3.unbind("<Button 1>")
+        app.display3.unbind("<Shift-Button 1>")
+        app.display3.unbind("<Shift-Button 3>")
+        app.display3.unbind("<Control-1>")
+        app.display3.unbind("<Shift-Control-1>")
+    elif tab == "Behavior Variants":
+        app.display.bind("<Button 1>", app.variantsTab.apply_difficulty_modifier)
+
+        app.display2.bind("<Button 1>", app.variantsTab.apply_difficulty_modifier)
+        app.display2.unbind("<Shift-Button 1>")
+        app.display2.unbind("<Shift-Button 3>")
+        app.display2.unbind("<Control-1>")
+        app.display2.unbind("<Shift-Control-1>")
+
+        if smoughActive:
+            app.display3.bind("<Button 1>", app.variantsTab.apply_difficulty_modifier)
+        else:
+            app.display3.unbind("<Button 1>")
+            app.display3.unbind("<Shift-Button 1>")
+            app.display3.unbind("<Shift-Button 3>")
+            app.display3.unbind("<Control-1>")
+            app.display3.unbind("<Shift-Control-1>")
+    elif tab == "Behavior Decks":
+        app.display.unbind("<Button 1>")
+
+        app.display2.bind("<Button 1>", lambda event, x=1: app.behaviorDeckTab.lower_health(event=event, amount=x))
+        app.display2.bind("<Shift-Button 1>", lambda event, x=5: app.behaviorDeckTab.lower_health(event=event, amount=x))
+        app.display2.bind("<Button 3>", lambda event, x=1: app.behaviorDeckTab.raise_health(event=event, amount=x))
+        app.display2.bind("<Shift-Button 3>", lambda event, x=5: app.behaviorDeckTab.raise_health(event=event, amount=x))
+        app.display2.bind("<Control-1>", lambda event, x=1: app.behaviorDeckTab.raise_health(event=event, amount=x))
+        app.display2.bind("<Shift-Control-1>", lambda event, x=5: app.behaviorDeckTab.raise_health(event=event, amount=x))
+
+        if smoughActive:
+            app.display3.bind("<Button 1>", lambda event, x=1: app.behaviorDeckTab.lower_health(event=event, amount=x))
+            app.display3.bind("<Shift-Button 1>", lambda event, x=5: app.behaviorDeckTab.lower_health(event=event, amount=x))
+            app.display3.bind("<Button 3>", lambda event, x=1: app.behaviorDeckTab.raise_health(event=event, amount=x))
+            app.display3.bind("<Shift-Button 3>", lambda event, x=5: app.behaviorDeckTab.raise_health(event=event, amount=x))
+            app.display3.bind("<Control-1>", lambda event, x=1: app.behaviorDeckTab.raise_health(event=event, amount=x))
+            app.display3.bind("<Shift-Control-1>", lambda event, x=5: app.behaviorDeckTab.raise_health(event=event, amount=x))
+        else:
+            app.display3.unbind("<Button 1>")
+            app.display3.unbind("<Shift-Button 1>")
+            app.display3.unbind("<Shift-Button 3>")
+            app.display3.unbind("<Control-1>")
+            app.display3.unbind("<Shift-Control-1>")
+
+
+
 def clear_other_tab_images(app, lookupTab, activeTab, onlyDisplay=None):
     displays = [app.display, app.display2, app.display3]
     for display in displays:

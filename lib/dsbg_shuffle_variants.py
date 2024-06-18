@@ -13,7 +13,7 @@ try:
 
     from dsbg_shuffle_enemies import bosses, enemiesDict
     from dsbg_shuffle_behaviors import behaviorDetail, behaviors
-    from dsbg_shuffle_utility import PopupWindow, clear_other_tab_images, error_popup, log, baseFolder, font, font2, font3, pathSep
+    from dsbg_shuffle_utility import PopupWindow, clear_other_tab_images, error_popup, log, set_display_bindings_by_tab, baseFolder, font, font2, font3, pathSep
 
 
     modIdLookup = {
@@ -272,7 +272,13 @@ try:
                 else:
                     self.selectedVariant = variant
 
-                clear_other_tab_images(self.app, variants, variants)
+                clear_other_tab_images(self.app, variants, variants if not fromDeck else "behaviorDeck")
+                    
+                if "Ornstein & Smough" not in self.selectedVariant:
+                    self.app.display3.config(image="")
+                    self.app.displayImages["variants"][self.app.display3]["image"] = None
+                    self.app.displayImages["variants"][self.app.display3]["name"] = None
+                    self.app.displayImages["variants"][self.app.display3]["activeTab"] = None
                     
                 if not selfCall:
                     originalSelection = deepcopy(self.selectedVariant)
@@ -286,31 +292,27 @@ try:
                         # Create and display the variant image.
                         self.variantPhotoImage = self.app.create_image(self.selectedVariant + ".jpg", "encounter", 4)
 
-                        self.edit_variant_card_os(variant=variant)
+                        self.edit_variant_card_os(variant=variant, fromDeck=fromDeck)
                     else:
                         for enemy in ["Ornstein", "Smough"]:
                             # Create and display the variant image.
                             self.variantPhotoImage = self.app.create_image(enemy + " - data.jpg", "encounter", 4)
 
-                            self.edit_variant_card_os(variant=variant, enemy=enemy, healthMod=healthMod if healthMod else {"Ornstein": 0, "Smough": 0})
+                            self.edit_variant_card_os(variant=variant, enemy=enemy, healthMod=healthMod if healthMod else {"Ornstein": 0, "Smough": 0}, fromDeck=fromDeck)
                 else:
                     # Create and display the variant image.
                     self.variantPhotoImage = self.app.create_image(self.selectedVariant + ".jpg", "encounter", 4)
 
-                    self.edit_variant_card(variant=variant, lockedTree=fromLocked, armorerDennis=armorerDennis, oldIronKing=oldIronKing, pursuer=pursuer, healthMod=healthMod)
+                    self.edit_variant_card(variant=variant, lockedTree=fromLocked, armorerDennis=armorerDennis, oldIronKing=oldIronKing, pursuer=pursuer, healthMod=healthMod, fromDeck=fromDeck)
 
                 if "data" not in self.selectedVariant and self.app.displayImages[variants][self.app.display2]["name"] != self.selectedVariant and not forPrinting:
-                    self.load_variant_card(variant=self.selectedVariant[:self.selectedVariant.index(" - ")] + " - data", fromLocked=fromLocked, selfCall=originalSelection, armorerDennis=armorerDennis, oldIronKing=oldIronKing, pursuer=pursuer, deckDataCard=deckDataCard, healthMod=healthMod)
+                    self.load_variant_card(variant=self.selectedVariant[:self.selectedVariant.index(" - ")] + " - data", fromLocked=fromLocked, selfCall=originalSelection, armorerDennis=armorerDennis, oldIronKing=oldIronKing, pursuer=pursuer, deckDataCard=deckDataCard, healthMod=healthMod, fromDeck=fromDeck)
 
                 if not selfCall:
                     self.selectedVariant = originalSelection
 
-                if "data" not in self.selectedVariant and not fromDeck:
-                    self.app.display.bind("<Button 1>", self.apply_difficulty_modifier)
+                set_display_bindings_by_tab(self.app, ("Ornstein" in self.selectedVariant or "Smough" in self.selectedVariant) and (self.selectedVariant.count("&") == 2 or "data" in self.selectedVariant))
 
-                if not fromDeck:
-                    self.app.display2.bind("<Button 1>", self.apply_difficulty_modifier)
-                    
                 self.treeviewVariantsList.bind("<<TreeviewSelect>>", self.load_variant_card)
                 self.treeviewVariantsLocked.bind("<<TreeviewSelect>>", self.load_variant_card_locked)
 
@@ -368,6 +370,33 @@ try:
                             "Main Bosses",
                             "Mega Bosses"
                             } else ""))
+                elif (variant[:variant.index(" - ")] if " - " in variant else variant) in set([v[:v.index("_")] for v in self.lockedVariants]):
+                    selection = [v for v in self.lockedVariants if (variant[:variant.index("_")] if "_" in variant else variant[:variant.index(" - ")] + "_") in v][0]
+                    # Account for Ornstein & Smough behaviors.
+                    if type(self.lockedVariants[selection][0]) == list:
+                        mods = [
+                            [modIdLookup[m] for m in list(self.lockedVariants[selection][0]) if m],
+                            [modIdLookup[m] for m in list(self.lockedVariants[selection][1]) if m]
+                            ]
+                    else:
+                        mods = [modIdLookup[m] for m in list(self.lockedVariants[selection]) if m]
+
+                    if "_" in variant:
+                        selectedVariantLookup = variant[:variant.index("_")]
+                    elif "-" in variant:
+                        selectedVariantLookup = variant[:variant.index(" - ")]
+                    else:
+                        selectedVariantLookup = variant
+
+                    self.selectedVariant = (
+                        selectedVariantLookup
+                        + (" - data" if self.treeviewVariantsLocked.parent(selection) in {
+                            "Enemies",
+                            "Invaders & Explorers Mimics",
+                            "Mini Bosses",
+                            "Main Bosses",
+                            "Mega Bosses"
+                            } else ""))
                 elif "_" not in variant:
                     self.load_variant_card(variant=variant, fromLocked=True, armorerDennis=armorerDennis, oldIronKing=oldIronKing, pursuer=pursuer, deckDataCard=deckDataCard, healthMod=healthMod, fromDeck=fromDeck, selfCall=selfCall)
                     return
@@ -393,7 +422,13 @@ try:
                             "Mega Bosses"
                             } else ""))
 
-                clear_other_tab_images(self.app, "variantsLocked", "variantsLocked")
+                clear_other_tab_images(self.app, "variantsLocked", "variantsLocked" if not fromDeck else "behaviorDeck")
+                    
+                if "Ornstein & Smough" not in self.selectedVariant:
+                    self.app.display3.config(image="")
+                    self.app.displayImages["variants"][self.app.display3]["image"] = None
+                    self.app.displayImages["variants"][self.app.display3]["name"] = None
+                    self.app.displayImages["variants"][self.app.display3]["activeTab"] = None
                     
                 if not selfCall:
                     originalSelection = deepcopy(self.selectedVariant)
@@ -403,35 +438,31 @@ try:
                     tooltip.destroy()
 
                 if ("Ornstein" in self.selectedVariant or "Smough" in self.selectedVariant) and (self.selectedVariant.count("&") == 2 or "data" in self.selectedVariant):
-                    if "data_" not in self.selectedVariant:
+                    if "data" not in self.selectedVariant:
                         # Create and display the variant image.
                         self.variantPhotoImage = self.app.create_image(self.selectedVariant + ".jpg", "encounter", 4)
 
-                        self.edit_variant_card_os(variant=mods, lockedTree=True)
+                        self.edit_variant_card_os(variant=mods, lockedTree=True, fromDeck=fromDeck)
                     else:
                         for enemy in ["Ornstein", "Smough"]:
                             # Create and display the variant image.
                             self.variantPhotoImage = self.app.create_image(enemy + " - data.jpg", "encounter", 4)
 
-                            self.edit_variant_card_os(variant=variant, lockedTree=True, enemy=enemy, healthMod=healthMod if healthMod else {"Ornstein": 0, "Smough": 0})
+                            self.edit_variant_card_os(variant=mods, lockedTree=True, enemy=enemy, healthMod=healthMod if healthMod else {"Ornstein": 0, "Smough": 0}, fromDeck=fromDeck)
                 else:
                     # Create and display the variant image.
                     self.variantPhotoImage = self.app.create_image(self.selectedVariant + ".jpg", "encounter", 4)
 
-                    self.edit_variant_card(variant=mods, lockedTree=True, armorerDennis=armorerDennis, oldIronKing=oldIronKing, pursuer=pursuer, healthMod=healthMod)
+                    self.edit_variant_card(variant=mods, lockedTree=True, armorerDennis=armorerDennis, oldIronKing=oldIronKing, pursuer=pursuer, healthMod=healthMod, fromDeck=fromDeck)
 
-                if "data_" not in self.selectedVariant and self.app.displayImages["variantsLocked"][self.app.display2]["name"] != self.selectedVariant and not forPrinting:
-                    modString = "_".join([str(n) for n in modIdLookup if modIdLookup[n] in set(mods) & set([modIdLookup[m] for m in dataCardMods])])
-                    self.load_variant_card_locked(variant=self.selectedVariant[:self.selectedVariant.index(" - ")] + "_" + modString, selfCall=True, armorerDennis=armorerDennis, oldIronKing=oldIronKing, pursuer=pursuer, deckDataCard=deckDataCard, healthMod=healthMod)
+                if "data" not in self.selectedVariant and self.app.displayImages["variantsLocked"][self.app.display2]["name"] != self.selectedVariant and not forPrinting:
+                    modString = "_".join([str(n) for n in modIdLookup if modIdLookup[n] in set(mods[0] if mods and type(mods[0]) == list else mods) & set([modIdLookup[m] for m in dataCardMods])])
+                    self.load_variant_card_locked(variant=self.selectedVariant[:self.selectedVariant.index(" - ")] + "_" + modString, selfCall=True, armorerDennis=armorerDennis, oldIronKing=oldIronKing, pursuer=pursuer, deckDataCard=deckDataCard, healthMod=healthMod, fromDeck=fromDeck)
 
                 if not selfCall:
                     self.selectedVariant = originalSelection
 
-                if "data_" not in self.selectedVariant and not fromDeck:
-                    self.app.display.bind("<Button 1>", self.apply_difficulty_modifier)
-
-                if not fromDeck:
-                    self.app.display2.bind("<Button 1>", self.apply_difficulty_modifier)
+                set_display_bindings_by_tab(self.app, ("Ornstein" in self.selectedVariant or "Smough" in self.selectedVariant) and (self.selectedVariant.count("&") == 2 or "data" in self.selectedVariant))
                     
                 self.treeviewVariantsList.bind("<<TreeviewSelect>>", self.load_variant_card)
                 self.treeviewVariantsLocked.bind("<<TreeviewSelect>>", self.load_variant_card_locked)
@@ -448,6 +479,14 @@ try:
             """
             try:
                 log("Start of apply_difficulty_modifier")
+
+                if self.app.notebook.tab(self.app.notebook.select(), "text") != "Behavior Variants":
+                    log("End of apply_difficulty_modifier (wrong tab)")
+                    return
+
+                clear_other_tab_images(self.app, "variants", "variants")
+
+                set_display_bindings_by_tab(self.app, ("Ornstein" in self.selectedVariant or "Smough" in self.selectedVariant) and (self.selectedVariant.count("&") == 2 or "data" in self.selectedVariant))
 
                 tree = self.treeviewVariantsList
                 if not tree.selection():
@@ -666,7 +705,7 @@ try:
                 raise
 
 
-        def edit_variant_card(self, variant=None, lockedTree=False, event=None, armorerDennis=False, oldIronKing=False, pursuer=False, deckDataCard=False, healthMod=0):
+        def edit_variant_card(self, variant=None, lockedTree=False, event=None, armorerDennis=False, oldIronKing=False, pursuer=False, deckDataCard=False, healthMod=0, fromDeck=False):
             try:
                 log("Start of edit_variant_card, variant={}".format(str(variant)))
 
@@ -688,20 +727,20 @@ try:
                     self.app.display2.config(image=displayPhotoImage)
                     self.app.displayImages[key][self.app.display2]["image"] = displayPhotoImage
                     self.app.displayImages[key][self.app.display2]["name"] = self.selectedVariant
-                    self.app.displayImages[key][self.app.display2]["activeTab"] = key
+                    self.app.displayImages[key][self.app.display2]["activeTab"] = key if not fromDeck else "behaviorDeck"
                 else:
                     if behavior == "data":
                         self.app.display2.image = displayPhotoImage
                         self.app.display2.config(image=displayPhotoImage)
                         self.app.displayImages[key][self.app.display2]["image"] = displayPhotoImage
                         self.app.displayImages[key][self.app.display2]["name"] = self.selectedVariant
-                        self.app.displayImages[key][self.app.display2]["activeTab"] = key
+                        self.app.displayImages[key][self.app.display2]["activeTab"] = key if not fromDeck else "behaviorDeck"
                     else:
                         self.app.display.image = displayPhotoImage
                         self.app.display.config(image=displayPhotoImage)
                         self.app.displayImages[key][self.app.display]["image"] = displayPhotoImage
                         self.app.displayImages[key][self.app.display]["name"] = self.selectedVariant
-                        self.app.displayImages[key][self.app.display]["activeTab"] = key
+                        self.app.displayImages[key][self.app.display]["activeTab"] = key if not fromDeck else "behaviorDeck"
 
                 log("End of edit_variant_card")
             except Exception as e:
@@ -884,7 +923,7 @@ try:
                     if iid not in self.lockedVariants:
                         self.lockedVariants[iid] = modList
                         contents = [treeLocked.item(child)["values"][0] for child in treeLocked.get_children(tree.parent(tree.focus()))] if treeLocked.exists(tree.parent(tree.focus())) else []
-                        treeLocked.insert(parent=tree.parent(focus), index=bisect_left(contents, iid), iid=iid, values=(v[0], v[1]), tags=True)
+                        treeLocked.insert(parent=tree.parent(focus), index=bisect_left(contents, v[0]), iid=iid, values=(v[0], v[1]), tags=True)
                     
                     for child in tree.get_children(focus):
                         if " - " in child:
@@ -971,7 +1010,7 @@ try:
                 
                 tree = self.treeviewVariantsList
 
-                for display in [self.app.display, self.app.display2]:
+                for display in [self.app.display, self.app.display2, self.app.display3]:
                     display.config(image="")
                     self.app.displayImages["variants"][display]["image"] = None
                     self.app.displayImages["variants"][display]["name"] = None
@@ -1163,20 +1202,25 @@ try:
                 if type(variant) != list and enemy in self.currentVariants:
                     mods = [modIdLookup[m] for m in list(self.currentVariants[enemy]["defKey"]) if m]
                     for mod in mods:
-                        healthAddition = int(mod[-1]) if "health" in mod else 0
-                        health += healthAddition
+                        if "health" in mod and int(mod[-1]) > healthAddition:
+                            healthAddition = int(mod[-1])
+                            health += healthAddition
+                            heatup = [h + healthAddition for h in heatup]
                         armor += int(mod[-1]) if "armor" in mod else 0
                         resist += int(mod[-1]) if "resist" in mod else 0
-                        if healthAddition:
-                            heatup = [h + healthAddition for h in heatup]
                 elif type(variant) == list:
                     for mod in variant:
-                        healthAddition = int(mod[-1]) if "health" in mod else 0
-                        health += healthAddition
+                        if "health" in mod and int(mod[-1]) > healthAddition:
+                            healthAddition = int(mod[-1])
+                            health += healthAddition
+                            heatup = [h + healthAddition for h in heatup]
                         armor += int(mod[-1]) if "armor" in mod else 0
                         resist += int(mod[-1]) if "resist" in mod else 0
-                        if healthAddition:
-                            heatup = [h + healthAddition for h in heatup]
+
+                if enemy == "Maldron the Assassin":
+                    imageWithText.text((132 + (4 if health < 10 else 0), 340), str(health), "black", font)
+                elif enemy == "Paladin Leeroy":
+                    imageWithText.text((184, 340), str(2 + healthAddition), "black", font)
 
                 if healthMod and health + healthMod >= 0:
                     health += healthMod
@@ -1191,11 +1235,6 @@ try:
                         imageWithText.text((242, 245), str(heatup[1]), "black", font2)
                     else:
                         imageWithText.text((242 + (4 if heatup[0] < 10 else 0), 245), str(heatup[0]), "black", font2)
-
-                if enemy == "Maldron the Assassin":
-                    imageWithText.text((132 + (4 if health < 10 else 0), 340), str(health), "black", font)
-                elif enemy == "Paladin Leeroy":
-                    imageWithText.text((184, 340), str(2 + healthAddition), "black", font)
 
                 log("End of edit_variant_card_data")
             except Exception as e:
@@ -1396,9 +1435,9 @@ try:
                 raise
 
 
-        def edit_variant_card_os(self, enemy=None, variant=None, lockedTree=False, event=None, healthMod={"Ornstein": 0, "Smough": 0}):
+        def edit_variant_card_os(self, enemy=None, variant=None, lockedTree=False, event=None, healthMod={"Ornstein": 0, "Smough": 0}, fromDeck=False):
             try:
-                log("Start of edit_variant_card, enemy={}, variant={}".format(str(enemy), str(variant)))
+                log("Start of edit_variant_card_os, enemy={}, variant={}".format(str(enemy), str(variant)))
 
                 if "data" in self.selectedVariant:
                     self.edit_variant_card_data_os(variant=variant, enemy=enemy, healthMod=healthMod)
@@ -1415,21 +1454,21 @@ try:
                         self.app.display2.config(image=photoImage)
                         self.app.displayImages[key][self.app.display2]["image"] = photoImage
                         self.app.displayImages[key][self.app.display2]["name"] = self.selectedVariant
-                        self.app.displayImages[key][self.app.display2]["activeTab"] = key
+                        self.app.displayImages[key][self.app.display2]["activeTab"] = key if not fromDeck else "behaviorDeck"
                     else:
                         self.app.display3.image = photoImage
                         self.app.display3.config(image=photoImage)
                         self.app.displayImages[key][self.app.display3]["image"] = photoImage
                         self.app.displayImages[key][self.app.display3]["name"] = self.selectedVariant
-                        self.app.displayImages[key][self.app.display3]["activeTab"] = key
+                        self.app.displayImages[key][self.app.display3]["activeTab"] = key if not fromDeck else "behaviorDeck"
                 else:
                     self.app.display.image = photoImage
                     self.app.display.config(image=photoImage)
                     self.app.displayImages[key][self.app.display]["image"] = photoImage
                     self.app.displayImages[key][self.app.display]["name"] = self.selectedVariant
-                    self.app.displayImages[key][self.app.display]["activeTab"] = key
+                    self.app.displayImages[key][self.app.display]["activeTab"] = key if not fromDeck else "behaviorDeck"
 
-                log("End of edit_variant_card")
+                log("End of edit_variant_card_os")
             except Exception as e:
                 error_popup(self.root, e)
                 raise
@@ -1437,7 +1476,7 @@ try:
 
         def edit_variant_card_data_os(self, enemy, healthMod={"Ornstein": 0, "Smough": 0}, variant=None, event=None):
             try:
-                log("Start of edit_variant_card_data, variant={}".format(str(variant)))
+                log("Start of edit_variant_card_data_os, variant={}".format(str(variant)))
 
                 imageWithText = ImageDraw.Draw(self.app.displayImage)
 
@@ -1446,9 +1485,15 @@ try:
                 armor = behaviorDetail["Ornstein & Smough"][enemy]["armor"]
                 resist = behaviorDetail["Ornstein & Smough"][enemy]["resist"]
 
-                if "Ornstein & Smough" in self.currentVariants:
+                if type(variant) != list and "Ornstein & Smough" in self.currentVariants:
                     mods = [modIdLookup[m] for m in list(self.currentVariants["Ornstein & Smough"]["defKey"]) if m]
                     for mod in mods:
+                        healthAddition = int(mod[-1]) if "health" in mod else 0
+                        health += healthAddition
+                        armor += int(mod[-1]) if "armor" in mod else 0
+                        resist += int(mod[-1]) if "resist" in mod else 0
+                elif type(variant) == list:
+                    for mod in variant:
                         healthAddition = int(mod[-1]) if "health" in mod else 0
                         health += healthAddition
                         armor += int(mod[-1]) if "armor" in mod else 0
@@ -1463,7 +1508,7 @@ try:
                 imageWithText.text((154, 245), str(resist), "black", font3)
                 imageWithText.text((248, 340), str(10 + healthAddition + (5 if enemy == "Smough" else 0)), "black", font)
 
-                log("End of edit_variant_card_data")
+                log("End of edit_variant_card_data_os")
             except Exception as e:
                 error_popup(self.root, e)
                 raise
@@ -1471,7 +1516,7 @@ try:
 
         def edit_variant_card_behavior_os(self, variant=None, event=None):
             try:
-                log("Start of edit_variant_card_behavior, variant={}".format(str(variant)))
+                log("Start of edit_variant_card_behavior_os, variant={}".format(str(variant)))
 
                 enemy = self.selectedVariant[:self.selectedVariant.index(" - ")] if " - " in self.selectedVariant else None
                 behavior = self.selectedVariant[self.selectedVariant.index(" - ")+3:] if " - " in self.selectedVariant else None
@@ -1492,7 +1537,7 @@ try:
 
                     self.add_components_to_variant_card_behavior_os(dodge, repeat, actions, i)
 
-                log("End of edit_variant_card_behavior")
+                log("End of edit_variant_card_behavior_os")
             except Exception as e:
                 error_popup(self.root, e)
                 raise

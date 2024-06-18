@@ -6,7 +6,7 @@ try:
     from random import shuffle
     from tkinter import filedialog, ttk
 
-    from dsbg_shuffle_utility import PopupWindow, do_nothing, error_popup, log, baseFolder, pathSep 
+    from dsbg_shuffle_utility import PopupWindow, clear_other_tab_images, error_popup, log, set_display_bindings_by_tab, baseFolder, pathSep 
 
 
     events = {
@@ -112,7 +112,6 @@ try:
                 self.treeviewEventList.pack(expand=True, fill="both")
                 self.scrollbarTreeviewEventList.config(command=self.treeviewEventList.yview)
                 
-                #minwidth = self.treeviewEventList.column("#0", option="minwidth")
                 self.treeviewEventList.column("#0", width=30)
                 self.treeviewEventList.column("#1", width=155)
                 self.treeviewEventList.column("#2", width=170)
@@ -164,13 +163,9 @@ try:
             try:
                 log("Start of load_event, campaign={}", str(campaign))
                 
-                if self.app.notebook.tab(self.app.notebook.select(), "text") == "Events":
-                    self.app.display.config(image="")
-                    self.app.display2.config(image="")
-                    self.app.display3.config(image="")
-                    self.app.displayImages["events"][self.app.display] = None
-                    self.app.displayImages["events"][self.app.display2] = None
-                    self.app.displayImages["events"][self.app.display3] = None
+                set_display_bindings_by_tab(self.app)
+
+                clear_other_tab_images(self.app, "encounters", "encounters")
                 
                 # Get the event selected.
                 if event:
@@ -210,7 +205,9 @@ try:
                 displayPhotoImage = ImageTk.PhotoImage(self.app.displayImage)
                 self.app.display.image = displayPhotoImage
                 self.app.display.config(image=displayPhotoImage)
-                self.app.displayImages["events"][self.app.display] = displayPhotoImage
+                self.app.displayImages["events"][self.app.display]["images"] = displayPhotoImage
+                self.app.displayImages["events"][self.app.display]["name"] = events[eventSelected]["name"]
+                self.app.displayImages["events"][self.app.display]["activeTab"] = "events"
 
                 log("End of load_event")
             except Exception as e:
@@ -390,11 +387,17 @@ try:
 
                 # Remove the image displaying a deleted encounter.
                 self.app.display.config(image="")
+                self.app.displayImages["events"][self.app.display]["images"] = None
+                self.app.displayImages["events"][self.app.display]["name"] = None
+                self.app.displayImages["events"][self.app.display]["activeTab"] = None
                 self.app.display2.config(image="")
+                self.app.displayImages["events"][self.app.display2]["images"] = None
+                self.app.displayImages["events"][self.app.display2]["name"] = None
+                self.app.displayImages["events"][self.app.display2]["activeTab"] = None
                 self.app.display3.config(image="")
-                self.app.displayImages["events"][self.app.display] = None
-                self.app.displayImages["events"][self.app.display2] = None
-                self.app.displayImages["events"][self.app.display3] = None
+                self.app.displayImages["events"][self.app.display3]["images"] = None
+                self.app.displayImages["events"][self.app.display3]["name"] = None
+                self.app.displayImages["events"][self.app.display3]["activeTab"] = None
 
                 shuffle(self.eventDeck)
 
@@ -423,11 +426,17 @@ try:
 
                 # Remove the image displaying a deleted encounter.
                 self.app.display.config(image="")
+                self.app.displayImages["events"][self.app.display]["images"] = None
+                self.app.displayImages["events"][self.app.display]["name"] = None
+                self.app.displayImages["events"][self.app.display]["activeTab"] = None
                 self.app.display2.config(image="")
+                self.app.displayImages["events"][self.app.display2]["images"] = None
+                self.app.displayImages["events"][self.app.display2]["name"] = None
+                self.app.displayImages["events"][self.app.display2]["activeTab"] = None
                 self.app.display3.config(image="")
-                self.app.displayImages["events"][self.app.display] = None
-                self.app.displayImages["events"][self.app.display2] = None
-                self.app.displayImages["events"][self.app.display3] = None
+                self.app.displayImages["events"][self.app.display3]["images"] = None
+                self.app.displayImages["events"][self.app.display3]["name"] = None
+                self.app.displayImages["events"][self.app.display3]["activeTab"] = None
                 
                 self.currentEvent = None
                 self.currentEventNum = 0
@@ -494,11 +503,17 @@ try:
 
                 shuffle(self.eventDeck)
                 self.app.display.config(image="")
+                self.app.displayImages["events"][self.app.display]["images"] = None
+                self.app.displayImages["events"][self.app.display]["name"] = None
+                self.app.displayImages["events"][self.app.display]["activeTab"] = None
                 self.app.display2.config(image="")
+                self.app.displayImages["events"][self.app.display2]["images"] = None
+                self.app.displayImages["events"][self.app.display2]["name"] = None
+                self.app.displayImages["events"][self.app.display2]["activeTab"] = None
                 self.app.display3.config(image="")
-                self.app.displayImages["events"][self.app.display] = None
-                self.app.displayImages["events"][self.app.display2] = None
-                self.app.displayImages["events"][self.app.display3] = None
+                self.app.displayImages["events"][self.app.display3]["images"] = None
+                self.app.displayImages["events"][self.app.display3]["name"] = None
+                self.app.displayImages["events"][self.app.display3]["activeTab"] = None
 
                 # Reduce the Drawn Order value of more recently drawn cards by 1.
                 for eventCard in self.treeviewEventDeck.get_children():
@@ -544,11 +559,17 @@ try:
                 self.eventDeck.remove(card)
                 self.eventDeck.append(card)
                 self.app.display.config(image="")
+                self.app.displayImages["events"][self.app.display]["images"] = None
+                self.app.displayImages["events"][self.app.display]["name"] = None
+                self.app.displayImages["events"][self.app.display]["activeTab"] = None
                 self.app.display2.config(image="")
+                self.app.displayImages["events"][self.app.display2]["images"] = None
+                self.app.displayImages["events"][self.app.display2]["name"] = None
+                self.app.displayImages["events"][self.app.display2]["activeTab"] = None
                 self.app.display3.config(image="")
-                self.app.displayImages["events"][self.app.display] = None
-                self.app.displayImages["events"][self.app.display2] = None
-                self.app.displayImages["events"][self.app.display3] = None
+                self.app.displayImages["events"][self.app.display3]["images"] = None
+                self.app.displayImages["events"][self.app.display3]["name"] = None
+                self.app.displayImages["events"][self.app.display3]["activeTab"] = None
 
                 # Reduce the Drawn Order value of more recently drawn cards by 1.
                 for eventCard in self.treeviewEventDeck.get_children():
@@ -591,11 +612,17 @@ try:
                 self.eventDeck.remove(card)
                 self.eventDeck.insert(0, card)
                 self.app.display.config(image="")
+                self.app.displayImages["events"][self.app.display]["images"] = None
+                self.app.displayImages["events"][self.app.display]["name"] = None
+                self.app.displayImages["events"][self.app.display]["activeTab"] = None
                 self.app.display2.config(image="")
+                self.app.displayImages["events"][self.app.display2]["images"] = None
+                self.app.displayImages["events"][self.app.display2]["name"] = None
+                self.app.displayImages["events"][self.app.display2]["activeTab"] = None
                 self.app.display3.config(image="")
-                self.app.displayImages["events"][self.app.display] = None
-                self.app.displayImages["events"][self.app.display2] = None
-                self.app.displayImages["events"][self.app.display3] = None
+                self.app.displayImages["events"][self.app.display3]["images"] = None
+                self.app.displayImages["events"][self.app.display3]["name"] = None
+                self.app.displayImages["events"][self.app.display3]["activeTab"] = None
                 
                 # Reduce the Drawn Order value of more recently drawn cards by 1.
                 for eventCard in self.treeviewEventDeck.get_children():
