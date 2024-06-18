@@ -260,15 +260,21 @@ try:
                         self.treeviewVariantsLocked.bind("<<TreeviewSelect>>", self.load_variant_card_locked)
                         return
 
-                    self.selectedVariant = (
-                        tree.selection()[0]
-                        + (" - data" if tree.parent(tree.selection()[0]) in {
-                            "Enemies",
-                            "Invaders & Explorers Mimics",
-                            "Mini Bosses",
-                            "Main Bosses",
-                            "Mega Bosses"
-                            } else ""))
+                    self.selectedVariant = tree.selection()[0]
+                    
+                    if tree.parent(self.selectedVariant) in {
+                        "Enemies",
+                        "Invaders & Explorers Mimics",
+                        "Mini Bosses",
+                        "Main Bosses",
+                        "Mega Bosses"
+                        }:
+                        self.selectedVariant += " - data"
+                        
+                        self.app.display.config(image="")
+                        self.app.displayImages["variants"][self.app.display]["image"] = None
+                        self.app.displayImages["variants"][self.app.display]["name"] = None
+                        self.app.displayImages["variants"][self.app.display]["activeTab"] = None
                 else:
                     self.selectedVariant = variant
 
@@ -382,14 +388,14 @@ try:
                         mods = [modIdLookup[m] for m in list(self.lockedVariants[selection]) if m]
 
                     if "_" in variant:
-                        selectedVariantLookup = variant[:variant.index("_")]
+                        name = variant[:variant.index("_")]
                     elif "-" in variant:
-                        selectedVariantLookup = variant[:variant.index(" - ")]
+                        name = variant[:variant.index(" - ")]
                     else:
-                        selectedVariantLookup = variant
+                        name = variant
 
                     self.selectedVariant = (
-                        selectedVariantLookup
+                        name
                         + (" - data" if self.treeviewVariantsLocked.parent(selection) in {
                             "Enemies",
                             "Invaders & Explorers Mimics",
@@ -423,6 +429,12 @@ try:
                             } else ""))
 
                 clear_other_tab_images(self.app, "variantsLocked", "variantsLocked" if not fromDeck else "behaviorDeck")
+                    
+                if not selfCall and "data" in self.selectedVariant:
+                    self.app.display.config(image="")
+                    self.app.displayImages["variants"][self.app.display]["image"] = None
+                    self.app.displayImages["variants"][self.app.display]["name"] = None
+                    self.app.displayImages["variants"][self.app.display]["activeTab"] = None
                     
                 if "Ornstein & Smough" not in self.selectedVariant:
                     self.app.display3.config(image="")
@@ -486,7 +498,7 @@ try:
 
                 clear_other_tab_images(self.app, "variants", "variants")
 
-                set_display_bindings_by_tab(self.app, ("Ornstein" in self.selectedVariant or "Smough" in self.selectedVariant) and (self.selectedVariant.count("&") == 2 or "data" in self.selectedVariant))
+                set_display_bindings_by_tab(self.app, self.selectedVariant and ("Ornstein" in self.selectedVariant or "Smough" in self.selectedVariant) and (self.selectedVariant.count("&") == 2 or "data" in self.selectedVariant))
 
                 tree = self.treeviewVariantsList
                 if not tree.selection():

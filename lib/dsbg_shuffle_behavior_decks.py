@@ -45,7 +45,6 @@ try:
                 self.decks[enemy] = {
                     "deck": [],
                     "curIndex": 0,
-                    "custom": False,
                     "heatup": 0 if enemy in "Old Dragonslayer" else 1 if enemy == "The Four Kings" else False,
                     "lastCardDrawn": None,
                     "healthMod": {"Ornstein": 0, "Smough": 0} if enemy == "Ornstein & Smough" else 0
@@ -294,12 +293,6 @@ try:
                 cardToDraw = variantSelection + " - " + self.decks[selection]["deck"][self.decks[selection]["curIndex"]]
                 
                 if variantSelection in set([v[:v.index("_")] for v in self.app.variantsTab.lockedVariants]) and cardToDraw in set([v[:v.index("_")] for v in self.app.variantsTab.lockedVariants]):
-                    if not [v[v.index("_"):] for v in self.app.variantsTab.lockedVariants if (
-                        cardToDraw in v
-                        and (self.decks[selection]["defKey"] == "" or set([int(x) for x in v[v.index("_")+1:].split(",")]).issuperset(set([int(x) for x in self.decks[selection]["defKey"].split(",")])))
-                        and (self.decks[selection]["defKey"] != "" or not set([int(x) for x in v[v.index("_")+1:].split(",")]) & dataCardMods))]:
-                        pass
-                    
                     variant = cardToDraw + choice([v[v.index("_"):] for v in self.app.variantsTab.lockedVariants if (
                         cardToDraw in v
                         and (self.decks[selection]["defKey"] == "" or set([int(x) for x in v[v.index("_")+1:].split(",")]).issuperset(set([int(x) for x in self.decks[selection]["defKey"].split(",")])))
