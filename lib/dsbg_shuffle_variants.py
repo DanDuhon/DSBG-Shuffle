@@ -376,8 +376,19 @@ try:
                             "Main Bosses",
                             "Mega Bosses"
                             } else ""))
-                elif (variant[:variant.index(" - ")] if " - " in variant else variant) in set([v[:v.index("_")] for v in self.lockedVariants]):
-                    selection = [v for v in self.lockedVariants if (variant[:variant.index("_")] if "_" in variant else variant[:variant.index(" - ")] + "_") in v][0]
+                elif (
+                    (variant[:variant.index(" - ")] if " - " in variant else variant) in set([v[:v.index("_")] for v in self.lockedVariants])
+                    or (("Ornstein" in variant or "Smough" in variant) and "Ornstein & Smough" in set([v[:v.index("_")] for v in self.lockedVariants]))
+                    ):
+                    if "Ornstein" in variant and "&" not in variant:
+                        var = variant.replace("Ornstein", "Ornstein & Smough")
+                        selection = [v for v in self.lockedVariants if (var[:var.index("_")] if "_" in var else var[:var.index(" - ")] + "_") in v][0]
+                    elif "Smough" in variant and "&" not in variant:
+                        var = variant.replace("Smough", "Ornstein & Smough")
+                        selection = [v for v in self.lockedVariants if (var[:var.index("_")] if "_" in var else var[:var.index(" - ")] + "_") in v][0]
+                    else:
+                        selection = [v for v in self.lockedVariants if (variant[:variant.index("_")] if "_" in variant else variant[:variant.index(" - ")] + "_") in v][0]
+
                     # Account for Ornstein & Smough behaviors.
                     if type(self.lockedVariants[selection][0]) == list:
                         mods = [

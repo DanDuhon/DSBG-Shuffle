@@ -449,7 +449,7 @@ try:
                     self.decks[selection]["deck"] = self.decks[selection]["heatupCards"][osOption]
                     self.decks[selection]["heatup"] = True
 
-                    healthVariant = + ([int(modIdLookup[m][-1]) for m in list(self.app.variantsTab.lockedVariants[selection]["defKey"]) if "health" in modIdLookup[m]][0] if (selection) in self.app.variantsTab.lockedVariants else 0)
+                    healthVariant = ([int(modIdLookup[m][-1]) for m in [int(i) for i in self.decks[selection]["defKey"].split(",")] if "health" in modIdLookup[m]][0] if self.decks[selection].get("defKey", None) else 0)
 
                     if osOption == "Ornstein":
                         self.decks[selection]["healthMod"]["Ornstein"] += 10 + healthVariant
