@@ -206,6 +206,9 @@ try:
             try:
                 log("Start of set_decks")
 
+                if not enemy:
+                    enemy = self.treeviewDecks.selection()[0]
+
                 if not skipClear:
                     # Remove keyword tooltips from the previous image shown, if there are any.
                     for tooltip in self.app.tooltips:
@@ -213,9 +216,12 @@ try:
 
                     # Remove the displayed item.
                     clear_other_tab_images(self.app, "variantsLocked", "behaviorDeck")
-
-                if not enemy:
-                    enemy = self.treeviewDecks.selection()[0]
+                
+                    self.app.display.config(image="")
+                    self.app.displayImages["variantsLocked"][self.app.display]["image"] = None
+                    self.app.displayImages["variantsLocked"][self.app.display]["name"] = None
+                    self.app.displayImages["variantsLocked"][self.app.display]["activeTab"] = None
+                    self.decks[enemy]["lastCardDrawn"] = None
 
                 self.decks[enemy]["deck"] = self.load_deck(enemy)
                 
@@ -263,7 +269,9 @@ try:
                 self.treeviewDecks.item(enemy, values=(self.treeviewDecks.item(enemy)["values"][0], len(self.decks[enemy]["deck"])))
 
                 if (enemy[:enemy.index(" (")] if "Vordt" in enemy else enemy) in set([v[:v.index("_")] for v in self.app.variantsTab.lockedVariants]):
-                    self.decks[enemy]["defKey"] = choice([v[v.index("_")+1:] for v in self.app.variantsTab.lockedVariants if "-" not in v])
+                    if not [v[v.index("_")+1:] for v in self.app.variantsTab.lockedVariants if "-" not in v]:
+                        pass
+                    self.decks[enemy]["defKey"] = choice([self.app.variantsTab.lockedVariants[v] for v in self.app.variantsTab.lockedVariants if "-" not in v])
 
                 if not skipClear and self.treeviewDecks.selection():
                     self.display_deck_cards()
@@ -292,11 +300,11 @@ try:
                 variantSelection = (selection[:selection.index(" (")] if "Vordt" in selection else selection)
                 cardToDraw = variantSelection + " - " + self.decks[selection]["deck"][self.decks[selection]["curIndex"]]
                 
-                if variantSelection in set([v[:v.index("_")] for v in self.app.variantsTab.lockedVariants]) and cardToDraw in set([v[:v.index("_")] for v in self.app.variantsTab.lockedVariants]):
-                    variant = cardToDraw + choice([v[v.index("_"):] for v in self.app.variantsTab.lockedVariants if (
+                if variantSelection in set(self.app.variantsTab.lockedVariants) and cardToDraw in set(self.app.variantsTab.lockedVariants):
+                    variant = cardToDraw + choice([v for v in self.app.variantsTab.lockedVariants if (
                         cardToDraw in v
-                        and (self.decks[selection]["defKey"] == "" or set([int(x) for x in v[v.index("_")+1:].split(",")]).issuperset(set([int(x) for x in self.decks[selection]["defKey"].split(",")])))
-                        and (self.decks[selection]["defKey"] != "" or not set([int(x) for x in v[v.index("_")+1:].split(",")]) & dataCardMods))])
+                        and (self.decks[selection]["defKey"] == "" or (set(self.app.variantsTab.lockedVariants[v]) if set(self.app.variantsTab.lockedVariants[v]) != {"",} else set()).issuperset(set(self.decks[selection]["defKey"]) if set(self.decks[selection]["defKey"]) != {"",} else set()))
+                        and (self.decks[selection]["defKey"] != "" or not (set(self.app.variantsTab.lockedVariants[v]) if set(self.app.variantsTab.lockedVariants[v]) != {"",} else set()) & dataCardMods))])
                 else:
                     variant = cardToDraw
                     
@@ -349,7 +357,7 @@ try:
                         self.app.variantsTab.load_variant_card_locked(variant="Smough - data", deckDataCard=True, healthMod=self.decks[self.treeviewDecks.selection()[0]]["healthMod"], fromDeck=True)
                     else:
                         selection = selection[:selection.index(" (")] if "Vordt" in selection else selection
-                        self.app.variantsTab.load_variant_card_locked(variant=selection + " - data", deckDataCard=True, healthMod=self.decks[self.treeviewDecks.selection()[0]]["healthMod"], fromDeck=True)
+                        self.app.variantsTab.load_variant_card_locked(variant=selection + ("_" + ",".join([str(m) for m in self.decks[selection]["defKey"]]) if self.decks[selection].get("defKey", None) else ""), deckDataCard=True, healthMod=self.decks[self.treeviewDecks.selection()[0]]["healthMod"], fromDeck=True)
 
                     set_display_bindings_by_tab(self.app, selection == "Ornstein & Smough")
 
@@ -421,8 +429,13 @@ try:
                 for tooltip in self.app.tooltips:
                     tooltip.destroy()
 
-                # Remove the displayed item.
                 clear_other_tab_images(self.app, "variantsLocked", "behaviorDeck", onlyDisplay=self.app.display)
+                
+                self.app.display.config(image="")
+                self.app.displayImages["variantsLocked"][self.app.display]["image"] = None
+                self.app.displayImages["variantsLocked"][self.app.display]["name"] = None
+                self.app.displayImages["variantsLocked"][self.app.display]["activeTab"] = None
+                self.decks[selection]["lastCardDrawn"] = None
 
                 if selection == "Maldron the Assassin":
                     self.decks[selection]["healthMod"] += 8 + ([int(modIdLookup[m][-1]) for m in list(self.app.variantsTab.lockedVariants[selection]["defKey"]) if "health" in modIdLookup[m]][0] if selection in self.app.variantsTab.lockedVariants else 0)
@@ -449,7 +462,7 @@ try:
                     self.decks[selection]["deck"] = self.decks[selection]["heatupCards"][osOption]
                     self.decks[selection]["heatup"] = True
 
-                    healthVariant = ([int(modIdLookup[m][-1]) for m in [int(i) for i in self.decks[selection]["defKey"].split(",")] if "health" in modIdLookup[m]][0] if self.decks[selection].get("defKey", None) else 0)
+                    healthVariant = ([int(modIdLookup[m][-1]) for m in [int(i) for i in self.decks[selection]["defKey"]] if "health" in modIdLookup[m]][0] if self.decks[selection].get("defKey", None) else 0)
 
                     if osOption == "Ornstein":
                         self.decks[selection]["healthMod"]["Ornstein"] += 10 + healthVariant

@@ -306,10 +306,12 @@ try:
 
                             self.edit_variant_card_os(variant=variant, enemy=enemy, healthMod=healthMod if healthMod else {"Ornstein": 0, "Smough": 0}, fromDeck=fromDeck)
                 else:
+                    self.selectedVariant += " - data" if "-" not in self.selectedVariant else ""
+                    
                     # Create and display the variant image.
                     self.variantPhotoImage = self.app.create_image(self.selectedVariant + ".jpg", "encounter", 4)
 
-                    self.edit_variant_card(variant=variant, lockedTree=fromLocked, armorerDennis=armorerDennis, oldIronKing=oldIronKing, pursuer=pursuer, healthMod=healthMod, fromDeck=fromDeck)
+                    self.edit_variant_card(variant=self.selectedVariant, lockedTree=fromLocked, armorerDennis=armorerDennis, oldIronKing=oldIronKing, pursuer=pursuer, healthMod=healthMod, fromDeck=fromDeck)
 
                 if "data" not in self.selectedVariant and self.app.displayImages[variants][self.app.display2]["name"] != self.selectedVariant and not forPrinting:
                     self.load_variant_card(variant=self.selectedVariant[:self.selectedVariant.index(" - ")] + " - data", fromLocked=fromLocked, selfCall=originalSelection, armorerDennis=armorerDennis, oldIronKing=oldIronKing, pursuer=pursuer, deckDataCard=deckDataCard, healthMod=healthMod, fromDeck=fromDeck)
@@ -376,6 +378,27 @@ try:
                             "Main Bosses",
                             "Mega Bosses"
                             } else ""))
+                elif variant in self.lockedVariants:
+                    name = variant[:variant.index("_")]
+
+                    # Account for Ornstein & Smough behaviors.
+                    if type(self.lockedVariants[variant][0]) == list:
+                        mods = [
+                            [modIdLookup[m] for m in list(self.lockedVariants[variant][0]) if m],
+                            [modIdLookup[m] for m in list(self.lockedVariants[variant][1]) if m]
+                            ]
+                    else:
+                        mods = [modIdLookup[m] for m in list(self.lockedVariants[variant]) if m]
+
+                    self.selectedVariant = (
+                        name
+                        + (" - data" if self.treeviewVariantsLocked.parent(variant) in {
+                            "Enemies",
+                            "Invaders & Explorers Mimics",
+                            "Mini Bosses",
+                            "Main Bosses",
+                            "Mega Bosses"
+                            } else ""))
                 elif (
                     (variant[:variant.index(" - ")] if " - " in variant else variant) in set([v[:v.index("_")] for v in self.lockedVariants])
                     or (("Ornstein" in variant or "Smough" in variant) and "Ornstein & Smough" in set([v[:v.index("_")] for v in self.lockedVariants]))
@@ -387,7 +410,7 @@ try:
                         var = variant.replace("Smough", "Ornstein & Smough")
                         selection = [v for v in self.lockedVariants if (var[:var.index("_")] if "_" in var else var[:var.index(" - ")] + "_") in v][0]
                     else:
-                        selection = [v for v in self.lockedVariants if (variant[:variant.index("_")] if "_" in variant else variant[:variant.index(" - ")] + "_") in v][0]
+                        selection = [v for v in self.lockedVariants if (variant[:variant.index("_")] if "_" in variant else variant[:variant.index(" - ")]) + "_" in v][0]
 
                     # Account for Ornstein & Smough behaviors.
                     if type(self.lockedVariants[selection][0]) == list:
@@ -421,12 +444,14 @@ try:
                     name = variant[:variant.index("_")]
 
                     # Account for Ornstein & Smough behaviors.
-                    if type(self.lockedVariants[variant][0]) == list:
+                    if "Ornstein" in variant or "Smough" in variant:
                         mods = [
                             [modIdLookup[m] for m in list(self.lockedVariants[variant][0]) if m],
                             [modIdLookup[m] for m in list(self.lockedVariants[variant][1]) if m]
                             ]
                     else:
+                        if variant not in self.lockedVariants:
+                            pass
                         mods = [modIdLookup[m] for m in list(self.lockedVariants[variant]) if m]
 
                     self.selectedVariant = (
@@ -479,7 +504,7 @@ try:
                     self.edit_variant_card(variant=mods, lockedTree=True, armorerDennis=armorerDennis, oldIronKing=oldIronKing, pursuer=pursuer, healthMod=healthMod, fromDeck=fromDeck)
 
                 if "data" not in self.selectedVariant and self.app.displayImages["variantsLocked"][self.app.display2]["name"] != self.selectedVariant and not forPrinting:
-                    modString = "_".join([str(n) for n in modIdLookup if modIdLookup[n] in set(mods[0] if mods and type(mods[0]) == list else mods) & set([modIdLookup[m] for m in dataCardMods])])
+                    modString = ",".join(sorted([str(n) for n in modIdLookup if modIdLookup[n] in set(mods[0] if mods and type(mods[0]) == list else mods) & set([modIdLookup[m] for m in dataCardMods])]))
                     self.load_variant_card_locked(variant=self.selectedVariant[:self.selectedVariant.index(" - ")] + "_" + modString, selfCall=True, armorerDennis=armorerDennis, oldIronKing=oldIronKing, pursuer=pursuer, deckDataCard=deckDataCard, healthMod=healthMod, fromDeck=fromDeck)
 
                 if not selfCall:
@@ -549,7 +574,7 @@ try:
 
                     if "defKey" not in self.currentVariants.get(startReal, {}):
                         defKey = choice(list(self.variants[startReal][self.app.numberOfCharacters][diffKeyReal].keys()))
-                        self.currentVariants[startReal] = {"defKey": defKey}
+                        self.currentVariants[startReal] = {"defKey": list(defKey)}
                     else:
                         defKey = self.currentVariants[startReal]["defKey"]
                     
@@ -662,7 +687,7 @@ try:
                 diffKeyIndex -= 1 if diffKeyIndex > len(list(self.variants[start][self.app.numberOfCharacters].keys())) - 1 else 0
                 diffKeyReal = list(self.variants[start][self.app.numberOfCharacters].keys())[diffKeyIndex]
                 defKey = choice(list(self.variants[start][self.app.numberOfCharacters][diffKeyReal].keys()))
-                self.currentVariants[start] = {"defKey": defKey}
+                self.currentVariants[start] = {"defKey": list(defKey)}
 
                 for behavior in self.variants[start][self.app.numberOfCharacters][diffKeyReal][defKey]:
                     self.pick_enemy_variants_behavior(start, behavior, diffKeyReal, defKey)
@@ -800,8 +825,8 @@ try:
                         if child not in self.currentVariants:
                             continue
                         v = tree.item(child)["values"]
-                        modList = [v for v in self.currentVariants[child][[k for k in list(self.currentVariants[child].keys()) if k != "defKey"][0]]]
-                        iidChild = child + "_" + ",".join([str(v) for v in modList])
+                        modList = sorted([v for v in self.currentVariants[child][[k for k in list(self.currentVariants[child].keys()) if k != "defKey"][0]]])
+                        iidChild = child + "_" + ",".join([str(m) for m in sorted(modList)])
 
                         if iidChild in self.lockedVariants:
                             continue
@@ -821,8 +846,8 @@ try:
                         if e not in self.currentVariants:
                             continue
                         v = tree.item(e)["values"]
-                        modList = list(self.currentVariants[e]["defKey"])
-                        iid = e + "_" + ",".join([str(v) for v in modList])
+                        modList = sorted(list(self.currentVariants[e]["defKey"]))
+                        iid = e + "_" + ",".join([str(m) for m in sorted(modList)])
                         iidForAvg = iid
 
                         if iid in self.lockedVariants:
@@ -848,12 +873,12 @@ try:
                             v = tree.item(child)["values"]
                         
                             if enemy == "Ornstein & Smough" and "&" in behavior:
-                                modList1 = [v for v in self.currentVariants[enemy][behavior][behavior[:behavior.index(" & ")]]]
-                                modList2 = [v for v in self.currentVariants[enemy][behavior][behavior[behavior.index(" & ")+3:]]]
-                                iidChild = child + "_" + ",".join([str(v) for v in modList1]) + "_" + ",".join([str(v) for v in modList2])
+                                modList1 = sorted([v for v in self.currentVariants[enemy][behavior][behavior[:behavior.index(" & ")]]])
+                                modList2 = sorted([v for v in self.currentVariants[enemy][behavior][behavior[behavior.index(" & ")+3:]]])
+                                iidChild = child + "_" + ",".join(sorted([str(v) for v in modList1], lambda x: int(x))) + "_" + ",".join(sorted([str(v) for v in modList2], lambda x: int(x)))
                             else:
-                                modList = [v for v in self.currentVariants[enemy][behavior]]
-                                iidChild = child + "_" + ",".join([str(v) for v in modList])
+                                modList = sorted([v for v in self.currentVariants[enemy][behavior]])
+                                iidChild = child + "_" + ",".join([str(m) for m in sorted(modList)])
 
                             if iidChild in self.lockedVariants:
                                 continue
@@ -881,13 +906,13 @@ try:
                         for e in tree.get_children(cat):
                             v = tree.item(e)["values"]
                             if cat == "Enemies":
-                                modList = [v for v in self.currentVariants[e][[k for k in list(self.currentVariants[e].keys()) if k != "defKey"][0]]]
+                                modList = sorted([v for v in self.currentVariants[e][[k for k in list(self.currentVariants[e].keys()) if k != "defKey"][0]]])
                                 i += 1
                                 progress.progressVar.set(i)
                                 self.root.update_idletasks()
                             else:
-                                modList = list(self.currentVariants[e]["defKey"])
-                            iid = e + "_" + ",".join([str(v) for v in modList])
+                                modList = sorted(list(self.currentVariants[e]["defKey"]))
+                            iid = e + "_" + ",".join([str(m) for m in sorted(modList)])
 
                             if iid in self.lockedVariants:
                                 log("End of lock_variant_card (nothing done)")
@@ -912,12 +937,12 @@ try:
                                 v = tree.item(child)["values"]
                         
                                 if enemy == "Ornstein & Smough" and "&" in behavior:
-                                    modList1 = [v for v in self.currentVariants[enemy][behavior][behavior[:behavior.index(" & ")]]]
-                                    modList2 = [v for v in self.currentVariants[enemy][behavior][behavior[behavior.index(" & ")+3:]]]
-                                    iidChild = child + "_" + ",".join([str(v) for v in modList1]) + "_" + ",".join([str(v) for v in modList2])
+                                    modList1 = sorted([v for v in self.currentVariants[enemy][behavior][behavior[:behavior.index(" & ")]]])
+                                    modList2 = sorted([v for v in self.currentVariants[enemy][behavior][behavior[behavior.index(" & ")+3:]]])
+                                    iidChild = child + "_" + ",".join(sorted([str(v) for v in modList1], lambda x: int(x))) + "_" + ",".join(sorted([str(v) for v in modList2], lambda x: int(x)))
                                 else:
-                                    modList = [v for v in self.currentVariants[enemy][behavior]]
-                                    iidChild = child + "_" + ",".join([str(v) for v in modList])
+                                    modList = sorted([v for v in self.currentVariants[enemy][behavior]])
+                                    iidChild = child + "_" + ",".join([str(m) for m in sorted(modList)])
 
                                 if iidChild in self.lockedVariants:
                                     continue
@@ -939,8 +964,8 @@ try:
                     else:
                         focus = tree.focus()
 
-                    modList = list(self.currentVariants[focus]["defKey"])
-                    iid = focus + "_" + ",".join([str(v) for v in modList])
+                    modList = sorted(list(self.currentVariants[focus]["defKey"]))
+                    iid = focus + "_" + ",".join([str(m) for m in sorted(modList)])
                     iidForAvg = iid
 
                     if iid not in self.lockedVariants:
@@ -959,14 +984,14 @@ try:
                         v = tree.item(child)["values"]
                         
                         if enemy == "Ornstein & Smough" and "&" in behavior:
-                            modList1 = [v for v in self.currentVariants[enemy][behavior][behavior[:behavior.index(" & ")]]]
-                            modList2 = [v for v in self.currentVariants[enemy][behavior][behavior[behavior.index(" & ")+3:]]]
-                            iidChild = child + "_" + ",".join([str(v) for v in modList1]) + "_" + ",".join([str(v) for v in modList2])
+                            modList1 = sorted([v for v in self.currentVariants[enemy][behavior][behavior[:behavior.index(" & ")]]])
+                            modList2 = sorted([v for v in self.currentVariants[enemy][behavior][behavior[behavior.index(" & ")+3:]]])
+                            iidChild = child + "_" + ",".join(sorted([str(v) for v in modList1], lambda x: int(x)) + "_" + ",".join(sorted([str(v) for v in modList2], lambda x: int(x))))
                         elif behavior not in self.currentVariants[enemy]:
                             continue
                         else:
-                            modList = [v for v in self.currentVariants[enemy][behavior]]
-                            iidChild = child + "_" + ",".join([str(v) for v in modList])
+                            modList = sorted([v for v in self.currentVariants[enemy][behavior]])
+                            iidChild = child + "_" + ",".join([str(m) for m in sorted(modList)])
 
                         if iidChild in self.lockedVariants:
                             continue
@@ -985,8 +1010,8 @@ try:
                     else:
                         self.app.behaviorDeckTab.set_decks(enemy=focus, skipClear=True)
                 else:
-                    modList = [v for v in self.currentVariants[tree.focus()][[k for k in list(self.currentVariants[tree.focus()].keys()) if k != "defKey"][0]]]
-                    iid = tree.focus() + "_" + ",".join([str(v) for v in modList])
+                    modList = sorted([v for v in self.currentVariants[tree.focus()][[k for k in list(self.currentVariants[tree.focus()].keys()) if k != "defKey"][0]]])
+                    iid = tree.focus() + "_" + ",".join([str(m) for m in sorted(modList)])
                     iidForAvg = iid
 
                     if iid in self.lockedVariants:
