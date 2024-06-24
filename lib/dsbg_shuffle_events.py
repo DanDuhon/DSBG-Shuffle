@@ -387,14 +387,17 @@ try:
 
                 # Remove the image displaying a deleted encounter.
                 self.app.display.config(image="")
+                self.app.display.image=None
                 self.app.displayImages["events"][self.app.display]["images"] = None
                 self.app.displayImages["events"][self.app.display]["name"] = None
                 self.app.displayImages["events"][self.app.display]["activeTab"] = None
                 self.app.display2.config(image="")
+                self.app.display2.image=None
                 self.app.displayImages["events"][self.app.display2]["images"] = None
                 self.app.displayImages["events"][self.app.display2]["name"] = None
                 self.app.displayImages["events"][self.app.display2]["activeTab"] = None
                 self.app.display3.config(image="")
+                self.app.display3.image=None
                 self.app.displayImages["events"][self.app.display3]["images"] = None
                 self.app.displayImages["events"][self.app.display3]["name"] = None
                 self.app.displayImages["events"][self.app.display3]["activeTab"] = None
@@ -426,14 +429,17 @@ try:
 
                 # Remove the image displaying a deleted encounter.
                 self.app.display.config(image="")
+                self.app.display.image=None
                 self.app.displayImages["events"][self.app.display]["images"] = None
                 self.app.displayImages["events"][self.app.display]["name"] = None
                 self.app.displayImages["events"][self.app.display]["activeTab"] = None
                 self.app.display2.config(image="")
+                self.app.display2.image=None
                 self.app.displayImages["events"][self.app.display2]["images"] = None
                 self.app.displayImages["events"][self.app.display2]["name"] = None
                 self.app.displayImages["events"][self.app.display2]["activeTab"] = None
                 self.app.display3.config(image="")
+                self.app.display3.image=None
                 self.app.displayImages["events"][self.app.display3]["images"] = None
                 self.app.displayImages["events"][self.app.display3]["name"] = None
                 self.app.displayImages["events"][self.app.display3]["activeTab"] = None
@@ -503,14 +509,17 @@ try:
 
                 shuffle(self.eventDeck)
                 self.app.display.config(image="")
+                self.app.display.image=None
                 self.app.displayImages["events"][self.app.display]["images"] = None
                 self.app.displayImages["events"][self.app.display]["name"] = None
                 self.app.displayImages["events"][self.app.display]["activeTab"] = None
                 self.app.display2.config(image="")
+                self.app.display2.image=None
                 self.app.displayImages["events"][self.app.display2]["images"] = None
                 self.app.displayImages["events"][self.app.display2]["name"] = None
                 self.app.displayImages["events"][self.app.display2]["activeTab"] = None
                 self.app.display3.config(image="")
+                self.app.display3.image=None
                 self.app.displayImages["events"][self.app.display3]["images"] = None
                 self.app.displayImages["events"][self.app.display3]["name"] = None
                 self.app.displayImages["events"][self.app.display3]["activeTab"] = None
@@ -559,14 +568,17 @@ try:
                 self.eventDeck.remove(card)
                 self.eventDeck.append(card)
                 self.app.display.config(image="")
+                self.app.display.image=None
                 self.app.displayImages["events"][self.app.display]["images"] = None
                 self.app.displayImages["events"][self.app.display]["name"] = None
                 self.app.displayImages["events"][self.app.display]["activeTab"] = None
                 self.app.display2.config(image="")
+                self.app.display2.image=None
                 self.app.displayImages["events"][self.app.display2]["images"] = None
                 self.app.displayImages["events"][self.app.display2]["name"] = None
                 self.app.displayImages["events"][self.app.display2]["activeTab"] = None
                 self.app.display3.config(image="")
+                self.app.display3.image=None
                 self.app.displayImages["events"][self.app.display3]["images"] = None
                 self.app.displayImages["events"][self.app.display3]["name"] = None
                 self.app.displayImages["events"][self.app.display3]["activeTab"] = None
@@ -616,10 +628,12 @@ try:
                 self.app.displayImages["events"][self.app.display]["name"] = None
                 self.app.displayImages["events"][self.app.display]["activeTab"] = None
                 self.app.display2.config(image="")
+                self.app.display2.image=None
                 self.app.displayImages["events"][self.app.display2]["images"] = None
                 self.app.displayImages["events"][self.app.display2]["name"] = None
                 self.app.displayImages["events"][self.app.display2]["activeTab"] = None
                 self.app.display3.config(image="")
+                self.app.display3.image=None
                 self.app.displayImages["events"][self.app.display3]["images"] = None
                 self.app.displayImages["events"][self.app.display3]["name"] = None
                 self.app.displayImages["events"][self.app.display3]["activeTab"] = None

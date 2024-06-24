@@ -683,6 +683,8 @@ try:
                     self.app.display.config(image=displayPhotoImage)
                     self.app.display2.config(image="")
                     self.app.display3.config(image="")
+                    self.app.display2.image=None
+                    self.app.display3.image=None
 
                 set_display_bindings_by_tab(self.app)
 

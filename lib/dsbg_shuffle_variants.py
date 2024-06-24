@@ -237,7 +237,12 @@ try:
                 self.treeviewVariantsList.unbind("<<TreeviewSelect>>")
                 self.treeviewVariantsLocked.unbind("<<TreeviewSelect>>")
 
-                variants = "variants" + ("Locked" if fromLocked else "")
+                if fromDeck:
+                    variants = "behaviorDeck"
+                elif fromLocked:
+                    variants = "variantsLocked"
+                else:
+                    variants = "variants"
 
                 # If this behavior was clicked on, get that information.
                 if event:
@@ -272,16 +277,25 @@ try:
                         self.selectedVariant += " - data"
                         
                         self.app.display.config(image="")
+                        self.app.display.image=None
                         self.app.displayImages["variants"][self.app.display]["image"] = None
                         self.app.displayImages["variants"][self.app.display]["name"] = None
                         self.app.displayImages["variants"][self.app.display]["activeTab"] = None
                 else:
                     self.selectedVariant = variant
 
-                clear_other_tab_images(self.app, variants, variants if not fromDeck else "behaviorDeck")
+                if self.selectedVariant[-1] == "_":
+                    self.selectedVariant = self.selectedVariant.replace("_", "")
+
+                clear_other_tab_images(
+                    self.app,
+                    variants,
+                    variants,
+                    name=self.selectedVariant[:self.selectedVariant.index(" - ")] if " - " in self.selectedVariant else self.selectedVariant[:self.selectedVariant.index("_")] if "_" in self.selectedVariant else self.selectedVariant)
                     
-                if "Ornstein & Smough" not in self.selectedVariant:
+                if "Smough" not in self.selectedVariant and self.app.displayImages["variants"][self.app.display3]["image"]:
                     self.app.display3.config(image="")
+                    self.app.display3.image=None
                     self.app.displayImages["variants"][self.app.display3]["image"] = None
                     self.app.displayImages["variants"][self.app.display3]["name"] = None
                     self.app.displayImages["variants"][self.app.display3]["activeTab"] = None
@@ -298,23 +312,23 @@ try:
                         # Create and display the variant image.
                         self.variantPhotoImage = self.app.create_image(self.selectedVariant + ".jpg", "encounter", 4)
 
-                        self.edit_variant_card_os(variant=variant, fromDeck=fromDeck)
+                        self.edit_variant_card_os(fromDeck=fromDeck)
                     else:
                         for enemy in ["Ornstein", "Smough"]:
                             # Create and display the variant image.
                             self.variantPhotoImage = self.app.create_image(enemy + " - data.jpg", "encounter", 4)
 
-                            self.edit_variant_card_os(variant=variant, enemy=enemy, healthMod=healthMod if healthMod else {"Ornstein": 0, "Smough": 0}, fromDeck=fromDeck)
+                            self.edit_variant_card_os(enemy=enemy, healthMod=healthMod if healthMod else {"Ornstein": 0, "Smough": 0}, fromDeck=fromDeck)
                 else:
                     self.selectedVariant += " - data" if "-" not in self.selectedVariant else ""
                     
                     # Create and display the variant image.
-                    self.variantPhotoImage = self.app.create_image(self.selectedVariant + ".jpg", "encounter", 4)
+                    self.variantPhotoImage = self.app.create_image((self.selectedVariant[:self.selectedVariant.index("_")] + self.selectedVariant.replace(variant, "") if "_" in self.selectedVariant else self.selectedVariant) + ".jpg", "encounter", 4)
 
                     self.edit_variant_card(variant=self.selectedVariant, lockedTree=fromLocked, armorerDennis=armorerDennis, oldIronKing=oldIronKing, pursuer=pursuer, healthMod=healthMod, fromDeck=fromDeck)
 
-                if "data" not in self.selectedVariant and self.app.displayImages[variants][self.app.display2]["name"] != self.selectedVariant and not forPrinting:
-                    self.load_variant_card(variant=self.selectedVariant[:self.selectedVariant.index(" - ")] + " - data", fromLocked=fromLocked, selfCall=originalSelection, armorerDennis=armorerDennis, oldIronKing=oldIronKing, pursuer=pursuer, deckDataCard=deckDataCard, healthMod=healthMod, fromDeck=fromDeck)
+                # if "data" not in self.selectedVariant and self.app.displayImages[variants][self.app.display2]["name"] != self.selectedVariant and not forPrinting:
+                #     self.load_variant_card(variant=self.selectedVariant[:self.selectedVariant.index(" - ")] + " - data", fromLocked=fromLocked, selfCall=originalSelection, armorerDennis=armorerDennis, oldIronKing=oldIronKing, pursuer=pursuer, deckDataCard=deckDataCard, healthMod=healthMod, fromDeck=fromDeck)
 
                 if not selfCall:
                     self.selectedVariant = originalSelection
@@ -437,7 +451,7 @@ try:
                             "Main Bosses",
                             "Mega Bosses"
                             } else ""))
-                elif "_" not in variant:
+                elif variant not in self.lockedVariants:
                     self.load_variant_card(variant=variant, fromLocked=True, armorerDennis=armorerDennis, oldIronKing=oldIronKing, pursuer=pursuer, deckDataCard=deckDataCard, healthMod=healthMod, fromDeck=fromDeck, selfCall=selfCall)
                     return
                 else:
@@ -450,8 +464,6 @@ try:
                             [modIdLookup[m] for m in list(self.lockedVariants[variant][1]) if m]
                             ]
                     else:
-                        if variant not in self.lockedVariants:
-                            pass
                         mods = [modIdLookup[m] for m in list(self.lockedVariants[variant]) if m]
 
                     self.selectedVariant = (
@@ -464,16 +476,27 @@ try:
                             "Mega Bosses"
                             } else ""))
 
-                clear_other_tab_images(self.app, "variantsLocked", "variantsLocked" if not fromDeck else "behaviorDeck")
+                if fromDeck:
+                    variants = "behaviorDeck"
+                else:
+                    variants = "variantsLocked"
+
+                clear_other_tab_images(
+                    self.app,
+                    variants,
+                    variants,
+                    name=self.selectedVariant[:self.selectedVariant.index(" - ")] if " - " in self.selectedVariant else self.selectedVariant[:self.selectedVariant.index("_")] if "_" in self.selectedVariant else self.selectedVariant)
                     
-                if not selfCall and "data" in self.selectedVariant:
+                if not selfCall and "data" in self.selectedVariant and self.app.display.image == self.app.displayImages["variants"][self.app.display]["image"]:
                     self.app.display.config(image="")
+                    self.app.display.image=None
                     self.app.displayImages["variants"][self.app.display]["image"] = None
                     self.app.displayImages["variants"][self.app.display]["name"] = None
                     self.app.displayImages["variants"][self.app.display]["activeTab"] = None
                     
-                if "Ornstein & Smough" not in self.selectedVariant:
+                if "Ornstein & Smough" not in self.selectedVariant and self.app.display3.image == self.app.displayImages["variants"][self.app.display3]["image"]:
                     self.app.display3.config(image="")
+                    self.app.display3.image=None
                     self.app.displayImages["variants"][self.app.display3]["image"] = None
                     self.app.displayImages["variants"][self.app.display3]["name"] = None
                     self.app.displayImages["variants"][self.app.display3]["activeTab"] = None
@@ -504,7 +527,7 @@ try:
                     self.edit_variant_card(variant=mods, lockedTree=True, armorerDennis=armorerDennis, oldIronKing=oldIronKing, pursuer=pursuer, healthMod=healthMod, fromDeck=fromDeck)
 
                 if "data" not in self.selectedVariant and self.app.displayImages["variantsLocked"][self.app.display2]["name"] != self.selectedVariant and not forPrinting:
-                    modString = ",".join(sorted([str(n) for n in modIdLookup if modIdLookup[n] in set(mods[0] if mods and type(mods[0]) == list else mods) & set([modIdLookup[m] for m in dataCardMods])]))
+                    modString = ",".join([str(x) for x in sorted([n for n in modIdLookup if modIdLookup[n] in set(mods[0] if mods and type(mods[0]) == list else mods) & set([modIdLookup[m] for m in dataCardMods])])])
                     self.load_variant_card_locked(variant=self.selectedVariant[:self.selectedVariant.index(" - ")] + "_" + modString, selfCall=True, armorerDennis=armorerDennis, oldIronKing=oldIronKing, pursuer=pursuer, deckDataCard=deckDataCard, healthMod=healthMod, fromDeck=fromDeck)
 
                 if not selfCall:
@@ -532,7 +555,11 @@ try:
                     log("End of apply_difficulty_modifier (wrong tab)")
                     return
 
-                clear_other_tab_images(self.app, "variants", "variants")
+                clear_other_tab_images(
+                    self.app,
+                    "variants",
+                    "variants",
+                    name=None if not self.selectedVariant else self.selectedVariant[:self.selectedVariant.index(" - ")] if " - " in self.selectedVariant else self.selectedVariant[:self.selectedVariant.index("_")] if "_" in self.selectedVariant else self.selectedVariant)
 
                 set_display_bindings_by_tab(self.app, self.selectedVariant and ("Ornstein" in self.selectedVariant or "Smough" in self.selectedVariant) and (self.selectedVariant.count("&") == 2 or "data" in self.selectedVariant))
 
@@ -599,7 +626,12 @@ try:
                         progress.progressVar.set(i)
                         self.root.update_idletasks()
                         self.pick_enemy_variants_enemy(child, diffKey)
-                        clear_other_tab_images(self.app, "variants", "variants", self.app.display)
+                        clear_other_tab_images(
+                            self.app,
+                            "variants",
+                            "variants",
+                            self.app.display,
+                            name=child[:child.index(" - ")] if " - " in child else child[:child.index("_")] if "_" in child else child)
                 elif start == "All":
                     progressMax = 0
                     for child in tree.get_children("All"):
@@ -617,7 +649,11 @@ try:
                             self.root.update_idletasks()
                             self.pick_enemy_variants_enemy(subChild, diffKey)
                             
-                    clear_other_tab_images(self.app, "variants", "variants", self.app.display)
+                    clear_other_tab_images(
+                        self.app,
+                        "variants",
+                        "variants",
+                        onlyDisplay=self.app.display)
 
                 if progress:
                     progress.label.config(text = "Calculating difficulty averages...")
@@ -691,8 +727,6 @@ try:
 
                 for behavior in self.variants[start][self.app.numberOfCharacters][diffKeyReal][defKey]:
                     self.pick_enemy_variants_behavior(start, behavior, diffKeyReal, defKey)
-                    
-                clear_other_tab_images(self.app, "variants", "variants", self.app.display)
                 
                 log("End of pick_enemy_variants_enemy")
             except Exception as e:
@@ -768,7 +802,12 @@ try:
 
                 displayPhotoImage = ImageTk.PhotoImage(self.app.displayImage)
 
-                key = "variants" + ("Locked" if lockedTree else "")
+                if fromDeck:
+                    key = "behaviorDeck"
+                elif lockedTree:
+                    key = "variantsLocked"
+                else:
+                    key = "variants"
 
                 if deckDataCard:
                     self.app.display2.image = displayPhotoImage
@@ -875,7 +914,7 @@ try:
                             if enemy == "Ornstein & Smough" and "&" in behavior:
                                 modList1 = sorted([v for v in self.currentVariants[enemy][behavior][behavior[:behavior.index(" & ")]]])
                                 modList2 = sorted([v for v in self.currentVariants[enemy][behavior][behavior[behavior.index(" & ")+3:]]])
-                                iidChild = child + "_" + ",".join(sorted([str(v) for v in modList1], lambda x: int(x))) + "_" + ",".join(sorted([str(v) for v in modList2], lambda x: int(x)))
+                                iidChild = child + "_" + ",".join([str(m) for m in sorted(modList1)]) + "_" + ",".join([str(m) for m in sorted(modList2)])
                             else:
                                 modList = sorted([v for v in self.currentVariants[enemy][behavior]])
                                 iidChild = child + "_" + ",".join([str(m) for m in sorted(modList)])
@@ -939,7 +978,7 @@ try:
                                 if enemy == "Ornstein & Smough" and "&" in behavior:
                                     modList1 = sorted([v for v in self.currentVariants[enemy][behavior][behavior[:behavior.index(" & ")]]])
                                     modList2 = sorted([v for v in self.currentVariants[enemy][behavior][behavior[behavior.index(" & ")+3:]]])
-                                    iidChild = child + "_" + ",".join(sorted([str(v) for v in modList1], lambda x: int(x))) + "_" + ",".join(sorted([str(v) for v in modList2], lambda x: int(x)))
+                                    iidChild = child + "_" + ",".join([str(m) for m in sorted(modList1)]) + "_" + ",".join([str(m) for m in sorted(modList2)])
                                 else:
                                     modList = sorted([v for v in self.currentVariants[enemy][behavior]])
                                     iidChild = child + "_" + ",".join([str(m) for m in sorted(modList)])
@@ -986,7 +1025,7 @@ try:
                         if enemy == "Ornstein & Smough" and "&" in behavior:
                             modList1 = sorted([v for v in self.currentVariants[enemy][behavior][behavior[:behavior.index(" & ")]]])
                             modList2 = sorted([v for v in self.currentVariants[enemy][behavior][behavior[behavior.index(" & ")+3:]]])
-                            iidChild = child + "_" + ",".join(sorted([str(v) for v in modList1], lambda x: int(x)) + "_" + ",".join(sorted([str(v) for v in modList2], lambda x: int(x))))
+                            iidChild = child + "_" + ",".join([str(m) for m in sorted(modList1)]) + "_" + ",".join([str(m) for m in sorted(modList2)])
                         elif behavior not in self.currentVariants[enemy]:
                             continue
                         else:
@@ -1060,6 +1099,7 @@ try:
 
                 for display in [self.app.display, self.app.display2, self.app.display3]:
                     display.config(image="")
+                    self.app.display.image=None
                     self.app.displayImages["variants"][display]["image"] = None
                     self.app.displayImages["variants"][display]["name"] = None
                     self.app.displayImages["variants"][display]["activeTab"] = None
@@ -1083,6 +1123,12 @@ try:
                             tree.item(subChild, values=(tree.item(subChild)["values"][0], 0))
                             for subSubChild in tree.get_children(subChild):
                                 tree.item(subSubChild, values=(tree.item(subSubChild)["values"][0], 0))
+
+                            if subChild == "Vordt of the Boreal Valley":
+                                self.app.behaviorDeckTab.set_decks(enemy="Vordt of the Boreal Valley (move)", skipClear=True)
+                                self.app.behaviorDeckTab.set_decks(enemy="Vordt of the Boreal Valley (attack)", skipClear=True)
+                            elif tree.parent(subChild) != "Enemies":
+                                self.app.behaviorDeckTab.set_decks(enemy=subChild, skipClear=True)
                 else:
                     for child in tree.get_children(target):
                         parent = tree.parent(child)
@@ -1121,6 +1167,11 @@ try:
                             del self.currentVariants[target]
                             tree.item(target, values=(tree.item(target)["values"][0], 0))
 
+                    if target in self.app.behaviorDeckTab.decks:
+                        self.app.behaviorDeckTab.set_decks(enemy=target, skipClear=True)
+                    elif tree.parent(target) in self.app.behaviorDeckTab.decks:
+                        self.app.behaviorDeckTab.set_decks(enemy=tree.parent(target), skipClear=True)
+
                 progress = PopupWindow(self.root, labelText="Calculating difficulty averages...", loadingImage=True)
                 # Recalculate the average difficulty mod for this row and its parents and children.
                 for child in tree.get_children(target):
@@ -1138,7 +1189,10 @@ try:
                             self.recalc_variant_average(tree, tree.parent(tree.parent(target)))
 
                 # Remove the image displaying a deleted item.
-                clear_other_tab_images(self.app, "variants", "variants")
+                clear_other_tab_images(
+                    self.app,
+                    "variants",
+                    "variants")
 
                 progress.destroy()
 
@@ -1188,17 +1242,26 @@ try:
                         if subChild not in {"All", "Enemies", "Invaders & Explorers Mimics", "Mini Bosses", "Main Bosses", "Mega Bosses"}:
                             tree.delete(subChild)
 
+                        if "_" in subChild and subChild[:subChild.index("_")] in self.app.behaviorDeckTab.decks:
+                            self.app.behaviorDeckTab.set_decks(enemy=subChild[:subChild.index("_")], skipClear=True)
+
                     if child in self.lockedVariants:
                         del self.lockedVariants[child]
                         
                     if child not in {"All", "Enemies", "Invaders & Explorers Mimics", "Mini Bosses", "Main Bosses", "Mega Bosses"}:
                         tree.delete(child)
 
+                    if "_" in child and child[:child.index("_")] in self.app.behaviorDeckTab.decks:
+                        self.app.behaviorDeckTab.set_decks(enemy=child[:child.index("_")], skipClear=True)
+
                 if target in self.lockedVariants:
                     del self.lockedVariants[target]
                     
                 if target not in {"All", "Enemies", "Invaders & Explorers Mimics", "Mini Bosses", "Main Bosses", "Mega Bosses"}:
                     tree.delete(target)
+
+                if "_" in target and target[:target.index("_")] in self.app.behaviorDeckTab.decks:
+                    self.app.behaviorDeckTab.set_decks(enemy=target[:target.index("_")], skipClear=True)
 
                 progress = PopupWindow(self.root, labelText="Calculating difficulty averages...", loadingImage=True)
                 # Recalculate the average difficulty mod for this row and its parents and children.
@@ -1220,7 +1283,10 @@ try:
                         self.recalc_variant_average(tree, tree.parent(parent))
 
                 # Remove the image displaying a deleted item.
-                clear_other_tab_images(self.app, "variants", "variants")
+                clear_other_tab_images(
+                    self.app,
+                    "variants",
+                    "variants")
 
                 progress.destroy()
 
@@ -1426,7 +1492,7 @@ try:
 
                 if type(variant) == list:
                     mods = variant
-                elif enemy in self.currentVariants:
+                elif enemy in self.currentVariants and behavior in self.currentVariants[enemy]:
                     mods = sorted([modIdLookup[m] for m in list(self.currentVariants[enemy][behavior])], key=lambda x: 1 if x == "repeat" else 0)
                 else:
                     log("End of apply_mods_to_actions (nothing to do)")

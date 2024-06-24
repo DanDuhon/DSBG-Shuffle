@@ -384,7 +384,7 @@ def set_display_bindings_by_tab(app, smoughActive=False):
 
 
 
-def clear_other_tab_images(app, lookupTab, activeTab, onlyDisplay=None):
+def clear_other_tab_images(app, lookupTab, activeTab, name=None, onlyDisplay=None):
     displays = [app.display, app.display2, app.display3]
     for display in displays:
         if onlyDisplay and display != onlyDisplay:
@@ -392,9 +392,11 @@ def clear_other_tab_images(app, lookupTab, activeTab, onlyDisplay=None):
         if (
             display.image
             and (display.image != app.displayImages[lookupTab][display]["image"]
-                    or app.displayImages[lookupTab][display]["activeTab"] != activeTab)
+                    or app.displayImages[lookupTab][display]["activeTab"] != activeTab
+                    or (name and name not in app.displayImages[lookupTab][display]["name"]))
             ):
             display.config(image="")
+            display.image=None
             app.displayImages[lookupTab][display]["image"] = None
             app.displayImages[lookupTab][display]["name"] = None
             app.displayImages[lookupTab][display]["activeTab"] = None

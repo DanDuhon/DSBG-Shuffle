@@ -260,6 +260,11 @@ try:
                         self.display: {"name": None, "image": None, "activeTab": None},
                         self.display2: {"name": None, "image": None, "activeTab": None},
                         self.display3: {"name": None, "image": None, "activeTab": None}
+                    },
+                    "behaviorDeck": {
+                        self.display: {"name": None, "image": None, "activeTab": None},
+                        self.display2: {"name": None, "image": None, "activeTab": None},
+                        self.display3: {"name": None, "image": None, "activeTab": None}
                     }
                 }
 
@@ -478,6 +483,9 @@ try:
                     self.display.config(image="")
                     self.display2.config(image="")
                     self.display3.config(image="")
+                    self.app.display.image=None
+                    self.app.display2.image=None
+                    self.app.display3.image=None
 
                     self.displayImages = {
                         "encounters": {
@@ -496,6 +504,11 @@ try:
                             self.display3: {"name": None, "image": None, "activeTab": None}
                         },
                         "variantsLocked": {
+                            self.display: {"name": None, "image": None, "activeTab": None},
+                            self.display2: {"name": None, "image": None, "activeTab": None},
+                            self.display3: {"name": None, "image": None, "activeTab": None}
+                        },
+                        "behaviorDeck": {
                             self.display: {"name": None, "image": None, "activeTab": None},
                             self.display2: {"name": None, "image": None, "activeTab": None},
                             self.display3: {"name": None, "image": None, "activeTab": None}

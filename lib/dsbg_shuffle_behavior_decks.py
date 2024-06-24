@@ -7,7 +7,7 @@ try:
     from dsbg_shuffle_enemies import bosses, enemiesDict
     from dsbg_shuffle_behaviors import behaviorDetail, behaviors
     from dsbg_shuffle_utility import PopupWindow, clear_other_tab_images, error_popup, log, set_display_bindings_by_tab
-    from dsbg_shuffle_variants import dataCardMods, modIdLookup
+    from dsbg_shuffle_variants import modIdLookup
 
 
     class BehaviorDeckFrame(ttk.Frame):
@@ -40,14 +40,13 @@ try:
                 )
             
             for enemy in self.decks:
-                if "Kings" in enemy:
-                    pass
                 self.decks[enemy] = {
                     "deck": [],
                     "curIndex": 0,
                     "heatup": 0 if enemy in "Old Dragonslayer" else 1 if enemy == "The Four Kings" else False,
                     "lastCardDrawn": None,
-                    "healthMod": {"Ornstein": 0, "Smough": 0} if enemy == "Ornstein & Smough" else 0
+                    "healthMod": {"Ornstein": 0, "Smough": 0} if enemy == "Ornstein & Smough" else 0,
+                    "defKey": {"",}
                     }
                 
                 if enemy == "Smelter Demon":
@@ -215,9 +214,14 @@ try:
                         tooltip.destroy()
 
                     # Remove the displayed item.
-                    clear_other_tab_images(self.app, "variantsLocked", "behaviorDeck")
+                    clear_other_tab_images(
+                        self.app,
+                        "behaviorDeck",
+                        "behaviorDeck",
+                        name=enemy[:enemy.index(" - ")] if " - " in enemy else enemy[:enemy.index("_")] if "_" in enemy else enemy)
                 
                     self.app.display.config(image="")
+                    self.app.display.image=None
                     self.app.displayImages["variantsLocked"][self.app.display]["image"] = None
                     self.app.displayImages["variantsLocked"][self.app.display]["name"] = None
                     self.app.displayImages["variantsLocked"][self.app.display]["activeTab"] = None
@@ -269,9 +273,9 @@ try:
                 self.treeviewDecks.item(enemy, values=(self.treeviewDecks.item(enemy)["values"][0], len(self.decks[enemy]["deck"])))
 
                 if (enemy[:enemy.index(" (")] if "Vordt" in enemy else enemy) in set([v[:v.index("_")] for v in self.app.variantsTab.lockedVariants]):
-                    if not [v[v.index("_")+1:] for v in self.app.variantsTab.lockedVariants if "-" not in v]:
-                        pass
                     self.decks[enemy]["defKey"] = choice([self.app.variantsTab.lockedVariants[v] for v in self.app.variantsTab.lockedVariants if "-" not in v])
+                else:
+                    self.decks[enemy]["defKey"] = {"",}
 
                 if not skipClear and self.treeviewDecks.selection():
                     self.display_deck_cards()
@@ -292,19 +296,28 @@ try:
                     log("End of draw_behavior_card (nothing done)")
                     return
                 
-                self.display_deck_cards()
+                # self.display_deck_cards()
                 
                 if self.decks[selection]["curIndex"] == len(self.decks[selection]["deck"]):
                     self.decks[selection]["curIndex"] = 0
 
                 variantSelection = (selection[:selection.index(" (")] if "Vordt" in selection else selection)
+                variantSelectionWithMods = variantSelection + "_" + ",".join([str(m) for m in self.decks[variantSelection]["defKey"]])
                 cardToDraw = variantSelection + " - " + self.decks[selection]["deck"][self.decks[selection]["curIndex"]]
                 
-                if variantSelection in set(self.app.variantsTab.lockedVariants) and cardToDraw in set(self.app.variantsTab.lockedVariants):
-                    variant = cardToDraw + choice([v for v in self.app.variantsTab.lockedVariants if (
-                        cardToDraw in v
-                        and (self.decks[selection]["defKey"] == "" or (set(self.app.variantsTab.lockedVariants[v]) if set(self.app.variantsTab.lockedVariants[v]) != {"",} else set()).issuperset(set(self.decks[selection]["defKey"]) if set(self.decks[selection]["defKey"]) != {"",} else set()))
-                        and (self.decks[selection]["defKey"] != "" or not (set(self.app.variantsTab.lockedVariants[v]) if set(self.app.variantsTab.lockedVariants[v]) != {"",} else set()) & dataCardMods))])
+                if cardToDraw.count("&") == 2:
+                    # O&S pre-heatup behavior
+                    cardToDrawOptions = [k for k in self.app.variantsTab.lockedVariants if (
+                        cardToDraw in k
+                        and set(self.decks[variantSelection]["defKey"]).issubset(set(self.app.variantsTab.lockedVariants[k][0]))
+                        and set(self.decks[variantSelection]["defKey"]).issubset(set(self.app.variantsTab.lockedVariants[k][1])))]
+                else:
+                    cardToDrawOptions = [k for k in self.app.variantsTab.lockedVariants if (
+                        cardToDraw in k
+                        and set(self.decks[variantSelection]["defKey"]).issubset(set(self.app.variantsTab.lockedVariants[k])))]
+                
+                if variantSelectionWithMods in set(self.app.variantsTab.lockedVariants) and cardToDrawOptions:
+                    variant = choice(cardToDrawOptions)
                 else:
                     variant = cardToDraw
                     
@@ -347,10 +360,11 @@ try:
                         tooltip.destroy()
 
                     # Remove the displayed item.
-                    clear_other_tab_images(self.app, "variantsLocked", "behaviorDeck")
-
-                    if self.decks[selection]["lastCardDrawn"]:
-                        self.app.variantsTab.load_variant_card_locked(variant=self.decks[selection]["lastCardDrawn"], healthMod=self.decks[self.treeviewDecks.selection()[0]]["healthMod"], fromDeck=True)
+                    clear_other_tab_images(
+                        self.app,
+                        "behaviorDeck",
+                        "behaviorDeck",
+                        name=selection[:selection.index(" - ")] if " - " in selection else selection[:selection.index("_")] if "_" in selection else selection)
 
                     if selection == "Ornstein & Smough":
                         self.app.variantsTab.load_variant_card_locked(variant="Ornstein - data", deckDataCard=True, healthMod=self.decks[self.treeviewDecks.selection()[0]]["healthMod"], fromDeck=True)
@@ -358,6 +372,9 @@ try:
                     else:
                         selection = selection[:selection.index(" (")] if "Vordt" in selection else selection
                         self.app.variantsTab.load_variant_card_locked(variant=selection + ("_" + ",".join([str(m) for m in self.decks[selection]["defKey"]]) if self.decks[selection].get("defKey", None) else ""), deckDataCard=True, healthMod=self.decks[self.treeviewDecks.selection()[0]]["healthMod"], fromDeck=True)
+
+                    if self.decks[selection]["lastCardDrawn"]:
+                        self.app.variantsTab.load_variant_card_locked(variant=self.decks[selection]["lastCardDrawn"], healthMod=self.decks[self.treeviewDecks.selection()[0]]["healthMod"], fromDeck=True)
 
                     set_display_bindings_by_tab(self.app, selection == "Ornstein & Smough")
 
@@ -379,21 +396,26 @@ try:
                     tooltip.destroy()
 
                 # Remove the displayed item.
-                clear_other_tab_images(self.app, "variantsLocked", "behaviorDeck", onlyDisplay=self.app.display)
+                clear_other_tab_images(
+                    self.app,
+                    "behaviorDeck",
+                    "behaviorDeck",
+                    name=selection[:selection.index(" - ")] if " - " in selection else selection[:selection.index("_")] if "_" in selection else selection,
+                    onlyDisplay=self.app.display)
 
                 if selection not in self.decks or not self.decks[selection]["lastCardDrawn"]:
                     log("End of draw_behavior_card (nothing done)")
                     return
                 
-                if selection in set([i[:i.index("_")] for i in self.app.variantsTab.lockedVariants]):
-                    pass
+                # if selection in set([i[:i.index("_")] for i in self.app.variantsTab.lockedVariants]):
+                #     pass
+                # else:
+                if selection == "Armorer Dennis" and self.decks[selection]["heatup"]:
+                    self.app.variantsTab.load_variant_card_locked(variant=self.decks[selection]["lastCardDrawn"], armorerDennis=True, fromDeck=True)
+                if selection == "Old Iron King" and self.decks[selection]["heatup"]:
+                    self.app.variantsTab.load_variant_card_locked(variant=self.decks[selection]["lastCardDrawn"], oldIronKing=True, fromDeck=True)
                 else:
-                    if selection == "Armorer Dennis" and self.decks[selection]["heatup"]:
-                        self.app.variantsTab.load_variant_card_locked(variant=self.decks[selection]["lastCardDrawn"], armorerDennis=True, fromDeck=True)
-                    if selection == "Old Iron King" and self.decks[selection]["heatup"]:
-                        self.app.variantsTab.load_variant_card_locked(variant=self.decks[selection]["lastCardDrawn"], oldIronKing=True, fromDeck=True)
-                    else:
-                        self.app.variantsTab.load_variant_card_locked(variant=self.decks[selection]["lastCardDrawn"], fromDeck=True)
+                    self.app.variantsTab.load_variant_card_locked(variant=self.decks[selection]["lastCardDrawn"], fromDeck=True)
 
                 log("End of draw_behavior_card")
             except Exception as e:
@@ -429,9 +451,15 @@ try:
                 for tooltip in self.app.tooltips:
                     tooltip.destroy()
 
-                clear_other_tab_images(self.app, "variantsLocked", "behaviorDeck", onlyDisplay=self.app.display)
+                clear_other_tab_images(
+                    self.app,
+                    "behaviorDeck",
+                    "behaviorDeck",
+                    name=selection[:selection.index(" - ")] if " - " in selection else selection[:selection.index("_")] if "_" in selection else selection,
+                    onlyDisplay=self.app.display)
                 
                 self.app.display.config(image="")
+                self.app.display.image=None
                 self.app.displayImages["variantsLocked"][self.app.display]["image"] = None
                 self.app.displayImages["variantsLocked"][self.app.display]["name"] = None
                 self.app.displayImages["variantsLocked"][self.app.display]["activeTab"] = None
