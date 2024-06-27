@@ -1,13 +1,15 @@
 try:
     import tkinter as tk
     from copy import deepcopy
+    from math import ceil
+    from PIL import ImageDraw, ImageTk
     from random import choice, sample, shuffle
     from tkinter import ttk
 
     from dsbg_shuffle_enemies import bosses, enemiesDict
     from dsbg_shuffle_behaviors import behaviorDetail, behaviors
-    from dsbg_shuffle_utility import PopupWindow, clear_other_tab_images, error_popup, log, set_display_bindings_by_tab
-    from dsbg_shuffle_variants import modIdLookup
+    from dsbg_shuffle_utility import PopupWindow, clear_other_tab_images, error_popup, log, set_display_bindings_by_tab, font2
+    from dsbg_shuffle_variants import get_health_bonus, modIdLookup
 
 
     class BehaviorDeckFrame(ttk.Frame):
@@ -45,9 +47,15 @@ try:
                     "curIndex": 0,
                     "heatup": 0 if enemy in "Old Dragonslayer" else 1 if enemy == "The Four Kings" else False,
                     "lastCardDrawn": None,
-                    "healthMod": {"Ornstein": 0, "Smough": 0} if enemy == "Ornstein & Smough" else 0,
                     "defKey": {"",}
                     }
+                
+                if enemy == "Ornstein & Smough":
+                    self.decks[enemy]["healthMod"] = {"Ornstein": 0, "Smough": 0}
+                elif enemy == "The Four Kings":
+                    self.decks[enemy]["healthMod"] = {1: 0, 2: 0, 3: 0, 4: 0}
+                else:
+                    self.decks[enemy]["healthMod"] = 0
                 
                 if enemy == "Smelter Demon":
                     self.decks[enemy]["heatupCnt"] = 5
@@ -64,7 +72,7 @@ try:
             
             for enemy in self.decks:
                 if (
-                    (enemy in bosses
+                    ((enemy[:enemy.index(" (")] if "Vordt" in enemy else enemy) in bosses
                         and bosses[(enemy[:enemy.index(" (")] if "Vordt" in enemy else enemy)]["expansions"] & self.app.availableExpansions)
                     or (enemy in enemiesDict
                         and enemiesDict[enemy].expansions & self.app.availableExpansions)
@@ -267,7 +275,7 @@ try:
                     shuffle(self.decks[enemy]["heatupCards"])
 
                 self.decks[enemy]["heatup"] = 0 if enemy in "Old Dragonslayer" else 1 if enemy == "The Four Kings" else False
-                self.decks[enemy]["healthMod"] = {"Ornstein": 0, "Smough": 0} if enemy == "Ornstein & Smough" else 0
+                self.decks[enemy]["healthMod"] = {"Ornstein": 0, "Smough": 0} if enemy == "Ornstein & Smough" else {1: 0, 2: 0, 3: 0, 4: 0} if enemy == "The Four Kings" else 0
                 self.decks[enemy]["curIndex"] = 0
                 self.decks[enemy]["lastCardDrawn"] = None
                 self.treeviewDecks.item(enemy, values=(self.treeviewDecks.item(enemy)["values"][0], len(self.decks[enemy]["deck"])))
@@ -296,25 +304,25 @@ try:
                     log("End of draw_behavior_card (nothing done)")
                     return
                 
-                # self.display_deck_cards()
-                
                 if self.decks[selection]["curIndex"] == len(self.decks[selection]["deck"]):
+                    if selection == "The Four Kings":
+                        self.heatup(selection)
                     self.decks[selection]["curIndex"] = 0
 
                 variantSelection = (selection[:selection.index(" (")] if "Vordt" in selection else selection)
-                variantSelectionWithMods = variantSelection + "_" + ",".join([str(m) for m in self.decks[variantSelection]["defKey"]])
+                variantSelectionWithMods = variantSelection + "_" + ",".join([str(m) for m in self.decks[selection]["defKey"]])
                 cardToDraw = variantSelection + " - " + self.decks[selection]["deck"][self.decks[selection]["curIndex"]]
                 
                 if cardToDraw.count("&") == 2:
                     # O&S pre-heatup behavior
                     cardToDrawOptions = [k for k in self.app.variantsTab.lockedVariants if (
                         cardToDraw in k
-                        and set(self.decks[variantSelection]["defKey"]).issubset(set(self.app.variantsTab.lockedVariants[k][0]))
-                        and set(self.decks[variantSelection]["defKey"]).issubset(set(self.app.variantsTab.lockedVariants[k][1])))]
+                        and set(self.decks[selection]["defKey"]).issubset(set(self.app.variantsTab.lockedVariants[k][0]))
+                        and set(self.decks[selection]["defKey"]).issubset(set(self.app.variantsTab.lockedVariants[k][1])))]
                 else:
                     cardToDrawOptions = [k for k in self.app.variantsTab.lockedVariants if (
                         cardToDraw in k
-                        and set(self.decks[variantSelection]["defKey"]).issubset(set(self.app.variantsTab.lockedVariants[k])))]
+                        and set(self.decks[selection]["defKey"]).issubset(set(self.app.variantsTab.lockedVariants[k])))]
                 
                 if variantSelectionWithMods in set(self.app.variantsTab.lockedVariants) and cardToDrawOptions:
                     variant = choice(cardToDrawOptions)
@@ -329,6 +337,10 @@ try:
                     self.app.variantsTab.load_variant_card_locked(variant=variant, oldIronKing=True, fromDeck=True, healthMod=self.decks[self.treeviewDecks.selection()[0]]["healthMod"])
                 else:
                     self.app.variantsTab.load_variant_card_locked(variant=variant, fromDeck=True, healthMod=self.decks[self.treeviewDecks.selection()[0]]["healthMod"])
+
+                if selection == "The Four Kings":
+                    for x in range(1, 5):
+                        self.four_kings_health_track(king=x, healthMod=self.decks["The Four Kings"]["healthMod"][x])
                 
                 self.decks[selection]["lastCardDrawn"] = variant
 
@@ -371,14 +383,63 @@ try:
                         self.app.variantsTab.load_variant_card_locked(variant="Smough - data", deckDataCard=True, healthMod=self.decks[self.treeviewDecks.selection()[0]]["healthMod"], fromDeck=True)
                     else:
                         selection = selection[:selection.index(" (")] if "Vordt" in selection else selection
-                        self.app.variantsTab.load_variant_card_locked(variant=selection + ("_" + ",".join([str(m) for m in self.decks[selection]["defKey"]]) if self.decks[selection].get("defKey", None) else ""), deckDataCard=True, healthMod=self.decks[self.treeviewDecks.selection()[0]]["healthMod"], fromDeck=True)
+                        self.app.variantsTab.load_variant_card_locked(variant=selection + ("_" + ",".join([str(m) for m in self.decks[self.treeviewDecks.selection()[0]]["defKey"]]) if self.decks[self.treeviewDecks.selection()[0]].get("defKey", None) else ""), deckDataCard=True, healthMod=0 if selection == "The Four Kings" else self.decks[self.treeviewDecks.selection()[0]]["healthMod"], fromDeck=True)
 
-                    if self.decks[selection]["lastCardDrawn"]:
-                        self.app.variantsTab.load_variant_card_locked(variant=self.decks[selection]["lastCardDrawn"], healthMod=self.decks[self.treeviewDecks.selection()[0]]["healthMod"], fromDeck=True)
+                    if self.decks[self.treeviewDecks.selection()[0]]["lastCardDrawn"]:
+                        self.app.variantsTab.load_variant_card_locked(variant=self.decks[self.treeviewDecks.selection()[0]]["lastCardDrawn"], healthMod=0 if selection == "The Four Kings" else self.decks[self.treeviewDecks.selection()[0]]["healthMod"], fromDeck=True)
+
+                    if selection == "The Four Kings":
+                        for x in range(1, 5):
+                            self.four_kings_health_track(king=x, healthMod=self.decks["The Four Kings"]["healthMod"][x])
 
                     set_display_bindings_by_tab(self.app, selection == "Ornstein & Smough")
 
                 log("End of display_deck_cards")
+            except Exception as e:
+                error_popup(self.root, e)
+                raise
+
+
+        def four_kings_health_track(self, king, healthMod=0):
+            try:
+                log("Start of four_kings_health_track")
+
+                self.app.create_image("The Four Kings health track" + str(king) + ".jpg", "fourKingsHealth")
+
+                imageWithText = ImageDraw.Draw(self.app.displayImage)
+
+                healthAddition = 0
+                health = behaviorDetail["The Four Kings"]["health"]
+
+                if "The Four Kings" in self.app.variantsTab.currentVariants:
+                    mods = [modIdLookup[m] for m in list(self.app.variantsTab.currentVariants["The Four Kings"]["defKey"]) if m]
+                    for mod in mods:
+                        if "health" in mod and int(mod[-1]) > healthAddition:
+                            healthAddition = int(mod[-1])
+                            healthAddition = ceil(healthAddition * 3)
+                            health += healthAddition
+
+                if healthMod and health + healthMod >= 0:
+                    health += healthMod
+
+                imageWithText.text((118 + (4 if health < 10 else 0), 16), str(health), "white", font2)
+
+                displayPhotoImage = ImageTk.PhotoImage(self.app.displayImage)
+
+                if king == 1:
+                    display = self.app.displayKing1
+                elif king == 2:
+                    display = self.app.displayKing2
+                elif king == 3:
+                    display = self.app.displayKing3
+                elif king == 4:
+                    display = self.app.displayKing4
+
+                display.image = displayPhotoImage
+                display.config(image=displayPhotoImage)
+                display.grid(row=king, column=1, sticky="nsew")
+
+                log("End of four_kings_health_track")
             except Exception as e:
                 error_popup(self.root, e)
                 raise
@@ -407,9 +468,6 @@ try:
                     log("End of draw_behavior_card (nothing done)")
                     return
                 
-                # if selection in set([i[:i.index("_")] for i in self.app.variantsTab.lockedVariants]):
-                #     pass
-                # else:
                 if selection == "Armorer Dennis" and self.decks[selection]["heatup"]:
                     self.app.variantsTab.load_variant_card_locked(variant=self.decks[selection]["lastCardDrawn"], armorerDennis=True, fromDeck=True)
                 if selection == "Old Iron King" and self.decks[selection]["heatup"]:
@@ -440,7 +498,7 @@ try:
                     log("End of heatup (nothing done)")
                     return
                 
-                p = PopupWindow(self.master, labelText="Really heat up?\nThis CANNOT be undone\nwithout completely resetting the deck!", yesButton=True, noButton=True)
+                p = PopupWindow(self.master, labelText="Really " + ("heat up" if selection != "The Four Kings" else "perform Royal Summons") + "?\nThis CANNOT be undone\nwithout completely resetting the deck!", yesButton=True, noButton=True)
                 self.root.wait_window(p)
 
                 if not p.answer:
@@ -549,6 +607,8 @@ try:
                 modSelection = selectionGeneric
                 if [v for v in self.app.variantsTab.lockedVariants if selectionGeneric + "_" in v]:
                     modSelection = [v for v in self.app.variantsTab.lockedVariants if selectionGeneric + "_" in v][0]
+                elif selectionGeneric in self.app.variantsTab.currentVariants:
+                    modSelection = self.app.variantsTab.currentVariants[selectionGeneric]["defKey"]
 
                 osClicked = "Ornstein" if event.widget == self.app.display2 else "Smough" if event.widget == self.app.display3 else ""
 
@@ -658,6 +718,78 @@ try:
                 self.app.variantsTab.load_variant_card_locked(variant=selection + " - data", deckDataCard=True, healthMod=self.decks[self.treeviewDecks.selection()[0]]["healthMod"], fromDeck=True)
 
                 log("End of raise_health")
+            except Exception as e:
+                error_popup(self.root, e)
+                raise
+                
+
+        def lower_health_king(self, amount, king, event=None):
+            try:
+                log("Start of lower_health_king")
+
+                if self.app.notebook.tab(self.app.notebook.select(), "text") != "Behavior Decks":
+                    log("End of lower_health_king (wrong tab)")
+                    return
+
+                selection = self.treeviewDecks.selection()[0]
+
+                if selection != "The Four Kings":
+                    log("End of lower_health_king (nothing done)")
+                    return
+                
+                modSelection = "The Four Kings"
+                if [v for v in self.app.variantsTab.lockedVariants if selection + "_" in v]:
+                    modSelection = [v for v in self.app.variantsTab.lockedVariants if selection + "_" in v][0]
+                elif selection in self.app.variantsTab.currentVariants:
+                    modSelection = self.app.variantsTab.currentVariants[selection]["defKey"]
+
+                startingHealth = (
+                    behaviorDetail[selection]["health"]
+                    + get_health_bonus(25, [] if modSelection == selection else modSelection)
+                    + self.decks[selection]["healthMod"][king]
+                    )
+
+                if startingHealth == 0:
+                    log("End of lower_health_king (nothing done)")
+                    return
+                
+                if startingHealth - amount < 0:
+                    amount = startingHealth
+
+                self.decks[selection]["healthMod"][king] -= amount
+
+                self.four_kings_health_track(king, healthMod=self.decks[selection]["healthMod"][king])
+
+                log("End of lower_health_king")
+            except Exception as e:
+                error_popup(self.root, e)
+                raise
+                
+
+        def raise_health_king(self, amount, king, event=None):
+            try:
+                log("Start of raise_health_king")
+
+                if self.app.notebook.tab(self.app.notebook.select(), "text") != "Behavior Decks":
+                    log("End of raise_health_king (wrong tab)")
+                    return
+
+                selection = self.treeviewDecks.selection()[0]
+
+                if (
+                    selection != "The Four Kings"
+                    or self.decks[selection]["healthMod"][king] == 0
+                    ):
+                    log("End of raise_health_king (nothing done)")
+                    return
+                elif self.decks[selection]["healthMod"][king] + amount > 0:
+                    amount = -(self.decks[selection]["healthMod"][king])
+
+                self.decks[selection]["healthMod"][king] += amount
+
+                self.four_kings_health_track(king, healthMod=self.decks[selection]["healthMod"][king])
+
+                log("End of raise_health_king")
             except Exception as e:
                 error_popup(self.root, e)
                 raise

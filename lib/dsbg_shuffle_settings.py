@@ -69,6 +69,7 @@ try:
                     "Black Dragon Kalameet": {"button": None, "value": tk.IntVar(), "displayName": "Black Dragon Kalameet"},
                     "Executioner Chariot": {"button": None, "value": tk.IntVar(), "displayName": "Executioner Chariot"},
                     "Gaping Dragon": {"button": None, "value": tk.IntVar(), "displayName": "Gaping Dragon"},
+                    "Guardian Dragon": {"button": None, "value": tk.IntVar(), "displayName": "Guardian Dragon"},
                     "Manus, Father of the Abyss": {"button": None, "value": tk.IntVar(), "displayName": "Manus, Father of the Abyss"},
                     "Old Iron King": {"button": None, "value": tk.IntVar(), "displayName": "Old Iron King"},
                     "Vordt of the Boreal Valley": {"button": None, "value": tk.IntVar(), "displayName": "Vordt of the Boreal Valley"},

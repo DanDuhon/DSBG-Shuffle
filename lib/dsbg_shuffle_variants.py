@@ -49,6 +49,28 @@ try:
         or "health" in modIdLookup[m])}
 
 
+    def get_health_bonus(health, mods):
+        modsStrings = set([modIdLookup[m] for m in mods])
+        return (
+            1 if health == 1 and {"health1", "damage health1"} & modsStrings
+            else 2 if health == 1 and {"health2", "damage health2"} & modsStrings
+            else 3 if health == 1 and {"health3", "damage health3"} & modsStrings
+            else 4 if health == 1 and {"health4", "damage health4"} & modsStrings
+            else 2 if health == 5 and {"health1", "damage health1"} & modsStrings
+            else 3 if health == 5 and {"health2", "damage health2"} & modsStrings
+            else 5 if health == 5 and {"health3", "damage health3"} & modsStrings
+            else 6 if health == 5 and {"health4", "damage health4"} & modsStrings
+            else 2 if health == 10 and {"health1", "damage health1"} & modsStrings
+            else 4 if health == 10 and {"health2", "damage health2"} & modsStrings
+            else 6 if health == 10 and {"health3", "damage health3"} & modsStrings
+            else 8 if health == 10 and {"health4", "damage health4"} & modsStrings
+            else ceil(health * 0.1) if {"health1", "damage health1"} & modsStrings
+            else ceil(health * 0.2) if {"health2", "damage health2"} & modsStrings
+            else ceil(health * 0.3) if {"health3", "damage health3"} & modsStrings
+            else ceil(health * 0.4) if {"health4", "damage health4"} & modsStrings
+            else 0)
+
+
     class VariantsFrame(ttk.Frame):
         def __init__(self, app, root):
             super(VariantsFrame, self).__init__()
@@ -555,14 +577,6 @@ try:
                     log("End of apply_difficulty_modifier (wrong tab)")
                     return
 
-                clear_other_tab_images(
-                    self.app,
-                    "variants",
-                    "variants",
-                    name=None if not self.selectedVariant else self.selectedVariant[:self.selectedVariant.index(" - ")] if " - " in self.selectedVariant else self.selectedVariant[:self.selectedVariant.index("_")] if "_" in self.selectedVariant else self.selectedVariant)
-
-                set_display_bindings_by_tab(self.app, self.selectedVariant and ("Ornstein" in self.selectedVariant or "Smough" in self.selectedVariant) and (self.selectedVariant.count("&") == 2 or "data" in self.selectedVariant))
-
                 tree = self.treeviewVariantsList
                 if not tree.selection():
                     log("End of apply_difficulty_modifier (nothing selected)")
@@ -572,8 +586,19 @@ try:
                     log("End of apply_difficulty_modifier (no mod entered)")
                     return
 
+                clear_other_tab_images(
+                    self.app,
+                    "variants",
+                    "variants",
+                    name=None if not self.selectedVariant else self.selectedVariant[:self.selectedVariant.index(" - ")] if " - " in self.selectedVariant else self.selectedVariant[:self.selectedVariant.index("_")] if "_" in self.selectedVariant else self.selectedVariant)
+
+                set_display_bindings_by_tab(self.app, self.selectedVariant and ("Ornstein" in self.selectedVariant or "Smough" in self.selectedVariant) and (self.selectedVariant.count("&") == 2 or "data" in self.selectedVariant))
+
                 if event:
-                    if event.widget == self.app.display2 and not tree.get_children(tree.selection()[0]):
+                    if tree.selection()[0] in {"All", "Enemies", "Invaders & Explorers Mimics", "Mini Bosses", "Main Bosses", "Mega Bosses"}:
+                        log("End of apply_difficulty_modifier (event click with category selected)")
+                        
+                    if event.widget == self.app.display2 and not tree.get_children(tree.selection()[0]) and tree.parent(tree.selection()[0]) != "Enemies":
                         self.selectedVariant = tree.parent(tree.selection()[0]) + " - data"
 
                     variantName = None
@@ -630,7 +655,7 @@ try:
                             self.app,
                             "variants",
                             "variants",
-                            self.app.display,
+                            onlyDisplay=self.app.display,
                             name=child[:child.index(" - ")] if " - " in child else child[:child.index("_")] if "_" in child else child)
                 elif start == "All":
                     progressMax = 0
@@ -754,17 +779,17 @@ try:
                     behaviorO = behavior[:behavior.index(" & ")]
                     behaviorS = behavior[behavior.index(" & ")+3:]
 
-                    if defKey not in self.variants[start][self.app.numberOfCharacters][diffKey]:
+                    if frozenset(defKey) not in self.variants[start][self.app.numberOfCharacters][diffKey]:
                         p = PopupWindow(self.root, "The difficulty modifier you chose is incompatible with the\ndifficulty modifiers on other behaviors.\n\nPlease try a different difficulty modifier or change the difficulty\nmodifier at the {} level.".format(start, start), firstButton="Ok")
                         self.root.wait_window(p)
                         return
 
                     self.currentVariants[start][behavior] = {
-                        behaviorO: choice(list(self.variants[start][self.app.numberOfCharacters][diffKey][defKey][behaviorO])),
-                        behaviorS: choice(list(self.variants[start][self.app.numberOfCharacters][diffKey][defKey][behaviorS]))
+                        behaviorO: choice(list(self.variants[start][self.app.numberOfCharacters][diffKey][frozenset(defKey)][behaviorO])),
+                        behaviorS: choice(list(self.variants[start][self.app.numberOfCharacters][diffKey][frozenset(defKey)][behaviorS]))
                     }
                 else:
-                    if defKey not in self.variants[start][self.app.numberOfCharacters][diffKey]:
+                    if frozenset(defKey) not in self.variants[start][self.app.numberOfCharacters][diffKey]:
                         p = PopupWindow(self.root, "The difficulty modifier you chose is incompatible with the\ndifficulty modifiers on other behaviors.\n\nPlease try a different difficulty modifier or change the difficulty\nmodifier at the {} level.".format(start, start), firstButton="Ok")
                         self.root.wait_window(p)
                         return
@@ -773,11 +798,11 @@ try:
                         len(self.currentVariants[start].get(behavior, [])) == 0
                         or (
                             behavior in self.currentVariants[start]
-                            and len(self.variants[start][self.app.numberOfCharacters][diffKey][defKey][behavior]) > 1
+                            and len(self.variants[start][self.app.numberOfCharacters][diffKey][frozenset(defKey)][behavior]) > 1
                             and curVariant == self.currentVariants[start][behavior]
                             )
                         ):
-                        self.currentVariants[start][behavior] = choice(self.variants[start][self.app.numberOfCharacters][diffKey][defKey][behavior])
+                        self.currentVariants[start][behavior] = choice(self.variants[start][self.app.numberOfCharacters][diffKey][frozenset(defKey)][behavior])
                     
                 self.treeviewVariantsList.item(start + (" - " + behavior if behavior else ""), values=(self.treeviewVariantsList.item(start + (" - " + behavior if behavior else ""))["values"][0], int(round((diffKey - 1.0) * 100, -1))))
                 
@@ -1318,6 +1343,13 @@ try:
                     for mod in mods:
                         if "health" in mod and int(mod[-1]) > healthAddition:
                             healthAddition = int(mod[-1])
+                            healthAddition = ceil(healthAddition * (
+                                1.5 if enemy in enemiesDict and getattr(enemiesDict[enemy], "cards") > 1
+                                else 1.5 if enemy in bosses and bosses[enemy]["level"] == "Mini Boss"
+                                else 2 if enemy in bosses and bosses[enemy]["level"] == "Main Boss"
+                                else 3 if enemy in bosses and bosses[enemy]["level"] == "Mega Boss"
+                                else 1
+                            ))
                             health += healthAddition
                             heatup = [h + healthAddition for h in heatup]
                         armor += int(mod[-1]) if "armor" in mod else 0
@@ -1326,6 +1358,13 @@ try:
                     for mod in variant:
                         if "health" in mod and int(mod[-1]) > healthAddition:
                             healthAddition = int(mod[-1])
+                            healthAddition = ceil(healthAddition * (
+                                1.5 if enemy in enemiesDict and getattr(enemiesDict[enemy], "cards") > 1
+                                else 1.5 if enemy in bosses and bosses[enemy]["level"] == "Mini Boss"
+                                else 2 if enemy in bosses and bosses[enemy]["level"] == "Main Boss"
+                                else 3 if enemy in bosses and bosses[enemy]["level"] == "Mega Boss"
+                                else 1
+                            ))
                             health += healthAddition
                             heatup = [h + healthAddition for h in heatup]
                         armor += int(mod[-1]) if "armor" in mod else 0
@@ -1570,6 +1609,11 @@ try:
                         self.app.displayImages[key][self.app.display2]["name"] = self.selectedVariant
                         self.app.displayImages[key][self.app.display2]["activeTab"] = key if not fromDeck else "behaviorDeck"
                     else:
+                        if enemy != "The Four Kings":
+                            self.app.displayKing1.grid_forget()
+                            self.app.displayKing2.grid_forget()
+                            self.app.displayKing3.grid_forget()
+                            self.app.displayKing4.grid_forget()
                         self.app.display3.image = photoImage
                         self.app.display3.config(image=photoImage)
                         self.app.displayImages[key][self.app.display3]["image"] = photoImage
@@ -1602,13 +1646,13 @@ try:
                 if type(variant) != list and "Ornstein & Smough" in self.currentVariants:
                     mods = [modIdLookup[m] for m in list(self.currentVariants["Ornstein & Smough"]["defKey"]) if m]
                     for mod in mods:
-                        healthAddition = int(mod[-1]) if "health" in mod else 0
+                        healthAddition = (int(mod[-1]) if "health" in mod else 0) * 2
                         health += healthAddition
                         armor += int(mod[-1]) if "armor" in mod else 0
                         resist += int(mod[-1]) if "resist" in mod else 0
                 elif type(variant) == list:
                     for mod in variant:
-                        healthAddition = int(mod[-1]) if "health" in mod else 0
+                        healthAddition = (int(mod[-1]) if "health" in mod else 0) * 2
                         health += healthAddition
                         armor += int(mod[-1]) if "armor" in mod else 0
                         resist += int(mod[-1]) if "resist" in mod else 0
