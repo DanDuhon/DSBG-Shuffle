@@ -1353,3 +1353,679 @@
 28/06/2024 09:21:19|DEBUG|[create_campaign_treeview] End of create_campaign_treeview
 28/06/2024 09:21:19|DEBUG|[create_event_treeviews] Start of create_event_treeviews
 28/06/2024 09:21:19|DEBUG|[create_event_treeviews] End of create_event_treeviews
+28/06/2024 09:21:23|DEBUG|[create_variants_treeview] Start of create_variants_treeview
+28/06/2024 09:21:23|DEBUG|[create_variants_treeview] End of create_variants_treeview
+28/06/2024 09:21:23|DEBUG|[create_deck_treeview] Start of create_deck_treeview
+28/06/2024 09:21:23|DEBUG|[create_deck_treeview] End of create_deck_treeview
+28/06/2024 09:21:23|DEBUG|[set_decks] Start of set_decks
+28/06/2024 09:21:23|DEBUG|[load_deck] Start of load_deck
+28/06/2024 09:21:23|DEBUG|[load_deck] End of load_deck
+28/06/2024 09:21:23|DEBUG|[set_decks] End of set_decks
+28/06/2024 09:21:23|DEBUG|[set_decks] Start of set_decks
+28/06/2024 09:21:23|DEBUG|[load_deck] Start of load_deck
+28/06/2024 09:21:23|DEBUG|[load_deck] End of load_deck
+28/06/2024 09:21:23|DEBUG|[set_decks] End of set_decks
+28/06/2024 09:21:23|DEBUG|[set_decks] Start of set_decks
+28/06/2024 09:21:23|DEBUG|[load_deck] Start of load_deck
+28/06/2024 09:21:23|DEBUG|[load_deck] End of load_deck
+28/06/2024 09:21:23|DEBUG|[set_decks] End of set_decks
+28/06/2024 09:21:23|DEBUG|[set_decks] Start of set_decks
+28/06/2024 09:21:23|DEBUG|[load_deck] Start of load_deck
+28/06/2024 09:21:23|DEBUG|[load_deck] End of load_deck
+28/06/2024 09:21:23|DEBUG|[set_decks] End of set_decks
+28/06/2024 09:21:23|DEBUG|[set_decks] Start of set_decks
+28/06/2024 09:21:23|DEBUG|[load_deck] Start of load_deck
+28/06/2024 09:21:23|DEBUG|[load_deck] End of load_deck
+28/06/2024 09:21:23|DEBUG|[set_decks] End of set_decks
+28/06/2024 09:21:23|DEBUG|[set_decks] Start of set_decks
+28/06/2024 09:21:23|DEBUG|[load_deck] Start of load_deck
+28/06/2024 09:21:23|DEBUG|[load_deck] End of load_deck
+28/06/2024 09:21:23|DEBUG|[set_decks] End of set_decks
+28/06/2024 09:21:23|DEBUG|[set_decks] Start of set_decks
+28/06/2024 09:21:23|DEBUG|[load_deck] Start of load_deck
+28/06/2024 09:21:23|DEBUG|[load_deck] End of load_deck
+28/06/2024 09:21:23|DEBUG|[set_decks] End of set_decks
+28/06/2024 09:21:23|DEBUG|[set_decks] Start of set_decks
+28/06/2024 09:21:23|DEBUG|[load_deck] Start of load_deck
+28/06/2024 09:21:23|DEBUG|[load_deck] End of load_deck
+28/06/2024 09:21:23|DEBUG|[set_decks] End of set_decks
+28/06/2024 09:21:23|DEBUG|[set_decks] Start of set_decks
+28/06/2024 09:21:23|DEBUG|[load_deck] Start of load_deck
+28/06/2024 09:21:23|DEBUG|[load_deck] End of load_deck
+28/06/2024 09:21:23|DEBUG|[set_decks] End of set_decks
+28/06/2024 09:21:23|DEBUG|[set_decks] Start of set_decks
+28/06/2024 09:21:23|DEBUG|[load_deck] Start of load_deck
+28/06/2024 09:21:23|DEBUG|[load_deck] End of load_deck
+28/06/2024 09:21:23|DEBUG|[set_decks] End of set_decks
+28/06/2024 09:21:23|DEBUG|[set_decks] Start of set_decks
+28/06/2024 09:21:23|DEBUG|[load_deck] Start of load_deck
+28/06/2024 09:21:23|DEBUG|[load_deck] End of load_deck
+28/06/2024 09:21:23|DEBUG|[set_decks] End of set_decks
+28/06/2024 09:21:23|DEBUG|[set_decks] Start of set_decks
+28/06/2024 09:21:23|DEBUG|[load_deck] Start of load_deck
+28/06/2024 09:21:23|DEBUG|[load_deck] End of load_deck
+28/06/2024 09:21:23|DEBUG|[set_decks] End of set_decks
+28/06/2024 09:21:23|DEBUG|[set_decks] Start of set_decks
+28/06/2024 09:21:23|DEBUG|[load_deck] Start of load_deck
+28/06/2024 09:21:23|DEBUG|[load_deck] End of load_deck
+28/06/2024 09:21:23|DEBUG|[set_decks] End of set_decks
+28/06/2024 09:21:23|DEBUG|[set_decks] Start of set_decks
+28/06/2024 09:21:23|DEBUG|[load_deck] Start of load_deck
+28/06/2024 09:21:23|DEBUG|[load_deck] End of load_deck
+28/06/2024 09:21:23|DEBUG|[set_decks] End of set_decks
+28/06/2024 09:21:23|DEBUG|[set_decks] Start of set_decks
+28/06/2024 09:21:23|DEBUG|[load_deck] Start of load_deck
+28/06/2024 09:21:23|DEBUG|[load_deck] End of load_deck
+28/06/2024 09:21:23|DEBUG|[set_decks] End of set_decks
+28/06/2024 09:21:23|DEBUG|[set_decks] Start of set_decks
+28/06/2024 09:21:23|DEBUG|[load_deck] Start of load_deck
+28/06/2024 09:21:23|DEBUG|[load_deck] End of load_deck
+28/06/2024 09:21:24|DEBUG|[set_decks] End of set_decks
+28/06/2024 09:21:24|DEBUG|[set_decks] Start of set_decks
+28/06/2024 09:21:24|DEBUG|[load_deck] Start of load_deck
+28/06/2024 09:21:24|DEBUG|[load_deck] End of load_deck
+28/06/2024 09:21:24|DEBUG|[set_decks] End of set_decks
+28/06/2024 09:21:24|DEBUG|[set_decks] Start of set_decks
+28/06/2024 09:21:24|DEBUG|[load_deck] Start of load_deck
+28/06/2024 09:21:24|DEBUG|[load_deck] End of load_deck
+28/06/2024 09:21:24|DEBUG|[set_decks] End of set_decks
+28/06/2024 09:21:24|DEBUG|[set_decks] Start of set_decks
+28/06/2024 09:21:24|DEBUG|[load_deck] Start of load_deck
+28/06/2024 09:21:24|DEBUG|[load_deck] End of load_deck
+28/06/2024 09:21:24|DEBUG|[set_decks] End of set_decks
+28/06/2024 09:21:24|DEBUG|[set_decks] Start of set_decks
+28/06/2024 09:21:24|DEBUG|[load_deck] Start of load_deck
+28/06/2024 09:21:24|DEBUG|[load_deck] End of load_deck
+28/06/2024 09:21:24|DEBUG|[set_decks] End of set_decks
+28/06/2024 09:21:24|DEBUG|[set_decks] Start of set_decks
+28/06/2024 09:21:24|DEBUG|[load_deck] Start of load_deck
+28/06/2024 09:21:24|DEBUG|[load_deck] End of load_deck
+28/06/2024 09:21:24|DEBUG|[set_decks] End of set_decks
+28/06/2024 09:21:24|DEBUG|[set_decks] Start of set_decks
+28/06/2024 09:21:24|DEBUG|[load_deck] Start of load_deck
+28/06/2024 09:21:24|DEBUG|[load_deck] End of load_deck
+28/06/2024 09:21:24|DEBUG|[set_decks] End of set_decks
+28/06/2024 09:21:24|DEBUG|[set_decks] Start of set_decks
+28/06/2024 09:21:24|DEBUG|[load_deck] Start of load_deck
+28/06/2024 09:21:24|DEBUG|[load_deck] End of load_deck
+28/06/2024 09:21:24|DEBUG|[set_decks] End of set_decks
+28/06/2024 09:21:24|DEBUG|[set_decks] Start of set_decks
+28/06/2024 09:21:24|DEBUG|[load_deck] Start of load_deck
+28/06/2024 09:21:24|DEBUG|[load_deck] End of load_deck
+28/06/2024 09:21:24|DEBUG|[set_decks] End of set_decks
+28/06/2024 09:21:24|DEBUG|[set_decks] Start of set_decks
+28/06/2024 09:21:24|DEBUG|[load_deck] Start of load_deck
+28/06/2024 09:21:24|DEBUG|[load_deck] End of load_deck
+28/06/2024 09:21:24|DEBUG|[set_decks] End of set_decks
+28/06/2024 09:21:24|DEBUG|[set_decks] Start of set_decks
+28/06/2024 09:21:24|DEBUG|[load_deck] Start of load_deck
+28/06/2024 09:21:24|DEBUG|[load_deck] End of load_deck
+28/06/2024 09:21:24|DEBUG|[set_decks] End of set_decks
+28/06/2024 09:21:24|DEBUG|[set_decks] Start of set_decks
+28/06/2024 09:21:24|DEBUG|[load_deck] Start of load_deck
+28/06/2024 09:21:24|DEBUG|[load_deck] End of load_deck
+28/06/2024 09:21:24|DEBUG|[set_decks] End of set_decks
+28/06/2024 09:21:24|DEBUG|[set_decks] Start of set_decks
+28/06/2024 09:21:24|DEBUG|[load_deck] Start of load_deck
+28/06/2024 09:21:24|DEBUG|[load_deck] End of load_deck
+28/06/2024 09:21:24|DEBUG|[set_decks] End of set_decks
+28/06/2024 09:21:24|DEBUG|[set_decks] Start of set_decks
+28/06/2024 09:21:24|DEBUG|[load_deck] Start of load_deck
+28/06/2024 09:21:24|DEBUG|[load_deck] End of load_deck
+28/06/2024 09:21:24|DEBUG|[set_decks] End of set_decks
+28/06/2024 09:21:24|DEBUG|[set_decks] Start of set_decks
+28/06/2024 09:21:24|DEBUG|[load_deck] Start of load_deck
+28/06/2024 09:21:24|DEBUG|[load_deck] End of load_deck
+28/06/2024 09:21:24|DEBUG|[set_decks] End of set_decks
+28/06/2024 09:21:24|DEBUG|[set_decks] Start of set_decks
+28/06/2024 09:21:24|DEBUG|[load_deck] Start of load_deck
+28/06/2024 09:21:24|DEBUG|[load_deck] End of load_deck
+28/06/2024 09:21:24|DEBUG|[set_decks] End of set_decks
+28/06/2024 09:21:24|DEBUG|[set_decks] Start of set_decks
+28/06/2024 09:21:24|DEBUG|[load_deck] Start of load_deck
+28/06/2024 09:21:24|DEBUG|[load_deck] End of load_deck
+28/06/2024 09:21:24|DEBUG|[set_decks] End of set_decks
+28/06/2024 09:21:24|DEBUG|[set_decks] Start of set_decks
+28/06/2024 09:21:24|DEBUG|[load_deck] Start of load_deck
+28/06/2024 09:21:24|DEBUG|[load_deck] End of load_deck
+28/06/2024 09:21:24|DEBUG|[set_decks] End of set_decks
+28/06/2024 09:21:24|DEBUG|[set_decks] Start of set_decks
+28/06/2024 09:21:24|DEBUG|[load_deck] Start of load_deck
+28/06/2024 09:21:24|DEBUG|[load_deck] End of load_deck
+28/06/2024 09:21:24|DEBUG|[set_decks] End of set_decks
+28/06/2024 09:21:24|DEBUG|[set_decks] Start of set_decks
+28/06/2024 09:21:24|DEBUG|[load_deck] Start of load_deck
+28/06/2024 09:21:24|DEBUG|[load_deck] End of load_deck
+28/06/2024 09:21:24|DEBUG|[set_decks] End of set_decks
+28/06/2024 09:21:24|DEBUG|[set_decks] Start of set_decks
+28/06/2024 09:21:24|DEBUG|[load_deck] Start of load_deck
+28/06/2024 09:21:24|DEBUG|[load_deck] End of load_deck
+28/06/2024 09:21:24|DEBUG|[set_decks] End of set_decks
+28/06/2024 09:21:24|DEBUG|[set_decks] Start of set_decks
+28/06/2024 09:21:24|DEBUG|[load_deck] Start of load_deck
+28/06/2024 09:21:24|DEBUG|[load_deck] End of load_deck
+28/06/2024 09:21:24|DEBUG|[set_decks] End of set_decks
+28/06/2024 09:21:24|DEBUG|[set_decks] Start of set_decks
+28/06/2024 09:21:24|DEBUG|[load_deck] Start of load_deck
+28/06/2024 09:21:24|DEBUG|[load_deck] End of load_deck
+28/06/2024 09:21:24|DEBUG|[set_decks] End of set_decks
+28/06/2024 09:21:24|DEBUG|[set_decks] Start of set_decks
+28/06/2024 09:21:24|DEBUG|[load_deck] Start of load_deck
+28/06/2024 09:21:24|DEBUG|[load_deck] End of load_deck
+28/06/2024 09:21:24|DEBUG|[set_decks] End of set_decks
+28/06/2024 09:21:24|DEBUG|[set_decks] Start of set_decks
+28/06/2024 09:21:24|DEBUG|[load_deck] Start of load_deck
+28/06/2024 09:21:24|DEBUG|[load_deck] End of load_deck
+28/06/2024 09:21:24|DEBUG|[set_decks] End of set_decks
+28/06/2024 09:21:24|DEBUG|[set_decks] Start of set_decks
+28/06/2024 09:21:24|DEBUG|[load_deck] Start of load_deck
+28/06/2024 09:21:24|DEBUG|[load_deck] End of load_deck
+28/06/2024 09:21:24|DEBUG|[set_decks] End of set_decks
+28/06/2024 09:21:24|DEBUG|[set_decks] Start of set_decks
+28/06/2024 09:21:24|DEBUG|[load_deck] Start of load_deck
+28/06/2024 09:21:24|DEBUG|[load_deck] End of load_deck
+28/06/2024 09:21:24|DEBUG|[set_decks] End of set_decks
+28/06/2024 09:21:24|DEBUG|[set_encounter_list] Start of set_encounter_list
+28/06/2024 09:21:24|DEBUG|[set_encounter_list] End of set_encounter_list
+28/06/2024 09:21:24|DEBUG|[create_encounters_treeview] Start of create_encounters_treeview
+28/06/2024 09:21:24|DEBUG|[create_encounters_treeview] End of create_encounters_treeview
+28/06/2024 09:21:24|DEBUG|[create_tabs] End of create_tabs
+28/06/2024 09:21:24|DEBUG|[create_buttons] Start of create_buttons
+28/06/2024 09:21:24|DEBUG|[create_buttons] End of create_buttons
+28/06/2024 09:21:24|DEBUG|[create_display_frame] Start of create_display_frame
+28/06/2024 09:21:24|DEBUG|[create_display_frame] End of create_display_frame
+28/06/2024 09:21:24|DEBUG|[create_menu] Start of create_menu
+28/06/2024 09:21:24|DEBUG|[create_menu] End of create_menu
+28/06/2024 09:21:24|DEBUG|[set_bindings_buttons_menus] Start of set_bindings_buttons_menus: enable=True
+28/06/2024 09:21:24|DEBUG|[set_bindings_buttons_menus] End of set_bindings_buttons_menus
+28/06/2024 09:21:24|DEBUG|[load_variant_card] Start of load_variant_card, variant=None, selfCall=None, forPrinting=False, armorerDennis=False, oldIronKing=False, pursuer=False, deckDataCard=False, healthMod=None, fromDeck=False
+28/06/2024 09:21:24|DEBUG|[load_variant_card] 	No variant selected
+28/06/2024 09:21:24|DEBUG|[load_variant_card] 	End of load_variant_card
+28/06/2024 09:21:27|DEBUG|[random_encounter] Start of random_encounter, level=1
+28/06/2024 09:21:27|DEBUG|[load_encounter] Start of load_encounter, event=None, encounter=The Forgotten, customEnemyListCheck=False
+28/06/2024 09:21:27|DEBUG|[load_encounter] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_encounters\The Forgotten1.json
+28/06/2024 09:21:27|DEBUG|[shuffle_enemies] Start of shuffle_enemies
+28/06/2024 09:21:27|DEBUG|[edit_encounter_card] Start of edit_encounter_card, name=The Forgotten, expansion=Dark Souls The Board Game, level=1, enemySlots=[2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0], right=False
+28/06/2024 09:21:27|DEBUG|[create_image] Start of create_image, imageFileName=The Forgotten.jpg, imageType=encounter, level=1, expansion=Dark Souls The Board Game
+28/06/2024 09:21:27|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\The Forgotten.jpg
+28/06/2024 09:21:27|DEBUG|[create_image] 	End of create_image
+28/06/2024 09:21:27|DEBUG|[edit_encounter_card] New enemies: [14, 14, 28]
+28/06/2024 09:21:27|DEBUG|[edit_encounter_card] Pasting Hollow Soldier image onto encounter at (67, 66).
+28/06/2024 09:21:27|DEBUG|[edit_encounter_card] Pasting Hollow Soldier image onto encounter at (107, 66).
+28/06/2024 09:21:27|DEBUG|[edit_encounter_card] Pasting Skeleton Archer image onto encounter at (67, 112).
+28/06/2024 09:21:27|DEBUG|[apply_keyword_tooltips] Start of apply_keyword_tooltips, name=The Forgotten, set=Dark Souls The Board Game
+28/06/2024 09:21:27|DEBUG|[apply_keyword_tooltips] 	End of apply_keyword_tooltips
+28/06/2024 09:21:27|DEBUG|[edit_encounter_card] 	End of edit_encounter_card
+28/06/2024 09:21:27|DEBUG|[shuffle_enemies] 	End of shuffle_enemies
+28/06/2024 09:21:27|DEBUG|[load_encounter] 	End of load_encounter
+28/06/2024 09:21:27|DEBUG|[random_encounter] 	End of random_encounter
+28/06/2024 09:21:28|DEBUG|[random_encounter] Start of random_encounter, level=2
+28/06/2024 09:21:28|DEBUG|[load_encounter] Start of load_encounter, event=None, encounter=Sunken Stairwell, customEnemyListCheck=False
+28/06/2024 09:21:28|DEBUG|[load_encounter] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_encounters\Sunken Stairwell1.json
+28/06/2024 09:21:28|DEBUG|[shuffle_enemies] Start of shuffle_enemies
+28/06/2024 09:21:28|DEBUG|[edit_encounter_card] Start of edit_encounter_card, name=Sunken Stairwell, expansion=Explorers, level=2, enemySlots=[2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0], right=False
+28/06/2024 09:21:28|DEBUG|[create_image] Start of create_image, imageFileName=Sunken Stairwell.jpg, imageType=encounter, level=2, expansion=Explorers
+28/06/2024 09:21:28|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Sunken Stairwell.jpg
+28/06/2024 09:21:28|DEBUG|[create_image] 	End of create_image
+28/06/2024 09:21:28|DEBUG|[edit_encounter_card] New enemies: [28, 27, 26]
+28/06/2024 09:21:28|DEBUG|[edit_encounter_card] Pasting Skeleton Archer image onto encounter at (67, 66).
+28/06/2024 09:21:28|DEBUG|[edit_encounter_card] Pasting Silver Knight Swordsman image onto encounter at (107, 66).
+28/06/2024 09:21:28|DEBUG|[edit_encounter_card] Pasting Silver Knight Spearman image onto encounter at (67, 112).
+28/06/2024 09:21:28|DEBUG|[apply_keyword_tooltips] Start of apply_keyword_tooltips, name=Sunken Stairwell, set=Explorers
+28/06/2024 09:21:28|DEBUG|[apply_keyword_tooltips] 	End of apply_keyword_tooltips
+28/06/2024 09:21:28|DEBUG|[edit_encounter_card] 	End of edit_encounter_card
+28/06/2024 09:21:28|DEBUG|[shuffle_enemies] 	End of shuffle_enemies
+28/06/2024 09:21:28|DEBUG|[load_encounter] 	End of load_encounter
+28/06/2024 09:21:28|DEBUG|[random_encounter] 	End of random_encounter
+28/06/2024 09:21:29|DEBUG|[random_encounter] Start of random_encounter, level=3
+28/06/2024 09:21:29|DEBUG|[load_encounter] Start of load_encounter, event=None, encounter=Central Irithyll, customEnemyListCheck=False
+28/06/2024 09:21:29|DEBUG|[load_encounter] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_encounters\Central Irithyll1.json
+28/06/2024 09:21:29|DEBUG|[shuffle_enemies] Start of shuffle_enemies
+28/06/2024 09:21:29|DEBUG|[edit_encounter_card] Start of edit_encounter_card, name=Central Irithyll, expansion=Dark Souls The Board Game, level=3, enemySlots=[1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0], right=False
+28/06/2024 09:21:29|DEBUG|[create_image] Start of create_image, imageFileName=Central Irithyll.jpg, imageType=encounter, level=3, expansion=Dark Souls The Board Game
+28/06/2024 09:21:29|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Central Irithyll.jpg
+28/06/2024 09:21:29|DEBUG|[create_image] 	End of create_image
+28/06/2024 09:21:29|DEBUG|[edit_encounter_card] New enemies: [13, 33, 2]
+28/06/2024 09:21:29|DEBUG|[edit_encounter_card] Pasting Giant Skeleton Soldier image onto encounter at (67, 66).
+28/06/2024 09:21:29|DEBUG|[edit_encounter_card] Pasting Stone Knight image onto encounter at (67, 112).
+28/06/2024 09:21:29|DEBUG|[edit_encounter_card] Pasting Alonne Knight Captain image onto encounter at (107, 112).
+28/06/2024 09:21:29|DEBUG|[apply_keyword_tooltips] Start of apply_keyword_tooltips, name=Central Irithyll, set=Dark Souls The Board Game
+28/06/2024 09:21:29|DEBUG|[apply_keyword_tooltips] 	End of apply_keyword_tooltips
+28/06/2024 09:21:29|DEBUG|[edit_encounter_card] 	End of edit_encounter_card
+28/06/2024 09:21:29|DEBUG|[shuffle_enemies] 	End of shuffle_enemies
+28/06/2024 09:21:29|DEBUG|[load_encounter] 	End of load_encounter
+28/06/2024 09:21:29|DEBUG|[random_encounter] 	End of random_encounter
+28/06/2024 09:21:30|DEBUG|[random_encounter] Start of random_encounter, level=4
+28/06/2024 09:21:30|DEBUG|[load_encounter] Start of load_encounter, event=None, encounter=Research Library, customEnemyListCheck=False
+28/06/2024 09:21:30|DEBUG|[load_encounter] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_encounters\Research Library1.json
+28/06/2024 09:21:30|DEBUG|[shuffle_enemies] Start of shuffle_enemies
+28/06/2024 09:21:30|DEBUG|[edit_encounter_card] Start of edit_encounter_card, name=Research Library, expansion=Guardian Dragon, level=4, enemySlots=[3, 2, 2, 3, 0, 0, 0, 0, 0, 0, 0], right=False
+28/06/2024 09:21:30|DEBUG|[create_image] Start of create_image, imageFileName=Research Library.jpg, imageType=encounter, level=4, expansion=Guardian Dragon
+28/06/2024 09:21:30|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Research Library.jpg
+28/06/2024 09:21:30|DEBUG|[create_image] 	End of create_image
+28/06/2024 09:21:30|DEBUG|[edit_encounter_card] New enemies: [10, 8, 28, 5, 11, 26, 28, 5, 1, 1]
+28/06/2024 09:21:30|DEBUG|[edit_encounter_card] Pasting Falchion Skeleton image onto encounter at (116, 78).
+28/06/2024 09:21:30|DEBUG|[edit_encounter_card] Pasting Demonic Foliage image onto encounter at (159, 78).
+28/06/2024 09:21:30|DEBUG|[edit_encounter_card] Pasting Skeleton Archer image onto encounter at (202, 78).
+28/06/2024 09:21:30|DEBUG|[edit_encounter_card] Pasting Bonewheel Skeleton image onto encounter at (116, 125).
+28/06/2024 09:21:30|DEBUG|[edit_encounter_card] Pasting Firebomb Hollow image onto encounter at (159, 125).
+28/06/2024 09:21:30|DEBUG|[edit_encounter_card] Pasting Silver Knight Spearman image onto encounter at (116, 172).
+28/06/2024 09:21:30|DEBUG|[edit_encounter_card] Pasting Skeleton Archer image onto encounter at (159, 172).
+28/06/2024 09:21:30|DEBUG|[edit_encounter_card] Pasting Bonewheel Skeleton image onto encounter at (116, 219).
+28/06/2024 09:21:30|DEBUG|[edit_encounter_card] Pasting Alonne Bow Knight image onto encounter at (159, 219).
+28/06/2024 09:21:30|DEBUG|[edit_encounter_card] Pasting Alonne Bow Knight image onto encounter at (202, 219).
+28/06/2024 09:21:30|DEBUG|[apply_keyword_tooltips] Start of apply_keyword_tooltips, name=Research Library, set=Guardian Dragon
+28/06/2024 09:21:30|DEBUG|[apply_keyword_tooltips] 	End of apply_keyword_tooltips
+28/06/2024 09:21:30|DEBUG|[edit_encounter_card] 	End of edit_encounter_card
+28/06/2024 09:21:30|DEBUG|[shuffle_enemies] 	End of shuffle_enemies
+28/06/2024 09:21:30|DEBUG|[load_encounter] 	End of load_encounter
+28/06/2024 09:21:30|DEBUG|[random_encounter] 	End of random_encounter
+28/06/2024 09:21:31|DEBUG|[random_encounter] Start of random_encounter, level=3
+28/06/2024 09:21:31|DEBUG|[load_encounter] Start of load_encounter, event=None, encounter=Twilight Falls, customEnemyListCheck=False
+28/06/2024 09:21:31|DEBUG|[load_encounter] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_encounters\Twilight Falls1.json
+28/06/2024 09:21:31|DEBUG|[shuffle_enemies] Start of shuffle_enemies
+28/06/2024 09:21:31|DEBUG|[edit_encounter_card] Start of edit_encounter_card, name=Twilight Falls, expansion=The Sunless City, level=3, enemySlots=[2, 2, 0, 0, 0, 2, 1, 0, 2, 3, 0], right=False
+28/06/2024 09:21:31|DEBUG|[create_image] Start of create_image, imageFileName=Twilight Falls.jpg, imageType=encounter, level=3, expansion=The Sunless City
+28/06/2024 09:21:31|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Twilight Falls.jpg
+28/06/2024 09:21:31|DEBUG|[create_image] 	End of create_image
+28/06/2024 09:21:31|DEBUG|[edit_encounter_card] New enemies: [30, 27, 25, 22, 6, 25, 34, 40, 25, 14, 14, 27]
+28/06/2024 09:21:31|DEBUG|[edit_encounter_card] Pasting Skeleton Soldier image onto encounter at (300, 323).
+28/06/2024 09:21:31|DEBUG|[edit_encounter_card] Pasting Silver Knight Swordsman image onto encounter at (329, 323).
+28/06/2024 09:21:31|DEBUG|[edit_encounter_card] Pasting Silver Knight Greatbowman image onto encounter at (300, 352).
+28/06/2024 09:21:31|DEBUG|[edit_encounter_card] Pasting Plow Scarecrow image onto encounter at (329, 352).
+28/06/2024 09:21:31|DEBUG|[edit_encounter_card] Pasting Crossbow Hollow image onto encounter at (300, 445).
+28/06/2024 09:21:31|DEBUG|[edit_encounter_card] Pasting Silver Knight Greatbowman image onto encounter at (329, 445).
+28/06/2024 09:21:31|DEBUG|[edit_encounter_card] Pasting Mimic image onto encounter at (300, 474).
+28/06/2024 09:21:31|DEBUG|[edit_encounter_card] Pasting Maldron the Assassin image onto encounter at (300, 567).
+28/06/2024 09:21:31|DEBUG|[edit_encounter_card] Pasting Silver Knight Greatbowman image onto encounter at (329, 567).
+28/06/2024 09:21:31|DEBUG|[edit_encounter_card] Pasting Hollow Soldier image onto encounter at (300, 596).
+28/06/2024 09:21:31|DEBUG|[edit_encounter_card] Pasting Hollow Soldier image onto encounter at (329, 596).
+28/06/2024 09:21:31|DEBUG|[edit_encounter_card] Pasting Silver Knight Swordsman image onto encounter at (358, 596).
+28/06/2024 09:21:31|DEBUG|[apply_keyword_tooltips] Start of apply_keyword_tooltips, name=Twilight Falls, set=The Sunless City
+28/06/2024 09:21:31|DEBUG|[create_tooltip] Start of create_tooltip, tooltipDict={'image': <PIL.Image.Image image mode=RGBA size=36x13 at 0x1F052ECA050>, 'photo image': <PIL.ImageTk.PhotoImage object at 0x000001F077E880D0>, 'imageName': 'illusion'}, x=142, y=199
+28/06/2024 09:21:31|DEBUG|[create_tooltip] 	End of create_tooltip
+28/06/2024 09:21:31|DEBUG|[apply_keyword_tooltips] 	End of apply_keyword_tooltips
+28/06/2024 09:21:31|DEBUG|[twilight_falls] Start of twilight_falls
+28/06/2024 09:21:31|DEBUG|[create_tooltip] Start of create_tooltip, tooltipDict={'photo image': <PIL.ImageTk.PhotoImage object at 0x000001F052EF3E10>, 'imageName': 'gang'}, x=142, y=214
+28/06/2024 09:21:31|DEBUG|[create_tooltip] 	End of create_tooltip
+28/06/2024 09:21:31|DEBUG|[twilight_falls] 	End of twilight_falls
+28/06/2024 09:21:31|DEBUG|[edit_encounter_card] 	End of edit_encounter_card
+28/06/2024 09:21:31|DEBUG|[shuffle_enemies] 	End of shuffle_enemies
+28/06/2024 09:21:31|DEBUG|[load_encounter] 	End of load_encounter
+28/06/2024 09:21:31|DEBUG|[random_encounter] 	End of random_encounter
+28/06/2024 09:23:35|DEBUG|[v1_campaign] Start of v1_campaign
+28/06/2024 09:23:35|DEBUG|[add_random_boss_to_campaign] Start of add_random_boss_to_campaign, level=Mini Boss
+28/06/2024 09:23:35|DEBUG|[add_random_boss_to_campaign] End of add_random_boss_to_campaign
+28/06/2024 09:23:35|DEBUG|[add_random_boss_to_campaign] Start of add_random_boss_to_campaign, level=Main Boss
+28/06/2024 09:23:35|DEBUG|[add_random_boss_to_campaign] End of add_random_boss_to_campaign
+28/06/2024 09:23:35|DEBUG|[add_random_boss_to_campaign] Start of add_random_boss_to_campaign, level=Mega Boss
+28/06/2024 09:23:35|DEBUG|[add_random_boss_to_campaign] End of add_random_boss_to_campaign
+28/06/2024 09:23:35|DEBUG|[random_encounter] Start of random_encounter, level=1
+28/06/2024 09:23:35|DEBUG|[load_encounter] Start of load_encounter, event=None, encounter=Threshold Bridge, customEnemyListCheck=False
+28/06/2024 09:23:35|DEBUG|[load_encounter] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_encounters\Threshold Bridge1.json
+28/06/2024 09:23:35|DEBUG|[shuffle_enemies] Start of shuffle_enemies
+28/06/2024 09:23:35|DEBUG|[edit_encounter_card] Start of edit_encounter_card, name=Threshold Bridge, expansion=Iron Keep, level=1, enemySlots=[1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0], right=False
+28/06/2024 09:23:35|DEBUG|[create_image] Start of create_image, imageFileName=Threshold Bridge.jpg, imageType=encounter, level=1, expansion=Iron Keep
+28/06/2024 09:23:35|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Threshold Bridge.jpg
+28/06/2024 09:23:35|DEBUG|[create_image] 	End of create_image
+28/06/2024 09:23:35|DEBUG|[edit_encounter_card] New enemies: [10, 11, 6]
+28/06/2024 09:23:35|DEBUG|[edit_encounter_card] Pasting Falchion Skeleton image onto encounter at (67, 66).
+28/06/2024 09:23:35|DEBUG|[edit_encounter_card] Pasting Firebomb Hollow image onto encounter at (67, 112).
+28/06/2024 09:23:35|DEBUG|[edit_encounter_card] Pasting Crossbow Hollow image onto encounter at (107, 112).
+28/06/2024 09:23:35|DEBUG|[apply_keyword_tooltips] Start of apply_keyword_tooltips, name=Threshold Bridge, set=Iron Keep
+28/06/2024 09:23:35|DEBUG|[apply_keyword_tooltips] 	End of apply_keyword_tooltips
+28/06/2024 09:23:35|DEBUG|[edit_encounter_card] 	End of edit_encounter_card
+28/06/2024 09:23:35|DEBUG|[shuffle_enemies] 	End of shuffle_enemies
+28/06/2024 09:23:35|DEBUG|[load_encounter] 	End of load_encounter
+28/06/2024 09:23:35|DEBUG|[random_encounter] 	End of random_encounter
+28/06/2024 09:23:35|DEBUG|[add_card_to_campaign] Start of add_card_to_campaign
+28/06/2024 09:23:35|DEBUG|[add_card_to_campaign] End of add_card_to_campaign
+28/06/2024 09:23:35|DEBUG|[random_encounter] Start of random_encounter, level=1
+28/06/2024 09:23:35|DEBUG|[load_encounter] Start of load_encounter, event=None, encounter=Broken Passageway, customEnemyListCheck=False
+28/06/2024 09:23:35|DEBUG|[load_encounter] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_encounters\Broken Passageway1.json
+28/06/2024 09:23:35|DEBUG|[shuffle_enemies] Start of shuffle_enemies
+28/06/2024 09:23:35|DEBUG|[edit_encounter_card] Start of edit_encounter_card, name=Broken Passageway, expansion=Dark Souls The Board Game, level=1, enemySlots=[1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0], right=False
+28/06/2024 09:23:35|DEBUG|[create_image] Start of create_image, imageFileName=Broken Passageway.jpg, imageType=encounter, level=1, expansion=Dark Souls The Board Game
+28/06/2024 09:23:35|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Broken Passageway.jpg
+28/06/2024 09:23:36|DEBUG|[create_image] 	End of create_image
+28/06/2024 09:23:36|DEBUG|[edit_encounter_card] New enemies: [22, 14, 30]
+28/06/2024 09:23:36|DEBUG|[edit_encounter_card] Pasting Plow Scarecrow image onto encounter at (67, 66).
+28/06/2024 09:23:36|DEBUG|[edit_encounter_card] Pasting Hollow Soldier image onto encounter at (67, 112).
+28/06/2024 09:23:36|DEBUG|[edit_encounter_card] Pasting Skeleton Soldier image onto encounter at (107, 112).
+28/06/2024 09:23:36|DEBUG|[apply_keyword_tooltips] Start of apply_keyword_tooltips, name=Broken Passageway, set=Dark Souls The Board Game
+28/06/2024 09:23:36|DEBUG|[apply_keyword_tooltips] 	End of apply_keyword_tooltips
+28/06/2024 09:23:36|DEBUG|[edit_encounter_card] 	End of edit_encounter_card
+28/06/2024 09:23:36|DEBUG|[shuffle_enemies] 	End of shuffle_enemies
+28/06/2024 09:23:36|DEBUG|[load_encounter] 	End of load_encounter
+28/06/2024 09:23:36|DEBUG|[random_encounter] 	End of random_encounter
+28/06/2024 09:23:36|DEBUG|[add_card_to_campaign] Start of add_card_to_campaign
+28/06/2024 09:23:36|DEBUG|[add_card_to_campaign] End of add_card_to_campaign
+28/06/2024 09:23:36|DEBUG|[random_encounter] Start of random_encounter, level=2
+28/06/2024 09:23:36|DEBUG|[load_encounter] Start of load_encounter, event=None, encounter=Murky Roots, customEnemyListCheck=False
+28/06/2024 09:23:36|DEBUG|[load_encounter] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_encounters\Murky Roots1.json
+28/06/2024 09:23:36|DEBUG|[shuffle_enemies] Start of shuffle_enemies
+28/06/2024 09:23:36|DEBUG|[edit_encounter_card] Start of edit_encounter_card, name=Murky Roots, expansion=Darkroot, level=2, enemySlots=[2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], right=False
+28/06/2024 09:23:36|DEBUG|[create_image] Start of create_image, imageFileName=Murky Roots.jpg, imageType=encounter, level=2, expansion=Darkroot
+28/06/2024 09:23:36|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Murky Roots.jpg
+28/06/2024 09:23:36|DEBUG|[create_image] 	End of create_image
+28/06/2024 09:23:36|DEBUG|[edit_encounter_card] New enemies: [33, 20]
+28/06/2024 09:23:36|DEBUG|[edit_encounter_card] Pasting Stone Knight image onto encounter at (67, 66).
+28/06/2024 09:23:36|DEBUG|[edit_encounter_card] Pasting Phalanx image onto encounter at (107, 66).
+28/06/2024 09:23:36|DEBUG|[apply_keyword_tooltips] Start of apply_keyword_tooltips, name=Murky Roots, set=Darkroot
+28/06/2024 09:23:36|DEBUG|[apply_keyword_tooltips] 	End of apply_keyword_tooltips
+28/06/2024 09:23:36|DEBUG|[edit_encounter_card] 	End of edit_encounter_card
+28/06/2024 09:23:36|DEBUG|[shuffle_enemies] 	End of shuffle_enemies
+28/06/2024 09:23:36|DEBUG|[load_encounter] 	End of load_encounter
+28/06/2024 09:23:36|DEBUG|[random_encounter] 	End of random_encounter
+28/06/2024 09:23:36|DEBUG|[add_card_to_campaign] Start of add_card_to_campaign
+28/06/2024 09:23:36|DEBUG|[add_card_to_campaign] End of add_card_to_campaign
+28/06/2024 09:23:36|DEBUG|[random_encounter] Start of random_encounter, level=2
+28/06/2024 09:23:36|DEBUG|[load_encounter] Start of load_encounter, event=None, encounter=Murky Roots, customEnemyListCheck=False
+28/06/2024 09:23:36|DEBUG|[shuffle_enemies] Start of shuffle_enemies
+28/06/2024 09:23:36|DEBUG|[edit_encounter_card] Start of edit_encounter_card, name=Murky Roots, expansion=Darkroot, level=2, enemySlots=[2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], right=False
+28/06/2024 09:23:36|DEBUG|[create_image] Start of create_image, imageFileName=Murky Roots.jpg, imageType=encounter, level=2, expansion=Darkroot
+28/06/2024 09:23:36|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Murky Roots.jpg
+28/06/2024 09:23:36|DEBUG|[create_image] 	End of create_image
+28/06/2024 09:23:36|DEBUG|[edit_encounter_card] New enemies: [18, 13]
+28/06/2024 09:23:36|DEBUG|[edit_encounter_card] Pasting Mushroom Parent image onto encounter at (67, 66).
+28/06/2024 09:23:36|DEBUG|[edit_encounter_card] Pasting Giant Skeleton Soldier image onto encounter at (107, 66).
+28/06/2024 09:23:36|DEBUG|[apply_keyword_tooltips] Start of apply_keyword_tooltips, name=Murky Roots, set=Darkroot
+28/06/2024 09:23:36|DEBUG|[apply_keyword_tooltips] 	End of apply_keyword_tooltips
+28/06/2024 09:23:36|DEBUG|[edit_encounter_card] 	End of edit_encounter_card
+28/06/2024 09:23:36|DEBUG|[shuffle_enemies] 	End of shuffle_enemies
+28/06/2024 09:23:36|DEBUG|[load_encounter] 	End of load_encounter
+28/06/2024 09:23:36|DEBUG|[random_encounter] 	End of random_encounter
+28/06/2024 09:23:36|DEBUG|[add_card_to_campaign] Start of add_card_to_campaign
+28/06/2024 09:23:36|DEBUG|[add_card_to_campaign] End of add_card_to_campaign
+28/06/2024 09:23:36|DEBUG|[random_encounter] Start of random_encounter, level=2
+28/06/2024 09:23:36|DEBUG|[load_encounter] Start of load_encounter, event=None, encounter=Bronze Spire, customEnemyListCheck=False
+28/06/2024 09:23:36|DEBUG|[load_encounter] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_encounters\Bronze Spire1.json
+28/06/2024 09:23:36|DEBUG|[shuffle_enemies] Start of shuffle_enemies
+28/06/2024 09:23:36|DEBUG|[edit_encounter_card] Start of edit_encounter_card, name=Bronze Spire, expansion=Iron Keep, level=2, enemySlots=[1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0], right=False
+28/06/2024 09:23:36|DEBUG|[create_image] Start of create_image, imageFileName=Bronze Spire.jpg, imageType=encounter, level=2, expansion=Iron Keep
+28/06/2024 09:23:36|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Bronze Spire.jpg
+28/06/2024 09:23:36|DEBUG|[create_image] 	End of create_image
+28/06/2024 09:23:36|DEBUG|[edit_encounter_card] New enemies: [1, 15]
+28/06/2024 09:23:36|DEBUG|[edit_encounter_card] Pasting Alonne Bow Knight image onto encounter at (67, 66).
+28/06/2024 09:23:36|DEBUG|[edit_encounter_card] Pasting Ironclad Soldier image onto encounter at (67, 112).
+28/06/2024 09:23:36|DEBUG|[apply_keyword_tooltips] Start of apply_keyword_tooltips, name=Bronze Spire, set=Iron Keep
+28/06/2024 09:23:36|DEBUG|[apply_keyword_tooltips] 	End of apply_keyword_tooltips
+28/06/2024 09:23:36|DEBUG|[edit_encounter_card] 	End of edit_encounter_card
+28/06/2024 09:23:36|DEBUG|[shuffle_enemies] 	End of shuffle_enemies
+28/06/2024 09:23:36|DEBUG|[load_encounter] 	End of load_encounter
+28/06/2024 09:23:36|DEBUG|[random_encounter] 	End of random_encounter
+28/06/2024 09:23:36|DEBUG|[add_card_to_campaign] Start of add_card_to_campaign
+28/06/2024 09:23:36|DEBUG|[add_card_to_campaign] End of add_card_to_campaign
+28/06/2024 09:23:36|DEBUG|[random_encounter] Start of random_encounter, level=2
+28/06/2024 09:23:36|DEBUG|[load_encounter] Start of load_encounter, event=None, encounter=Black Bog, customEnemyListCheck=False
+28/06/2024 09:23:36|DEBUG|[load_encounter] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_encounters\Black Bog1.json
+28/06/2024 09:23:36|DEBUG|[shuffle_enemies] Start of shuffle_enemies
+28/06/2024 09:23:36|DEBUG|[edit_encounter_card] Start of edit_encounter_card, name=Black Bog, expansion=Darkroot, level=2, enemySlots=[2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0], right=False
+28/06/2024 09:23:36|DEBUG|[create_image] Start of create_image, imageFileName=Black Bog.jpg, imageType=encounter, level=2, expansion=Darkroot
+28/06/2024 09:23:36|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Black Bog.jpg
+28/06/2024 09:23:36|DEBUG|[create_image] 	End of create_image
+28/06/2024 09:23:36|DEBUG|[edit_encounter_card] New enemies: [10, 22, 8, 22]
+28/06/2024 09:23:36|DEBUG|[edit_encounter_card] Pasting Falchion Skeleton image onto encounter at (67, 66).
+28/06/2024 09:23:36|DEBUG|[edit_encounter_card] Pasting Plow Scarecrow image onto encounter at (107, 66).
+28/06/2024 09:23:36|DEBUG|[edit_encounter_card] Pasting Demonic Foliage image onto encounter at (67, 112).
+28/06/2024 09:23:36|DEBUG|[edit_encounter_card] Pasting Plow Scarecrow image onto encounter at (107, 112).
+28/06/2024 09:23:36|DEBUG|[apply_keyword_tooltips] Start of apply_keyword_tooltips, name=Black Bog, set=Darkroot
+28/06/2024 09:23:36|DEBUG|[apply_keyword_tooltips] 	End of apply_keyword_tooltips
+28/06/2024 09:23:36|DEBUG|[edit_encounter_card] 	End of edit_encounter_card
+28/06/2024 09:23:36|DEBUG|[shuffle_enemies] 	End of shuffle_enemies
+28/06/2024 09:23:36|DEBUG|[load_encounter] 	End of load_encounter
+28/06/2024 09:23:36|DEBUG|[random_encounter] 	End of random_encounter
+28/06/2024 09:23:36|DEBUG|[add_card_to_campaign] Start of add_card_to_campaign
+28/06/2024 09:23:36|DEBUG|[add_card_to_campaign] End of add_card_to_campaign
+28/06/2024 09:23:36|DEBUG|[random_encounter] Start of random_encounter, level=3
+28/06/2024 09:23:36|DEBUG|[load_encounter] Start of load_encounter, event=None, encounter=Desecrated Church, customEnemyListCheck=False
+28/06/2024 09:23:36|DEBUG|[load_encounter] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_encounters\Desecrated Church1.json
+28/06/2024 09:23:36|DEBUG|[shuffle_enemies] Start of shuffle_enemies
+28/06/2024 09:23:36|DEBUG|[edit_encounter_card] Start of edit_encounter_card, name=Desecrated Church, expansion=Dark Souls The Board Game, level=3, enemySlots=[3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0], right=False
+28/06/2024 09:23:36|DEBUG|[create_image] Start of create_image, imageFileName=Desecrated Church.jpg, imageType=encounter, level=3, expansion=Dark Souls The Board Game
+28/06/2024 09:23:36|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Desecrated Church.jpg
+28/06/2024 09:23:36|DEBUG|[create_image] 	End of create_image
+28/06/2024 09:23:36|DEBUG|[edit_encounter_card] New enemies: [30, 30, 6, 10, 2, 1]
+28/06/2024 09:23:36|DEBUG|[edit_encounter_card] Pasting Skeleton Soldier image onto encounter at (67, 66).
+28/06/2024 09:23:36|DEBUG|[edit_encounter_card] Pasting Skeleton Soldier image onto encounter at (107, 66).
+28/06/2024 09:23:36|DEBUG|[edit_encounter_card] Pasting Crossbow Hollow image onto encounter at (147, 66).
+28/06/2024 09:23:36|DEBUG|[edit_encounter_card] Pasting Falchion Skeleton image onto encounter at (67, 112).
+28/06/2024 09:23:36|DEBUG|[edit_encounter_card] Pasting Alonne Knight Captain image onto encounter at (107, 112).
+28/06/2024 09:23:36|DEBUG|[edit_encounter_card] Pasting Alonne Bow Knight image onto encounter at (147, 112).
+28/06/2024 09:23:36|DEBUG|[apply_keyword_tooltips] Start of apply_keyword_tooltips, name=Desecrated Church, set=Dark Souls The Board Game
+28/06/2024 09:23:36|DEBUG|[apply_keyword_tooltips] 	End of apply_keyword_tooltips
+28/06/2024 09:23:36|DEBUG|[edit_encounter_card] 	End of edit_encounter_card
+28/06/2024 09:23:36|DEBUG|[shuffle_enemies] 	End of shuffle_enemies
+28/06/2024 09:23:36|DEBUG|[load_encounter] 	End of load_encounter
+28/06/2024 09:23:36|DEBUG|[random_encounter] 	End of random_encounter
+28/06/2024 09:23:36|DEBUG|[add_card_to_campaign] Start of add_card_to_campaign
+28/06/2024 09:23:36|DEBUG|[add_card_to_campaign] End of add_card_to_campaign
+28/06/2024 09:23:36|DEBUG|[random_encounter] Start of random_encounter, level=3
+28/06/2024 09:23:36|DEBUG|[load_encounter] Start of load_encounter, event=None, encounter=Desolate Hinterland, customEnemyListCheck=False
+28/06/2024 09:23:36|DEBUG|[load_encounter] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_encounters\Desolate Hinterland1.json
+28/06/2024 09:23:36|DEBUG|[shuffle_enemies] Start of shuffle_enemies
+28/06/2024 09:23:36|DEBUG|[edit_encounter_card] Start of edit_encounter_card, name=Desolate Hinterland, expansion=Darkroot, level=3, enemySlots=[1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0], right=False
+28/06/2024 09:23:36|DEBUG|[create_image] Start of create_image, imageFileName=Desolate Hinterland.jpg, imageType=encounter, level=3, expansion=Darkroot
+28/06/2024 09:23:36|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Desolate Hinterland.jpg
+28/06/2024 09:23:36|DEBUG|[create_image] 	End of create_image
+28/06/2024 09:23:36|DEBUG|[edit_encounter_card] New enemies: [2, 18, 17]
+28/06/2024 09:23:36|DEBUG|[edit_encounter_card] Pasting Alonne Knight Captain image onto encounter at (67, 66).
+28/06/2024 09:23:36|DEBUG|[edit_encounter_card] Pasting Mushroom Parent image onto encounter at (67, 112).
+28/06/2024 09:23:36|DEBUG|[edit_encounter_card] Pasting Mushroom Child image onto encounter at (107, 112).
+28/06/2024 09:23:36|DEBUG|[apply_keyword_tooltips] Start of apply_keyword_tooltips, name=Desolate Hinterland, set=Darkroot
+28/06/2024 09:23:36|DEBUG|[apply_keyword_tooltips] 	End of apply_keyword_tooltips
+28/06/2024 09:23:36|DEBUG|[edit_encounter_card] 	End of edit_encounter_card
+28/06/2024 09:23:36|DEBUG|[shuffle_enemies] 	End of shuffle_enemies
+28/06/2024 09:23:36|DEBUG|[load_encounter] 	End of load_encounter
+28/06/2024 09:23:36|DEBUG|[random_encounter] 	End of random_encounter
+28/06/2024 09:23:36|DEBUG|[add_card_to_campaign] Start of add_card_to_campaign
+28/06/2024 09:23:36|DEBUG|[add_card_to_campaign] End of add_card_to_campaign
+28/06/2024 09:23:36|DEBUG|[random_encounter] Start of random_encounter, level=4
+28/06/2024 09:23:36|DEBUG|[load_encounter] Start of load_encounter, event=None, encounter=Huntsman's Copse, customEnemyListCheck=False
+28/06/2024 09:23:36|DEBUG|[load_encounter] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_encounters\Huntsman's Copse1.json
+28/06/2024 09:23:36|DEBUG|[shuffle_enemies] Start of shuffle_enemies
+28/06/2024 09:23:36|DEBUG|[edit_encounter_card] Start of edit_encounter_card, name=Huntsman's Copse, expansion=Executioner Chariot, level=4, enemySlots=[1, 1, 2, 1, 0, 0, 0, 0, 0, 0, 0], right=False
+28/06/2024 09:23:36|DEBUG|[create_image] Start of create_image, imageFileName=Huntsman's Copse.jpg, imageType=encounter, level=4, expansion=Executioner Chariot
+28/06/2024 09:23:36|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Huntsman's Copse.jpg
+28/06/2024 09:23:36|DEBUG|[create_image] 	End of create_image
+28/06/2024 09:23:36|DEBUG|[edit_encounter_card] New enemies: [38, 32, 6, 22, 11]
+28/06/2024 09:23:36|DEBUG|[edit_encounter_card] Pasting Kirk, Knight of Thorns image onto encounter at (115, 76).
+28/06/2024 09:23:36|DEBUG|[edit_encounter_card] Pasting Stone Guardian image onto encounter at (116, 125).
+28/06/2024 09:23:36|DEBUG|[edit_encounter_card] Pasting Crossbow Hollow image onto encounter at (116, 172).
+28/06/2024 09:23:36|DEBUG|[edit_encounter_card] Pasting Plow Scarecrow image onto encounter at (159, 172).
+28/06/2024 09:23:36|DEBUG|[edit_encounter_card] Pasting Firebomb Hollow image onto encounter at (116, 219).
+28/06/2024 09:23:36|DEBUG|[apply_keyword_tooltips] Start of apply_keyword_tooltips, name=Huntsman's Copse, set=Executioner Chariot
+28/06/2024 09:23:36|DEBUG|[apply_keyword_tooltips] 	End of apply_keyword_tooltips
+28/06/2024 09:23:36|DEBUG|[edit_encounter_card] 	End of edit_encounter_card
+28/06/2024 09:23:36|DEBUG|[shuffle_enemies] 	End of shuffle_enemies
+28/06/2024 09:23:36|DEBUG|[load_encounter] 	End of load_encounter
+28/06/2024 09:23:36|DEBUG|[random_encounter] 	End of random_encounter
+28/06/2024 09:23:36|DEBUG|[add_card_to_campaign] Start of add_card_to_campaign
+28/06/2024 09:23:36|DEBUG|[add_card_to_campaign] End of add_card_to_campaign
+28/06/2024 09:23:36|DEBUG|[move_down] Start of move_down
+28/06/2024 09:23:36|DEBUG|[move_down] End of move_down
+28/06/2024 09:23:36|DEBUG|[move_down] Start of move_down
+28/06/2024 09:23:36|DEBUG|[move_down] End of move_down
+28/06/2024 09:23:36|DEBUG|[move_down] Start of move_down
+28/06/2024 09:23:36|DEBUG|[move_down] End of move_down
+28/06/2024 09:23:36|DEBUG|[move_down] Start of move_down
+28/06/2024 09:23:36|DEBUG|[move_down] End of move_down
+28/06/2024 09:23:36|DEBUG|[move_down] Start of move_down
+28/06/2024 09:23:36|DEBUG|[move_down] End of move_down
+28/06/2024 09:23:36|DEBUG|[move_down] Start of move_down
+28/06/2024 09:23:36|DEBUG|[move_down] End of move_down
+28/06/2024 09:23:36|DEBUG|[move_down] Start of move_down
+28/06/2024 09:23:36|DEBUG|[move_down] End of move_down
+28/06/2024 09:23:36|DEBUG|[move_down] Start of move_down
+28/06/2024 09:23:36|DEBUG|[move_down] End of move_down
+28/06/2024 09:23:36|DEBUG|[move_down] Start of move_down
+28/06/2024 09:23:36|DEBUG|[move_down] End of move_down
+28/06/2024 09:23:36|DEBUG|[move_down] Start of move_down
+28/06/2024 09:23:36|DEBUG|[move_down] End of move_down
+28/06/2024 09:23:36|DEBUG|[move_down] Start of move_down
+28/06/2024 09:23:36|DEBUG|[move_down] End of move_down
+28/06/2024 09:23:36|DEBUG|[move_down] Start of move_down
+28/06/2024 09:23:36|DEBUG|[move_down] End of move_down
+28/06/2024 09:23:36|DEBUG|[move_down] Start of move_down
+28/06/2024 09:23:36|DEBUG|[move_down] End of move_down
+28/06/2024 09:23:37|DEBUG|[move_down] Start of move_down
+28/06/2024 09:23:37|DEBUG|[move_down] End of move_down
+28/06/2024 09:23:37|DEBUG|[move_down] Start of move_down
+28/06/2024 09:23:37|DEBUG|[move_down] End of move_down
+28/06/2024 09:23:37|DEBUG|[move_down] Start of move_down
+28/06/2024 09:23:37|DEBUG|[move_down] End of move_down
+28/06/2024 09:23:37|DEBUG|[move_down] Start of move_down
+28/06/2024 09:23:37|DEBUG|[move_down] End of move_down
+28/06/2024 09:23:37|DEBUG|[move_down] Start of move_down
+28/06/2024 09:23:37|DEBUG|[move_down] End of move_down
+28/06/2024 09:23:37|DEBUG|[move_down] Start of move_down
+28/06/2024 09:23:37|DEBUG|[move_down] End of move_down
+28/06/2024 09:23:37|DEBUG|[move_down] Start of move_down
+28/06/2024 09:23:37|DEBUG|[move_down] End of move_down
+28/06/2024 09:23:37|DEBUG|[move_down] Start of move_down
+28/06/2024 09:23:37|DEBUG|[move_down] End of move_down
+28/06/2024 09:23:37|DEBUG|[v1_campaign] End of v1_campaign
+28/06/2024 09:23:46|DEBUG|[load_campaign_card] Start of load_campaign_card
+28/06/2024 09:23:46|DEBUG|[load_campaign_card] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_encounters\Threshold Bridge1.json
+28/06/2024 09:23:46|DEBUG|[edit_encounter_card] Start of edit_encounter_card, name=Threshold Bridge, expansion=Iron Keep, level=1, enemySlots=[1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0], right=False
+28/06/2024 09:23:46|DEBUG|[create_image] Start of create_image, imageFileName=Threshold Bridge.jpg, imageType=encounter, level=1, expansion=Iron Keep
+28/06/2024 09:23:46|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Threshold Bridge.jpg
+28/06/2024 09:23:46|DEBUG|[create_image] 	End of create_image
+28/06/2024 09:23:46|DEBUG|[edit_encounter_card] New enemies: [10, 11, 6]
+28/06/2024 09:23:46|DEBUG|[edit_encounter_card] Pasting Falchion Skeleton image onto encounter at (67, 66).
+28/06/2024 09:23:46|DEBUG|[edit_encounter_card] Pasting Firebomb Hollow image onto encounter at (67, 112).
+28/06/2024 09:23:46|DEBUG|[edit_encounter_card] Pasting Crossbow Hollow image onto encounter at (107, 112).
+28/06/2024 09:23:46|DEBUG|[apply_keyword_tooltips] Start of apply_keyword_tooltips, name=Threshold Bridge, set=Iron Keep
+28/06/2024 09:23:46|DEBUG|[apply_keyword_tooltips] 	End of apply_keyword_tooltips
+28/06/2024 09:23:46|DEBUG|[edit_encounter_card] 	End of edit_encounter_card
+28/06/2024 09:23:46|DEBUG|[load_campaign_card] End of load_campaign_card
+28/06/2024 09:23:48|DEBUG|[load_campaign_card] Start of load_campaign_card
+28/06/2024 09:23:48|DEBUG|[load_campaign_card] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_encounters\Broken Passageway1.json
+28/06/2024 09:23:48|DEBUG|[edit_encounter_card] Start of edit_encounter_card, name=Broken Passageway, expansion=Dark Souls The Board Game, level=1, enemySlots=[1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0], right=False
+28/06/2024 09:23:48|DEBUG|[create_image] Start of create_image, imageFileName=Broken Passageway.jpg, imageType=encounter, level=1, expansion=Dark Souls The Board Game
+28/06/2024 09:23:48|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Broken Passageway.jpg
+28/06/2024 09:23:48|DEBUG|[create_image] 	End of create_image
+28/06/2024 09:23:48|DEBUG|[edit_encounter_card] New enemies: [22, 14, 30]
+28/06/2024 09:23:48|DEBUG|[edit_encounter_card] Pasting Plow Scarecrow image onto encounter at (67, 66).
+28/06/2024 09:23:48|DEBUG|[edit_encounter_card] Pasting Hollow Soldier image onto encounter at (67, 112).
+28/06/2024 09:23:48|DEBUG|[edit_encounter_card] Pasting Skeleton Soldier image onto encounter at (107, 112).
+28/06/2024 09:23:48|DEBUG|[apply_keyword_tooltips] Start of apply_keyword_tooltips, name=Broken Passageway, set=Dark Souls The Board Game
+28/06/2024 09:23:48|DEBUG|[apply_keyword_tooltips] 	End of apply_keyword_tooltips
+28/06/2024 09:23:48|DEBUG|[edit_encounter_card] 	End of edit_encounter_card
+28/06/2024 09:23:48|DEBUG|[load_campaign_card] End of load_campaign_card
+28/06/2024 09:23:49|DEBUG|[load_campaign_card] Start of load_campaign_card
+28/06/2024 09:23:49|DEBUG|[load_campaign_card] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_encounters\Murky Roots1.json
+28/06/2024 09:23:49|DEBUG|[edit_encounter_card] Start of edit_encounter_card, name=Murky Roots, expansion=Darkroot, level=2, enemySlots=[2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], right=False
+28/06/2024 09:23:49|DEBUG|[create_image] Start of create_image, imageFileName=Murky Roots.jpg, imageType=encounter, level=2, expansion=Darkroot
+28/06/2024 09:23:49|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Murky Roots.jpg
+28/06/2024 09:23:49|DEBUG|[create_image] 	End of create_image
+28/06/2024 09:23:49|DEBUG|[edit_encounter_card] New enemies: [33, 20]
+28/06/2024 09:23:49|DEBUG|[edit_encounter_card] Pasting Stone Knight image onto encounter at (67, 66).
+28/06/2024 09:23:49|DEBUG|[edit_encounter_card] Pasting Phalanx image onto encounter at (107, 66).
+28/06/2024 09:23:49|DEBUG|[apply_keyword_tooltips] Start of apply_keyword_tooltips, name=Murky Roots, set=Darkroot
+28/06/2024 09:23:49|DEBUG|[apply_keyword_tooltips] 	End of apply_keyword_tooltips
+28/06/2024 09:23:49|DEBUG|[edit_encounter_card] 	End of edit_encounter_card
+28/06/2024 09:23:49|DEBUG|[load_campaign_card] End of load_campaign_card
+28/06/2024 09:23:49|DEBUG|[load_campaign_card] Start of load_campaign_card
+28/06/2024 09:23:49|DEBUG|[load_campaign_card] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_encounters\Murky Roots1.json
+28/06/2024 09:23:49|DEBUG|[edit_encounter_card] Start of edit_encounter_card, name=Murky Roots, expansion=Darkroot, level=2, enemySlots=[2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], right=False
+28/06/2024 09:23:49|DEBUG|[create_image] Start of create_image, imageFileName=Murky Roots.jpg, imageType=encounter, level=2, expansion=Darkroot
+28/06/2024 09:23:49|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Murky Roots.jpg
+28/06/2024 09:23:50|DEBUG|[create_image] 	End of create_image
+28/06/2024 09:23:50|DEBUG|[edit_encounter_card] New enemies: [18, 13]
+28/06/2024 09:23:50|DEBUG|[edit_encounter_card] Pasting Mushroom Parent image onto encounter at (67, 66).
+28/06/2024 09:23:50|DEBUG|[edit_encounter_card] Pasting Giant Skeleton Soldier image onto encounter at (107, 66).
+28/06/2024 09:23:50|DEBUG|[apply_keyword_tooltips] Start of apply_keyword_tooltips, name=Murky Roots, set=Darkroot
+28/06/2024 09:23:50|DEBUG|[apply_keyword_tooltips] 	End of apply_keyword_tooltips
+28/06/2024 09:23:50|DEBUG|[edit_encounter_card] 	End of edit_encounter_card
+28/06/2024 09:23:50|DEBUG|[load_campaign_card] End of load_campaign_card
+28/06/2024 09:23:50|DEBUG|[load_campaign_card] Start of load_campaign_card
+28/06/2024 09:23:50|DEBUG|[create_image] Start of create_image, imageFileName=Winged Knight.jpg, imageType=encounter, level=4, expansion=None
+28/06/2024 09:23:50|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Winged Knight.jpg
+28/06/2024 09:23:50|DEBUG|[create_image] 	End of create_image
+28/06/2024 09:23:50|DEBUG|[load_campaign_card] End of load_campaign_card
+28/06/2024 09:23:52|DEBUG|[load_campaign_card] Start of load_campaign_card
+28/06/2024 09:23:52|DEBUG|[load_campaign_card] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_encounters\Bronze Spire1.json
+28/06/2024 09:23:52|DEBUG|[edit_encounter_card] Start of edit_encounter_card, name=Bronze Spire, expansion=Iron Keep, level=2, enemySlots=[1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0], right=False
+28/06/2024 09:23:52|DEBUG|[create_image] Start of create_image, imageFileName=Bronze Spire.jpg, imageType=encounter, level=2, expansion=Iron Keep
+28/06/2024 09:23:52|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Bronze Spire.jpg
+28/06/2024 09:23:52|DEBUG|[create_image] 	End of create_image
+28/06/2024 09:23:52|DEBUG|[edit_encounter_card] New enemies: [1, 15]
+28/06/2024 09:23:52|DEBUG|[edit_encounter_card] Pasting Alonne Bow Knight image onto encounter at (67, 66).
+28/06/2024 09:23:52|DEBUG|[edit_encounter_card] Pasting Ironclad Soldier image onto encounter at (67, 112).
+28/06/2024 09:23:52|DEBUG|[apply_keyword_tooltips] Start of apply_keyword_tooltips, name=Bronze Spire, set=Iron Keep
+28/06/2024 09:23:52|DEBUG|[apply_keyword_tooltips] 	End of apply_keyword_tooltips
+28/06/2024 09:23:52|DEBUG|[edit_encounter_card] 	End of edit_encounter_card
+28/06/2024 09:23:52|DEBUG|[load_campaign_card] End of load_campaign_card
+28/06/2024 09:23:53|DEBUG|[load_campaign_card] Start of load_campaign_card
+28/06/2024 09:23:53|DEBUG|[load_campaign_card] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_encounters\Black Bog1.json
+28/06/2024 09:23:53|DEBUG|[edit_encounter_card] Start of edit_encounter_card, name=Black Bog, expansion=Darkroot, level=2, enemySlots=[2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0], right=False
+28/06/2024 09:23:53|DEBUG|[create_image] Start of create_image, imageFileName=Black Bog.jpg, imageType=encounter, level=2, expansion=Darkroot
+28/06/2024 09:23:53|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Black Bog.jpg
+28/06/2024 09:23:53|DEBUG|[create_image] 	End of create_image
+28/06/2024 09:23:53|DEBUG|[edit_encounter_card] New enemies: [10, 22, 8, 22]
+28/06/2024 09:23:53|DEBUG|[edit_encounter_card] Pasting Falchion Skeleton image onto encounter at (67, 66).
+28/06/2024 09:23:53|DEBUG|[edit_encounter_card] Pasting Plow Scarecrow image onto encounter at (107, 66).
+28/06/2024 09:23:53|DEBUG|[edit_encounter_card] Pasting Demonic Foliage image onto encounter at (67, 112).
+28/06/2024 09:23:53|DEBUG|[edit_encounter_card] Pasting Plow Scarecrow image onto encounter at (107, 112).
+28/06/2024 09:23:53|DEBUG|[apply_keyword_tooltips] Start of apply_keyword_tooltips, name=Black Bog, set=Darkroot
+28/06/2024 09:23:53|DEBUG|[apply_keyword_tooltips] 	End of apply_keyword_tooltips
+28/06/2024 09:23:53|DEBUG|[edit_encounter_card] 	End of edit_encounter_card
+28/06/2024 09:23:53|DEBUG|[load_campaign_card] End of load_campaign_card
+28/06/2024 09:23:54|DEBUG|[load_campaign_card] Start of load_campaign_card
+28/06/2024 09:23:54|DEBUG|[load_campaign_card] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_encounters\Desecrated Church1.json
+28/06/2024 09:23:54|DEBUG|[edit_encounter_card] Start of edit_encounter_card, name=Desecrated Church, expansion=Dark Souls The Board Game, level=3, enemySlots=[3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0], right=False
+28/06/2024 09:23:54|DEBUG|[create_image] Start of create_image, imageFileName=Desecrated Church.jpg, imageType=encounter, level=3, expansion=Dark Souls The Board Game
+28/06/2024 09:23:54|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Desecrated Church.jpg
+28/06/2024 09:23:54|DEBUG|[create_image] 	End of create_image
+28/06/2024 09:23:54|DEBUG|[edit_encounter_card] New enemies: [30, 30, 6, 10, 2, 1]
+28/06/2024 09:23:54|DEBUG|[edit_encounter_card] Pasting Skeleton Soldier image onto encounter at (67, 66).
+28/06/2024 09:23:54|DEBUG|[edit_encounter_card] Pasting Skeleton Soldier image onto encounter at (107, 66).
+28/06/2024 09:23:54|DEBUG|[edit_encounter_card] Pasting Crossbow Hollow image onto encounter at (147, 66).
+28/06/2024 09:23:54|DEBUG|[edit_encounter_card] Pasting Falchion Skeleton image onto encounter at (67, 112).
+28/06/2024 09:23:54|DEBUG|[edit_encounter_card] Pasting Alonne Knight Captain image onto encounter at (107, 112).
+28/06/2024 09:23:54|DEBUG|[edit_encounter_card] Pasting Alonne Bow Knight image onto encounter at (147, 112).
+28/06/2024 09:23:54|DEBUG|[apply_keyword_tooltips] Start of apply_keyword_tooltips, name=Desecrated Church, set=Dark Souls The Board Game
+28/06/2024 09:23:54|DEBUG|[apply_keyword_tooltips] 	End of apply_keyword_tooltips
+28/06/2024 09:23:54|DEBUG|[edit_encounter_card] 	End of edit_encounter_card
+28/06/2024 09:23:54|DEBUG|[load_campaign_card] End of load_campaign_card
+28/06/2024 09:23:55|DEBUG|[load_campaign_card] Start of load_campaign_card
+28/06/2024 09:23:55|DEBUG|[load_campaign_card] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_encounters\Desolate Hinterland1.json
+28/06/2024 09:23:55|DEBUG|[edit_encounter_card] Start of edit_encounter_card, name=Desolate Hinterland, expansion=Darkroot, level=3, enemySlots=[1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0], right=False
+28/06/2024 09:23:55|DEBUG|[create_image] Start of create_image, imageFileName=Desolate Hinterland.jpg, imageType=encounter, level=3, expansion=Darkroot
+28/06/2024 09:23:55|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Desolate Hinterland.jpg
+28/06/2024 09:23:55|DEBUG|[create_image] 	End of create_image
+28/06/2024 09:23:55|DEBUG|[edit_encounter_card] New enemies: [2, 18, 17]
+28/06/2024 09:23:55|DEBUG|[edit_encounter_card] Pasting Alonne Knight Captain image onto encounter at (67, 66).
+28/06/2024 09:23:55|DEBUG|[edit_encounter_card] Pasting Mushroom Parent image onto encounter at (67, 112).
+28/06/2024 09:23:55|DEBUG|[edit_encounter_card] Pasting Mushroom Child image onto encounter at (107, 112).
+28/06/2024 09:23:55|DEBUG|[apply_keyword_tooltips] Start of apply_keyword_tooltips, name=Desolate Hinterland, set=Darkroot
+28/06/2024 09:23:55|DEBUG|[apply_keyword_tooltips] 	End of apply_keyword_tooltips
+28/06/2024 09:23:55|DEBUG|[edit_encounter_card] 	End of edit_encounter_card
+28/06/2024 09:23:55|DEBUG|[load_campaign_card] End of load_campaign_card
+28/06/2024 09:23:56|DEBUG|[load_campaign_card] Start of load_campaign_card
+28/06/2024 09:23:56|DEBUG|[create_image] Start of create_image, imageFileName=Dancer of the Boreal Valley.jpg, imageType=encounter, level=4, expansion=None
+28/06/2024 09:23:56|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Dancer of the Boreal Valley.jpg
+28/06/2024 09:23:56|DEBUG|[create_image] 	End of create_image
+28/06/2024 09:23:56|DEBUG|[load_campaign_card] End of load_campaign_card
+28/06/2024 09:23:59|DEBUG|[load_campaign_card] Start of load_campaign_card
+28/06/2024 09:23:59|DEBUG|[load_campaign_card] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_encounters\Huntsman's Copse1.json
+28/06/2024 09:23:59|DEBUG|[edit_encounter_card] Start of edit_encounter_card, name=Huntsman's Copse, expansion=Executioner Chariot, level=4, enemySlots=[1, 1, 2, 1, 0, 0, 0, 0, 0, 0, 0], right=False
+28/06/2024 09:23:59|DEBUG|[create_image] Start of create_image, imageFileName=Huntsman's Copse.jpg, imageType=encounter, level=4, expansion=Executioner Chariot
+28/06/2024 09:23:59|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Huntsman's Copse.jpg
+28/06/2024 09:23:59|DEBUG|[create_image] 	End of create_image
+28/06/2024 09:23:59|DEBUG|[edit_encounter_card] New enemies: [38, 32, 6, 22, 11]
+28/06/2024 09:23:59|DEBUG|[edit_encounter_card] Pasting Kirk, Knight of Thorns image onto encounter at (115, 76).
+28/06/2024 09:23:59|DEBUG|[edit_encounter_card] Pasting Stone Guardian image onto encounter at (116, 125).
+28/06/2024 09:23:59|DEBUG|[edit_encounter_card] Pasting Crossbow Hollow image onto encounter at (116, 172).
+28/06/2024 09:23:59|DEBUG|[edit_encounter_card] Pasting Plow Scarecrow image onto encounter at (159, 172).
+28/06/2024 09:23:59|DEBUG|[edit_encounter_card] Pasting Firebomb Hollow image onto encounter at (116, 219).
+28/06/2024 09:23:59|DEBUG|[apply_keyword_tooltips] Start of apply_keyword_tooltips, name=Huntsman's Copse, set=Executioner Chariot
+28/06/2024 09:23:59|DEBUG|[apply_keyword_tooltips] 	End of apply_keyword_tooltips
+28/06/2024 09:23:59|DEBUG|[edit_encounter_card] 	End of edit_encounter_card
+28/06/2024 09:23:59|DEBUG|[load_campaign_card] End of load_campaign_card
+28/06/2024 09:24:00|DEBUG|[load_campaign_card] Start of load_campaign_card
+28/06/2024 09:24:00|DEBUG|[create_image] Start of create_image, imageFileName=Gaping Dragon.jpg, imageType=encounter, level=4, expansion=None
+28/06/2024 09:24:00|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Gaping Dragon.jpg
+28/06/2024 09:24:00|DEBUG|[create_image] 	End of create_image
+28/06/2024 09:24:00|DEBUG|[load_campaign_card] End of load_campaign_card
