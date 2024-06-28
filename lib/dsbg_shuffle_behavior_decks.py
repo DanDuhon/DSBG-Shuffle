@@ -113,6 +113,7 @@ try:
                 self.treeviewDecks.column("Cards in Deck", anchor=tk.W, width=90)
                 self.treeviewDecks.column("Heat Up", anchor=tk.W, width=90)
                 
+                self.treeviewDecks.insert(parent="", index="end", iid="Enemies", values=("Enemies", "", ""), tags=False)
                 if {"Phantoms", "Explorers"} & self.app.availableExpansions:
                     self.treeviewDecks.insert(parent="", index="end", iid="Invaders & Explorers Mimics", values=("Invaders & Explorers Mimics", "", ""), tags=False)
                 self.treeviewDecks.insert(parent="", index="end", iid="Mini Bosses", values=("Mini Bosses", "", ""), tags=False)
@@ -120,14 +121,17 @@ try:
                 if set([boss for boss in bosses if bosses[boss]["level"] == "Mega Boss"]) & self.app.availableExpansions:
                     self.treeviewDecks.insert(parent="", index="end", iid="Mega Bosses", values=("Mega Bosses", "", ""), tags=False)
 
+                for enemy in sorted([enemy for enemy in enemiesDict if enemiesDict[enemy].expansions & self.app.availableExpansions and "Phantoms" not in enemiesDict[enemy].expansions and enemiesDict[enemy].name not in {"Hungry Mimic", "Voracious Mimic"}]):
+                    self.treeviewDecks.insert(parent="Enemies", index="end", iid=enemy, values=("    " + enemy, "", ""), tags=True)
+
                 for enemy in sorted([enemy for enemy in enemiesDict if enemiesDict[enemy].expansions & self.app.availableExpansions and ("Phantoms" in enemiesDict[enemy].expansions or enemiesDict[enemy].name in {"Hungry Mimic", "Voracious Mimic"})]):
-                    self.treeviewDecks.insert(parent="Invaders & Explorers Mimics", index="end", iid=enemy, values=("    " + enemy, enemiesDict[enemy].cards, "no"), tags=True)
+                    self.treeviewDecks.insert(parent="Invaders & Explorers Mimics", index="end", iid=enemy, values=("    " + enemy, enemiesDict[enemy].cards, ""), tags=True)
                     
                 for enemy in sorted([enemy for enemy in bosses if (
                     bosses[enemy]["expansions"] & self.app.availableExpansions
                     and enemy != "Vordt of the Boreal Valley"
                     )]):
-                    self.treeviewDecks.insert(parent=bosses[enemy]["level"] + "es", index="end", iid=enemy, values=("    " + enemy, bosses[enemy]["cards"]), tags=True)
+                    self.treeviewDecks.insert(parent=bosses[enemy]["level"] + "es", index="end", iid=enemy, values=("    " + enemy, bosses[enemy]["cards"], ""), tags=True)
 
                 if "Vordt of the Boreal Valley" in self.app.availableExpansions:
                     self.treeviewDecks.insert(parent="Mega Bosses", index="end", iid="Vordt of the Boreal Valley (move)", values=("    Vordt of the Boreal Valley (move)", 4), tags=True)
@@ -218,6 +222,10 @@ try:
                         self.set_decks(enemy="Vordt of the Boreal Valley " +  ("(move)" if "(attack)" in self.treeviewDecks.selection()[0] else "(attack)"))
                     enemy = self.treeviewDecks.selection()[0]
 
+                if enemy not in self.decks:
+                    log("End of set_decks (nothing done)")
+                    return
+
                 if not skipClear:
                     # Remove keyword tooltips from the previous image shown, if there are any.
                     for tooltip in self.app.tooltips:
@@ -305,7 +313,7 @@ try:
 
                 selection = self.treeviewDecks.selection()[0]
 
-                if not selection:
+                if not selection or selection not in self.decks:
                     log("End of draw_behavior_card (nothing done)")
                     return
                 
@@ -494,6 +502,7 @@ try:
 
                 if (
                     not selection
+                    or selection not in self.decks
                     or selection == "Executioner Chariot"
                     or (selection == "Old Dragonslayer" and self.decks[selection]["heatup"] > 2)
                     or (selection == "The Four Kings" and self.decks[selection]["heatup"] > 3)
