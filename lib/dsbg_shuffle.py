@@ -235,42 +235,40 @@ try:
                 self.display.grid(column=0, row=0, sticky="nsew")
                 self.display2 = ttk.Label(self.displayFrame)
                 self.display2.image = None
-                self.display2.grid(column=1, row=0, sticky="nsew")
+                self.display2.grid(column=1, row=0, sticky="nsew", columnspan=2)
                 self.display3 = ttk.Label(self.displayFrame)
                 self.display3.image = None
-                self.display3.grid(column=1, row=1, sticky="nsew")
+                self.display3.grid(column=1, row=1, sticky="nsew", columnspan=2)
+
+                # Frames for health trackers
                 self.displayKing1 = ttk.Label(self.displayFrame)
                 self.displayKing1.image = None
-                self.displayKing1.bind("<Button 1>", lambda event, x=1: app.behaviorDeckTab.lower_health_king(event=event, king=1, amount=x))
-                self.displayKing1.bind("<Shift-Button 1>", lambda event, x=5: app.behaviorDeckTab.lower_health_king(event=event, king=1, amount=x))
-                self.displayKing1.bind("<Button 3>", lambda event, x=1: app.behaviorDeckTab.raise_health_king(event=event, king=1, amount=x))
-                self.displayKing1.bind("<Shift-Button 3>", lambda event, x=5: app.behaviorDeckTab.raise_health_king(event=event, king=1, amount=x))
-                self.displayKing1.bind("<Control-1>", lambda event, x=1: app.behaviorDeckTab.raise_health_king(event=event, king=1, amount=x))
-                self.displayKing1.bind("<Shift-Control-1>", lambda event, x=5: app.behaviorDeckTab.raise_health_king(event=event, king=1, amount=x))
                 self.displayKing2 = ttk.Label(self.displayFrame)
                 self.displayKing2.image = None
-                self.displayKing2.bind("<Button 1>", lambda event, x=1: app.behaviorDeckTab.lower_health_king(event=event, king=2, amount=x))
-                self.displayKing2.bind("<Shift-Button 1>", lambda event, x=5: app.behaviorDeckTab.lower_health_king(event=event, king=2, amount=x))
-                self.displayKing2.bind("<Button 3>", lambda event, x=1: app.behaviorDeckTab.raise_health_king(event=event, king=2, amount=x))
-                self.displayKing2.bind("<Shift-Button 3>", lambda event, x=5: app.behaviorDeckTab.raise_health_king(event=event, king=2, amount=x))
-                self.displayKing2.bind("<Control-1>", lambda event, x=1: app.behaviorDeckTab.raise_health_king(event=event, king=2, amount=x))
-                self.displayKing2.bind("<Shift-Control-1>", lambda event, x=5: app.behaviorDeckTab.raise_health_king(event=event, king=2, amount=x))
                 self.displayKing3 = ttk.Label(self.displayFrame)
                 self.displayKing3.image = None
-                self.displayKing3.bind("<Button 1>", lambda event, x=1: app.behaviorDeckTab.lower_health_king(event=event, king=3, amount=x))
-                self.displayKing3.bind("<Shift-Button 1>", lambda event, x=5: app.behaviorDeckTab.lower_health_king(event=event, king=3, amount=x))
-                self.displayKing3.bind("<Button 3>", lambda event, x=1: app.behaviorDeckTab.raise_health_king(event=event, king=3, amount=x))
-                self.displayKing3.bind("<Shift-Button 3>", lambda event, x=5: app.behaviorDeckTab.raise_health_king(event=event, king=3, amount=x))
-                self.displayKing3.bind("<Control-1>", lambda event, x=1: app.behaviorDeckTab.raise_health_king(event=event, king=3, amount=x))
-                self.displayKing3.bind("<Shift-Control-1>", lambda event, x=5: app.behaviorDeckTab.raise_health_king(event=event, king=3, amount=x))
                 self.displayKing4 = ttk.Label(self.displayFrame)
                 self.displayKing4.image = None
-                self.displayKing4.bind("<Button 1>", lambda event, x=1: app.behaviorDeckTab.lower_health_king(event=event, king=4, amount=x))
-                self.displayKing4.bind("<Shift-Button 1>", lambda event, x=5: app.behaviorDeckTab.lower_health_king(event=event, king=4, amount=x))
-                self.displayKing4.bind("<Button 3>", lambda event, x=1: app.behaviorDeckTab.raise_health_king(event=event, king=4, amount=x))
-                self.displayKing4.bind("<Shift-Button 3>", lambda event, x=5: app.behaviorDeckTab.raise_health_king(event=event, king=4, amount=x))
-                self.displayKing4.bind("<Control-1>", lambda event, x=1: app.behaviorDeckTab.raise_health_king(event=event, king=4, amount=x))
-                self.displayKing4.bind("<Shift-Control-1>", lambda event, x=5: app.behaviorDeckTab.raise_health_king(event=event, king=4, amount=x))
+
+                for k, d in enumerate([self.displayKing1, self.displayKing2, self.displayKing3, self.displayKing4], 1):
+                    d.bind("<Button 1>", lambda event, x=1: app.behaviorDeckTab.lower_health_king(event=event, king=k, amount=x))
+                    d.bind("<Shift-Button 1>", lambda event, x=5: app.behaviorDeckTab.lower_health_king(event=event, king=k, amount=x))
+                    d.bind("<Button 3>", lambda event, x=1: app.behaviorDeckTab.raise_health_king(event=event, king=k, amount=x))
+                    d.bind("<Shift-Button 3>", lambda event, x=5: app.behaviorDeckTab.raise_health_king(event=event, king=k, amount=x))
+                    d.bind("<Control-1>", lambda event, x=1: app.behaviorDeckTab.raise_health_king(event=event, king=k, amount=x))
+                    d.bind("<Shift-Control-1>", lambda event, x=5: app.behaviorDeckTab.raise_health_king(event=event, king=k, amount=x))
+
+                for enemy in self.enabledEnemies:
+                    self.behaviorDeckTab.decks[enemyIds[enemy].name]["healthTrackers"] = []
+                    for _ in range(8):
+                        self.behaviorDeckTab.decks[enemyIds[enemy].name]["healthTrackers"].append(ttk.Label(self.displayFrame))
+                        self.behaviorDeckTab.decks[enemyIds[enemy].name]["healthTrackers"][-1].image = None
+                        self.behaviorDeckTab.decks[enemyIds[enemy].name]["healthTrackers"][-1].bind("<Button 1>", lambda event, x=1: app.behaviorDeckTab.lower_health_regular(event=event, amount=x))
+                        self.behaviorDeckTab.decks[enemyIds[enemy].name]["healthTrackers"][-1].bind("<Shift-Button 1>", lambda event, x=5: app.behaviorDeckTab.lower_health_regular(event=event, amount=x))
+                        self.behaviorDeckTab.decks[enemyIds[enemy].name]["healthTrackers"][-1].bind("<Button 3>", lambda event, x=1: app.behaviorDeckTab.raise_health_regular(event=event, amount=x))
+                        self.behaviorDeckTab.decks[enemyIds[enemy].name]["healthTrackers"][-1].bind("<Shift-Button 3>", lambda event, x=5: app.behaviorDeckTab.raise_health_regular(event=event, amount=x))
+                        self.behaviorDeckTab.decks[enemyIds[enemy].name]["healthTrackers"][-1].bind("<Control-1>", lambda event, x=1: app.behaviorDeckTab.raise_health_regular(event=event, amount=x))
+                        self.behaviorDeckTab.decks[enemyIds[enemy].name]["healthTrackers"][-1].bind("<Shift-Control-1>", lambda event, x=5: app.behaviorDeckTab.raise_health_regular(event=event, amount=x))
 
                 self.displayImages = {
                     "encounters": {
@@ -665,6 +663,11 @@ try:
                     imagePath = baseFolder + "\\lib\\dsbg_shuffle_images\\".replace("\\", pathSep) + imageFileName[:-4] + " rule bg.jpg"
                     log("\tOpening " + imagePath)
                     image = Image.open(imagePath).resize((14, 14), Image.Resampling.LANCZOS)
+                elif imageType == "healthTracker":
+                    imagePath = baseFolder + "\\lib\\dsbg_shuffle_images\\".replace("\\", pathSep) + imageFileName
+                    log("\tOpening " + imagePath)
+                    self.displayImage = Image.open(imagePath).resize((102, 55), Image.Resampling.LANCZOS)
+                    image = ImageTk.PhotoImage(self.displayImage)
                 elif imageType == "fourKingsHealth":
                     imagePath = baseFolder + "\\lib\\dsbg_shuffle_images\\".replace("\\", pathSep) + imageFileName
                     log("\tOpening " + imagePath)

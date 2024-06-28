@@ -33,11 +33,16 @@ try:
             self.resetButton = ttk.Button(self.deckTabButtonsFrame, text="Reset Deck", width=16, command=self.set_decks)
             self.resetButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
 
+            self.drawButton = ttk.Button(self.deckTabButtonsFrame2, text="Add Tracker", width=16, command=lambda add=True: self.health_tracker(add))
+            self.drawButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+            self.heatupButton = ttk.Button(self.deckTabButtonsFrame2, text="Remove Trackers", width=16, command=self.remove_all_health_trackers)
+            self.heatupButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+
             self.decks = (
-                {k: [] for k in enemiesDict if k in behaviors}
-                | {k: [] for k in bosses if "Vordt" not in k}
-                | {"Vordt of the Boreal Valley (move)": []}
-                | {"Vordt of the Boreal Valley (attack)": []}
+                {k: {} for k in enemiesDict}
+                | {k: {} for k in bosses if "Vordt" not in k}
+                | {"Vordt of the Boreal Valley (move)": {}}
+                | {"Vordt of the Boreal Valley (attack)": {}}
                 )
             
             for enemy in self.decks:
@@ -48,6 +53,9 @@ try:
                     "lastCardDrawn": None,
                     "defKey": {"",}
                     }
+                
+                if enemy not in behaviors and enemiesDict[enemy].id in self.app.enabledEnemies:
+                    self.decks[enemy]["healthMod"] = {0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0}
                 
                 if enemy == "Ornstein & Smough":
                     self.decks[enemy]["healthMod"] = {"Ornstein": 0, "Smough": 0}
@@ -149,6 +157,10 @@ try:
             try:
                 log("Start of load_deck")
 
+                if enemy not in behaviors:
+                    log("End of load_deck (regular enemy)")
+                    return
+
                 lookupName = enemy if "(" not in enemy else enemy[:enemy.index(" (")]
 
                 behaviorsWithDupes = deepcopy(behaviors)
@@ -247,56 +259,61 @@ try:
 
                 self.decks[enemy]["deck"] = self.load_deck(enemy)
                 
-                if enemy == "Oliver the Collector":
-                    self.decks[enemy]["heatupCards"] = [b for b in behaviors[enemy] if b not in set(self.decks[enemy]["deck"])]
-                elif enemy in {"Old Dragonslayer", "Artorias"}:
-                    self.decks[enemy]["heatupCards"] = [b for b in behaviors[enemy] if behaviorDetail[enemy][b].get("heatup", False)]
-                elif enemy == "Smelter Demon":
-                    self.decks[enemy]["heatupCards"] = sample([b for b in behaviors[enemy] if behaviorDetail[enemy][b].get("heatup", False)], 5)
-                elif enemy == "Ornstein & Smough":
-                    self.decks[enemy]["heatupCards"] = {}
-                    self.decks[enemy]["heatupCards"]["Ornstein"] = ["Charged Bolt", "Charged Swiping Combo", "Electric Clash", "High Voltage", "Lightning Stab"]
-                    self.decks[enemy]["heatupCards"]["Smough"] = ["Charged Charge", "Electric Bonzai Drop", "Electric Hammer Smash", "Jumping Volt Slam", "Lightning Sweep"]
-                    shuffle(self.decks[enemy]["heatupCards"]["Ornstein"])
-                    shuffle(self.decks[enemy]["heatupCards"]["Smough"])
-                elif enemy == "Guardian Dragon":
-                    self.decks[enemy]["heatupCards"] = ["Cage Grasp Inferno", "Cage Grasp Inferno"]
-                elif enemy == "The Four Kings":
-                    self.decks[enemy]["heatupCards"] = {}
-                    self.decks[enemy]["heatupCards"][2] = [b for b in behaviors[enemy] if behaviorDetail[enemy][b].get("heatup", 1) == 2]
-                    self.decks[enemy]["heatupCards"][3] = [b for b in behaviors[enemy] if behaviorDetail[enemy][b].get("heatup", 1) == 3]
-                    self.decks[enemy]["heatupCards"][4] = [b for b in behaviors[enemy] if behaviorDetail[enemy][b].get("heatup", 1) == 4]
-                    shuffle(self.decks[enemy]["heatupCards"][2])
-                    shuffle(self.decks[enemy]["heatupCards"][3])
-                    shuffle(self.decks[enemy]["heatupCards"][4])
-                elif enemy == "The Last Giant":
-                    self.decks[enemy]["heatupCards"] = sample([b for b in behaviors[enemy] if behaviorDetail[enemy][b].get("heatup", False)], 3) + ["Falling Slam"]
-                else:
-                    if "Vordt" in enemy:
-                        enemyName = enemy[:enemy.index(" (")]
+                if enemy in behaviors:
+                    if enemy == "Oliver the Collector":
+                        self.decks[enemy]["heatupCards"] = [b for b in behaviors[enemy] if b not in set(self.decks[enemy]["deck"])]
+                    elif enemy in {"Old Dragonslayer", "Artorias"}:
+                        self.decks[enemy]["heatupCards"] = [b for b in behaviors[enemy] if behaviorDetail[enemy][b].get("heatup", False)]
+                    elif enemy == "Smelter Demon":
+                        self.decks[enemy]["heatupCards"] = sample([b for b in behaviors[enemy] if behaviorDetail[enemy][b].get("heatup", False)], 5)
+                    elif enemy == "Ornstein & Smough":
+                        self.decks[enemy]["heatupCards"] = {}
+                        self.decks[enemy]["heatupCards"]["Ornstein"] = ["Charged Bolt", "Charged Swiping Combo", "Electric Clash", "High Voltage", "Lightning Stab"]
+                        self.decks[enemy]["heatupCards"]["Smough"] = ["Charged Charge", "Electric Bonzai Drop", "Electric Hammer Smash", "Jumping Volt Slam", "Lightning Sweep"]
+                        shuffle(self.decks[enemy]["heatupCards"]["Ornstein"])
+                        shuffle(self.decks[enemy]["heatupCards"]["Smough"])
+                    elif enemy == "Guardian Dragon":
+                        self.decks[enemy]["heatupCards"] = ["Cage Grasp Inferno", "Cage Grasp Inferno"]
+                    elif enemy == "The Four Kings":
+                        self.decks[enemy]["heatupCards"] = {}
+                        self.decks[enemy]["heatupCards"][2] = [b for b in behaviors[enemy] if behaviorDetail[enemy][b].get("heatup", 1) == 2]
+                        self.decks[enemy]["heatupCards"][3] = [b for b in behaviors[enemy] if behaviorDetail[enemy][b].get("heatup", 1) == 3]
+                        self.decks[enemy]["heatupCards"][4] = [b for b in behaviors[enemy] if behaviorDetail[enemy][b].get("heatup", 1) == 4]
+                        shuffle(self.decks[enemy]["heatupCards"][2])
+                        shuffle(self.decks[enemy]["heatupCards"][3])
+                        shuffle(self.decks[enemy]["heatupCards"][4])
+                    elif enemy == "The Last Giant":
+                        self.decks[enemy]["heatupCards"] = sample([b for b in behaviors[enemy] if behaviorDetail[enemy][b].get("heatup", False)], 3) + ["Falling Slam"]
                     else:
-                        enemyName = enemy
-                    if [b for b in behaviors[enemy] if behaviorDetail[enemyName][b].get("heatup", False)]:
-                        self.decks[enemy]["heatupCards"] = [choice([b for b in behaviors[enemy] if behaviorDetail[enemyName][b].get("heatup", False)])]
-                    else:
-                        self.decks[enemy]["heatupCards"] = [choice([b for b in behaviors[enemy] if b not in set(self.decks[enemy]["deck"])])]
+                        if "Vordt" in enemy:
+                            enemyName = enemy[:enemy.index(" (")]
+                        else:
+                            enemyName = enemy
+                        if [b for b in behaviors[enemy] if behaviorDetail[enemyName][b].get("heatup", False)]:
+                            self.decks[enemy]["heatupCards"] = [choice([b for b in behaviors[enemy] if behaviorDetail[enemyName][b].get("heatup", False)])]
+                        else:
+                            self.decks[enemy]["heatupCards"] = [choice([b for b in behaviors[enemy] if b not in set(self.decks[enemy]["deck"])])]
 
-                if type(self.decks[enemy]["heatupCards"]) == list:
-                    shuffle(self.decks[enemy]["heatupCards"])
+                    if type(self.decks[enemy]["heatupCards"]) == list:
+                        shuffle(self.decks[enemy]["heatupCards"])
 
                 self.decks[enemy]["heatup"] = 0 if enemy == "Old Dragonslayer" else 1 if enemy == "The Four Kings" else False
-                self.decks[enemy]["healthMod"] = {"Ornstein": 0, "Smough": 0} if enemy == "Ornstein & Smough" else {1: 0, 2: 0, 3: 0, 4: 0} if enemy == "The Four Kings" else 0
+                self.decks[enemy]["healthMod"] = {"Ornstein": 0, "Smough": 0} if enemy == "Ornstein & Smough" else {1: 0, 2: 0, 3: 0, 4: 0} if enemy == "The Four Kings" else {0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0} if enemy not in behaviors and enemiesDict[enemy].id in self.app.enabledEnemies else 0
                 self.decks[enemy]["curIndex"] = 0
                 self.decks[enemy]["lastCardDrawn"] = None
                 self.treeviewDecks.item(enemy, values=(
                     self.treeviewDecks.item(enemy)["values"][0],
-                    len(self.decks[enemy]["deck"]),
+                    len(self.decks[enemy]["deck"]) if self.decks[enemy]["deck"] else "",
                     ""))
 
                 if (enemy[:enemy.index(" (")] if "Vordt" in enemy else enemy) in set([v[:v.index("_")] for v in self.app.variantsTab.lockedVariants]):
                     self.decks[enemy]["defKey"] = choice([self.app.variantsTab.lockedVariants[v] for v in self.app.variantsTab.lockedVariants if "-" not in v])
+                elif (enemy[:enemy.index(" (")] if "Vordt" in enemy else enemy) in self.app.variantsTab.currentVariants:
+                    self.decks[enemy]["defKey"] = self.app.variantsTab.currentVariants[enemy]["defKey"]
                 else:
                     self.decks[enemy]["defKey"] = {"",}
+
+                self.remove_all_health_trackers()
 
                 if not skipClear and self.treeviewDecks.selection():
                     self.display_deck_cards()
@@ -313,7 +330,7 @@ try:
 
                 selection = self.treeviewDecks.selection()[0]
 
-                if not selection or selection not in self.decks:
+                if not selection or selection not in self.decks or self.treeviewDecks.parent(selection) == "Enemies":
                     log("End of draw_behavior_card (nothing done)")
                     return
                 
@@ -397,14 +414,16 @@ try:
                         self.app.variantsTab.load_variant_card_locked(variant="Smough - data", deckDataCard=True, healthMod=self.decks[self.treeviewDecks.selection()[0]]["healthMod"], fromDeck=True)
                     else:
                         selection = selection[:selection.index(" (")] if "Vordt" in selection else selection
-                        self.app.variantsTab.load_variant_card_locked(variant=selection + ("_" + ",".join([str(m) for m in self.decks[self.treeviewDecks.selection()[0]]["defKey"]]) if self.decks[self.treeviewDecks.selection()[0]].get("defKey", None) else ""), deckDataCard=True, healthMod=0 if selection == "The Four Kings" else self.decks[self.treeviewDecks.selection()[0]]["healthMod"], fromDeck=True)
+                        self.app.variantsTab.load_variant_card_locked(variant=selection + ("_" + ",".join([str(m) for m in self.decks[self.treeviewDecks.selection()[0]]["defKey"]]) if self.decks[self.treeviewDecks.selection()[0]].get("defKey", None) else ""), deckDataCard=True, healthMod=0 if selection == "The Four Kings" or self.treeviewDecks.parent(selection) == "Enemies" else self.decks[self.treeviewDecks.selection()[0]]["healthMod"], fromDeck=True)
 
                     if self.decks[self.treeviewDecks.selection()[0]]["lastCardDrawn"]:
-                        self.app.variantsTab.load_variant_card_locked(variant=self.decks[self.treeviewDecks.selection()[0]]["lastCardDrawn"], healthMod=0 if selection == "The Four Kings" else self.decks[self.treeviewDecks.selection()[0]]["healthMod"], fromDeck=True)
+                        self.app.variantsTab.load_variant_card_locked(variant=self.decks[self.treeviewDecks.selection()[0]]["lastCardDrawn"], healthMod=0 if selection == "The Four Kings" or self.treeviewDecks.parent(selection) == "Enemies" else self.decks[self.treeviewDecks.selection()[0]]["healthMod"], fromDeck=True)
 
                     if selection == "The Four Kings":
                         for x in range(1, 5):
                             self.four_kings_health_track(king=x, healthMod=self.decks["The Four Kings"]["healthMod"][x])
+                    elif self.treeviewDecks.parent(selection) == "Enemies":
+                        self.health_tracker()
 
                     set_display_bindings_by_tab(self.app, selection == "Ornstein & Smough")
 
@@ -432,7 +451,7 @@ try:
                     health += healthMod
 
                 if king <= self.decks["The Four Kings"]["heatup"]:
-                    imageWithText.text((118 + (4 if health < 10 else 0), 16), str(health), "white", font2)
+                    imageWithText.text((118 + (4 if health < 10 else 0), 17), str(health), "white", font2)
                 else:
                     imageWithText.text((124, 16), "-", "white", font2)
 
@@ -452,6 +471,107 @@ try:
                 display.grid(row=king, column=1, sticky="nsew")
 
                 log("End of four_kings_health_track")
+            except Exception as e:
+                error_popup(self.root, e)
+                raise
+
+
+        def health_tracker(self, add=False, labelIndex=-1):
+            try:
+                log("Start of health_tracker")
+
+                if self.treeviewDecks.parent(self.treeviewDecks.selection()[0]) != "Enemies":
+                    log("End of health_tracker (regular enemy not selected)")
+                    return
+                
+                enemy = self.treeviewDecks.selection()[0]
+
+                if add:
+                    display = None
+                    spot = 0
+
+                    for s, d in enumerate(self.decks[enemy]["healthTrackers"]):
+                        if not d.image:
+                            display = d
+                            spot = s
+                            healthMod = self.decks[enemy]["healthMod"][s]
+                            break
+
+                    if not display:
+                        log("End of health_tracker (no spots available)")
+                        return
+
+                    self.app.create_image("Health track " + enemy + ".jpg", "healthTracker")
+
+                    imageWithText = ImageDraw.Draw(self.app.displayImage)
+
+                    health = behaviorDetail[enemy]["health"]
+
+                    mods = [modIdLookup[m] for m in list(self.decks[enemy]["defKey"]) if m]
+                    healthAddition = get_health_bonus(health, mods)
+                    health += healthAddition
+
+                    if healthMod and health + healthMod >= 0:
+                        health += healthMod
+
+                    imageWithText.text((67 + (4 if health < 10 else 0), 17), str(health), "white", font2)
+
+                    displayPhotoImage = ImageTk.PhotoImage(self.app.displayImage)
+
+                    display.image = displayPhotoImage
+                    display.config(image=displayPhotoImage)
+                    display.grid(row=1+int(spot/2), column=1+(spot%2), sticky="nsew")
+                elif labelIndex > -1:
+                    self.app.create_image("Health track " + enemy + ".jpg", "healthTracker")
+
+                    imageWithText = ImageDraw.Draw(self.app.displayImage)
+
+                    health = behaviorDetail[enemy]["health"]
+                    healthMod = self.decks[enemy]["healthMod"][labelIndex]
+
+                    mods = [modIdLookup[m] for m in list(self.decks[enemy]["defKey"]) if m]
+                    healthAddition = get_health_bonus(health, mods)
+                    health += healthAddition
+
+                    if healthMod and health + healthMod >= 0:
+                        health += healthMod
+
+                    imageWithText.text((67 + (4 if health < 10 else 0), 17), str(health), "white", font2)
+
+                    displayPhotoImage = ImageTk.PhotoImage(self.app.displayImage)
+
+                    display = self.decks[enemy]["healthTrackers"][labelIndex]
+                    display.image = displayPhotoImage
+                    display.config(image=displayPhotoImage)
+                    display.grid(row=1+int(labelIndex/2), column=1+(labelIndex%2), sticky="nsew")
+                else:
+                    for s, d in enumerate(self.decks[enemy]["healthTrackers"]):
+                        if d.image:
+                            d.grid(row=1+int(s/2), column=1+(s%2), sticky="nsew")
+
+                log("End of health_tracker")
+            except Exception as e:
+                error_popup(self.root, e)
+                raise
+
+
+        def remove_all_health_trackers(self):
+            try:
+                log("Start of remove_all_health_trackers")
+
+                if not self.treeviewDecks.selection():
+                    log("End of remove_all_health_trackers (nothing done)")
+                    return
+
+                enemy = self.treeviewDecks.selection()[0]
+
+                self.decks[enemy]["healthMod"] = {0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0}
+
+                for d in self.decks[enemy]["healthTrackers"]:
+                    d.image = None
+                    d.config(image="")
+
+                log("End of remove_all_health_trackers")
             except Exception as e:
                 error_popup(self.root, e)
                 raise
@@ -503,6 +623,7 @@ try:
                 if (
                     not selection
                     or selection not in self.decks
+                    or self.treeviewDecks.parent(selection) == "Enemies"
                     or selection == "Executioner Chariot"
                     or (selection == "Old Dragonslayer" and self.decks[selection]["heatup"] > 2)
                     or (selection == "The Four Kings" and self.decks[selection]["heatup"] > 3)
@@ -631,7 +752,7 @@ try:
 
                 selection = self.treeviewDecks.selection()[0]
 
-                if selection == "The Four Kings":
+                if selection == "The Four Kings" or selection not in behaviors:
                     log("End of lower_health (wrong tab)")
                     return
 
@@ -732,6 +853,10 @@ try:
 
                 selection = self.treeviewDecks.selection()[0]
 
+                if selection not in behaviors:
+                    log("End of raise_health (nothing done)")
+                    return
+
                 osClicked = "Ornstein" if event.widget == self.app.display2 else "Smough" if event.widget == self.app.display3 else ""
 
                 if (
@@ -824,6 +949,84 @@ try:
                 self.four_kings_health_track(king, healthMod=self.decks[selection]["healthMod"][king])
 
                 log("End of raise_health_king")
+            except Exception as e:
+                error_popup(self.root, e)
+                raise
+                
+
+        def lower_health_regular(self, amount, event=None):
+            try:
+                log("Start of lower_health_regular")
+
+                if self.app.notebook.tab(self.app.notebook.select(), "text") != "Behavior Decks":
+                    log("End of lower_health_regular (wrong tab)")
+                    return
+
+                selection = self.treeviewDecks.selection()[0]
+
+                if self.treeviewDecks.parent(selection) != "Enemies":
+                    log("End of lower_health_king (nothing done)")
+                    return
+                
+                eventLabel = event.widget
+                labelIndex = self.decks[selection]["healthTrackers"].index(eventLabel)
+                
+                modSelection = self.decks[selection]["defKey"] if self.decks[selection]["defKey"] else selection
+
+                startingHealth = (
+                    behaviorDetail[selection]["health"]
+                    + get_health_bonus(behaviorDetail[selection]["health"], [] if modSelection == selection else modSelection)
+                    + self.decks[selection]["healthMod"][labelIndex]
+                    )
+
+                if startingHealth == 0:
+                    log("End of lower_health_king (nothing done)")
+                    return
+                
+                if startingHealth - amount < 0:
+                    amount = startingHealth
+
+                self.decks[selection]["healthMod"][labelIndex] -= amount
+
+                self.health_tracker(labelIndex=labelIndex)
+
+                log("End of lower_health_king")
+            except Exception as e:
+                error_popup(self.root, e)
+                raise
+                
+
+        def raise_health_regular(self, amount, event=None):
+            try:
+                log("Start of raise_health_regular")
+
+                if self.app.notebook.tab(self.app.notebook.select(), "text") != "Behavior Decks":
+                    log("End of raise_health_regular (wrong tab)")
+                    return
+
+                selection = self.treeviewDecks.selection()[0]
+
+                if self.treeviewDecks.parent(selection) != "Enemies":
+                    log("End of lower_health_king (nothing done)")
+                    return
+                
+                eventLabel = event.widget
+                labelIndex = self.decks[selection]["healthTrackers"].index(eventLabel)
+
+                if (
+                    self.treeviewDecks.parent(selection) != "Enemies"
+                    or self.decks[selection]["healthMod"][labelIndex] == 0
+                    ):
+                    log("End of raise_health_regular (nothing done)")
+                    return
+                elif self.decks[selection]["healthMod"][labelIndex] + amount > 0:
+                    amount = -(self.decks[selection]["healthMod"][labelIndex])
+
+                self.decks[selection]["healthMod"][labelIndex] += amount
+
+                self.health_tracker(labelIndex=labelIndex)
+
+                log("End of raise_health_regular")
             except Exception as e:
                 error_popup(self.root, e)
                 raise

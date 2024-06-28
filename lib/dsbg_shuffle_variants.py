@@ -639,6 +639,7 @@ try:
                 # Selected enemy name - generate variants for all enemy behaviors.
                 if tree.item(start)["tags"] and start in self.variants:
                     self.pick_enemy_variants_enemy(start, diffKey)
+                    self.app.behaviorDeckTab.set_decks(enemy=start, skipClear=True)
                 # Generate different variant for selected behavior.
                 elif " - " in start:
                     startReal = start[:start.index(" - ")]
@@ -653,6 +654,7 @@ try:
                         defKey = self.currentVariants[startReal]["defKey"]
                     
                     self.pick_enemy_variants_behavior(startReal, start[start.index(" - ")+3:], diffKeyReal, defKey)
+                    self.app.behaviorDeckTab.set_decks(enemy=self.treeviewVariantsList.parent(start), skipClear=True)
                 elif start in {"Enemies", "Invaders & Explorers Mimics", "Mini Bosses", "Main Bosses", "Mega Bosses"}:
                     if start == "Enemies":
                         progress = PopupWindow(self.root, labelText="Generating variants...", progressBar=True, progressMax=len(tree.get_children("Enemies")), loadingImage=True)
@@ -673,6 +675,7 @@ try:
                         progress.progressVar.set(i)
                         self.root.update_idletasks()
                         self.pick_enemy_variants_enemy(child, diffKey)
+                        self.app.behaviorDeckTab.set_decks(enemy=child, skipClear=True)
                         clear_other_tab_images(
                             self.app,
                             "variants",
@@ -695,6 +698,7 @@ try:
                             progress.progressVar.set(i)
                             self.root.update_idletasks()
                             self.pick_enemy_variants_enemy(subChild, diffKey)
+                            self.app.behaviorDeckTab.set_decks(enemy=subChild, skipClear=True)
                             
                     clear_other_tab_images(
                         self.app,
@@ -839,6 +843,7 @@ try:
                 log("Start of edit_variant_card, variant={}".format(str(variant)))
 
                 enemy = self.selectedVariant[:self.selectedVariant.index(" - ")] if " - " in self.selectedVariant else None
+                enemy = enemy[:enemy.index("_")] if "_" in enemy else enemy
                 behavior = self.selectedVariant[self.selectedVariant.index(" - ")+3:] if " - " in self.selectedVariant else None
 
                 if behavior == "data":
@@ -869,6 +874,11 @@ try:
                         self.app.displayImages[key][self.app.display2]["image"] = displayPhotoImage
                         self.app.displayImages[key][self.app.display2]["name"] = self.selectedVariant
                         self.app.displayImages[key][self.app.display2]["activeTab"] = key if not fromDeck else "behaviorDeck"
+
+                        for e in [e for e in self.app.behaviorDeckTab.decks if e != enemy]:
+                            if "healthTrackers" in self.app.behaviorDeckTab.decks[e]:
+                                for h in self.app.behaviorDeckTab.decks[e]["healthTrackers"]:
+                                    h.grid_forget()
                     else:
                         self.app.display.image = displayPhotoImage
                         self.app.display.config(image=displayPhotoImage)
@@ -920,6 +930,8 @@ try:
                         self.lockedVariants[iidChild] = modList
                         contents = [treeLocked.item(child)["values"][0] for child in treeLocked.get_children("Enemies")]
                         treeLocked.insert(parent="Enemies", index=bisect_left(contents, v[0]), iid=iidChild, values=(v[0], v[1]), tags=True)
+
+                        self.app.behaviorDeckTab.set_decks(enemy=child, skipClear=True)
                 elif tree.focus() in {"Invaders & Explorers Mimics", "Mini Bosses", "Main Bosses", "Mega Bosses"}:
                     progressMax = 0
                     for child in tree.get_children(tree.focus()):
@@ -1174,7 +1186,7 @@ try:
                             if subChild == "Vordt of the Boreal Valley":
                                 self.app.behaviorDeckTab.set_decks(enemy="Vordt of the Boreal Valley (move)", skipClear=True)
                                 self.app.behaviorDeckTab.set_decks(enemy="Vordt of the Boreal Valley (attack)", skipClear=True)
-                            elif tree.parent(subChild) != "Enemies":
+                            elif subChild in self.app.behaviorDeckTab.decks:
                                 self.app.behaviorDeckTab.set_decks(enemy=subChild, skipClear=True)
                 else:
                     for child in tree.get_children(target):
@@ -1384,7 +1396,7 @@ try:
                 if healthMod and health + healthMod >= 0:
                     health += healthMod
 
-                imageWithText.text((252 + (4 if health < 10 else 0), 35), str(health), "white", font2)
+                imageWithText.text((253 + (4 if health < 10 else 0), 35), str(health), "white", font2)
                 imageWithText.text((130, 245 - (10 if "behavior" in behaviorDetail[enemy] else 0)), str(armor), "white", font3)
                 imageWithText.text((154, 245 - (10 if "behavior" in behaviorDetail[enemy] else 0)), str(resist), "black", font3)
 
@@ -1393,7 +1405,7 @@ try:
                         imageWithText.text((189, 245), str(heatup[0]), "black", font2)
                         imageWithText.text((242, 245), str(heatup[1]), "black", font2)
                     else:
-                        imageWithText.text((242 + (4 if heatup[0] < 10 else 0), 245), str(heatup[0]), "black", font2)
+                        imageWithText.text((243 + (4 if heatup[0] < 10 else 0), 245), str(heatup[0]), "black", font2)
 
                 log("End of edit_variant_card_data")
             except Exception as e:
@@ -1406,6 +1418,7 @@ try:
                 log("Start of edit_variant_card_behavior, variant={}".format(str(variant)))
 
                 enemy = self.selectedVariant[:self.selectedVariant.index(" - ")] if " - " in self.selectedVariant else None
+                enemy = enemy[:enemy.index("_")] if "_" in enemy else enemy
                 if "behavior" in behaviorDetail[enemy]:
                     behavior = "behavior"
                 else:
@@ -1620,6 +1633,12 @@ try:
                             self.app.displayKing2.grid_forget()
                             self.app.displayKing3.grid_forget()
                             self.app.displayKing4.grid_forget()
+
+                        for e in [e for e in self.app.behaviorDeckTab.decks if e != enemy]:
+                            if "healthTrackers" in self.app.behaviorDeckTab.decks[e]:
+                                for h in self.app.behaviorDeckTab.decks[e]["healthTrackers"]:
+                                    h.grid_forget()
+
                         self.app.display3.image = photoImage
                         self.app.display3.config(image=photoImage)
                         self.app.displayImages[key][self.app.display3]["image"] = photoImage
