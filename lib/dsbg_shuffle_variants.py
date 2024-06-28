@@ -71,6 +71,28 @@ try:
             else 0)
 
 
+    def get_health_bonus(health, mods):
+        modsSet = set([modIdLookup[m] if type(m) == int else m for m in mods])
+        return (
+            1 if health == 1 and {"health1", "damage health1"} & modsSet
+            else 2 if health == 1 and {"health2", "damage health2"} & modsSet
+            else 3 if health == 1 and {"health3", "damage health3"} & modsSet
+            else 4 if health == 1 and {"health4", "damage health4"} & modsSet
+            else 2 if health == 5 and {"health1", "damage health1"} & modsSet
+            else 3 if health == 5 and {"health2", "damage health2"} & modsSet
+            else 5 if health == 5 and {"health3", "damage health3"} & modsSet
+            else 6 if health == 5 and {"health4", "damage health4"} & modsSet
+            else 2 if health == 10 and {"health1", "damage health1"} & modsSet
+            else 4 if health == 10 and {"health2", "damage health2"} & modsSet
+            else 6 if health == 10 and {"health3", "damage health3"} & modsSet
+            else 8 if health == 10 and {"health4", "damage health4"} & modsSet
+            else ceil(health * 0.1) if {"health1", "damage health1"} & modsSet
+            else ceil(health * 0.2) if {"health2", "damage health2"} & modsSet
+            else ceil(health * 0.3) if {"health3", "damage health3"} & modsSet
+            else ceil(health * 0.4) if {"health4", "damage health4"} & modsSet
+            else 0)
+
+
     class VariantsFrame(ttk.Frame):
         def __init__(self, app, root):
             super(VariantsFrame, self).__init__()
@@ -1340,33 +1362,17 @@ try:
 
                 if type(variant) != list and enemy in self.currentVariants:
                     mods = [modIdLookup[m] for m in list(self.currentVariants[enemy]["defKey"]) if m]
+                    healthAddition = get_health_bonus(health, mods)
+                    health += healthAddition
+                    heatup = [h + healthAddition for h in heatup]
                     for mod in mods:
-                        if "health" in mod and int(mod[-1]) > healthAddition:
-                            healthAddition = int(mod[-1])
-                            healthAddition = ceil(healthAddition * (
-                                1.5 if enemy in enemiesDict and getattr(enemiesDict[enemy], "cards") > 1
-                                else 1.5 if enemy in bosses and bosses[enemy]["level"] == "Mini Boss"
-                                else 2 if enemy in bosses and bosses[enemy]["level"] == "Main Boss"
-                                else 3 if enemy in bosses and bosses[enemy]["level"] == "Mega Boss"
-                                else 1
-                            ))
-                            health += healthAddition
-                            heatup = [h + healthAddition for h in heatup]
                         armor += int(mod[-1]) if "armor" in mod else 0
                         resist += int(mod[-1]) if "resist" in mod else 0
                 elif type(variant) == list:
+                    healthAddition = get_health_bonus(health, variant)
+                    health += healthAddition
+                    heatup = [h + healthAddition for h in heatup]
                     for mod in variant:
-                        if "health" in mod and int(mod[-1]) > healthAddition:
-                            healthAddition = int(mod[-1])
-                            healthAddition = ceil(healthAddition * (
-                                1.5 if enemy in enemiesDict and getattr(enemiesDict[enemy], "cards") > 1
-                                else 1.5 if enemy in bosses and bosses[enemy]["level"] == "Mini Boss"
-                                else 2 if enemy in bosses and bosses[enemy]["level"] == "Main Boss"
-                                else 3 if enemy in bosses and bosses[enemy]["level"] == "Mega Boss"
-                                else 1
-                            ))
-                            health += healthAddition
-                            heatup = [h + healthAddition for h in heatup]
                         armor += int(mod[-1]) if "armor" in mod else 0
                         resist += int(mod[-1]) if "resist" in mod else 0
 
@@ -1645,12 +1651,14 @@ try:
 
                 if type(variant) != list and "Ornstein & Smough" in self.currentVariants:
                     mods = [modIdLookup[m] for m in list(self.currentVariants["Ornstein & Smough"]["defKey"]) if m]
+                    healthAddition = get_health_bonus(health, mods)
+                    health += healthAddition
                     for mod in mods:
-                        healthAddition = (int(mod[-1]) if "health" in mod else 0) * 2
-                        health += healthAddition
                         armor += int(mod[-1]) if "armor" in mod else 0
                         resist += int(mod[-1]) if "resist" in mod else 0
                 elif type(variant) == list:
+                    healthAddition = get_health_bonus(health, mods)
+                    health += healthAddition
                     for mod in variant:
                         healthAddition = (int(mod[-1]) if "health" in mod else 0) * 2
                         health += healthAddition
