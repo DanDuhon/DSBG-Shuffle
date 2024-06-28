@@ -89,6 +89,7 @@ try:
                 self.expansions["Asylum Demon"]["value"].set(1 if "Asylum Demon" in self.settings["availableExpansions"] else 0)
                 self.expansions["Black Dragon Kalameet"]["value"].set(1 if "Black Dragon Kalameet" in self.settings["availableExpansions"] else 0)
                 self.expansions["Gaping Dragon"]["value"].set(1 if "Gaping Dragon" in self.settings["availableExpansions"] else 0)
+                self.expansions["Guardian Dragon"]["value"].set(1 if "Guardian Dragon" in self.settings["availableExpansions"] else 0)
                 self.expansions["Manus, Father of the Abyss"]["value"].set(1 if "Manus, Father of the Abyss" in self.settings["availableExpansions"] else 0)
                 self.expansions["Old Iron King"]["value"].set(1 if "Old Iron King" in self.settings["availableExpansions"] else 0)
                 self.expansions["Vordt of the Boreal Valley"]["value"].set(1 if "Vordt of the Boreal Valley" in self.settings["availableExpansions"] else 0)
@@ -381,6 +382,7 @@ try:
                     "Asylum Demon",
                     "Black Dragon Kalameet",
                     "Gaping Dragon",
+                    "Guardian Dragon",
                     "Manus, Father of the Abyss",
                     "Old Iron King",
                     "Vordt of the Boreal Valley",

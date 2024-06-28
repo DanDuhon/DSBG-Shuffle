@@ -371,8 +371,8 @@ try:
 
                     self.edit_variant_card(variant=self.selectedVariant, lockedTree=fromLocked, armorerDennis=armorerDennis, oldIronKing=oldIronKing, pursuer=pursuer, healthMod=healthMod, fromDeck=fromDeck)
 
-                # if "data" not in self.selectedVariant and self.app.displayImages[variants][self.app.display2]["name"] != self.selectedVariant and not forPrinting:
-                #     self.load_variant_card(variant=self.selectedVariant[:self.selectedVariant.index(" - ")] + " - data", fromLocked=fromLocked, selfCall=originalSelection, armorerDennis=armorerDennis, oldIronKing=oldIronKing, pursuer=pursuer, deckDataCard=deckDataCard, healthMod=healthMod, fromDeck=fromDeck)
+                if "data" not in self.selectedVariant and self.app.displayImages[variants][self.app.display2]["name"] != self.selectedVariant and "The Four Kings" not in self.selectedVariant and not forPrinting:
+                    self.load_variant_card(variant=self.selectedVariant[:self.selectedVariant.index(" - ")] + " - data", fromLocked=fromLocked, selfCall=originalSelection, armorerDennis=armorerDennis, oldIronKing=oldIronKing, pursuer=pursuer, deckDataCard=deckDataCard, healthMod=healthMod, fromDeck=fromDeck)
 
                 if not selfCall:
                     self.selectedVariant = originalSelection
@@ -570,7 +570,7 @@ try:
 
                     self.edit_variant_card(variant=mods, lockedTree=True, armorerDennis=armorerDennis, oldIronKing=oldIronKing, pursuer=pursuer, healthMod=healthMod, fromDeck=fromDeck)
 
-                if "data" not in self.selectedVariant and self.app.displayImages["variantsLocked"][self.app.display2]["name"] != self.selectedVariant and not forPrinting:
+                if "data" not in self.selectedVariant and self.app.displayImages["variantsLocked"][self.app.display2]["name"] != self.selectedVariant and "The Four Kings" not in self.selectedVariant and not forPrinting:
                     modString = ",".join([str(x) for x in sorted([n for n in modIdLookup if modIdLookup[n] in set(mods[0] if mods and type(mods[0]) == list else mods) & set([modIdLookup[m] for m in dataCardMods])])])
                     self.load_variant_card_locked(variant=self.selectedVariant[:self.selectedVariant.index(" - ")] + "_" + modString, selfCall=True, armorerDennis=armorerDennis, oldIronKing=oldIronKing, pursuer=pursuer, deckDataCard=deckDataCard, healthMod=healthMod, fromDeck=fromDeck)
 

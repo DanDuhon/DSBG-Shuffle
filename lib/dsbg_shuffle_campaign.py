@@ -54,42 +54,59 @@ try:
             self.campaignTabButtonsFrame4.pack()
             self.campaignTabButtonsFrame5 = ttk.Frame(self)
             self.campaignTabButtonsFrame5.pack()
+            self.campaignTabButtonsFrame6 = ttk.Frame(self)
+            self.campaignTabButtonsFrame6.pack()
             self.campaignTabTreeviewFrame = ttk.Frame(self)
             self.campaignTabTreeviewFrame.pack(fill="both", expand=True)
 
-            self.deleteButton = ttk.Button(self.campaignTabButtonsFrame, text="Remove Card", width=16, command=self.delete_card_from_campaign)
+            self.l1 = ttk.Button(self.campaignTabButtonsFrame, text="Random Level 1", width=16, command=lambda x=1: self.app.encounterTab.random_encounter(level=x))
+            self.l2 = ttk.Button(self.campaignTabButtonsFrame, text="Random Level 2", width=16, command=lambda x=2: self.app.encounterTab.random_encounter(level=x))
+            self.l3 = ttk.Button(self.campaignTabButtonsFrame, text="Random Level 3", width=16, command=lambda x=3: self.app.encounterTab.random_encounter(level=x))
+            self.l4 = ttk.Button(self.campaignTabButtonsFrame, text="Random Level 4", width=16, command=lambda x=4: self.app.encounterTab.random_encounter(level=x))
+            if "level4" not in self.app.settings["encounterTypes"]:
+                self.l4["state"] = "disabled"
+            if ["level4"] == self.app.settings["encounterTypes"]:
+                self.l1["state"] = "disabled"
+                self.l2["state"] = "disabled"
+                self.l3["state"] = "disabled"
+            self.l1.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+            self.l2.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+            self.l3.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+            self.l4.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+
+            self.deleteButton = ttk.Button(self.campaignTabButtonsFrame2, text="Remove Card", width=16, command=self.delete_card_from_campaign)
             self.deleteButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-            self.moveUpButton = ttk.Button(self.campaignTabButtonsFrame, text="Move Up", width=16, command=self.move_up)
+            self.moveUpButton = ttk.Button(self.campaignTabButtonsFrame2, text="Move Up", width=16, command=self.move_up)
             self.moveUpButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-            self.moveDownButton = ttk.Button(self.campaignTabButtonsFrame, text="Move Down", width=16, command=self.move_down)
+            self.moveDownButton = ttk.Button(self.campaignTabButtonsFrame2, text="Move Down", width=16, command=self.move_down)
             self.moveDownButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
             
-            self.loadButton = ttk.Button(self.campaignTabButtonsFrame2, text="Load Campaign", width=16, command=self.load_campaign)
+            self.loadButton = ttk.Button(self.campaignTabButtonsFrame3, text="Load Campaign", width=16, command=self.load_campaign)
             self.loadButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-            self.saveButton = ttk.Button(self.campaignTabButtonsFrame2, text="Save Campaign", width=16, command=self.save_campaign)
+            self.saveButton = ttk.Button(self.campaignTabButtonsFrame3, text="Save Campaign", width=16, command=self.save_campaign)
             self.saveButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-            self.printEncounters = ttk.Button(self.campaignTabButtonsFrame2, text="Export to PDF", width=16, command=self.print_encounters)
+            self.printEncounters = ttk.Button(self.campaignTabButtonsFrame3, text="Export to PDF", width=16, command=self.print_encounters)
             self.printEncounters.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
 
-            self.randomMiniBossButton = ttk.Button(self.campaignTabButtonsFrame3, text="Add Mini Boss", width=16, command=lambda x="Mini Boss": self.add_random_boss_to_campaign(level=x))
+            self.randomMiniBossButton = ttk.Button(self.campaignTabButtonsFrame4, text="Add Mini Boss", width=16, command=lambda x="Mini Boss": self.add_random_boss_to_campaign(level=x))
             self.randomMiniBossButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-            self.randomMiniBossButton = ttk.Button(self.campaignTabButtonsFrame3, text="Add Main Boss", width=16, command=lambda x="Main Boss": self.add_random_boss_to_campaign(level=x))
+            self.randomMiniBossButton = ttk.Button(self.campaignTabButtonsFrame4, text="Add Main Boss", width=16, command=lambda x="Main Boss": self.add_random_boss_to_campaign(level=x))
             self.randomMiniBossButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-            self.randomMiniBossButton = ttk.Button(self.campaignTabButtonsFrame3, text="Add Mega Boss", width=16, command=lambda x="Mega Boss": self.add_random_boss_to_campaign(level=x))
+            self.randomMiniBossButton = ttk.Button(self.campaignTabButtonsFrame4, text="Add Mega Boss", width=16, command=lambda x="Mega Boss": self.add_random_boss_to_campaign(level=x))
             self.randomMiniBossButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
 
-            self.bossMenu = ttk.Combobox(self.campaignTabButtonsFrame4, state="readonly", values=self.bossMenuItems, textvariable=self.selectedBoss)
+            self.bossMenu = ttk.Combobox(self.campaignTabButtonsFrame5, state="readonly", values=self.bossMenuItems, textvariable=self.selectedBoss)
             self.bossMenu.current(0)
             self.bossMenu.config(width=17)
             self.bossMenu.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-            self.addBossButton = ttk.Button(self.campaignTabButtonsFrame4, text="Add Boss", width=16, command=self.add_boss_to_campaign)
+            self.addBossButton = ttk.Button(self.campaignTabButtonsFrame5, text="Add Boss", width=16, command=self.add_boss_to_campaign)
             self.addBossButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
 
-            self.v1CampaignButton = ttk.Button(self.campaignTabButtonsFrame5, text="V1 Campaign", width=16, command=self.v1_campaign)
+            self.v1CampaignButton = ttk.Button(self.campaignTabButtonsFrame6, text="V1 Campaign", width=16, command=self.v1_campaign)
             self.v1CampaignButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-            self.v2CampaignButton = ttk.Button(self.campaignTabButtonsFrame5, text="V2 Campaign", width=16, command=self.v2_campaign)
+            self.v2CampaignButton = ttk.Button(self.campaignTabButtonsFrame6, text="V2 Campaign", width=16, command=self.v2_campaign)
             self.v2CampaignButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-            self.gravestoneButton = ttk.Button(self.campaignTabButtonsFrame5, text="V2 Gravestone", width=16, command=self.v2_campaign_gravestone)
+            self.gravestoneButton = ttk.Button(self.campaignTabButtonsFrame6, text="V2 Gravestone", width=16, command=self.v2_campaign_gravestone)
             self.gravestoneButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
         
             self.scrollbarTreeviewCampaign = ttk.Scrollbar(self.campaignTabTreeviewFrame)

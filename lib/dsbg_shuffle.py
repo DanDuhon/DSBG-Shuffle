@@ -387,33 +387,12 @@ try:
                 self.buttonsFrame = ttk.Frame(self)
                 self.buttonsFrame.grid(row=0, column=0, pady=(10, 0), sticky="nw")
                 self.buttonsFrame.columnconfigure(index=0, weight=1)
-
-                self.buttons = set()
-                self.l1 = ttk.Button(self.buttonsFrame, text="Random Level 1", width=16, command=lambda x=1: self.encounterTab.random_encounter(level=x))
-                self.l2 = ttk.Button(self.buttonsFrame, text="Random Level 2", width=16, command=lambda x=2: self.encounterTab.random_encounter(level=x))
-                self.l3 = ttk.Button(self.buttonsFrame, text="Random Level 3", width=16, command=lambda x=3: self.encounterTab.random_encounter(level=x))
-                self.l4 = ttk.Button(self.buttonsFrame, text="Random Level 4", width=16, command=lambda x=4: self.encounterTab.random_encounter(level=x))
-                if "level4" not in self.settings["encounterTypes"]:
-                    self.l4["state"] = "disabled"
-                if ["level4"] == self.settings["encounterTypes"]:
-                    self.l1["state"] = "disabled"
-                    self.l2["state"] = "disabled"
-                    self.l3["state"] = "disabled"
-                self.l5 = ttk.Button(self.buttonsFrame, text="Add to Campaign", width=16, command=self.campaignTab.add_card_to_campaign)
-                self.buttons.add(self.l1)
-                self.buttons.add(self.l2)
-                self.buttons.add(self.l3)
-                self.buttons.add(self.l4)
-                self.buttons.add(self.l5)
-                self.l1.grid(column=0, row=0, padx=5)
-                self.l2.grid(column=1, row=0, padx=5)
-                self.l3.grid(column=2, row=0, padx=5)
-                self.l4.grid(column=3, row=0, padx=5)
-                self.l5.grid(column=0, row=1, padx=5, pady=5)
+                self.campaignButton = ttk.Button(self.buttonsFrame, text="Add to Campaign", width=16, command=self.campaignTab.add_card_to_campaign)
+                self.campaignButton.grid(column=0, row=1, padx=5, pady=5)
 
                 # Link to the wiki
                 wikiLink = ttk.Button(self.buttonsFrame, text="Open the wiki", width=16, command=self.open_wiki)
-                wikiLink.grid(column=1, row=1)
+                wikiLink.grid(column=3, row=1)
                 
                 log("End of create_buttons")
             except Exception as e:
@@ -515,9 +494,9 @@ try:
                     self.display.config(image="")
                     self.display2.config(image="")
                     self.display3.config(image="")
-                    self.app.display.image=None
-                    self.app.display2.image=None
-                    self.app.display3.image=None
+                    self.display.image=None
+                    self.display2.image=None
+                    self.display3.image=None
 
                     self.displayImages = {
                         "encounters": {

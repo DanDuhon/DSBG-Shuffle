@@ -1,4 +1,5 @@
 try:
+    import tkinter as tk
     from collections import Counter
     from json import load
     from PIL import ImageTk, ImageDraw
@@ -37,6 +38,24 @@ try:
                         self.encountersToRemove.add(encounter)
 
                 self.encounterList = list(set(self.encounterList) - self.encountersToRemove)
+
+            self.buttonsFrame = ttk.Frame(self)
+            self.buttonsFrame.pack()
+
+            self.l1 = ttk.Button(self.buttonsFrame, text="Random Level 1", width=16, command=lambda x=1: self.random_encounter(level=x))
+            self.l2 = ttk.Button(self.buttonsFrame, text="Random Level 2", width=16, command=lambda x=2: self.random_encounter(level=x))
+            self.l3 = ttk.Button(self.buttonsFrame, text="Random Level 3", width=16, command=lambda x=3: self.random_encounter(level=x))
+            self.l4 = ttk.Button(self.buttonsFrame, text="Random Level 4", width=16, command=lambda x=4: self.random_encounter(level=x))
+            if "level4" not in self.app.settings["encounterTypes"]:
+                self.l4["state"] = "disabled"
+            if ["level4"] == self.app.settings["encounterTypes"]:
+                self.l1["state"] = "disabled"
+                self.l2["state"] = "disabled"
+                self.l3["state"] = "disabled"
+            self.l1.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+            self.l2.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+            self.l3.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+            self.l4.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
 
             self.scrollbarTreeviewEncounters = ttk.Scrollbar(self)
             self.scrollbarTreeviewEncounters.pack(side="right", fill="y")

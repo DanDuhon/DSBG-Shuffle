@@ -28,7 +28,7 @@ try:
 
             self.drawButton = ttk.Button(self.deckTabButtonsFrame, text="Draw Card", width=16, command=self.draw_behavior_card)
             self.drawButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-            self.heatupButton = ttk.Button(self.deckTabButtonsFrame, text="Heatup", width=16, command=self.heatup)
+            self.heatupButton = ttk.Button(self.deckTabButtonsFrame, text="Heat Up", width=16, command=self.heatup)
             self.heatupButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
             self.resetButton = ttk.Button(self.deckTabButtonsFrame, text="Reset Deck", width=16, command=self.set_decks)
             self.resetButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
@@ -96,7 +96,7 @@ try:
                 self.treeviewDecks = ttk.Treeview(
                     self.deckTreeviewFrame,
                     selectmode="browse",
-                    columns=("Name", "Cards in Deck", "Heatup"),
+                    columns=("Name", "Cards in Deck", "Heat Up"),
                     yscrollcommand=self.scrollbarTreeviewDeck.set,
                     height=11 if self.root.winfo_screenheight() > 1000 else 9
                 )
@@ -108,10 +108,10 @@ try:
 
                 self.treeviewDecks.heading("Name", text="Name", anchor=tk.W)
                 self.treeviewDecks.heading("Cards in Deck", text="Cards in Deck", anchor=tk.W)
-                self.treeviewDecks.heading("Heatup", text="Heatup", anchor=tk.W)
+                self.treeviewDecks.heading("Heat Up", text="Heat Up", anchor=tk.W)
                 self.treeviewDecks.column("Name", anchor=tk.W, width=300)
                 self.treeviewDecks.column("Cards in Deck", anchor=tk.W, width=90)
-                self.treeviewDecks.column("Heatup", anchor=tk.W, width=90)
+                self.treeviewDecks.column("Heat Up", anchor=tk.W, width=90)
                 
                 if {"Phantoms", "Explorers"} & self.app.availableExpansions:
                     self.treeviewDecks.insert(parent="", index="end", iid="Invaders & Explorers Mimics", values=("Invaders & Explorers Mimics", "", ""), tags=False)
@@ -276,11 +276,14 @@ try:
                 if type(self.decks[enemy]["heatupCards"]) == list:
                     shuffle(self.decks[enemy]["heatupCards"])
 
-                self.decks[enemy]["heatup"] = 0 if enemy in "Old Dragonslayer" else 1 if enemy == "The Four Kings" else False
+                self.decks[enemy]["heatup"] = 0 if enemy == "Old Dragonslayer" else 1 if enemy == "The Four Kings" else False
                 self.decks[enemy]["healthMod"] = {"Ornstein": 0, "Smough": 0} if enemy == "Ornstein & Smough" else {1: 0, 2: 0, 3: 0, 4: 0} if enemy == "The Four Kings" else 0
                 self.decks[enemy]["curIndex"] = 0
                 self.decks[enemy]["lastCardDrawn"] = None
-                self.treeviewDecks.item(enemy, values=(self.treeviewDecks.item(enemy)["values"][0], len(self.decks[enemy]["deck"])))
+                self.treeviewDecks.item(enemy, values=(
+                    self.treeviewDecks.item(enemy)["values"][0],
+                    len(self.decks[enemy]["deck"]),
+                    ""))
 
                 if (enemy[:enemy.index(" (")] if "Vordt" in enemy else enemy) in set([v[:v.index("_")] for v in self.app.variantsTab.lockedVariants]):
                     self.decks[enemy]["defKey"] = choice([self.app.variantsTab.lockedVariants[v] for v in self.app.variantsTab.lockedVariants if "-" not in v])
@@ -341,7 +344,7 @@ try:
                     self.app.variantsTab.load_variant_card_locked(variant=variant, fromDeck=True, healthMod=self.decks[self.treeviewDecks.selection()[0]]["healthMod"])
 
                 if selection == "The Four Kings":
-                    for x in range(1, 1 + self.decks["The Four Kings"]["heatup"]):
+                    for x in range(1, 5):
                         self.four_kings_health_track(king=x, healthMod=self.decks["The Four Kings"]["healthMod"][x])
                 
                 self.decks[selection]["lastCardDrawn"] = variant
@@ -354,7 +357,8 @@ try:
 
                 self.treeviewDecks.item(selection, values=(
                     self.treeviewDecks.item(selection)["values"][0],
-                    len(self.decks[selection]["deck"]) - self.decks[selection]["curIndex"]))
+                    len(self.decks[selection]["deck"]) - self.decks[selection]["curIndex"],
+                    self.treeviewDecks.item(selection)["values"][2]))
 
                 log("End of draw_behavior_card")
             except Exception as e:
@@ -410,18 +414,19 @@ try:
 
                 imageWithText = ImageDraw.Draw(self.app.displayImage)
 
-                healthAddition = 0
                 health = behaviorDetail["The Four Kings"]["health"]
 
-                if "The Four Kings" in self.app.variantsTab.currentVariants:
-                    mods = [modIdLookup[m] for m in list(self.app.variantsTab.currentVariants["The Four Kings"]["defKey"]) if m]
-                    healthAddition = get_health_bonus(health, mods)
-                    health += healthAddition
+                mods = [modIdLookup[m] for m in list(self.decks["The Four Kings"]["defKey"]) if m]
+                healthAddition = get_health_bonus(health, mods)
+                health += healthAddition
 
                 if healthMod and health + healthMod >= 0:
                     health += healthMod
 
-                imageWithText.text((118 + (4 if health < 10 else 0), 16), str(health), "white", font2)
+                if king <= self.decks["The Four Kings"]["heatup"]:
+                    imageWithText.text((118 + (4 if health < 10 else 0), 16), str(health), "white", font2)
+                else:
+                    imageWithText.text((124, 16), "-", "white", font2)
 
                 displayPhotoImage = ImageTk.PhotoImage(self.app.displayImage)
 
@@ -531,6 +536,8 @@ try:
                     health = behaviorDetail[selection[:selection.index(" (")] if "Vordt" in selection else selection]["health"]
                     healthBonus = get_health_bonus(health, self.decks[selection]["defKey"])
 
+                heatup = "Yes"
+
                 if selection == "Maldron the Assassin":
                     self.decks[selection]["healthMod"] += 8 + healthBonus
                     if self.decks[selection]["healthMod"] > 0:
@@ -542,6 +549,7 @@ try:
                 elif selection == "Old Dragonslayer":
                     self.decks[selection]["deck"] += [self.decks[selection]["heatupCards"].pop()]
                     self.decks[selection]["heatup"] += 1
+                    heatup = self.decks[selection]["heatup"]
                 elif selection == "Artorias":
                     shuffle(self.decks[selection]["deck"])
                     self.decks[selection]["deck"] = self.decks[selection]["deck"][:-2]
@@ -578,6 +586,7 @@ try:
                     shuffle(self.decks[selection]["deck"])
                     self.decks[selection]["deck"].pop()
                     self.decks[selection]["deck"] += sample(self.decks[selection]["heatupCards"][self.decks[selection]["heatup"]], 2)
+                    heatup = self.decks[selection]["heatup"] - 1
                 elif selection == "The Last Giant":
                     self.decks[selection]["deck"] = list(set(self.decks[selection]["deck"]) - set([b for b in behaviors[selection] if behaviorDetail[selection][b].get("arm", False)]))
                     self.decks[selection]["deck"] += self.decks[selection]["heatupCards"]
@@ -589,9 +598,12 @@ try:
                 self.decks[selection]["curIndex"] = 0
                 self.decks[selection]["lastCardDrawn"] = None
 
-                self.treeviewDecks.item(selection, values=(self.treeviewDecks.item(selection)["values"][0], len(self.decks[selection]["deck"]) - self.decks[selection]["curIndex"]))
+                self.treeviewDecks.item(selection, values=(
+                    self.treeviewDecks.item(selection)["values"][0],
+                    len(self.decks[selection]["deck"]) - self.decks[selection]["curIndex"],
+                    heatup))
 
-                if selection in {"Maldron the Assassin", "Ornstein & Smough"}:
+                if selection in {"Maldron the Assassin", "Ornstein & Smough", "The Four Kings"}:
                     self.display_deck_cards()
 
                 log("End of heatup")
@@ -749,15 +761,11 @@ try:
 
                 selection = self.treeviewDecks.selection()[0]
 
-                if selection != "The Four Kings":
+                if selection != "The Four Kings" or king > self.decks["The Four Kings"]["heatup"]:
                     log("End of lower_health_king (nothing done)")
                     return
                 
-                modSelection = "The Four Kings"
-                if [v for v in self.app.variantsTab.lockedVariants if selection + "_" in v]:
-                    modSelection = [v for v in self.app.variantsTab.lockedVariants if selection + "_" in v][0]
-                elif selection in self.app.variantsTab.currentVariants:
-                    modSelection = self.app.variantsTab.currentVariants[selection]["defKey"]
+                modSelection = self.decks["The Four Kings"]["defKey"] if self.decks["The Four Kings"]["defKey"] else "The Four Kings"
 
                 startingHealth = (
                     behaviorDetail[selection]["health"]
@@ -795,6 +803,7 @@ try:
                 if (
                     selection != "The Four Kings"
                     or self.decks[selection]["healthMod"][king] == 0
+                    or king > self.decks["The Four Kings"]["heatup"]
                     ):
                     log("End of raise_health_king (nothing done)")
                     return
