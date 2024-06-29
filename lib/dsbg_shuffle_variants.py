@@ -1120,7 +1120,7 @@ try:
                     contents = [treeLocked.item(child)["values"][0] for child in treeLocked.get_children(tree.parent(tree.focus()))]
                     treeLocked.insert(parent=tree.parent(tree.focus()), index=bisect_left(contents, v[0]), iid=iid, values=(v[0], v[1]), tags=True)
                     
-                    self.app.behaviorDeckTab.set_decks(enemy=e, skipClear=True)
+                    self.app.behaviorDeckTab.set_decks(enemy=tree.focus(), skipClear=True)
 
                 if progress:
                     progress.label.config(text = "Calculating difficulty averages...")

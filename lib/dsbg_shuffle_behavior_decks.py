@@ -330,7 +330,7 @@ try:
 
                 selection = self.treeviewDecks.selection()[0]
 
-                if not selection or selection not in self.decks or self.treeviewDecks.parent(selection) == "Enemies":
+                if not selection or selection not in self.decks:
                     log("End of draw_behavior_card (nothing done)")
                     return
                 
