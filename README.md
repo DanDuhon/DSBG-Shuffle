@@ -5,6 +5,8 @@ The idea behind this program is to provide backwards and forwards compatibility 
 
 It also contains ways to build campaigns, event card management, and enemy behavior variants.
 
+[Link to the wiki!](https://github.com/DanDuhon/DSBG-Shuffle/wiki/About-DSBG%E2%80%90Shuffle)
+
 
 
 ## How to run/Installation
@@ -43,7 +45,7 @@ There are a couple workaround options for Mac/Linux.
 - The "might work" way:
   1. Install [Python 3](https://www.python.org/downloads/) (requires Python 3.1 or higher).
   2. Install [pip](https://pip.pypa.io/en/stable/installation/).
-  3. Install the following modules using pip: [Pillow](https://pillow.readthedocs.io/en/stable/installation.html#basic-installation), [fpdf](https://pypi.org/project/fpdf/), [requests](https://pypi.org/project/requests/).  All other modules used should come bundled with Python 3, but here they are in case you're missing some: collections, datetime, inspect, json, logging, math, os, platform, random, requests, statistics, sys, tkinter, webbrowser.
+  3. Install the following modules using pip: [Pillow](https://pillow.readthedocs.io/en/stable/installation.html#basic-installation), [fpdf](https://pypi.org/project/fpdf/), [requests](https://pypi.org/project/requests/).  All other modules used should come bundled with Python 3, but here they are in case you're missing some: bisect, collections, copy, datetime, inspect, json, logging, math, os, platform, random, requests, statistics, sys, tkinter, webbrowser.
   4. Create a directory to install the font: `mkdir /usr/local/share/fonts/truetype`
   5. Copy the font from the repo's lib directory to the one just created: `cp "[path to lib dir]/Adobe Caslon Pro Semibold.ttf" /usr/local/share/fonts/truetype/`
   6. Refresh the system font cache: `fc-cache -fv` (you might need to install fc-cache with `apt install fontconfig`)
