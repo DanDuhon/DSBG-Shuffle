@@ -11,7 +11,7 @@ It also contains ways to build campaigns, event card management, and enemy behav
 
 ## How to run/Installation
 1. Go to [Releases](https://github.com/DanDuhon/DSBG-Shuffle/releases) and click on "Source code (zip)" or "Source code (tar.gz)", whichever archive format is your preference.
-2. Inside the archive file is a folder called "DSBG-Shuffle-main".  Unzip this folder anywhere you want.
+2. Inside the archive file is a folder.  Unzip this folder anywhere you want.
 3. Open the folder, and run "DSBG-Shuffle.exe" inside it.  There isn't an installer (mostly because it would be too big for GitHub), you just run the .exe.  If you're not running Windows, see the FAQ for workarounds for Mac/Linux.
 
 
