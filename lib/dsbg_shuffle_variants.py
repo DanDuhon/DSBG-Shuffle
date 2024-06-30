@@ -129,10 +129,12 @@ try:
             self.variantsTabButtonsFrame.pack()
             self.variantsTabButtonsFrame2 = ttk.Frame(self)
             self.variantsTabButtonsFrame2.pack()
-            self.variantsTabSwitchFrame = ttk.Frame(self)
-            self.variantsTabSwitchFrame.pack()
-            self.variantsTabSwitchFrame2 = ttk.Frame(self)
-            self.variantsTabSwitchFrame2.pack()
+            self.variantsTabMenuFrame = ttk.Frame(self)
+            self.variantsTabMenuFrame.pack()
+            self.variantsTabMenuFrame2 = ttk.Frame(self)
+            self.variantsTabMenuFrame2.pack()
+            self.variantsTabMenuFrame3 = ttk.Frame(self)
+            self.variantsTabMenuFrame3.pack()
             self.variantsListTreeviewFrame = ttk.Frame(self)
             self.variantsListTreeviewFrame.pack(fill="both", expand=True)
             self.variantsTabButtonsFrame3 = ttk.Frame(self)
@@ -162,36 +164,50 @@ try:
             self.removeButton = ttk.Button(self.variantsTabButtonsFrame2, text="Remove Variant", width=16, command=self.remove_variant_card)
             self.removeButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
 
-            self.healthSwitchVal = tk.IntVar()
-            self.healthSwitch = ttk.Checkbutton(self.variantsTabSwitchFrame, text="Health", variable=self.healthSwitchVal, style="Switch.TCheckbutton", command=self.check_max_switches)
-            self.healthSwitch.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-            self.armorSwitchVal = tk.IntVar()
-            self.armorSwitch = ttk.Checkbutton(self.variantsTabSwitchFrame, text="Armor", variable=self.armorSwitchVal, style="Switch.TCheckbutton", command=self.check_max_switches)
-            self.armorSwitch.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-            self.resistSwitchVal = tk.IntVar()
-            self.resistSwitch = ttk.Checkbutton(self.variantsTabSwitchFrame, text="Resist", variable=self.resistSwitchVal, style="Switch.TCheckbutton", command=self.check_max_switches)
-            self.resistSwitch.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-            self.damageSwitchVal = tk.IntVar()
-            self.damageSwitch = ttk.Checkbutton(self.variantsTabSwitchFrame2, text="Damage", variable=self.damageSwitchVal, style="Switch.TCheckbutton", command=self.check_max_switches)
-            self.damageSwitch.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-            self.dodgeSwitchVal = tk.IntVar()
-            self.dodgeSwitch = ttk.Checkbutton(self.variantsTabSwitchFrame2, text="Dodge", variable=self.dodgeSwitchVal, style="Switch.TCheckbutton", command=self.check_max_switches)
-            self.dodgeSwitch.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-            self.repeatSwitchVal = tk.IntVar()
-            self.repeatSwitch = ttk.Checkbutton(self.variantsTabSwitchFrame2, text="Repeat", variable=self.repeatSwitchVal, style="Switch.TCheckbutton", command=self.check_max_switches)
-            self.repeatSwitch.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-            self.conditionsSwitchVal = tk.IntVar()
-            self.conditionsSwitch = ttk.Checkbutton(self.variantsTabSwitchFrame2, text="Conditions", variable=self.conditionsSwitchVal, style="Switch.TCheckbutton", command=self.check_max_switches)
-            self.conditionsSwitch.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+            self.healthMenuList = ["", "Heath Allowed", "Heath Required", "Heath Banned"]
+            self.healthMenuVal = tk.StringVar(value=self.healthMenuList[1])
+            self.healthMenu = ttk.OptionMenu(self.variantsTabMenuFrame, self.healthMenuVal, *self.healthMenuList)
+            self.healthMenu.config(width=17)
+            self.healthMenu.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+            self.armorMenuList = ["", "Armor Allowed", "Armor Required", "Armor Banned"]
+            self.armorMenuVal = tk.StringVar(value=self.armorMenuList[1])
+            self.armorMenu = ttk.OptionMenu(self.variantsTabMenuFrame, self.armorMenuVal, *self.armorMenuList)
+            self.armorMenu.config(width=17)
+            self.armorMenu.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+            self.resistMenuList = ["", "Resist Allowed", "Resist Required", "Resist Banned"]
+            self.resistMenuVal = tk.StringVar(value=self.resistMenuList[1])
+            self.resistMenu = ttk.OptionMenu(self.variantsTabMenuFrame2, self.resistMenuVal, *self.resistMenuList)
+            self.resistMenu.config(width=17)
+            self.resistMenu.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+            self.damageMenuList = ["", "Damage Allowed", "Damage Required", "Damage Banned"]
+            self.damageMenuVal = tk.StringVar(value=self.damageMenuList[1])
+            self.damageMenu = ttk.OptionMenu(self.variantsTabMenuFrame2, self.damageMenuVal, *self.damageMenuList)
+            self.damageMenu.config(width=17)
+            self.damageMenu.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+            self.dodgeMenuList = ["", "Dodge Allowed", "Dodge Required", "Dodge Banned"]
+            self.dodgeMenuVal = tk.StringVar(value=self.dodgeMenuList[1])
+            self.dodgeMenu = ttk.OptionMenu(self.variantsTabMenuFrame3, self.dodgeMenuVal, *self.dodgeMenuList)
+            self.dodgeMenu.config(width=17)
+            self.dodgeMenu.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+            self.repeatMenuList = ["", "Repeat Allowed", "Repeat Required", "Repeat Banned"]
+            self.repeatMenuVal = tk.StringVar(value=self.repeatMenuList[1])
+            self.repeatMenu = ttk.OptionMenu(self.variantsTabMenuFrame3, self.repeatMenuVal, *self.repeatMenuList)
+            self.repeatMenu.config(width=17)
+            self.repeatMenu.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+            self.conditionsMenuList = ["", "Conditions Allowed", "Conditions Required", "Conditions Banned"]
+            self.conditionsMenuVal = tk.StringVar(value=self.conditionsMenuList[1])
+            self.conditionsMenu = ttk.OptionMenu(self.variantsTabMenuFrame3, self.conditionsMenuVal, *self.conditionsMenuList)
+            self.conditionsMenu.config(width=17)
+            self.conditionsMenu.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
 
-            self.variantSwitches = {
-                "health": {"button": self.healthSwitch, "value": self.healthSwitchVal, "mods": {m for m in modIdLookup if "health" in modIdLookup[m]}},
-                "armor": {"button": self.armorSwitch, "value": self.armorSwitchVal, "mods": {m for m in modIdLookup if "armor" in modIdLookup[m]}},
-                "resist": {"button": self.resistSwitch, "value": self.resistSwitchVal, "mods": {m for m in modIdLookup if "resist" in modIdLookup[m]}},
-                "damage": {"button": self.damageSwitch, "value": self.damageSwitchVal, "mods": {m for m in modIdLookup if "damage" in modIdLookup[m]}},
-                "dodge": {"button": self.dodgeSwitch, "value": self.dodgeSwitchVal, "mods": {m for m in modIdLookup if "dodge" in modIdLookup[m]}},
-                "repeat": {"button": self.repeatSwitch, "value": self.repeatSwitchVal, "mods": {m for m in modIdLookup if "repeat" in modIdLookup[m]}},
-                "conditions": {"button": self.conditionsSwitch, "value": self.conditionsSwitchVal, "mods": {m for m in modIdLookup if "bleed" in modIdLookup[m] or "frostbite" in modIdLookup[m] or "poison" in modIdLookup[m] or "stagger" in modIdLookup[m]}}
+            self.variantMenus = {
+                "health": {"button": self.healthMenu, "value": self.healthMenuVal, "mods": {m for m in modIdLookup if "health" in modIdLookup[m]}},
+                "armor": {"button": self.armorMenu, "value": self.armorMenuVal, "mods": {m for m in modIdLookup if "armor" in modIdLookup[m]}},
+                "resist": {"button": self.resistMenu, "value": self.resistMenuVal, "mods": {m for m in modIdLookup if "resist" in modIdLookup[m]}},
+                "damage": {"button": self.damageMenu, "value": self.damageMenuVal, "mods": {m for m in modIdLookup if "damage" in modIdLookup[m]}},
+                "dodge": {"button": self.dodgeMenu, "value": self.dodgeMenuVal, "mods": {m for m in modIdLookup if "dodge" in modIdLookup[m]}},
+                "repeat": {"button": self.repeatMenu, "value": self.repeatMenuVal, "mods": {m for m in modIdLookup if "repeat" in modIdLookup[m]}},
+                "conditions": {"button": self.conditionsMenu, "value": self.conditionsMenuVal, "mods": {m for m in modIdLookup if "bleed" in modIdLookup[m] or "frostbite" in modIdLookup[m] or "poison" in modIdLookup[m] or "stagger" in modIdLookup[m]}}
             }
             
             self.removeLockedButton = ttk.Button(self.variantsTabButtonsFrame3, text="Remove Variant(s)", width=16, command=self.delete_locked_variant)
@@ -304,32 +320,6 @@ try:
                 log("End of create_variants_treeview")
             except Exception as e:
                 error_popup(self.root, e)
-                raise
-
-
-        def check_max_switches(self, event=None):
-            """
-            Checks to see how many switches are on.
-            Disable remaining if 4 are on.
-
-            Optional Parameters:
-                event: tkinter.Event
-                    The tkinter Event that is the trigger.
-            """
-            try:
-                log("Start of check_max_switches")
-
-                numSwitches = len([s for s in self.variantSwitches if self.variantSwitches[s]["value"].get() == 1])
-                if numSwitches == 4:
-                    for s in [s for s in self.variantSwitches if self.variantSwitches[s]["value"].get() == 0]:
-                        self.variantSwitches[s]["button"].config(state=tk.DISABLED)
-                else:
-                    for s in self.variantSwitches:
-                        self.variantSwitches[s]["button"].config(state=tk.NORMAL)
-
-                log("End of check_max_switches")
-            except Exception as e:
-                log(e, exception=True)
                 raise
 
 
@@ -825,25 +815,26 @@ try:
                 raise
 
 
-        def get_variant_difficulty_dict(self, start, k, variantsRequirements):
+        def get_variant_difficulty_dict(self, start, k, modsRequired, modsBanned):
             return {
-                d: self.get_variant_behavior_dict(start, k, d, variantsRequirements)
+                d: self.get_variant_behavior_dict(start, k, d, modsRequired, modsBanned)
                 for d in self.variants[start][self.app.numberOfCharacters][k] if (
-                    self.get_variant_behavior_dict(start, k, d, variantsRequirements))
+                    self.get_variant_behavior_dict(start, k, d, modsRequired, modsBanned))
                 }
 
 
-        def get_variant_behavior_dict(self, start, k, d, variantsRequirements):
+        def get_variant_behavior_dict(self, start, k, d, modsRequired, modsBanned):
             return {
-                e: self.get_variant_list_key(start, k, d, e, variantsRequirements)
+                e: self.get_variant_list_key(start, k, d, e, modsRequired, modsBanned)
                 for e in self.variants[start][self.app.numberOfCharacters][k][d] if (
-                    self.get_variant_list_key(start, k, d, e, variantsRequirements))
+                    self.get_variant_list_key(start, k, d, e, modsRequired, modsBanned))
                 }
 
 
-        def get_variant_list_key(self, start, k, d, e, variantsRequirements):
+        def get_variant_list_key(self, start, k, d, e, modsRequired, modsBanned):
             return [f for f in self.variants[start][self.app.numberOfCharacters][k][d][e] if (
-                all(set(f) & r for r in variantsRequirements))]
+                (all(set(f) & r for r in modsRequired) or not modsRequired)
+                and (all(not set(f) & r for r in modsBanned) or not modsBanned))]
 
 
         def pick_enemy_variants_enemy(self, start, diffKey):
@@ -853,17 +844,28 @@ try:
             try:
                 log("Start of pick_enemy_variants_enemy, start={}, diffKey={}".format(str(start), str(diffKey)))
 
-                variantsRequirements = [self.variantSwitches[s]["mods"] for s in self.variantSwitches if self.variantSwitches[s]["value"].get() == 1]
-                if variantsRequirements:
+                modsRequired = [
+                    self.variantMenus[s]["mods"] for s in self.variantMenus if (
+                        "Required" in self.variantMenus[s]["value"].get())]
+                
+                modsBanned = [
+                    self.variantMenus[s]["mods"] for s in self.variantMenus if (
+                        "Banned" in self.variantMenus[s]["value"].get())]
+                
+                if modsRequired or modsBanned:
                     # This effectively rebuilds self.variants but limited to variants that
                     # have the required variants.  Also had to ensure no empty lists or keys.
                     variants = {
-                        k: self.get_variant_difficulty_dict(start, k, variantsRequirements)
+                        k: self.get_variant_difficulty_dict(start, k, modsRequired, modsBanned)
                             for k in self.variants[start][self.app.numberOfCharacters] if (
-                                self.get_variant_difficulty_dict(start, k, variantsRequirements))
+                                self.get_variant_difficulty_dict(start, k, modsRequired, modsBanned))
                         }
                 else:
                     variants = self.variants[start][self.app.numberOfCharacters]
+
+                if not variants:
+                    log("End of pick_enemy_variants_enemy")
+                    return
 
                 diffKeyIndex = bisect_left(list(variants.keys()), diffKey)
                 diffKeyIndex -= 1 if diffKeyIndex > len(list(variants.keys())) - 1 else 0
