@@ -129,6 +129,10 @@ try:
             self.variantsTabButtonsFrame.pack()
             self.variantsTabButtonsFrame2 = ttk.Frame(self)
             self.variantsTabButtonsFrame2.pack()
+            self.variantsTabSwitchFrame = ttk.Frame(self)
+            self.variantsTabSwitchFrame.pack()
+            self.variantsTabSwitchFrame2 = ttk.Frame(self)
+            self.variantsTabSwitchFrame2.pack()
             self.variantsListTreeviewFrame = ttk.Frame(self)
             self.variantsListTreeviewFrame.pack(fill="both", expand=True)
             self.variantsTabButtonsFrame3 = ttk.Frame(self)
@@ -157,6 +161,38 @@ try:
             self.lockButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
             self.removeButton = ttk.Button(self.variantsTabButtonsFrame2, text="Remove Variant", width=16, command=self.remove_variant_card)
             self.removeButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+
+            self.healthSwitchVal = tk.IntVar()
+            self.healthSwitch = ttk.Checkbutton(self.variantsTabSwitchFrame, text="Health", variable=self.healthSwitchVal, style="Switch.TCheckbutton", command=self.check_max_switches)
+            self.healthSwitch.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+            self.armorSwitchVal = tk.IntVar()
+            self.armorSwitch = ttk.Checkbutton(self.variantsTabSwitchFrame, text="Armor", variable=self.armorSwitchVal, style="Switch.TCheckbutton", command=self.check_max_switches)
+            self.armorSwitch.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+            self.resistSwitchVal = tk.IntVar()
+            self.resistSwitch = ttk.Checkbutton(self.variantsTabSwitchFrame, text="Resist", variable=self.resistSwitchVal, style="Switch.TCheckbutton", command=self.check_max_switches)
+            self.resistSwitch.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+            self.damageSwitchVal = tk.IntVar()
+            self.damageSwitch = ttk.Checkbutton(self.variantsTabSwitchFrame2, text="Damage", variable=self.damageSwitchVal, style="Switch.TCheckbutton", command=self.check_max_switches)
+            self.damageSwitch.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+            self.dodgeSwitchVal = tk.IntVar()
+            self.dodgeSwitch = ttk.Checkbutton(self.variantsTabSwitchFrame2, text="Dodge", variable=self.dodgeSwitchVal, style="Switch.TCheckbutton", command=self.check_max_switches)
+            self.dodgeSwitch.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+            self.repeatSwitchVal = tk.IntVar()
+            self.repeatSwitch = ttk.Checkbutton(self.variantsTabSwitchFrame2, text="Repeat", variable=self.repeatSwitchVal, style="Switch.TCheckbutton", command=self.check_max_switches)
+            self.repeatSwitch.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+            self.conditionsSwitchVal = tk.IntVar()
+            self.conditionsSwitch = ttk.Checkbutton(self.variantsTabSwitchFrame2, text="Conditions", variable=self.conditionsSwitchVal, style="Switch.TCheckbutton", command=self.check_max_switches)
+            self.conditionsSwitch.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+
+            self.variantSwitches = {
+                "health": {"button": self.healthSwitch, "value": self.healthSwitchVal, "mods": {m for m in modIdLookup if "health" in modIdLookup[m]}},
+                "armor": {"button": self.armorSwitch, "value": self.armorSwitchVal, "mods": {m for m in modIdLookup if "armor" in modIdLookup[m]}},
+                "resist": {"button": self.resistSwitch, "value": self.resistSwitchVal, "mods": {m for m in modIdLookup if "resist" in modIdLookup[m]}},
+                "damage": {"button": self.damageSwitch, "value": self.damageSwitchVal, "mods": {m for m in modIdLookup if "damage" in modIdLookup[m]}},
+                "dodge": {"button": self.dodgeSwitch, "value": self.dodgeSwitchVal, "mods": {m for m in modIdLookup if "dodge" in modIdLookup[m]}},
+                "repeat": {"button": self.repeatSwitch, "value": self.repeatSwitchVal, "mods": {m for m in modIdLookup if "repeat" in modIdLookup[m]}},
+                "conditions": {"button": self.conditionsSwitch, "value": self.conditionsSwitchVal, "mods": {m for m in modIdLookup if "bleed" in modIdLookup[m] or "frostbite" in modIdLookup[m] or "poison" in modIdLookup[m] or "stagger" in modIdLookup[m]}}
+            }
             
             self.removeLockedButton = ttk.Button(self.variantsTabButtonsFrame3, text="Remove Variant(s)", width=16, command=self.delete_locked_variant)
             self.removeLockedButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
@@ -268,6 +304,32 @@ try:
                 log("End of create_variants_treeview")
             except Exception as e:
                 error_popup(self.root, e)
+                raise
+
+
+        def check_max_switches(self, event=None):
+            """
+            Checks to see how many switches are on.
+            Disable remaining if 4 are on.
+
+            Optional Parameters:
+                event: tkinter.Event
+                    The tkinter Event that is the trigger.
+            """
+            try:
+                log("Start of check_max_switches")
+
+                numSwitches = len([s for s in self.variantSwitches if self.variantSwitches[s]["value"].get() == 1])
+                if numSwitches == 4:
+                    for s in [s for s in self.variantSwitches if self.variantSwitches[s]["value"].get() == 0]:
+                        self.variantSwitches[s]["button"].config(state=tk.DISABLED)
+                else:
+                    for s in self.variantSwitches:
+                        self.variantSwitches[s]["button"].config(state=tk.NORMAL)
+
+                log("End of check_max_switches")
+            except Exception as e:
+                log(e, exception=True)
                 raise
 
 
@@ -763,6 +825,27 @@ try:
                 raise
 
 
+        def get_variant_difficulty_dict(self, start, k, variantsRequirements):
+            return {
+                d: self.get_variant_behavior_dict(start, k, d, variantsRequirements)
+                for d in self.variants[start][self.app.numberOfCharacters][k] if (
+                    self.get_variant_behavior_dict(start, k, d, variantsRequirements))
+                }
+
+
+        def get_variant_behavior_dict(self, start, k, d, variantsRequirements):
+            return {
+                e: self.get_variant_list_key(start, k, d, e, variantsRequirements)
+                for e in self.variants[start][self.app.numberOfCharacters][k][d] if (
+                    self.get_variant_list_key(start, k, d, e, variantsRequirements))
+                }
+
+
+        def get_variant_list_key(self, start, k, d, e, variantsRequirements):
+            return [f for f in self.variants[start][self.app.numberOfCharacters][k][d][e] if (
+                all(set(f) & r for r in variantsRequirements))]
+
+
         def pick_enemy_variants_enemy(self, start, diffKey):
             """
             Find the appropriate variants for the entered difficulty.
@@ -770,14 +853,26 @@ try:
             try:
                 log("Start of pick_enemy_variants_enemy, start={}, diffKey={}".format(str(start), str(diffKey)))
 
-                diffKeyIndex = bisect_left(list(self.variants[start][self.app.numberOfCharacters].keys()), diffKey)
-                diffKeyIndex -= 1 if diffKeyIndex > len(list(self.variants[start][self.app.numberOfCharacters].keys())) - 1 else 0
-                diffKeyReal = list(self.variants[start][self.app.numberOfCharacters].keys())[diffKeyIndex]
-                defKey = choice(list(self.variants[start][self.app.numberOfCharacters][diffKeyReal].keys()))
+                variantsRequirements = [self.variantSwitches[s]["mods"] for s in self.variantSwitches if self.variantSwitches[s]["value"].get() == 1]
+                if variantsRequirements:
+                    # This effectively rebuilds self.variants but limited to variants that
+                    # have the required variants.  Also had to ensure no empty lists or keys.
+                    variants = {
+                        k: self.get_variant_difficulty_dict(start, k, variantsRequirements)
+                            for k in self.variants[start][self.app.numberOfCharacters] if (
+                                self.get_variant_difficulty_dict(start, k, variantsRequirements))
+                        }
+                else:
+                    variants = self.variants[start][self.app.numberOfCharacters]
+
+                diffKeyIndex = bisect_left(list(variants.keys()), diffKey)
+                diffKeyIndex -= 1 if diffKeyIndex > len(list(variants.keys())) - 1 else 0
+                diffKeyReal = list(variants.keys())[diffKeyIndex]
+                defKey = choice(list(variants[diffKeyReal].keys()))
                 self.currentVariants[start] = {"defKey": list(defKey)}
 
-                for behavior in self.variants[start][self.app.numberOfCharacters][diffKeyReal][defKey]:
-                    self.pick_enemy_variants_behavior(start, behavior, diffKeyReal, defKey)
+                for behavior in variants[diffKeyReal][defKey]:
+                    self.pick_enemy_variants_behavior(start, behavior, diffKeyReal, defKey, variants)
                 
                 log("End of pick_enemy_variants_enemy")
             except Exception as e:
@@ -785,7 +880,7 @@ try:
                 raise
 
 
-        def pick_enemy_variants_behavior(self, start, behavior, diffKey, defKey):
+        def pick_enemy_variants_behavior(self, start, behavior, diffKey, defKey, variants):
             """
             Find the appropriate variants for the entered difficulty.
             """
@@ -805,17 +900,17 @@ try:
                     behaviorO = behavior[:behavior.index(" & ")]
                     behaviorS = behavior[behavior.index(" & ")+3:]
 
-                    if frozenset(defKey) not in self.variants[start][self.app.numberOfCharacters][diffKey]:
+                    if frozenset(defKey) not in variants[diffKey]:
                         p = PopupWindow(self.root, "The difficulty modifier you chose is incompatible with the\ndifficulty modifiers on other behaviors.\n\nPlease try a different difficulty modifier or change the difficulty\nmodifier at the {} level.".format(start, start), firstButton="Ok")
                         self.root.wait_window(p)
                         return
 
                     self.currentVariants[start][behavior] = {
-                        behaviorO: choice(list(self.variants[start][self.app.numberOfCharacters][diffKey][frozenset(defKey)][behaviorO])),
-                        behaviorS: choice(list(self.variants[start][self.app.numberOfCharacters][diffKey][frozenset(defKey)][behaviorS]))
+                        behaviorO: choice(list(variants[diffKey][frozenset(defKey)][behaviorO])),
+                        behaviorS: choice(list(variants[diffKey][frozenset(defKey)][behaviorS]))
                     }
                 else:
-                    if frozenset(defKey) not in self.variants[start][self.app.numberOfCharacters][diffKey]:
+                    if frozenset(defKey) not in variants[diffKey]:
                         p = PopupWindow(self.root, "The difficulty modifier you chose is incompatible with the\ndifficulty modifiers on other behaviors.\n\nPlease try a different difficulty modifier or change the difficulty\nmodifier at the {} level.".format(start, start), firstButton="Ok")
                         self.root.wait_window(p)
                         return
@@ -824,11 +919,11 @@ try:
                         len(self.currentVariants[start].get(behavior, [])) == 0
                         or (
                             behavior in self.currentVariants[start]
-                            and len(self.variants[start][self.app.numberOfCharacters][diffKey][frozenset(defKey)][behavior]) > 1
+                            and len(variants[diffKey][frozenset(defKey)][behavior]) > 1
                             and curVariant == self.currentVariants[start][behavior]
                             )
                         ):
-                        self.currentVariants[start][behavior] = choice(self.variants[start][self.app.numberOfCharacters][diffKey][frozenset(defKey)][behavior])
+                        self.currentVariants[start][behavior] = choice(variants[diffKey][frozenset(defKey)][behavior])
                     
                 self.treeviewVariantsList.item(start + (" - " + behavior if behavior else ""), values=(self.treeviewVariantsList.item(start + (" - " + behavior if behavior else ""))["values"][0], int(round((diffKey - 1.0) * 100, -1))))
                 
