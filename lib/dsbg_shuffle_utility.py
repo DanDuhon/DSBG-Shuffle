@@ -408,7 +408,7 @@ def clear_other_tab_images(app, lookupTab, activeTab, name=None, onlyDisplay=Non
 
 def error_popup(root, e):
     log(e, exception=True)
-    p = PopupWindow(root, "Error detected!\n\nPlease open a Github issue describing what you were doing\nand include the dsbg_shuffle_log file!  Thanks!", firstButton="Ok")
+    p = PopupWindow(root, "Error detected!\n\nPlease open a Github issue describing what you were doing\nand include the dsbg_shuffle_log file!  Thanks!\n\nRegardless, please close and reopen the app.", firstButton="Ok")
     root.wait_window(p)
 
 

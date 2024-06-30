@@ -328,11 +328,14 @@ try:
             try:
                 log("Start of draw_behavior_card")
 
-                selection = self.treeviewDecks.selection()[0]
-
-                if not selection or selection not in self.decks:
+                if (
+                    not self.treeviewDecks.selection()
+                    or self.treeviewDecks.selection()[0] not in self.decks 
+                    or not self.decks[self.treeviewDecks.selection()[0]]["deck"]):
                     log("End of draw_behavior_card (nothing done)")
                     return
+
+                selection = self.treeviewDecks.selection()[0]
                 
                 if self.decks[selection]["curIndex"] == len(self.decks[selection]["deck"]):
                     if selection == "The Four Kings":
@@ -559,7 +562,7 @@ try:
             try:
                 log("Start of remove_all_health_trackers")
 
-                if not self.treeviewDecks.selection():
+                if not self.treeviewDecks.selection() or self.treeviewDecks.selection()[0] not in self.decks:
                     log("End of remove_all_health_trackers (nothing done)")
                     return
 
