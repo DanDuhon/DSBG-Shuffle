@@ -50,28 +50,6 @@ try:
 
 
     def get_health_bonus(health, mods):
-        modsStrings = set([modIdLookup[m] for m in mods])
-        return (
-            1 if health == 1 and {"health1", "damage health1"} & modsStrings
-            else 2 if health == 1 and {"health2", "damage health2"} & modsStrings
-            else 3 if health == 1 and {"health3", "damage health3"} & modsStrings
-            else 4 if health == 1 and {"health4", "damage health4"} & modsStrings
-            else 2 if health == 5 and {"health1", "damage health1"} & modsStrings
-            else 3 if health == 5 and {"health2", "damage health2"} & modsStrings
-            else 5 if health == 5 and {"health3", "damage health3"} & modsStrings
-            else 6 if health == 5 and {"health4", "damage health4"} & modsStrings
-            else 2 if health == 10 and {"health1", "damage health1"} & modsStrings
-            else 4 if health == 10 and {"health2", "damage health2"} & modsStrings
-            else 6 if health == 10 and {"health3", "damage health3"} & modsStrings
-            else 8 if health == 10 and {"health4", "damage health4"} & modsStrings
-            else ceil(health * 0.1) if {"health1", "damage health1"} & modsStrings
-            else ceil(health * 0.2) if {"health2", "damage health2"} & modsStrings
-            else ceil(health * 0.3) if {"health3", "damage health3"} & modsStrings
-            else ceil(health * 0.4) if {"health4", "damage health4"} & modsStrings
-            else 0)
-
-
-    def get_health_bonus(health, mods):
         modsSet = set([modIdLookup[m] if type(m) == int else m for m in mods])
         return (
             1 if health == 1 and {"health1", "damage health1"} & modsSet
@@ -704,8 +682,27 @@ try:
                         self.currentVariants[startReal] = {"defKey": list(defKey)}
                     else:
                         defKey = self.currentVariants[startReal]["defKey"]
+
+                    modsRequired = [
+                        self.variantMenus[s]["mods"] for s in self.variantMenus if (
+                            "Required" in self.variantMenus[s]["value"].get())]
                     
-                    self.pick_enemy_variants_behavior(startReal, start[start.index(" - ")+3:], diffKeyReal, defKey)
+                    modsBanned = [
+                        self.variantMenus[s]["mods"] for s in self.variantMenus if (
+                            "Banned" in self.variantMenus[s]["value"].get())]
+                    
+                    if modsRequired or modsBanned:
+                        # This effectively rebuilds self.variants but limited to variants that
+                        # have the required variants.  Also had to ensure no empty lists or keys.
+                        variants = {
+                            k: self.get_variant_difficulty_dict(startReal, k, modsRequired, modsBanned)
+                                for k in self.variants[startReal][self.app.numberOfCharacters] if (
+                                    self.get_variant_difficulty_dict(startReal, k, modsRequired, modsBanned))
+                            }
+                    else:
+                        variants = self.variants[startReal][self.app.numberOfCharacters]
+                    
+                    self.pick_enemy_variants_behavior(startReal, start[start.index(" - ")+3:], diffKeyReal, defKey, variants)
                     self.app.behaviorDeckTab.set_decks(enemy=self.treeviewVariantsList.parent(start), skipClear=True)
                 elif start in {"Enemies", "Invaders & Explorers Mimics", "Mini Bosses", "Main Bosses", "Mega Bosses"}:
                     if start == "Enemies":
@@ -971,11 +968,6 @@ try:
                         self.app.displayImages[key][self.app.display2]["image"] = displayPhotoImage
                         self.app.displayImages[key][self.app.display2]["name"] = self.selectedVariant
                         self.app.displayImages[key][self.app.display2]["activeTab"] = key if not fromDeck else "behaviorDeck"
-
-                        for e in [e for e in self.app.behaviorDeckTab.decks if e != enemy]:
-                            if "healthTrackers" in self.app.behaviorDeckTab.decks[e]:
-                                for h in self.app.behaviorDeckTab.decks[e]["healthTrackers"]:
-                                    h.grid_forget()
                     else:
                         self.app.display.image = displayPhotoImage
                         self.app.display.config(image=displayPhotoImage)
@@ -1493,7 +1485,7 @@ try:
                 if healthMod and health + healthMod >= 0:
                     health += healthMod
 
-                imageWithText.text((253 + (4 if health < 10 else 0), 35), str(health), "white", font2)
+                imageWithText.text((253 + (2 if health == 0 else 4 if health < 10 else 0), 35), str(health), "white", font2)
                 imageWithText.text((130, 245 - (10 if "behavior" in behaviorDetail[enemy] else 0)), str(armor), "white", font3)
                 imageWithText.text((154, 245 - (10 if "behavior" in behaviorDetail[enemy] else 0)), str(resist), "black", font3)
 
@@ -1731,11 +1723,6 @@ try:
                             self.app.displayKing3.grid_forget()
                             self.app.displayKing4.grid_forget()
 
-                        for e in [e for e in self.app.behaviorDeckTab.decks if e != enemy]:
-                            if "healthTrackers" in self.app.behaviorDeckTab.decks[e]:
-                                for h in self.app.behaviorDeckTab.decks[e]["healthTrackers"]:
-                                    h.grid_forget()
-
                         self.app.display3.image = photoImage
                         self.app.display3.config(image=photoImage)
                         self.app.displayImages[key][self.app.display3]["image"] = photoImage
@@ -1785,7 +1772,7 @@ try:
                     health += healthMod[enemy]
 
                 imageWithText.text((246, 245), "0", "black", font2)
-                imageWithText.text((252 + (4 if health < 10 else 0), 35), str(health), "white", font2)
+                imageWithText.text((252 + (2 if health == 0 else 4 if health < 10 else 0), 35), str(health), "white", font2)
                 imageWithText.text((130, 245), str(armor), "white", font3)
                 imageWithText.text((154, 245), str(resist), "black", font3)
                 imageWithText.text((248, 340), str(10 + healthAddition + (5 if enemy == "Smough" else 0)), "black", font)

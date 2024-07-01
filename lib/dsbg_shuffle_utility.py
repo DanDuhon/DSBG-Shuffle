@@ -385,10 +385,18 @@ def set_display_bindings_by_tab(app, smoughActive=False):
 
 
 def clear_other_tab_images(app, lookupTab, activeTab, name=None, onlyDisplay=None):
+    if not getattr(app, "display", None):
+        return
+
     app.displayKing1.grid_forget()
     app.displayKing2.grid_forget()
     app.displayKing3.grid_forget()
     app.displayKing4.grid_forget()
+
+    for e in [e for e in app.behaviorDeckTab.decks if "healthTrackers" in app.behaviorDeckTab.decks[e]]:
+        for h in app.behaviorDeckTab.decks[e]["healthTrackers"]:
+            h.grid_forget()
+
     displays = [app.display, app.display2, app.display3]
     for display in displays:
         if onlyDisplay and display != onlyDisplay:

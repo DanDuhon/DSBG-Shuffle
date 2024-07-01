@@ -676,8 +676,6 @@ class Tester():
         behaviorOs = osBehaviorLookup[behavior]
 
         mods = [modIdLookup[m] for m in variant if m]
-        if mods == ['health3', 'poison']:
-            pass
     
         if "&" in behaviorOs:
             dodge = behaviorDetail[enemy][behaviorOs][behavior]["dodge"]

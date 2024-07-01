@@ -42,8 +42,6 @@ try:
                 self.v1Expansions = {"Dark Souls The Board Game", "Darkroot", "Executioner Chariot", "Explorers", "Iron Keep"}
                 self.v2Expansions = (self.allExpansions - self.v1Expansions - self.level4Expansions)
                 self.enabledEnemies = set([enemiesDict[enemy.replace(" (V1)", "")].id for enemy in self.settings["enabledEnemies"] if enemy not in self.allExpansions])
-                if "Phantoms" in self.availableExpansions:
-                    self.enabledEnemies = self.enabledEnemies.union(set([enemy for enemy in enemyIds if "Phantoms" in enemyIds[enemy].expansions]))
                 self.charactersActive = set(self.settings["charactersActive"])
                 self.numberOfCharacters = len(self.charactersActive)
                 self.availableCoreSets = self.coreSets & self.availableExpansions
@@ -137,6 +135,8 @@ try:
                 self.create_display_frame()
                 self.create_menu()
                 self.set_bindings_buttons_menus(True)
+
+                root.state("zoomed")
 
                 self.progress.destroy()
                 root.deiconify()
@@ -258,7 +258,7 @@ try:
                     d.bind("<Control-1>", lambda event, x=1: app.behaviorDeckTab.raise_health_king(event=event, king=k, amount=x))
                     d.bind("<Shift-Control-1>", lambda event, x=5: app.behaviorDeckTab.raise_health_king(event=event, king=k, amount=x))
 
-                for enemy in self.enabledEnemies:
+                for enemy in [e for e in self.enabledEnemies if "Phantoms" not in enemyIds[e].expansions and enemyIds[e].name not in {"Hungry Mimic", "Voracious Mimic"}]:
                     self.behaviorDeckTab.decks[enemyIds[enemy].name]["healthTrackers"] = []
                     for _ in range(8):
                         self.behaviorDeckTab.decks[enemyIds[enemy].name]["healthTrackers"].append(ttk.Label(self.displayFrame))
@@ -570,8 +570,6 @@ try:
                         progress = PopupWindow(root, labelText="Applying custom enemy list...", progressBar=True, progressMax=len(self.encounterTab.encounterList), loadingImage=True)
                         
                         self.enabledEnemies = set([enemiesDict[enemy.replace(" (V1)", "")].id for enemy in self.settings["enabledEnemies"] if enemy not in self.allExpansions])
-                        if "Phantoms" in self.availableExpansions:
-                            self.enabledEnemies = self.enabledEnemies.union(set([enemy for enemy in enemyIds if "Phantoms" in enemyIds[enemy].expansions]))
 
                         self.encountersToRemove = set()
                         for encounter in self.encounterTab.encounterList:
@@ -593,18 +591,18 @@ try:
                 self.set_bindings_buttons_menus(True)
                 
                 if "level4" not in self.settings["encounterTypes"]:
-                    self.l4["state"] = "disabled"
+                    self.encounterTab.l4["state"] = "disabled"
                 else:
-                    self.l4["state"] = "enabled"
+                    self.encounterTab.l4["state"] = "enabled"
                 
                 if ["level4"] == self.settings["encounterTypes"]:
-                    self.l1["state"] = "disabled"
-                    self.l2["state"] = "disabled"
-                    self.l3["state"] = "disabled"
+                    self.encounterTab.l1["state"] = "disabled"
+                    self.encounterTab.l2["state"] = "disabled"
+                    self.encounterTab.l3["state"] = "disabled"
                 else:
-                    self.l1["state"] = "enabled"
-                    self.l2["state"] = "enabled"
-                    self.l3["state"] = "enabled"
+                    self.encounterTab.l1["state"] = "enabled"
+                    self.encounterTab.l2["state"] = "enabled"
+                    self.encounterTab.l3["state"] = "enabled"
 
                 log("End of settings_window")
             except Exception as e:

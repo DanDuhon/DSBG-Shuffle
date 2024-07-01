@@ -313,7 +313,7 @@ try:
                 else:
                     self.decks[enemy]["defKey"] = {"",}
 
-                self.remove_all_health_trackers()
+                self.remove_all_health_trackers(enemy)
 
                 if not skipClear and self.treeviewDecks.selection():
                     self.display_deck_cards()
@@ -454,7 +454,7 @@ try:
                     health += healthMod
 
                 if king <= self.decks["The Four Kings"]["heatup"]:
-                    imageWithText.text((118 + (4 if health < 10 else 0), 17), str(health), "white", font2)
+                    imageWithText.text((118 + (2 if health == 0 else 4 if health < 10 else 0), 17), str(health), "white", font2)
                 else:
                     imageWithText.text((124, 16), "-", "white", font2)
 
@@ -483,9 +483,13 @@ try:
             try:
                 log("Start of health_tracker")
 
-                if self.treeviewDecks.parent(self.treeviewDecks.selection()[0]) != "Enemies":
+                if not self.treeviewDecks.selection() or self.treeviewDecks.parent(self.treeviewDecks.selection()[0]) != "Enemies":
                     log("End of health_tracker (regular enemy not selected)")
                     return
+
+                if self.app.display2.image != self.app.displayImages["behaviorDeck"][self.app.display2]["image"]:
+                    log("End of health_tracker (came from other tab - displaying cards first)")
+                    self.display_deck_cards()
                 
                 enemy = self.treeviewDecks.selection()[0]
 
@@ -517,7 +521,7 @@ try:
                     if healthMod and health + healthMod >= 0:
                         health += healthMod
 
-                    imageWithText.text((67 + (4 if health < 10 else 0), 17), str(health), "white", font2)
+                    imageWithText.text((67 + (2 if health == 0 else 4 if health < 10 else 0), 17), str(health), "white", font2)
 
                     displayPhotoImage = ImageTk.PhotoImage(self.app.displayImage)
 
@@ -539,7 +543,7 @@ try:
                     if healthMod and health + healthMod >= 0:
                         health += healthMod
 
-                    imageWithText.text((67 + (4 if health < 10 else 0), 17), str(health), "white", font2)
+                    imageWithText.text((67 + (2 if health == 0 else 4 if health < 10 else 0), 17), str(health), "white", font2)
 
                     displayPhotoImage = ImageTk.PhotoImage(self.app.displayImage)
 
@@ -558,15 +562,22 @@ try:
                 raise
 
 
-        def remove_all_health_trackers(self):
+        def remove_all_health_trackers(self, enemy=None):
             try:
                 log("Start of remove_all_health_trackers")
 
-                if not self.treeviewDecks.selection() or self.treeviewDecks.selection()[0] not in self.decks:
+                if not self.treeviewDecks.selection():
                     log("End of remove_all_health_trackers (nothing done)")
                     return
 
-                enemy = self.treeviewDecks.selection()[0]
+                if not enemy:
+                    enemy = self.treeviewDecks.selection()[0]
+
+                if (
+                    enemy not in self.decks
+                    or "healthTrackers" not in self.decks[enemy]):
+                    log("End of remove_all_health_trackers (nothing done)")
+                    return
 
                 self.decks[enemy]["healthMod"] = {0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0}
 

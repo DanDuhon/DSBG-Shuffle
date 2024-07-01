@@ -165,14 +165,18 @@ try:
                 
                 set_display_bindings_by_tab(self.app)
 
-                clear_other_tab_images(self.app, "encounters", "encounters")
+                clear_other_tab_images(self.app, "events", "events")
                 
                 # Get the event selected.
                 if event:
                     tree = event.widget
 
                     # Don't update the image shown if you've selected more than one encounter.
-                    if len(tree.selection()) != 1 or tree.selection()[0] not in events:
+                    if (
+                        len(tree.selection()) != 1
+                        or (tree.selection()
+                            and "_" in tree.selection()[0]
+                            and tree.selection()[0][:tree.selection()[0].index("_")] not in events)):
                         log("End of load_event (not updating image)")
                         return
                     
