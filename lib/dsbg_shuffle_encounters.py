@@ -56,6 +56,11 @@ try:
             self.l2.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
             self.l3.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
             self.l4.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+            
+            self.buttonsFrame2 = ttk.Frame(self)
+            self.buttonsFrame2.pack()
+            self.originalButton = ttk.Button(self.buttonsFrame2, text="Show Original", width=16, command=self.show_original)
+            self.originalButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
 
             self.scrollbarTreeviewEncounters = ttk.Scrollbar(self)
             self.scrollbarTreeviewEncounters.pack(side="right", fill="y")
@@ -436,6 +441,7 @@ try:
 
                 self.app.selected["alternatives"] = []
                 self.app.selected["enemySlots"] = alts["enemySlots"]
+                self.app.selected["original"] = alts["original"]
                 self.newEnemies = []
 
                 # Use only alternative enemies for expansions and enemies the user has activated in the settings.
@@ -451,6 +457,39 @@ try:
                     set_display_bindings_by_tab(self.app)
 
                 log("\tEnd of load_encounter")
+            except Exception as e:
+                error_popup(self.root, e)
+                raise
+
+
+        def show_original(self, event=None):
+            """
+            Display the encounter with its original enemies.
+
+            Optional Parameters:
+                event: tkinter.Event
+                    The tkinter Event that is the trigger.
+                    Default: None
+            """
+            try:
+                log("Start of show_original")
+
+                if self.app.notebook.tab(self.app.notebook.select(), "text") not in {"Encounters", "Campaign"}:
+                    log("End of show_original (wrong tab)")
+                    return
+
+                if not self.app.selected:
+                    log("\tNo encounter loaded - nothing to do")
+                    log("\tEnd of show_original")
+                    return
+
+                self.rewardTreasure = None
+
+                self.newEnemies = self.app.selected["original"]
+
+                self.edit_encounter_card(self.app.selected["name"], self.app.selected["expansion"], self.app.selected["level"], self.app.selected["enemySlots"], original=True)
+
+                log("\tEnd of show_original")
             except Exception as e:
                 error_popup(self.root, e)
                 raise
@@ -496,7 +535,7 @@ try:
                 raise
 
 
-        def edit_encounter_card(self, name, expansion, level, enemySlots, campaignGen=False, right=False):
+        def edit_encounter_card(self, name, expansion, level, enemySlots, campaignGen=False, right=False, original=False):
             """
             Modify the encounter card image with the new enemies and treasure reward, if applicable.
 
@@ -570,7 +609,7 @@ try:
                 elif name == "Aged Sentinel":
                     self.aged_sentinel(right=right)
                 elif name == "Castle Break In":
-                    self.castle_break_in()
+                    self.castle_break_in(original=original)
                 elif (name == "Central Plaza" or name == "Central Plaza (TSC)") and expansion == "The Sunless City":
                     self.central_plaza(right=right)
                 elif name == "Cloak and Feathers":
@@ -578,13 +617,13 @@ try:
                 elif name == "Cold Snap":
                     self.cold_snap(right=right)
                 elif name == "Corvian Host":
-                    self.corvian_host(right=right)
+                    self.corvian_host(right=right, original=original)
                 elif name == "Corrupted Hovel":
                     self.corrupted_hovel(right=right)
                 elif name == "Dark Alleyway":
                     self.dark_alleyway(right=right)
                 elif name == "Dark Resurrection":
-                    self.dark_resurrection()
+                    self.dark_resurrection(original=original)
                 elif name == "Deathly Freeze":
                     self.deathly_freeze(level, right=right)
                 elif name == "Deathly Magic":
@@ -594,37 +633,37 @@ try:
                 elif name == "Depths of the Cathedral":
                     self.depths_of_the_cathedral(right=right)
                 elif name == "Distant Tower":
-                    self.distant_tower(right=right)
+                    self.distant_tower(right=right, original=original)
                 elif name == "Eye of the Storm":
                     self.eye_of_the_storm(right=right)
                 elif name == "Flooded Fortress":
-                    self.flooded_fortress(right=right)
+                    self.flooded_fortress(right=right, original=original)
                 elif name == "Frozen Revolutions":
                     self.frozen_revolutions(right=right)
                 elif name == "Giant's Coffin":
-                    self.giants_coffin(right=right)
+                    self.giants_coffin(right=right, original=original)
                 elif name == "Gleaming Silver":
                     self.gleaming_silver(level, right=right)
                 elif name == "Gnashing Beaks":
                     self.gnashing_beaks(right=right)
                 elif name == "Grave Matters":
-                    self.grave_matters()
+                    self.grave_matters(original=original)
                 elif name == "Grim Reunion":
                     self.grim_reunion(right=right)
                 elif name == "Hanging Rafters":
-                    self.hanging_rafters()
+                    self.hanging_rafters(original=original)
                 elif name == "In Deep Water":
-                    self.in_deep_water(right=right)
+                    self.in_deep_water(right=right, original=original)
                 elif name == "Inhospitable Ground":
-                    self.inhospitable_ground()
+                    self.inhospitable_ground(original=original)
                 elif name == "Lakeview Refuge":
                     self.lakeview_refuge(right=right)
                 elif name == "Monstrous Maw":
-                    self.monstrous_maw(right=right)
+                    self.monstrous_maw(right=right, original=original)
                 elif name == "No Safe Haven":
-                    self.no_safe_haven(right=right)
+                    self.no_safe_haven(right=right, original=original)
                 elif name == "Painted Passage":
-                    self.painted_passage()
+                    self.painted_passage(original=original)
                 elif name == "Parish Church":
                     self.parish_church(right=right)
                 elif name == "Parish Gates":
@@ -632,11 +671,11 @@ try:
                 elif name == "Pitch Black":
                     self.pitch_black(level, right=right)
                 elif name == "Puppet Master":
-                    self.puppet_master(right=right)
+                    self.puppet_master(right=right, original=original)
                 elif name == "Rain of Filth":
-                    self.rain_of_filth()
+                    self.rain_of_filth(original=original)
                 elif name == "Shattered Keep":
-                    self.shattered_keep(right=right)
+                    self.shattered_keep(right=right, original=original)
                 elif name == "Skeletal Spokes":
                     self.skeletal_spokes(right=right)
                 elif name == "Skeleton Overlord":
@@ -644,9 +683,9 @@ try:
                 elif name == "Tempting Maw":
                     self.tempting_maw(right=right)
                 elif name == "The Abandoned Chest":
-                    self.the_abandoned_chest(right=right)
+                    self.the_abandoned_chest(right=right, original=original)
                 elif name == "The Beast From the Depths":
-                    self.the_beast_from_the_depths(right=right)
+                    self.the_beast_from_the_depths(right=right, original=original)
                 elif name == "The Bell Tower":
                     self.the_bell_tower(right=right)
                 elif name == "The First Bastion":
@@ -656,29 +695,29 @@ try:
                 elif name == "The Grand Hall":
                     self.the_grand_hall(right=right)
                 elif name == "The Iron Golem":
-                    self.the_iron_golem(right=right)
+                    self.the_iron_golem(right=right, original=original)
                 elif name == "The Last Bastion":
                     self.the_last_bastion(level, right=right)
                 elif name == "The Locked Grave":
-                    self.the_locked_grave(right=right)
+                    self.the_locked_grave(right=right, original=original)
                 elif name == "The Shine of Gold":
                     self.the_shine_of_gold(right=right)
                 elif name == "The Skeleton Ball":
-                    self.the_skeleton_ball(right=right)
+                    self.the_skeleton_ball(right=right, original=original)
                 elif name == "Trecherous Tower":
                     self.trecherous_tower()
                 elif name == "Trophy Room":
-                    self.trophy_room(right=right)
+                    self.trophy_room(right=right, original=original)
                 elif name == "Twilight Falls":
                     self.twilight_falls(right=right)
                 elif name == "Undead Sanctum":
-                    self.undead_sanctum(right=right)
+                    self.undead_sanctum(right=right, original=original)
                 elif name == "Unseen Scurrying":
-                    self.unseen_scurrying()
+                    self.unseen_scurrying(original=original)
                 elif name == "Urns of the Fallen":
-                    self.urns_of_the_fallen()
+                    self.urns_of_the_fallen(original=original)
                 elif name == "Velka's Chosen":
-                    self.velkas_chosen(level, right=right)
+                    self.velkas_chosen(level, right=right, original=original)
 
                 displayPhotoImage = ImageTk.PhotoImage(self.app.displayImage)
 
@@ -799,7 +838,7 @@ try:
                 raise
 
 
-        def castle_break_in(self):
+        def castle_break_in(self, original=False):
             try:
                 log("Start of castle_break_in")
 
@@ -808,7 +847,7 @@ try:
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
+                    newTreasure = pick_treasure("Original" if original else self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 newTreasureLines = self.new_treasure_name(newTreasure)
@@ -877,7 +916,7 @@ try:
                 raise
 
 
-        def corvian_host(self, right=False):
+        def corvian_host(self, right=False, original=False):
             try:
                 log("Start of corvian_host")
 
@@ -894,7 +933,7 @@ try:
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
+                    newTreasure = pick_treasure("Original" if original else self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 newTreasureLines = self.new_treasure_name(newTreasure)
@@ -921,14 +960,14 @@ try:
                 raise
 
 
-        def dark_resurrection(self):
+        def dark_resurrection(self, original=False):
             try:
                 log("Start of dark_resurrection")
 
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
+                    newTreasure = pick_treasure("Original" if original else self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.app.displayImage)
@@ -1022,7 +1061,7 @@ try:
                 raise
 
 
-        def distant_tower(self, right=False):
+        def distant_tower(self, right=False, original=False):
             try:
                 log("Start of distant_tower")
 
@@ -1033,7 +1072,7 @@ try:
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
+                    newTreasure = pick_treasure("Original" if original else self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.app.displayImage)
@@ -1083,14 +1122,14 @@ try:
                 raise
 
 
-        def flooded_fortress(self, right=False):
+        def flooded_fortress(self, right=False, original=False):
             try:
                 log("Start of flooded_fortress")
 
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
+                    newTreasure = pick_treasure("Original" if original else self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.app.displayImage)
@@ -1116,7 +1155,7 @@ try:
                 raise
 
 
-        def frozen_revolutions(self, right=False):
+        def frozen_revolutions(self, right=False, original=False):
             try:
                 log("Start of frozen_revolutions")
 
@@ -1129,7 +1168,7 @@ try:
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
+                    newTreasure = pick_treasure("Original" if original else self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.app.displayImage)
@@ -1143,7 +1182,7 @@ try:
                 raise
 
 
-        def giants_coffin(self, right=False):
+        def giants_coffin(self, right=False, original=False):
             try:
                 log("Start of giants_coffin")
 
@@ -1158,7 +1197,7 @@ try:
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
+                    newTreasure = pick_treasure("Original" if original else self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.app.displayImage)
@@ -1214,14 +1253,14 @@ try:
                 raise
 
 
-        def grave_matters(self):
+        def grave_matters(self, original=False):
             try:
                 log("Start of grave_matters")
 
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
+                    newTreasure = pick_treasure("Original" if original else self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.app.displayImage)
@@ -1250,7 +1289,7 @@ try:
                 raise
 
 
-        def hanging_rafters(self):
+        def hanging_rafters(self, original=False):
             try:
                 log("Start of hanging_rafters")
 
@@ -1259,7 +1298,7 @@ try:
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
+                    newTreasure = pick_treasure("Original" if original else self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 newTreasureLines = self.new_treasure_name(newTreasure)
@@ -1272,7 +1311,7 @@ try:
                 raise
 
 
-        def in_deep_water(self, right=False):
+        def in_deep_water(self, right=False, original=False):
             try:
                 log("Start of in_deep_water")
 
@@ -1287,7 +1326,7 @@ try:
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
+                    newTreasure = pick_treasure("Original" if original else self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.app.displayImage)
@@ -1301,14 +1340,14 @@ try:
                 raise
 
 
-        def inhospitable_ground(self):
+        def inhospitable_ground(self, original=False):
             try:
                 log("Start of inhospitable_ground")
 
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
+                    newTreasure = pick_treasure("Original" if original else self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.app.displayImage)
@@ -1342,7 +1381,7 @@ try:
                 raise
 
 
-        def monstrous_maw(self, right=False):
+        def monstrous_maw(self, right=False, original=False):
             try:
                 log("Start of monstrous_maw")
 
@@ -1354,7 +1393,7 @@ try:
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
+                    newTreasure = pick_treasure("Original" if original else self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.app.displayImage)
@@ -1368,7 +1407,7 @@ try:
                 raise
 
 
-        def no_safe_haven(self, right=False):
+        def no_safe_haven(self, right=False, original=False):
             try:
                 log("Start of no_safe_haven")
 
@@ -1379,7 +1418,7 @@ try:
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
+                    newTreasure = pick_treasure("Original" if original else self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.app.displayImage)
@@ -1393,14 +1432,14 @@ try:
                 raise
 
 
-        def painted_passage(self):
+        def painted_passage(self, original=False):
             try:
                 log("Start of painted_passage")
 
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
+                    newTreasure = pick_treasure("Original" if original else self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.app.displayImage)
@@ -1469,7 +1508,7 @@ try:
                 raise
 
 
-        def puppet_master(self, right=False):
+        def puppet_master(self, right=False, original=False):
             try:
                 log("Start of puppet_master")
 
@@ -1483,7 +1522,7 @@ try:
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
+                    newTreasure = pick_treasure("Original" if original else self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.app.displayImage)
@@ -1497,14 +1536,14 @@ try:
                 raise
 
 
-        def rain_of_filth(self):
+        def rain_of_filth(self, original=False):
             try:
                 log("Start of rain_of_filth")
 
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
+                    newTreasure = pick_treasure("Original" if original else self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.app.displayImage)
@@ -1518,7 +1557,7 @@ try:
                 raise
 
 
-        def shattered_keep(self, right=False):
+        def shattered_keep(self, right=False, original=False):
             try:
                 log("Start of shattered_keep")
                 
@@ -1530,7 +1569,7 @@ try:
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
+                    newTreasure = pick_treasure("Original" if original else self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.app.displayImage)
@@ -1602,7 +1641,7 @@ try:
                 raise
 
 
-        def the_abandoned_chest(self, right=False):
+        def the_abandoned_chest(self, right=False, original=False):
             try:
                 log("Start of the_abandoned_chest")
 
@@ -1617,7 +1656,7 @@ try:
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
+                    newTreasure = pick_treasure("Original" if original else self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.app.displayImage)
@@ -1631,7 +1670,7 @@ try:
                 raise
 
 
-        def the_beast_from_the_depths(self, right=False):
+        def the_beast_from_the_depths(self, right=False, original=False):
             try:
                 log("Start of the_beast_from_the_depths")
 
@@ -1643,7 +1682,7 @@ try:
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
+                    newTreasure = pick_treasure("Original" if original else self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.app.displayImage)
@@ -1730,7 +1769,7 @@ try:
                 raise
 
 
-        def the_iron_golem(self, right=False):
+        def the_iron_golem(self, right=False, original=False):
             try:
                 log("Start of the_iron_golem")
 
@@ -1743,7 +1782,7 @@ try:
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
+                    newTreasure = pick_treasure("Original" if original else self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.app.displayImage)
@@ -1773,7 +1812,7 @@ try:
                 raise
 
 
-        def the_locked_grave(self, right=False):
+        def the_locked_grave(self, right=False, original=False):
             try:
                 log("Start of the_locked_grave")
 
@@ -1785,7 +1824,7 @@ try:
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
+                    newTreasure = pick_treasure("Original" if original else self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.app.displayImage)
@@ -1820,7 +1859,7 @@ try:
                 raise
 
 
-        def the_skeleton_ball(self, right=False):
+        def the_skeleton_ball(self, right=False, original=False):
             try:
                 log("Start of the_skeleton_ball")
 
@@ -1834,7 +1873,7 @@ try:
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
+                    newTreasure = pick_treasure("Original" if original else self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.app.displayImage)
@@ -1866,7 +1905,7 @@ try:
                 raise
 
 
-        def trophy_room(self, right=False):
+        def trophy_room(self, right=False, original=False):
             try:
                 log("Start of trophy_room")
 
@@ -1880,7 +1919,7 @@ try:
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
+                    newTreasure = pick_treasure("Original" if original else self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.app.displayImage)
@@ -1916,7 +1955,7 @@ try:
                 raise
 
 
-        def undead_sanctum(self, right=False):
+        def undead_sanctum(self, right=False, original=False):
             try:
                 log("Start of undead_sanctum")
 
@@ -1935,7 +1974,7 @@ try:
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
+                    newTreasure = pick_treasure("Original" if original else self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.app.displayImage)
@@ -1948,14 +1987,14 @@ try:
                 error_popup(self.root, e)
                 raise
 
-        def unseen_scurrying(self):
+        def unseen_scurrying(self, original=False):
             try:
                 log("Start of unseen_scurrying")
 
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
+                    newTreasure = pick_treasure("Original" if original else self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.app.displayImage)
@@ -1969,14 +2008,14 @@ try:
                 raise
 
 
-        def urns_of_the_fallen(self):
+        def urns_of_the_fallen(self, original=False):
             try:
                 log("Start of urns_of_the_fallen")
 
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
+                    newTreasure = pick_treasure("Original" if original else self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.app.displayImage)
@@ -1990,7 +2029,7 @@ try:
                 raise
 
 
-        def velkas_chosen(self, level, right=False):
+        def velkas_chosen(self, level, right=False, original=False):
             try:
                 log("Start of velkas_chosen")
 
@@ -2003,7 +2042,7 @@ try:
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
+                    newTreasure = pick_treasure("Original" if original else self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.app.displayImage)
