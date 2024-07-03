@@ -629,9 +629,9 @@ try:
                 elif name == "Deathly Magic":
                     self.deathly_magic(level, right=right)
                 elif name == "Deathly Tolls":
-                    self.deathly_tolls(right=right)
+                    self.deathly_tolls(right=right, original=original)
                 elif name == "Depths of the Cathedral":
-                    self.depths_of_the_cathedral(right=right)
+                    self.depths_of_the_cathedral(right=right, original=original)
                 elif name == "Distant Tower":
                     self.distant_tower(right=right, original=original)
                 elif name == "Eye of the Storm":
@@ -691,7 +691,7 @@ try:
                 elif name == "The First Bastion":
                     self.the_first_bastion(level, right=right)
                 elif name == "The Fountainhead":
-                    self.the_fountainhead(right=right)
+                    self.the_fountainhead(right=right, original=original)
                 elif name == "The Grand Hall":
                     self.the_grand_hall(right=right)
                 elif name == "The Iron Golem":
@@ -709,7 +709,7 @@ try:
                 elif name == "Trophy Room":
                     self.trophy_room(right=right, original=original)
                 elif name == "Twilight Falls":
-                    self.twilight_falls(right=right)
+                    self.twilight_falls(right=right, original=original)
                 elif name == "Undead Sanctum":
                     self.undead_sanctum(right=right, original=original)
                 elif name == "Unseen Scurrying":
@@ -1013,7 +1013,7 @@ try:
                 raise
 
 
-        def deathly_tolls(self, right=False):
+        def deathly_tolls(self, right=False, original=False):
             try:
                 log("Start of deathly_tolls")
 
@@ -1021,7 +1021,7 @@ try:
                 tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.allEnemies[target]["image text" if self.app.forPrinting else "photo image text"], "imageName": target}
                 self.app.create_tooltip(tooltipDict=tooltipDict, x=180, y=212, right=right)
 
-                gang = Counter([enemyIds[enemy].gang for enemy in self.newEnemies if enemyIds[enemy].gang]).most_common(1)[0][0]
+                gang = "Hollow" if original else Counter([enemyIds[enemy].gang for enemy in self.newEnemies if enemyIds[enemy].gang]).most_common(1)[0][0]
                 if gang == "Alonne":
                     tooltipDict = {"image" if self.app.forPrinting else "image" if self.app.forPrinting else "photo image": self.app.gangAlonne if self.app.forPrinting else self.app.gangAlonnePhoto, "imageName": "gang"}
                 elif gang == "Hollow":
@@ -1039,11 +1039,11 @@ try:
                 raise
 
 
-        def depths_of_the_cathedral(self, right=False):
+        def depths_of_the_cathedral(self, right=False, original=False):
             try:
                 log("Start of depths_of_the_cathedral")
 
-                gang = Counter([enemyIds[enemy].gang for enemy in self.newEnemies if enemyIds[enemy].gang]).most_common(1)[0][0]
+                gang = "Hollow" if original else Counter([enemyIds[enemy].gang for enemy in self.newEnemies if enemyIds[enemy].gang]).most_common(1)[0][0]
                 if gang == "Alonne":
                     tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.gangAlonne if self.app.forPrinting else self.app.gangAlonnePhoto, "imageName": "gang"}
                 elif gang == "Hollow":
@@ -1137,7 +1137,7 @@ try:
                 imageWithText.text((21, 258), newTreasureLines[0], "black", font)
                 imageWithText.text((21, 269), newTreasureLines.get(1, ""), "black", font)
 
-                gang = Counter([enemyIds[enemy].gang for enemy in self.newEnemies if enemyIds[enemy].gang]).most_common(1)[0][0]
+                gang =  "Hollow" if original else Counter([enemyIds[enemy].gang for enemy in self.newEnemies if enemyIds[enemy].gang]).most_common(1)[0][0]
                 if gang == "Alonne":
                     tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.gangAlonne if self.app.forPrinting else self.app.gangAlonnePhoto, "imageName": "gang"}
                 elif gang == "Hollow":
@@ -1733,11 +1733,11 @@ try:
                 raise
 
 
-        def the_fountainhead(self, right=False):
+        def the_fountainhead(self, right=False, original=False):
             try:
                 log("Start of the_fountainhead")
 
-                gang = Counter([enemyIds[enemy].gang for enemy in self.newEnemies if enemyIds[enemy].gang]).most_common(1)[0][0]
+                gang = "Hollow" if original else Counter([enemyIds[enemy].gang for enemy in self.newEnemies if enemyIds[enemy].gang]).most_common(1)[0][0]
                 if gang == "Alonne":
                     tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.gangAlonne if self.app.forPrinting else self.app.gangAlonnePhoto, "imageName": "gang"}
                 elif gang == "Hollow":
@@ -1933,11 +1933,11 @@ try:
                 raise
 
 
-        def twilight_falls(self, right=False):
+        def twilight_falls(self, right=False, original=False):
             try:
                 log("Start of twilight_falls")
 
-                gang = Counter([enemyIds[enemy].gang for enemy in self.newEnemies if enemyIds[enemy].gang]).most_common(1)[0][0]
+                gang = "Hollow" if original else Counter([enemyIds[enemy].gang for enemy in self.newEnemies if enemyIds[enemy].gang]).most_common(1)[0][0]
                 if gang == "Alonne":
                     tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.gangAlonne if self.app.forPrinting else self.app.gangAlonnePhoto, "imageName": "gang"}
                 elif gang == "Hollow":
@@ -1959,7 +1959,7 @@ try:
             try:
                 log("Start of undead_sanctum")
 
-                gang = Counter([enemyIds[enemy].gang for enemy in self.newEnemies if enemyIds[enemy].gang]).most_common(1)[0][0]
+                gang = "Hollow" if original else Counter([enemyIds[enemy].gang for enemy in self.newEnemies if enemyIds[enemy].gang]).most_common(1)[0][0]
                 if gang == "Alonne":
                     tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.gangAlonne if self.app.forPrinting else self.app.gangAlonnePhoto, "imageName": "gang"}
                 elif gang == "Hollow":
