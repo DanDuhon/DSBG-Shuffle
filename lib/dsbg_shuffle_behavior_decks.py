@@ -784,7 +784,7 @@ try:
                     + behaviorDetail[selectionGeneric].get(osClicked, {}).get("health", 0)
                 )
 
-                healthBonus = get_health_bonus(health, [] if modSelection == selection else modSelection)
+                healthBonus = get_health_bonus(health, [] if modSelection == selection else [int(m) for m in modSelection[modSelection.index("_")+1:].split(",")])
 
                 startingHealth = (
                     (self.decks[selection]["healthMod"][osClicked] if selection == "Ornstein & Smough" else self.decks[selection]["healthMod"])
