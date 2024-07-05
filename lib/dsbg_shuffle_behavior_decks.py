@@ -521,7 +521,10 @@ try:
                     if healthMod and health + healthMod >= 0:
                         health += healthMod
 
-                    imageWithText.text((67 + (2 if health == 0 else 4 if health < 10 else 0), 17), str(health), "white", font2)
+                    imageWithText.text((67 + (
+                        2 if health == 0 else
+                        4 if health == 1 else
+                        3 if health < 10 else 0), 17), str(health), "white", font2)
 
                     displayPhotoImage = ImageTk.PhotoImage(self.app.displayImage)
 
@@ -543,7 +546,10 @@ try:
                     if healthMod and health + healthMod >= 0:
                         health += healthMod
 
-                    imageWithText.text((67 + (2 if health == 0 else 4 if health < 10 else 0), 17), str(health), "white", font2)
+                    imageWithText.text((67 + (
+                        2 if health == 0 else
+                        4 if health == 1 else
+                        3 if health < 10 else 0), 17), str(health), "white", font2)
 
                     displayPhotoImage = ImageTk.PhotoImage(self.app.displayImage)
 
@@ -771,12 +777,7 @@ try:
                     return
 
                 selectionGeneric = selection[:selection.index(" (")] if "Vordt" in selection else selection
-                modSelection = selectionGeneric
-                if [v for v in self.app.variantsTab.lockedVariants if selectionGeneric + "_" in v]:
-                    modSelection = [v for v in self.app.variantsTab.lockedVariants if selectionGeneric + "_" in v][0]
-                elif selectionGeneric in self.app.variantsTab.currentVariants:
-                    modSelection = self.app.variantsTab.currentVariants[selectionGeneric]["defKey"]
-
+                modSelection = self.decks[selectionGeneric]["defKey"]
                 osClicked = "Ornstein" if event.widget == self.app.display2 else "Smough" if event.widget == self.app.display3 else ""
 
                 health = (
@@ -784,7 +785,7 @@ try:
                     + behaviorDetail[selectionGeneric].get(osClicked, {}).get("health", 0)
                 )
 
-                healthBonus = get_health_bonus(health, [] if modSelection == selection else [int(m) for m in modSelection[modSelection.index("_")+1:].split(",")])
+                healthBonus = get_health_bonus(health, modSelection)
 
                 startingHealth = (
                     (self.decks[selection]["healthMod"][osClicked] if selection == "Ornstein & Smough" else self.decks[selection]["healthMod"])

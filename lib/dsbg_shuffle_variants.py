@@ -668,7 +668,7 @@ try:
 
                 # Selected enemy name - generate variants for all enemy behaviors.
                 if tree.item(start)["tags"] and start in self.variants:
-                    self.pick_enemy_variants_enemy(start, diffKey)
+                    self.pick_enemy_variants_enemy(start, diffKey, progress=progress)
                     self.app.behaviorDeckTab.set_decks(enemy=start, skipClear=True)
                 # Generate different variant for selected behavior.
                 elif " - " in start:
@@ -723,7 +723,7 @@ try:
                             i += len(tree.get_children(child))
                         progress.progressVar.set(i)
                         self.root.update_idletasks()
-                        self.pick_enemy_variants_enemy(child, diffKey)
+                        self.pick_enemy_variants_enemy(child, diffKey, progress=progress)
                         self.app.behaviorDeckTab.set_decks(enemy=child, skipClear=True)
                         clear_other_tab_images(
                             self.app,
@@ -746,7 +746,7 @@ try:
                             i += len(tree.get_children(subChild))
                             progress.progressVar.set(i)
                             self.root.update_idletasks()
-                            self.pick_enemy_variants_enemy(subChild, diffKey)
+                            self.pick_enemy_variants_enemy(subChild, diffKey, progress=progress)
                             self.app.behaviorDeckTab.set_decks(enemy=subChild, skipClear=True)
                             
                     clear_other_tab_images(
@@ -821,11 +821,12 @@ try:
 
 
         def get_variant_behavior_dict(self, start, k, d, modsRequired, modsBanned):
-            return {
+            r = {
                 e: self.get_variant_list_key(start, k, d, e, modsRequired, modsBanned)
                 for e in self.variants[start][self.app.numberOfCharacters][k][d] if (
                     self.get_variant_list_key(start, k, d, e, modsRequired, modsBanned))
                 }
+            return r if set(r.keys()) == set(self.variants[start][self.app.numberOfCharacters][k][d].keys()) else {}
 
 
         def get_variant_list_key(self, start, k, d, e, modsRequired, modsBanned):
@@ -834,7 +835,7 @@ try:
                 and (all(not set(f) & r for r in modsBanned) or not modsBanned))]
 
 
-        def pick_enemy_variants_enemy(self, start, diffKey):
+        def pick_enemy_variants_enemy(self, start, diffKey, progress):
             """
             Find the appropriate variants for the entered difficulty.
             """
@@ -852,11 +853,17 @@ try:
                 if modsRequired or modsBanned:
                     # This effectively rebuilds self.variants but limited to variants that
                     # have the required variants.  Also had to ensure no empty lists or keys.
+                    if not progress:
+                        progress2 = PopupWindow(self.root, labelText="Generating variant...", loadingImage=True)
+
                     variants = {
                         k: self.get_variant_difficulty_dict(start, k, modsRequired, modsBanned)
                             for k in self.variants[start][self.app.numberOfCharacters] if (
                                 self.get_variant_difficulty_dict(start, k, modsRequired, modsBanned))
                         }
+                    
+                    if not progress:
+                        progress2.destroy()
                 else:
                     variants = self.variants[start][self.app.numberOfCharacters]
 
@@ -1485,7 +1492,12 @@ try:
                 if healthMod and health + healthMod >= 0:
                     health += healthMod
 
-                imageWithText.text((253 + (2 if health == 0 else 4 if health < 10 else 0), 35), str(health), "white", font2)
+                imageWithText.text((251 + (
+                    7 if health == 1 else
+                    4 if health == 0 else
+                    1 if 49 < health < 60 else
+                    5 if 1 < health < 10 else
+                    3 if health < 20 else 0), 35), str(health), "white", font2)
                 imageWithText.text((130, 245 - (10 if "behavior" in behaviorDetail[enemy] else 0)), str(armor), "white", font3)
                 imageWithText.text((154, 245 - (10 if "behavior" in behaviorDetail[enemy] else 0)), str(resist), "black", font3)
 
@@ -1760,11 +1772,9 @@ try:
                         armor += int(mod[-1]) if "armor" in mod else 0
                         resist += int(mod[-1]) if "resist" in mod else 0
                 elif type(variant) == list:
-                    healthAddition = get_health_bonus(health, mods)
+                    healthAddition = get_health_bonus(health, variant)
                     health += healthAddition
                     for mod in variant:
-                        healthAddition = (int(mod[-1]) if "health" in mod else 0) * 2
-                        health += healthAddition
                         armor += int(mod[-1]) if "armor" in mod else 0
                         resist += int(mod[-1]) if "resist" in mod else 0
 
