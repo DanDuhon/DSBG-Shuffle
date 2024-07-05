@@ -234,8 +234,14 @@ try:
                         self.set_decks(enemy="Vordt of the Boreal Valley " +  ("(move)" if "(attack)" in self.treeviewDecks.selection()[0] else "(attack)"))
                     enemy = self.treeviewDecks.selection()[0]
 
-                if enemy not in self.decks:
+                if enemy not in self.decks and "Vordt" not in enemy:
                     log("End of set_decks (nothing done)")
+                    return
+                
+                if enemy == "Vordt of the Boreal Valley":
+                    self.set_decks(enemy="Vordt of the Boreal Valley (move)")
+                    self.set_decks(enemy="Vordt of the Boreal Valley (attack)")
+                    log("End of set_decks")
                     return
 
                 if not skipClear:
@@ -309,7 +315,7 @@ try:
                 if (enemy[:enemy.index(" (")] if "Vordt" in enemy else enemy) in set([v[:v.index("_")] for v in self.app.variantsTab.lockedVariants]):
                     self.decks[enemy]["defKey"] = choice([self.app.variantsTab.lockedVariants[v] for v in self.app.variantsTab.lockedVariants if "-" not in v])
                 elif (enemy[:enemy.index(" (")] if "Vordt" in enemy else enemy) in self.app.variantsTab.currentVariants:
-                    self.decks[enemy]["defKey"] = self.app.variantsTab.currentVariants[enemy]["defKey"]
+                    self.decks[enemy]["defKey"] = self.app.variantsTab.currentVariants[enemy[:enemy.index(" (")] if "Vordt" in enemy else enemy]["defKey"]
                 else:
                     self.decks[enemy]["defKey"] = {"",}
 
@@ -417,7 +423,7 @@ try:
                         self.app.variantsTab.load_variant_card_locked(variant="Smough - data", deckDataCard=True, healthMod=self.decks[self.treeviewDecks.selection()[0]]["healthMod"], fromDeck=True)
                     else:
                         selection = selection[:selection.index(" (")] if "Vordt" in selection else selection
-                        self.app.variantsTab.load_variant_card_locked(variant=selection + ("_" + ",".join([str(m) for m in self.decks[self.treeviewDecks.selection()[0]]["defKey"]]) if self.decks[self.treeviewDecks.selection()[0]].get("defKey", None) else ""), deckDataCard=True, healthMod=0 if selection == "The Four Kings" or self.treeviewDecks.parent(selection) == "Enemies" else self.decks[self.treeviewDecks.selection()[0]]["healthMod"], fromDeck=True)
+                        self.app.variantsTab.load_variant_card_locked(variant=selection + ("_" + ",".join([str(m) for m in self.decks[self.treeviewDecks.selection()[0]]["defKey"]]) if self.decks[self.treeviewDecks.selection()[0]].get("defKey", None) else ""), deckDataCard=True, healthMod=0 if selection == "The Four Kings" or self.treeviewDecks.parent(self.treeviewDecks.selection()[0]) == "Enemies" else self.decks[self.treeviewDecks.selection()[0]]["healthMod"], fromDeck=True)
 
                     if self.decks[self.treeviewDecks.selection()[0]]["lastCardDrawn"]:
                         self.app.variantsTab.load_variant_card_locked(variant=self.decks[self.treeviewDecks.selection()[0]]["lastCardDrawn"], healthMod=0 if selection == "The Four Kings" or self.treeviewDecks.parent(selection) == "Enemies" else self.decks[self.treeviewDecks.selection()[0]]["healthMod"], fromDeck=True)
@@ -425,7 +431,7 @@ try:
                     if selection == "The Four Kings":
                         for x in range(1, 5):
                             self.four_kings_health_track(king=x, healthMod=self.decks["The Four Kings"]["healthMod"][x])
-                    elif self.treeviewDecks.parent(selection) == "Enemies":
+                    elif self.treeviewDecks.parent(self.treeviewDecks.selection()[0]) == "Enemies":
                         self.health_tracker()
 
                     set_display_bindings_by_tab(self.app, selection == "Ornstein & Smough")
@@ -777,7 +783,7 @@ try:
                     return
 
                 selectionGeneric = selection[:selection.index(" (")] if "Vordt" in selection else selection
-                modSelection = self.decks[selectionGeneric]["defKey"]
+                modSelection = self.decks[selection]["defKey"]
                 osClicked = "Ornstein" if event.widget == self.app.display2 else "Smough" if event.widget == self.app.display3 else ""
 
                 health = (
