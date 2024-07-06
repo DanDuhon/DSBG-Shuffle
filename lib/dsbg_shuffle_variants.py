@@ -196,8 +196,6 @@ try:
             self.loadButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
             self.imagesPdfButton = ttk.Button(self.variantsTabButtonsFrame4, text="Images to PDF", width=16, command=self.print_variant_cards)
             self.imagesPdfButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-            self.summaryPdfButton = ttk.Button(self.variantsTabButtonsFrame4, text="Summary to File", width=16, command=self.print_variant_summary)
-            self.summaryPdfButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
 
             self.create_variants_treeview()
 
@@ -449,13 +447,13 @@ try:
                     name = tree.selection()[0][:tree.selection()[0].index("_")]
 
                     # Account for Ornstein & Smough behaviors.
-                    if type(self.lockedVariants[tree.selection()[0]][0]) == list:
+                    if type(self.lockedVariants[tree.selection()[0]]["mods"][0]) == list:
                         mods = [
-                            [modIdLookup[m] for m in list(self.lockedVariants[tree.selection()[0]][0]) if m],
-                            [modIdLookup[m] for m in list(self.lockedVariants[tree.selection()[0]][1]) if m]
+                            [modIdLookup[m] for m in list(self.lockedVariants[tree.selection()[0]]["mods"][0]) if m],
+                            [modIdLookup[m] for m in list(self.lockedVariants[tree.selection()[0]]["mods"][1]) if m]
                             ]
                     else:
-                        mods = [modIdLookup[m] for m in list(self.lockedVariants[tree.selection()[0]]) if m]
+                        mods = [modIdLookup[m] for m in list(self.lockedVariants[tree.selection()[0]]["mods"]) if m]
 
                     self.selectedVariant = (
                         name
@@ -470,13 +468,13 @@ try:
                     name = variant[:variant.index("_")]
 
                     # Account for Ornstein & Smough behaviors.
-                    if type(self.lockedVariants[variant][0]) == list:
+                    if type(self.lockedVariants[variant]["mods"][0]) == list:
                         mods = [
-                            [modIdLookup[m] for m in list(self.lockedVariants[variant][0]) if m],
-                            [modIdLookup[m] for m in list(self.lockedVariants[variant][1]) if m]
+                            [modIdLookup[m] for m in list(self.lockedVariants[variant]["mods"][0]) if m],
+                            [modIdLookup[m] for m in list(self.lockedVariants[variant]["mods"][1]) if m]
                             ]
                     else:
-                        mods = [modIdLookup[m] for m in list(self.lockedVariants[variant]) if m]
+                        mods = [modIdLookup[m] for m in list(self.lockedVariants[variant]["mods"]) if m]
 
                     self.selectedVariant = (
                         name
@@ -1023,7 +1021,10 @@ try:
                         if iidChild in self.lockedVariants:
                             continue
                         
-                        self.lockedVariants[iidChild] = modList
+                        self.lockedVariants[iidChild] = {
+                            "mods": modList,
+                            "defKey": set(modList) & dataCardMods
+                            }
                         contents = [treeLocked.item(child)["values"][0] for child in treeLocked.get_children("Enemies")]
                         treeLocked.insert(parent="Enemies", index=bisect_left(contents, v[0]), iid=iidChild, values=(v[0], v[1]), tags=True)
 
@@ -1048,7 +1049,10 @@ try:
                             log("End of lock_variant_card (nothing done)")
                             continue
                         
-                        self.lockedVariants[iid] = modList
+                        self.lockedVariants[iid] = {
+                            "mods": modList,
+                            "defKey": set(modList) & dataCardMods
+                            }
                         contents = [treeLocked.item(child)["values"][0] for child in treeLocked.get_children(tree.parent(e))]
                         treeLocked.insert(parent=tree.parent(e), index=bisect_left(contents, v[0]), iid=iid, values=(v[0], v[1]), tags=True)
                         
@@ -1078,9 +1082,15 @@ try:
                                 continue
                             
                             if enemy == "Ornstein & Smough" and "&" in behavior:
-                                self.lockedVariants[iidChild] = [modList1, modList2]
+                                self.lockedVariants[iidChild] = {
+                                    "mods": [modList1, modList2],
+                                    "defKey": set(modList) & dataCardMods
+                                    }
                             else:
-                                self.lockedVariants[iidChild] = modList
+                                self.lockedVariants[iidChild] = {
+                                    "mods": modList,
+                                    "defKey": set(modList) & dataCardMods
+                                    }
 
                             contents = [treeLocked.item(child)["values"][0] for child in treeLocked.get_children(iid)]
                             treeLocked.insert(parent=iid, index=bisect_left(contents, v[0]), iid=iidChild, values=(v[0], v[1]), tags=True)
@@ -1092,7 +1102,7 @@ try:
                         for subChild in tree.get_children(child):
                             progressMax += len(tree.get_children(subChild))
 
-                    progress = PopupWindow(self.root, labelText="Locking variants...", progressBar=True, progressMax=progressMax + len(set(self.currentVariants.keys()) & set(tree.get_children("Enemies"))), loadingImage=True)
+                    progress = PopupWindow(self.root, labelText="Locking variants...", progressBar=True, progressMax=len(list(self.currentVariants.keys())), loadingImage=True)
 
                     i = 0
                     iidForAvg = "All"
@@ -1104,15 +1114,20 @@ try:
                                 i += 1
                                 progress.progressVar.set(i)
                                 self.root.update_idletasks()
-                            else:
+                            elif e in self.currentVariants:
                                 modList = sorted(list(self.currentVariants[e]["defKey"]))
+                            else:
+                                continue
                             iid = e + "_" + ",".join([str(m) for m in sorted(modList)])
 
                             if iid in self.lockedVariants:
                                 log("End of lock_variant_card (nothing done)")
                                 continue
                             
-                            self.lockedVariants[iid] = modList
+                            self.lockedVariants[iid] = {
+                                "mods": modList,
+                                "defKey": set(modList) & dataCardMods
+                                }
                             contents = [treeLocked.item(child)["values"][0] for child in treeLocked.get_children(cat)]
                             treeLocked.insert(parent=cat, index=bisect_left(contents, v[0]), iid=iid, values=(v[0], v[1]), tags=True)
                             
@@ -1142,9 +1157,15 @@ try:
                                     continue
                                 
                                 if enemy == "Ornstein & Smough" and "&" in behavior:
-                                    self.lockedVariants[iidChild] = [modList1, modList2]
+                                    self.lockedVariants[iidChild] = {
+                                        "mods": [modList1, modList2],
+                                        "defKey": set(modList) & dataCardMods
+                                        }
                                 else:
-                                    self.lockedVariants[iidChild] = modList
+                                    self.lockedVariants[iidChild] = {
+                                        "mods": modList,
+                                        "defKey": set(modList) & dataCardMods
+                                        }
 
                                 contents = [treeLocked.item(child)["values"][0] for child in treeLocked.get_children(iid)]
                                 treeLocked.insert(parent=iid, index=bisect_left(contents, v[0]), iid=iidChild, values=(v[0], v[1]), tags=True)
@@ -1163,7 +1184,10 @@ try:
                     iidForAvg = iid
 
                     if iid not in self.lockedVariants:
-                        self.lockedVariants[iid] = modList
+                        self.lockedVariants[iid] = {
+                            "mods": modList,
+                            "defKey": set(modList) & dataCardMods
+                            }
                         contents = [treeLocked.item(child)["values"][0] for child in treeLocked.get_children(tree.parent(tree.focus()))] if treeLocked.exists(tree.parent(tree.focus())) else []
                         treeLocked.insert(parent=tree.parent(focus), index=bisect_left(contents, v[0]), iid=iid, values=(v[0], v[1]), tags=True)
                     
@@ -1191,9 +1215,15 @@ try:
                             continue
                             
                         if enemy == "Ornstein & Smough" and "&" in behavior:
-                            self.lockedVariants[iidChild] = [modList1, modList2]
+                            self.lockedVariants[iidChild] = {
+                                "mods": [modList1, modList2],
+                                "defKey": set(modList) & dataCardMods
+                                }
                         else:
-                            self.lockedVariants[iidChild] = modList
+                            self.lockedVariants[iidChild] = {
+                                "mods": modList,
+                                "defKey": set(modList) & dataCardMods
+                                }
                             
                         contents = treeLocked.get_children(iid)
                         treeLocked.insert(parent=iid, index=bisect_left(contents, iidChild), iid=iidChild, values=(v[0], v[1]), tags=True)
@@ -1212,7 +1242,10 @@ try:
                         log("End of lock_variant_card (nothing done)")
                         return
                     
-                    self.lockedVariants[iid] = modList
+                    self.lockedVariants[iid] = {
+                        "mods": modList,
+                        "defKey": set(modList) & dataCardMods
+                        }
                     contents = [treeLocked.item(child)["values"][0] for child in treeLocked.get_children(tree.parent(tree.focus()))]
                     treeLocked.insert(parent=tree.parent(tree.focus()), index=bisect_left(contents, v[0]), iid=iid, values=(v[0], v[1]), tags=True)
                     
@@ -2163,105 +2196,6 @@ try:
                 pdf.image(baseFolder + "\\lib\\dsbg_shuffle_image_staging\\".replace("\\", pathSep) + variant + ".png", x=x, y=y, type="PNG", w=width)
 
                 log("End of add_card_to_pdf")
-            except Exception as e:
-                error_popup(self.root, e)
-                raise
-
-
-        def print_variant_summary(self):
-            """
-            Export variant cards to a PDF.
-            """
-            try:
-                log("Start of print_variant_summary")
-
-                friendlyMod = {
-                    "dodge1": "+1 dodge",
-                    "dodge2": "+2 dodge",
-                    "damage1": "+1 damage",
-                    "damage2": "+2 damage",
-                    "damage3": "+3 damage",
-                    "damage4": "+4 damage",
-                    "armor1": "+1 armor",
-                    "armor2": "+1 armor",
-                    "resist1": "+1 resist",
-                    "resist2": "+2 resist",
-                    "health1": "+1 health & heat-up value",
-                    "health2": "+2 health & heat-up value",
-                    "health3": "+3 health & heat-up value",
-                    "health4": "+4 health & heat-up value",
-                    "repeat": "+1 repeat",
-                    "magic": "deals magic damage",
-                    "bleed": "add Bleed",
-                    "frostbite": "add Frostbite",
-                    "poison": "add Poison",
-                    "stagger": "add Stagger",
-                    "physical": "deals physical damage",
-                    "damage health1": "+1 damage, +1 health",
-                    "damage health2": "+2 damage, +2 health",
-                    "armor resist1": "+1 armor, +1 resist",
-                    "": ""
-                    }
-
-                summary = ""
-                for variant in self.lockedVariants:
-                    name = variant[:variant.index("_")]
-                    if "Ornstein & Smough - " in name and "&" in name[name.index(" - "):]:
-                        mods = ", ".join([friendlyMod[modIdLookup.get(m, "")] for m in self.lockedVariants[variant][0] if modIdLookup.get(m, "") not in {
-                            "armor1",
-                            "armor2",
-                            "resist1",
-                            "resist2",
-                            "armor resist1",
-                            "health1",
-                            "health2",
-                            "health3",
-                            "health4"
-                        }])
-                        summary += "\t{}: {}\n".format(name[name.index(" - ")+3:name.index(" & ", name.index(" - ")+3)], mods if mods else "no changes")
-
-                        mods = ", ".join([friendlyMod[modIdLookup.get(m, "")] for m in self.lockedVariants[variant][1] if modIdLookup.get(m, "") not in {
-                            "armor1",
-                            "armor2",
-                            "resist1",
-                            "resist2",
-                            "armor resist1",
-                            "health1",
-                            "health2",
-                            "health3",
-                            "health4"
-                        }])
-                        summary += "\t{}: {}\n".format(name[name.index(" & ", name.index(" - ")+3)+3:], mods if mods else "no changes")
-                    else:
-                        mods = ", ".join([friendlyMod[modIdLookup.get(m, "")] for m in self.lockedVariants[variant] if ("-" not in name or modIdLookup.get(m, "") not in {
-                            "armor1",
-                            "armor2",
-                            "resist1",
-                            "resist2",
-                            "armor resist1",
-                            "health1",
-                            "health2",
-                            "health3",
-                            "health4"
-                        })])
-
-                        if "-" in name:
-                            mods = mods.replace(", +1 health", "").replace(", +2 health", "")
-
-                        summary += ("\t" if "-" in name else "") + "{}: {}\n".format(name[name.index(" - ")+3:] if "-" in name else name, mods if mods else "no changes")
-
-                # Prompt user to save the file.
-                output = filedialog.asksaveasfile(mode="w", initialdir=baseFolder + "\\lib\\dsbg_shuffle_exports".replace("\\", pathSep), defaultextension=".txt")
-
-                # If they canceled it, do nothing.
-                if not output:
-                    log("End of print_variant_summary (nothing done)")
-                    return
-                
-                with open(output.name, "w") as o:
-                    o.write(summary)
-
-                log("End of print_variant_summary")
             except Exception as e:
                 error_popup(self.root, e)
                 raise

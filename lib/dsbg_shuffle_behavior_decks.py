@@ -51,7 +51,8 @@ try:
                     "curIndex": 0,
                     "heatup": 0 if enemy in "Old Dragonslayer" else 1 if enemy == "The Four Kings" else False,
                     "lastCardDrawn": None,
-                    "defKey": {"",}
+                    "defKey": {"",},
+                    "mods": []
                     }
                 
                 if enemy not in behaviors and enemiesDict[enemy].id in self.app.enabledEnemies:
@@ -313,11 +314,15 @@ try:
                     ""))
 
                 if (enemy[:enemy.index(" (")] if "Vordt" in enemy else enemy) in set([v[:v.index("_")] for v in self.app.variantsTab.lockedVariants]):
-                    self.decks[enemy]["defKey"] = choice([self.app.variantsTab.lockedVariants[v] for v in self.app.variantsTab.lockedVariants if "-" not in v])
+                    variant = choice([v for v in self.app.variantsTab.lockedVariants if "-" not in v])
+                    self.decks[enemy]["defKey"] = self.app.variantsTab.lockedVariants[variant]["defKey"]
+                    self.decks[enemy]["mods"] = self.app.variantsTab.lockedVariants[variant]["mods"]
                 elif (enemy[:enemy.index(" (")] if "Vordt" in enemy else enemy) in self.app.variantsTab.currentVariants:
                     self.decks[enemy]["defKey"] = self.app.variantsTab.currentVariants[enemy[:enemy.index(" (")] if "Vordt" in enemy else enemy]["defKey"]
+                    self.decks[enemy]["mods"] = self.app.variantsTab.currentVariants[enemy[:enemy.index(" (")] if "Vordt" in enemy else enemy]["" if enemy in enemiesDict and "Phantoms" not in enemiesDict[enemy].expansions else "defKey"]
                 else:
                     self.decks[enemy]["defKey"] = {"",}
+                    self.decks[enemy]["mods"] = []
 
                 self.remove_all_health_trackers(enemy)
 
@@ -423,7 +428,7 @@ try:
                         self.app.variantsTab.load_variant_card_locked(variant="Smough - data", deckDataCard=True, healthMod=self.decks[self.treeviewDecks.selection()[0]]["healthMod"], fromDeck=True)
                     else:
                         selection = selection[:selection.index(" (")] if "Vordt" in selection else selection
-                        self.app.variantsTab.load_variant_card_locked(variant=selection + ("_" + ",".join([str(m) for m in self.decks[self.treeviewDecks.selection()[0]]["defKey"]]) if self.decks[self.treeviewDecks.selection()[0]].get("defKey", None) else ""), deckDataCard=True, healthMod=0 if selection == "The Four Kings" or self.treeviewDecks.parent(self.treeviewDecks.selection()[0]) == "Enemies" else self.decks[self.treeviewDecks.selection()[0]]["healthMod"], fromDeck=True)
+                        self.app.variantsTab.load_variant_card_locked(variant=selection + ("_" + ",".join([str(m) for m in self.decks[self.treeviewDecks.selection()[0]]["mods"]])), deckDataCard=True, healthMod=0 if selection == "The Four Kings" or self.treeviewDecks.parent(self.treeviewDecks.selection()[0]) == "Enemies" else self.decks[self.treeviewDecks.selection()[0]]["healthMod"], fromDeck=True)
 
                     if self.decks[self.treeviewDecks.selection()[0]]["lastCardDrawn"]:
                         self.app.variantsTab.load_variant_card_locked(variant=self.decks[self.treeviewDecks.selection()[0]]["lastCardDrawn"], healthMod=0 if selection == "The Four Kings" or self.treeviewDecks.parent(selection) == "Enemies" else self.decks[self.treeviewDecks.selection()[0]]["healthMod"], fromDeck=True)
