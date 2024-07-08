@@ -259,6 +259,9 @@ try:
                 
                     self.app.display.config(image="")
                     self.app.display.image=None
+                    self.app.displayImages["variants"][self.app.display]["image"] = None
+                    self.app.displayImages["variants"][self.app.display]["name"] = None
+                    self.app.displayImages["variants"][self.app.display]["activeTab"] = None
                     self.app.displayImages["variantsLocked"][self.app.display]["image"] = None
                     self.app.displayImages["variantsLocked"][self.app.display]["name"] = None
                     self.app.displayImages["variantsLocked"][self.app.display]["activeTab"] = None
@@ -319,7 +322,7 @@ try:
                     self.decks[enemy]["mods"] = self.app.variantsTab.lockedVariants[variant]["mods"]
                 elif (enemy[:enemy.index(" (")] if "Vordt" in enemy else enemy) in self.app.variantsTab.currentVariants:
                     self.decks[enemy]["defKey"] = self.app.variantsTab.currentVariants[enemy[:enemy.index(" (")] if "Vordt" in enemy else enemy]["defKey"]
-                    self.decks[enemy]["mods"] = self.app.variantsTab.currentVariants[enemy[:enemy.index(" (")] if "Vordt" in enemy else enemy]["" if enemy in enemiesDict and "Phantoms" not in enemiesDict[enemy].expansions else "defKey"]
+                    self.decks[enemy]["mods"] = self.app.variantsTab.currentVariants[enemy[:enemy.index(" (")] if "Vordt" in enemy else enemy]["" if enemy in enemiesDict and "Phantoms" not in enemiesDict[enemy].expansions and enemy not in {"Hungry Mimic", "Voracious Mimic"} else "defKey"]
                 else:
                     self.decks[enemy]["defKey"] = {"",}
                     self.decks[enemy]["mods"] = []
@@ -429,6 +432,11 @@ try:
                     else:
                         selection = selection[:selection.index(" (")] if "Vordt" in selection else selection
                         self.app.variantsTab.load_variant_card_locked(variant=selection + ("_" + ",".join([str(m) for m in self.decks[self.treeviewDecks.selection()[0]]["mods"]])), deckDataCard=True, healthMod=0 if selection == "The Four Kings" or self.treeviewDecks.parent(self.treeviewDecks.selection()[0]) == "Enemies" else self.decks[self.treeviewDecks.selection()[0]]["healthMod"], fromDeck=True)
+
+                    if selection == "Gaping Dragon":
+                        self.app.variantsTab.load_variant_card_locked(variant="Gaping Dragon - Crawling Charge_" + "_".join([str(m) for m in self.decks["Gaping Dragon"]["mods"]]), deckDataCard=True, healthMod=self.decks["Gaping Dragon"]["healthMod"], fromDeck=True, bottomRightDisplay=True)
+                    if "Vordt" in selection:
+                        self.app.variantsTab.load_variant_card_locked(variant="Vordt of the Boreal Valley - Frostbreath_" + "_".join([str(m) for m in self.decks["Gaping Dragon"]["mods"]]), deckDataCard=True, healthMod=self.decks["Gaping Dragon"]["healthMod"], fromDeck=True, bottomRightDisplay=True)
 
                     if self.decks[self.treeviewDecks.selection()[0]]["lastCardDrawn"]:
                         self.app.variantsTab.load_variant_card_locked(variant=self.decks[self.treeviewDecks.selection()[0]]["lastCardDrawn"], healthMod=0 if selection == "The Four Kings" or self.treeviewDecks.parent(selection) == "Enemies" else self.decks[self.treeviewDecks.selection()[0]]["healthMod"], fromDeck=True)
@@ -683,6 +691,9 @@ try:
                 
                 self.app.display.config(image="")
                 self.app.display.image=None
+                self.app.displayImages["variants"][self.app.display]["image"] = None
+                self.app.displayImages["variants"][self.app.display]["name"] = None
+                self.app.displayImages["variants"][self.app.display]["activeTab"] = None
                 self.app.displayImages["variantsLocked"][self.app.display]["image"] = None
                 self.app.displayImages["variantsLocked"][self.app.display]["name"] = None
                 self.app.displayImages["variantsLocked"][self.app.display]["activeTab"] = None

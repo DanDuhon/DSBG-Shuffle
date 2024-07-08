@@ -299,7 +299,7 @@ try:
                 raise
 
 
-        def load_variant_card(self, event=None, variant=None, fromLocked=False, selfCall=None, forPrinting=False, armorerDennis=False, oldIronKing=False, pursuer=False, deckDataCard=False, healthMod=None, fromDeck=False):
+        def load_variant_card(self, event=None, variant=None, fromLocked=False, bottomRightDisplay=False, selfCall=None, forPrinting=False, armorerDennis=False, oldIronKing=False, pursuer=False, deckDataCard=False, healthMod=None, fromDeck=False):
             """
             Load a variant card that was selected (or passed in).
             """
@@ -350,9 +350,9 @@ try:
                         
                         self.app.display.config(image="")
                         self.app.display.image=None
-                        self.app.displayImages["variants"][self.app.display]["image"] = None
-                        self.app.displayImages["variants"][self.app.display]["name"] = None
-                        self.app.displayImages["variants"][self.app.display]["activeTab"] = None
+                        self.app.displayImages["variantsLocked"][self.app.display]["image"] = None
+                        self.app.displayImages["variantsLocked"][self.app.display]["name"] = None
+                        self.app.displayImages["variantsLocked"][self.app.display]["activeTab"] = None
                 else:
                     self.selectedVariant = variant
 
@@ -365,12 +365,12 @@ try:
                     variants,
                     name=self.selectedVariant[:self.selectedVariant.index(" - ")] if " - " in self.selectedVariant else self.selectedVariant[:self.selectedVariant.index("_")] if "_" in self.selectedVariant else self.selectedVariant)
                     
-                if "Smough" not in self.selectedVariant and self.app.displayImages["variants"][self.app.display3]["image"]:
+                if "Smough" not in self.selectedVariant and "Gaping Dragon" not in self.selectedVariant and self.app.displayImages["variants"][self.app.display3]["image"]:
                     self.app.display3.config(image="")
                     self.app.display3.image=None
-                    self.app.displayImages["variants"][self.app.display3]["image"] = None
-                    self.app.displayImages["variants"][self.app.display3]["name"] = None
-                    self.app.displayImages["variants"][self.app.display3]["activeTab"] = None
+                    self.app.displayImages["variantsLocked"][self.app.display3]["image"] = None
+                    self.app.displayImages["variantsLocked"][self.app.display3]["name"] = None
+                    self.app.displayImages["variantsLocked"][self.app.display3]["activeTab"] = None
                     
                 if not selfCall:
                     originalSelection = deepcopy(self.selectedVariant)
@@ -397,7 +397,7 @@ try:
                     # Create and display the variant image.
                     self.variantPhotoImage = self.app.create_image((self.selectedVariant[:self.selectedVariant.index("_")] + self.selectedVariant.replace(variant, "") if "_" in self.selectedVariant else self.selectedVariant) + ".jpg", "encounter", 4)
 
-                    self.edit_variant_card(variant=self.selectedVariant, lockedTree=fromLocked, armorerDennis=armorerDennis, oldIronKing=oldIronKing, pursuer=pursuer, healthMod=healthMod, fromDeck=fromDeck)
+                    self.edit_variant_card(variant=self.selectedVariant, bottomRightDisplay=bottomRightDisplay, lockedTree=fromLocked, armorerDennis=armorerDennis, oldIronKing=oldIronKing, pursuer=pursuer, healthMod=healthMod, fromDeck=fromDeck)
 
                 if "data" not in self.selectedVariant and self.app.displayImages[variants][self.app.display2]["name"] != self.selectedVariant and "The Four Kings" not in self.selectedVariant and not forPrinting:
                     self.load_variant_card(variant=self.selectedVariant[:self.selectedVariant.index(" - ")] + " - data", fromLocked=fromLocked, selfCall=originalSelection, armorerDennis=armorerDennis, oldIronKing=oldIronKing, pursuer=pursuer, deckDataCard=deckDataCard, healthMod=healthMod, fromDeck=fromDeck)
@@ -416,7 +416,7 @@ try:
                 raise
 
 
-        def load_variant_card_locked(self, event=None, variant=None, selfCall=None, forPrinting=False, armorerDennis=False, oldIronKing=False, pursuer=False, deckDataCard=False, healthMod=None, fromDeck=False):
+        def load_variant_card_locked(self, event=None, variant=None, selfCall=None, bottomRightDisplay=False, forPrinting=False, armorerDennis=False, oldIronKing=False, pursuer=False, deckDataCard=False, healthMod=None, fromDeck=False):
             try:
                 log("Start of load_variant_card_locked, variant={}, selfCall={}, forPrinting={}, armorerDennis={}, oldIronKing={}, pursuer={}, deckDataCard={}, healthMod={}, fromDeck={}".format(str(variant), str(selfCall), str(forPrinting), str(armorerDennis), str(oldIronKing), str(pursuer), str(deckDataCard), str(healthMod), str(fromDeck)))
                     
@@ -499,13 +499,13 @@ try:
                         selection = [v for v in self.lockedVariants if (variant[:variant.index("_")] if "_" in variant else variant[:variant.index(" - ")]) + "_" in v][0]
 
                     # Account for Ornstein & Smough behaviors.
-                    if type(self.lockedVariants[selection][0]) == list:
+                    if type(self.lockedVariants[selection]["mods"][0]) == list:
                         mods = [
-                            [modIdLookup[m] for m in list(self.lockedVariants[selection][0]) if m],
-                            [modIdLookup[m] for m in list(self.lockedVariants[selection][1]) if m]
+                            [modIdLookup[m] for m in list(self.lockedVariants[selection]["mods"][0]) if m],
+                            [modIdLookup[m] for m in list(self.lockedVariants[selection]["mods"][1]) if m]
                             ]
                     else:
-                        mods = [modIdLookup[m] for m in list(self.lockedVariants[selection]) if m]
+                        mods = [modIdLookup[m] for m in list(self.lockedVariants[selection]["mods"]) if m]
 
                     if "_" in variant:
                         name = variant[:variant.index("_")]
@@ -524,7 +524,8 @@ try:
                             "Mega Bosses"
                             } else ""))
                 elif variant not in self.lockedVariants:
-                    self.load_variant_card(variant=variant, fromLocked=True, armorerDennis=armorerDennis, oldIronKing=oldIronKing, pursuer=pursuer, deckDataCard=deckDataCard, healthMod=healthMod, fromDeck=fromDeck, selfCall=selfCall)
+                    self.load_variant_card(variant=variant, fromLocked=True, armorerDennis=armorerDennis, oldIronKing=oldIronKing, pursuer=pursuer, deckDataCard=deckDataCard, healthMod=healthMod, fromDeck=fromDeck, selfCall=selfCall, bottomRightDisplay=bottomRightDisplay)
+                    log("End of load_variant_card_locked")
                     return
                 else:
                     name = variant[:variant.index("_")]
@@ -566,7 +567,7 @@ try:
                     self.app.displayImages["variants"][self.app.display]["name"] = None
                     self.app.displayImages["variants"][self.app.display]["activeTab"] = None
                     
-                if "Ornstein & Smough" not in self.selectedVariant and self.app.display3.image == self.app.displayImages["variants"][self.app.display3]["image"]:
+                if "Ornstein & Smough" not in self.selectedVariant and "Gaping Dragon" not in self.selectedVariant and self.app.display3.image == self.app.displayImages["variants"][self.app.display3]["image"]:
                     self.app.display3.config(image="")
                     self.app.display3.image=None
                     self.app.displayImages["variants"][self.app.display3]["image"] = None
@@ -596,7 +597,7 @@ try:
                     # Create and display the variant image.
                     self.variantPhotoImage = self.app.create_image(self.selectedVariant + ".jpg", "encounter", 4)
 
-                    self.edit_variant_card(variant=mods, lockedTree=True, armorerDennis=armorerDennis, oldIronKing=oldIronKing, pursuer=pursuer, healthMod=healthMod, fromDeck=fromDeck)
+                    self.edit_variant_card(variant=mods, lockedTree=True, armorerDennis=armorerDennis, oldIronKing=oldIronKing, pursuer=pursuer, healthMod=healthMod, fromDeck=fromDeck, bottomRightDisplay=bottomRightDisplay)
 
                 if "data" not in self.selectedVariant and self.app.displayImages["variantsLocked"][self.app.display2]["name"] != self.selectedVariant and "The Four Kings" not in self.selectedVariant and not forPrinting:
                     modString = ",".join([str(x) for x in sorted([n for n in modIdLookup if modIdLookup[n] in set(mods[0] if mods and type(mods[0]) == list else mods) & set([modIdLookup[m] for m in dataCardMods])])])
@@ -937,7 +938,7 @@ try:
                 raise
 
 
-        def edit_variant_card(self, variant=None, lockedTree=False, event=None, armorerDennis=False, oldIronKing=False, pursuer=False, deckDataCard=False, healthMod=0, fromDeck=False):
+        def edit_variant_card(self, variant=None, lockedTree=False, event=None, bottomRightDisplay=False, armorerDennis=False, oldIronKing=False, pursuer=False, deckDataCard=False, healthMod=0, fromDeck=False):
             try:
                 log("Start of edit_variant_card, variant={}".format(str(variant)))
 
@@ -960,7 +961,13 @@ try:
                 else:
                     key = "variants"
 
-                if deckDataCard:
+                if bottomRightDisplay:
+                    self.app.display3.image = displayPhotoImage
+                    self.app.display3.config(image=displayPhotoImage)
+                    self.app.displayImages[key][self.app.display3]["image"] = displayPhotoImage
+                    self.app.displayImages[key][self.app.display3]["name"] = self.selectedVariant
+                    self.app.displayImages[key][self.app.display3]["activeTab"] = key if not fromDeck else "behaviorDeck"
+                elif deckDataCard:
                     self.app.display2.image = displayPhotoImage
                     self.app.display2.config(image=displayPhotoImage)
                     self.app.displayImages[key][self.app.display2]["image"] = displayPhotoImage
@@ -1557,6 +1564,9 @@ try:
                     behavior = "behavior"
                 else:
                     behavior = self.selectedVariant[self.selectedVariant.index(" - ")+3:] if " - " in self.selectedVariant else None
+
+                if "_" in behavior:
+                    behavior = behavior[:behavior.index("_")]
 
                 dodge = behaviorDetail[enemy][behavior]["dodge"] + (1 if armorerDennis else 0) + (1 if oldIronKing and "Fire Beam" in behavior else 0)
                 repeat = behaviorDetail[enemy][behavior].get("repeat", 1)
