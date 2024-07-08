@@ -49,7 +49,10 @@ try:
                 self.decks[enemy] = {
                     "deck": [],
                     "curIndex": 0,
-                    "heatup": 0 if enemy in "Old Dragonslayer" else 1 if enemy == "The Four Kings" else False,
+                    "heatup": 0 if enemy in {
+                        "Old Dragonslayer",
+                        "Vordt of the Boreal Valley (move)",
+                        "Vordt of the Boreal Valley (attack)"} else 1 if enemy == "The Four Kings" else False,
                     "lastCardDrawn": None,
                     "defKey": {"",},
                     "mods": []
@@ -235,15 +238,17 @@ try:
                     # Reset the other Vordt deck if one was reset.
                     if "Vordt" in self.treeviewDecks.selection()[0]:
                         self.set_decks(enemy="Vordt of the Boreal Valley " +  ("(move)" if "(attack)" in self.treeviewDecks.selection()[0] else "(attack)"))
-                    enemy = self.treeviewDecks.selection()[0]
+                    selection = self.treeviewDecks.selection()[0]
+                else:
+                    selection = enemy
 
-                if enemy not in self.decks and "Vordt" not in enemy:
+                if selection not in self.decks and "Vordt" not in selection:
                     log("End of set_decks (nothing done)")
                     return
                 
-                if enemy == "Vordt of the Boreal Valley":
+                if selection == "Vordt of the Boreal Valley":
                     self.set_decks(enemy="Vordt of the Boreal Valley (move)")
-                    self.set_decks(enemy="Vordt of the Boreal Valley (attack)")
+                    self.set_decks(enemy="Vordt of the Boreal Valley (attack)", skipClear=True)
                     log("End of set_decks")
                     return
 
@@ -257,7 +262,7 @@ try:
                         self.app,
                         "behaviorDeck",
                         "behaviorDeck",
-                        name=enemy[:enemy.index(" - ")] if " - " in enemy else enemy[:enemy.index("_")] if "_" in enemy else enemy)
+                        name=selection[:selection.index(" - ")] if " - " in selection else selection[:selection.index("_")] if "_" in selection else selection)
                 
                     self.app.displayTopLeft.config(image="")
                     self.app.displayTopLeft.image=None
@@ -267,71 +272,74 @@ try:
                     self.app.displayImages["variantsLocked"][self.app.displayTopLeft]["image"] = None
                     self.app.displayImages["variantsLocked"][self.app.displayTopLeft]["name"] = None
                     self.app.displayImages["variantsLocked"][self.app.displayTopLeft]["activeTab"] = None
-                    self.decks[enemy]["lastCardDrawn"] = None
+                    self.decks[selection]["lastCardDrawn"] = None
 
-                self.decks[enemy]["deck"] = self.load_deck(enemy)
+                self.decks[selection]["deck"] = self.load_deck(selection)
                 
-                if enemy in behaviors:
-                    if enemy == "Oliver the Collector":
-                        self.decks[enemy]["heatupCards"] = [b for b in behaviors[enemy] if b not in set(self.decks[enemy]["deck"])]
-                    elif enemy in {"Old Dragonslayer", "Artorias"}:
-                        self.decks[enemy]["heatupCards"] = [b for b in behaviors[enemy] if behaviorDetail[enemy][b].get("heatup", False)]
-                    elif enemy == "Smelter Demon":
-                        self.decks[enemy]["heatupCards"] = sample([b for b in behaviors[enemy] if behaviorDetail[enemy][b].get("heatup", False)], 5)
-                    elif enemy == "Ornstein & Smough":
-                        self.decks[enemy]["heatupCards"] = {}
-                        self.decks[enemy]["heatupCards"]["Ornstein"] = ["Charged Bolt", "Charged Swiping Combo", "Electric Clash", "High Voltage", "Lightning Stab"]
-                        self.decks[enemy]["heatupCards"]["Smough"] = ["Charged Charge", "Electric Bonzai Drop", "Electric Hammer Smash", "Jumping Volt Slam", "Lightning Sweep"]
-                        shuffle(self.decks[enemy]["heatupCards"]["Ornstein"])
-                        shuffle(self.decks[enemy]["heatupCards"]["Smough"])
-                    elif enemy == "Guardian Dragon":
-                        self.decks[enemy]["heatupCards"] = ["Cage Grasp Inferno", "Cage Grasp Inferno"]
-                    elif enemy == "The Four Kings":
-                        self.decks[enemy]["heatupCards"] = {}
-                        self.decks[enemy]["heatupCards"][2] = [b for b in behaviors[enemy] if behaviorDetail[enemy][b].get("heatup", 1) == 2]
-                        self.decks[enemy]["heatupCards"][3] = [b for b in behaviors[enemy] if behaviorDetail[enemy][b].get("heatup", 1) == 3]
-                        self.decks[enemy]["heatupCards"][4] = [b for b in behaviors[enemy] if behaviorDetail[enemy][b].get("heatup", 1) == 4]
-                        shuffle(self.decks[enemy]["heatupCards"][2])
-                        shuffle(self.decks[enemy]["heatupCards"][3])
-                        shuffle(self.decks[enemy]["heatupCards"][4])
-                    elif enemy == "The Last Giant":
-                        self.decks[enemy]["heatupCards"] = sample([b for b in behaviors[enemy] if behaviorDetail[enemy][b].get("heatup", False)], 3) + ["Falling Slam"]
+                if selection in behaviors:
+                    if selection == "Oliver the Collector":
+                        self.decks[selection]["heatupCards"] = [b for b in behaviors[selection] if b not in set(self.decks[selection]["deck"])]
+                    elif selection in {"Old Dragonslayer", "Artorias"}:
+                        self.decks[selection]["heatupCards"] = [b for b in behaviors[selection] if behaviorDetail[selection][b].get("heatup", False)]
+                    elif selection == "Smelter Demon":
+                        self.decks[selection]["heatupCards"] = sample([b for b in behaviors[selection] if behaviorDetail[selection][b].get("heatup", False)], 5)
+                    elif selection == "Ornstein & Smough":
+                        self.decks[selection]["heatupCards"] = {}
+                        self.decks[selection]["heatupCards"]["Ornstein"] = ["Charged Bolt", "Charged Swiping Combo", "Electric Clash", "High Voltage", "Lightning Stab"]
+                        self.decks[selection]["heatupCards"]["Smough"] = ["Charged Charge", "Electric Bonzai Drop", "Electric Hammer Smash", "Jumping Volt Slam", "Lightning Sweep"]
+                        shuffle(self.decks[selection]["heatupCards"]["Ornstein"])
+                        shuffle(self.decks[selection]["heatupCards"]["Smough"])
+                    elif selection == "Guardian Dragon":
+                        self.decks[selection]["heatupCards"] = ["Cage Grasp Inferno", "Cage Grasp Inferno"]
+                    elif selection == "The Four Kings":
+                        self.decks[selection]["heatupCards"] = {}
+                        self.decks[selection]["heatupCards"][2] = [b for b in behaviors[selection] if behaviorDetail[selection][b].get("heatup", 1) == 2]
+                        self.decks[selection]["heatupCards"][3] = [b for b in behaviors[selection] if behaviorDetail[selection][b].get("heatup", 1) == 3]
+                        self.decks[selection]["heatupCards"][4] = [b for b in behaviors[selection] if behaviorDetail[selection][b].get("heatup", 1) == 4]
+                        shuffle(self.decks[selection]["heatupCards"][2])
+                        shuffle(self.decks[selection]["heatupCards"][3])
+                        shuffle(self.decks[selection]["heatupCards"][4])
+                    elif selection == "The Last Giant":
+                        self.decks[selection]["heatupCards"] = sample([b for b in behaviors[selection] if behaviorDetail[selection][b].get("heatup", False)], 3) + ["Falling Slam"]
                     else:
-                        if "Vordt" in enemy:
-                            enemyName = enemy[:enemy.index(" (")]
+                        if "Vordt" in selection:
+                            enemyName = selection[:selection.index(" (")]
                         else:
-                            enemyName = enemy
-                        if [b for b in behaviors[enemy] if behaviorDetail[enemyName][b].get("heatup", False)]:
-                            self.decks[enemy]["heatupCards"] = [choice([b for b in behaviors[enemy] if behaviorDetail[enemyName][b].get("heatup", False)])]
+                            enemyName = selection
+                        if [b for b in behaviors[selection] if behaviorDetail[enemyName][b].get("heatup", False)]:
+                            self.decks[selection]["heatupCards"] = [choice([b for b in behaviors[selection] if behaviorDetail[enemyName][b].get("heatup", False)])]
                         else:
-                            self.decks[enemy]["heatupCards"] = [choice([b for b in behaviors[enemy] if b not in set(self.decks[enemy]["deck"])])]
+                            self.decks[selection]["heatupCards"] = [choice([b for b in behaviors[selection] if b not in set(self.decks[selection]["deck"])])]
 
-                    if type(self.decks[enemy]["heatupCards"]) == list:
-                        shuffle(self.decks[enemy]["heatupCards"])
+                    if type(self.decks[selection]["heatupCards"]) == list:
+                        shuffle(self.decks[selection]["heatupCards"])
 
-                self.decks[enemy]["heatup"] = 0 if enemy == "Old Dragonslayer" else 1 if enemy == "The Four Kings" else False
-                self.decks[enemy]["healthMod"] = {"Ornstein": 0, "Smough": 0} if enemy == "Ornstein & Smough" else {1: 0, 2: 0, 3: 0, 4: 0} if enemy == "The Four Kings" else {0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0} if enemy not in behaviors and enemiesDict[enemy].id in self.app.enabledEnemies else 0
-                self.decks[enemy]["curIndex"] = 0
-                self.decks[enemy]["lastCardDrawn"] = None
-                self.treeviewDecks.item(enemy, values=(
-                    self.treeviewDecks.item(enemy)["values"][0],
-                    len(self.decks[enemy]["deck"]) if self.decks[enemy]["deck"] else "",
+                self.decks[selection]["heatup"] = 0 if selection in {
+                        "Old Dragonslayer",
+                        "Vordt of the Boreal Valley (move)",
+                        "Vordt of the Boreal Valley (attack)"} else 1 if selection == "The Four Kings" else False
+                self.decks[selection]["healthMod"] = {"Ornstein": 0, "Smough": 0} if selection == "Ornstein & Smough" else {1: 0, 2: 0, 3: 0, 4: 0} if selection == "The Four Kings" else {0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0} if selection not in behaviors and enemiesDict[selection].id in self.app.enabledEnemies else 0
+                self.decks[selection]["curIndex"] = 0
+                self.decks[selection]["lastCardDrawn"] = None
+                self.treeviewDecks.item(selection, values=(
+                    self.treeviewDecks.item(selection)["values"][0],
+                    len(self.decks[selection]["deck"]) if self.decks[selection]["deck"] else "",
                     ""))
 
-                if (enemy[:enemy.index(" (")] if "Vordt" in enemy else enemy) in set([v[:v.index("_")] for v in self.app.variantsTab.lockedVariants]):
+                if (selection[:selection.index(" (")] if "Vordt" in selection else selection) in set([v[:v.index("_")] for v in self.app.variantsTab.lockedVariants]):
                     variant = choice([v for v in self.app.variantsTab.lockedVariants if "-" not in v])
-                    self.decks[enemy]["defKey"] = self.app.variantsTab.lockedVariants[variant]["defKey"]
-                    self.decks[enemy]["mods"] = self.app.variantsTab.lockedVariants[variant]["mods"]
-                elif (enemy[:enemy.index(" (")] if "Vordt" in enemy else enemy) in self.app.variantsTab.currentVariants:
-                    self.decks[enemy]["defKey"] = self.app.variantsTab.currentVariants[enemy[:enemy.index(" (")] if "Vordt" in enemy else enemy]["defKey"]
-                    self.decks[enemy]["mods"] = self.app.variantsTab.currentVariants[enemy[:enemy.index(" (")] if "Vordt" in enemy else enemy]["" if enemy in enemiesDict and "Phantoms" not in enemiesDict[enemy].expansions and enemy not in {"Hungry Mimic", "Voracious Mimic"} else "defKey"]
+                    self.decks[selection]["defKey"] = self.app.variantsTab.lockedVariants[variant]["defKey"]
+                    self.decks[selection]["mods"] = self.app.variantsTab.lockedVariants[variant]["mods"]
+                elif (selection[:selection.index(" (")] if "Vordt" in selection else selection) in self.app.variantsTab.currentVariants:
+                    self.decks[selection]["defKey"] = self.app.variantsTab.currentVariants[selection[:selection.index(" (")] if "Vordt" in selection else selection]["defKey"]
+                    self.decks[selection]["mods"] = self.app.variantsTab.currentVariants[selection[:selection.index(" (")] if "Vordt" in selection else selection]["" if selection in enemiesDict and "Phantoms" not in enemiesDict[selection].expansions and selection not in {"Hungry Mimic", "Voracious Mimic"} else "defKey"]
                 else:
-                    self.decks[enemy]["defKey"] = {"",}
-                    self.decks[enemy]["mods"] = []
+                    self.decks[selection]["defKey"] = {"",}
+                    self.decks[selection]["mods"] = []
 
-                self.remove_all_health_trackers(enemy)
+                self.remove_all_health_trackers(selection)
 
-                if not skipClear and self.treeviewDecks.selection():
+                if not skipClear and self.treeviewDecks.selection() and not enemy:
                     self.display_deck_cards()
 
                 log("End of set_decks")
@@ -340,7 +348,7 @@ try:
                 raise
                 
 
-        def draw_behavior_card(self):
+        def draw_behavior_card(self, enemy=None, bottomLeftDisplay=False):
             try:
                 log("Start of draw_behavior_card")
 
@@ -351,7 +359,17 @@ try:
                     log("End of draw_behavior_card (nothing done)")
                     return
 
-                selection = self.treeviewDecks.selection()[0]
+                if enemy:
+                    selection = enemy
+                else:
+                    selection = self.treeviewDecks.selection()[0]
+
+                # Draw from both Vordt decks
+                if not enemy and "Vordt" in selection:
+                    self.draw_behavior_card(enemy="Vordt of the Boreal Valley " +  ("(move)" if "(attack)" in selection else "(attack)"), bottomLeftDisplay="(move)" in selection)
+
+                if selection == "Vordt of the Boreal Valley (attack)":
+                    bottomLeftDisplay = True
                 
                 if self.decks[selection]["curIndex"] == len(self.decks[selection]["deck"]):
                     if selection == "The Four Kings":
@@ -388,7 +406,7 @@ try:
                 elif selection == "Old Iron King" and self.decks[selection]["heatup"]:
                     self.app.variantsTab.load_variant_card_locked(variant=variant, oldIronKing=True, fromDeck=True, healthMod=self.decks[self.treeviewDecks.selection()[0]]["healthMod"])
                 else:
-                    self.app.variantsTab.load_variant_card_locked(variant=variant, fromDeck=True, healthMod=self.decks[self.treeviewDecks.selection()[0]]["healthMod"])
+                    self.app.variantsTab.load_variant_card_locked(variant=variant, fromDeck=True, bottomLeftDisplay=bottomLeftDisplay, healthMod=self.decks[self.treeviewDecks.selection()[0]]["healthMod"])
 
                 if selection == "The Four Kings":
                     for x in range(1, 5):
@@ -440,11 +458,16 @@ try:
 
                     if selection == "Gaping Dragon":
                         self.app.variantsTab.load_variant_card_locked(variant="Gaping Dragon - Crawling Charge_" + "_".join([str(m) for m in self.decks["Gaping Dragon"]["mods"]]), deckDataCard=True, healthMod=self.decks["Gaping Dragon"]["healthMod"], fromDeck=True, bottomRightDisplay=True)
-                    if "Vordt" in selection:
+                    elif "Vordt" in selection:
                         self.app.variantsTab.load_variant_card_locked(variant="Vordt of the Boreal Valley - Frostbreath_" + "_".join([str(m) for m in self.decks["Gaping Dragon"]["mods"]]), deckDataCard=True, healthMod=self.decks["Gaping Dragon"]["healthMod"], fromDeck=True, bottomRightDisplay=True)
 
                     if self.decks[self.treeviewDecks.selection()[0]]["lastCardDrawn"]:
-                        self.app.variantsTab.load_variant_card_locked(variant=self.decks[self.treeviewDecks.selection()[0]]["lastCardDrawn"], healthMod=0 if selection == "The Four Kings" or self.treeviewDecks.parent(selection) == "Enemies" else self.decks[self.treeviewDecks.selection()[0]]["healthMod"], fromDeck=True)
+                        # Display both Vordt cards.
+                        if "Vordt" in selection:
+                            self.app.variantsTab.load_variant_card_locked(variant=self.decks["Vordt of the Boreal Valley (move)"]["lastCardDrawn"], healthMod=self.decks["Vordt of the Boreal Valley (move)"]["healthMod"], fromDeck=True, bottomLeftDisplay=False)
+                            self.app.variantsTab.load_variant_card_locked(variant=self.decks["Vordt of the Boreal Valley (attack)"]["lastCardDrawn"], healthMod=self.decks["Vordt of the Boreal Valley (attack)"]["healthMod"], fromDeck=True, bottomLeftDisplay=True)
+                        else:
+                            self.app.variantsTab.load_variant_card_locked(variant=self.decks[self.treeviewDecks.selection()[0]]["lastCardDrawn"], healthMod=0 if selection == "The Four Kings" or self.treeviewDecks.parent(self.treeviewDecks.selection()[0]) == "Enemies" else self.decks[self.treeviewDecks.selection()[0]]["healthMod"], fromDeck=True)
 
                     if selection == "The Four Kings":
                         for x in range(1, 5):
@@ -638,7 +661,7 @@ try:
                     "behaviorDeck",
                     "behaviorDeck",
                     name=selection[:selection.index(" - ")] if " - " in selection else selection[:selection.index("_")] if "_" in selection else selection,
-                    onlyDisplay=self.app.display)
+                    onlyDisplay=self.app.displayTopLeft)
 
                 if selection not in self.decks or not self.decks[selection]["lastCardDrawn"]:
                     log("End of draw_behavior_card (nothing done)")
@@ -671,6 +694,7 @@ try:
                     or selection == "Executioner Chariot"
                     or (selection == "Old Dragonslayer" and self.decks[selection]["heatup"] > 2)
                     or (selection == "The Four Kings" and self.decks[selection]["heatup"] > 3)
+                    or ("Vordt" in selection and self.decks[selection]["heatup"] > 1)
                     or (type(self.decks[selection]["heatup"]) == bool and self.decks[selection]["heatup"])
                     ):
                     log("End of heatup (nothing done)")
@@ -686,23 +710,41 @@ try:
                 # Remove keyword tooltips from the previous image shown, if there are any.
                 for tooltip in self.app.tooltips:
                     tooltip.destroy()
-
-                clear_other_tab_images(
-                    self.app,
-                    "behaviorDeck",
-                    "behaviorDeck",
-                    name=selection[:selection.index(" - ")] if " - " in selection else selection[:selection.index("_")] if "_" in selection else selection,
-                    onlyDisplay=self.app.display)
                 
-                self.app.displayTopLeft.config(image="")
-                self.app.displayTopLeft.image=None
-                self.app.displayImages["variants"][self.app.displayTopLeft]["image"] = None
-                self.app.displayImages["variants"][self.app.displayTopLeft]["name"] = None
-                self.app.displayImages["variants"][self.app.displayTopLeft]["activeTab"] = None
-                self.app.displayImages["variantsLocked"][self.app.displayTopLeft]["image"] = None
-                self.app.displayImages["variantsLocked"][self.app.displayTopLeft]["name"] = None
-                self.app.displayImages["variantsLocked"][self.app.displayTopLeft]["activeTab"] = None
-                self.decks[selection]["lastCardDrawn"] = None
+                if "Vordt" in selection and self.decks[selection]["heatup"] == 0:
+                    clear_other_tab_images(
+                        self.app,
+                        "behaviorDeck",
+                        "behaviorDeck",
+                        name=selection[:selection.index(" - ")] if " - " in selection else selection[:selection.index("_")] if "_" in selection else selection,
+                        onlyDisplay=self.app.displayBottomLeft)
+                    
+                    self.app.displayBottomLeft.config(image="")
+                    self.app.displayBottomLeft.image=None
+                    self.app.displayImages["variants"][self.app.displayBottomLeft]["image"] = None
+                    self.app.displayImages["variants"][self.app.displayBottomLeft]["name"] = None
+                    self.app.displayImages["variants"][self.app.displayBottomLeft]["activeTab"] = None
+                    self.app.displayImages["variantsLocked"][self.app.displayBottomLeft]["image"] = None
+                    self.app.displayImages["variantsLocked"][self.app.displayBottomLeft]["name"] = None
+                    self.app.displayImages["variantsLocked"][self.app.displayBottomLeft]["activeTab"] = None
+                else:
+                    clear_other_tab_images(
+                        self.app,
+                        "behaviorDeck",
+                        "behaviorDeck",
+                        name=selection[:selection.index(" - ")] if " - " in selection else selection[:selection.index("_")] if "_" in selection else selection,
+                        onlyDisplay=self.app.displayTopLeft)
+                    
+                    self.app.displayTopLeft.config(image="")
+                    self.app.displayTopLeft.image=None
+                    self.app.displayImages["variants"][self.app.displayTopLeft]["image"] = None
+                    self.app.displayImages["variants"][self.app.displayTopLeft]["name"] = None
+                    self.app.displayImages["variants"][self.app.displayTopLeft]["activeTab"] = None
+                    self.app.displayImages["variantsLocked"][self.app.displayTopLeft]["image"] = None
+                    self.app.displayImages["variantsLocked"][self.app.displayTopLeft]["name"] = None
+                    self.app.displayImages["variantsLocked"][self.app.displayTopLeft]["activeTab"] = None
+                    
+                    self.decks[selection]["lastCardDrawn"] = None
 
                 if selection == "Ornstein & Smough":
                     healthOrnstein = behaviorDetail[selection]["Ornstein"]["health"]
@@ -767,18 +809,31 @@ try:
                 elif selection == "The Last Giant":
                     self.decks[selection]["deck"] = list(set(self.decks[selection]["deck"]) - set([b for b in behaviors[selection] if behaviorDetail[selection][b].get("arm", False)]))
                     self.decks[selection]["deck"] += self.decks[selection]["heatupCards"]
+                elif "Vordt" in selection:
+                    vordtSelection = "Vordt of the Boreal Valley (attack)" if self.decks[selection]["heatup"] == 0 else "Vordt of the Boreal Valley (move)"
+                    self.decks[vordtSelection]["deck"] += self.decks[vordtSelection]["heatupCards"]
+                    self.decks[vordtSelection]["heatup"] += 1
+                    self.decks[selection]["heatup"] += 1
                 else:
                     self.decks[selection]["deck"] += self.decks[selection]["heatupCards"]
                     self.decks[selection]["heatup"] = True
-                
-                shuffle(self.decks[selection]["deck"])
-                self.decks[selection]["curIndex"] = 0
-                self.decks[selection]["lastCardDrawn"] = None
 
-                self.treeviewDecks.item(selection, values=(
-                    self.treeviewDecks.item(selection)["values"][0],
-                    len(self.decks[selection]["deck"]) - self.decks[selection]["curIndex"],
-                    heatup))
+                if "Vordt" in selection:
+                    shuffle(self.decks[vordtSelection]["deck"])
+                    self.decks[vordtSelection]["curIndex"] = 0
+                    self.decks[vordtSelection]["lastCardDrawn"] = None
+                    self.treeviewDecks.item(vordtSelection, values=(
+                        self.treeviewDecks.item(vordtSelection)["values"][0],
+                        len(self.decks[vordtSelection]["deck"]) - self.decks[vordtSelection]["curIndex"],
+                        heatup))
+                else:
+                    shuffle(self.decks[selection]["deck"])
+                    self.decks[selection]["curIndex"] = 0
+                    self.decks[selection]["lastCardDrawn"] = None
+                    self.treeviewDecks.item(selection, values=(
+                        self.treeviewDecks.item(selection)["values"][0],
+                        len(self.decks[selection]["deck"]) - self.decks[selection]["curIndex"],
+                        heatup))
 
                 if selection in {"Maldron the Assassin", "Ornstein & Smough", "The Four Kings"}:
                     self.display_deck_cards()

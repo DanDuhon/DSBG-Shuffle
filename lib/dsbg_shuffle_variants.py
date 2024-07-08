@@ -299,7 +299,7 @@ try:
                 raise
 
 
-        def load_variant_card(self, event=None, variant=None, fromLocked=False, bottomRightDisplay=False, selfCall=None, forPrinting=False, armorerDennis=False, oldIronKing=False, pursuer=False, deckDataCard=False, healthMod=None, fromDeck=False):
+        def load_variant_card(self, event=None, variant=None, fromLocked=False, bottomLeftDisplay=False, bottomRightDisplay=False, selfCall=None, forPrinting=False, armorerDennis=False, oldIronKing=False, pursuer=False, deckDataCard=False, healthMod=None, fromDeck=False):
             """
             Load a variant card that was selected (or passed in).
             """
@@ -397,7 +397,7 @@ try:
                     # Create and display the variant image.
                     self.variantPhotoImage = self.app.create_image((self.selectedVariant[:self.selectedVariant.index("_")] + self.selectedVariant.replace(variant, "") if "_" in self.selectedVariant else self.selectedVariant) + ".jpg", "encounter", 4)
 
-                    self.edit_variant_card(variant=self.selectedVariant, bottomRightDisplay=bottomRightDisplay, lockedTree=fromLocked, armorerDennis=armorerDennis, oldIronKing=oldIronKing, pursuer=pursuer, healthMod=healthMod, fromDeck=fromDeck)
+                    self.edit_variant_card(variant=self.selectedVariant, bottomLeftDisplay=bottomLeftDisplay, bottomRightDisplay=bottomRightDisplay, lockedTree=fromLocked, armorerDennis=armorerDennis, oldIronKing=oldIronKing, pursuer=pursuer, healthMod=healthMod, fromDeck=fromDeck)
 
                 if "data" not in self.selectedVariant and self.app.displayImages[variants][self.app.displayTopRight]["name"] != self.selectedVariant and "The Four Kings" not in self.selectedVariant and not forPrinting:
                     self.load_variant_card(variant=self.selectedVariant[:self.selectedVariant.index(" - ")] + " - data", fromLocked=fromLocked, selfCall=originalSelection, armorerDennis=armorerDennis, oldIronKing=oldIronKing, pursuer=pursuer, deckDataCard=deckDataCard, healthMod=healthMod, fromDeck=fromDeck)
@@ -416,7 +416,7 @@ try:
                 raise
 
 
-        def load_variant_card_locked(self, event=None, variant=None, selfCall=None, bottomRightDisplay=False, forPrinting=False, armorerDennis=False, oldIronKing=False, pursuer=False, deckDataCard=False, healthMod=None, fromDeck=False):
+        def load_variant_card_locked(self, event=None, variant=None, selfCall=None, bottomLeftDisplay=False, bottomRightDisplay=False, forPrinting=False, armorerDennis=False, oldIronKing=False, pursuer=False, deckDataCard=False, healthMod=None, fromDeck=False):
             try:
                 log("Start of load_variant_card_locked, variant={}, selfCall={}, forPrinting={}, armorerDennis={}, oldIronKing={}, pursuer={}, deckDataCard={}, healthMod={}, fromDeck={}".format(str(variant), str(selfCall), str(forPrinting), str(armorerDennis), str(oldIronKing), str(pursuer), str(deckDataCard), str(healthMod), str(fromDeck)))
                     
@@ -524,7 +524,7 @@ try:
                             "Mega Bosses"
                             } else ""))
                 elif variant not in self.lockedVariants:
-                    self.load_variant_card(variant=variant, fromLocked=True, armorerDennis=armorerDennis, oldIronKing=oldIronKing, pursuer=pursuer, deckDataCard=deckDataCard, healthMod=healthMod, fromDeck=fromDeck, selfCall=selfCall, bottomRightDisplay=bottomRightDisplay)
+                    self.load_variant_card(variant=variant, fromLocked=True, armorerDennis=armorerDennis, oldIronKing=oldIronKing, pursuer=pursuer, deckDataCard=deckDataCard, healthMod=healthMod, fromDeck=fromDeck, selfCall=selfCall, bottomLeftDisplay=bottomLeftDisplay, bottomRightDisplay=bottomRightDisplay)
                     log("End of load_variant_card_locked")
                     return
                 else:
@@ -597,7 +597,7 @@ try:
                     # Create and display the variant image.
                     self.variantPhotoImage = self.app.create_image(self.selectedVariant + ".jpg", "encounter", 4)
 
-                    self.edit_variant_card(variant=mods, lockedTree=True, armorerDennis=armorerDennis, oldIronKing=oldIronKing, pursuer=pursuer, healthMod=healthMod, fromDeck=fromDeck, bottomRightDisplay=bottomRightDisplay)
+                    self.edit_variant_card(variant=mods, lockedTree=True, armorerDennis=armorerDennis, oldIronKing=oldIronKing, pursuer=pursuer, healthMod=healthMod, fromDeck=fromDeck, bottomLeftDisplay=bottomLeftDisplay, bottomRightDisplay=bottomRightDisplay)
 
                 if "data" not in self.selectedVariant and self.app.displayImages["variantsLocked"][self.app.displayTopRight]["name"] != self.selectedVariant and "The Four Kings" not in self.selectedVariant and not forPrinting:
                     modString = ",".join([str(x) for x in sorted([n for n in modIdLookup if modIdLookup[n] in set(mods[0] if mods and type(mods[0]) == list else mods) & set([modIdLookup[m] for m in dataCardMods])])])
@@ -752,7 +752,7 @@ try:
                         self.app,
                         "variants",
                         "variants",
-                        onlyDisplay=self.app.display)
+                        onlyDisplay=self.app.displayTopLeft)
 
                 if progress:
                     progress.label.config(text = "Calculating difficulty averages...")
@@ -938,7 +938,7 @@ try:
                 raise
 
 
-        def edit_variant_card(self, variant=None, lockedTree=False, event=None, bottomRightDisplay=False, armorerDennis=False, oldIronKing=False, pursuer=False, deckDataCard=False, healthMod=0, fromDeck=False):
+        def edit_variant_card(self, variant=None, lockedTree=False, event=None, bottomLeftDisplay=False, bottomRightDisplay=False, armorerDennis=False, oldIronKing=False, pursuer=False, deckDataCard=False, healthMod=0, fromDeck=False):
             try:
                 log("Start of edit_variant_card, variant={}".format(str(variant)))
 
@@ -967,6 +967,12 @@ try:
                     self.app.displayImages[key][self.app.displayBottomRight]["image"] = displayPhotoImage
                     self.app.displayImages[key][self.app.displayBottomRight]["name"] = self.selectedVariant
                     self.app.displayImages[key][self.app.displayBottomRight]["activeTab"] = key if not fromDeck else "behaviorDeck"
+                elif bottomLeftDisplay:
+                    self.app.displayBottomLeft.image = displayPhotoImage
+                    self.app.displayBottomLeft.config(image=displayPhotoImage)
+                    self.app.displayImages[key][self.app.displayBottomLeft]["image"] = displayPhotoImage
+                    self.app.displayImages[key][self.app.displayBottomLeft]["name"] = self.selectedVariant
+                    self.app.displayImages[key][self.app.displayBottomLeft]["activeTab"] = key if not fromDeck else "behaviorDeck"
                 elif deckDataCard:
                     self.app.displayTopRight.image = displayPhotoImage
                     self.app.displayTopRight.config(image=displayPhotoImage)
