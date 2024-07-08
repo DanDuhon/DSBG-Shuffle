@@ -314,73 +314,73 @@ def set_display_bindings_by_tab(app, smoughActive=False):
         return
     
     if tab == "Encounters":
-        app.display.bind("<Button 1>", app.encounterTab.shuffle_enemies)
+        app.displayTopLeft.bind("<Button 1>", app.encounterTab.shuffle_enemies)
 
-        app.display2.unbind("<Button 1>")
-        app.display2.unbind("<Shift-Button 1>")
-        app.display2.unbind("<Shift-Button 3>")
-        app.display2.unbind("<Control-1>")
-        app.display2.unbind("<Shift-Control-1>")
+        app.displayTopRight.unbind("<Button 1>")
+        app.displayTopRight.unbind("<Shift-Button 1>")
+        app.displayTopRight.unbind("<Shift-Button 3>")
+        app.displayTopRight.unbind("<Control-1>")
+        app.displayTopRight.unbind("<Shift-Control-1>")
 
-        app.display3.unbind("<Button 1>")
-        app.display3.unbind("<Shift-Button 1>")
-        app.display3.unbind("<Shift-Button 3>")
-        app.display3.unbind("<Control-1>")
-        app.display3.unbind("<Shift-Control-1>")
+        app.displayBottomRight.unbind("<Button 1>")
+        app.displayBottomRight.unbind("<Shift-Button 1>")
+        app.displayBottomRight.unbind("<Shift-Button 3>")
+        app.displayBottomRight.unbind("<Control-1>")
+        app.displayBottomRight.unbind("<Shift-Control-1>")
     elif tab == "Events":
-        app.display.unbind("<Button 1>")
+        app.displayTopLeft.unbind("<Button 1>")
 
-        app.display2.unbind("<Button 1>")
-        app.display2.unbind("<Shift-Button 1>")
-        app.display2.unbind("<Shift-Button 3>")
-        app.display2.unbind("<Control-1>")
-        app.display2.unbind("<Shift-Control-1>")
+        app.displayTopRight.unbind("<Button 1>")
+        app.displayTopRight.unbind("<Shift-Button 1>")
+        app.displayTopRight.unbind("<Shift-Button 3>")
+        app.displayTopRight.unbind("<Control-1>")
+        app.displayTopRight.unbind("<Shift-Control-1>")
 
-        app.display3.unbind("<Button 1>")
-        app.display3.unbind("<Shift-Button 1>")
-        app.display3.unbind("<Shift-Button 3>")
-        app.display3.unbind("<Control-1>")
-        app.display3.unbind("<Shift-Control-1>")
+        app.displayBottomRight.unbind("<Button 1>")
+        app.displayBottomRight.unbind("<Shift-Button 1>")
+        app.displayBottomRight.unbind("<Shift-Button 3>")
+        app.displayBottomRight.unbind("<Control-1>")
+        app.displayBottomRight.unbind("<Shift-Control-1>")
     elif tab == "Behavior Variants":
-        app.display.bind("<Button 1>", app.variantsTab.apply_difficulty_modifier)
+        app.displayTopLeft.bind("<Button 1>", app.variantsTab.apply_difficulty_modifier)
 
-        app.display2.bind("<Button 1>", app.variantsTab.apply_difficulty_modifier)
-        app.display2.unbind("<Shift-Button 1>")
-        app.display2.unbind("<Shift-Button 3>")
-        app.display2.unbind("<Control-1>")
-        app.display2.unbind("<Shift-Control-1>")
+        app.displayTopRight.bind("<Button 1>", app.variantsTab.apply_difficulty_modifier)
+        app.displayTopRight.unbind("<Shift-Button 1>")
+        app.displayTopRight.unbind("<Shift-Button 3>")
+        app.displayTopRight.unbind("<Control-1>")
+        app.displayTopRight.unbind("<Shift-Control-1>")
 
         if smoughActive:
-            app.display3.bind("<Button 1>", app.variantsTab.apply_difficulty_modifier)
+            app.displayBottomRight.bind("<Button 1>", app.variantsTab.apply_difficulty_modifier)
         else:
-            app.display3.unbind("<Button 1>")
-            app.display3.unbind("<Shift-Button 1>")
-            app.display3.unbind("<Shift-Button 3>")
-            app.display3.unbind("<Control-1>")
-            app.display3.unbind("<Shift-Control-1>")
+            app.displayBottomRight.unbind("<Button 1>")
+            app.displayBottomRight.unbind("<Shift-Button 1>")
+            app.displayBottomRight.unbind("<Shift-Button 3>")
+            app.displayBottomRight.unbind("<Control-1>")
+            app.displayBottomRight.unbind("<Shift-Control-1>")
     elif tab == "Behavior Decks":
-        app.display.unbind("<Button 1>")
+        app.displayTopLeft.unbind("<Button 1>")
 
-        app.display2.bind("<Button 1>", lambda event, x=1: app.behaviorDeckTab.lower_health(event=event, amount=x))
-        app.display2.bind("<Shift-Button 1>", lambda event, x=5: app.behaviorDeckTab.lower_health(event=event, amount=x))
-        app.display2.bind("<Button 3>", lambda event, x=1: app.behaviorDeckTab.raise_health(event=event, amount=x))
-        app.display2.bind("<Shift-Button 3>", lambda event, x=5: app.behaviorDeckTab.raise_health(event=event, amount=x))
-        app.display2.bind("<Control-1>", lambda event, x=1: app.behaviorDeckTab.raise_health(event=event, amount=x))
-        app.display2.bind("<Shift-Control-1>", lambda event, x=5: app.behaviorDeckTab.raise_health(event=event, amount=x))
+        app.displayTopRight.bind("<Button 1>", lambda event, x=1: app.behaviorDeckTab.lower_health(event=event, amount=x))
+        app.displayTopRight.bind("<Shift-Button 1>", lambda event, x=5: app.behaviorDeckTab.lower_health(event=event, amount=x))
+        app.displayTopRight.bind("<Button 3>", lambda event, x=1: app.behaviorDeckTab.raise_health(event=event, amount=x))
+        app.displayTopRight.bind("<Shift-Button 3>", lambda event, x=5: app.behaviorDeckTab.raise_health(event=event, amount=x))
+        app.displayTopRight.bind("<Control-1>", lambda event, x=1: app.behaviorDeckTab.raise_health(event=event, amount=x))
+        app.displayTopRight.bind("<Shift-Control-1>", lambda event, x=5: app.behaviorDeckTab.raise_health(event=event, amount=x))
 
         if smoughActive:
-            app.display3.bind("<Button 1>", lambda event, x=1: app.behaviorDeckTab.lower_health(event=event, amount=x))
-            app.display3.bind("<Shift-Button 1>", lambda event, x=5: app.behaviorDeckTab.lower_health(event=event, amount=x))
-            app.display3.bind("<Button 3>", lambda event, x=1: app.behaviorDeckTab.raise_health(event=event, amount=x))
-            app.display3.bind("<Shift-Button 3>", lambda event, x=5: app.behaviorDeckTab.raise_health(event=event, amount=x))
-            app.display3.bind("<Control-1>", lambda event, x=1: app.behaviorDeckTab.raise_health(event=event, amount=x))
-            app.display3.bind("<Shift-Control-1>", lambda event, x=5: app.behaviorDeckTab.raise_health(event=event, amount=x))
+            app.displayBottomRight.bind("<Button 1>", lambda event, x=1: app.behaviorDeckTab.lower_health(event=event, amount=x))
+            app.displayBottomRight.bind("<Shift-Button 1>", lambda event, x=5: app.behaviorDeckTab.lower_health(event=event, amount=x))
+            app.displayBottomRight.bind("<Button 3>", lambda event, x=1: app.behaviorDeckTab.raise_health(event=event, amount=x))
+            app.displayBottomRight.bind("<Shift-Button 3>", lambda event, x=5: app.behaviorDeckTab.raise_health(event=event, amount=x))
+            app.displayBottomRight.bind("<Control-1>", lambda event, x=1: app.behaviorDeckTab.raise_health(event=event, amount=x))
+            app.displayBottomRight.bind("<Shift-Control-1>", lambda event, x=5: app.behaviorDeckTab.raise_health(event=event, amount=x))
         else:
-            app.display3.unbind("<Button 1>")
-            app.display3.unbind("<Shift-Button 1>")
-            app.display3.unbind("<Shift-Button 3>")
-            app.display3.unbind("<Control-1>")
-            app.display3.unbind("<Shift-Control-1>")
+            app.displayBottomRight.unbind("<Button 1>")
+            app.displayBottomRight.unbind("<Shift-Button 1>")
+            app.displayBottomRight.unbind("<Shift-Button 3>")
+            app.displayBottomRight.unbind("<Control-1>")
+            app.displayBottomRight.unbind("<Shift-Control-1>")
 
 
 
@@ -397,7 +397,7 @@ def clear_other_tab_images(app, lookupTab, activeTab, name=None, onlyDisplay=Non
         for h in app.behaviorDeckTab.decks[e]["healthTrackers"]:
             h.grid_forget()
 
-    displays = [app.display, app.display2, app.display3]
+    displays = [app.display, app.displayTopRight, app.displayBottomRight]
     for display in displays:
         if onlyDisplay and display != onlyDisplay:
             continue

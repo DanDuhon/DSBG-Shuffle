@@ -1,0 +1,2009 @@
+08/07/2024 10:31:38|DEBUG|[__init__] Initiating application
+08/07/2024 10:31:38|DEBUG|[create_image] Start of create_image, imageFileName=Alonne Bow Knight.png, imageType=enemyOld, level=None, expansion=None
+08/07/2024 10:31:38|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Alonne Bow Knight.png
+08/07/2024 10:31:38|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:38|DEBUG|[create_image] Start of create_image, imageFileName=Alonne Bow Knight.png, imageType=enemyOldLevel4, level=None, expansion=None
+08/07/2024 10:31:38|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Alonne Bow Knight.png
+08/07/2024 10:31:38|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:38|DEBUG|[create_image] Start of create_image, imageFileName=Alonne Bow Knight.png, imageType=enemyNew, level=None, expansion=None
+08/07/2024 10:31:38|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Alonne Bow Knight.png
+08/07/2024 10:31:38|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:38|DEBUG|[create_image] Start of create_image, imageFileName=Alonne Bow Knight.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:38|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Alonne Bow Knight rule bg.jpg
+08/07/2024 10:31:38|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:38|DEBUG|[create_image] Start of create_image, imageFileName=Alonne Bow Knight.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:38|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Alonne Bow Knight rule bg.jpg
+08/07/2024 10:31:38|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:38|DEBUG|[create_image] Start of create_image, imageFileName=Alonne Knight Captain.png, imageType=enemyOld, level=None, expansion=None
+08/07/2024 10:31:38|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Alonne Knight Captain.png
+08/07/2024 10:31:38|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:38|DEBUG|[create_image] Start of create_image, imageFileName=Alonne Knight Captain.png, imageType=enemyOldLevel4, level=None, expansion=None
+08/07/2024 10:31:38|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Alonne Knight Captain.png
+08/07/2024 10:31:38|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:38|DEBUG|[create_image] Start of create_image, imageFileName=Alonne Knight Captain.png, imageType=enemyNew, level=None, expansion=None
+08/07/2024 10:31:38|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Alonne Knight Captain.png
+08/07/2024 10:31:38|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:38|DEBUG|[create_image] Start of create_image, imageFileName=Alonne Knight Captain.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:38|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Alonne Knight Captain rule bg.jpg
+08/07/2024 10:31:38|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:38|DEBUG|[create_image] Start of create_image, imageFileName=Alonne Knight Captain.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:38|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Alonne Knight Captain rule bg.jpg
+08/07/2024 10:31:38|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:38|DEBUG|[create_image] Start of create_image, imageFileName=Alonne Sword Knight.png, imageType=enemyOld, level=None, expansion=None
+08/07/2024 10:31:38|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Alonne Sword Knight.png
+08/07/2024 10:31:38|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:38|DEBUG|[create_image] Start of create_image, imageFileName=Alonne Sword Knight.png, imageType=enemyOldLevel4, level=None, expansion=None
+08/07/2024 10:31:38|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Alonne Sword Knight.png
+08/07/2024 10:31:38|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:38|DEBUG|[create_image] Start of create_image, imageFileName=Alonne Sword Knight.png, imageType=enemyNew, level=None, expansion=None
+08/07/2024 10:31:38|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Alonne Sword Knight.png
+08/07/2024 10:31:38|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:38|DEBUG|[create_image] Start of create_image, imageFileName=Alonne Sword Knight.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:38|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Alonne Sword Knight rule bg.jpg
+08/07/2024 10:31:38|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:38|DEBUG|[create_image] Start of create_image, imageFileName=Alonne Sword Knight.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:38|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Alonne Sword Knight rule bg.jpg
+08/07/2024 10:31:38|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:38|DEBUG|[create_image] Start of create_image, imageFileName=Black Hollow Mage.png, imageType=enemyOld, level=None, expansion=None
+08/07/2024 10:31:38|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Black Hollow Mage.png
+08/07/2024 10:31:38|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:38|DEBUG|[create_image] Start of create_image, imageFileName=Black Hollow Mage.png, imageType=enemyOldLevel4, level=None, expansion=None
+08/07/2024 10:31:38|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Black Hollow Mage.png
+08/07/2024 10:31:38|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:38|DEBUG|[create_image] Start of create_image, imageFileName=Black Hollow Mage.png, imageType=enemyNew, level=None, expansion=None
+08/07/2024 10:31:38|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Black Hollow Mage.png
+08/07/2024 10:31:38|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:38|DEBUG|[create_image] Start of create_image, imageFileName=Black Hollow Mage.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:38|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Black Hollow Mage rule bg.jpg
+08/07/2024 10:31:38|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:38|DEBUG|[create_image] Start of create_image, imageFileName=Black Hollow Mage.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:38|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Black Hollow Mage rule bg.jpg
+08/07/2024 10:31:38|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:38|DEBUG|[create_image] Start of create_image, imageFileName=Bonewheel Skeleton.png, imageType=enemyOld, level=None, expansion=None
+08/07/2024 10:31:38|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Bonewheel Skeleton.png
+08/07/2024 10:31:38|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:38|DEBUG|[create_image] Start of create_image, imageFileName=Bonewheel Skeleton.png, imageType=enemyOldLevel4, level=None, expansion=None
+08/07/2024 10:31:38|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Bonewheel Skeleton.png
+08/07/2024 10:31:38|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:38|DEBUG|[create_image] Start of create_image, imageFileName=Bonewheel Skeleton.png, imageType=enemyNew, level=None, expansion=None
+08/07/2024 10:31:38|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Bonewheel Skeleton.png
+08/07/2024 10:31:39|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:39|DEBUG|[create_image] Start of create_image, imageFileName=Bonewheel Skeleton.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:39|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Bonewheel Skeleton rule bg.jpg
+08/07/2024 10:31:39|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:39|DEBUG|[create_image] Start of create_image, imageFileName=Bonewheel Skeleton.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:39|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Bonewheel Skeleton rule bg.jpg
+08/07/2024 10:31:39|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:39|DEBUG|[create_image] Start of create_image, imageFileName=Crossbow Hollow.png, imageType=enemyOld, level=None, expansion=None
+08/07/2024 10:31:39|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Crossbow Hollow.png
+08/07/2024 10:31:39|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:39|DEBUG|[create_image] Start of create_image, imageFileName=Crossbow Hollow.png, imageType=enemyOldLevel4, level=None, expansion=None
+08/07/2024 10:31:39|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Crossbow Hollow.png
+08/07/2024 10:31:39|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:39|DEBUG|[create_image] Start of create_image, imageFileName=Crossbow Hollow.png, imageType=enemyNew, level=None, expansion=None
+08/07/2024 10:31:39|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Crossbow Hollow.png
+08/07/2024 10:31:39|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:39|DEBUG|[create_image] Start of create_image, imageFileName=Crossbow Hollow.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:39|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Crossbow Hollow rule bg.jpg
+08/07/2024 10:31:39|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:39|DEBUG|[create_image] Start of create_image, imageFileName=Crossbow Hollow.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:39|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Crossbow Hollow rule bg.jpg
+08/07/2024 10:31:39|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:39|DEBUG|[create_image] Start of create_image, imageFileName=Crow Demon.png, imageType=enemyOld, level=None, expansion=None
+08/07/2024 10:31:39|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Crow Demon.png
+08/07/2024 10:31:39|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:39|DEBUG|[create_image] Start of create_image, imageFileName=Crow Demon.png, imageType=enemyOldLevel4, level=None, expansion=None
+08/07/2024 10:31:39|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Crow Demon.png
+08/07/2024 10:31:39|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:39|DEBUG|[create_image] Start of create_image, imageFileName=Crow Demon.png, imageType=enemyNew, level=None, expansion=None
+08/07/2024 10:31:39|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Crow Demon.png
+08/07/2024 10:31:39|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:39|DEBUG|[create_image] Start of create_image, imageFileName=Crow Demon.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:39|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Crow Demon rule bg.jpg
+08/07/2024 10:31:39|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:39|DEBUG|[create_image] Start of create_image, imageFileName=Crow Demon.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:39|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Crow Demon rule bg.jpg
+08/07/2024 10:31:39|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:39|DEBUG|[create_image] Start of create_image, imageFileName=Demonic Foliage.png, imageType=enemyOld, level=None, expansion=None
+08/07/2024 10:31:39|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Demonic Foliage.png
+08/07/2024 10:31:39|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:39|DEBUG|[create_image] Start of create_image, imageFileName=Demonic Foliage.png, imageType=enemyOldLevel4, level=None, expansion=None
+08/07/2024 10:31:39|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Demonic Foliage.png
+08/07/2024 10:31:39|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:39|DEBUG|[create_image] Start of create_image, imageFileName=Demonic Foliage.png, imageType=enemyNew, level=None, expansion=None
+08/07/2024 10:31:39|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Demonic Foliage.png
+08/07/2024 10:31:39|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:39|DEBUG|[create_image] Start of create_image, imageFileName=Demonic Foliage.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:39|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Demonic Foliage rule bg.jpg
+08/07/2024 10:31:39|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:39|DEBUG|[create_image] Start of create_image, imageFileName=Demonic Foliage.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:39|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Demonic Foliage rule bg.jpg
+08/07/2024 10:31:39|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:39|DEBUG|[create_image] Start of create_image, imageFileName=Engorged Zombie.png, imageType=enemyOld, level=None, expansion=None
+08/07/2024 10:31:39|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Engorged Zombie.png
+08/07/2024 10:31:39|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:39|DEBUG|[create_image] Start of create_image, imageFileName=Engorged Zombie.png, imageType=enemyOldLevel4, level=None, expansion=None
+08/07/2024 10:31:39|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Engorged Zombie.png
+08/07/2024 10:31:39|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:39|DEBUG|[create_image] Start of create_image, imageFileName=Engorged Zombie.png, imageType=enemyNew, level=None, expansion=None
+08/07/2024 10:31:39|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Engorged Zombie.png
+08/07/2024 10:31:39|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:39|DEBUG|[create_image] Start of create_image, imageFileName=Engorged Zombie.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:39|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Engorged Zombie rule bg.jpg
+08/07/2024 10:31:39|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:39|DEBUG|[create_image] Start of create_image, imageFileName=Engorged Zombie.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:39|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Engorged Zombie rule bg.jpg
+08/07/2024 10:31:39|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:39|DEBUG|[create_image] Start of create_image, imageFileName=Falchion Skeleton.png, imageType=enemyOld, level=None, expansion=None
+08/07/2024 10:31:39|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Falchion Skeleton.png
+08/07/2024 10:31:39|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:39|DEBUG|[create_image] Start of create_image, imageFileName=Falchion Skeleton.png, imageType=enemyOldLevel4, level=None, expansion=None
+08/07/2024 10:31:39|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Falchion Skeleton.png
+08/07/2024 10:31:39|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:39|DEBUG|[create_image] Start of create_image, imageFileName=Falchion Skeleton.png, imageType=enemyNew, level=None, expansion=None
+08/07/2024 10:31:39|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Falchion Skeleton.png
+08/07/2024 10:31:39|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:39|DEBUG|[create_image] Start of create_image, imageFileName=Falchion Skeleton.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:39|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Falchion Skeleton rule bg.jpg
+08/07/2024 10:31:39|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:39|DEBUG|[create_image] Start of create_image, imageFileName=Falchion Skeleton.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:39|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Falchion Skeleton rule bg.jpg
+08/07/2024 10:31:39|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:39|DEBUG|[create_image] Start of create_image, imageFileName=Firebomb Hollow.png, imageType=enemyOld, level=None, expansion=None
+08/07/2024 10:31:39|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Firebomb Hollow.png
+08/07/2024 10:31:39|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:39|DEBUG|[create_image] Start of create_image, imageFileName=Firebomb Hollow.png, imageType=enemyOldLevel4, level=None, expansion=None
+08/07/2024 10:31:39|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Firebomb Hollow.png
+08/07/2024 10:31:39|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:39|DEBUG|[create_image] Start of create_image, imageFileName=Firebomb Hollow.png, imageType=enemyNew, level=None, expansion=None
+08/07/2024 10:31:39|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Firebomb Hollow.png
+08/07/2024 10:31:39|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:39|DEBUG|[create_image] Start of create_image, imageFileName=Firebomb Hollow.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:39|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Firebomb Hollow rule bg.jpg
+08/07/2024 10:31:39|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:39|DEBUG|[create_image] Start of create_image, imageFileName=Firebomb Hollow.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:39|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Firebomb Hollow rule bg.jpg
+08/07/2024 10:31:39|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:39|DEBUG|[create_image] Start of create_image, imageFileName=Giant Skeleton Archer.png, imageType=enemyOld, level=None, expansion=None
+08/07/2024 10:31:39|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Giant Skeleton Archer.png
+08/07/2024 10:31:39|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:39|DEBUG|[create_image] Start of create_image, imageFileName=Giant Skeleton Archer.png, imageType=enemyOldLevel4, level=None, expansion=None
+08/07/2024 10:31:39|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Giant Skeleton Archer.png
+08/07/2024 10:31:39|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:39|DEBUG|[create_image] Start of create_image, imageFileName=Giant Skeleton Archer.png, imageType=enemyNew, level=None, expansion=None
+08/07/2024 10:31:39|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Giant Skeleton Archer.png
+08/07/2024 10:31:39|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:39|DEBUG|[create_image] Start of create_image, imageFileName=Giant Skeleton Archer.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:39|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Giant Skeleton Archer rule bg.jpg
+08/07/2024 10:31:39|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:39|DEBUG|[create_image] Start of create_image, imageFileName=Giant Skeleton Archer.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:39|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Giant Skeleton Archer rule bg.jpg
+08/07/2024 10:31:40|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:40|DEBUG|[create_image] Start of create_image, imageFileName=Giant Skeleton Soldier.png, imageType=enemyOld, level=None, expansion=None
+08/07/2024 10:31:40|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Giant Skeleton Soldier.png
+08/07/2024 10:31:40|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:40|DEBUG|[create_image] Start of create_image, imageFileName=Giant Skeleton Soldier.png, imageType=enemyOldLevel4, level=None, expansion=None
+08/07/2024 10:31:40|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Giant Skeleton Soldier.png
+08/07/2024 10:31:40|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:40|DEBUG|[create_image] Start of create_image, imageFileName=Giant Skeleton Soldier.png, imageType=enemyNew, level=None, expansion=None
+08/07/2024 10:31:40|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Giant Skeleton Soldier.png
+08/07/2024 10:31:40|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:40|DEBUG|[create_image] Start of create_image, imageFileName=Giant Skeleton Soldier.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:40|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Giant Skeleton Soldier rule bg.jpg
+08/07/2024 10:31:40|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:40|DEBUG|[create_image] Start of create_image, imageFileName=Giant Skeleton Soldier.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:40|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Giant Skeleton Soldier rule bg.jpg
+08/07/2024 10:31:40|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:40|DEBUG|[create_image] Start of create_image, imageFileName=Hollow Soldier.png, imageType=enemyOld, level=None, expansion=None
+08/07/2024 10:31:40|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Hollow Soldier.png
+08/07/2024 10:31:40|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:40|DEBUG|[create_image] Start of create_image, imageFileName=Hollow Soldier.png, imageType=enemyOldLevel4, level=None, expansion=None
+08/07/2024 10:31:40|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Hollow Soldier.png
+08/07/2024 10:31:40|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:40|DEBUG|[create_image] Start of create_image, imageFileName=Hollow Soldier.png, imageType=enemyNew, level=None, expansion=None
+08/07/2024 10:31:40|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Hollow Soldier.png
+08/07/2024 10:31:40|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:40|DEBUG|[create_image] Start of create_image, imageFileName=Hollow Soldier.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:40|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Hollow Soldier rule bg.jpg
+08/07/2024 10:31:40|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:40|DEBUG|[create_image] Start of create_image, imageFileName=Hollow Soldier.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:40|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Hollow Soldier rule bg.jpg
+08/07/2024 10:31:40|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:40|DEBUG|[create_image] Start of create_image, imageFileName=Ironclad Soldier.png, imageType=enemyOld, level=None, expansion=None
+08/07/2024 10:31:40|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Ironclad Soldier.png
+08/07/2024 10:31:40|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:40|DEBUG|[create_image] Start of create_image, imageFileName=Ironclad Soldier.png, imageType=enemyOldLevel4, level=None, expansion=None
+08/07/2024 10:31:40|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Ironclad Soldier.png
+08/07/2024 10:31:40|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:40|DEBUG|[create_image] Start of create_image, imageFileName=Ironclad Soldier.png, imageType=enemyNew, level=None, expansion=None
+08/07/2024 10:31:40|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Ironclad Soldier.png
+08/07/2024 10:31:40|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:40|DEBUG|[create_image] Start of create_image, imageFileName=Ironclad Soldier.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:40|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Ironclad Soldier rule bg.jpg
+08/07/2024 10:31:40|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:40|DEBUG|[create_image] Start of create_image, imageFileName=Ironclad Soldier.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:40|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Ironclad Soldier rule bg.jpg
+08/07/2024 10:31:40|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:40|DEBUG|[create_image] Start of create_image, imageFileName=Large Hollow Soldier.png, imageType=enemyOld, level=None, expansion=None
+08/07/2024 10:31:40|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Large Hollow Soldier.png
+08/07/2024 10:31:40|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:40|DEBUG|[create_image] Start of create_image, imageFileName=Large Hollow Soldier.png, imageType=enemyOldLevel4, level=None, expansion=None
+08/07/2024 10:31:40|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Large Hollow Soldier.png
+08/07/2024 10:31:40|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:40|DEBUG|[create_image] Start of create_image, imageFileName=Large Hollow Soldier.png, imageType=enemyNew, level=None, expansion=None
+08/07/2024 10:31:40|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Large Hollow Soldier.png
+08/07/2024 10:31:40|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:40|DEBUG|[create_image] Start of create_image, imageFileName=Large Hollow Soldier.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:40|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Large Hollow Soldier rule bg.jpg
+08/07/2024 10:31:40|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:40|DEBUG|[create_image] Start of create_image, imageFileName=Large Hollow Soldier.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:40|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Large Hollow Soldier rule bg.jpg
+08/07/2024 10:31:40|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:40|DEBUG|[create_image] Start of create_image, imageFileName=Mushroom Child.png, imageType=enemyOld, level=None, expansion=None
+08/07/2024 10:31:40|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Mushroom Child.png
+08/07/2024 10:31:40|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:40|DEBUG|[create_image] Start of create_image, imageFileName=Mushroom Child.png, imageType=enemyOldLevel4, level=None, expansion=None
+08/07/2024 10:31:40|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Mushroom Child.png
+08/07/2024 10:31:40|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:40|DEBUG|[create_image] Start of create_image, imageFileName=Mushroom Child.png, imageType=enemyNew, level=None, expansion=None
+08/07/2024 10:31:40|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Mushroom Child.png
+08/07/2024 10:31:40|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:40|DEBUG|[create_image] Start of create_image, imageFileName=Mushroom Child.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:40|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Mushroom Child rule bg.jpg
+08/07/2024 10:31:40|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:40|DEBUG|[create_image] Start of create_image, imageFileName=Mushroom Child.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:40|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Mushroom Child rule bg.jpg
+08/07/2024 10:31:40|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:40|DEBUG|[create_image] Start of create_image, imageFileName=Mushroom Parent.png, imageType=enemyOld, level=None, expansion=None
+08/07/2024 10:31:40|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Mushroom Parent.png
+08/07/2024 10:31:40|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:40|DEBUG|[create_image] Start of create_image, imageFileName=Mushroom Parent.png, imageType=enemyOldLevel4, level=None, expansion=None
+08/07/2024 10:31:40|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Mushroom Parent.png
+08/07/2024 10:31:40|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:40|DEBUG|[create_image] Start of create_image, imageFileName=Mushroom Parent.png, imageType=enemyNew, level=None, expansion=None
+08/07/2024 10:31:40|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Mushroom Parent.png
+08/07/2024 10:31:40|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:40|DEBUG|[create_image] Start of create_image, imageFileName=Mushroom Parent.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:40|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Mushroom Parent rule bg.jpg
+08/07/2024 10:31:40|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:40|DEBUG|[create_image] Start of create_image, imageFileName=Mushroom Parent.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:40|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Mushroom Parent rule bg.jpg
+08/07/2024 10:31:40|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:40|DEBUG|[create_image] Start of create_image, imageFileName=Necromancer.png, imageType=enemyOld, level=None, expansion=None
+08/07/2024 10:31:40|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Necromancer.png
+08/07/2024 10:31:40|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:40|DEBUG|[create_image] Start of create_image, imageFileName=Necromancer.png, imageType=enemyOldLevel4, level=None, expansion=None
+08/07/2024 10:31:40|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Necromancer.png
+08/07/2024 10:31:40|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:40|DEBUG|[create_image] Start of create_image, imageFileName=Necromancer.png, imageType=enemyNew, level=None, expansion=None
+08/07/2024 10:31:40|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Necromancer.png
+08/07/2024 10:31:40|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:40|DEBUG|[create_image] Start of create_image, imageFileName=Necromancer.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:40|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Necromancer rule bg.jpg
+08/07/2024 10:31:40|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:40|DEBUG|[create_image] Start of create_image, imageFileName=Necromancer.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:40|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Necromancer rule bg.jpg
+08/07/2024 10:31:40|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:40|DEBUG|[create_image] Start of create_image, imageFileName=Phalanx.png, imageType=enemyOld, level=None, expansion=None
+08/07/2024 10:31:40|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Phalanx.png
+08/07/2024 10:31:40|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:40|DEBUG|[create_image] Start of create_image, imageFileName=Phalanx.png, imageType=enemyOldLevel4, level=None, expansion=None
+08/07/2024 10:31:40|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Phalanx.png
+08/07/2024 10:31:40|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:40|DEBUG|[create_image] Start of create_image, imageFileName=Phalanx.png, imageType=enemyNew, level=None, expansion=None
+08/07/2024 10:31:40|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Phalanx.png
+08/07/2024 10:31:40|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:40|DEBUG|[create_image] Start of create_image, imageFileName=Phalanx.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:40|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Phalanx rule bg.jpg
+08/07/2024 10:31:40|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:40|DEBUG|[create_image] Start of create_image, imageFileName=Phalanx.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:40|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Phalanx rule bg.jpg
+08/07/2024 10:31:40|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:40|DEBUG|[create_image] Start of create_image, imageFileName=Phalanx Hollow.png, imageType=enemyOld, level=None, expansion=None
+08/07/2024 10:31:40|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Phalanx Hollow.png
+08/07/2024 10:31:40|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:40|DEBUG|[create_image] Start of create_image, imageFileName=Phalanx Hollow.png, imageType=enemyOldLevel4, level=None, expansion=None
+08/07/2024 10:31:40|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Phalanx Hollow.png
+08/07/2024 10:31:40|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:40|DEBUG|[create_image] Start of create_image, imageFileName=Phalanx Hollow.png, imageType=enemyNew, level=None, expansion=None
+08/07/2024 10:31:41|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Phalanx Hollow.png
+08/07/2024 10:31:41|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:41|DEBUG|[create_image] Start of create_image, imageFileName=Phalanx Hollow.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:41|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Phalanx Hollow rule bg.jpg
+08/07/2024 10:31:41|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:41|DEBUG|[create_image] Start of create_image, imageFileName=Phalanx Hollow.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:41|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Phalanx Hollow rule bg.jpg
+08/07/2024 10:31:41|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:41|DEBUG|[create_image] Start of create_image, imageFileName=Plow Scarecrow.png, imageType=enemyOld, level=None, expansion=None
+08/07/2024 10:31:41|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Plow Scarecrow.png
+08/07/2024 10:31:41|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:41|DEBUG|[create_image] Start of create_image, imageFileName=Plow Scarecrow.png, imageType=enemyOldLevel4, level=None, expansion=None
+08/07/2024 10:31:41|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Plow Scarecrow.png
+08/07/2024 10:31:41|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:41|DEBUG|[create_image] Start of create_image, imageFileName=Plow Scarecrow.png, imageType=enemyNew, level=None, expansion=None
+08/07/2024 10:31:41|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Plow Scarecrow.png
+08/07/2024 10:31:41|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:41|DEBUG|[create_image] Start of create_image, imageFileName=Plow Scarecrow.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:41|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Plow Scarecrow rule bg.jpg
+08/07/2024 10:31:41|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:41|DEBUG|[create_image] Start of create_image, imageFileName=Plow Scarecrow.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:41|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Plow Scarecrow rule bg.jpg
+08/07/2024 10:31:41|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:41|DEBUG|[create_image] Start of create_image, imageFileName=Sentinel.png, imageType=enemyOld, level=None, expansion=None
+08/07/2024 10:31:41|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Sentinel.png
+08/07/2024 10:31:41|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:41|DEBUG|[create_image] Start of create_image, imageFileName=Sentinel.png, imageType=enemyOldLevel4, level=None, expansion=None
+08/07/2024 10:31:41|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Sentinel.png
+08/07/2024 10:31:41|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:41|DEBUG|[create_image] Start of create_image, imageFileName=Sentinel.png, imageType=enemyNew, level=None, expansion=None
+08/07/2024 10:31:41|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Sentinel.png
+08/07/2024 10:31:41|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:41|DEBUG|[create_image] Start of create_image, imageFileName=Sentinel.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:41|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Sentinel rule bg.jpg
+08/07/2024 10:31:41|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:41|DEBUG|[create_image] Start of create_image, imageFileName=Sentinel.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:41|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Sentinel rule bg.jpg
+08/07/2024 10:31:41|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:41|DEBUG|[create_image] Start of create_image, imageFileName=Shears Scarecrow.png, imageType=enemyOld, level=None, expansion=None
+08/07/2024 10:31:41|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Shears Scarecrow.png
+08/07/2024 10:31:41|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:41|DEBUG|[create_image] Start of create_image, imageFileName=Shears Scarecrow.png, imageType=enemyOldLevel4, level=None, expansion=None
+08/07/2024 10:31:41|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Shears Scarecrow.png
+08/07/2024 10:31:41|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:41|DEBUG|[create_image] Start of create_image, imageFileName=Shears Scarecrow.png, imageType=enemyNew, level=None, expansion=None
+08/07/2024 10:31:41|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Shears Scarecrow.png
+08/07/2024 10:31:41|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:41|DEBUG|[create_image] Start of create_image, imageFileName=Shears Scarecrow.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:41|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Shears Scarecrow rule bg.jpg
+08/07/2024 10:31:41|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:41|DEBUG|[create_image] Start of create_image, imageFileName=Shears Scarecrow.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:41|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Shears Scarecrow rule bg.jpg
+08/07/2024 10:31:41|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:41|DEBUG|[create_image] Start of create_image, imageFileName=Silver Knight Greatbowman.png, imageType=enemyOld, level=None, expansion=None
+08/07/2024 10:31:41|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Silver Knight Greatbowman.png
+08/07/2024 10:31:41|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:41|DEBUG|[create_image] Start of create_image, imageFileName=Silver Knight Greatbowman.png, imageType=enemyOldLevel4, level=None, expansion=None
+08/07/2024 10:31:41|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Silver Knight Greatbowman.png
+08/07/2024 10:31:41|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:41|DEBUG|[create_image] Start of create_image, imageFileName=Silver Knight Greatbowman.png, imageType=enemyNew, level=None, expansion=None
+08/07/2024 10:31:41|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Silver Knight Greatbowman.png
+08/07/2024 10:31:41|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:41|DEBUG|[create_image] Start of create_image, imageFileName=Silver Knight Greatbowman.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:41|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Silver Knight Greatbowman rule bg.jpg
+08/07/2024 10:31:41|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:41|DEBUG|[create_image] Start of create_image, imageFileName=Silver Knight Greatbowman.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:41|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Silver Knight Greatbowman rule bg.jpg
+08/07/2024 10:31:41|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:41|DEBUG|[create_image] Start of create_image, imageFileName=Silver Knight Spearman.png, imageType=enemyOld, level=None, expansion=None
+08/07/2024 10:31:41|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Silver Knight Spearman.png
+08/07/2024 10:31:41|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:41|DEBUG|[create_image] Start of create_image, imageFileName=Silver Knight Spearman.png, imageType=enemyOldLevel4, level=None, expansion=None
+08/07/2024 10:31:41|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Silver Knight Spearman.png
+08/07/2024 10:31:41|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:41|DEBUG|[create_image] Start of create_image, imageFileName=Silver Knight Spearman.png, imageType=enemyNew, level=None, expansion=None
+08/07/2024 10:31:41|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Silver Knight Spearman.png
+08/07/2024 10:31:41|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:41|DEBUG|[create_image] Start of create_image, imageFileName=Silver Knight Spearman.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:41|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Silver Knight Spearman rule bg.jpg
+08/07/2024 10:31:41|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:41|DEBUG|[create_image] Start of create_image, imageFileName=Silver Knight Spearman.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:41|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Silver Knight Spearman rule bg.jpg
+08/07/2024 10:31:41|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:41|DEBUG|[create_image] Start of create_image, imageFileName=Silver Knight Swordsman.png, imageType=enemyOld, level=None, expansion=None
+08/07/2024 10:31:41|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Silver Knight Swordsman.png
+08/07/2024 10:31:41|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:41|DEBUG|[create_image] Start of create_image, imageFileName=Silver Knight Swordsman.png, imageType=enemyOldLevel4, level=None, expansion=None
+08/07/2024 10:31:41|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Silver Knight Swordsman.png
+08/07/2024 10:31:41|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:41|DEBUG|[create_image] Start of create_image, imageFileName=Silver Knight Swordsman.png, imageType=enemyNew, level=None, expansion=None
+08/07/2024 10:31:41|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Silver Knight Swordsman.png
+08/07/2024 10:31:41|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:41|DEBUG|[create_image] Start of create_image, imageFileName=Silver Knight Swordsman.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:41|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Silver Knight Swordsman rule bg.jpg
+08/07/2024 10:31:41|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:41|DEBUG|[create_image] Start of create_image, imageFileName=Silver Knight Swordsman.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:41|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Silver Knight Swordsman rule bg.jpg
+08/07/2024 10:31:41|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:41|DEBUG|[create_image] Start of create_image, imageFileName=Skeleton Archer.png, imageType=enemyOld, level=None, expansion=None
+08/07/2024 10:31:41|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Skeleton Archer.png
+08/07/2024 10:31:41|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:41|DEBUG|[create_image] Start of create_image, imageFileName=Skeleton Archer.png, imageType=enemyOldLevel4, level=None, expansion=None
+08/07/2024 10:31:41|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Skeleton Archer.png
+08/07/2024 10:31:41|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:41|DEBUG|[create_image] Start of create_image, imageFileName=Skeleton Archer.png, imageType=enemyNew, level=None, expansion=None
+08/07/2024 10:31:41|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Skeleton Archer.png
+08/07/2024 10:31:41|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:41|DEBUG|[create_image] Start of create_image, imageFileName=Skeleton Archer.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:41|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Skeleton Archer rule bg.jpg
+08/07/2024 10:31:41|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:41|DEBUG|[create_image] Start of create_image, imageFileName=Skeleton Archer.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:41|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Skeleton Archer rule bg.jpg
+08/07/2024 10:31:41|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:41|DEBUG|[create_image] Start of create_image, imageFileName=Skeleton Beast.png, imageType=enemyOld, level=None, expansion=None
+08/07/2024 10:31:41|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Skeleton Beast.png
+08/07/2024 10:31:41|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:41|DEBUG|[create_image] Start of create_image, imageFileName=Skeleton Beast.png, imageType=enemyOldLevel4, level=None, expansion=None
+08/07/2024 10:31:41|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Skeleton Beast.png
+08/07/2024 10:31:42|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:42|DEBUG|[create_image] Start of create_image, imageFileName=Skeleton Beast.png, imageType=enemyNew, level=None, expansion=None
+08/07/2024 10:31:42|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Skeleton Beast.png
+08/07/2024 10:31:42|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:42|DEBUG|[create_image] Start of create_image, imageFileName=Skeleton Beast.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:42|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Skeleton Beast rule bg.jpg
+08/07/2024 10:31:42|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:42|DEBUG|[create_image] Start of create_image, imageFileName=Skeleton Beast.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:42|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Skeleton Beast rule bg.jpg
+08/07/2024 10:31:42|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:42|DEBUG|[create_image] Start of create_image, imageFileName=Skeleton Soldier.png, imageType=enemyOld, level=None, expansion=None
+08/07/2024 10:31:42|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Skeleton Soldier.png
+08/07/2024 10:31:42|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:42|DEBUG|[create_image] Start of create_image, imageFileName=Skeleton Soldier.png, imageType=enemyOldLevel4, level=None, expansion=None
+08/07/2024 10:31:42|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Skeleton Soldier.png
+08/07/2024 10:31:42|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:42|DEBUG|[create_image] Start of create_image, imageFileName=Skeleton Soldier.png, imageType=enemyNew, level=None, expansion=None
+08/07/2024 10:31:42|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Skeleton Soldier.png
+08/07/2024 10:31:42|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:42|DEBUG|[create_image] Start of create_image, imageFileName=Skeleton Soldier.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:42|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Skeleton Soldier rule bg.jpg
+08/07/2024 10:31:42|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:42|DEBUG|[create_image] Start of create_image, imageFileName=Skeleton Soldier.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:42|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Skeleton Soldier rule bg.jpg
+08/07/2024 10:31:42|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:42|DEBUG|[create_image] Start of create_image, imageFileName=Snow Rat.png, imageType=enemyOld, level=None, expansion=None
+08/07/2024 10:31:42|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Snow Rat.png
+08/07/2024 10:31:42|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:42|DEBUG|[create_image] Start of create_image, imageFileName=Snow Rat.png, imageType=enemyOldLevel4, level=None, expansion=None
+08/07/2024 10:31:42|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Snow Rat.png
+08/07/2024 10:31:42|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:42|DEBUG|[create_image] Start of create_image, imageFileName=Snow Rat.png, imageType=enemyNew, level=None, expansion=None
+08/07/2024 10:31:42|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Snow Rat.png
+08/07/2024 10:31:42|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:42|DEBUG|[create_image] Start of create_image, imageFileName=Snow Rat.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:42|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Snow Rat rule bg.jpg
+08/07/2024 10:31:42|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:42|DEBUG|[create_image] Start of create_image, imageFileName=Snow Rat.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:42|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Snow Rat rule bg.jpg
+08/07/2024 10:31:42|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:42|DEBUG|[create_image] Start of create_image, imageFileName=Stone Guardian.png, imageType=enemyOld, level=None, expansion=None
+08/07/2024 10:31:42|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Stone Guardian.png
+08/07/2024 10:31:42|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:42|DEBUG|[create_image] Start of create_image, imageFileName=Stone Guardian.png, imageType=enemyOldLevel4, level=None, expansion=None
+08/07/2024 10:31:42|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Stone Guardian.png
+08/07/2024 10:31:42|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:42|DEBUG|[create_image] Start of create_image, imageFileName=Stone Guardian.png, imageType=enemyNew, level=None, expansion=None
+08/07/2024 10:31:42|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Stone Guardian.png
+08/07/2024 10:31:42|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:42|DEBUG|[create_image] Start of create_image, imageFileName=Stone Guardian.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:42|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Stone Guardian rule bg.jpg
+08/07/2024 10:31:42|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:42|DEBUG|[create_image] Start of create_image, imageFileName=Stone Guardian.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:42|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Stone Guardian rule bg.jpg
+08/07/2024 10:31:42|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:42|DEBUG|[create_image] Start of create_image, imageFileName=Stone Knight.png, imageType=enemyOld, level=None, expansion=None
+08/07/2024 10:31:42|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Stone Knight.png
+08/07/2024 10:31:42|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:42|DEBUG|[create_image] Start of create_image, imageFileName=Stone Knight.png, imageType=enemyOldLevel4, level=None, expansion=None
+08/07/2024 10:31:42|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Stone Knight.png
+08/07/2024 10:31:42|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:42|DEBUG|[create_image] Start of create_image, imageFileName=Stone Knight.png, imageType=enemyNew, level=None, expansion=None
+08/07/2024 10:31:42|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Stone Knight.png
+08/07/2024 10:31:42|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:42|DEBUG|[create_image] Start of create_image, imageFileName=Stone Knight.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:42|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Stone Knight rule bg.jpg
+08/07/2024 10:31:42|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:42|DEBUG|[create_image] Start of create_image, imageFileName=Stone Knight.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:42|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Stone Knight rule bg.jpg
+08/07/2024 10:31:42|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:42|DEBUG|[create_image] Start of create_image, imageFileName=Mimic.png, imageType=enemyOld, level=None, expansion=None
+08/07/2024 10:31:42|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Mimic.png
+08/07/2024 10:31:42|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:42|DEBUG|[create_image] Start of create_image, imageFileName=Mimic.png, imageType=enemyOldLevel4, level=None, expansion=None
+08/07/2024 10:31:42|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Mimic.png
+08/07/2024 10:31:42|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:42|DEBUG|[create_image] Start of create_image, imageFileName=Mimic.png, imageType=enemyNew, level=None, expansion=None
+08/07/2024 10:31:42|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Mimic.png
+08/07/2024 10:31:42|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:42|DEBUG|[create_image] Start of create_image, imageFileName=Mimic.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:42|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Mimic rule bg.jpg
+08/07/2024 10:31:42|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:42|DEBUG|[create_image] Start of create_image, imageFileName=Mimic.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:42|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Mimic rule bg.jpg
+08/07/2024 10:31:42|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:42|DEBUG|[create_image] Start of create_image, imageFileName=Armorer Dennis.png, imageType=enemyOld, level=None, expansion=None
+08/07/2024 10:31:42|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Armorer Dennis.png
+08/07/2024 10:31:42|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:42|DEBUG|[create_image] Start of create_image, imageFileName=Armorer Dennis.png, imageType=enemyOldLevel4, level=None, expansion=None
+08/07/2024 10:31:42|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Armorer Dennis.png
+08/07/2024 10:31:42|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:42|DEBUG|[create_image] Start of create_image, imageFileName=Armorer Dennis.png, imageType=enemyNew, level=None, expansion=None
+08/07/2024 10:31:42|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Armorer Dennis.png
+08/07/2024 10:31:42|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:42|DEBUG|[create_image] Start of create_image, imageFileName=Armorer Dennis.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:42|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Armorer Dennis rule bg.jpg
+08/07/2024 10:31:42|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:42|DEBUG|[create_image] Start of create_image, imageFileName=Armorer Dennis.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:42|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Armorer Dennis rule bg.jpg
+08/07/2024 10:31:42|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:42|DEBUG|[create_image] Start of create_image, imageFileName=Fencer Sharron.png, imageType=enemyOld, level=None, expansion=None
+08/07/2024 10:31:42|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Fencer Sharron.png
+08/07/2024 10:31:42|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:42|DEBUG|[create_image] Start of create_image, imageFileName=Fencer Sharron.png, imageType=enemyOldLevel4, level=None, expansion=None
+08/07/2024 10:31:42|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Fencer Sharron.png
+08/07/2024 10:31:42|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:42|DEBUG|[create_image] Start of create_image, imageFileName=Fencer Sharron.png, imageType=enemyNew, level=None, expansion=None
+08/07/2024 10:31:42|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Fencer Sharron.png
+08/07/2024 10:31:42|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:42|DEBUG|[create_image] Start of create_image, imageFileName=Fencer Sharron.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:42|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Fencer Sharron rule bg.jpg
+08/07/2024 10:31:42|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:42|DEBUG|[create_image] Start of create_image, imageFileName=Fencer Sharron.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:42|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Fencer Sharron rule bg.jpg
+08/07/2024 10:31:42|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:42|DEBUG|[create_image] Start of create_image, imageFileName=Invader Brylex.png, imageType=enemyOld, level=None, expansion=None
+08/07/2024 10:31:42|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Invader Brylex.png
+08/07/2024 10:31:42|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:42|DEBUG|[create_image] Start of create_image, imageFileName=Invader Brylex.png, imageType=enemyOldLevel4, level=None, expansion=None
+08/07/2024 10:31:42|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Invader Brylex.png
+08/07/2024 10:31:42|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:42|DEBUG|[create_image] Start of create_image, imageFileName=Invader Brylex.png, imageType=enemyNew, level=None, expansion=None
+08/07/2024 10:31:42|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Invader Brylex.png
+08/07/2024 10:31:42|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:42|DEBUG|[create_image] Start of create_image, imageFileName=Invader Brylex.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:42|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Invader Brylex rule bg.jpg
+08/07/2024 10:31:42|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:42|DEBUG|[create_image] Start of create_image, imageFileName=Invader Brylex.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:42|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Invader Brylex rule bg.jpg
+08/07/2024 10:31:42|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:42|DEBUG|[create_image] Start of create_image, imageFileName=Kirk, Knight of Thorns.png, imageType=enemyOld, level=None, expansion=None
+08/07/2024 10:31:42|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Kirk, Knight of Thorns.png
+08/07/2024 10:31:42|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:42|DEBUG|[create_image] Start of create_image, imageFileName=Kirk, Knight of Thorns.png, imageType=enemyOldLevel4, level=None, expansion=None
+08/07/2024 10:31:42|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Kirk, Knight of Thorns.png
+08/07/2024 10:31:42|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:42|DEBUG|[create_image] Start of create_image, imageFileName=Kirk, Knight of Thorns.png, imageType=enemyNew, level=None, expansion=None
+08/07/2024 10:31:42|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Kirk, Knight of Thorns.png
+08/07/2024 10:31:42|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:42|DEBUG|[create_image] Start of create_image, imageFileName=Kirk, Knight of Thorns.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:42|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Kirk, Knight of Thorns rule bg.jpg
+08/07/2024 10:31:42|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:42|DEBUG|[create_image] Start of create_image, imageFileName=Kirk, Knight of Thorns.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:42|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Kirk, Knight of Thorns rule bg.jpg
+08/07/2024 10:31:42|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:42|DEBUG|[create_image] Start of create_image, imageFileName=Longfinger Kirk.png, imageType=enemyOld, level=None, expansion=None
+08/07/2024 10:31:42|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Longfinger Kirk.png
+08/07/2024 10:31:42|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:42|DEBUG|[create_image] Start of create_image, imageFileName=Longfinger Kirk.png, imageType=enemyOldLevel4, level=None, expansion=None
+08/07/2024 10:31:42|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Longfinger Kirk.png
+08/07/2024 10:31:42|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:42|DEBUG|[create_image] Start of create_image, imageFileName=Longfinger Kirk.png, imageType=enemyNew, level=None, expansion=None
+08/07/2024 10:31:42|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Longfinger Kirk.png
+08/07/2024 10:31:42|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:42|DEBUG|[create_image] Start of create_image, imageFileName=Longfinger Kirk.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:42|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Longfinger Kirk rule bg.jpg
+08/07/2024 10:31:42|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:42|DEBUG|[create_image] Start of create_image, imageFileName=Longfinger Kirk.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:42|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Longfinger Kirk rule bg.jpg
+08/07/2024 10:31:42|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:42|DEBUG|[create_image] Start of create_image, imageFileName=Maldron the Assassin.png, imageType=enemyOld, level=None, expansion=None
+08/07/2024 10:31:42|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Maldron the Assassin.png
+08/07/2024 10:31:42|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:42|DEBUG|[create_image] Start of create_image, imageFileName=Maldron the Assassin.png, imageType=enemyOldLevel4, level=None, expansion=None
+08/07/2024 10:31:42|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Maldron the Assassin.png
+08/07/2024 10:31:42|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:42|DEBUG|[create_image] Start of create_image, imageFileName=Maldron the Assassin.png, imageType=enemyNew, level=None, expansion=None
+08/07/2024 10:31:42|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Maldron the Assassin.png
+08/07/2024 10:31:43|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:43|DEBUG|[create_image] Start of create_image, imageFileName=Maldron the Assassin.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:43|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Maldron the Assassin rule bg.jpg
+08/07/2024 10:31:43|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:43|DEBUG|[create_image] Start of create_image, imageFileName=Maldron the Assassin.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:43|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Maldron the Assassin rule bg.jpg
+08/07/2024 10:31:43|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:43|DEBUG|[create_image] Start of create_image, imageFileName=Maneater Mildred.png, imageType=enemyOld, level=None, expansion=None
+08/07/2024 10:31:43|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Maneater Mildred.png
+08/07/2024 10:31:43|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:43|DEBUG|[create_image] Start of create_image, imageFileName=Maneater Mildred.png, imageType=enemyOldLevel4, level=None, expansion=None
+08/07/2024 10:31:43|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Maneater Mildred.png
+08/07/2024 10:31:43|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:43|DEBUG|[create_image] Start of create_image, imageFileName=Maneater Mildred.png, imageType=enemyNew, level=None, expansion=None
+08/07/2024 10:31:43|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Maneater Mildred.png
+08/07/2024 10:31:43|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:43|DEBUG|[create_image] Start of create_image, imageFileName=Maneater Mildred.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:43|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Maneater Mildred rule bg.jpg
+08/07/2024 10:31:43|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:43|DEBUG|[create_image] Start of create_image, imageFileName=Maneater Mildred.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:43|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Maneater Mildred rule bg.jpg
+08/07/2024 10:31:43|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:43|DEBUG|[create_image] Start of create_image, imageFileName=Marvelous Chester.png, imageType=enemyOld, level=None, expansion=None
+08/07/2024 10:31:43|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Marvelous Chester.png
+08/07/2024 10:31:43|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:43|DEBUG|[create_image] Start of create_image, imageFileName=Marvelous Chester.png, imageType=enemyOldLevel4, level=None, expansion=None
+08/07/2024 10:31:43|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Marvelous Chester.png
+08/07/2024 10:31:43|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:43|DEBUG|[create_image] Start of create_image, imageFileName=Marvelous Chester.png, imageType=enemyNew, level=None, expansion=None
+08/07/2024 10:31:43|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Marvelous Chester.png
+08/07/2024 10:31:43|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:43|DEBUG|[create_image] Start of create_image, imageFileName=Marvelous Chester.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:43|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Marvelous Chester rule bg.jpg
+08/07/2024 10:31:43|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:43|DEBUG|[create_image] Start of create_image, imageFileName=Marvelous Chester.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:43|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Marvelous Chester rule bg.jpg
+08/07/2024 10:31:43|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:43|DEBUG|[create_image] Start of create_image, imageFileName=Melinda the Butcher.png, imageType=enemyOld, level=None, expansion=None
+08/07/2024 10:31:43|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Melinda the Butcher.png
+08/07/2024 10:31:43|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:43|DEBUG|[create_image] Start of create_image, imageFileName=Melinda the Butcher.png, imageType=enemyOldLevel4, level=None, expansion=None
+08/07/2024 10:31:43|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Melinda the Butcher.png
+08/07/2024 10:31:43|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:43|DEBUG|[create_image] Start of create_image, imageFileName=Melinda the Butcher.png, imageType=enemyNew, level=None, expansion=None
+08/07/2024 10:31:43|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Melinda the Butcher.png
+08/07/2024 10:31:43|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:43|DEBUG|[create_image] Start of create_image, imageFileName=Melinda the Butcher.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:43|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Melinda the Butcher rule bg.jpg
+08/07/2024 10:31:43|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:43|DEBUG|[create_image] Start of create_image, imageFileName=Melinda the Butcher.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:43|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Melinda the Butcher rule bg.jpg
+08/07/2024 10:31:43|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:43|DEBUG|[create_image] Start of create_image, imageFileName=Oliver the Collector.png, imageType=enemyOld, level=None, expansion=None
+08/07/2024 10:31:43|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Oliver the Collector.png
+08/07/2024 10:31:43|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:43|DEBUG|[create_image] Start of create_image, imageFileName=Oliver the Collector.png, imageType=enemyOldLevel4, level=None, expansion=None
+08/07/2024 10:31:43|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Oliver the Collector.png
+08/07/2024 10:31:43|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:43|DEBUG|[create_image] Start of create_image, imageFileName=Oliver the Collector.png, imageType=enemyNew, level=None, expansion=None
+08/07/2024 10:31:43|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Oliver the Collector.png
+08/07/2024 10:31:43|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:43|DEBUG|[create_image] Start of create_image, imageFileName=Oliver the Collector.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:43|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Oliver the Collector rule bg.jpg
+08/07/2024 10:31:43|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:43|DEBUG|[create_image] Start of create_image, imageFileName=Oliver the Collector.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:43|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Oliver the Collector rule bg.jpg
+08/07/2024 10:31:43|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:43|DEBUG|[create_image] Start of create_image, imageFileName=Paladin Leeroy.png, imageType=enemyOld, level=None, expansion=None
+08/07/2024 10:31:43|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Paladin Leeroy.png
+08/07/2024 10:31:43|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:43|DEBUG|[create_image] Start of create_image, imageFileName=Paladin Leeroy.png, imageType=enemyOldLevel4, level=None, expansion=None
+08/07/2024 10:31:43|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Paladin Leeroy.png
+08/07/2024 10:31:43|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:43|DEBUG|[create_image] Start of create_image, imageFileName=Paladin Leeroy.png, imageType=enemyNew, level=None, expansion=None
+08/07/2024 10:31:43|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Paladin Leeroy.png
+08/07/2024 10:31:43|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:43|DEBUG|[create_image] Start of create_image, imageFileName=Paladin Leeroy.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:43|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Paladin Leeroy rule bg.jpg
+08/07/2024 10:31:43|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:43|DEBUG|[create_image] Start of create_image, imageFileName=Paladin Leeroy.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:43|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Paladin Leeroy rule bg.jpg
+08/07/2024 10:31:43|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:43|DEBUG|[create_image] Start of create_image, imageFileName=Xanthous King Jeremiah.png, imageType=enemyOld, level=None, expansion=None
+08/07/2024 10:31:43|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Xanthous King Jeremiah.png
+08/07/2024 10:31:43|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:43|DEBUG|[create_image] Start of create_image, imageFileName=Xanthous King Jeremiah.png, imageType=enemyOldLevel4, level=None, expansion=None
+08/07/2024 10:31:43|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Xanthous King Jeremiah.png
+08/07/2024 10:31:43|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:43|DEBUG|[create_image] Start of create_image, imageFileName=Xanthous King Jeremiah.png, imageType=enemyNew, level=None, expansion=None
+08/07/2024 10:31:43|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Xanthous King Jeremiah.png
+08/07/2024 10:31:43|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:43|DEBUG|[create_image] Start of create_image, imageFileName=Xanthous King Jeremiah.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:43|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Xanthous King Jeremiah rule bg.jpg
+08/07/2024 10:31:43|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:43|DEBUG|[create_image] Start of create_image, imageFileName=Xanthous King Jeremiah.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:43|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Xanthous King Jeremiah rule bg.jpg
+08/07/2024 10:31:43|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:43|DEBUG|[create_image] Start of create_image, imageFileName=Hungry Mimic.png, imageType=enemyOld, level=None, expansion=None
+08/07/2024 10:31:43|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Hungry Mimic.png
+08/07/2024 10:31:43|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:43|DEBUG|[create_image] Start of create_image, imageFileName=Hungry Mimic.png, imageType=enemyOldLevel4, level=None, expansion=None
+08/07/2024 10:31:43|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Hungry Mimic.png
+08/07/2024 10:31:43|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:43|DEBUG|[create_image] Start of create_image, imageFileName=Hungry Mimic.png, imageType=enemyNew, level=None, expansion=None
+08/07/2024 10:31:43|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Hungry Mimic.png
+08/07/2024 10:31:43|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:43|DEBUG|[create_image] Start of create_image, imageFileName=Hungry Mimic.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:43|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Hungry Mimic rule bg.jpg
+08/07/2024 10:31:43|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:43|DEBUG|[create_image] Start of create_image, imageFileName=Hungry Mimic.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:43|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Hungry Mimic rule bg.jpg
+08/07/2024 10:31:43|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:43|DEBUG|[create_image] Start of create_image, imageFileName=Voracious Mimic.png, imageType=enemyOld, level=None, expansion=None
+08/07/2024 10:31:43|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Voracious Mimic.png
+08/07/2024 10:31:43|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:43|DEBUG|[create_image] Start of create_image, imageFileName=Voracious Mimic.png, imageType=enemyOldLevel4, level=None, expansion=None
+08/07/2024 10:31:43|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Voracious Mimic.png
+08/07/2024 10:31:43|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:43|DEBUG|[create_image] Start of create_image, imageFileName=Voracious Mimic.png, imageType=enemyNew, level=None, expansion=None
+08/07/2024 10:31:43|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Voracious Mimic.png
+08/07/2024 10:31:43|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:43|DEBUG|[create_image] Start of create_image, imageFileName=Voracious Mimic.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:43|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Voracious Mimic rule bg.jpg
+08/07/2024 10:31:43|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:43|DEBUG|[create_image] Start of create_image, imageFileName=Voracious Mimic.png, imageType=enemyText, level=None, expansion=None
+08/07/2024 10:31:43|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Voracious Mimic rule bg.jpg
+08/07/2024 10:31:43|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:43|DEBUG|[generate_treasure_soul_cost] Start of generate_treasure_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:43|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:44|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:45|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:45|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:45|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:45|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:45|DEBUG|[mean_soul_cost] Start of mean_soul_cost
+08/07/2024 10:31:45|DEBUG|[mean_soul_cost] End of mean_soul_cost
+08/07/2024 10:31:45|DEBUG|[generate_treasure_soul_cost] End of generate_treasure_soul_cost
+08/07/2024 10:31:45|DEBUG|[create_image] Start of create_image, imageFileName=enemy_node_2.png, imageType=enemyNode, level=None, expansion=None
+08/07/2024 10:31:45|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\enemy_node_2.png
+08/07/2024 10:31:45|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:45|DEBUG|[create_image] Start of create_image, imageFileName=attack_physical_2.png, imageType=attack, level=None, expansion=None
+08/07/2024 10:31:45|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\attack_physical_2.png
+08/07/2024 10:31:45|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:45|DEBUG|[create_image] Start of create_image, imageFileName=attack_magic_2.png, imageType=attack, level=None, expansion=None
+08/07/2024 10:31:45|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\attack_magic_2.png
+08/07/2024 10:31:45|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:45|DEBUG|[create_image] Start of create_image, imageFileName=attack_push_2.png, imageType=push, level=None, expansion=None
+08/07/2024 10:31:45|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\attack_push_2.png
+08/07/2024 10:31:45|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:45|DEBUG|[create_image] Start of create_image, imageFileName=attack_physical_3.png, imageType=attack, level=None, expansion=None
+08/07/2024 10:31:45|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\attack_physical_3.png
+08/07/2024 10:31:45|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:45|DEBUG|[create_image] Start of create_image, imageFileName=attack_magic_3.png, imageType=attack, level=None, expansion=None
+08/07/2024 10:31:45|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\attack_magic_3.png
+08/07/2024 10:31:45|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:45|DEBUG|[create_image] Start of create_image, imageFileName=attack_push_3.png, imageType=push, level=None, expansion=None
+08/07/2024 10:31:45|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\attack_push_3.png
+08/07/2024 10:31:45|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:45|DEBUG|[create_image] Start of create_image, imageFileName=attack_physical_4.png, imageType=attack, level=None, expansion=None
+08/07/2024 10:31:45|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\attack_physical_4.png
+08/07/2024 10:31:45|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:45|DEBUG|[create_image] Start of create_image, imageFileName=attack_magic_4.png, imageType=attack, level=None, expansion=None
+08/07/2024 10:31:45|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\attack_magic_4.png
+08/07/2024 10:31:45|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:45|DEBUG|[create_image] Start of create_image, imageFileName=attack_push_4.png, imageType=push, level=None, expansion=None
+08/07/2024 10:31:45|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\attack_push_4.png
+08/07/2024 10:31:45|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:45|DEBUG|[create_image] Start of create_image, imageFileName=attack_physical_5.png, imageType=attack, level=None, expansion=None
+08/07/2024 10:31:45|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\attack_physical_5.png
+08/07/2024 10:31:45|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:45|DEBUG|[create_image] Start of create_image, imageFileName=attack_magic_5.png, imageType=attack, level=None, expansion=None
+08/07/2024 10:31:45|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\attack_magic_5.png
+08/07/2024 10:31:45|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:45|DEBUG|[create_image] Start of create_image, imageFileName=attack_push_5.png, imageType=push, level=None, expansion=None
+08/07/2024 10:31:45|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\attack_push_5.png
+08/07/2024 10:31:45|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:45|DEBUG|[create_image] Start of create_image, imageFileName=attack_physical_6.png, imageType=attack, level=None, expansion=None
+08/07/2024 10:31:45|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\attack_physical_6.png
+08/07/2024 10:31:45|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:45|DEBUG|[create_image] Start of create_image, imageFileName=attack_magic_6.png, imageType=attack, level=None, expansion=None
+08/07/2024 10:31:45|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\attack_magic_6.png
+08/07/2024 10:31:45|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:45|DEBUG|[create_image] Start of create_image, imageFileName=attack_push_6.png, imageType=push, level=None, expansion=None
+08/07/2024 10:31:45|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\attack_push_6.png
+08/07/2024 10:31:45|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:45|DEBUG|[create_image] Start of create_image, imageFileName=attack_physical_7.png, imageType=attack, level=None, expansion=None
+08/07/2024 10:31:45|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\attack_physical_7.png
+08/07/2024 10:31:45|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:45|DEBUG|[create_image] Start of create_image, imageFileName=attack_magic_7.png, imageType=attack, level=None, expansion=None
+08/07/2024 10:31:45|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\attack_magic_7.png
+08/07/2024 10:31:45|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:45|DEBUG|[create_image] Start of create_image, imageFileName=attack_push_7.png, imageType=push, level=None, expansion=None
+08/07/2024 10:31:45|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\attack_push_7.png
+08/07/2024 10:31:45|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:45|DEBUG|[create_image] Start of create_image, imageFileName=attack_physical_8.png, imageType=attack, level=None, expansion=None
+08/07/2024 10:31:45|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\attack_physical_8.png
+08/07/2024 10:31:45|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:45|DEBUG|[create_image] Start of create_image, imageFileName=attack_magic_8.png, imageType=attack, level=None, expansion=None
+08/07/2024 10:31:45|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\attack_magic_8.png
+08/07/2024 10:31:45|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:45|DEBUG|[create_image] Start of create_image, imageFileName=attack_push_8.png, imageType=push, level=None, expansion=None
+08/07/2024 10:31:45|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\attack_push_8.png
+08/07/2024 10:31:45|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:45|DEBUG|[create_image] Start of create_image, imageFileName=attack_physical_9.png, imageType=attack, level=None, expansion=None
+08/07/2024 10:31:45|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\attack_physical_9.png
+08/07/2024 10:31:45|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:45|DEBUG|[create_image] Start of create_image, imageFileName=attack_magic_9.png, imageType=attack, level=None, expansion=None
+08/07/2024 10:31:45|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\attack_magic_9.png
+08/07/2024 10:31:45|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:45|DEBUG|[create_image] Start of create_image, imageFileName=attack_push_9.png, imageType=push, level=None, expansion=None
+08/07/2024 10:31:45|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\attack_push_9.png
+08/07/2024 10:31:45|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:45|DEBUG|[create_image] Start of create_image, imageFileName=attack_physical_10.png, imageType=attack, level=None, expansion=None
+08/07/2024 10:31:45|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\attack_physical_10.png
+08/07/2024 10:31:45|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:45|DEBUG|[create_image] Start of create_image, imageFileName=attack_magic_10.png, imageType=attack, level=None, expansion=None
+08/07/2024 10:31:45|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\attack_magic_10.png
+08/07/2024 10:31:45|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:45|DEBUG|[create_image] Start of create_image, imageFileName=attack_push_10.png, imageType=push, level=None, expansion=None
+08/07/2024 10:31:45|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\attack_push_10.png
+08/07/2024 10:31:45|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:45|DEBUG|[create_image] Start of create_image, imageFileName=attack_physical_11.png, imageType=attack, level=None, expansion=None
+08/07/2024 10:31:45|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\attack_physical_11.png
+08/07/2024 10:31:45|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:45|DEBUG|[create_image] Start of create_image, imageFileName=attack_magic_11.png, imageType=attack, level=None, expansion=None
+08/07/2024 10:31:45|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\attack_magic_11.png
+08/07/2024 10:31:45|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:45|DEBUG|[create_image] Start of create_image, imageFileName=attack_push_11.png, imageType=push, level=None, expansion=None
+08/07/2024 10:31:45|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\attack_push_11.png
+08/07/2024 10:31:45|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:45|DEBUG|[create_image] Start of create_image, imageFileName=attack_physical_12.png, imageType=attack, level=None, expansion=None
+08/07/2024 10:31:45|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\attack_physical_12.png
+08/07/2024 10:31:45|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:45|DEBUG|[create_image] Start of create_image, imageFileName=attack_magic_12.png, imageType=attack, level=None, expansion=None
+08/07/2024 10:31:45|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\attack_magic_12.png
+08/07/2024 10:31:45|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:45|DEBUG|[create_image] Start of create_image, imageFileName=attack_push_12.png, imageType=push, level=None, expansion=None
+08/07/2024 10:31:45|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\attack_push_12.png
+08/07/2024 10:31:45|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:45|DEBUG|[create_image] Start of create_image, imageFileName=attack_physical_13.png, imageType=attack, level=None, expansion=None
+08/07/2024 10:31:45|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\attack_physical_13.png
+08/07/2024 10:31:45|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:45|DEBUG|[create_image] Start of create_image, imageFileName=attack_magic_13.png, imageType=attack, level=None, expansion=None
+08/07/2024 10:31:45|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\attack_magic_13.png
+08/07/2024 10:31:45|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:45|DEBUG|[create_image] Start of create_image, imageFileName=attack_push_13.png, imageType=push, level=None, expansion=None
+08/07/2024 10:31:45|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\attack_push_13.png
+08/07/2024 10:31:45|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:45|DEBUG|[create_image] Start of create_image, imageFileName=bleed.png, imageType=bleed, level=None, expansion=None
+08/07/2024 10:31:45|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\bleed.png
+08/07/2024 10:31:45|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:45|DEBUG|[create_image] Start of create_image, imageFileName=frostbite.png, imageType=frostbite, level=None, expansion=None
+08/07/2024 10:31:45|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\frostbite.png
+08/07/2024 10:31:45|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:45|DEBUG|[create_image] Start of create_image, imageFileName=poison.png, imageType=poison, level=None, expansion=None
+08/07/2024 10:31:45|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\poison.png
+08/07/2024 10:31:45|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:45|DEBUG|[create_image] Start of create_image, imageFileName=stagger.png, imageType=stagger, level=None, expansion=None
+08/07/2024 10:31:45|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\stagger.png
+08/07/2024 10:31:45|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:45|DEBUG|[create_image] Start of create_image, imageFileName=corrosion.png, imageType=corrosion, level=None, expansion=None
+08/07/2024 10:31:45|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\corrosion.png
+08/07/2024 10:31:45|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:45|DEBUG|[create_image] Start of create_image, imageFileName=calamity.png, imageType=calamity, level=None, expansion=None
+08/07/2024 10:31:45|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\calamity.png
+08/07/2024 10:31:45|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:45|DEBUG|[create_image] Start of create_image, imageFileName=repeat_2.png, imageType=repeat, level=None, expansion=None
+08/07/2024 10:31:45|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\repeat_2.png
+08/07/2024 10:31:45|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:45|DEBUG|[create_image] Start of create_image, imageFileName=repeat_3.png, imageType=repeat, level=None, expansion=None
+08/07/2024 10:31:45|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\repeat_3.png
+08/07/2024 10:31:45|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:45|DEBUG|[create_image] Start of create_image, imageFileName=repeat_4.png, imageType=repeat, level=None, expansion=None
+08/07/2024 10:31:45|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\repeat_4.png
+08/07/2024 10:31:45|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:45|DEBUG|[create_image] Start of create_image, imageFileName=repeat_5.png, imageType=repeat, level=None, expansion=None
+08/07/2024 10:31:45|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\repeat_5.png
+08/07/2024 10:31:45|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:45|DEBUG|[create_image] Start of create_image, imageFileName=sks_move.png, imageType=move, level=None, expansion=None
+08/07/2024 10:31:45|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\sks_move.png
+08/07/2024 10:31:45|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:45|DEBUG|[create_image] Start of create_image, imageFileName=phalanx_move.png, imageType=move, level=None, expansion=None
+08/07/2024 10:31:45|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\phalanx_move.png
+08/07/2024 10:31:45|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:45|DEBUG|[create_image] Start of create_image, imageFileName=barrage.png, imageType=barrage, level=None, expansion=None
+08/07/2024 10:31:45|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\barrage.png
+08/07/2024 10:31:45|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:45|DEBUG|[create_image] Start of create_image, imageFileName=bitter_cold.png, imageType=bitterCold, level=None, expansion=None
+08/07/2024 10:31:45|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\bitter_cold.png
+08/07/2024 10:31:45|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:45|DEBUG|[create_image] Start of create_image, imageFileName=darkness.png, imageType=darkness, level=None, expansion=None
+08/07/2024 10:31:45|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\darkness.png
+08/07/2024 10:31:45|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:45|DEBUG|[create_image] Start of create_image, imageFileName=eerie.png, imageType=eerie, level=None, expansion=None
+08/07/2024 10:31:45|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\eerie.png
+08/07/2024 10:31:45|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:45|DEBUG|[create_image] Start of create_image, imageFileName=gang_alonne.png, imageType=gangAlonne, level=None, expansion=None
+08/07/2024 10:31:45|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\gang_alonne.png
+08/07/2024 10:31:45|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:45|DEBUG|[create_image] Start of create_image, imageFileName=gang_hollow.png, imageType=gangHollow, level=None, expansion=None
+08/07/2024 10:31:45|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\gang_hollow.png
+08/07/2024 10:31:45|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:45|DEBUG|[create_image] Start of create_image, imageFileName=gang_silver_knight.png, imageType=gangSilverKnight, level=None, expansion=None
+08/07/2024 10:31:45|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\gang_silver_knight.png
+08/07/2024 10:31:45|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:45|DEBUG|[create_image] Start of create_image, imageFileName=gang_skeleton.png, imageType=gangSkeleton, level=None, expansion=None
+08/07/2024 10:31:45|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\gang_skeleton.png
+08/07/2024 10:31:45|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:45|DEBUG|[create_image] Start of create_image, imageFileName=hidden.png, imageType=hidden, level=None, expansion=None
+08/07/2024 10:31:45|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\hidden.png
+08/07/2024 10:31:45|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:45|DEBUG|[create_image] Start of create_image, imageFileName=illusion.png, imageType=illusion, level=None, expansion=None
+08/07/2024 10:31:45|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\illusion.png
+08/07/2024 10:31:45|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:45|DEBUG|[create_image] Start of create_image, imageFileName=mimic_keyword.png, imageType=mimic, level=None, expansion=None
+08/07/2024 10:31:45|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\mimic_keyword.png
+08/07/2024 10:31:45|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:45|DEBUG|[create_image] Start of create_image, imageFileName=onslaught.png, imageType=onslaught, level=None, expansion=None
+08/07/2024 10:31:45|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\onslaught.png
+08/07/2024 10:31:45|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:45|DEBUG|[create_image] Start of create_image, imageFileName=poison_mist.png, imageType=poisonMist, level=None, expansion=None
+08/07/2024 10:31:45|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\poison_mist.png
+08/07/2024 10:31:45|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:45|DEBUG|[create_image] Start of create_image, imageFileName=snowstorm.png, imageType=snowstorm, level=None, expansion=None
+08/07/2024 10:31:45|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\snowstorm.png
+08/07/2024 10:31:45|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:45|DEBUG|[create_image] Start of create_image, imageFileName=timer.png, imageType=timer, level=None, expansion=None
+08/07/2024 10:31:45|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\timer.png
+08/07/2024 10:31:45|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:45|DEBUG|[create_image] Start of create_image, imageFileName=trial.png, imageType=trial, level=None, expansion=None
+08/07/2024 10:31:45|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\trial.png
+08/07/2024 10:31:45|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:31:45|DEBUG|[create_tabs] Start of create_tabs
+08/07/2024 10:31:45|DEBUG|[create_campaign_treeview] Start of create_campaign_treeview
+08/07/2024 10:31:45|DEBUG|[create_campaign_treeview] End of create_campaign_treeview
+08/07/2024 10:31:45|DEBUG|[create_event_treeviews] Start of create_event_treeviews
+08/07/2024 10:31:45|DEBUG|[create_event_treeviews] End of create_event_treeviews
+08/07/2024 10:31:49|DEBUG|[create_variants_treeview] Start of create_variants_treeview
+08/07/2024 10:31:49|DEBUG|[create_variants_treeview] End of create_variants_treeview
+08/07/2024 10:31:49|DEBUG|[create_deck_treeview] Start of create_deck_treeview
+08/07/2024 10:31:49|DEBUG|[create_deck_treeview] End of create_deck_treeview
+08/07/2024 10:31:49|DEBUG|[set_decks] Start of set_decks
+08/07/2024 10:31:49|DEBUG|[load_deck] Start of load_deck
+08/07/2024 10:31:49|DEBUG|[load_deck] End of load_deck (regular enemy)
+08/07/2024 10:31:49|DEBUG|[remove_all_health_trackers] Start of remove_all_health_trackers
+08/07/2024 10:31:49|DEBUG|[remove_all_health_trackers] End of remove_all_health_trackers (nothing done)
+08/07/2024 10:31:49|DEBUG|[set_decks] End of set_decks
+08/07/2024 10:31:49|DEBUG|[set_decks] Start of set_decks
+08/07/2024 10:31:49|DEBUG|[load_deck] Start of load_deck
+08/07/2024 10:31:49|DEBUG|[load_deck] End of load_deck (regular enemy)
+08/07/2024 10:31:49|DEBUG|[remove_all_health_trackers] Start of remove_all_health_trackers
+08/07/2024 10:31:49|DEBUG|[remove_all_health_trackers] End of remove_all_health_trackers (nothing done)
+08/07/2024 10:31:49|DEBUG|[set_decks] End of set_decks
+08/07/2024 10:31:49|DEBUG|[set_decks] Start of set_decks
+08/07/2024 10:31:49|DEBUG|[load_deck] Start of load_deck
+08/07/2024 10:31:49|DEBUG|[load_deck] End of load_deck (regular enemy)
+08/07/2024 10:31:49|DEBUG|[remove_all_health_trackers] Start of remove_all_health_trackers
+08/07/2024 10:31:49|DEBUG|[remove_all_health_trackers] End of remove_all_health_trackers (nothing done)
+08/07/2024 10:31:49|DEBUG|[set_decks] End of set_decks
+08/07/2024 10:31:49|DEBUG|[set_decks] Start of set_decks
+08/07/2024 10:31:49|DEBUG|[load_deck] Start of load_deck
+08/07/2024 10:31:49|DEBUG|[load_deck] End of load_deck (regular enemy)
+08/07/2024 10:31:49|DEBUG|[remove_all_health_trackers] Start of remove_all_health_trackers
+08/07/2024 10:31:49|DEBUG|[remove_all_health_trackers] End of remove_all_health_trackers (nothing done)
+08/07/2024 10:31:49|DEBUG|[set_decks] End of set_decks
+08/07/2024 10:31:49|DEBUG|[set_decks] Start of set_decks
+08/07/2024 10:31:49|DEBUG|[load_deck] Start of load_deck
+08/07/2024 10:31:49|DEBUG|[load_deck] End of load_deck (regular enemy)
+08/07/2024 10:31:49|DEBUG|[remove_all_health_trackers] Start of remove_all_health_trackers
+08/07/2024 10:31:49|DEBUG|[remove_all_health_trackers] End of remove_all_health_trackers (nothing done)
+08/07/2024 10:31:49|DEBUG|[set_decks] End of set_decks
+08/07/2024 10:31:49|DEBUG|[set_decks] Start of set_decks
+08/07/2024 10:31:49|DEBUG|[load_deck] Start of load_deck
+08/07/2024 10:31:49|DEBUG|[load_deck] End of load_deck (regular enemy)
+08/07/2024 10:31:49|DEBUG|[remove_all_health_trackers] Start of remove_all_health_trackers
+08/07/2024 10:31:49|DEBUG|[remove_all_health_trackers] End of remove_all_health_trackers (nothing done)
+08/07/2024 10:31:49|DEBUG|[set_decks] End of set_decks
+08/07/2024 10:31:49|DEBUG|[set_decks] Start of set_decks
+08/07/2024 10:31:49|DEBUG|[load_deck] Start of load_deck
+08/07/2024 10:31:49|DEBUG|[load_deck] End of load_deck (regular enemy)
+08/07/2024 10:31:49|DEBUG|[remove_all_health_trackers] Start of remove_all_health_trackers
+08/07/2024 10:31:49|DEBUG|[remove_all_health_trackers] End of remove_all_health_trackers (nothing done)
+08/07/2024 10:31:49|DEBUG|[set_decks] End of set_decks
+08/07/2024 10:31:49|DEBUG|[set_decks] Start of set_decks
+08/07/2024 10:31:49|DEBUG|[load_deck] Start of load_deck
+08/07/2024 10:31:49|DEBUG|[load_deck] End of load_deck (regular enemy)
+08/07/2024 10:31:49|DEBUG|[remove_all_health_trackers] Start of remove_all_health_trackers
+08/07/2024 10:31:49|DEBUG|[remove_all_health_trackers] End of remove_all_health_trackers (nothing done)
+08/07/2024 10:31:49|DEBUG|[set_decks] End of set_decks
+08/07/2024 10:31:49|DEBUG|[set_decks] Start of set_decks
+08/07/2024 10:31:49|DEBUG|[load_deck] Start of load_deck
+08/07/2024 10:31:49|DEBUG|[load_deck] End of load_deck (regular enemy)
+08/07/2024 10:31:49|DEBUG|[remove_all_health_trackers] Start of remove_all_health_trackers
+08/07/2024 10:31:49|DEBUG|[remove_all_health_trackers] End of remove_all_health_trackers (nothing done)
+08/07/2024 10:31:49|DEBUG|[set_decks] End of set_decks
+08/07/2024 10:31:49|DEBUG|[set_decks] Start of set_decks
+08/07/2024 10:31:49|DEBUG|[load_deck] Start of load_deck
+08/07/2024 10:31:49|DEBUG|[load_deck] End of load_deck (regular enemy)
+08/07/2024 10:31:49|DEBUG|[remove_all_health_trackers] Start of remove_all_health_trackers
+08/07/2024 10:31:49|DEBUG|[remove_all_health_trackers] End of remove_all_health_trackers (nothing done)
+08/07/2024 10:31:49|DEBUG|[set_decks] End of set_decks
+08/07/2024 10:31:49|DEBUG|[set_decks] Start of set_decks
+08/07/2024 10:31:49|DEBUG|[load_deck] Start of load_deck
+08/07/2024 10:31:49|DEBUG|[load_deck] End of load_deck (regular enemy)
+08/07/2024 10:31:49|DEBUG|[remove_all_health_trackers] Start of remove_all_health_trackers
+08/07/2024 10:31:49|DEBUG|[remove_all_health_trackers] End of remove_all_health_trackers (nothing done)
+08/07/2024 10:31:49|DEBUG|[set_decks] End of set_decks
+08/07/2024 10:31:49|DEBUG|[set_decks] Start of set_decks
+08/07/2024 10:31:49|DEBUG|[load_deck] Start of load_deck
+08/07/2024 10:31:49|DEBUG|[load_deck] End of load_deck (regular enemy)
+08/07/2024 10:31:49|DEBUG|[remove_all_health_trackers] Start of remove_all_health_trackers
+08/07/2024 10:31:49|DEBUG|[remove_all_health_trackers] End of remove_all_health_trackers (nothing done)
+08/07/2024 10:31:49|DEBUG|[set_decks] End of set_decks
+08/07/2024 10:31:49|DEBUG|[set_decks] Start of set_decks
+08/07/2024 10:31:49|DEBUG|[load_deck] Start of load_deck
+08/07/2024 10:31:49|DEBUG|[load_deck] End of load_deck (regular enemy)
+08/07/2024 10:31:49|DEBUG|[remove_all_health_trackers] Start of remove_all_health_trackers
+08/07/2024 10:31:49|DEBUG|[remove_all_health_trackers] End of remove_all_health_trackers (nothing done)
+08/07/2024 10:31:49|DEBUG|[set_decks] End of set_decks
+08/07/2024 10:31:49|DEBUG|[set_decks] Start of set_decks
+08/07/2024 10:31:49|DEBUG|[load_deck] Start of load_deck
+08/07/2024 10:31:49|DEBUG|[load_deck] End of load_deck (regular enemy)
+08/07/2024 10:31:49|DEBUG|[remove_all_health_trackers] Start of remove_all_health_trackers
+08/07/2024 10:31:49|DEBUG|[remove_all_health_trackers] End of remove_all_health_trackers (nothing done)
+08/07/2024 10:31:49|DEBUG|[set_decks] End of set_decks
+08/07/2024 10:31:49|DEBUG|[set_decks] Start of set_decks
+08/07/2024 10:31:49|DEBUG|[load_deck] Start of load_deck
+08/07/2024 10:31:49|DEBUG|[load_deck] End of load_deck (regular enemy)
+08/07/2024 10:31:49|DEBUG|[remove_all_health_trackers] Start of remove_all_health_trackers
+08/07/2024 10:31:49|DEBUG|[remove_all_health_trackers] End of remove_all_health_trackers (nothing done)
+08/07/2024 10:31:49|DEBUG|[set_decks] End of set_decks
+08/07/2024 10:31:49|DEBUG|[set_decks] Start of set_decks
+08/07/2024 10:31:49|DEBUG|[load_deck] Start of load_deck
+08/07/2024 10:31:49|DEBUG|[load_deck] End of load_deck (regular enemy)
+08/07/2024 10:31:49|DEBUG|[remove_all_health_trackers] Start of remove_all_health_trackers
+08/07/2024 10:31:49|DEBUG|[remove_all_health_trackers] End of remove_all_health_trackers (nothing done)
+08/07/2024 10:31:49|DEBUG|[set_decks] End of set_decks
+08/07/2024 10:31:49|DEBUG|[set_decks] Start of set_decks
+08/07/2024 10:31:49|DEBUG|[load_deck] Start of load_deck
+08/07/2024 10:31:49|DEBUG|[load_deck] End of load_deck (regular enemy)
+08/07/2024 10:31:49|DEBUG|[remove_all_health_trackers] Start of remove_all_health_trackers
+08/07/2024 10:31:49|DEBUG|[remove_all_health_trackers] End of remove_all_health_trackers (nothing done)
+08/07/2024 10:31:49|DEBUG|[set_decks] End of set_decks
+08/07/2024 10:31:49|DEBUG|[set_decks] Start of set_decks
+08/07/2024 10:31:49|DEBUG|[load_deck] Start of load_deck
+08/07/2024 10:31:49|DEBUG|[load_deck] End of load_deck (regular enemy)
+08/07/2024 10:31:49|DEBUG|[remove_all_health_trackers] Start of remove_all_health_trackers
+08/07/2024 10:31:49|DEBUG|[remove_all_health_trackers] End of remove_all_health_trackers (nothing done)
+08/07/2024 10:31:49|DEBUG|[set_decks] End of set_decks
+08/07/2024 10:31:49|DEBUG|[set_decks] Start of set_decks
+08/07/2024 10:31:49|DEBUG|[load_deck] Start of load_deck
+08/07/2024 10:31:49|DEBUG|[load_deck] End of load_deck (regular enemy)
+08/07/2024 10:31:49|DEBUG|[remove_all_health_trackers] Start of remove_all_health_trackers
+08/07/2024 10:31:49|DEBUG|[remove_all_health_trackers] End of remove_all_health_trackers (nothing done)
+08/07/2024 10:31:49|DEBUG|[set_decks] End of set_decks
+08/07/2024 10:31:49|DEBUG|[set_decks] Start of set_decks
+08/07/2024 10:31:49|DEBUG|[load_deck] Start of load_deck
+08/07/2024 10:31:49|DEBUG|[load_deck] End of load_deck (regular enemy)
+08/07/2024 10:31:49|DEBUG|[remove_all_health_trackers] Start of remove_all_health_trackers
+08/07/2024 10:31:49|DEBUG|[remove_all_health_trackers] End of remove_all_health_trackers (nothing done)
+08/07/2024 10:31:49|DEBUG|[set_decks] End of set_decks
+08/07/2024 10:31:49|DEBUG|[set_decks] Start of set_decks
+08/07/2024 10:31:49|DEBUG|[load_deck] Start of load_deck
+08/07/2024 10:31:49|DEBUG|[load_deck] End of load_deck (regular enemy)
+08/07/2024 10:31:49|DEBUG|[remove_all_health_trackers] Start of remove_all_health_trackers
+08/07/2024 10:31:49|DEBUG|[remove_all_health_trackers] End of remove_all_health_trackers (nothing done)
+08/07/2024 10:31:49|DEBUG|[set_decks] End of set_decks
+08/07/2024 10:31:49|DEBUG|[set_decks] Start of set_decks
+08/07/2024 10:31:49|DEBUG|[load_deck] Start of load_deck
+08/07/2024 10:31:49|DEBUG|[load_deck] End of load_deck (regular enemy)
+08/07/2024 10:31:49|DEBUG|[remove_all_health_trackers] Start of remove_all_health_trackers
+08/07/2024 10:31:49|DEBUG|[remove_all_health_trackers] End of remove_all_health_trackers (nothing done)
+08/07/2024 10:31:49|DEBUG|[set_decks] End of set_decks
+08/07/2024 10:31:49|DEBUG|[set_decks] Start of set_decks
+08/07/2024 10:31:49|DEBUG|[load_deck] Start of load_deck
+08/07/2024 10:31:50|DEBUG|[load_deck] End of load_deck (regular enemy)
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] Start of remove_all_health_trackers
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] End of remove_all_health_trackers (nothing done)
+08/07/2024 10:31:50|DEBUG|[set_decks] End of set_decks
+08/07/2024 10:31:50|DEBUG|[set_decks] Start of set_decks
+08/07/2024 10:31:50|DEBUG|[load_deck] Start of load_deck
+08/07/2024 10:31:50|DEBUG|[load_deck] End of load_deck (regular enemy)
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] Start of remove_all_health_trackers
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] End of remove_all_health_trackers (nothing done)
+08/07/2024 10:31:50|DEBUG|[set_decks] End of set_decks
+08/07/2024 10:31:50|DEBUG|[set_decks] Start of set_decks
+08/07/2024 10:31:50|DEBUG|[load_deck] Start of load_deck
+08/07/2024 10:31:50|DEBUG|[load_deck] End of load_deck (regular enemy)
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] Start of remove_all_health_trackers
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] End of remove_all_health_trackers (nothing done)
+08/07/2024 10:31:50|DEBUG|[set_decks] End of set_decks
+08/07/2024 10:31:50|DEBUG|[set_decks] Start of set_decks
+08/07/2024 10:31:50|DEBUG|[load_deck] Start of load_deck
+08/07/2024 10:31:50|DEBUG|[load_deck] End of load_deck (regular enemy)
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] Start of remove_all_health_trackers
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] End of remove_all_health_trackers (nothing done)
+08/07/2024 10:31:50|DEBUG|[set_decks] End of set_decks
+08/07/2024 10:31:50|DEBUG|[set_decks] Start of set_decks
+08/07/2024 10:31:50|DEBUG|[load_deck] Start of load_deck
+08/07/2024 10:31:50|DEBUG|[load_deck] End of load_deck (regular enemy)
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] Start of remove_all_health_trackers
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] End of remove_all_health_trackers (nothing done)
+08/07/2024 10:31:50|DEBUG|[set_decks] End of set_decks
+08/07/2024 10:31:50|DEBUG|[set_decks] Start of set_decks
+08/07/2024 10:31:50|DEBUG|[load_deck] Start of load_deck
+08/07/2024 10:31:50|DEBUG|[load_deck] End of load_deck (regular enemy)
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] Start of remove_all_health_trackers
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] End of remove_all_health_trackers (nothing done)
+08/07/2024 10:31:50|DEBUG|[set_decks] End of set_decks
+08/07/2024 10:31:50|DEBUG|[set_decks] Start of set_decks
+08/07/2024 10:31:50|DEBUG|[load_deck] Start of load_deck
+08/07/2024 10:31:50|DEBUG|[load_deck] End of load_deck (regular enemy)
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] Start of remove_all_health_trackers
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] End of remove_all_health_trackers (nothing done)
+08/07/2024 10:31:50|DEBUG|[set_decks] End of set_decks
+08/07/2024 10:31:50|DEBUG|[set_decks] Start of set_decks
+08/07/2024 10:31:50|DEBUG|[load_deck] Start of load_deck
+08/07/2024 10:31:50|DEBUG|[load_deck] End of load_deck (regular enemy)
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] Start of remove_all_health_trackers
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] End of remove_all_health_trackers (nothing done)
+08/07/2024 10:31:50|DEBUG|[set_decks] End of set_decks
+08/07/2024 10:31:50|DEBUG|[set_decks] Start of set_decks
+08/07/2024 10:31:50|DEBUG|[load_deck] Start of load_deck
+08/07/2024 10:31:50|DEBUG|[load_deck] End of load_deck (regular enemy)
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] Start of remove_all_health_trackers
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] End of remove_all_health_trackers (nothing done)
+08/07/2024 10:31:50|DEBUG|[set_decks] End of set_decks
+08/07/2024 10:31:50|DEBUG|[set_decks] Start of set_decks
+08/07/2024 10:31:50|DEBUG|[load_deck] Start of load_deck
+08/07/2024 10:31:50|DEBUG|[load_deck] End of load_deck (regular enemy)
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] Start of remove_all_health_trackers
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] End of remove_all_health_trackers (nothing done)
+08/07/2024 10:31:50|DEBUG|[set_decks] End of set_decks
+08/07/2024 10:31:50|DEBUG|[set_decks] Start of set_decks
+08/07/2024 10:31:50|DEBUG|[load_deck] Start of load_deck
+08/07/2024 10:31:50|DEBUG|[load_deck] End of load_deck (regular enemy)
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] Start of remove_all_health_trackers
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] End of remove_all_health_trackers (nothing done)
+08/07/2024 10:31:50|DEBUG|[set_decks] End of set_decks
+08/07/2024 10:31:50|DEBUG|[set_decks] Start of set_decks
+08/07/2024 10:31:50|DEBUG|[load_deck] Start of load_deck
+08/07/2024 10:31:50|DEBUG|[load_deck] End of load_deck (regular enemy)
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] Start of remove_all_health_trackers
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] End of remove_all_health_trackers (nothing done)
+08/07/2024 10:31:50|DEBUG|[set_decks] End of set_decks
+08/07/2024 10:31:50|DEBUG|[set_decks] Start of set_decks
+08/07/2024 10:31:50|DEBUG|[load_deck] Start of load_deck
+08/07/2024 10:31:50|DEBUG|[load_deck] End of load_deck
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] Start of remove_all_health_trackers
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] End of remove_all_health_trackers (nothing done)
+08/07/2024 10:31:50|DEBUG|[set_decks] End of set_decks
+08/07/2024 10:31:50|DEBUG|[set_decks] Start of set_decks
+08/07/2024 10:31:50|DEBUG|[load_deck] Start of load_deck
+08/07/2024 10:31:50|DEBUG|[load_deck] End of load_deck
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] Start of remove_all_health_trackers
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] End of remove_all_health_trackers (nothing done)
+08/07/2024 10:31:50|DEBUG|[set_decks] End of set_decks
+08/07/2024 10:31:50|DEBUG|[set_decks] Start of set_decks
+08/07/2024 10:31:50|DEBUG|[load_deck] Start of load_deck
+08/07/2024 10:31:50|DEBUG|[load_deck] End of load_deck
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] Start of remove_all_health_trackers
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] End of remove_all_health_trackers (nothing done)
+08/07/2024 10:31:50|DEBUG|[set_decks] End of set_decks
+08/07/2024 10:31:50|DEBUG|[set_decks] Start of set_decks
+08/07/2024 10:31:50|DEBUG|[load_deck] Start of load_deck
+08/07/2024 10:31:50|DEBUG|[load_deck] End of load_deck
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] Start of remove_all_health_trackers
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] End of remove_all_health_trackers (nothing done)
+08/07/2024 10:31:50|DEBUG|[set_decks] End of set_decks
+08/07/2024 10:31:50|DEBUG|[set_decks] Start of set_decks
+08/07/2024 10:31:50|DEBUG|[load_deck] Start of load_deck
+08/07/2024 10:31:50|DEBUG|[load_deck] End of load_deck
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] Start of remove_all_health_trackers
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] End of remove_all_health_trackers (nothing done)
+08/07/2024 10:31:50|DEBUG|[set_decks] End of set_decks
+08/07/2024 10:31:50|DEBUG|[set_decks] Start of set_decks
+08/07/2024 10:31:50|DEBUG|[load_deck] Start of load_deck
+08/07/2024 10:31:50|DEBUG|[load_deck] End of load_deck
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] Start of remove_all_health_trackers
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] End of remove_all_health_trackers (nothing done)
+08/07/2024 10:31:50|DEBUG|[set_decks] End of set_decks
+08/07/2024 10:31:50|DEBUG|[set_decks] Start of set_decks
+08/07/2024 10:31:50|DEBUG|[load_deck] Start of load_deck
+08/07/2024 10:31:50|DEBUG|[load_deck] End of load_deck
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] Start of remove_all_health_trackers
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] End of remove_all_health_trackers (nothing done)
+08/07/2024 10:31:50|DEBUG|[set_decks] End of set_decks
+08/07/2024 10:31:50|DEBUG|[set_decks] Start of set_decks
+08/07/2024 10:31:50|DEBUG|[load_deck] Start of load_deck
+08/07/2024 10:31:50|DEBUG|[load_deck] End of load_deck
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] Start of remove_all_health_trackers
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] End of remove_all_health_trackers (nothing done)
+08/07/2024 10:31:50|DEBUG|[set_decks] End of set_decks
+08/07/2024 10:31:50|DEBUG|[set_decks] Start of set_decks
+08/07/2024 10:31:50|DEBUG|[load_deck] Start of load_deck
+08/07/2024 10:31:50|DEBUG|[load_deck] End of load_deck
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] Start of remove_all_health_trackers
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] End of remove_all_health_trackers (nothing done)
+08/07/2024 10:31:50|DEBUG|[set_decks] End of set_decks
+08/07/2024 10:31:50|DEBUG|[set_decks] Start of set_decks
+08/07/2024 10:31:50|DEBUG|[load_deck] Start of load_deck
+08/07/2024 10:31:50|DEBUG|[load_deck] End of load_deck
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] Start of remove_all_health_trackers
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] End of remove_all_health_trackers (nothing done)
+08/07/2024 10:31:50|DEBUG|[set_decks] End of set_decks
+08/07/2024 10:31:50|DEBUG|[set_decks] Start of set_decks
+08/07/2024 10:31:50|DEBUG|[load_deck] Start of load_deck
+08/07/2024 10:31:50|DEBUG|[load_deck] End of load_deck
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] Start of remove_all_health_trackers
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] End of remove_all_health_trackers (nothing done)
+08/07/2024 10:31:50|DEBUG|[set_decks] End of set_decks
+08/07/2024 10:31:50|DEBUG|[set_decks] Start of set_decks
+08/07/2024 10:31:50|DEBUG|[load_deck] Start of load_deck
+08/07/2024 10:31:50|DEBUG|[load_deck] End of load_deck
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] Start of remove_all_health_trackers
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] End of remove_all_health_trackers (nothing done)
+08/07/2024 10:31:50|DEBUG|[set_decks] End of set_decks
+08/07/2024 10:31:50|DEBUG|[set_decks] Start of set_decks
+08/07/2024 10:31:50|DEBUG|[load_deck] Start of load_deck
+08/07/2024 10:31:50|DEBUG|[load_deck] End of load_deck
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] Start of remove_all_health_trackers
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] End of remove_all_health_trackers (nothing done)
+08/07/2024 10:31:50|DEBUG|[set_decks] End of set_decks
+08/07/2024 10:31:50|DEBUG|[set_decks] Start of set_decks
+08/07/2024 10:31:50|DEBUG|[load_deck] Start of load_deck
+08/07/2024 10:31:50|DEBUG|[load_deck] End of load_deck
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] Start of remove_all_health_trackers
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] End of remove_all_health_trackers (nothing done)
+08/07/2024 10:31:50|DEBUG|[set_decks] End of set_decks
+08/07/2024 10:31:50|DEBUG|[set_decks] Start of set_decks
+08/07/2024 10:31:50|DEBUG|[load_deck] Start of load_deck
+08/07/2024 10:31:50|DEBUG|[load_deck] End of load_deck
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] Start of remove_all_health_trackers
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] End of remove_all_health_trackers (nothing done)
+08/07/2024 10:31:50|DEBUG|[set_decks] End of set_decks
+08/07/2024 10:31:50|DEBUG|[set_decks] Start of set_decks
+08/07/2024 10:31:50|DEBUG|[load_deck] Start of load_deck
+08/07/2024 10:31:50|DEBUG|[load_deck] End of load_deck
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] Start of remove_all_health_trackers
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] End of remove_all_health_trackers (nothing done)
+08/07/2024 10:31:50|DEBUG|[set_decks] End of set_decks
+08/07/2024 10:31:50|DEBUG|[set_decks] Start of set_decks
+08/07/2024 10:31:50|DEBUG|[load_deck] Start of load_deck
+08/07/2024 10:31:50|DEBUG|[load_deck] End of load_deck
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] Start of remove_all_health_trackers
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] End of remove_all_health_trackers (nothing done)
+08/07/2024 10:31:50|DEBUG|[set_decks] End of set_decks
+08/07/2024 10:31:50|DEBUG|[set_decks] Start of set_decks
+08/07/2024 10:31:50|DEBUG|[load_deck] Start of load_deck
+08/07/2024 10:31:50|DEBUG|[load_deck] End of load_deck
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] Start of remove_all_health_trackers
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] End of remove_all_health_trackers (nothing done)
+08/07/2024 10:31:50|DEBUG|[set_decks] End of set_decks
+08/07/2024 10:31:50|DEBUG|[set_decks] Start of set_decks
+08/07/2024 10:31:50|DEBUG|[load_deck] Start of load_deck
+08/07/2024 10:31:50|DEBUG|[load_deck] End of load_deck
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] Start of remove_all_health_trackers
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] End of remove_all_health_trackers (nothing done)
+08/07/2024 10:31:50|DEBUG|[set_decks] End of set_decks
+08/07/2024 10:31:50|DEBUG|[set_decks] Start of set_decks
+08/07/2024 10:31:50|DEBUG|[load_deck] Start of load_deck
+08/07/2024 10:31:50|DEBUG|[load_deck] End of load_deck
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] Start of remove_all_health_trackers
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] End of remove_all_health_trackers (nothing done)
+08/07/2024 10:31:50|DEBUG|[set_decks] End of set_decks
+08/07/2024 10:31:50|DEBUG|[set_decks] Start of set_decks
+08/07/2024 10:31:50|DEBUG|[load_deck] Start of load_deck
+08/07/2024 10:31:50|DEBUG|[load_deck] End of load_deck
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] Start of remove_all_health_trackers
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] End of remove_all_health_trackers (nothing done)
+08/07/2024 10:31:50|DEBUG|[set_decks] End of set_decks
+08/07/2024 10:31:50|DEBUG|[set_decks] Start of set_decks
+08/07/2024 10:31:50|DEBUG|[load_deck] Start of load_deck
+08/07/2024 10:31:50|DEBUG|[load_deck] End of load_deck
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] Start of remove_all_health_trackers
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] End of remove_all_health_trackers (nothing done)
+08/07/2024 10:31:50|DEBUG|[set_decks] End of set_decks
+08/07/2024 10:31:50|DEBUG|[set_decks] Start of set_decks
+08/07/2024 10:31:50|DEBUG|[load_deck] Start of load_deck
+08/07/2024 10:31:50|DEBUG|[load_deck] End of load_deck
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] Start of remove_all_health_trackers
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] End of remove_all_health_trackers (nothing done)
+08/07/2024 10:31:50|DEBUG|[set_decks] End of set_decks
+08/07/2024 10:31:50|DEBUG|[set_decks] Start of set_decks
+08/07/2024 10:31:50|DEBUG|[load_deck] Start of load_deck
+08/07/2024 10:31:50|DEBUG|[load_deck] End of load_deck
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] Start of remove_all_health_trackers
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] End of remove_all_health_trackers (nothing done)
+08/07/2024 10:31:50|DEBUG|[set_decks] End of set_decks
+08/07/2024 10:31:50|DEBUG|[set_decks] Start of set_decks
+08/07/2024 10:31:50|DEBUG|[load_deck] Start of load_deck
+08/07/2024 10:31:50|DEBUG|[load_deck] End of load_deck
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] Start of remove_all_health_trackers
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] End of remove_all_health_trackers (nothing done)
+08/07/2024 10:31:50|DEBUG|[set_decks] End of set_decks
+08/07/2024 10:31:50|DEBUG|[set_decks] Start of set_decks
+08/07/2024 10:31:50|DEBUG|[load_deck] Start of load_deck
+08/07/2024 10:31:50|DEBUG|[load_deck] End of load_deck
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] Start of remove_all_health_trackers
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] End of remove_all_health_trackers (nothing done)
+08/07/2024 10:31:50|DEBUG|[set_decks] End of set_decks
+08/07/2024 10:31:50|DEBUG|[set_decks] Start of set_decks
+08/07/2024 10:31:50|DEBUG|[load_deck] Start of load_deck
+08/07/2024 10:31:50|DEBUG|[load_deck] End of load_deck
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] Start of remove_all_health_trackers
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] End of remove_all_health_trackers (nothing done)
+08/07/2024 10:31:50|DEBUG|[set_decks] End of set_decks
+08/07/2024 10:31:50|DEBUG|[set_decks] Start of set_decks
+08/07/2024 10:31:50|DEBUG|[load_deck] Start of load_deck
+08/07/2024 10:31:50|DEBUG|[load_deck] End of load_deck
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] Start of remove_all_health_trackers
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] End of remove_all_health_trackers (nothing done)
+08/07/2024 10:31:50|DEBUG|[set_decks] End of set_decks
+08/07/2024 10:31:50|DEBUG|[set_decks] Start of set_decks
+08/07/2024 10:31:50|DEBUG|[load_deck] Start of load_deck
+08/07/2024 10:31:50|DEBUG|[load_deck] End of load_deck
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] Start of remove_all_health_trackers
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] End of remove_all_health_trackers (nothing done)
+08/07/2024 10:31:50|DEBUG|[set_decks] End of set_decks
+08/07/2024 10:31:50|DEBUG|[set_decks] Start of set_decks
+08/07/2024 10:31:50|DEBUG|[load_deck] Start of load_deck
+08/07/2024 10:31:50|DEBUG|[load_deck] End of load_deck
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] Start of remove_all_health_trackers
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] End of remove_all_health_trackers (nothing done)
+08/07/2024 10:31:50|DEBUG|[set_decks] End of set_decks
+08/07/2024 10:31:50|DEBUG|[set_decks] Start of set_decks
+08/07/2024 10:31:50|DEBUG|[load_deck] Start of load_deck
+08/07/2024 10:31:50|DEBUG|[load_deck] End of load_deck
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] Start of remove_all_health_trackers
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] End of remove_all_health_trackers (nothing done)
+08/07/2024 10:31:50|DEBUG|[set_decks] End of set_decks
+08/07/2024 10:31:50|DEBUG|[set_decks] Start of set_decks
+08/07/2024 10:31:50|DEBUG|[load_deck] Start of load_deck
+08/07/2024 10:31:50|DEBUG|[load_deck] End of load_deck
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] Start of remove_all_health_trackers
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] End of remove_all_health_trackers (nothing done)
+08/07/2024 10:31:50|DEBUG|[set_decks] End of set_decks
+08/07/2024 10:31:50|DEBUG|[set_decks] Start of set_decks
+08/07/2024 10:31:50|DEBUG|[load_deck] Start of load_deck
+08/07/2024 10:31:50|DEBUG|[load_deck] End of load_deck
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] Start of remove_all_health_trackers
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] End of remove_all_health_trackers (nothing done)
+08/07/2024 10:31:50|DEBUG|[set_decks] End of set_decks
+08/07/2024 10:31:50|DEBUG|[set_decks] Start of set_decks
+08/07/2024 10:31:50|DEBUG|[load_deck] Start of load_deck
+08/07/2024 10:31:50|DEBUG|[load_deck] End of load_deck
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] Start of remove_all_health_trackers
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] End of remove_all_health_trackers (nothing done)
+08/07/2024 10:31:50|DEBUG|[set_decks] End of set_decks
+08/07/2024 10:31:50|DEBUG|[set_decks] Start of set_decks
+08/07/2024 10:31:50|DEBUG|[load_deck] Start of load_deck
+08/07/2024 10:31:50|DEBUG|[load_deck] End of load_deck
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] Start of remove_all_health_trackers
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] End of remove_all_health_trackers (nothing done)
+08/07/2024 10:31:50|DEBUG|[set_decks] End of set_decks
+08/07/2024 10:31:50|DEBUG|[set_decks] Start of set_decks
+08/07/2024 10:31:50|DEBUG|[load_deck] Start of load_deck
+08/07/2024 10:31:50|DEBUG|[load_deck] End of load_deck
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] Start of remove_all_health_trackers
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] End of remove_all_health_trackers (nothing done)
+08/07/2024 10:31:50|DEBUG|[set_decks] End of set_decks
+08/07/2024 10:31:50|DEBUG|[set_decks] Start of set_decks
+08/07/2024 10:31:50|DEBUG|[load_deck] Start of load_deck
+08/07/2024 10:31:50|DEBUG|[load_deck] End of load_deck
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] Start of remove_all_health_trackers
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] End of remove_all_health_trackers (nothing done)
+08/07/2024 10:31:50|DEBUG|[set_decks] End of set_decks
+08/07/2024 10:31:50|DEBUG|[set_decks] Start of set_decks
+08/07/2024 10:31:50|DEBUG|[load_deck] Start of load_deck
+08/07/2024 10:31:50|DEBUG|[load_deck] End of load_deck
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] Start of remove_all_health_trackers
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] End of remove_all_health_trackers (nothing done)
+08/07/2024 10:31:50|DEBUG|[set_decks] End of set_decks
+08/07/2024 10:31:50|DEBUG|[set_decks] Start of set_decks
+08/07/2024 10:31:50|DEBUG|[load_deck] Start of load_deck
+08/07/2024 10:31:50|DEBUG|[load_deck] End of load_deck
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] Start of remove_all_health_trackers
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] End of remove_all_health_trackers (nothing done)
+08/07/2024 10:31:50|DEBUG|[set_decks] End of set_decks
+08/07/2024 10:31:50|DEBUG|[set_decks] Start of set_decks
+08/07/2024 10:31:50|DEBUG|[load_deck] Start of load_deck
+08/07/2024 10:31:50|DEBUG|[load_deck] End of load_deck
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] Start of remove_all_health_trackers
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] End of remove_all_health_trackers (nothing done)
+08/07/2024 10:31:50|DEBUG|[set_decks] End of set_decks
+08/07/2024 10:31:50|DEBUG|[set_decks] Start of set_decks
+08/07/2024 10:31:50|DEBUG|[load_deck] Start of load_deck
+08/07/2024 10:31:50|DEBUG|[load_deck] End of load_deck
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] Start of remove_all_health_trackers
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] End of remove_all_health_trackers (nothing done)
+08/07/2024 10:31:50|DEBUG|[set_decks] End of set_decks
+08/07/2024 10:31:50|DEBUG|[set_decks] Start of set_decks
+08/07/2024 10:31:50|DEBUG|[load_deck] Start of load_deck
+08/07/2024 10:31:50|DEBUG|[load_deck] End of load_deck
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] Start of remove_all_health_trackers
+08/07/2024 10:31:50|DEBUG|[remove_all_health_trackers] End of remove_all_health_trackers (nothing done)
+08/07/2024 10:31:50|DEBUG|[set_decks] End of set_decks
+08/07/2024 10:31:50|DEBUG|[set_encounter_list] Start of set_encounter_list
+08/07/2024 10:31:50|DEBUG|[set_encounter_list] End of set_encounter_list
+08/07/2024 10:31:50|DEBUG|[create_encounters_treeview] Start of create_encounters_treeview
+08/07/2024 10:31:50|DEBUG|[create_encounters_treeview] End of create_encounters_treeview
+08/07/2024 10:31:50|DEBUG|[create_tabs] End of create_tabs
+08/07/2024 10:31:50|DEBUG|[create_buttons] Start of create_buttons
+08/07/2024 10:31:50|DEBUG|[create_buttons] End of create_buttons
+08/07/2024 10:31:50|DEBUG|[create_display_frame] Start of create_display_frame
+08/07/2024 10:31:51|DEBUG|[create_display_frame] End of create_display_frame
+08/07/2024 10:31:51|DEBUG|[create_menu] Start of create_menu
+08/07/2024 10:31:51|DEBUG|[create_menu] End of create_menu
+08/07/2024 10:31:51|DEBUG|[set_bindings_buttons_menus] Start of set_bindings_buttons_menus: enable=True
+08/07/2024 10:31:51|DEBUG|[set_bindings_buttons_menus] End of set_bindings_buttons_menus
+08/07/2024 10:31:51|DEBUG|[load_variant_card] Start of load_variant_card, variant=None, selfCall=None, forPrinting=False, armorerDennis=False, oldIronKing=False, pursuer=False, deckDataCard=False, healthMod=None, fromDeck=False
+08/07/2024 10:31:51|DEBUG|[load_variant_card] 	No variant selected
+08/07/2024 10:31:51|DEBUG|[load_variant_card] 	End of load_variant_card
+08/07/2024 10:34:14|DEBUG|[random_encounter] Start of random_encounter, level=1
+08/07/2024 10:34:14|DEBUG|[load_encounter] Start of load_encounter, event=None, encounter=Puppet Master, customEnemyListCheck=False
+08/07/2024 10:34:14|DEBUG|[load_encounter] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_encounters\Puppet Master1.json
+08/07/2024 10:34:14|DEBUG|[shuffle_enemies] Start of shuffle_enemies
+08/07/2024 10:34:14|DEBUG|[edit_encounter_card] Start of edit_encounter_card, name=Puppet Master, expansion=Tomb of Giants, level=1, enemySlots=[2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], right=False
+08/07/2024 10:34:14|DEBUG|[create_image] Start of create_image, imageFileName=Puppet Master.jpg, imageType=encounter, level=1, expansion=Tomb of Giants
+08/07/2024 10:34:14|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Puppet Master.jpg
+08/07/2024 10:34:14|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:34:14|DEBUG|[edit_encounter_card] New enemies: [12, 16]
+08/07/2024 10:34:14|DEBUG|[edit_encounter_card] Pasting Giant Skeleton Archer image onto encounter at (300, 323).
+08/07/2024 10:34:14|DEBUG|[edit_encounter_card] Pasting Large Hollow Soldier image onto encounter at (329, 323).
+08/07/2024 10:34:14|DEBUG|[apply_keyword_tooltips] Start of apply_keyword_tooltips, name=Puppet Master, set=Tomb of Giants
+08/07/2024 10:34:14|DEBUG|[apply_keyword_tooltips] 	End of apply_keyword_tooltips
+08/07/2024 10:34:14|DEBUG|[puppet_master] Start of puppet_master
+08/07/2024 10:34:14|DEBUG|[create_tooltip] Start of create_tooltip, tooltipDict={'photo image': <PIL.ImageTk.PhotoImage object at 0x0000020F0B0DC910>, 'imageName': 'Large Hollow Soldier'}, x=64, y=148
+08/07/2024 10:34:14|DEBUG|[create_tooltip] 	End of create_tooltip
+08/07/2024 10:34:14|DEBUG|[create_tooltip] Start of create_tooltip, tooltipDict={'photo image': <PIL.ImageTk.PhotoImage object at 0x0000020F0B0E8C10>, 'imageName': 'Giant Skeleton Archer'}, x=145, y=196
+08/07/2024 10:34:14|DEBUG|[create_tooltip] 	End of create_tooltip
+08/07/2024 10:34:14|DEBUG|[pick_treasure] Start of pick_treasure
+08/07/2024 10:34:14|DEBUG|[pick_treasure] End of pick_treasure
+08/07/2024 10:34:14|DEBUG|[new_treasure_name] Start of new_treasure_name, newTreasure=Kukris
+08/07/2024 10:34:14|DEBUG|[new_treasure_name] 	End of new_treasure_name, returning {0: 'Kukris'}
+08/07/2024 10:34:14|DEBUG|[puppet_master] 	End of puppet_master
+08/07/2024 10:34:14|DEBUG|[edit_encounter_card] 	End of edit_encounter_card
+08/07/2024 10:34:14|DEBUG|[shuffle_enemies] 	End of shuffle_enemies
+08/07/2024 10:34:14|DEBUG|[load_encounter] 	End of load_encounter
+08/07/2024 10:34:14|DEBUG|[random_encounter] 	End of random_encounter
+08/07/2024 10:34:22|DEBUG|[load_encounter] Start of load_encounter, event=<VirtualEvent event x=0 y=0>, encounter=None, customEnemyListCheck=False
+08/07/2024 10:34:22|DEBUG|[load_encounter] 	No encounter selected
+08/07/2024 10:34:22|DEBUG|[load_encounter] 	End of load_encounter
+08/07/2024 10:34:23|DEBUG|[load_encounter] Start of load_encounter, event=<VirtualEvent event x=0 y=0>, encounter=None, customEnemyListCheck=False
+08/07/2024 10:34:23|DEBUG|[load_encounter] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_encounters\Cloak and Feathers1.json
+08/07/2024 10:34:23|DEBUG|[shuffle_enemies] Start of shuffle_enemies
+08/07/2024 10:34:23|DEBUG|[edit_encounter_card] Start of edit_encounter_card, name=Cloak and Feathers, expansion=Painted World of Ariamis, level=1, enemySlots=[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], right=False
+08/07/2024 10:34:23|DEBUG|[create_image] Start of create_image, imageFileName=Cloak and Feathers.jpg, imageType=encounter, level=1, expansion=Painted World of Ariamis
+08/07/2024 10:34:23|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Cloak and Feathers.jpg
+08/07/2024 10:34:23|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:34:23|DEBUG|[edit_encounter_card] New enemies: [36]
+08/07/2024 10:34:23|DEBUG|[edit_encounter_card] Pasting Fencer Sharron image onto encounter at (300, 323).
+08/07/2024 10:34:23|DEBUG|[apply_keyword_tooltips] Start of apply_keyword_tooltips, name=Cloak and Feathers, set=Painted World of Ariamis
+08/07/2024 10:34:23|DEBUG|[apply_keyword_to08/07/2024 10:35:10|DEBUG|[<module>] Closing application
+3|DEBUG|[cloak_and_feathers] Start of cloak_and_feathers
+08/07/2024 10:34:23|DEBUG|[create_tooltip] Start of create_tooltip, tooltipDict={'photo image': <PIL.ImageTk.PhotoImage object at 0x0000020F0B115790>, 'imageName': 'Fencer Sharron'}, x=65, y=147
+08/07/2024 10:34:23|DEBUG|[create_tooltip] 	End of create_tooltip
+08/07/2024 10:34:23|DEBUG|[cloak_and_feathers] 	End of cloak_and_feathers
+08/07/2024 10:34:23|DEBUG|[edit_encounter_card] 	End of edit_encounter_card
+08/07/2024 10:34:23|DEBUG|[shuffle_enemies] 	End of shuffle_enemies
+08/07/2024 10:34:23|DEBUG|[load_encounter] 	End of load_encounter
+08/07/2024 10:34:24|DEBUG|[load_event] Start of load_event, campaign=False
+08/07/2024 10:34:24|DEBUG|[load_event] End of load_event (core set selected)
+08/07/2024 10:34:25|DEBUG|[load_event] Start of load_event, campaign=False
+08/07/2024 10:34:25|DEBUG|[create_image] Start of create_image, imageFileName=Blacksmith's Trial.jpg, imageType=encounter, level=4, expansion=None
+08/07/2024 10:34:25|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Blacksmith's Trial.jpg
+08/07/2024 10:34:25|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:34:25|DEBUG|[load_event] End of load_event
+08/07/2024 10:34:26|DEBUG|[callback] Start of callback
+08/07/2024 10:34:26|DEBUG|[callback] End of callback
+08/07/2024 10:34:28|DEBUG|[callback] Start of callback
+08/07/2024 10:34:28|DEBUG|[callback] End of callback
+08/07/2024 10:34:28|DEBUG|[load_variant_card] Start of load_variant_card, variant=None, selfCall=None, forPrinting=False, armorerDennis=False, oldIronKing=False, pursuer=False, deckDataCard=False, healthMod=None, fromDeck=False
+08/07/2024 10:34:28|DEBUG|[load_variant_card] 	No variant selected
+08/07/2024 10:34:28|DEBUG|[load_variant_card] 	End of load_variant_card
+08/07/2024 10:34:28|DEBUG|[load_variant_card] Start of load_variant_card, variant=None, selfCall=None, forPrinting=False, armorerDennis=False, oldIronKing=False, pursuer=False, deckDataCard=False, healthMod=None, fromDeck=False
+08/07/2024 10:34:29|DEBUG|[load_variant_card] 	No variant selected
+08/07/2024 10:34:29|DEBUG|[load_variant_card] 	End of load_variant_card
+08/07/2024 10:34:29|DEBUG|[load_variant_card] Start of load_variant_card, variant=None, selfCall=None, forPrinting=False, armorerDennis=False, oldIronKing=False, pursuer=False, deckDataCard=False, healthMod=None, fromDeck=False
+08/07/2024 10:34:29|DEBUG|[load_variant_card] 	No variant selected
+08/07/2024 10:34:29|DEBUG|[load_variant_card] 	End of load_variant_card
+08/07/2024 10:34:30|DEBUG|[load_variant_card] Start of load_variant_card, variant=None, selfCall=None, forPrinting=False, armorerDennis=False, oldIronKing=False, pursuer=False, deckDataCard=False, healthMod=None, fromDeck=False
+08/07/2024 10:34:30|DEBUG|[create_image] Start of create_image, imageFileName=Armorer Dennis - data.jpg, imageType=encounter, level=4, expansion=None
+08/07/2024 10:34:30|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Armorer Dennis - data.jpg
+08/07/2024 10:34:30|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:34:30|DEBUG|[edit_variant_card] Start of edit_variant_card, variant=Armorer Dennis - data
+08/07/2024 10:34:30|DEBUG|[edit_variant_card_data] Start of edit_variant_card_data, variant=Armorer Dennis - data
+08/07/2024 10:34:30|DEBUG|[edit_variant_card_data] End of edit_variant_card_data
+08/07/2024 10:34:30|DEBUG|[edit_variant_card] End of edit_variant_card
+08/07/2024 10:34:30|DEBUG|[load_variant_card] End of load_variant_card
+08/07/2024 10:34:30|DEBUG|[load_variant_card] Start of load_variant_card, variant=None, selfCall=None, forPrinting=False, armorerDennis=False, oldIronKing=False, pursuer=False, deckDataCard=False, healthMod=None, fromDeck=False
+08/07/2024 10:34:30|DEBUG|[create_image] Start of create_image, imageFileName=Armorer Dennis - data.jpg, imageType=encounter, level=4, expansion=None
+08/07/2024 10:34:30|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Armorer Dennis - data.jpg
+08/07/2024 10:34:30|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:34:30|DEBUG|[edit_variant_card] Start of edit_variant_card, variant=Armorer Dennis - data
+08/07/2024 10:34:30|DEBUG|[edit_variant_card_data] Start of edit_variant_card_data, variant=Armorer Dennis - data
+08/07/2024 10:34:30|DEBUG|[edit_variant_card_data] End of edit_variant_card_data
+08/07/2024 10:34:30|DEBUG|[edit_variant_card] End of edit_variant_card
+08/07/2024 10:34:30|DEBUG|[load_variant_card] End of load_variant_card
+08/07/2024 10:34:31|DEBUG|[load_variant_card] Start of load_variant_card, variant=None, selfCall=None, forPrinting=False, armorerDennis=False, oldIronKing=False, pursuer=False, deckDataCard=False, healthMod=None, fromDeck=False
+08/07/2024 10:34:31|DEBUG|[create_image] Start of create_image, imageFileName=Armorer Dennis - Soul Flash.jpg, imageType=encounter, level=4, expansion=None
+08/07/2024 10:34:31|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Armorer Dennis - Soul Flash.jpg
+08/07/2024 10:34:31|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:34:31|DEBUG|[edit_variant_card] Start of edit_variant_card, variant=Armorer Dennis - Soul Flash
+08/07/2024 10:34:31|DEBUG|[edit_variant_card_behavior] Start of edit_variant_card_behavior, variant=Armorer Dennis - Soul Flash
+08/07/2024 10:34:31|DEBUG|[apply_mods_to_actions] Start of apply_mods_to_actions, enemy=Armorer Dennis, behavior=Soul Flash, dodge=2, repeat=1, actions={'middle': {'type': 'magic', 'damage': 4}, 'right': {}}, variant=Armorer Dennis - Soul Flash
+08/07/2024 10:34:31|DEBUG|[apply_mods_to_actions] End of apply_mods_to_actions (nothing to do)
+08/07/2024 10:34:31|DEBUG|[add_components_to_variant_card_behavior] Start of add_components_to_variant_card_behavior, enemy=Armorer Dennis, behavior=Soul Flash, dodge=2, repeat=1, actions={'middle': {'type': 'magic', 'damage': 4}, 'right': {}}
+08/07/2024 10:34:31|DEBUG|[add_components_to_variant_card_behavior] Pasting magic attack image onto variant at (107, 280).
+08/07/2024 10:34:31|DEBUG|[add_components_to_variant_card_behavior] End of add_components_to_variant_card_behavior
+08/07/2024 10:34:31|DEBUG|[edit_variant_card_behavior] End of edit_variant_card_behavior
+08/07/2024 10:34:31|DEBUG|[edit_variant_card] End of edit_variant_card
+08/07/2024 10:34:31|DEBUG|[load_variant_card] Start of load_variant_card, variant=Armorer Dennis - data, selfCall=Armorer Dennis - Soul Flash, forPrinting=False, armorerDennis=False, oldIronKing=False, pursuer=False, deckDataCard=False, healthMod=None, fromDeck=False
+08/07/2024 10:34:31|DEBUG|[create_image] Start of create_image, imageFileName=Armorer Dennis - data.jpg, imageType=encounter, level=4, expansion=None
+08/07/2024 10:34:31|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Armorer Dennis - data.jpg
+08/07/2024 10:34:31|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:34:31|DEBUG|[edit_variant_card] Start of edit_variant_card, variant=Armorer Dennis - data
+08/07/2024 10:34:31|DEBUG|[edit_variant_card_data] Start of edit_variant_card_data, variant=Armorer Dennis - data
+08/07/2024 10:34:31|DEBUG|[edit_variant_card_data] End of edit_variant_card_data
+08/07/2024 10:34:31|DEBUG|[edit_variant_card] End of edit_variant_card
+08/07/2024 10:34:31|DEBUG|[load_variant_card] End of load_variant_card
+08/07/2024 10:34:31|DEBUG|[load_variant_card] End of load_variant_card
+08/07/2024 10:34:34|DEBUG|[display_deck_cards] Start of display_deck_cards
+08/07/2024 10:34:34|DEBUG|[display_deck_cards] End of display_deck_cards
+08/07/2024 10:34:36|DEBUG|[display_deck_cards] Start of display_deck_cards
+08/07/2024 10:34:36|DEBUG|[display_deck_cards] End of display_deck_cards
+08/07/2024 10:34:37|DEBUG|[display_deck_cards] Start of display_deck_cards
+08/07/2024 10:34:37|DEBUG|[load_variant_card_locked] Start of load_variant_card_locked, variant=Gaping Dragon_, selfCall=None, forPrinting=False, armorerDennis=False, oldIronKing=False, pursuer=False, deckDataCard=True, healthMod=0, fromDeck=True
+08/07/2024 10:34:37|DEBUG|[load_variant_card] Start of load_variant_card, variant=Gaping Dragon_, selfCall=None, forPrinting=False, armorerDennis=False, oldIronKing=False, pursuer=False, deckDataCard=True, healthMod=0, fromDeck=True
+08/07/2024 10:34:37|DEBUG|[create_image] Start of create_image, imageFileName=Gaping Dragon - data.jpg, imageType=encounter, level=4, expansion=None
+08/07/2024 10:34:37|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Gaping Dragon - data.jpg
+08/07/2024 10:34:37|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:34:37|DEBUG|[edit_variant_card] Start of edit_variant_card, variant=Gaping Dragon - data
+08/07/2024 10:34:37|DEBUG|[edit_variant_card_data] Start of edit_variant_card_data, variant=Gaping Dragon - data
+08/07/2024 10:34:37|DEBUG|[edit_variant_card_data] End of edit_variant_card_data
+08/07/2024 10:34:37|DEBUG|[edit_variant_card] End of edit_variant_card
+08/07/2024 10:34:37|DEBUG|[load_variant_card] End of load_variant_card
+08/07/2024 10:34:37|DEBUG|[load_variant_card_locked] End of load_variant_card_locked
+08/07/2024 10:34:37|DEBUG|[load_variant_card_locked] Start of load_variant_card_locked, variant=Gaping Dragon - Crawling Charge_, selfCall=None, forPrinting=False, armorerDennis=False, oldIronKing=False, pursuer=False, deckDataCard=True, healthMod=0, fromDeck=True
+08/07/2024 10:34:37|DEBUG|[load_variant_card] Start of load_variant_card, variant=Gaping Dragon - Crawling Charge_, selfCall=None, forPrinting=False, armorerDennis=False, oldIronKing=False, pursuer=False, deckDataCard=True, healthMod=0, fromDeck=True
+08/07/2024 10:34:38|DEBUG|[create_image] Start of create_image, imageFileName=Gaping Dragon - Crawling Charge.jpg, imageType=encounter, level=4, expansion=None
+08/07/2024 10:34:38|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Gaping Dragon - Crawling Charge.jpg
+08/07/2024 10:34:38|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:34:38|DEBUG|[edit_variant_card] Start of edit_variant_card, variant=Gaping Dragon - Crawling Charge
+08/07/2024 10:34:38|DEBUG|[edit_variant_card_behavior] Start of edit_variant_card_behavior, variant=Gaping Dragon - Crawling Charge
+08/07/2024 10:34:38|DEBUG|[apply_mods_to_actions] Start of apply_mods_to_actions, enemy=Gaping Dragon, behavior=Crawling Charge, dodge=2, repeat=1, actions={'middle': {'type': 'push', 'damage': 5}}, variant=Gaping Dragon - Crawling Charge
+08/07/2024 10:34:38|DEBUG|[apply_mods_to_actions] End of apply_mods_to_actions (nothing to do)
+08/07/2024 10:34:38|DEBUG|[add_components_to_variant_card_behavior] Start of add_components_to_variant_card_behavior, enemy=Gaping Dragon, behavior=Crawling Charge, dodge=2, repeat=1, actions={'middle': {'type': 'push', 'damage': 5}}
+08/07/2024 10:34:38|DEBUG|[add_components_to_variant_card_behavior] Pasting push attack image onto variant at (110, 283).
+08/07/2024 10:34:38|DEBUG|[add_components_to_variant_card_behavior] End of add_components_to_variant_card_behavior
+08/07/2024 10:34:38|DEBUG|[edit_variant_card_behavior] End of edit_variant_card_behavior
+08/07/2024 10:34:38|DEBUG|[edit_variant_card] End of edit_variant_card
+08/07/2024 10:34:38|DEBUG|[load_variant_card] Start of load_variant_card, variant=Gaping Dragon - data, selfCall=Gaping Dragon - Crawling Charge, forPrinting=False, armorerDennis=False, oldIronKing=False, pursuer=False, deckDataCard=True, healthMod=0, fromDeck=True
+08/07/2024 10:34:38|DEBUG|[create_image] Start of create_image, imageFileName=Gaping Dragon - data.jpg, imageType=encounter, level=4, expansion=None
+08/07/2024 10:34:38|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Gaping Dragon - data.jpg
+08/07/2024 10:34:38|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:34:38|DEBUG|[edit_variant_card] Start of edit_variant_card, variant=Gaping Dragon - data
+08/07/2024 10:34:38|DEBUG|[edit_variant_card_data] Start of edit_variant_card_data, variant=Gaping Dragon - data
+08/07/2024 10:34:38|DEBUG|[edit_variant_card_data] End of edit_variant_card_data
+08/07/2024 10:34:38|DEBUG|[edit_variant_card] End of edit_variant_card
+08/07/2024 10:34:38|DEBUG|[load_variant_card] End of load_variant_card
+08/07/2024 10:34:38|DEBUG|[load_variant_card] End of load_variant_card
+08/07/2024 10:34:38|DEBUG|[load_variant_card_locked] End of load_variant_card_locked
+08/07/2024 10:34:38|DEBUG|[display_deck_cards] End of display_deck_cards
+08/07/2024 10:34:40|DEBUG|[draw_behavior_card] Start of draw_behavior_card
+08/07/2024 10:34:40|DEBUG|[load_variant_card_locked] Start of load_variant_card_locked, variant=Gaping Dragon - Stomach Slam, selfCall=None, forPrinting=False, armorerDennis=False, oldIronKing=False, pursuer=False, deckDataCard=False, healthMod=0, fromDeck=True
+08/07/2024 10:34:40|DEBUG|[load_variant_card] Start of load_variant_card, variant=Gaping Dragon - Stomach Slam, selfCall=None, forPrinting=False, armorerDennis=False, oldIronKing=False, pursuer=False, deckDataCard=False, healthMod=0, fromDeck=True
+08/07/2024 10:34:40|DEBUG|[create_image] Start of create_image, imageFileName=Gaping Dragon - Stomach Slam.jpg, imageType=encounter, level=4, expansion=None
+08/07/2024 10:34:40|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Gaping Dragon - Stomach Slam.jpg
+08/07/2024 10:34:40|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:34:40|DEBUG|[edit_variant_card] Start of edit_variant_card, variant=Gaping Dragon - Stomach Slam
+08/07/2024 10:34:40|DEBUG|[edit_variant_card_behavior] Start of edit_variant_card_behavior, variant=Gaping Dragon - Stomach Slam
+08/07/2024 10:34:40|DEBUG|[apply_mods_to_actions] Start of apply_mods_to_actions, enemy=Gaping Dragon, behavior=Stomach Slam, dodge=2, repeat=1, actions={'middle': {'type': 'physical', 'damage': 7}}, variant=Gaping Dragon - Stomach Slam
+08/07/2024 10:34:40|DEBUG|[apply_mods_to_actions] End of apply_mods_to_actions (nothing to do)
+08/07/2024 10:34:40|DEBUG|[add_components_to_variant_card_behavior] Start of add_components_to_variant_card_behavior, enemy=Gaping Dragon, behavior=Stomach Slam, dodge=2, repeat=1, actions={'middle': {'type': 'physical', 'damage': 7}}
+08/07/2024 10:34:40|DEBUG|[add_components_to_variant_card_behavior] Pasting physical attack image onto variant at (107, 280).
+08/07/2024 10:34:40|DEBUG|[add_components_to_variant_card_behavior] End of add_components_to_variant_card_behavior
+08/07/2024 10:34:40|DEBUG|[edit_variant_card_behavior] End of edit_variant_card_behavior
+08/07/2024 10:34:40|DEBUG|[edit_variant_card] End of edit_variant_card
+08/07/2024 10:34:40|DEBUG|[load_variant_card] Start of load_variant_card, variant=Gaping Dragon - data, selfCall=Gaping Dragon - Stomach Slam, forPrinting=False, armorerDennis=False, oldIronKing=False, pursuer=False, deckDataCard=False, healthMod=0, fromDeck=True
+08/07/2024 10:34:40|DEBUG|[create_image] Start of create_image, imageFileName=Gaping Dragon - data.jpg, imageType=encounter, level=4, expansion=None
+08/07/2024 10:34:40|DEBUG|[create_image] 	Opening C:\Users\lenle\Documents\GitHub\DSBG-Shuffle\lib\dsbg_shuffle_images\Gaping Dragon - data.jpg
+08/07/2024 10:34:40|DEBUG|[create_image] 	End of create_image
+08/07/2024 10:34:40|DEBUG|[edit_variant_card] Start of edit_variant_card, variant=Gaping Dragon - data
+08/07/2024 10:34:40|DEBUG|[edit_variant_card_data] Start of edit_variant_card_data, variant=Gaping Dragon - data
+08/07/2024 10:34:40|DEBUG|[edit_variant_card_data] End of edit_variant_card_data
+08/07/2024 10:34:40|DEBUG|[edit_variant_card] End of edit_variant_card
+08/07/2024 10:34:40|DEBUG|[load_variant_card] End of load_variant_card
+08/07/2024 10:34:40|DEBUG|[load_variant_card] End of load_variant_card
+08/07/2024 10:34:40|DEBUG|[load_variant_card_locked] End of load_variant_card_locked
+08/07/2024 10:34:40|DEBUG|[draw_behavior_card] End of draw_behavior_card

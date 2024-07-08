@@ -348,11 +348,11 @@ try:
                         }:
                         self.selectedVariant += " - data"
                         
-                        self.app.display.config(image="")
-                        self.app.display.image=None
-                        self.app.displayImages["variantsLocked"][self.app.display]["image"] = None
-                        self.app.displayImages["variantsLocked"][self.app.display]["name"] = None
-                        self.app.displayImages["variantsLocked"][self.app.display]["activeTab"] = None
+                        self.app.displayTopLeft.config(image="")
+                        self.app.displayTopLeft.image=None
+                        self.app.displayImages["variantsLocked"][self.app.displayTopLeft]["image"] = None
+                        self.app.displayImages["variantsLocked"][self.app.displayTopLeft]["name"] = None
+                        self.app.displayImages["variantsLocked"][self.app.displayTopLeft]["activeTab"] = None
                 else:
                     self.selectedVariant = variant
 
@@ -365,12 +365,12 @@ try:
                     variants,
                     name=self.selectedVariant[:self.selectedVariant.index(" - ")] if " - " in self.selectedVariant else self.selectedVariant[:self.selectedVariant.index("_")] if "_" in self.selectedVariant else self.selectedVariant)
                     
-                if "Smough" not in self.selectedVariant and "Gaping Dragon" not in self.selectedVariant and self.app.displayImages["variants"][self.app.display3]["image"]:
-                    self.app.display3.config(image="")
-                    self.app.display3.image=None
-                    self.app.displayImages["variantsLocked"][self.app.display3]["image"] = None
-                    self.app.displayImages["variantsLocked"][self.app.display3]["name"] = None
-                    self.app.displayImages["variantsLocked"][self.app.display3]["activeTab"] = None
+                if "Smough" not in self.selectedVariant and "Gaping Dragon" not in self.selectedVariant and self.app.displayImages["variants"][self.app.displayBottomRight]["image"]:
+                    self.app.displayBottomRight.config(image="")
+                    self.app.displayBottomRight.image=None
+                    self.app.displayImages["variantsLocked"][self.app.displayBottomRight]["image"] = None
+                    self.app.displayImages["variantsLocked"][self.app.displayBottomRight]["name"] = None
+                    self.app.displayImages["variantsLocked"][self.app.displayBottomRight]["activeTab"] = None
                     
                 if not selfCall:
                     originalSelection = deepcopy(self.selectedVariant)
@@ -399,7 +399,7 @@ try:
 
                     self.edit_variant_card(variant=self.selectedVariant, bottomRightDisplay=bottomRightDisplay, lockedTree=fromLocked, armorerDennis=armorerDennis, oldIronKing=oldIronKing, pursuer=pursuer, healthMod=healthMod, fromDeck=fromDeck)
 
-                if "data" not in self.selectedVariant and self.app.displayImages[variants][self.app.display2]["name"] != self.selectedVariant and "The Four Kings" not in self.selectedVariant and not forPrinting:
+                if "data" not in self.selectedVariant and self.app.displayImages[variants][self.app.displayTopRight]["name"] != self.selectedVariant and "The Four Kings" not in self.selectedVariant and not forPrinting:
                     self.load_variant_card(variant=self.selectedVariant[:self.selectedVariant.index(" - ")] + " - data", fromLocked=fromLocked, selfCall=originalSelection, armorerDennis=armorerDennis, oldIronKing=oldIronKing, pursuer=pursuer, deckDataCard=deckDataCard, healthMod=healthMod, fromDeck=fromDeck)
 
                 if not selfCall:
@@ -560,19 +560,19 @@ try:
                     variants,
                     name=self.selectedVariant[:self.selectedVariant.index(" - ")] if " - " in self.selectedVariant else self.selectedVariant[:self.selectedVariant.index("_")] if "_" in self.selectedVariant else self.selectedVariant)
                     
-                if not selfCall and "data" in self.selectedVariant and self.app.display.image == self.app.displayImages["variants"][self.app.display]["image"]:
-                    self.app.display.config(image="")
-                    self.app.display.image=None
-                    self.app.displayImages["variants"][self.app.display]["image"] = None
-                    self.app.displayImages["variants"][self.app.display]["name"] = None
-                    self.app.displayImages["variants"][self.app.display]["activeTab"] = None
+                if not selfCall and "data" in self.selectedVariant and self.app.displayTopLeft.image == self.app.displayImages["variants"][self.app.displayTopLeft]["image"]:
+                    self.app.displayTopLeft.config(image="")
+                    self.app.displayTopLeft.image=None
+                    self.app.displayImages["variants"][self.app.displayTopLeft]["image"] = None
+                    self.app.displayImages["variants"][self.app.displayTopLeft]["name"] = None
+                    self.app.displayImages["variants"][self.app.displayTopLeft]["activeTab"] = None
                     
-                if "Ornstein & Smough" not in self.selectedVariant and "Gaping Dragon" not in self.selectedVariant and self.app.display3.image == self.app.displayImages["variants"][self.app.display3]["image"]:
-                    self.app.display3.config(image="")
-                    self.app.display3.image=None
-                    self.app.displayImages["variants"][self.app.display3]["image"] = None
-                    self.app.displayImages["variants"][self.app.display3]["name"] = None
-                    self.app.displayImages["variants"][self.app.display3]["activeTab"] = None
+                if "Ornstein & Smough" not in self.selectedVariant and "Gaping Dragon" not in self.selectedVariant and self.app.displayBottomRight.image == self.app.displayImages["variants"][self.app.displayBottomRight]["image"]:
+                    self.app.displayBottomRight.config(image="")
+                    self.app.displayBottomRight.image=None
+                    self.app.displayImages["variants"][self.app.displayBottomRight]["image"] = None
+                    self.app.displayImages["variants"][self.app.displayBottomRight]["name"] = None
+                    self.app.displayImages["variants"][self.app.displayBottomRight]["activeTab"] = None
                     
                 if not selfCall:
                     originalSelection = deepcopy(self.selectedVariant)
@@ -599,7 +599,7 @@ try:
 
                     self.edit_variant_card(variant=mods, lockedTree=True, armorerDennis=armorerDennis, oldIronKing=oldIronKing, pursuer=pursuer, healthMod=healthMod, fromDeck=fromDeck, bottomRightDisplay=bottomRightDisplay)
 
-                if "data" not in self.selectedVariant and self.app.displayImages["variantsLocked"][self.app.display2]["name"] != self.selectedVariant and "The Four Kings" not in self.selectedVariant and not forPrinting:
+                if "data" not in self.selectedVariant and self.app.displayImages["variantsLocked"][self.app.displayTopRight]["name"] != self.selectedVariant and "The Four Kings" not in self.selectedVariant and not forPrinting:
                     modString = ",".join([str(x) for x in sorted([n for n in modIdLookup if modIdLookup[n] in set(mods[0] if mods and type(mods[0]) == list else mods) & set([modIdLookup[m] for m in dataCardMods])])])
                     self.load_variant_card_locked(variant=self.selectedVariant[:self.selectedVariant.index(" - ")] + "_" + modString, selfCall=True, armorerDennis=armorerDennis, oldIronKing=oldIronKing, pursuer=pursuer, deckDataCard=deckDataCard, healthMod=healthMod, fromDeck=fromDeck)
 
@@ -649,7 +649,7 @@ try:
                     if tree.selection()[0] in {"All", "Enemies", "Invaders & Explorers Mimics", "Mini Bosses", "Main Bosses", "Mega Bosses"}:
                         log("End of apply_difficulty_modifier (event click with category selected)")
                         
-                    if event.widget == self.app.display2 and not tree.get_children(tree.selection()[0]) and tree.parent(tree.selection()[0]) != "Enemies":
+                    if event.widget == self.app.displayTopRight and not tree.get_children(tree.selection()[0]) and tree.parent(tree.selection()[0]) != "Enemies":
                         self.selectedVariant = tree.parent(tree.selection()[0]) + " - data"
 
                     variantName = None
@@ -962,30 +962,30 @@ try:
                     key = "variants"
 
                 if bottomRightDisplay:
-                    self.app.display3.image = displayPhotoImage
-                    self.app.display3.config(image=displayPhotoImage)
-                    self.app.displayImages[key][self.app.display3]["image"] = displayPhotoImage
-                    self.app.displayImages[key][self.app.display3]["name"] = self.selectedVariant
-                    self.app.displayImages[key][self.app.display3]["activeTab"] = key if not fromDeck else "behaviorDeck"
+                    self.app.displayBottomRight.image = displayPhotoImage
+                    self.app.displayBottomRight.config(image=displayPhotoImage)
+                    self.app.displayImages[key][self.app.displayBottomRight]["image"] = displayPhotoImage
+                    self.app.displayImages[key][self.app.displayBottomRight]["name"] = self.selectedVariant
+                    self.app.displayImages[key][self.app.displayBottomRight]["activeTab"] = key if not fromDeck else "behaviorDeck"
                 elif deckDataCard:
-                    self.app.display2.image = displayPhotoImage
-                    self.app.display2.config(image=displayPhotoImage)
-                    self.app.displayImages[key][self.app.display2]["image"] = displayPhotoImage
-                    self.app.displayImages[key][self.app.display2]["name"] = self.selectedVariant
-                    self.app.displayImages[key][self.app.display2]["activeTab"] = key if not fromDeck else "behaviorDeck"
+                    self.app.displayTopRight.image = displayPhotoImage
+                    self.app.displayTopRight.config(image=displayPhotoImage)
+                    self.app.displayImages[key][self.app.displayTopRight]["image"] = displayPhotoImage
+                    self.app.displayImages[key][self.app.displayTopRight]["name"] = self.selectedVariant
+                    self.app.displayImages[key][self.app.displayTopRight]["activeTab"] = key if not fromDeck else "behaviorDeck"
                 else:
                     if behavior == "data":
-                        self.app.display2.image = displayPhotoImage
-                        self.app.display2.config(image=displayPhotoImage)
-                        self.app.displayImages[key][self.app.display2]["image"] = displayPhotoImage
-                        self.app.displayImages[key][self.app.display2]["name"] = self.selectedVariant
-                        self.app.displayImages[key][self.app.display2]["activeTab"] = key if not fromDeck else "behaviorDeck"
+                        self.app.displayTopRight.image = displayPhotoImage
+                        self.app.displayTopRight.config(image=displayPhotoImage)
+                        self.app.displayImages[key][self.app.displayTopRight]["image"] = displayPhotoImage
+                        self.app.displayImages[key][self.app.displayTopRight]["name"] = self.selectedVariant
+                        self.app.displayImages[key][self.app.displayTopRight]["activeTab"] = key if not fromDeck else "behaviorDeck"
                     else:
-                        self.app.display.image = displayPhotoImage
-                        self.app.display.config(image=displayPhotoImage)
-                        self.app.displayImages[key][self.app.display]["image"] = displayPhotoImage
-                        self.app.displayImages[key][self.app.display]["name"] = self.selectedVariant
-                        self.app.displayImages[key][self.app.display]["activeTab"] = key if not fromDeck else "behaviorDeck"
+                        self.app.displayTopLeft.image = displayPhotoImage
+                        self.app.displayTopLeft.config(image=displayPhotoImage)
+                        self.app.displayImages[key][self.app.displayTopLeft]["image"] = displayPhotoImage
+                        self.app.displayImages[key][self.app.displayTopLeft]["name"] = self.selectedVariant
+                        self.app.displayImages[key][self.app.displayTopLeft]["activeTab"] = key if not fromDeck else "behaviorDeck"
 
                 log("End of edit_variant_card")
             except Exception as e:
@@ -1292,9 +1292,9 @@ try:
                 
                 tree = self.treeviewVariantsList
 
-                for display in [self.app.display, self.app.display2, self.app.display3]:
+                for display in [self.app.display, self.app.displayTopRight, self.app.displayBottomRight]:
                     display.config(image="")
-                    self.app.display.image=None
+                    self.app.displayTopLeft.image=None
                     self.app.displayImages["variants"][display]["image"] = None
                     self.app.displayImages["variants"][display]["name"] = None
                     self.app.displayImages["variants"][display]["activeTab"] = None
@@ -1766,11 +1766,11 @@ try:
                 
                 if "data" in self.selectedVariant:
                     if enemy == "Ornstein":
-                        self.app.display2.image = photoImage
-                        self.app.display2.config(image=photoImage)
-                        self.app.displayImages[key][self.app.display2]["image"] = photoImage
-                        self.app.displayImages[key][self.app.display2]["name"] = self.selectedVariant
-                        self.app.displayImages[key][self.app.display2]["activeTab"] = key if not fromDeck else "behaviorDeck"
+                        self.app.displayTopRight.image = photoImage
+                        self.app.displayTopRight.config(image=photoImage)
+                        self.app.displayImages[key][self.app.displayTopRight]["image"] = photoImage
+                        self.app.displayImages[key][self.app.displayTopRight]["name"] = self.selectedVariant
+                        self.app.displayImages[key][self.app.displayTopRight]["activeTab"] = key if not fromDeck else "behaviorDeck"
                     else:
                         if enemy != "The Four Kings":
                             self.app.displayKing1.grid_forget()
@@ -1778,17 +1778,17 @@ try:
                             self.app.displayKing3.grid_forget()
                             self.app.displayKing4.grid_forget()
 
-                        self.app.display3.image = photoImage
-                        self.app.display3.config(image=photoImage)
-                        self.app.displayImages[key][self.app.display3]["image"] = photoImage
-                        self.app.displayImages[key][self.app.display3]["name"] = self.selectedVariant
-                        self.app.displayImages[key][self.app.display3]["activeTab"] = key if not fromDeck else "behaviorDeck"
+                        self.app.displayBottomRight.image = photoImage
+                        self.app.displayBottomRight.config(image=photoImage)
+                        self.app.displayImages[key][self.app.displayBottomRight]["image"] = photoImage
+                        self.app.displayImages[key][self.app.displayBottomRight]["name"] = self.selectedVariant
+                        self.app.displayImages[key][self.app.displayBottomRight]["activeTab"] = key if not fromDeck else "behaviorDeck"
                 else:
-                    self.app.display.image = photoImage
-                    self.app.display.config(image=photoImage)
-                    self.app.displayImages[key][self.app.display]["image"] = photoImage
-                    self.app.displayImages[key][self.app.display]["name"] = self.selectedVariant
-                    self.app.displayImages[key][self.app.display]["activeTab"] = key if not fromDeck else "behaviorDeck"
+                    self.app.displayTopLeft.image = photoImage
+                    self.app.displayTopLeft.config(image=photoImage)
+                    self.app.displayImages[key][self.app.displayTopLeft]["image"] = photoImage
+                    self.app.displayImages[key][self.app.displayTopLeft]["name"] = self.selectedVariant
+                    self.app.displayImages[key][self.app.displayTopLeft]["activeTab"] = key if not fromDeck else "behaviorDeck"
 
                 log("End of edit_variant_card_os")
             except Exception as e:
@@ -2124,12 +2124,12 @@ try:
                             self.load_variant_card_locked(variant=variant, forPrinting=True)
 
                         # Stage the image.
-                        if self.app.displayImages["variants"][self.app.display]["image"]:
-                            self.add_card_to_pdf(variant, width, pdf, self.app.displayImages["variants"][self.app.display]["image"], x, y)
-                        if self.app.displayImages["variants"][self.app.display2]["image"] and "Ornstein & Smough_" in variant:
-                            self.add_card_to_pdf(variant, width, pdf, self.app.displayImages["variants"][self.app.display2]["image"], x, y, ornstein=True)
-                        elif self.app.displayImages["variants"][self.app.display2]["image"]:
-                            self.add_card_to_pdf(variant, width, pdf, self.app.displayImages["variants"][self.app.display2]["image"], x, y)
+                        if self.app.displayImages["variants"][self.app.displayTopLeft]["image"]:
+                            self.add_card_to_pdf(variant, width, pdf, self.app.displayImages["variants"][self.app.displayTopLeft]["image"], x, y)
+                        if self.app.displayImages["variants"][self.app.displayTopRight]["image"] and "Ornstein & Smough_" in variant:
+                            self.add_card_to_pdf(variant, width, pdf, self.app.displayImages["variants"][self.app.displayTopRight]["image"], x, y, ornstein=True)
+                        elif self.app.displayImages["variants"][self.app.displayTopRight]["image"]:
+                            self.add_card_to_pdf(variant, width, pdf, self.app.displayImages["variants"][self.app.displayTopRight]["image"], x, y)
 
                         if i < standardCards:
                             if i in columnBreaks:
@@ -2143,8 +2143,8 @@ try:
                         else:
                             y += width + buffer
 
-                        if self.app.displayImages["variants"][self.app.display3]["image"] and "Ornstein & Smough_" in variant:
-                            self.add_card_to_pdf(variant, width, pdf, self.app.displayImages["variants"][self.app.display3]["image"], x, y, smough=True)
+                        if self.app.displayImages["variants"][self.app.displayBottomRight]["image"] and "Ornstein & Smough_" in variant:
+                            self.add_card_to_pdf(variant, width, pdf, self.app.displayImages["variants"][self.app.displayBottomRight]["image"], x, y, smough=True)
 
                             i += 1
 

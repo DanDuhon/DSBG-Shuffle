@@ -195,6 +195,8 @@ try:
                     deck = sample(nonHeatupCards, 4)
                 elif "(attack)" in enemy: # Vordt
                     deck = sample(nonHeatupCards, 3)
+                elif enemy == "Black Dragon Kalameet":
+                    deck = sample(nonHeatupCards, 4) + ["Hellfire Blast", "Mark of Calamity"]
                 elif enemy == "Executioner Chariot":
                     deck = sample(nonHeatupCards, 4) + [choice([b for b in behaviors[enemy] if behaviorDetail[lookupName][b].get("heatup", False)])]
                 elif enemy == "Gaping Dragon":
@@ -257,14 +259,14 @@ try:
                         "behaviorDeck",
                         name=enemy[:enemy.index(" - ")] if " - " in enemy else enemy[:enemy.index("_")] if "_" in enemy else enemy)
                 
-                    self.app.display.config(image="")
-                    self.app.display.image=None
-                    self.app.displayImages["variants"][self.app.display]["image"] = None
-                    self.app.displayImages["variants"][self.app.display]["name"] = None
-                    self.app.displayImages["variants"][self.app.display]["activeTab"] = None
-                    self.app.displayImages["variantsLocked"][self.app.display]["image"] = None
-                    self.app.displayImages["variantsLocked"][self.app.display]["name"] = None
-                    self.app.displayImages["variantsLocked"][self.app.display]["activeTab"] = None
+                    self.app.displayTopLeft.config(image="")
+                    self.app.displayTopLeft.image=None
+                    self.app.displayImages["variants"][self.app.displayTopLeft]["image"] = None
+                    self.app.displayImages["variants"][self.app.displayTopLeft]["name"] = None
+                    self.app.displayImages["variants"][self.app.displayTopLeft]["activeTab"] = None
+                    self.app.displayImages["variantsLocked"][self.app.displayTopLeft]["image"] = None
+                    self.app.displayImages["variantsLocked"][self.app.displayTopLeft]["name"] = None
+                    self.app.displayImages["variantsLocked"][self.app.displayTopLeft]["activeTab"] = None
                     self.decks[enemy]["lastCardDrawn"] = None
 
                 self.decks[enemy]["deck"] = self.load_deck(enemy)
@@ -366,6 +368,9 @@ try:
                         cardToDraw in k
                         and set(self.decks[selection]["defKey"]).issubset(set(self.app.variantsTab.lockedVariants[k][0]))
                         and set(self.decks[selection]["defKey"]).issubset(set(self.app.variantsTab.lockedVariants[k][1])))]
+                elif self.treeviewDecks.selection()[0] == "Great Grey Wolf Sif" and behaviorDetail["Great Grey Wolf Sif"]["health"] + get_health_bonus(behaviorDetail["Great Grey Wolf Sif"]["health"], [modIdLookup[m] for m in list(self.decks["Great Grey Wolf Sif"]["defKey"]) if m]) + self.decks[self.treeviewDecks.selection()[0]]["healthMod"] <= 3:
+                    cardToDraw = "Great Grey Wolf Sif - Limping Strike"
+                    cardToDrawOptions = None
                 else:
                     cardToDrawOptions = [k for k in self.app.variantsTab.lockedVariants if (
                         cardToDraw in k
@@ -506,7 +511,7 @@ try:
                     log("End of health_tracker (regular enemy not selected)")
                     return
 
-                if self.app.display2.image != self.app.displayImages["behaviorDeck"][self.app.display2]["image"]:
+                if self.app.displayTopRight.image != self.app.displayImages["behaviorDeck"][self.app.displayTopRight]["image"]:
                     log("End of health_tracker (came from other tab - displaying cards first)")
                     self.display_deck_cards()
                 
@@ -689,14 +694,14 @@ try:
                     name=selection[:selection.index(" - ")] if " - " in selection else selection[:selection.index("_")] if "_" in selection else selection,
                     onlyDisplay=self.app.display)
                 
-                self.app.display.config(image="")
-                self.app.display.image=None
-                self.app.displayImages["variants"][self.app.display]["image"] = None
-                self.app.displayImages["variants"][self.app.display]["name"] = None
-                self.app.displayImages["variants"][self.app.display]["activeTab"] = None
-                self.app.displayImages["variantsLocked"][self.app.display]["image"] = None
-                self.app.displayImages["variantsLocked"][self.app.display]["name"] = None
-                self.app.displayImages["variantsLocked"][self.app.display]["activeTab"] = None
+                self.app.displayTopLeft.config(image="")
+                self.app.displayTopLeft.image=None
+                self.app.displayImages["variants"][self.app.displayTopLeft]["image"] = None
+                self.app.displayImages["variants"][self.app.displayTopLeft]["name"] = None
+                self.app.displayImages["variants"][self.app.displayTopLeft]["activeTab"] = None
+                self.app.displayImages["variantsLocked"][self.app.displayTopLeft]["image"] = None
+                self.app.displayImages["variantsLocked"][self.app.displayTopLeft]["name"] = None
+                self.app.displayImages["variantsLocked"][self.app.displayTopLeft]["activeTab"] = None
                 self.decks[selection]["lastCardDrawn"] = None
 
                 if selection == "Ornstein & Smough":
@@ -800,7 +805,7 @@ try:
 
                 selectionGeneric = selection[:selection.index(" (")] if "Vordt" in selection else selection
                 modSelection = self.decks[selection]["defKey"]
-                osClicked = "Ornstein" if event.widget == self.app.display2 else "Smough" if event.widget == self.app.display3 else ""
+                osClicked = "Ornstein" if event.widget == self.app.displayTopRight else "Smough" if event.widget == self.app.displayBottomRight else ""
 
                 health = (
                     behaviorDetail[selectionGeneric].get("health", 0)
@@ -894,7 +899,7 @@ try:
                     log("End of raise_health (nothing done)")
                     return
 
-                osClicked = "Ornstein" if event.widget == self.app.display2 else "Smough" if event.widget == self.app.display3 else ""
+                osClicked = "Ornstein" if event.widget == self.app.displayTopRight else "Smough" if event.widget == self.app.displayBottomRight else ""
 
                 if (
                     selection == "The Four Kings"
@@ -939,7 +944,7 @@ try:
                 modSelection = self.decks["The Four Kings"]["defKey"] if self.decks["The Four Kings"]["defKey"] else "The Four Kings"
 
                 startingHealth = (
-                    behaviorDetail[selection]["health"]
+                    25
                     + get_health_bonus(25, [] if modSelection == selection else modSelection)
                     + self.decks[selection]["healthMod"][king]
                     )
@@ -1002,7 +1007,7 @@ try:
                 selection = self.treeviewDecks.selection()[0]
 
                 if self.treeviewDecks.parent(selection) != "Enemies":
-                    log("End of lower_health_king (nothing done)")
+                    log("End of lower_health_regular (nothing done)")
                     return
                 
                 eventLabel = event.widget
@@ -1017,7 +1022,7 @@ try:
                     )
 
                 if startingHealth == 0:
-                    log("End of lower_health_king (nothing done)")
+                    log("End of lower_health_regular (nothing done)")
                     return
                 
                 if startingHealth - amount < 0:
@@ -1027,7 +1032,7 @@ try:
 
                 self.health_tracker(labelIndex=labelIndex)
 
-                log("End of lower_health_king")
+                log("End of lower_health_regular")
             except Exception as e:
                 error_popup(self.root, e)
                 raise
@@ -1044,7 +1049,7 @@ try:
                 selection = self.treeviewDecks.selection()[0]
 
                 if self.treeviewDecks.parent(selection) != "Enemies":
-                    log("End of lower_health_king (nothing done)")
+                    log("End of raise_health_regular (nothing done)")
                     return
                 
                 eventLabel = event.widget

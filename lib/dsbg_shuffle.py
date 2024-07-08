@@ -230,15 +230,18 @@ try:
                 self.displayFrame.bind("<Leave>", self._unbound_to_mousewheel)
                 self.displayFrame.bind("<Configure>", lambda event, canvas=self.displayCanvas: self.on_frame_configure(canvas))
 
-                self.display = ttk.Label(self.displayFrame)
-                self.display.image = None
-                self.display.grid(column=0, row=0, sticky="nsew")
-                self.display2 = ttk.Label(self.displayFrame)
-                self.display2.image = None
-                self.display2.grid(column=1, row=0, sticky="nsew", columnspan=2)
-                self.display3 = ttk.Label(self.displayFrame)
-                self.display3.image = None
-                self.display3.grid(column=1, row=1, sticky="nsew", columnspan=2)
+                self.displayTopLeft = ttk.Label(self.displayFrame)
+                self.displayTopLeft.image = None
+                self.displayTopLeft.grid(column=0, row=0, sticky="nsew")
+                self.displayTopRight = ttk.Label(self.displayFrame)
+                self.displayTopRight.image = None
+                self.displayTopRight.grid(column=1, row=0, sticky="nsew", columnspan=2)
+                self.displayBottomLeft = ttk.Label(self.displayFrame)
+                self.displayBottomLeft.image = None
+                self.displayBottomLeft.grid(column=0, row=1, sticky="nsew")
+                self.displayBottomRight = ttk.Label(self.displayFrame)
+                self.displayBottomRight.image = None
+                self.displayBottomRight.grid(column=1, row=1, sticky="nsew", columnspan=2)
 
                 # Frames for health trackers
                 self.displayKing1 = ttk.Label(self.displayFrame)
@@ -250,13 +253,33 @@ try:
                 self.displayKing4 = ttk.Label(self.displayFrame)
                 self.displayKing4.image = None
 
-                for k, d in enumerate([self.displayKing1, self.displayKing2, self.displayKing3, self.displayKing4], 1):
-                    d.bind("<Button 1>", lambda event, x=1: app.behaviorDeckTab.lower_health_king(event=event, king=k, amount=x))
-                    d.bind("<Shift-Button 1>", lambda event, x=5: app.behaviorDeckTab.lower_health_king(event=event, king=k, amount=x))
-                    d.bind("<Button 3>", lambda event, x=1: app.behaviorDeckTab.raise_health_king(event=event, king=k, amount=x))
-                    d.bind("<Shift-Button 3>", lambda event, x=5: app.behaviorDeckTab.raise_health_king(event=event, king=k, amount=x))
-                    d.bind("<Control-1>", lambda event, x=1: app.behaviorDeckTab.raise_health_king(event=event, king=k, amount=x))
-                    d.bind("<Shift-Control-1>", lambda event, x=5: app.behaviorDeckTab.raise_health_king(event=event, king=k, amount=x))
+                self.displayKing1.bind("<Button 1>", lambda event, x=1: app.behaviorDeckTab.lower_health_king(event=event, king=1, amount=x))
+                self.displayKing1.bind("<Shift-Button 1>", lambda event, x=5: app.behaviorDeckTab.lower_health_king(event=event, king=1, amount=x))
+                self.displayKing1.bind("<Button 3>", lambda event, x=1: app.behaviorDeckTab.raise_health_king(event=event, king=1, amount=x))
+                self.displayKing1.bind("<Shift-Button 3>", lambda event, x=5: app.behaviorDeckTab.raise_health_king(event=event, king=1, amount=x))
+                self.displayKing1.bind("<Control-1>", lambda event, x=1: app.behaviorDeckTab.raise_health_king(event=event, king=1, amount=x))
+                self.displayKing1.bind("<Shift-Control-1>", lambda event, x=5: app.behaviorDeckTab.raise_health_king(event=event, king=1, amount=x))
+
+                self.displayKing2.bind("<Button 1>", lambda event, x=1: app.behaviorDeckTab.lower_health_king(event=event, king=2, amount=x))
+                self.displayKing2.bind("<Shift-Button 1>", lambda event, x=5: app.behaviorDeckTab.lower_health_king(event=event, king=2, amount=x))
+                self.displayKing2.bind("<Button 3>", lambda event, x=1: app.behaviorDeckTab.raise_health_king(event=event, king=2, amount=x))
+                self.displayKing2.bind("<Shift-Button 3>", lambda event, x=5: app.behaviorDeckTab.raise_health_king(event=event, king=2, amount=x))
+                self.displayKing2.bind("<Control-1>", lambda event, x=1: app.behaviorDeckTab.raise_health_king(event=event, king=2, amount=x))
+                self.displayKing2.bind("<Shift-Control-1>", lambda event, x=5: app.behaviorDeckTab.raise_health_king(event=event, king=2, amount=x))
+
+                self.displayKing3.bind("<Button 1>", lambda event, x=1: app.behaviorDeckTab.lower_health_king(event=event, king=3, amount=x))
+                self.displayKing3.bind("<Shift-Button 1>", lambda event, x=5: app.behaviorDeckTab.lower_health_king(event=event, king=3, amount=x))
+                self.displayKing3.bind("<Button 3>", lambda event, x=1: app.behaviorDeckTab.raise_health_king(event=event, king=3, amount=x))
+                self.displayKing3.bind("<Shift-Button 3>", lambda event, x=5: app.behaviorDeckTab.raise_health_king(event=event, king=3, amount=x))
+                self.displayKing3.bind("<Control-1>", lambda event, x=1: app.behaviorDeckTab.raise_health_king(event=event, king=3, amount=x))
+                self.displayKing3.bind("<Shift-Control-1>", lambda event, x=5: app.behaviorDeckTab.raise_health_king(event=event, king=3, amount=x))
+
+                self.displayKing4.bind("<Button 1>", lambda event, x=1: app.behaviorDeckTab.lower_health_king(event=event, king=4, amount=x))
+                self.displayKing4.bind("<Shift-Button 1>", lambda event, x=5: app.behaviorDeckTab.lower_health_king(event=event, king=4, amount=x))
+                self.displayKing4.bind("<Button 3>", lambda event, x=1: app.behaviorDeckTab.raise_health_king(event=event, king=4, amount=x))
+                self.displayKing4.bind("<Shift-Button 3>", lambda event, x=5: app.behaviorDeckTab.raise_health_king(event=event, king=4, amount=x))
+                self.displayKing4.bind("<Control-1>", lambda event, x=1: app.behaviorDeckTab.raise_health_king(event=event, king=4, amount=x))
+                self.displayKing4.bind("<Shift-Control-1>", lambda event, x=5: app.behaviorDeckTab.raise_health_king(event=event, king=4, amount=x))
 
                 for enemy in [e for e in self.enabledEnemies if "Phantoms" not in enemyIds[e].expansions and enemyIds[e].name not in {"Hungry Mimic", "Voracious Mimic"}]:
                     self.behaviorDeckTab.decks[enemyIds[enemy].name]["healthTrackers"] = []
@@ -272,29 +295,34 @@ try:
 
                 self.displayImages = {
                     "encounters": {
-                        self.display: {"name": None, "image": None, "activeTab": None},
-                        self.display2: {"name": None, "image": None, "activeTab": None},
-                        self.display3: {"name": None, "image": None, "activeTab": None}
+                        self.displayTopLeft: {"name": None, "image": None, "activeTab": None},
+                        self.displayTopRight: {"name": None, "image": None, "activeTab": None},
+                        self.displayBottomLeft: {"name": None, "image": None, "activeTab": None},
+                        self.displayBottomRight: {"name": None, "image": None, "activeTab": None}
                     },
                     "events": {
-                        self.display: {"name": None, "image": None, "activeTab": None},
-                        self.display2: {"name": None, "image": None, "activeTab": None},
-                        self.display3: {"name": None, "image": None, "activeTab": None}
+                        self.displayTopLeft: {"name": None, "image": None, "activeTab": None},
+                        self.displayTopRight: {"name": None, "image": None, "activeTab": None},
+                        self.displayBottomLeft: {"name": None, "image": None, "activeTab": None},
+                        self.displayBottomRight: {"name": None, "image": None, "activeTab": None}
                     },
                     "variants": {
-                        self.display: {"name": None, "image": None, "activeTab": None},
-                        self.display2: {"name": None, "image": None, "activeTab": None},
-                        self.display3: {"name": None, "image": None, "activeTab": None}
+                        self.displayTopLeft: {"name": None, "image": None, "activeTab": None},
+                        self.displayTopRight: {"name": None, "image": None, "activeTab": None},
+                        self.displayBottomLeft: {"name": None, "image": None, "activeTab": None},
+                        self.displayBottomRight: {"name": None, "image": None, "activeTab": None}
                     },
                     "variantsLocked": {
-                        self.display: {"name": None, "image": None, "activeTab": None},
-                        self.display2: {"name": None, "image": None, "activeTab": None},
-                        self.display3: {"name": None, "image": None, "activeTab": None}
+                        self.displayTopLeft: {"name": None, "image": None, "activeTab": None},
+                        self.displayTopRight: {"name": None, "image": None, "activeTab": None},
+                        self.displayBottomLeft: {"name": None, "image": None, "activeTab": None},
+                        self.displayBottomRight: {"name": None, "image": None, "activeTab": None}
                     },
                     "behaviorDeck": {
-                        self.display: {"name": None, "image": None, "activeTab": None},
-                        self.display2: {"name": None, "image": None, "activeTab": None},
-                        self.display3: {"name": None, "image": None, "activeTab": None}
+                        self.displayTopLeft: {"name": None, "image": None, "activeTab": None},
+                        self.displayTopRight: {"name": None, "image": None, "activeTab": None},
+                        self.displayBottomLeft: {"name": None, "image": None, "activeTab": None},
+                        self.displayBottomRight: {"name": None, "image": None, "activeTab": None}
                     }
                 }
 
@@ -489,38 +517,45 @@ try:
                 if self.settings != oldSettings:
                     self.selected = None
                     self.rewardTreasure = None
-                    self.display.config(image="")
-                    self.display2.config(image="")
-                    self.display3.config(image="")
-                    self.display.image=None
-                    self.display2.image=None
-                    self.display3.image=None
+                    self.displayTopLeft.config(image="")
+                    self.displayTopLeft.image=None
+                    self.displayTopRight.config(image="")
+                    self.displayTopRight.image=None
+                    self.displayBottomLeft.config(image="")
+                    self.displayBottomLeft.image=None
+                    self.displayBottomRight.config(image="")
+                    self.displayBottomRight.image=None
 
                     self.displayImages = {
                         "encounters": {
-                            self.display: {"name": None, "image": None, "activeTab": None},
-                            self.display2: {"name": None, "image": None, "activeTab": None},
-                            self.display3: {"name": None, "image": None, "activeTab": None}
+                            self.displayTopLeft: {"name": None, "image": None, "activeTab": None},
+                            self.displayTopRight: {"name": None, "image": None, "activeTab": None},
+                            self.displayBottomLeft: {"name": None, "image": None, "activeTab": None},
+                            self.displayBottomRight: {"name": None, "image": None, "activeTab": None}
                         },
                         "events": {
-                            self.display: {"name": None, "image": None, "activeTab": None},
-                            self.display2: {"name": None, "image": None, "activeTab": None},
-                            self.display3: {"name": None, "image": None, "activeTab": None}
+                            self.displayTopLeft: {"name": None, "image": None, "activeTab": None},
+                            self.displayTopRight: {"name": None, "image": None, "activeTab": None},
+                            self.displayBottomLeft: {"name": None, "image": None, "activeTab": None},
+                            self.displayBottomRight: {"name": None, "image": None, "activeTab": None}
                         },
                         "variants": {
-                            self.display: {"name": None, "image": None, "activeTab": None},
-                            self.display2: {"name": None, "image": None, "activeTab": None},
-                            self.display3: {"name": None, "image": None, "activeTab": None}
+                            self.displayTopLeft: {"name": None, "image": None, "activeTab": None},
+                            self.displayTopRight: {"name": None, "image": None, "activeTab": None},
+                            self.displayBottomLeft: {"name": None, "image": None, "activeTab": None},
+                            self.displayBottomRight: {"name": None, "image": None, "activeTab": None}
                         },
                         "variantsLocked": {
-                            self.display: {"name": None, "image": None, "activeTab": None},
-                            self.display2: {"name": None, "image": None, "activeTab": None},
-                            self.display3: {"name": None, "image": None, "activeTab": None}
+                            self.displayTopLeft: {"name": None, "image": None, "activeTab": None},
+                            self.displayTopRight: {"name": None, "image": None, "activeTab": None},
+                            self.displayBottomLeft: {"name": None, "image": None, "activeTab": None},
+                            self.displayBottomRight: {"name": None, "image": None, "activeTab": None}
                         },
                         "behaviorDeck": {
-                            self.display: {"name": None, "image": None, "activeTab": None},
-                            self.display2: {"name": None, "image": None, "activeTab": None},
-                            self.display3: {"name": None, "image": None, "activeTab": None}
+                            self.displayTopLeft: {"name": None, "image": None, "activeTab": None},
+                            self.displayTopRight: {"name": None, "image": None, "activeTab": None},
+                            self.displayBottomLeft: {"name": None, "image": None, "activeTab": None},
+                            self.displayBottomRight: {"name": None, "image": None, "activeTab": None}
                         }
                     }
 

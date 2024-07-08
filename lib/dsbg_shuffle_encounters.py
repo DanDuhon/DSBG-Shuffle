@@ -722,27 +722,27 @@ try:
                 displayPhotoImage = ImageTk.PhotoImage(self.app.displayImage)
 
                 if right:
-                    self.app.displayImages["encounters"][self.app.display2]["name"] = name
-                    self.app.displayImages["encounters"][self.app.display2]["image"] = displayPhotoImage
-                    self.app.displayImages["encounters"][self.app.display2]["activeTab"] = "encounters"
-                    self.app.display2.image = displayPhotoImage
-                    self.app.display2.config(image=displayPhotoImage)
+                    self.app.displayImages["encounters"][self.app.displayTopRight]["name"] = name
+                    self.app.displayImages["encounters"][self.app.displayTopRight]["image"] = displayPhotoImage
+                    self.app.displayImages["encounters"][self.app.displayTopRight]["activeTab"] = "encounters"
+                    self.app.displayTopRight.image = displayPhotoImage
+                    self.app.displayTopRight.config(image=displayPhotoImage)
                 else:
-                    self.app.displayImages["encounters"][self.app.display]["name"] = name
-                    self.app.displayImages["encounters"][self.app.display]["image"] = displayPhotoImage
-                    self.app.displayImages["encounters"][self.app.display]["activeTab"] = "encounters"
-                    self.app.display.image = displayPhotoImage
-                    self.app.display.config(image=displayPhotoImage)
+                    self.app.displayImages["encounters"][self.app.displayTopLeft]["name"] = name
+                    self.app.displayImages["encounters"][self.app.displayTopLeft]["image"] = displayPhotoImage
+                    self.app.displayImages["encounters"][self.app.displayTopLeft]["activeTab"] = "encounters"
+                    self.app.displayTopLeft.image = displayPhotoImage
+                    self.app.displayTopLeft.config(image=displayPhotoImage)
 
                 if not self.app.forPrinting and not campaignGen:
-                    self.app.displayImages["encounters"][self.app.display]["name"] = name
-                    self.app.displayImages["encounters"][self.app.display]["image"] = displayPhotoImage
-                    self.app.displayImages["encounters"][self.app.display]["activeTab"] = "encounters"
-                    self.app.display.config(image=displayPhotoImage)
-                    self.app.display2.config(image="")
-                    self.app.display3.config(image="")
-                    self.app.display2.image=None
-                    self.app.display3.image=None
+                    self.app.displayImages["encounters"][self.app.displayTopLeft]["name"] = name
+                    self.app.displayImages["encounters"][self.app.displayTopLeft]["image"] = displayPhotoImage
+                    self.app.displayImages["encounters"][self.app.displayTopLeft]["activeTab"] = "encounters"
+                    self.app.displayTopLeft.config(image=displayPhotoImage)
+                    self.app.displayTopRight.config(image="")
+                    self.app.displayBottomRight.config(image="")
+                    self.app.displayTopRight.image=None
+                    self.app.displayBottomRight.image=None
 
                 set_display_bindings_by_tab(self.app)
 

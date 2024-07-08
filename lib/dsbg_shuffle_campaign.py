@@ -484,7 +484,7 @@ try:
 
                 self.app.selected = None
                 self.app.encounterTab.rewardTreasure = None
-                self.app.display.unbind("<Button 1>")
+                self.app.displayTopLeft.unbind("<Button 1>")
 
                 tree = event.widget
 
@@ -515,10 +515,10 @@ try:
                 elif campaignCard["type"] == "boss":
                     # Create and display the boss image.
                     self.app.create_image(campaignCard["name"] + ".jpg", "encounter", 4)
-                    self.app.displayImages["encounters"][self.app.display]["image"] = ImageTk.PhotoImage(self.app.displayImage)
-                    self.app.displayImages["encounters"][self.app.display]["activeTab"] = None
-                    self.app.display.image = self.app.displayImages["encounters"][self.app.display]["image"]
-                    self.app.display.config(image=self.app.displayImages["encounters"][self.app.display]["image"])
+                    self.app.displayImages["encounters"][self.app.displayTopLeft]["image"] = ImageTk.PhotoImage(self.app.displayImage)
+                    self.app.displayImages["encounters"][self.app.displayTopLeft]["activeTab"] = None
+                    self.app.displayTopLeft.image = self.app.displayImages["encounters"][self.app.displayTopLeft]["image"]
+                    self.app.displayTopLeft.config(image=self.app.displayImages["encounters"][self.app.displayTopLeft]["image"])
                 elif campaignCard["type"] == "event":
                     self.app.eventTab.load_event(campaign=True, treeviewCampaign=tree)
 
@@ -637,7 +637,7 @@ try:
 
                             # Stage the encounter image
                             log("\tStaging " + encounter["name"] + ", level " + str(encounter["level"]) + " from " + encounter["expansion"])
-                            imageStage = ImageTk.getimage(self.app.displayImages["encounters"][self.app.display]["image"])
+                            imageStage = ImageTk.getimage(self.app.displayImages["encounters"][self.app.displayTopLeft]["image"])
 
                             if i > standardCards:
                                 imageStage = imageStage.rotate(90, Image.NEAREST, expand=1)
@@ -837,7 +837,7 @@ try:
                 p = PopupWindow(self.master, labelText="Which encounter do you want to play?", rightButton=True, leftButton=True)
                 self.root.wait_window(p)
                 
-                clear_other_tab_images(self.app, "encounters", "campaign", self.app.display2)
+                clear_other_tab_images(self.app, "encounters", "campaign", self.app.displayTopRight)
 
                 if p.answer:
                     self.load_v2_campaign_card(leftEncounter)
@@ -951,7 +951,7 @@ try:
 
                 self.app.selected = card
                 self.app.encounterTab.rewardTreasure = None
-                self.app.display.unbind("<Button 1>")
+                self.app.displayTopLeft.unbind("<Button 1>")
                 
                 if not right:
                     # Remove keyword tooltips from the previous card shown, if there are any.
