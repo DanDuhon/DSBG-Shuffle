@@ -4649,6 +4649,31 @@
             "4": [1, 0, 3, 4, 2]
         }
     },
+    "Mega Boss Setup": {
+        "name": "Mega Boss Setup",
+        "expansion": "Executioner Chariot",
+        "level": 4,
+        "tiles": {
+            "1": {
+                "enemies": [10, 10, 4, 10, 4, 10],
+                "spawns": []
+            },
+            "2": {
+                "enemies": [],
+                "spawns": []
+            },
+            "3": {
+                "enemies": [],
+                "spawns": []
+            }
+        },
+        "difficultyOrder": {
+            "1": [0, 1, 4, 2, 5, 3],
+            "2": [0, 1, 4, 2, 5, 3],
+            "3": [0, 1, 4, 2, 5, 3],
+            "4": [0, 1, 4, 2, 5, 3]
+        }
+    },
     "Darkened Chamber": {
         "name": "Darkened Chamber",
         "expansion": "Gaping Dragon",

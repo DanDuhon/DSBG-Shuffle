@@ -380,6 +380,7 @@ try:
 
                 self.load_encounter(encounter=choice([encounter for encounter in encounterList if (
                     self.app.encounters[encounter]["level"] == level
+                    and encounter != "Mega Boss Setup"
                     and (self.app.encounters[encounter]["expansion"] in self.expansionsForRandomEncounters
                         or self.app.encounters[encounter]["level"] == 4))]))
 

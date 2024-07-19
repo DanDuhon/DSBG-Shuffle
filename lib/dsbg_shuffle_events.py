@@ -106,7 +106,7 @@ try:
                     selectmode="extended",
                     columns=("Core Set", "Name", "Count"),
                     yscrollcommand=self.scrollbarTreeviewEventList.set,
-                    height=12 if self.root.winfo_screenheight() > 1000 else 10
+                    height=12 if self.root.winfo_screenheight() > 1000 else 5
                 )
                 
                 self.treeviewEventList.pack(expand=True, fill="both")
@@ -136,7 +136,7 @@ try:
                     selectmode="extended",
                     columns=("Event Deck", "Drawn Order"),
                     yscrollcommand=self.scrollbarTreeviewEventDeck.set,
-                    height=12 if self.root.winfo_screenheight() > 1000 else 10
+                    height=12 if self.root.winfo_screenheight() > 1000 else 5
                 )
                 
                 self.treeviewEventDeck.pack(expand=True, fill="both")

@@ -384,15 +384,17 @@ try:
                     # O&S pre-heatup behavior
                     cardToDrawOptions = [k for k in self.app.variantsTab.lockedVariants if (
                         cardToDraw in k
-                        and set(self.decks[selection]["defKey"]).issubset(set(self.app.variantsTab.lockedVariants[k][0]))
-                        and set(self.decks[selection]["defKey"]).issubset(set(self.app.variantsTab.lockedVariants[k][1])))]
+                        and self.decks[selection]["defKey"].issubset(self.app.variantsTab.lockedVariants[k][0]["defKey"])
+                        and self.decks[selection]["defKey"].issubset(self.app.variantsTab.lockedVariants[k][1]["defKey"]))]
                 elif self.treeviewDecks.selection()[0] == "Great Grey Wolf Sif" and behaviorDetail["Great Grey Wolf Sif"]["health"] + get_health_bonus(behaviorDetail["Great Grey Wolf Sif"]["health"], [modIdLookup[m] for m in list(self.decks["Great Grey Wolf Sif"]["defKey"]) if m]) + self.decks[self.treeviewDecks.selection()[0]]["healthMod"] <= 3:
                     cardToDraw = "Great Grey Wolf Sif - Limping Strike"
-                    cardToDrawOptions = None
+                    cardToDrawOptions = [k for k in self.app.variantsTab.lockedVariants if (
+                        cardToDraw in k
+                        and self.decks[selection]["defKey"].issubset(self.app.variantsTab.lockedVariants[k]["defKey"]))]
                 else:
                     cardToDrawOptions = [k for k in self.app.variantsTab.lockedVariants if (
                         cardToDraw in k
-                        and set(self.decks[selection]["defKey"]).issubset(set(self.app.variantsTab.lockedVariants[k])))]
+                        and self.decks[selection]["defKey"].issubset(self.app.variantsTab.lockedVariants[k]["defKey"]))]
                 
                 if variantSelectionWithMods in set(self.app.variantsTab.lockedVariants) and cardToDrawOptions:
                     variant = choice(cardToDrawOptions)

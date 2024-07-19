@@ -221,7 +221,7 @@ try:
                     selectmode="browse",
                     columns=("Name", "Current Modifier"),
                     yscrollcommand=self.scrollbarTreeviewVariantsList.set,
-                    height=11 if self.root.winfo_screenheight() > 1000 else 9
+                    height=11 if self.root.winfo_screenheight() > 1000 else 5
                 )
 
                 self.treeviewVariantsList.pack(expand=True, fill="both")
@@ -270,7 +270,7 @@ try:
                         selectmode="browse",
                         columns=("Name", "Current Modifier"),
                         yscrollcommand=self.scrollbarTreeviewVariantsLocked.set,
-                        height=11 if self.root.winfo_screenheight() > 1000 else 9
+                        height=11 if self.root.winfo_screenheight() > 1000 else 5
                     )
 
                     self.treeviewVariantsLocked.pack(expand=True, fill="both")
@@ -365,7 +365,7 @@ try:
                     variants,
                     name=self.selectedVariant[:self.selectedVariant.index(" - ")] if " - " in self.selectedVariant else self.selectedVariant[:self.selectedVariant.index("_")] if "_" in self.selectedVariant else self.selectedVariant)
                     
-                if "Smough" not in self.selectedVariant and "Gaping Dragon" not in self.selectedVariant and self.app.displayImages["variants"][self.app.displayBottomRight]["image"]:
+                if "Smough" not in self.selectedVariant and "Gaping Dragon" not in self.selectedVariant and "Vordt" not in self.selectedVariant and self.app.displayImages["variants"][self.app.displayBottomRight]["image"]:
                     self.app.displayBottomRight.config(image="")
                     self.app.displayBottomRight.image=None
                     self.app.displayImages["variantsLocked"][self.app.displayBottomRight]["image"] = None
