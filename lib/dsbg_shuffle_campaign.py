@@ -259,6 +259,10 @@ try:
                     return
                 selectedBoss = choice(availableBosses)
 
+                if selectedBoss == "Executioner Chariot":
+                    self.app.encounterTab.load_encounter(encounter="Mega Boss Setup")
+                    self.add_card_to_campaign()
+
                 # Multiples need a different iid in the treeview, so append a number.
                 if selectedBoss + "_0" not in self.treeviewCampaign.get_children():
                     self.treeviewCampaign.insert(parent="", iid=selectedBoss + "_0", values=(selectedBoss, "Boss", bosses[selectedBoss]["level"]), index="end")
@@ -277,6 +281,12 @@ try:
                 }
 
                 self.campaign.append(card)
+                    
+                addedRow = self.treeviewCampaign.get_children()[-1]
+                if addedRow == "Executioner Chariot_0":
+                    addedRow = self.treeviewCampaign.get_children()[-2]
+                self.treeviewCampaign.focus(addedRow)
+                self.treeviewCampaign.selection_set(addedRow)
 
                 log("End of add_random_boss_to_campaign")
             except Exception as e:
@@ -702,6 +712,7 @@ try:
                     return
 
                 mega = False
+                chariot = False
                 
                 progress = PopupWindow(self.root, labelText="Generating encounters...", loadingImage=True)
                 
@@ -717,7 +728,7 @@ try:
                 self.add_random_boss_to_campaign(level="Main Boss")
                 self.add_random_boss_to_campaign(level="Mega Boss")
 
-                if len(self.campaign) == 3:
+                if len(self.campaign) >= 3:
                     mega = True
 
                 for level in bosses[self.campaign[0]["name"]]["encounters"]:
@@ -729,13 +740,22 @@ try:
                     self.add_card_to_campaign()
 
                 if mega:
-                    for level in bosses[self.campaign[2]["name"]]["encounters"]:
+                    if self.campaign[3]["name"] == "Executioner Chariot":
+                        chariot = True
+
+                    for level in bosses[self.campaign[2 + (1 if chariot else 0)]["name"]]["encounters"]:
                         self.app.encounterTab.random_encounter(level=level, encounterList=encounterList)
                         self.add_card_to_campaign()
-                        
-                    boss3 = (self.campaign[2]["name"] + "_0",)
 
-                    for _ in range(9):
+                    if chariot:
+                        bossSetup = ("Mega Boss Setup_0",)
+                        boss3 = (self.campaign[3]["name"] + "_0",)
+                        for _ in range(10):
+                            self.move_down(leaves=bossSetup)
+                    else:
+                        boss3 = (self.campaign[2]["name"] + "_0",)
+
+                    for _ in range(9 + (1 if chariot else 0)):
                         self.move_down(leaves=boss3)
 
                 boss1 = (self.campaign[0]["name"] + "_0",)
@@ -746,6 +766,10 @@ try:
 
                 for _ in range(4):
                     self.move_down(leaves=boss1)
+                    
+                firstRow = self.treeviewCampaign.get_children()[0]
+                self.treeviewCampaign.focus(firstRow)
+                self.treeviewCampaign.selection_set(firstRow)
 
                 progress.destroy()
 
@@ -807,6 +831,14 @@ try:
                     if len([e for e in self.campaign if e["level"] == 4]) < 1:
                         self.v2_campaign_pick_encounter(4)
                         return
+                    
+                    if "Executioner Chariot" in set([e["name"] for e in self.campaign]) and "Mega Boss Setup" not in set([e["name"] for e in self.campaign]):
+                        self.app.encounterTab.load_encounter(encounter="Mega Boss Setup")
+                        self.add_card_to_campaign()
+                        addedRow = self.treeviewCampaign.get_children()[-1]
+                        self.treeviewCampaign.focus(addedRow)
+                        self.treeviewCampaign.selection_set(addedRow)
+                        return
                         
                     if not [e for e in self.campaign if e["level"] == "Mega Boss"]:
                         self.add_random_boss_to_campaign(level="Mega Boss")
@@ -845,6 +877,10 @@ try:
                     self.load_v2_campaign_card(rightEncounter)
 
                 self.add_card_to_campaign()
+                
+                addedRow = self.treeviewCampaign.get_children()[-1]
+                self.treeviewCampaign.focus(addedRow)
+                self.treeviewCampaign.selection_set(addedRow)
 
                 log("End of generate_v2_campaign_encounters")
             except Exception as e:

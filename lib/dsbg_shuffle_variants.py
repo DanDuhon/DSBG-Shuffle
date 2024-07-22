@@ -131,7 +131,7 @@ try:
             self.diffLabel = ttk.Label(self.variantsTabButtonsFrame, text="Difficulty Modifier: +")
             self.diffLabel.pack(side=tk.LEFT, anchor=tk.CENTER, pady=5)
             self.entryText = tk.StringVar()
-            self.diffEntry = ttk.Entry(self.variantsTabButtonsFrame, textvariable=self.entryText, width=6, validate="all", validatecommand=(vcmd, "%P"))
+            self.diffEntry = ttk.Entry(self.variantsTabButtonsFrame, textvariable=self.entryText, width=7, validate="all", validatecommand=(vcmd, "%P"))
             self.diffEntry.pack(side=tk.LEFT, anchor=tk.CENTER, pady=5)
             self.diffLabel2 = ttk.Label(self.variantsTabButtonsFrame, text="%")
             self.diffLabel2.pack(side=tk.LEFT, anchor=tk.CENTER, pady=5)
@@ -2224,7 +2224,7 @@ try:
             try:
                 log("Start of callback")
 
-                if (str.isdigit(P) or str(P) == "") and len(P) <= 6:
+                if (str.isdigit(P) or str(P) == "") and len(P) <= 7:
                     log("End of callback")
                     return True
                 else:
