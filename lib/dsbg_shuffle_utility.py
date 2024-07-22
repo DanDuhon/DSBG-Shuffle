@@ -108,13 +108,19 @@ class PopupWindow(tk.Toplevel):
         secondButton: Boolean
             Whether to show the second button.
 
+        yesButton: Boolean
+            Whether to show the yes button.
+
+        noButton: Boolean
+            Whether to show the no button.
+
         progressBar: Boolean
             Whether to show the progress bar for app loading.
 
         loadingImage: Boolean
             Whether to show the loading image.
     """
-    def __init__(self, root, labelText=None, firstButton=False, secondButton=False, progressBar=False, progressMax=None, loadingImage=False):
+    def __init__(self, root, labelText=None, firstButton=False, secondButton=False, yesButton=False, noButton=False, ornsteinButton=False, smoughButton=False, leftButton=False, rightButton=False, keepButton=False, discardButton=False, progressBar=False, progressMax=None, loadingImage=False):
         tk.Toplevel.__init__(self, root)
         self.attributes('-alpha', 0.0)
         self.popupFrame = ttk.Frame(self, padding=(20, 10))
@@ -122,8 +128,8 @@ class PopupWindow(tk.Toplevel):
         self.label = ttk.Label(self.popupFrame, text=labelText)
         self.label.grid(column=0, row=1, columnspan=2, padx=20, pady=20)
         self.wait_visibility()
-        self.grab_set_global()
-        self.label.focus_force()
+        self.grab_set()
+        self.answer = None
 
         if firstButton:
             button = ttk.Button(self.popupFrame, text="OK", command=self.destroy)
@@ -133,6 +139,38 @@ class PopupWindow(tk.Toplevel):
             button2 = ttk.Button(self.popupFrame, text="Quit and take me there!", command=root.destroy)
             button2.grid(column=1, row=2, padx=20, pady=20)
             button2.bind("<Button 1>", lambda e: webbrowser.open_new("https://github.com/DanDuhon/DSBG-Shuffle/releases"))
+
+        if yesButton:
+            button = ttk.Button(self.popupFrame, text="Yes", command=self.yes)
+            button.grid(column=0, row=2, padx=20, pady=20)
+
+        if noButton:
+            button = ttk.Button(self.popupFrame, text="No", command=self.no)
+            button.grid(column=1, row=2, padx=20, pady=20)
+
+        if leftButton:
+            button = ttk.Button(self.popupFrame, text="Left", command=self.yes)
+            button.grid(column=0, row=2, padx=20, pady=20)
+
+        if rightButton:
+            button = ttk.Button(self.popupFrame, text="Right", command=self.no)
+            button.grid(column=1, row=2, padx=20, pady=20)
+
+        if keepButton:
+            button = ttk.Button(self.popupFrame, text="Keep", command=self.yes)
+            button.grid(column=0, row=2, padx=20, pady=20)
+
+        if discardButton:
+            button = ttk.Button(self.popupFrame, text="Discard", command=self.no)
+            button.grid(column=1, row=2, padx=20, pady=20)
+
+        if ornsteinButton:
+            button = ttk.Button(self.popupFrame, text="Ornstein", command=self.yes)
+            button.grid(column=0, row=2, padx=20, pady=20)
+
+        if smoughButton:
+            button = ttk.Button(self.popupFrame, text="Smough", command=self.no)
+            button.grid(column=1, row=2, padx=20, pady=20)
 
         if loadingImage:
             loadingImage = ImageTk.PhotoImage(Image.open(baseFolder + "\\lib\\bonfire.png".replace("\\", pathSep)), Image.Resampling.LANCZOS)
@@ -148,6 +186,16 @@ class PopupWindow(tk.Toplevel):
 
         center(self)
         self.attributes('-alpha', 1.0)
+
+
+    def yes(self):
+        self.destroy()
+        self.answer = True
+
+
+    def no(self):
+        self.destroy()
+        self.answer = False
 
 
 class VerticalScrolledFrame(ttk.Frame):
@@ -259,9 +307,116 @@ def log(message, exception=False):
         adapter.debug(message, caller=calframe[1][3])
 
 
+def set_display_bindings_by_tab(app, smoughActive=False):
+    tab = app.notebook.tab(app.notebook.select(), "text")
+    # Don't change bindings on the campaign tab.
+    if tab == "Campaign":
+        return
+    
+    if tab == "Encounters":
+        app.displayTopLeft.bind("<Button 1>", app.encounterTab.shuffle_enemies)
+
+        app.displayTopRight.unbind("<Button 1>")
+        app.displayTopRight.unbind("<Shift-Button 1>")
+        app.displayTopRight.unbind("<Shift-Button 3>")
+        app.displayTopRight.unbind("<Control-1>")
+        app.displayTopRight.unbind("<Shift-Control-1>")
+
+        app.displayBottomRight.unbind("<Button 1>")
+        app.displayBottomRight.unbind("<Shift-Button 1>")
+        app.displayBottomRight.unbind("<Shift-Button 3>")
+        app.displayBottomRight.unbind("<Control-1>")
+        app.displayBottomRight.unbind("<Shift-Control-1>")
+    elif tab == "Events":
+        app.displayTopLeft.unbind("<Button 1>")
+
+        app.displayTopRight.unbind("<Button 1>")
+        app.displayTopRight.unbind("<Shift-Button 1>")
+        app.displayTopRight.unbind("<Shift-Button 3>")
+        app.displayTopRight.unbind("<Control-1>")
+        app.displayTopRight.unbind("<Shift-Control-1>")
+
+        app.displayBottomRight.unbind("<Button 1>")
+        app.displayBottomRight.unbind("<Shift-Button 1>")
+        app.displayBottomRight.unbind("<Shift-Button 3>")
+        app.displayBottomRight.unbind("<Control-1>")
+        app.displayBottomRight.unbind("<Shift-Control-1>")
+    elif tab == "Behavior Variants":
+        app.displayTopLeft.bind("<Button 1>", app.variantsTab.apply_difficulty_modifier)
+
+        app.displayTopRight.bind("<Button 1>", app.variantsTab.apply_difficulty_modifier)
+        app.displayTopRight.unbind("<Shift-Button 1>")
+        app.displayTopRight.unbind("<Shift-Button 3>")
+        app.displayTopRight.unbind("<Control-1>")
+        app.displayTopRight.unbind("<Shift-Control-1>")
+
+        if smoughActive:
+            app.displayBottomRight.bind("<Button 1>", app.variantsTab.apply_difficulty_modifier)
+        else:
+            app.displayBottomRight.unbind("<Button 1>")
+            app.displayBottomRight.unbind("<Shift-Button 1>")
+            app.displayBottomRight.unbind("<Shift-Button 3>")
+            app.displayBottomRight.unbind("<Control-1>")
+            app.displayBottomRight.unbind("<Shift-Control-1>")
+    elif tab == "Behavior Decks":
+        app.displayTopLeft.unbind("<Button 1>")
+
+        app.displayTopRight.bind("<Button 1>", lambda event, x=1: app.behaviorDeckTab.lower_health(event=event, amount=x))
+        app.displayTopRight.bind("<Shift-Button 1>", lambda event, x=5: app.behaviorDeckTab.lower_health(event=event, amount=x))
+        app.displayTopRight.bind("<Button 3>", lambda event, x=1: app.behaviorDeckTab.raise_health(event=event, amount=x))
+        app.displayTopRight.bind("<Shift-Button 3>", lambda event, x=5: app.behaviorDeckTab.raise_health(event=event, amount=x))
+        app.displayTopRight.bind("<Control-1>", lambda event, x=1: app.behaviorDeckTab.raise_health(event=event, amount=x))
+        app.displayTopRight.bind("<Shift-Control-1>", lambda event, x=5: app.behaviorDeckTab.raise_health(event=event, amount=x))
+
+        if smoughActive:
+            app.displayBottomRight.bind("<Button 1>", lambda event, x=1: app.behaviorDeckTab.lower_health(event=event, amount=x))
+            app.displayBottomRight.bind("<Shift-Button 1>", lambda event, x=5: app.behaviorDeckTab.lower_health(event=event, amount=x))
+            app.displayBottomRight.bind("<Button 3>", lambda event, x=1: app.behaviorDeckTab.raise_health(event=event, amount=x))
+            app.displayBottomRight.bind("<Shift-Button 3>", lambda event, x=5: app.behaviorDeckTab.raise_health(event=event, amount=x))
+            app.displayBottomRight.bind("<Control-1>", lambda event, x=1: app.behaviorDeckTab.raise_health(event=event, amount=x))
+            app.displayBottomRight.bind("<Shift-Control-1>", lambda event, x=5: app.behaviorDeckTab.raise_health(event=event, amount=x))
+        else:
+            app.displayBottomRight.unbind("<Button 1>")
+            app.displayBottomRight.unbind("<Shift-Button 1>")
+            app.displayBottomRight.unbind("<Shift-Button 3>")
+            app.displayBottomRight.unbind("<Control-1>")
+            app.displayBottomRight.unbind("<Shift-Control-1>")
+
+
+
+def clear_other_tab_images(app, lookupTab, activeTab, name=None, onlyDisplay=None):
+    if not getattr(app, "displayTopLeft", None):
+        return
+
+    app.displayKing1.grid_forget()
+    app.displayKing2.grid_forget()
+    app.displayKing3.grid_forget()
+    app.displayKing4.grid_forget()
+
+    for e in [e for e in app.behaviorDeckTab.decks if "healthTrackers" in app.behaviorDeckTab.decks[e]]:
+        for h in app.behaviorDeckTab.decks[e]["healthTrackers"]:
+            h.grid_forget()
+
+    displays = [app.displayTopLeft, app.displayTopRight, app.displayBottomLeft, app.displayBottomRight]
+    for display in displays:
+        if onlyDisplay and display != onlyDisplay:
+            continue
+        if (
+            display.image
+            and (display.image != app.displayImages[lookupTab][display]["image"]
+                    or app.displayImages[lookupTab][display]["activeTab"] != activeTab
+                    or (name and name not in app.displayImages[lookupTab][display]["name"]))
+            ):
+            display.config(image="")
+            display.image=None
+            app.displayImages[lookupTab][display]["image"] = None
+            app.displayImages[lookupTab][display]["name"] = None
+            app.displayImages[lookupTab][display]["activeTab"] = None
+
+
 def error_popup(root, e):
     log(e, exception=True)
-    p = PopupWindow(root, "Error detected!\n\nPlease open a Github issue describing what you were doing\nand include the dsbg_shuffle_log file!  Thanks!", firstButton="Ok")
+    p = PopupWindow(root, "Error detected!\n\nPlease open a Github issue describing what you were doing\nand include the dsbg_shuffle_log file!  Thanks!\n\nRegardless, please close and reopen the app.", firstButton="Ok")
     root.wait_window(p)
 
 

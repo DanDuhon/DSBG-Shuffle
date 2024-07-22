@@ -1,1 +1,1 @@
-{"enemySlots": [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0], "alternatives": {"Tomb of Giants": [[30, 30]]}}
+{"enemySlots": [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0], "alternatives": {"Darkroot": [[22, 22]], "Darkroot,Tomb of Giants": [[24, 30]], "Painted World of Ariamis,Executioner Chariot": [[9, 10]], "Tomb of Giants": [[30, 30]], "Darkroot,Executioner Chariot": [[24, 10]], "Executioner Chariot,Tomb of Giants": [[30, 10]], "Painted World of Ariamis": [[9, 9]], "Darkroot,Painted World of Ariamis": [[9, 8]], "Painted World of Ariamis,Tomb of Giants": [[9, 30]]}, "original": [30, 30]}

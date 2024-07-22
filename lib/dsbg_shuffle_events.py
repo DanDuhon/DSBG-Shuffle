@@ -6,7 +6,7 @@ try:
     from random import shuffle
     from tkinter import filedialog, ttk
 
-    from dsbg_shuffle_utility import PopupWindow, error_popup, log, baseFolder, pathSep 
+    from dsbg_shuffle_utility import PopupWindow, clear_other_tab_images, error_popup, log, set_display_bindings_by_tab, baseFolder, pathSep 
 
 
     events = {
@@ -112,7 +112,6 @@ try:
                 self.treeviewEventList.pack(expand=True, fill="both")
                 self.scrollbarTreeviewEventList.config(command=self.treeviewEventList.yview)
                 
-                #minwidth = self.treeviewEventList.column("#0", option="minwidth")
                 self.treeviewEventList.column("#0", width=30)
                 self.treeviewEventList.column("#1", width=155)
                 self.treeviewEventList.column("#2", width=170)
@@ -162,14 +161,22 @@ try:
 
         def load_event(self, event=None, campaign=False, treeviewCampaign=None):
             try:
-                log("Start of load_event, campaign={}", str(campaign))
+                log("Start of load_event, campaign={}".format(str(campaign)))
+                
+                set_display_bindings_by_tab(self.app)
+
+                clear_other_tab_images(self.app, "events", "events")
                 
                 # Get the event selected.
                 if event:
                     tree = event.widget
 
                     # Don't update the image shown if you've selected more than one encounter.
-                    if len(tree.selection()) != 1:
+                    if (
+                        len(tree.selection()) != 1
+                        or (tree.selection()
+                            and "_" in tree.selection()[0]
+                            and tree.selection()[0][:tree.selection()[0].index("_")] not in events)):
                         log("End of load_event (not updating image)")
                         return
                     
@@ -199,9 +206,12 @@ try:
 
                 # Create and display the event image.
                 self.app.create_image(events[eventSelected]["name"] + ".jpg", "encounter", 4)
-                self.app.displayPhotoImage = ImageTk.PhotoImage(self.app.displayImage)
-                self.app.display.image = self.app.displayPhotoImage
-                self.app.display.config(image=self.app.displayPhotoImage)
+                displayPhotoImage = ImageTk.PhotoImage(self.app.displayImage)
+                self.app.displayTopLeft.image = displayPhotoImage
+                self.app.displayTopLeft.config(image=displayPhotoImage)
+                self.app.displayImages["events"][self.app.displayTopLeft]["image"] = displayPhotoImage
+                self.app.displayImages["events"][self.app.displayTopLeft]["name"] = events[eventSelected]["name"]
+                self.app.displayImages["events"][self.app.displayTopLeft]["activeTab"] = "events"
 
                 log("End of load_event")
             except Exception as e:
@@ -380,7 +390,21 @@ try:
                     self.eventDeck.remove(item)
 
                 # Remove the image displaying a deleted encounter.
-                self.app.display.config(image="")
+                self.app.displayTopLeft.config(image="")
+                self.app.displayTopLeft.image=None
+                self.app.displayImages["events"][self.app.displayTopLeft]["image"] = None
+                self.app.displayImages["events"][self.app.displayTopLeft]["name"] = None
+                self.app.displayImages["events"][self.app.displayTopLeft]["activeTab"] = None
+                self.app.displayTopRight.config(image="")
+                self.app.displayTopRight.image=None
+                self.app.displayImages["events"][self.app.displayTopRight]["image"] = None
+                self.app.displayImages["events"][self.app.displayTopRight]["name"] = None
+                self.app.displayImages["events"][self.app.displayTopRight]["activeTab"] = None
+                self.app.displayBottomRight.config(image="")
+                self.app.displayBottomRight.image=None
+                self.app.displayImages["events"][self.app.displayBottomRight]["image"] = None
+                self.app.displayImages["events"][self.app.displayBottomRight]["name"] = None
+                self.app.displayImages["events"][self.app.displayBottomRight]["activeTab"] = None
 
                 shuffle(self.eventDeck)
 
@@ -408,7 +432,21 @@ try:
                 self.sort_event_deck_treeview()
 
                 # Remove the image displaying a deleted encounter.
-                self.app.display.config(image="")
+                self.app.displayTopLeft.config(image="")
+                self.app.displayTopLeft.image=None
+                self.app.displayImages["events"][self.app.displayTopLeft]["image"] = None
+                self.app.displayImages["events"][self.app.displayTopLeft]["name"] = None
+                self.app.displayImages["events"][self.app.displayTopLeft]["activeTab"] = None
+                self.app.displayTopRight.config(image="")
+                self.app.displayTopRight.image=None
+                self.app.displayImages["events"][self.app.displayTopRight]["image"] = None
+                self.app.displayImages["events"][self.app.displayTopRight]["name"] = None
+                self.app.displayImages["events"][self.app.displayTopRight]["activeTab"] = None
+                self.app.displayBottomRight.config(image="")
+                self.app.displayBottomRight.image=None
+                self.app.displayImages["events"][self.app.displayBottomRight]["image"] = None
+                self.app.displayImages["events"][self.app.displayBottomRight]["name"] = None
+                self.app.displayImages["events"][self.app.displayBottomRight]["activeTab"] = None
                 
                 self.currentEvent = None
                 self.currentEventNum = 0
@@ -474,7 +512,22 @@ try:
                     return
 
                 shuffle(self.eventDeck)
-                self.app.display.config(image="")
+                self.app.displayTopLeft.config(image="")
+                self.app.displayTopLeft.image=None
+                self.app.displayImages["events"][self.app.displayTopLeft]["image"] = None
+                self.app.displayImages["events"][self.app.displayTopLeft]["name"] = None
+                self.app.displayImages["events"][self.app.displayTopLeft]["activeTab"] = None
+                self.app.displayTopRight.config(image="")
+                self.app.displayTopRight.image=None
+                self.app.displayImages["events"][self.app.displayTopRight]["image"] = None
+                self.app.displayImages["events"][self.app.displayTopRight]["name"] = None
+                self.app.displayImages["events"][self.app.displayTopRight]["activeTab"] = None
+                self.app.displayBottomRight.config(image="")
+                self.app.displayBottomRight.image=None
+                self.app.displayImages["events"][self.app.displayBottomRight]["image"] = None
+                self.app.displayImages["events"][self.app.displayBottomRight]["name"] = None
+                self.app.displayImages["events"][self.app.displayBottomRight]["activeTab"] = None
+
                 # Reduce the Drawn Order value of more recently drawn cards by 1.
                 for eventCard in self.treeviewEventDeck.get_children():
                     if self.treeviewEventDeck.item(eventCard)["values"][1] and self.treeviewEventDeck.item(eventCard)["values"][1] > self.treeviewEventDeck.item(card)["values"][1]:
@@ -518,7 +571,22 @@ try:
 
                 self.eventDeck.remove(card)
                 self.eventDeck.append(card)
-                self.app.display.config(image="")
+                self.app.displayTopLeft.config(image="")
+                self.app.displayTopLeft.image=None
+                self.app.displayImages["events"][self.app.displayTopLeft]["image"] = None
+                self.app.displayImages["events"][self.app.displayTopLeft]["name"] = None
+                self.app.displayImages["events"][self.app.displayTopLeft]["activeTab"] = None
+                self.app.displayTopRight.config(image="")
+                self.app.displayTopRight.image=None
+                self.app.displayImages["events"][self.app.displayTopRight]["image"] = None
+                self.app.displayImages["events"][self.app.displayTopRight]["name"] = None
+                self.app.displayImages["events"][self.app.displayTopRight]["activeTab"] = None
+                self.app.displayBottomRight.config(image="")
+                self.app.displayBottomRight.image=None
+                self.app.displayImages["events"][self.app.displayBottomRight]["image"] = None
+                self.app.displayImages["events"][self.app.displayBottomRight]["name"] = None
+                self.app.displayImages["events"][self.app.displayBottomRight]["activeTab"] = None
+
                 # Reduce the Drawn Order value of more recently drawn cards by 1.
                 for eventCard in self.treeviewEventDeck.get_children():
                     if self.treeviewEventDeck.item(eventCard)["values"][1] and self.treeviewEventDeck.item(eventCard)["values"][1] > self.treeviewEventDeck.item(card)["values"][1]:
@@ -559,7 +627,21 @@ try:
 
                 self.eventDeck.remove(card)
                 self.eventDeck.insert(0, card)
-                self.app.display.config(image="")
+                self.app.displayTopLeft.config(image="")
+                self.app.displayImages["events"][self.app.displayTopLeft]["image"] = None
+                self.app.displayImages["events"][self.app.displayTopLeft]["name"] = None
+                self.app.displayImages["events"][self.app.displayTopLeft]["activeTab"] = None
+                self.app.displayTopRight.config(image="")
+                self.app.displayTopRight.image=None
+                self.app.displayImages["events"][self.app.displayTopRight]["image"] = None
+                self.app.displayImages["events"][self.app.displayTopRight]["name"] = None
+                self.app.displayImages["events"][self.app.displayTopRight]["activeTab"] = None
+                self.app.displayBottomRight.config(image="")
+                self.app.displayBottomRight.image=None
+                self.app.displayImages["events"][self.app.displayBottomRight]["image"] = None
+                self.app.displayImages["events"][self.app.displayBottomRight]["name"] = None
+                self.app.displayImages["events"][self.app.displayBottomRight]["activeTab"] = None
+                
                 # Reduce the Drawn Order value of more recently drawn cards by 1.
                 for eventCard in self.treeviewEventDeck.get_children():
                     if self.treeviewEventDeck.item(eventCard)["values"][1] and self.treeviewEventDeck.item(eventCard)["values"][1] > self.treeviewEventDeck.item(card)["values"][1]:

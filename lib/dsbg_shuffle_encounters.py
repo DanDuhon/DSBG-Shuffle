@@ -1,4 +1,5 @@
 try:
+    import tkinter as tk
     from collections import Counter
     from json import load
     from PIL import ImageTk, ImageDraw
@@ -7,7 +8,7 @@ try:
 
     from dsbg_shuffle_enemies import enemiesDict, enemyIds
     from dsbg_shuffle_treasure import pick_treasure, treasureSwapEncounters
-    from dsbg_shuffle_utility import PopupWindow, do_nothing, error_popup, log, baseFolder, font, pathSep
+    from dsbg_shuffle_utility import PopupWindow, clear_other_tab_images, error_popup, log, set_display_bindings_by_tab, baseFolder, font, pathSep
 
 
     class EncountersFrame(ttk.Frame):
@@ -37,6 +38,29 @@ try:
                         self.encountersToRemove.add(encounter)
 
                 self.encounterList = list(set(self.encounterList) - self.encountersToRemove)
+
+            self.buttonsFrame = ttk.Frame(self)
+            self.buttonsFrame.pack()
+
+            self.l1 = ttk.Button(self.buttonsFrame, text="Random Level 1", width=16, command=lambda x=1: self.random_encounter(level=x))
+            self.l2 = ttk.Button(self.buttonsFrame, text="Random Level 2", width=16, command=lambda x=2: self.random_encounter(level=x))
+            self.l3 = ttk.Button(self.buttonsFrame, text="Random Level 3", width=16, command=lambda x=3: self.random_encounter(level=x))
+            self.l4 = ttk.Button(self.buttonsFrame, text="Random Level 4", width=16, command=lambda x=4: self.random_encounter(level=x))
+            if "level4" not in self.app.settings["encounterTypes"]:
+                self.l4["state"] = "disabled"
+            if ["level4"] == self.app.settings["encounterTypes"]:
+                self.l1["state"] = "disabled"
+                self.l2["state"] = "disabled"
+                self.l3["state"] = "disabled"
+            self.l1.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+            self.l2.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+            self.l3.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+            self.l4.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+            
+            self.buttonsFrame2 = ttk.Frame(self)
+            self.buttonsFrame2.pack()
+            self.originalButton = ttk.Button(self.buttonsFrame2, text="Show Original", width=16, command=self.show_original)
+            self.originalButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
 
             self.scrollbarTreeviewEncounters = ttk.Scrollbar(self)
             self.scrollbarTreeviewEncounters.pack(side="right", fill="y")
@@ -335,7 +359,7 @@ try:
                 raise
 
 
-        def random_encounter(self, event=None, level=None):
+        def random_encounter(self, event=None, level=None, encounterList=None):
             """
             Picks a random encounter from the list of available encounters and displays it.
 
@@ -351,8 +375,12 @@ try:
             try:
                 log("Start of random_encounter, level={}".format(str(level)))
 
-                self.load_encounter(encounter=choice([encounter for encounter in self.encounterList if (
+                if not encounterList:
+                    encounterList = self.encounterList
+
+                self.load_encounter(encounter=choice([encounter for encounter in encounterList if (
                     self.app.encounters[encounter]["level"] == level
+                    and encounter != "Mega Boss Setup"
                     and (self.app.encounters[encounter]["expansion"] in self.expansionsForRandomEncounters
                         or self.app.encounters[encounter]["level"] == 4))]))
 
@@ -378,6 +406,8 @@ try:
             try:
                 log("Start of load_encounter, event={}, encounter={}, customEnemyListCheck={}".format(str(event), str(encounter), str(customEnemyListCheck)))
 
+                clear_other_tab_images(self.app, "encounters", "encounters")
+
                 if not customEnemyListCheck:
                     self.treeviewEncounters.unbind("<<TreeviewSelect>>")
 
@@ -387,7 +417,7 @@ try:
                     if not tree.item(tree.selection())["tags"][0]:
                         log("\tNo encounter selected")
                         self.treeviewEncounters.bind("<<TreeviewSelect>>", self.load_encounter)
-                        self.app.display.bind("<Button 1>", self.shuffle_enemies)
+                        set_display_bindings_by_tab(self.app)
                         log("\tEnd of load_encounter")
                         return
                     encounterName = tree.item(tree.selection())["text"]
@@ -399,7 +429,7 @@ try:
                     if self.app.encounters[encounterName] == self.app.selected:
                         self.shuffle_enemies()
                         self.treeviewEncounters.bind("<<TreeviewSelect>>", self.load_encounter)
-                        self.app.display.bind("<Button 1>", self.shuffle_enemies)
+                        set_display_bindings_by_tab(self.app)
                         log("\tEnd of load_encounter")
                         return
 
@@ -412,6 +442,7 @@ try:
 
                 self.app.selected["alternatives"] = []
                 self.app.selected["enemySlots"] = alts["enemySlots"]
+                self.app.selected["original"] = alts["original"]
                 self.newEnemies = []
 
                 # Use only alternative enemies for expansions and enemies the user has activated in the settings.
@@ -424,9 +455,42 @@ try:
                 if not customEnemyListCheck:
                     self.shuffle_enemies()
                     self.treeviewEncounters.bind("<<TreeviewSelect>>", self.load_encounter)
-                    self.app.display.bind("<Button 1>", self.shuffle_enemies)
+                    set_display_bindings_by_tab(self.app)
 
                 log("\tEnd of load_encounter")
+            except Exception as e:
+                error_popup(self.root, e)
+                raise
+
+
+        def show_original(self, event=None):
+            """
+            Display the encounter with its original enemies.
+
+            Optional Parameters:
+                event: tkinter.Event
+                    The tkinter Event that is the trigger.
+                    Default: None
+            """
+            try:
+                log("Start of show_original")
+
+                if self.app.notebook.tab(self.app.notebook.select(), "text") not in {"Encounters", "Campaign"}:
+                    log("End of show_original (wrong tab)")
+                    return
+
+                if not self.app.selected:
+                    log("\tNo encounter loaded - nothing to do")
+                    log("\tEnd of show_original")
+                    return
+
+                self.rewardTreasure = None
+
+                self.newEnemies = self.app.selected["original"]
+
+                self.edit_encounter_card(self.app.selected["name"], self.app.selected["expansion"], self.app.selected["level"], self.app.selected["enemySlots"], original=True)
+
+                log("\tEnd of show_original")
             except Exception as e:
                 error_popup(self.root, e)
                 raise
@@ -444,10 +508,12 @@ try:
             try:
                 log("Start of shuffle_enemies")
 
-                self.app.display.bind("<Button 1>", do_nothing)
+                if self.app.notebook.tab(self.app.notebook.select(), "text") not in {"Encounters", "Campaign"}:
+                    log("End of shuffle_enemies (wrong tab)")
+                    return
+
                 if not self.app.selected:
                     log("\tNo encounter loaded - nothing to shuffle")
-                    self.app.display.bind("<Button 1>", self.shuffle_enemies)
                     log("\tEnd of shuffle_enemies")
                     return
 
@@ -456,8 +522,6 @@ try:
                 # Make sure a new set of enemies is chosen each time, otherwise it
                 # feels like the program isn't doing anything.
                 oldEnemies = [e for e in self.newEnemies]
-                if not self.app.selected["alternatives"]:
-                    pass
                 self.newEnemies = choice(self.app.selected["alternatives"])
                 # Check to see if there are multiple alternatives.
                 if len(set([tuple(a) for a in self.app.selected["alternatives"]])) > 1:
@@ -472,7 +536,7 @@ try:
                 raise
 
 
-        def edit_encounter_card(self, name, expansion, level, enemySlots):
+        def edit_encounter_card(self, name, expansion, level, enemySlots, campaignGen=False, right=False, original=False):
             """
             Modify the encounter card image with the new enemies and treasure reward, if applicable.
 
@@ -488,11 +552,18 @@ try:
 
                 enemySlots: List
                     The slots on the card in which enemies are found.
+
+            Optional Parameters:
+                campaignGen: Boolean
+                    Whether this call if from the v2 campaign generator.
+
+                right: Boolean
+                    Display on the right side of the display pane if True.
             """
             try:
-                log("Start of edit_encounter_card, name={}, expansion={}, level={}, enemySlots={}".format(str(name), str(expansion), str(level), str(enemySlots)))
+                log("Start of edit_encounter_card, name={}, expansion={}, level={}, enemySlots={}, right={}".format(str(name), str(expansion), str(level), str(enemySlots), str(right)))
 
-                self.app.displayPhotoImage = self.app.create_image(name + ".jpg", "encounter", level, expansion)
+                displayPhotoImage = self.app.create_image(name + ".jpg", "encounter", level, expansion)
 
                 self.newTiles = {
                     1: [[], [], [], []],
@@ -531,129 +602,151 @@ try:
                         self.app.displayImage.paste(im=image, box=(x, y), mask=image)
                         s += 1
 
-                self.apply_keyword_tooltips(name, expansion)
+                self.apply_keyword_tooltips(name, expansion, right=right)
 
                 # These are new encounters that have text referencing specific enemies.
                 if name == "Abandoned and Forgotten":
                     self.abandoned_and_forgotten()
                 elif name == "Aged Sentinel":
-                    self.aged_sentinel()
+                    self.aged_sentinel(right=right)
                 elif name == "Castle Break In":
-                    self.castle_break_in()
+                    self.castle_break_in(original=original)
                 elif (name == "Central Plaza" or name == "Central Plaza (TSC)") and expansion == "The Sunless City":
-                    self.central_plaza()
+                    self.central_plaza(right=right)
                 elif name == "Cloak and Feathers":
-                    self.cloak_and_feathers()
+                    self.cloak_and_feathers(right=right)
                 elif name == "Cold Snap":
-                    self.cold_snap()
+                    self.cold_snap(right=right)
                 elif name == "Corvian Host":
-                    self.corvian_host()
+                    self.corvian_host(right=right, original=original)
                 elif name == "Corrupted Hovel":
-                    self.corrupted_hovel()
+                    self.corrupted_hovel(right=right)
                 elif name == "Dark Alleyway":
-                    self.dark_alleyway()
+                    self.dark_alleyway(right=right)
                 elif name == "Dark Resurrection":
-                    self.dark_resurrection()
+                    self.dark_resurrection(original=original)
                 elif name == "Deathly Freeze":
-                    self.deathly_freeze(level)
+                    self.deathly_freeze(level, right=right)
                 elif name == "Deathly Magic":
-                    self.deathly_magic(level)
+                    self.deathly_magic(level, right=right)
                 elif name == "Deathly Tolls":
-                    self.deathly_tolls()
+                    self.deathly_tolls(right=right, original=original)
                 elif name == "Depths of the Cathedral":
-                    self.depths_of_the_cathedral()
+                    self.depths_of_the_cathedral(right=right, original=original)
                 elif name == "Distant Tower":
-                    self.distant_tower()
+                    self.distant_tower(right=right, original=original)
                 elif name == "Eye of the Storm":
-                    self.eye_of_the_storm()
+                    self.eye_of_the_storm(right=right)
                 elif name == "Flooded Fortress":
-                    self.flooded_fortress()
+                    self.flooded_fortress(right=right, original=original)
                 elif name == "Frozen Revolutions":
-                    self.frozen_revolutions()
+                    self.frozen_revolutions(right=right)
                 elif name == "Giant's Coffin":
-                    self.giants_coffin()
+                    self.giants_coffin(right=right, original=original)
                 elif name == "Gleaming Silver":
-                    self.gleaming_silver(level)
+                    self.gleaming_silver(level, right=right)
                 elif name == "Gnashing Beaks":
-                    self.gnashing_beaks()
+                    self.gnashing_beaks(right=right)
                 elif name == "Grave Matters":
-                    self.grave_matters()
+                    self.grave_matters(original=original)
                 elif name == "Grim Reunion":
-                    self.grim_reunion()
+                    self.grim_reunion(right=right)
                 elif name == "Hanging Rafters":
-                    self.hanging_rafters()
+                    self.hanging_rafters(original=original)
                 elif name == "In Deep Water":
-                    self.in_deep_water()
+                    self.in_deep_water(right=right, original=original)
                 elif name == "Inhospitable Ground":
-                    self.inhospitable_ground()
+                    self.inhospitable_ground(original=original)
                 elif name == "Lakeview Refuge":
-                    self.lakeview_refuge()
+                    self.lakeview_refuge(right=right)
                 elif name == "Monstrous Maw":
-                    self.monstrous_maw()
+                    self.monstrous_maw(right=right, original=original)
                 elif name == "No Safe Haven":
-                    self.no_safe_haven()
+                    self.no_safe_haven(right=right, original=original)
                 elif name == "Painted Passage":
-                    self.painted_passage()
+                    self.painted_passage(original=original)
                 elif name == "Parish Church":
-                    self.parish_church()
+                    self.parish_church(right=right)
                 elif name == "Parish Gates":
-                    self.parish_gates()
+                    self.parish_gates(right=right)
                 elif name == "Pitch Black":
-                    self.pitch_black(level)
+                    self.pitch_black(level, right=right)
                 elif name == "Puppet Master":
-                    self.puppet_master()
+                    self.puppet_master(right=right, original=original)
                 elif name == "Rain of Filth":
-                    self.rain_of_filth()
+                    self.rain_of_filth(original=original)
                 elif name == "Shattered Keep":
-                    self.shattered_keep()
+                    self.shattered_keep(right=right, original=original)
                 elif name == "Skeletal Spokes":
-                    self.skeletal_spokes()
+                    self.skeletal_spokes(right=right)
                 elif name == "Skeleton Overlord":
-                    self.skeleton_overlord()
+                    self.skeleton_overlord(right=right)
                 elif name == "Tempting Maw":
-                    self.tempting_maw()
+                    self.tempting_maw(right=right)
                 elif name == "The Abandoned Chest":
-                    self.the_abandoned_chest()
+                    self.the_abandoned_chest(right=right, original=original)
                 elif name == "The Beast From the Depths":
-                    self.the_beast_from_the_depths()
+                    self.the_beast_from_the_depths(right=right, original=original)
                 elif name == "The Bell Tower":
-                    self.the_bell_tower()
+                    self.the_bell_tower(right=right)
                 elif name == "The First Bastion":
-                    self.the_first_bastion(level)
+                    self.the_first_bastion(level, right=right)
                 elif name == "The Fountainhead":
-                    self.the_fountainhead()
+                    self.the_fountainhead(right=right, original=original)
                 elif name == "The Grand Hall":
-                    self.the_grand_hall()
+                    self.the_grand_hall(right=right)
                 elif name == "The Iron Golem":
-                    self.the_iron_golem()
+                    self.the_iron_golem(right=right, original=original)
                 elif name == "The Last Bastion":
-                    self.the_last_bastion(level)
+                    self.the_last_bastion(level, right=right)
                 elif name == "The Locked Grave":
-                    self.the_locked_grave()
+                    self.the_locked_grave(right=right, original=original)
                 elif name == "The Shine of Gold":
-                    self.the_shine_of_gold()
+                    self.the_shine_of_gold(right=right)
                 elif name == "The Skeleton Ball":
-                    self.the_skeleton_ball()
+                    self.the_skeleton_ball(right=right, original=original)
                 elif name == "Trecherous Tower":
                     self.trecherous_tower()
                 elif name == "Trophy Room":
-                    self.trophy_room()
+                    self.trophy_room(right=right, original=original)
                 elif name == "Twilight Falls":
-                    self.twilight_falls()
+                    self.twilight_falls(right=right, original=original)
                 elif name == "Undead Sanctum":
-                    self.undead_sanctum()
+                    self.undead_sanctum(right=right, original=original)
                 elif name == "Unseen Scurrying":
-                    self.unseen_scurrying()
+                    self.unseen_scurrying(original=original)
                 elif name == "Urns of the Fallen":
-                    self.urns_of_the_fallen()
+                    self.urns_of_the_fallen(original=original)
                 elif name == "Velka's Chosen":
-                    self.velkas_chosen(level)
+                    self.velkas_chosen(level, right=right, original=original)
 
-                self.app.displayPhotoImage = ImageTk.PhotoImage(self.app.displayImage)
-                self.app.display.image = self.app.displayPhotoImage
-                if not self.app.forPrinting:
-                    self.app.display.config(image=self.app.displayPhotoImage)
-                self.app.display.bind("<Button 1>", self.shuffle_enemies)
+                displayPhotoImage = ImageTk.PhotoImage(self.app.displayImage)
+
+                if right:
+                    self.app.displayImages["encounters"][self.app.displayTopRight]["name"] = name
+                    self.app.displayImages["encounters"][self.app.displayTopRight]["image"] = displayPhotoImage
+                    self.app.displayImages["encounters"][self.app.displayTopRight]["activeTab"] = "encounters"
+                    self.app.displayTopRight.image = displayPhotoImage
+                    self.app.displayTopRight.config(image=displayPhotoImage)
+                else:
+                    self.app.displayImages["encounters"][self.app.displayTopLeft]["name"] = name
+                    self.app.displayImages["encounters"][self.app.displayTopLeft]["image"] = displayPhotoImage
+                    self.app.displayImages["encounters"][self.app.displayTopLeft]["activeTab"] = "encounters"
+                    self.app.displayTopLeft.image = displayPhotoImage
+                    self.app.displayTopLeft.config(image=displayPhotoImage)
+
+                if not self.app.forPrinting and not campaignGen:
+                    self.app.displayImages["encounters"][self.app.displayTopLeft]["name"] = name
+                    self.app.displayImages["encounters"][self.app.displayTopLeft]["image"] = displayPhotoImage
+                    self.app.displayImages["encounters"][self.app.displayTopLeft]["activeTab"] = "encounters"
+                    self.app.displayTopLeft.config(image=displayPhotoImage)
+                    self.app.displayTopRight.config(image="")
+                    self.app.displayBottomRight.config(image="")
+                    self.app.displayTopRight.image=None
+                    self.app.displayBottomRight.image=None
+
+                set_display_bindings_by_tab(self.app)
+
 
                 log("\tEnd of edit_encounter_card")
             except Exception as e:
@@ -661,7 +754,7 @@ try:
                 raise
 
 
-        def apply_keyword_tooltips(self, name, set):
+        def apply_keyword_tooltips(self, name, set, right=False):
             """
             If the encounter card has keywords, create an image of the word imposed over
             the original word and create a tooltip that shows up when mousing over the keyword image.
@@ -669,8 +762,9 @@ try:
             try:
                 log("Start of apply_keyword_tooltips, name={}, set={}".format(str(name), str(set)))
 
-                for tooltip in self.app.tooltips:
-                    tooltip.destroy()
+                if not right:
+                    for tooltip in self.app.tooltips:
+                        tooltip.destroy()
 
                 if not self.app.selected and self.app.notebook.tab(self.app.notebook.select(), "text") != "Campaign":
                     log("\tEnd of apply_keyword_tooltips (removed tooltips only)")
@@ -679,7 +773,7 @@ try:
                 for i, tooltip in enumerate(self.encounterTooltips.get((name, set), [])):
                     if not tooltip:
                         continue
-                    self.app.create_tooltip(tooltipDict=tooltip, x=142, y=int(199 + (15.5 * i)))
+                    self.app.create_tooltip(tooltipDict=tooltip, x=142, y=int(199 + (15.5 * i)), right=right)
 
                 log("\tEnd of apply_keyword_tooltips")
             except Exception as e:
@@ -729,15 +823,15 @@ try:
                 raise
 
 
-        def aged_sentinel(self):
+        def aged_sentinel(self, right=False):
             try:
                 log("Start of aged_sentinel")
 
                 target = self.newTiles[1][1][0]
                 tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.allEnemies[target]["image text" if self.app.forPrinting else "photo image text"], "imageName": target}
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=65, y=147)
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=143, y=231)
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=203, y=255)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=65, y=147, right=right)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=143, y=231, right=right)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=203, y=255, right=right)
 
                 log("\tEnd of aged_sentinel")
             except Exception as e:
@@ -745,7 +839,7 @@ try:
                 raise
 
 
-        def castle_break_in(self):
+        def castle_break_in(self, original=False):
             try:
                 log("Start of castle_break_in")
 
@@ -754,7 +848,7 @@ try:
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
+                    newTreasure = pick_treasure("Original" if original else self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 newTreasureLines = self.new_treasure_name(newTreasure)
@@ -767,13 +861,13 @@ try:
                 raise
 
 
-        def central_plaza(self):
+        def central_plaza(self, right=False):
             try:
                 log("Start of central_plaza")
 
                 target = enemyIds[self.newEnemies[4]].name
                 tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.allEnemies[target]["image text" if self.app.forPrinting else "photo image text"], "imageName": target}
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=143, y=262)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=143, y=262, right=right)
 
                 log("\tEnd of central_plaza")
             except Exception as e:
@@ -781,13 +875,13 @@ try:
                 raise
 
 
-        def cloak_and_feathers(self):
+        def cloak_and_feathers(self, right=False):
             try:
                 log("Start of cloak_and_feathers")
 
                 target = self.newTiles[1][0][0]
                 tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.allEnemies[target]["image text" if self.app.forPrinting else "photo image text"], "imageName": target}
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=65, y=147)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=65, y=147, right=right)
 
                 log("\tEnd of cloak_and_feathers")
             except Exception as e:
@@ -795,13 +889,13 @@ try:
                 raise
 
 
-        def cold_snap(self):
+        def cold_snap(self, right=False):
             try:
                 log("Start of cold_snap")
 
                 target = self.newTiles[2][0][1]
                 tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.allEnemies[target]["image text" if self.app.forPrinting else "photo image text"], "imageName": target}
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=216, y=227)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=216, y=227, right=right)
 
                 log("\tEnd of cold_snap")
             except Exception as e:
@@ -809,13 +903,13 @@ try:
                 raise
 
 
-        def corrupted_hovel(self):
+        def corrupted_hovel(self, right=False):
             try:
                 log("Start of corrupted_hovel")
 
                 target = [enemy for enemy in self.newTiles[1][0] + self.newTiles[1][1] if (self.newTiles[1][0] + self.newTiles[1][1]).count(enemy) == 2][0]
                 tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.allEnemies[target]["image text" if self.app.forPrinting else "photo image text"], "imageName": target}
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=146, y=250)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=146, y=250, right=right)
 
                 log("\tEnd of corrupted_hovel")
             except Exception as e:
@@ -823,24 +917,24 @@ try:
                 raise
 
 
-        def corvian_host(self):
+        def corvian_host(self, right=False, original=False):
             try:
                 log("Start of corvian_host")
 
                 target = self.newTiles[1][1][0]
                 tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.allEnemies[target]["image text" if self.app.forPrinting else "photo image text"], "imageName": target}
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=161, y=238)
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=263, y=238)
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=261, y=251)
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=189, y=276)
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=145, y=288)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=161, y=238, right=right)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=263, y=238, right=right)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=261, y=251, right=right)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=189, y=276, right=right)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=145, y=288, right=right)
 
                 imageWithText = ImageDraw.Draw(self.app.displayImage)
 
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
+                    newTreasure = pick_treasure("Original" if original else self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 newTreasureLines = self.new_treasure_name(newTreasure)
@@ -853,13 +947,13 @@ try:
                 raise
 
 
-        def dark_alleyway(self):
+        def dark_alleyway(self, right=False):
             try:
                 log("Start of dark_alleyway")
 
                 target = self.newTiles[1][0][0]
                 tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.allEnemies[target]["image text" if self.app.forPrinting else "photo image text"], "imageName": target}
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=65, y=147)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=65, y=147, right=right)
 
                 log("\tEnd of dark_alleyway")
             except Exception as e:
@@ -867,14 +961,14 @@ try:
                 raise
 
 
-        def dark_resurrection(self):
+        def dark_resurrection(self, original=False):
             try:
                 log("Start of dark_resurrection")
 
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
+                    newTreasure = pick_treasure("Original" if original else self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.app.displayImage)
@@ -888,7 +982,7 @@ try:
                 raise
 
 
-        def deathly_freeze(self, level):
+        def deathly_freeze(self, level, right=False):
             try:
                 log("Start of deathly_freeze")
 
@@ -897,7 +991,7 @@ try:
                 overlap = set(deathlyFreezeTile1) & set(deathlyFreezeTile2)
                 target = sorted([enemy for enemy in overlap if deathlyFreezeTile1.count(enemy) + deathlyFreezeTile2.count(enemy) == 2], key=lambda x: (-enemiesDict[x].difficultyTiers[level]["toughness"], enemiesDict[x].difficultyTiers[level]["difficulty"][self.app.numberOfCharacters]), reverse=True)[0]
                 tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.allEnemies[target]["image text" if self.app.forPrinting else "photo image text"], "imageName": target}
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=141, y=242)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=141, y=242, right=right)
 
                 log("\tEnd of deathly_freeze")
             except Exception as e:
@@ -905,14 +999,14 @@ try:
                 raise
 
 
-        def deathly_magic(self, level):
+        def deathly_magic(self, level, right=False):
             try:
                 log("Start of deathly_magic")
 
                 target = sorted([enemy for enemy in self.newTiles[1][0] + self.newTiles[1][1] if (self.newTiles[1][0] + self.newTiles[1][1]).count(enemy) == 1], key=lambda x: enemiesDict[x].difficultyTiers[level]["difficulty"][self.app.numberOfCharacters], reverse=True)[0]
                 tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.allEnemies[target]["image text" if self.app.forPrinting else "photo image text"], "imageName": target}
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=65, y=147)
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=274, y=196)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=65, y=147, right=right)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=274, y=196, right=right)
 
                 log("\tEnd of deathly_magic")
             except Exception as e:
@@ -920,15 +1014,15 @@ try:
                 raise
 
 
-        def deathly_tolls(self):
+        def deathly_tolls(self, right=False, original=False):
             try:
                 log("Start of deathly_tolls")
 
                 target = enemyIds[self.newEnemies[7]].name
                 tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.allEnemies[target]["image text" if self.app.forPrinting else "photo image text"], "imageName": target}
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=180, y=212)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=180, y=212, right=right)
 
-                gang = Counter([enemyIds[enemy].gang for enemy in self.newEnemies if enemyIds[enemy].gang]).most_common(1)[0][0]
+                gang = "Hollow" if original else Counter([enemyIds[enemy].gang for enemy in self.newEnemies if enemyIds[enemy].gang]).most_common(1)[0][0]
                 if gang == "Alonne":
                     tooltipDict = {"image" if self.app.forPrinting else "image" if self.app.forPrinting else "photo image": self.app.gangAlonne if self.app.forPrinting else self.app.gangAlonnePhoto, "imageName": "gang"}
                 elif gang == "Hollow":
@@ -938,7 +1032,7 @@ try:
                 elif gang == "Skeleton":
                     tooltipDict = {"image" if self.app.forPrinting else "image" if self.app.forPrinting else "photo image": self.app.gangSkeleton if self.app.forPrinting else self.app.gangSkeletonPhoto, "imageName": "gang"}
 
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=142, y=245)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=142, y=245, right=right)
 
                 log("\tEnd of deathly_tolls")
             except Exception as e:
@@ -946,11 +1040,11 @@ try:
                 raise
 
 
-        def depths_of_the_cathedral(self):
+        def depths_of_the_cathedral(self, right=False, original=False):
             try:
                 log("Start of depths_of_the_cathedral")
 
-                gang = Counter([enemyIds[enemy].gang for enemy in self.newEnemies if enemyIds[enemy].gang]).most_common(1)[0][0]
+                gang = "Hollow" if original else Counter([enemyIds[enemy].gang for enemy in self.newEnemies if enemyIds[enemy].gang]).most_common(1)[0][0]
                 if gang == "Alonne":
                     tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.gangAlonne if self.app.forPrinting else self.app.gangAlonnePhoto, "imageName": "gang"}
                 elif gang == "Hollow":
@@ -960,7 +1054,7 @@ try:
                 elif gang == "Skeleton":
                     tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.gangSkeleton if self.app.forPrinting else self.app.gangSkeletonPhoto, "imageName": "gang"}
 
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=142, y=214)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=142, y=214, right=right)
 
                 log("\tEnd of depths_of_the_cathedral")
             except Exception as e:
@@ -968,18 +1062,18 @@ try:
                 raise
 
 
-        def distant_tower(self):
+        def distant_tower(self, right=False, original=False):
             try:
                 log("Start of distant_tower")
 
                 target = self.newTiles[3][0][0]
                 tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.allEnemies[target]["image text" if self.app.forPrinting else "photo image text"], "imageName": target}
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=217, y=213)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=217, y=213, right=right)
 
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
+                    newTreasure = pick_treasure("Original" if original else self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.app.displayImage)
@@ -993,7 +1087,7 @@ try:
                 raise
 
 
-        def eye_of_the_storm(self):
+        def eye_of_the_storm(self, right=False):
             try:
                 log("Start of eye_of_the_storm")
 
@@ -1003,12 +1097,12 @@ try:
                 text1 = "Increase        "
                 if fourTarget:
                     tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.allEnemies[fourTarget[0]]["image text" if self.app.forPrinting else "photo image text"], "imageName": fourTarget[0]}
-                    self.app.create_tooltip(tooltipDict=tooltipDict, x=187, y=255)
+                    self.app.create_tooltip(tooltipDict=tooltipDict, x=187, y=255, right=right)
                 else:
                     tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.allEnemies[targets[0]]["image text" if self.app.forPrinting else "photo image text"], "imageName": targets[0]}
-                    self.app.create_tooltip(tooltipDict=tooltipDict, x=187, y=255)
+                    self.app.create_tooltip(tooltipDict=tooltipDict, x=187, y=255, right=right)
                     tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.allEnemies[targets[1]]["image text" if self.app.forPrinting else "photo image text"], "imageName": targets[1]}
-                    self.app.create_tooltip(tooltipDict=tooltipDict, x=232, y=255)
+                    self.app.create_tooltip(tooltipDict=tooltipDict, x=232, y=255, right=right)
                     text1 += " and        "
                 text1 += "block and resistance"
                 text2 = "values by 1. Once these enemies have been"
@@ -1016,8 +1110,8 @@ try:
 
                 target = enemyIds[self.newEnemies[5]].name
                 tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.allEnemies[target]["image text" if self.app.forPrinting else "photo image text"], "imageName": target}
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=65, y=147)
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=228, y=281)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=65, y=147, right=right)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=228, y=281, right=right)
                 self.app.displayImage.paste(im=self.app.enemyNode2, box=(263, 281), mask=self.app.enemyNode2)
                 imageWithText.text((140, 255), text1, "black", font)
                 imageWithText.text((140, 268), text2, "black", font)
@@ -1029,14 +1123,14 @@ try:
                 raise
 
 
-        def flooded_fortress(self):
+        def flooded_fortress(self, right=False, original=False):
             try:
                 log("Start of flooded_fortress")
 
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
+                    newTreasure = pick_treasure("Original" if original else self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.app.displayImage)
@@ -1044,7 +1138,7 @@ try:
                 imageWithText.text((21, 258), newTreasureLines[0], "black", font)
                 imageWithText.text((21, 269), newTreasureLines.get(1, ""), "black", font)
 
-                gang = Counter([enemyIds[enemy].gang for enemy in self.newEnemies if enemyIds[enemy].gang]).most_common(1)[0][0]
+                gang =  "Hollow" if original else Counter([enemyIds[enemy].gang for enemy in self.newEnemies if enemyIds[enemy].gang]).most_common(1)[0][0]
                 if gang == "Alonne":
                     tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.gangAlonne if self.app.forPrinting else self.app.gangAlonnePhoto, "imageName": "gang"}
                 elif gang == "Hollow":
@@ -1054,7 +1148,7 @@ try:
                 elif gang == "Skeleton":
                     tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.gangSkeleton if self.app.forPrinting else self.app.gangSkeletonPhoto, "imageName": "gang"}
 
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=142, y=215)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=142, y=215, right=right)
 
                 log("\tEnd of flooded_fortress")
             except Exception as e:
@@ -1062,20 +1156,20 @@ try:
                 raise
 
 
-        def frozen_revolutions(self):
+        def frozen_revolutions(self, right=False, original=False):
             try:
                 log("Start of frozen_revolutions")
 
                 target = self.newTiles[3][0][0]
                 tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.allEnemies[target]["image text" if self.app.forPrinting else "photo image text"], "imageName": target}
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=143, y=227)
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=143, y=243)
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=354, y=243)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=143, y=227, right=right)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=143, y=243, right=right)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=354, y=243, right=right)
 
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
+                    newTreasure = pick_treasure("Original" if original else self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.app.displayImage)
@@ -1089,22 +1183,22 @@ try:
                 raise
 
 
-        def giants_coffin(self):
+        def giants_coffin(self, right=False, original=False):
             try:
                 log("Start of giants_coffin")
 
                 target = enemyIds[self.newEnemies[4]].name
                 tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.allEnemies[target]["image text" if self.app.forPrinting else "photo image text"], "imageName": target}
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=241, y=228)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=241, y=228, right=right)
 
                 target = enemyIds[self.newEnemies[5]].name
                 tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.allEnemies[target]["image text" if self.app.forPrinting else "photo image text"], "imageName": target}
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=286, y=228)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=286, y=228, right=right)
 
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
+                    newTreasure = pick_treasure("Original" if original else self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.app.displayImage)
@@ -1118,7 +1212,7 @@ try:
                 raise
 
 
-        def gleaming_silver(self, level):
+        def gleaming_silver(self, level, right=False):
             try:
                 log("Start of gleaming_silver")
 
@@ -1126,11 +1220,11 @@ try:
 
                 for i, target in enumerate(targets):
                     tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.allEnemies[target]["image text" if self.app.forPrinting else "photo image text"], "imageName": target}
-                    self.app.create_tooltip(tooltipDict=tooltipDict, x=144 + (i * 20), y=270)
+                    self.app.create_tooltip(tooltipDict=tooltipDict, x=144 + (i * 20), y=270, right=right)
 
                 target = enemyIds[self.newEnemies[5]].name
                 tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.allEnemies[target]["image text" if self.app.forPrinting else "photo image text"], "imageName": target}
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=180, y=212)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=180, y=212, right=right)
 
                 log("\tEnd of gleaming_silver")
             except Exception as e:
@@ -1138,21 +1232,21 @@ try:
                 raise
 
 
-        def gnashing_beaks(self):
+        def gnashing_beaks(self, right=False):
             try:
                 log("Start of gnashing_beaks")
 
                 target = enemyIds[self.newEnemies[2]].name
                 tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.allEnemies[target]["image text" if self.app.forPrinting else "photo image text"], "imageName": target}
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=314, y=232)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=314, y=232, right=right)
 
                 target = enemyIds[self.newEnemies[3]].name
                 tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.allEnemies[target]["image text" if self.app.forPrinting else "photo image text"], "imageName": target}
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=338, y=232)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=338, y=232, right=right)
 
                 target = enemyIds[self.newEnemies[4]].name
                 tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.allEnemies[target]["image text" if self.app.forPrinting else "photo image text"], "imageName": target}
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=235, y=244)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=235, y=244, right=right)
 
                 log("\tEnd of gnashing_beaks")
             except Exception as e:
@@ -1160,14 +1254,14 @@ try:
                 raise
 
 
-        def grave_matters(self):
+        def grave_matters(self, original=False):
             try:
                 log("Start of grave_matters")
 
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
+                    newTreasure = pick_treasure("Original" if original else self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.app.displayImage)
@@ -1181,14 +1275,14 @@ try:
                 raise
 
 
-        def grim_reunion(self):
+        def grim_reunion(self, right=False):
             try:
                 log("Start of grim_reunion")
 
                 target = enemyIds[self.newEnemies[10]].name
                 tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.allEnemies[target]["image text" if self.app.forPrinting else "photo image text"], "imageName": target}
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=219, y=196)
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=269, y=255)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=219, y=196, right=right)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=269, y=255, right=right)
 
                 log("\tEnd of grim_reunion")
             except Exception as e:
@@ -1196,7 +1290,7 @@ try:
                 raise
 
 
-        def hanging_rafters(self):
+        def hanging_rafters(self, original=False):
             try:
                 log("Start of hanging_rafters")
 
@@ -1205,7 +1299,7 @@ try:
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
+                    newTreasure = pick_treasure("Original" if original else self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 newTreasureLines = self.new_treasure_name(newTreasure)
@@ -1218,22 +1312,22 @@ try:
                 raise
 
 
-        def in_deep_water(self):
+        def in_deep_water(self, right=False, original=False):
             try:
                 log("Start of in_deep_water")
 
                 target = enemyIds[self.newEnemies[4]].name
                 tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.allEnemies[target]["image text" if self.app.forPrinting else "photo image text"], "imageName": target}
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=239, y=198)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=239, y=198, right=right)
 
                 target = enemyIds[self.newEnemies[5]].name
                 tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.allEnemies[target]["image text" if self.app.forPrinting else "photo image text"], "imageName": target}
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=323, y=198)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=323, y=198, right=right)
 
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
+                    newTreasure = pick_treasure("Original" if original else self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.app.displayImage)
@@ -1247,14 +1341,14 @@ try:
                 raise
 
 
-        def inhospitable_ground(self):
+        def inhospitable_ground(self, original=False):
             try:
                 log("Start of inhospitable_ground")
 
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
+                    newTreasure = pick_treasure("Original" if original else self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.app.displayImage)
@@ -1268,19 +1362,19 @@ try:
                 raise
 
 
-        def lakeview_refuge(self):
+        def lakeview_refuge(self, right=False):
             try:
                 log("Start of lakeview_refuge")
 
                 target = enemyIds[self.newEnemies[-(self.app.numberOfCharacters + 1)]].name
                 tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.allEnemies[target]["image text" if self.app.forPrinting else "photo image text"], "imageName": target}
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=215, y=228)
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=291, y=264)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=215, y=228, right=right)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=291, y=264, right=right)
 
                 for i, enemy in enumerate(self.newEnemies[-self.app.numberOfCharacters:]):
                     target = enemyIds[enemy].name
                     tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.allEnemies[target]["image text" if self.app.forPrinting else "photo image text"], "imageName": target}
-                    self.app.create_tooltip(tooltipDict=tooltipDict, x=181 + (20 * i), y=288)
+                    self.app.create_tooltip(tooltipDict=tooltipDict, x=181 + (20 * i), y=288, right=right)
 
                 log("\tEnd of lakeview_refuge")
             except Exception as e:
@@ -1288,19 +1382,19 @@ try:
                 raise
 
 
-        def monstrous_maw(self):
+        def monstrous_maw(self, right=False, original=False):
             try:
                 log("Start of monstrous_maw")
 
                 target = self.newTiles[1][1][0]
                 tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.allEnemies[target]["image text" if self.app.forPrinting else "photo image text"], "imageName": target}
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=65, y=147)
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=210, y=196)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=65, y=147, right=right)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=210, y=196, right=right)
 
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
+                    newTreasure = pick_treasure("Original" if original else self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.app.displayImage)
@@ -1314,18 +1408,18 @@ try:
                 raise
 
 
-        def no_safe_haven(self):
+        def no_safe_haven(self, right=False, original=False):
             try:
                 log("Start of no_safe_haven")
 
                 target = self.newTiles[2][0][0]
                 tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.allEnemies[target]["image text" if self.app.forPrinting else "photo image text"], "imageName": target}
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=63, y=147)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=63, y=147, right=right)
 
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
+                    newTreasure = pick_treasure("Original" if original else self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.app.displayImage)
@@ -1339,14 +1433,14 @@ try:
                 raise
 
 
-        def painted_passage(self):
+        def painted_passage(self, original=False):
             try:
                 log("Start of painted_passage")
 
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
+                    newTreasure = pick_treasure("Original" if original else self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.app.displayImage)
@@ -1360,13 +1454,13 @@ try:
                 raise
 
 
-        def parish_church(self):
+        def parish_church(self, right=False):
             try:
                 log("Start of parish_church")
 
                 target = enemyIds[self.newEnemies[10]].name
                 tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.allEnemies[target]["image text" if self.app.forPrinting else "photo image text"], "imageName": target}
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=180, y=198)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=180, y=198, right=right)
 
                 log("\tEnd of parish_church")
             except Exception as e:
@@ -1374,21 +1468,21 @@ try:
                 raise
 
 
-        def parish_gates(self):
+        def parish_gates(self, right=False):
             try:
                 log("Start of parish_gates")
 
                 target = enemyIds[self.newEnemies[3]].name
                 tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.allEnemies[target]["image text" if self.app.forPrinting else "photo image text"], "imageName": target}
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=301, y=220)
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=188, y=255)
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=144, y=280)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=301, y=220, right=right)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=188, y=255, right=right)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=144, y=280, right=right)
 
                 target = enemyIds[self.newEnemies[4]].name
                 tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.allEnemies[target]["image text" if self.app.forPrinting else "photo image text"], "imageName": target}
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=321, y=220)
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=208, y=255)
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=164, y=280)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=164, y=232, right=right)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=208, y=255, right=right)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=164, y=280, right=right)
 
                 log("\tEnd of parish_gates")
             except Exception as e:
@@ -1396,7 +1490,7 @@ try:
                 raise
 
 
-        def pitch_black(self, level):
+        def pitch_black(self, level, right=False):
             try:
                 log("Start of pitch_black")
 
@@ -1404,10 +1498,10 @@ try:
                 tile2Enemies = self.newTiles[2][0] + self.newTiles[2][1]
                 target = sorted([enemy for enemy in tile1Enemies if tile1Enemies.count(enemy) == 1], key=lambda x: enemiesDict[x].difficultyTiers[level]["difficulty"][self.app.numberOfCharacters], reverse=True)[0]
                 tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.allEnemies[target]["image text" if self.app.forPrinting else "photo image text"], "imageName": target}
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=65, y=147)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=65, y=147, right=right)
                 target = sorted([enemy for enemy in tile2Enemies if tile2Enemies.count(enemy) == 1], key=lambda x: enemiesDict[x].difficultyTiers[level]["difficulty"][self.app.numberOfCharacters], reverse=True)[0]
                 tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.allEnemies[target]["image text" if self.app.forPrinting else "photo image text"], "imageName": target}
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=222, y=147)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=222, y=147, right=right)
 
                 log("\tEnd of pitch_black")
             except Exception as e:
@@ -1415,21 +1509,21 @@ try:
                 raise
 
 
-        def puppet_master(self):
+        def puppet_master(self, right=False, original=False):
             try:
                 log("Start of puppet_master")
 
                 target = self.newTiles[1][0][1]
                 tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.allEnemies[target]["image text" if self.app.forPrinting else "photo image text"], "imageName": target}
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=64, y=148)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=64, y=148, right=right)
                 target = self.newTiles[1][0][0]
                 tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.allEnemies[target]["image text" if self.app.forPrinting else "photo image text"], "imageName": target}
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=145, y=196)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=145, y=196, right=right)
 
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
+                    newTreasure = pick_treasure("Original" if original else self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.app.displayImage)
@@ -1443,14 +1537,14 @@ try:
                 raise
 
 
-        def rain_of_filth(self):
+        def rain_of_filth(self, original=False):
             try:
                 log("Start of rain_of_filth")
 
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
+                    newTreasure = pick_treasure("Original" if original else self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.app.displayImage)
@@ -1464,19 +1558,19 @@ try:
                 raise
 
 
-        def shattered_keep(self):
+        def shattered_keep(self, right=False, original=False):
             try:
                 log("Start of shattered_keep")
                 
                 targets = set([self.newTiles[1][0][1], self.newTiles[1][1][0], self.newTiles[1][1][1]])
                 for i, target in enumerate(targets):
                     tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.allEnemies[target]["image text" if self.app.forPrinting else "photo image text"], "imageName": target}
-                    self.app.create_tooltip(tooltipDict=tooltipDict, x=145 + (20 * i), y=213)
+                    self.app.create_tooltip(tooltipDict=tooltipDict, x=145 + (20 * i), y=213, right=right)
 
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
+                    newTreasure = pick_treasure("Original" if original else self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.app.displayImage)
@@ -1490,15 +1584,15 @@ try:
                 raise
 
 
-        def skeletal_spokes(self):
+        def skeletal_spokes(self, right=False):
             try:
                 log("Start of skeletal_spokes")
 
                 target = self.newTiles[2][0][0]
                 tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.allEnemies[target]["image text" if self.app.forPrinting else "photo image text"], "imageName": target}
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=145, y=196)
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=165, y=210)
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=165, y=239)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=145, y=196, right=right)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=165, y=210, right=right)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=165, y=239, right=right)
 
                 log("\tEnd of skeletal_spokes")
             except Exception as e:
@@ -1506,25 +1600,25 @@ try:
                 raise
 
 
-        def skeleton_overlord(self):
+        def skeleton_overlord(self, right=False):
             try:
                 log("Start of skeleton_overlord")
 
                 target = enemyIds[self.newEnemies[1]].name
                 tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.allEnemies[target]["image text" if self.app.forPrinting else "photo image text"], "imageName": target}
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=230, y=196)
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=208, y=257)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=230, y=196, right=right)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=208, y=257, right=right)
 
                 target = enemyIds[self.newEnemies[2]].name
                 tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.allEnemies[target]["image text" if self.app.forPrinting else "photo image text"], "imageName": target}
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=309, y=196)
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=245, y=257)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=309, y=196, right=right)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=245, y=257, right=right)
 
                 target = self.newTiles[1][0][0]
                 tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.allEnemies[target]["image text" if self.app.forPrinting else "photo image text"], "imageName": target}
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=65, y=147)
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=313, y=232)
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=332, y=257)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=65, y=147, right=right)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=313, y=232, right=right)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=332, y=257, right=right)
 
                 log("\tEnd of skeleton_overlord")
             except Exception as e:
@@ -1532,15 +1626,15 @@ try:
                 raise
 
 
-        def tempting_maw(self):
+        def tempting_maw(self, right=False):
             try:
                 log("Start of tempting_maw")
 
                 target = enemyIds[self.newEnemies[4]].name
                 tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.allEnemies[target]["image text" if self.app.forPrinting else "photo image text"], "imageName": target}
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=224, y=145)
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=220, y=197)
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=346, y=256)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=224, y=145, right=right)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=220, y=197, right=right)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=346, y=256, right=right)
 
                 log("\tEnd of tempting_maw")
             except Exception as e:
@@ -1548,22 +1642,22 @@ try:
                 raise
 
 
-        def the_abandoned_chest(self):
+        def the_abandoned_chest(self, right=False, original=False):
             try:
                 log("Start of the_abandoned_chest")
 
                 target = enemyIds[self.newEnemies[4]].name
                 tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.allEnemies[target]["image text" if self.app.forPrinting else "photo image text"], "imageName": target}
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=322, y=195)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=322, y=195, right=right)
 
                 target = enemyIds[self.newEnemies[5]].name
                 tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.allEnemies[target]["image text" if self.app.forPrinting else "photo image text"], "imageName": target}
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=144, y=208)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=144, y=208, right=right)
 
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
+                    newTreasure = pick_treasure("Original" if original else self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.app.displayImage)
@@ -1577,19 +1671,19 @@ try:
                 raise
 
 
-        def the_beast_from_the_depths(self):
+        def the_beast_from_the_depths(self, right=False, original=False):
             try:
                 log("Start of the_beast_from_the_depths")
 
                 target = self.newTiles[1][0][0]
                 tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.allEnemies[target]["image text" if self.app.forPrinting else "photo image text"], "imageName": target}
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=65, y=147)
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=158, y=222)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=65, y=147, right=right)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=158, y=222, right=right)
 
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
+                    newTreasure = pick_treasure("Original" if original else self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.app.displayImage)
@@ -1603,17 +1697,17 @@ try:
                 raise
 
 
-        def the_bell_tower(self):
+        def the_bell_tower(self, right=False):
             try:
                 log("Start of the_bell_tower")
 
                 target = enemyIds[self.newEnemies[2]].name
                 tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.allEnemies[target]["image text" if self.app.forPrinting else "photo image text"], "imageName": target}
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=321, y=195)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=321, y=195, right=right)
 
                 target = enemyIds[self.newEnemies[3]].name
                 tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.allEnemies[target]["image text" if self.app.forPrinting else "photo image text"], "imageName": target}
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=341, y=195)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=341, y=195, right=right)
 
                 log("\tEnd of the_bell_tower")
             except Exception as e:
@@ -1621,18 +1715,18 @@ try:
                 raise
 
 
-        def the_first_bastion(self, level):
+        def the_first_bastion(self, level, right=False):
             try:
                 log("Start of the_first_bastion")
 
                 targets = sorted([enemyIds[enemy].name for enemy in self.newEnemies[-3:]], key=lambda x: (-enemiesDict[x].difficultyTiers[level]["toughness"], enemiesDict[x].difficultyTiers[level]["difficulty"][self.app.numberOfCharacters]))
                 tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.allEnemies[targets[0]]["image text" if self.app.forPrinting else "photo image text"], "imageName": targets[0]}
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=362, y=212)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=362, y=212, right=right)
                 tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.allEnemies[targets[1]]["image text" if self.app.forPrinting else "photo image text"], "imageName": targets[1]}
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=188, y=237)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=188, y=237, right=right)
                 tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.allEnemies[targets[2]]["image text" if self.app.forPrinting else "photo image text"], "imageName": targets[2]}
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=247, y=249)
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=216, y=197)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=247, y=249, right=right)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=216, y=197, right=right)
 
                 log("\tEnd of the_first_bastion")
             except Exception as e:
@@ -1640,11 +1734,11 @@ try:
                 raise
 
 
-        def the_fountainhead(self):
+        def the_fountainhead(self, right=False, original=False):
             try:
                 log("Start of the_fountainhead")
 
-                gang = Counter([enemyIds[enemy].gang for enemy in self.newEnemies if enemyIds[enemy].gang]).most_common(1)[0][0]
+                gang = "Hollow" if original else Counter([enemyIds[enemy].gang for enemy in self.newEnemies if enemyIds[enemy].gang]).most_common(1)[0][0]
                 if gang == "Alonne":
                     tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.gangAlonne if self.app.forPrinting else self.app.gangAlonnePhoto, "imageName": "gang"}
                 elif gang == "Hollow":
@@ -1654,7 +1748,7 @@ try:
                 elif gang == "Skeleton":
                     tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.gangSkeleton if self.app.forPrinting else self.app.gangSkeletonPhoto, "imageName": "gang"}
 
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=142, y=200)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=142, y=200, right=right)
 
                 log("\tEnd of the_fountainhead")
             except Exception as e:
@@ -1662,13 +1756,13 @@ try:
                 raise
 
 
-        def the_grand_hall(self):
+        def the_grand_hall(self, right=False):
             try:
                 log("Start of the_grand_hall")
 
                 target = enemyIds[self.newEnemies[7]].name
                 tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.allEnemies[target]["image text" if self.app.forPrinting else "photo image text"], "imageName": target}
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=180, y=213)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=180, y=213, right=right)
 
                 log("\tEnd of the_grand_hall")
             except Exception as e:
@@ -1676,20 +1770,20 @@ try:
                 raise
 
 
-        def the_iron_golem(self):
+        def the_iron_golem(self, right=False, original=False):
             try:
                 log("Start of the_iron_golem")
 
                 target = self.newTiles[1][1][0]
                 tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.allEnemies[target]["image text" if self.app.forPrinting else "photo image text"], "imageName": target}
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=65, y=147)
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=188, y=196)
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=174, y=219)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=65, y=147, right=right)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=188, y=196, right=right)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=174, y=219, right=right)
 
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
+                    newTreasure = pick_treasure("Original" if original else self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.app.displayImage)
@@ -1703,15 +1797,15 @@ try:
                 raise
 
 
-        def the_last_bastion(self, level):
+        def the_last_bastion(self, level, right=False):
             try:
                 log("Start of the_last_bastion")
 
                 target = sorted([enemy for enemy in self.newTiles[1][0] + self.newTiles[1][1]], key=lambda x: enemiesDict[x].difficultyTiers[level]["difficulty"][self.app.numberOfCharacters])[0]
                 tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.allEnemies[target]["image text" if self.app.forPrinting else "photo image text"], "imageName": target}
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=215, y=227)
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=316, y=250)
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=337, y=263)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=215, y=227, right=right)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=316, y=250, right=right)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=337, y=263, right=right)
 
                 log("\tEnd of the_last_bastion")
             except Exception as e:
@@ -1719,19 +1813,19 @@ try:
                 raise
 
 
-        def the_locked_grave(self):
+        def the_locked_grave(self, right=False, original=False):
             try:
                 log("Start of the_locked_grave")
 
                 target = enemyIds[self.newEnemies[7]].name
                 tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.allEnemies[target]["image text" if self.app.forPrinting else "photo image text"], "imageName": target}
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=217, y=197)
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=306, y=220)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=217, y=197, right=right)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=306, y=220, right=right)
 
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
+                    newTreasure = pick_treasure("Original" if original else self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.app.displayImage)
@@ -1745,16 +1839,16 @@ try:
                 raise
 
 
-        def the_shine_of_gold(self):
+        def the_shine_of_gold(self, right=False):
             try:
                 log("Start of the_shine_of_gold")
 
                 target = self.newTiles[1][1][0]
                 tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.allEnemies[target]["image text" if self.app.forPrinting else "photo image text"], "imageName": target}
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=65, y=147)
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=207, y=219)
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=280, y=254)
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=250, y=268)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=65, y=147, right=right)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=207, y=219, right=right)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=280, y=254, right=right)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=250, y=268, right=right)
 
                 target = self.newTiles[1][0][0]
                 tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.allEnemies[target]["image text" if self.app.forPrinting else "photo image text"], "imageName": target}
@@ -1766,21 +1860,21 @@ try:
                 raise
 
 
-        def the_skeleton_ball(self):
+        def the_skeleton_ball(self, right=False, original=False):
             try:
                 log("Start of the_skeleton_ball")
 
                 target = self.newTiles[1][0][0]
                 tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.allEnemies[target]["image text" if self.app.forPrinting else "photo image text"], "imageName": target}
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=64, y=148)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=64, y=148, right=right)
                 target = self.newTiles[3][1][0]
                 tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.allEnemies[target]["image text" if self.app.forPrinting else "photo image text"], "imageName": target}
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=222, y=148)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=222, y=148, right=right)
 
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
+                    newTreasure = pick_treasure("Original" if original else self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.app.displayImage)
@@ -1812,21 +1906,21 @@ try:
                 raise
 
 
-        def trophy_room(self):
+        def trophy_room(self, right=False, original=False):
             try:
                 log("Start of trophy_room")
 
                 targets = set([self.newTiles[2][0][0], self.newTiles[2][1][0]])
                 for i, target in enumerate(targets):
                     tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.allEnemies[target]["image text" if self.app.forPrinting else "photo image text"], "imageName": target}
-                    self.app.create_tooltip(tooltipDict=tooltipDict, x=61 + (20 * i), y=147)
-                    self.app.create_tooltip(tooltipDict=tooltipDict, x=210 + (20 * i), y=197)
-                    self.app.create_tooltip(tooltipDict=tooltipDict, x=145 + (20 * i), y=244)
+                    self.app.create_tooltip(tooltipDict=tooltipDict, x=61 + (20 * i), y=147, right=right)
+                    self.app.create_tooltip(tooltipDict=tooltipDict, x=210 + (20 * i), y=197, right=right)
+                    self.app.create_tooltip(tooltipDict=tooltipDict, x=145 + (20 * i), y=244, right=right)
 
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
+                    newTreasure = pick_treasure("Original" if original else self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.app.displayImage)
@@ -1840,11 +1934,11 @@ try:
                 raise
 
 
-        def twilight_falls(self):
+        def twilight_falls(self, right=False, original=False):
             try:
                 log("Start of twilight_falls")
 
-                gang = Counter([enemyIds[enemy].gang for enemy in self.newEnemies if enemyIds[enemy].gang]).most_common(1)[0][0]
+                gang = "Hollow" if original else Counter([enemyIds[enemy].gang for enemy in self.newEnemies if enemyIds[enemy].gang]).most_common(1)[0][0]
                 if gang == "Alonne":
                     tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.gangAlonne if self.app.forPrinting else self.app.gangAlonnePhoto, "imageName": "gang"}
                 elif gang == "Hollow":
@@ -1854,7 +1948,7 @@ try:
                 elif gang == "Skeleton":
                     tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.gangSkeleton if self.app.forPrinting else self.app.gangSkeletonPhoto, "imageName": "gang"}
 
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=142, y=214)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=142, y=214, right=right)
 
                 log("\tEnd of twilight_falls")
             except Exception as e:
@@ -1862,11 +1956,11 @@ try:
                 raise
 
 
-        def undead_sanctum(self):
+        def undead_sanctum(self, right=False, original=False):
             try:
                 log("Start of undead_sanctum")
 
-                gang = Counter([enemyIds[enemy].gang for enemy in self.newEnemies if enemyIds[enemy].gang]).most_common(1)[0][0]
+                gang = "Hollow" if original else Counter([enemyIds[enemy].gang for enemy in self.newEnemies if enemyIds[enemy].gang]).most_common(1)[0][0]
                 if gang == "Alonne":
                     tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.gangAlonne if self.app.forPrinting else self.app.gangAlonnePhoto, "imageName": "gang"}
                 elif gang == "Hollow":
@@ -1876,12 +1970,12 @@ try:
                 elif gang == "Skeleton":
                     tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.gangSkeleton if self.app.forPrinting else self.app.gangSkeletonPhoto, "imageName": "gang"}
 
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=142, y=214)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=142, y=214, right=right)
 
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
+                    newTreasure = pick_treasure("Original" if original else self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.app.displayImage)
@@ -1894,14 +1988,14 @@ try:
                 error_popup(self.root, e)
                 raise
 
-        def unseen_scurrying(self):
+        def unseen_scurrying(self, original=False):
             try:
                 log("Start of unseen_scurrying")
 
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
+                    newTreasure = pick_treasure("Original" if original else self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.app.displayImage)
@@ -1915,14 +2009,14 @@ try:
                 raise
 
 
-        def urns_of_the_fallen(self):
+        def urns_of_the_fallen(self, original=False):
             try:
                 log("Start of urns_of_the_fallen")
 
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
+                    newTreasure = pick_treasure("Original" if original else self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.app.displayImage)
@@ -1936,20 +2030,20 @@ try:
                 raise
 
 
-        def velkas_chosen(self, level):
+        def velkas_chosen(self, level, right=False, original=False):
             try:
                 log("Start of velkas_chosen")
 
                 target = sorted([enemy for enemy in self.newTiles[2][0] + self.newTiles[2][1]], key=lambda x: enemiesDict[x].difficultyTiers[level]["difficulty"][self.app.numberOfCharacters], reverse=True)[0]
                 tooltipDict = {"image" if self.app.forPrinting else "photo image": self.app.allEnemies[target]["image text" if self.app.forPrinting else "photo image text"], "imageName": target}
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=65, y=147)
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=298, y=195)
-                self.app.create_tooltip(tooltipDict=tooltipDict, x=205, y=219)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=65, y=147, right=right)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=298, y=195, right=right)
+                self.app.create_tooltip(tooltipDict=tooltipDict, x=205, y=219, right=right)
 
                 if self.rewardTreasure:
                     newTreasure = self.rewardTreasure
                 else:
-                    newTreasure = pick_treasure(self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
+                    newTreasure = pick_treasure("Original" if original else self.app.settings["treasureSwapOption"], treasureSwapEncounters[self.app.selected["name"]], self.rewardTreasure, self.app.selected["level"], set(self.app.availableExpansions), set(self.app.charactersActive))
                     self.rewardTreasure = newTreasure
 
                 imageWithText = ImageDraw.Draw(self.app.displayImage)

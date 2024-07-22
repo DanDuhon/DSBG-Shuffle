@@ -9,14 +9,15 @@ try:
     from PIL import Image, ImageTk
     from tkinter import ttk
 
+    from dsbg_shuffle_behavior_decks import BehaviorDeckFrame
     from dsbg_shuffle_campaign import CampaignFrame
     from dsbg_shuffle_encounters import EncountersFrame
     from dsbg_shuffle_enemies import enemyIds, enemiesDict, bosses
     from dsbg_shuffle_events import EventsFrame
     from dsbg_shuffle_settings import SettingsWindow
     from dsbg_shuffle_tooltip_reference import tooltipText
-    from dsbg_shuffle_treasure import generate_treasure_soul_cost, populate_treasure_tiers, pick_treasure, treasureSwapEncounters, treasures
-    from dsbg_shuffle_utility import CreateToolTip, PopupWindow, enable_binding, center, do_nothing, log, error_popup, baseFolder, font, pathSep
+    from dsbg_shuffle_treasure import generate_treasure_soul_cost, populate_treasure_tiers, treasures
+    from dsbg_shuffle_utility import CreateToolTip, PopupWindow, enable_binding, center, do_nothing, log, error_popup, baseFolder, pathSep
     from dsbg_shuffle_variants import VariantsFrame
 
 
@@ -41,8 +42,6 @@ try:
                 self.v1Expansions = {"Dark Souls The Board Game", "Darkroot", "Executioner Chariot", "Explorers", "Iron Keep"}
                 self.v2Expansions = (self.allExpansions - self.v1Expansions - self.level4Expansions)
                 self.enabledEnemies = set([enemiesDict[enemy.replace(" (V1)", "")].id for enemy in self.settings["enabledEnemies"] if enemy not in self.allExpansions])
-                if "Phantoms" in self.availableExpansions:
-                    self.enabledEnemies = self.enabledEnemies.union(set([enemy for enemy in enemyIds if "Phantoms" in enemyIds[enemy].expansions]))
                 self.charactersActive = set(self.settings["charactersActive"])
                 self.numberOfCharacters = len(self.charactersActive)
                 self.availableCoreSets = self.coreSets & self.availableExpansions
@@ -137,6 +136,8 @@ try:
                 self.create_menu()
                 self.set_bindings_buttons_menus(True)
 
+                root.state("zoomed")
+
                 self.progress.destroy()
                 root.deiconify()
             except Exception as e:
@@ -195,6 +196,9 @@ try:
                 self.variantsTab = VariantsFrame(root=root, app=self)
                 self.notebook.add(self.variantsTab, text="Behavior Variants")
 
+                self.behaviorDeckTab = BehaviorDeckFrame(root=root, app=self)
+                self.notebook.add(self.behaviorDeckTab, text="Behavior Decks")
+
                 self.encounterTab = EncountersFrame(root=root, app=self)
                 for index in [0, 1]:
                     self.encounterTab.columnconfigure(index=index, weight=1)
@@ -216,7 +220,7 @@ try:
             try:
                 log("Start of create_display_frame")
 
-                self.displayCanvas = tk.Canvas(self, width=410, yscrollcommand=self.displayScrollbar.set)
+                self.displayCanvas = tk.Canvas(self, width=820, yscrollcommand=self.displayScrollbar.set)
                 self.displayFrame = ttk.Frame(self.displayCanvas)
                 self.displayFrame.columnconfigure(index=0, weight=1, minsize=410)
                 self.displayCanvas.grid(row=0, column=4, padx=10, pady=(10, 0), sticky="nsew", rowspan=2)
@@ -226,8 +230,101 @@ try:
                 self.displayFrame.bind("<Leave>", self._unbound_to_mousewheel)
                 self.displayFrame.bind("<Configure>", lambda event, canvas=self.displayCanvas: self.on_frame_configure(canvas))
 
-                self.display = ttk.Label(self.displayFrame)
-                self.display.grid(column=0, row=0, sticky="nsew")
+                self.displayTopLeft = ttk.Label(self.displayFrame)
+                self.displayTopLeft.image = None
+                self.displayTopLeft.grid(column=0, row=0, sticky="nsew")
+                self.displayTopRight = ttk.Label(self.displayFrame)
+                self.displayTopRight.image = None
+                self.displayTopRight.grid(column=1, row=0, sticky="nsew", columnspan=2)
+                self.displayBottomLeft = ttk.Label(self.displayFrame)
+                self.displayBottomLeft.image = None
+                self.displayBottomLeft.grid(column=0, row=1, sticky="nsew")
+                self.displayBottomRight = ttk.Label(self.displayFrame)
+                self.displayBottomRight.image = None
+                self.displayBottomRight.grid(column=1, row=1, sticky="nsew", columnspan=2)
+
+                # Frames for health trackers
+                self.displayKing1 = ttk.Label(self.displayFrame)
+                self.displayKing1.image = None
+                self.displayKing2 = ttk.Label(self.displayFrame)
+                self.displayKing2.image = None
+                self.displayKing3 = ttk.Label(self.displayFrame)
+                self.displayKing3.image = None
+                self.displayKing4 = ttk.Label(self.displayFrame)
+                self.displayKing4.image = None
+
+                self.displayKing1.bind("<Button 1>", lambda event, x=1: app.behaviorDeckTab.lower_health_king(event=event, king=1, amount=x))
+                self.displayKing1.bind("<Shift-Button 1>", lambda event, x=5: app.behaviorDeckTab.lower_health_king(event=event, king=1, amount=x))
+                self.displayKing1.bind("<Button 3>", lambda event, x=1: app.behaviorDeckTab.raise_health_king(event=event, king=1, amount=x))
+                self.displayKing1.bind("<Shift-Button 3>", lambda event, x=5: app.behaviorDeckTab.raise_health_king(event=event, king=1, amount=x))
+                self.displayKing1.bind("<Control-1>", lambda event, x=1: app.behaviorDeckTab.raise_health_king(event=event, king=1, amount=x))
+                self.displayKing1.bind("<Shift-Control-1>", lambda event, x=5: app.behaviorDeckTab.raise_health_king(event=event, king=1, amount=x))
+
+                self.displayKing2.bind("<Button 1>", lambda event, x=1: app.behaviorDeckTab.lower_health_king(event=event, king=2, amount=x))
+                self.displayKing2.bind("<Shift-Button 1>", lambda event, x=5: app.behaviorDeckTab.lower_health_king(event=event, king=2, amount=x))
+                self.displayKing2.bind("<Button 3>", lambda event, x=1: app.behaviorDeckTab.raise_health_king(event=event, king=2, amount=x))
+                self.displayKing2.bind("<Shift-Button 3>", lambda event, x=5: app.behaviorDeckTab.raise_health_king(event=event, king=2, amount=x))
+                self.displayKing2.bind("<Control-1>", lambda event, x=1: app.behaviorDeckTab.raise_health_king(event=event, king=2, amount=x))
+                self.displayKing2.bind("<Shift-Control-1>", lambda event, x=5: app.behaviorDeckTab.raise_health_king(event=event, king=2, amount=x))
+
+                self.displayKing3.bind("<Button 1>", lambda event, x=1: app.behaviorDeckTab.lower_health_king(event=event, king=3, amount=x))
+                self.displayKing3.bind("<Shift-Button 1>", lambda event, x=5: app.behaviorDeckTab.lower_health_king(event=event, king=3, amount=x))
+                self.displayKing3.bind("<Button 3>", lambda event, x=1: app.behaviorDeckTab.raise_health_king(event=event, king=3, amount=x))
+                self.displayKing3.bind("<Shift-Button 3>", lambda event, x=5: app.behaviorDeckTab.raise_health_king(event=event, king=3, amount=x))
+                self.displayKing3.bind("<Control-1>", lambda event, x=1: app.behaviorDeckTab.raise_health_king(event=event, king=3, amount=x))
+                self.displayKing3.bind("<Shift-Control-1>", lambda event, x=5: app.behaviorDeckTab.raise_health_king(event=event, king=3, amount=x))
+
+                self.displayKing4.bind("<Button 1>", lambda event, x=1: app.behaviorDeckTab.lower_health_king(event=event, king=4, amount=x))
+                self.displayKing4.bind("<Shift-Button 1>", lambda event, x=5: app.behaviorDeckTab.lower_health_king(event=event, king=4, amount=x))
+                self.displayKing4.bind("<Button 3>", lambda event, x=1: app.behaviorDeckTab.raise_health_king(event=event, king=4, amount=x))
+                self.displayKing4.bind("<Shift-Button 3>", lambda event, x=5: app.behaviorDeckTab.raise_health_king(event=event, king=4, amount=x))
+                self.displayKing4.bind("<Control-1>", lambda event, x=1: app.behaviorDeckTab.raise_health_king(event=event, king=4, amount=x))
+                self.displayKing4.bind("<Shift-Control-1>", lambda event, x=5: app.behaviorDeckTab.raise_health_king(event=event, king=4, amount=x))
+
+                for enemy in [e for e in self.enabledEnemies if "Phantoms" not in enemyIds[e].expansions and enemyIds[e].name not in {"Hungry Mimic", "Voracious Mimic"}]:
+                    self.behaviorDeckTab.decks[enemyIds[enemy].name]["healthTrackers"] = []
+                    for _ in range(8):
+                        self.behaviorDeckTab.decks[enemyIds[enemy].name]["healthTrackers"].append(ttk.Label(self.displayFrame))
+                        self.behaviorDeckTab.decks[enemyIds[enemy].name]["healthTrackers"][-1].image = None
+                        self.behaviorDeckTab.decks[enemyIds[enemy].name]["healthTrackers"][-1].bind("<Button 1>", lambda event, x=1: app.behaviorDeckTab.lower_health_regular(event=event, amount=x))
+                        self.behaviorDeckTab.decks[enemyIds[enemy].name]["healthTrackers"][-1].bind("<Shift-Button 1>", lambda event, x=5: app.behaviorDeckTab.lower_health_regular(event=event, amount=x))
+                        self.behaviorDeckTab.decks[enemyIds[enemy].name]["healthTrackers"][-1].bind("<Button 3>", lambda event, x=1: app.behaviorDeckTab.raise_health_regular(event=event, amount=x))
+                        self.behaviorDeckTab.decks[enemyIds[enemy].name]["healthTrackers"][-1].bind("<Shift-Button 3>", lambda event, x=5: app.behaviorDeckTab.raise_health_regular(event=event, amount=x))
+                        self.behaviorDeckTab.decks[enemyIds[enemy].name]["healthTrackers"][-1].bind("<Control-1>", lambda event, x=1: app.behaviorDeckTab.raise_health_regular(event=event, amount=x))
+                        self.behaviorDeckTab.decks[enemyIds[enemy].name]["healthTrackers"][-1].bind("<Shift-Control-1>", lambda event, x=5: app.behaviorDeckTab.raise_health_regular(event=event, amount=x))
+
+                self.displayImages = {
+                    "encounters": {
+                        self.displayTopLeft: {"name": None, "image": None, "activeTab": None},
+                        self.displayTopRight: {"name": None, "image": None, "activeTab": None},
+                        self.displayBottomLeft: {"name": None, "image": None, "activeTab": None},
+                        self.displayBottomRight: {"name": None, "image": None, "activeTab": None}
+                    },
+                    "events": {
+                        self.displayTopLeft: {"name": None, "image": None, "activeTab": None},
+                        self.displayTopRight: {"name": None, "image": None, "activeTab": None},
+                        self.displayBottomLeft: {"name": None, "image": None, "activeTab": None},
+                        self.displayBottomRight: {"name": None, "image": None, "activeTab": None}
+                    },
+                    "variants": {
+                        self.displayTopLeft: {"name": None, "image": None, "activeTab": None},
+                        self.displayTopRight: {"name": None, "image": None, "activeTab": None},
+                        self.displayBottomLeft: {"name": None, "image": None, "activeTab": None},
+                        self.displayBottomRight: {"name": None, "image": None, "activeTab": None}
+                    },
+                    "variantsLocked": {
+                        self.displayTopLeft: {"name": None, "image": None, "activeTab": None},
+                        self.displayTopRight: {"name": None, "image": None, "activeTab": None},
+                        self.displayBottomLeft: {"name": None, "image": None, "activeTab": None},
+                        self.displayBottomRight: {"name": None, "image": None, "activeTab": None}
+                    },
+                    "behaviorDeck": {
+                        self.displayTopLeft: {"name": None, "image": None, "activeTab": None},
+                        self.displayTopRight: {"name": None, "image": None, "activeTab": None},
+                        self.displayBottomLeft: {"name": None, "image": None, "activeTab": None},
+                        self.displayBottomRight: {"name": None, "image": None, "activeTab": None}
+                    }
+                }
 
                 log("End of create_display_frame")
             except Exception as e:
@@ -316,33 +413,12 @@ try:
                 self.buttonsFrame = ttk.Frame(self)
                 self.buttonsFrame.grid(row=0, column=0, pady=(10, 0), sticky="nw")
                 self.buttonsFrame.columnconfigure(index=0, weight=1)
-
-                self.buttons = set()
-                self.l1 = ttk.Button(self.buttonsFrame, text="Random Level 1", width=16, command=lambda x=1: self.encounterTab.random_encounter(level=x))
-                self.l2 = ttk.Button(self.buttonsFrame, text="Random Level 2", width=16, command=lambda x=2: self.encounterTab.random_encounter(level=x))
-                self.l3 = ttk.Button(self.buttonsFrame, text="Random Level 3", width=16, command=lambda x=3: self.encounterTab.random_encounter(level=x))
-                self.l4 = ttk.Button(self.buttonsFrame, text="Random Level 4", width=16, command=lambda x=4: self.encounterTab.random_encounter(level=x))
-                if "level4" not in self.settings["encounterTypes"]:
-                    self.l4["state"] = "disabled"
-                if ["level4"] == self.settings["encounterTypes"]:
-                    self.l1["state"] = "disabled"
-                    self.l2["state"] = "disabled"
-                    self.l3["state"] = "disabled"
-                self.l5 = ttk.Button(self.buttonsFrame, text="Add to Campaign", width=16, command=self.campaignTab.add_card_to_campaign)
-                self.buttons.add(self.l1)
-                self.buttons.add(self.l2)
-                self.buttons.add(self.l3)
-                self.buttons.add(self.l4)
-                self.buttons.add(self.l5)
-                self.l1.grid(column=0, row=0, padx=5)
-                self.l2.grid(column=1, row=0, padx=5)
-                self.l3.grid(column=2, row=0, padx=5)
-                self.l4.grid(column=3, row=0, padx=5)
-                self.l5.grid(column=0, row=1, padx=5, pady=5)
+                self.campaignButton = ttk.Button(self.buttonsFrame, text="Add to Campaign", width=16, command=self.campaignTab.add_card_to_campaign)
+                self.campaignButton.grid(column=0, row=1, padx=5, pady=5)
 
                 # Link to the wiki
                 wikiLink = ttk.Button(self.buttonsFrame, text="Open the wiki", width=16, command=self.open_wiki)
-                wikiLink.grid(column=1, row=1)
+                wikiLink.grid(column=3, row=1)
                 
                 log("End of create_buttons")
             except Exception as e:
@@ -441,7 +517,48 @@ try:
                 if self.settings != oldSettings:
                     self.selected = None
                     self.rewardTreasure = None
-                    self.display.config(image="")
+                    self.displayTopLeft.config(image="")
+                    self.displayTopLeft.image=None
+                    self.displayTopRight.config(image="")
+                    self.displayTopRight.image=None
+                    self.displayBottomLeft.config(image="")
+                    self.displayBottomLeft.image=None
+                    self.displayBottomRight.config(image="")
+                    self.displayBottomRight.image=None
+
+                    self.displayImages = {
+                        "encounters": {
+                            self.displayTopLeft: {"name": None, "image": None, "activeTab": None},
+                            self.displayTopRight: {"name": None, "image": None, "activeTab": None},
+                            self.displayBottomLeft: {"name": None, "image": None, "activeTab": None},
+                            self.displayBottomRight: {"name": None, "image": None, "activeTab": None}
+                        },
+                        "events": {
+                            self.displayTopLeft: {"name": None, "image": None, "activeTab": None},
+                            self.displayTopRight: {"name": None, "image": None, "activeTab": None},
+                            self.displayBottomLeft: {"name": None, "image": None, "activeTab": None},
+                            self.displayBottomRight: {"name": None, "image": None, "activeTab": None}
+                        },
+                        "variants": {
+                            self.displayTopLeft: {"name": None, "image": None, "activeTab": None},
+                            self.displayTopRight: {"name": None, "image": None, "activeTab": None},
+                            self.displayBottomLeft: {"name": None, "image": None, "activeTab": None},
+                            self.displayBottomRight: {"name": None, "image": None, "activeTab": None}
+                        },
+                        "variantsLocked": {
+                            self.displayTopLeft: {"name": None, "image": None, "activeTab": None},
+                            self.displayTopRight: {"name": None, "image": None, "activeTab": None},
+                            self.displayBottomLeft: {"name": None, "image": None, "activeTab": None},
+                            self.displayBottomRight: {"name": None, "image": None, "activeTab": None}
+                        },
+                        "behaviorDeck": {
+                            self.displayTopLeft: {"name": None, "image": None, "activeTab": None},
+                            self.displayTopRight: {"name": None, "image": None, "activeTab": None},
+                            self.displayBottomLeft: {"name": None, "image": None, "activeTab": None},
+                            self.displayBottomRight: {"name": None, "image": None, "activeTab": None}
+                        }
+                    }
+
                     self.encounterTab.treeviewEncounters.pack_forget()
                     self.encounterTab.treeviewEncounters.destroy()
                     self.availableExpansions = set(self.settings["availableExpansions"])
@@ -452,6 +569,7 @@ try:
                     self.encounterTab.set_encounter_list()
                     self.encounterTab.create_encounters_treeview()
                     self.variantsTab.reset_treeview()
+                    self.behaviorDeckTab.reset_treeview()
 
                     self.bossMenuItems = [
                         "Select Boss",
@@ -487,8 +605,6 @@ try:
                         progress = PopupWindow(root, labelText="Applying custom enemy list...", progressBar=True, progressMax=len(self.encounterTab.encounterList), loadingImage=True)
                         
                         self.enabledEnemies = set([enemiesDict[enemy.replace(" (V1)", "")].id for enemy in self.settings["enabledEnemies"] if enemy not in self.allExpansions])
-                        if "Phantoms" in self.availableExpansions:
-                            self.enabledEnemies = self.enabledEnemies.union(set([enemy for enemy in enemyIds if "Phantoms" in enemyIds[enemy].expansions]))
 
                         self.encountersToRemove = set()
                         for encounter in self.encounterTab.encounterList:
@@ -510,18 +626,18 @@ try:
                 self.set_bindings_buttons_menus(True)
                 
                 if "level4" not in self.settings["encounterTypes"]:
-                    self.l4["state"] = "disabled"
+                    self.encounterTab.l4["state"] = "disabled"
                 else:
-                    self.l4["state"] = "enabled"
+                    self.encounterTab.l4["state"] = "enabled"
                 
                 if ["level4"] == self.settings["encounterTypes"]:
-                    self.l1["state"] = "disabled"
-                    self.l2["state"] = "disabled"
-                    self.l3["state"] = "disabled"
+                    self.encounterTab.l1["state"] = "disabled"
+                    self.encounterTab.l2["state"] = "disabled"
+                    self.encounterTab.l3["state"] = "disabled"
                 else:
-                    self.l1["state"] = "enabled"
-                    self.l2["state"] = "enabled"
-                    self.l3["state"] = "enabled"
+                    self.encounterTab.l1["state"] = "enabled"
+                    self.encounterTab.l2["state"] = "enabled"
+                    self.encounterTab.l3["state"] = "enabled"
 
                 log("End of settings_window")
             except Exception as e:
@@ -580,6 +696,16 @@ try:
                     imagePath = baseFolder + "\\lib\\dsbg_shuffle_images\\".replace("\\", pathSep) + imageFileName[:-4] + " rule bg.jpg"
                     log("\tOpening " + imagePath)
                     image = Image.open(imagePath).resize((14, 14), Image.Resampling.LANCZOS)
+                elif imageType == "healthTracker":
+                    imagePath = baseFolder + "\\lib\\dsbg_shuffle_images\\".replace("\\", pathSep) + imageFileName
+                    log("\tOpening " + imagePath)
+                    self.displayImage = Image.open(imagePath).resize((102, 55), Image.Resampling.LANCZOS)
+                    image = ImageTk.PhotoImage(self.displayImage)
+                elif imageType == "fourKingsHealth":
+                    imagePath = baseFolder + "\\lib\\dsbg_shuffle_images\\".replace("\\", pathSep) + imageFileName
+                    log("\tOpening " + imagePath)
+                    self.displayImage = Image.open(imagePath).resize((155, 55), Image.Resampling.LANCZOS)
+                    image = ImageTk.PhotoImage(self.displayImage)
                 else:
                     imagePath = baseFolder + "\\lib\\dsbg_shuffle_images\\".replace("\\", pathSep) + imageFileName
                     log("\tOpening " + imagePath)
@@ -658,7 +784,7 @@ try:
                 raise
 
 
-        def create_tooltip(self, tooltipDict, x, y):
+        def create_tooltip(self, tooltipDict, x, y, right=False):
             """
             Create a label and tooltip that will be placed and later removed.
             """
@@ -669,6 +795,7 @@ try:
                     convertedImage = tooltipDict["image"].convert("RGBA")
                     self.displayImage.paste(im=convertedImage, box=(x, y), mask=convertedImage)
                 else:
+                    x += 410 if right else 0
                     label = tk.Label(self.displayFrame, image=tooltipDict["photo image"], borderwidth=0, highlightthickness=0)
                     self.tooltips.append(label)
                     label.place(x=x, y=y)

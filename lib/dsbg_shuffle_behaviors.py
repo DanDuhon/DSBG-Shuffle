@@ -32,7 +32,7 @@ try:
         "Ornstein & Smough": ["Evasive Sweep & Trampling Charge", "Gliding Stab & Hammer Smash", "Lightning Bolt & Jumping Slam", "Spear Slam & Hammer Sweep", "Swiping Combo & Bonzai Drop", "Charged Bolt", "Charged Swiping Combo", "Electric Clash", "High Voltage", "Lightning Stab", "Charged Charge", "Electric Bonzai Drop", "Electric Hammer Smash", "Jumping Volt Slam", "Lightning Sweep"],
         "Sir Alonne": ["Charging Katana Lunge", "Charging Katana Slash", "Dark Wave", "Double Slash Combo", "Fast Katana Lunge", "Katana Plunge", "Left Sidestep Slash", "Life Drain", "Lunging Slash Combo", "Right Sidestep Slash", "Stab & Slash Combo", "Stabbing Slash Combo", "Triple Slash Combo"],
         "Smelter Demon": ["Double Sweep", "Fiery Blast", "Fiery Explosion", "Flame Wave", "Flaming Double Sweep", "Flaming Impalement Strike", "Flaming Lunging Strike", "Flaming Overhead Chop", "Flaming Sweeping Slash", "Leaping Impalement Strike", "Lunging Strike", "Overhead Chop", "Sweeping Slash"],
-        "The Pursuer": ["Cursed Impale", "Dark Magic", "Overhead Cleave", "Rising Blade Swing", "Shield Bash", "Shield Smash", "Stabbing Strike", "Wide Blade Swing"],
+        "The Pursuer": ["Back Dash", "Cursed Impale", "Dark Magic", "Forward Dash", "Overhead Cleave", "Rising Blade Swing", "Shield Bash", "Shield Smash", "Stabbing Strike", "Wide Blade Swing"],
         "Black Dragon Kalameet": ["Conflagration", "Consuming Blaze", "Evasive Tail Whip", "Flame Feint", "Head Strike", "Hellfire Barrage", "Hellfire Blast", "Mark of Calamity", "Rising Inferno", "Rush Strike", "Sweeping Flame", "Swooping Charge", "Tail Sweep"],
         "Executioner Chariot": ["Advancing Back Kick", "Back Kick", "Charging Breath", "Charging Ram", "Deadly Breath", "Death Race", "Engulfing Darkness", "Headbutt", "Merciless Charge", "Rearing Charge", "Roiling Darkness", "Stomp Rush", "Trampling Charge"],
         "Gaping Dragon": ["Claw Swipe", "Corrosive Ooze (Front)", "Corrosive Ooze (Front Left)", "Corrosive Ooze (Front Right)", "Corrosive Ooze (Front Right Left)", "Crawling Charge", "Flying Smash", "Gorge", "Right Hook", "Stomach Slam", "Stomp Slam", "Tail Whip", "Triple Stomp"],
@@ -42,7 +42,9 @@ try:
         "Stray Demon": ["Crushing Leaps", "Delayed Hammer Drive", "Ground Pound", "Hammer Blast", "Hammer Drive", "Leaping Hammer Smash", "Lumbering Swings", "Mighty Hammer Smash", "Retreating Sweep", "Shockwave", "Sidestep Left Sweep", "Sidestep Right Sweep", "Sweeping Strikes"],
         "The Four Kings": ["Blazing Wrath", "Cautious Arrow Mass", "Downward Slash", "Evasive Abyss Arrow", "Evasive Slash", "Executioner's Slash", "Forward Thrust", "Homing Abyss Arrow", "Homing Arrow Mass", "Horizontal Slash", "Into the Abyss", "Lifedrain Death Grasp", "Lifedrain Grab", "Pinpoint Homing Arrows", "Precision Slash", "Shockwave", "Thrust & Retreat", "Unerring Thrust", "Upward Slash", "Wrath of the Kings"],
         "The Last Giant": ["Arm Club Backhand", "Arm Club Sweep", "Arm Smash", "Armed Swings", "Backhand Strike", "Backstep Stomp", "Beat You With It", "Clubbing Blow", "Falling Slam", "Heavy Swings", "Left Foot Stomp", "Overhead Smash", "Right Foot Stomp", "Stomp Rush", "Sweeping Strike", "Triple Stomp"],
-        "Vordt of the Boreal Valley": ["Backhand Swipe", "Berserk Rush", "Berserk Trample", "Crushing Charge", "Double Swipe", "Frostbreath", "Hammerfist Combo", "Hammerfist", "Handle Slam", "Jump Rush", "Mace Thrust", "Retreating Sweep", "Shove Left", "Shove Right", "Tracking Charge", "Trampling Charge", "Wild Swings"]
+        "Vordt of the Boreal Valley": ["Backhand Swipe", "Berserk Rush", "Berserk Trample", "Crushing Charge", "Double Swipe", "Frostbreath", "Hammerfist Combo", "Hammerfist", "Handle Slam", "Jump Rush", "Mace Thrust", "Retreating Sweep", "Shove Left", "Shove Right", "Tracking Charge", "Trampling Charge", "Wild Swings"],
+        "Vordt of the Boreal Valley (move)": ["Berserk Rush", "Berserk Trample", "Crushing Charge", "Jump Rush", "Shove Left", "Shove Right", "Tracking Charge", "Trampling Charge"],
+        "Vordt of the Boreal Valley (attack)": ["Backhand Swipe", "Double Swipe", "Hammerfist Combo", "Hammerfist", "Handle Slam", "Mace Thrust", "Retreating Sweep", "Wild Swings"]
     }
 
     behaviorDetail = {
@@ -939,16 +941,19 @@ try:
             },
             "Darkness Falls": {
                 "dodge": 1,
-                "right": {"type": "magic", "damage": 5}
+                "right": {"type": "magic", "damage": 5},
+                "heatup": True
             },
             "Massive Sweep": {
                 "dodge": 2,
-                "middle": {"type": "physical", "damage": 5}
+                "middle": {"type": "physical", "damage": 5},
+                "heatup": True
             },
             "Lunging Combo": {
                 "dodge": 2,
                 "left": {"type": "physical", "damage": 5},
-                "right": {"type": "physical", "damage": 5}
+                "right": {"type": "physical", "damage": 5},
+                "heatup": True
             }
         },
         "Asylum Demon": {
@@ -989,18 +994,21 @@ try:
             "Lumbering Swings": {
                 "dodge": 1,
                 "repeat": 2,
-                "right": {"type": "physical", "damage": 4}
+                "right": {"type": "physical", "damage": 4},
+                "heatup": True
             },
             "Sweeping Strikes": {
                 "dodge": 2,
                 "middle": {"type": "physical", "damage": 4},
-                "right": {"type": "physical", "damage": 4}
+                "right": {"type": "physical", "damage": 4},
+                "heatup": True
             },
             "Crushing Leaps": {
                 "dodge": 1,
                 "left": {"type": "push", "damage": 5},
                 "middle": {"type": "push", "damage": 5},
-                "right": {}
+                "right": {},
+                "heatup": True
             }
         },
         "Boreal Outrider Knight": {
@@ -1039,17 +1047,20 @@ try:
                 "dodge": 1,
                 "repeat": 3,
                 "middle": {"type": "physical", "damage": 4},
-                "right": {}
+                "right": {},
+                "heatup": True
             },
             "Uppercut Slam": {
                 "dodge": 2,
                 "middle": {"type": "physical", "damage": 5},
-                "right": {"effect": ["frostbite"]}
+                "right": {"effect": ["frostbite"]},
+                "heatup": True
             },
             "Frost Breath": {
                 "dodge": 1,
                 "middle": {"type": "magic", "damage": 6},
-                "right": {"effect": ["frostbite"]}
+                "right": {"effect": ["frostbite"]},
+                "heatup": True
             }
         },
         "Winged Knight": {
@@ -1071,19 +1082,22 @@ try:
                 "dodge": 2,
                 "repeat": 2,
                 "middle": {"type": "physical", "damage": 6},
-                "right": {}
+                "right": {},
+                "heatup": True
             },
             "Whirlwind": {
                 "dodge": 1,
                 "repeat": 3,
                 "middle": {"type": "physical", "damage": 4},
-                "right": {}
+                "right": {},
+                "heatup": True
             },
             "Pillars of Light": {
                 "dodge": 1,
                 "left": {"type": "magic", "damage": 5},
                 "middle": {},
-                "right": {}
+                "right": {},
+                "heatup": True
             },
             "Sweeping Blade Swing": {
                 "dodge": 1,
@@ -1140,24 +1154,28 @@ try:
             "Massive Swing": {
                 "dodge": 2,
                 "left": {"type": "physical", "damage": 5},
-                "middle": {}
+                "middle": {},
+                "heatup": True
             },
             "Hacking Slash": {
                 "dodge": 2,
                 "left": {"type": "physical", "damage": 5},
                 "middle": {"effect": ["stagger"]},
-                "right": {"type": "push", "damage": 4}
+                "right": {"type": "push", "damage": 4},
+                "heatup": True
             },
             "Charge": {
                 "dodge": 2,
                 "left": {"type": "physical", "damage": 6},
-                "middle": {"effect": ["stagger"]}
+                "middle": {"effect": ["stagger"]},
+                "heatup": True
             }
         },
         "Heavy Knight": {
             "Defensive Swipe": {
                 "dodge": 3,
-                "left": {"type": "physical", "damage": 4}
+                "left": {"type": "physical", "damage": 4},
+                "heatup": True
             },
             "health": 25,
             "heatup": 15,
@@ -1165,11 +1183,13 @@ try:
             "resist": 2,
             "Charging Chop": {
                 "dodge": 2,
-                "middle": {"type": "physical", "damage": 6}
+                "middle": {"type": "physical", "damage": 6},
+                "heatup": True
             },
             "Defensive Chop": {
                 "dodge": 2,
-                "left": {"type": "physical", "damage": 5}
+                "left": {"type": "physical", "damage": 5},
+                "heatup": True
             },
             "Overhead Chop": {
                 "dodge": 1,
@@ -1238,18 +1258,21 @@ try:
             "Sweeping Strike": {
                 "dodge": 1,
                 "middle": {"type": "physical", "damage": 6},
-                "right": {}
+                "right": {},
+                "heatup": True
             },
             "Vaulting Slam": {
                 "dodge": 2,
                 "left": {"type": "push", "damage": 6},
-                "right": {}
+                "right": {},
+                "heatup": True
             },
             "Double Pole Crush": {
                 "dodge": 1,
                 "repeat": 2,
                 "left": {"type": "physical", "damage": 5},
-                "middle": {}
+                "middle": {},
+                "heatup": True
             }
         },
         "Gargoyle": {
@@ -1285,17 +1308,20 @@ try:
             "Flying Tail Whip": {
                 "dodge": 1,
                 "middle": {"type": "physical", "damage": 6},
-                "right": {}
+                "right": {},
+                "heatup": True
             },
             "Swooping Cleave": {
                 "dodge": 2,
                 "middle": {"type": "physical", "damage": 6},
-                "right": {}
+                "right": {},
+                "heatup": True
             },
             "Aerial Electric Breath": {
                 "dodge": 2,
                 "middle": {"type": "magic", "damage": 5},
-                "right": {}
+                "right": {},
+                "heatup": True
             }
         },
         "Smelter Demon": {
@@ -1339,38 +1365,45 @@ try:
                 "dodge": 2,
                 "left": {"type": "push", "damage": 4},
                 "middle": {"type": "magic", "damage": 4},
-                "right": {}
+                "right": {},
+                "heatup": True
             },
             "Fiery Explosion": {
                 "dodge": 2,
                 "left": {"type": "magic", "damage": 6},
                 "middle": {},
-                "right": {}
+                "right": {},
+                "heatup": True
             },
             "Flaming Double Sweep": {
                 "dodge": 1,
                 "repeat": 2,
                 "left": {"type": "magic", "damage": 6},
-                "middle": {}
+                "middle": {},
+                "heatup": True
             },
             "Flaming Sweeping Slash": {
                 "dodge": 1,
                 "middle": {"type": "magic", "damage": 6},
-                "right": {}
+                "right": {},
+                "heatup": True
             },
             "Flaming Overhead Chop": {
                 "dodge": 2,
                 "middle": {"type": "magic", "damage": 6},
-                "right": {"effect": ["stagger"]}
+                "right": {"effect": ["stagger"]},
+                "heatup": True
             },
             "Flame Wave": {
                 "dodge": 2,
                 "middle": {"type": "magic", "damage": 5},
-                "right": {}
+                "right": {},
+                "heatup": True
             },
             "Flaming Lunging Strike": {
                 "dodge": 1,
-                "right": {"type": "magic", "damage": 7}
+                "right": {"type": "magic", "damage": 7},
+                "heatup": True
             }
         },
         "The Pursuer": {
@@ -1417,6 +1450,12 @@ try:
                 "dodge": 1,
                 "middle": {"type": "physical", "damage": 6},
                 "right": {}
+            },
+            "Forward Dash": {
+                "dodge": 0
+            },
+            "Back Dash": {
+                "dodge": 0
             }
         },
         "Crossbreed Priscilla": {
@@ -1475,19 +1514,22 @@ try:
                 "dodge": 2,
                 "repeat": 2,
                 "middle": {"type": "physical", "damage": 6},
-                "right": {"effect": ["bleed"]}
+                "right": {"effect": ["bleed"]},
+                "heatup": True
             },
             "Double Strike": {
                 "dodge": 2,
                 "repeat": 2,
                 "middle": {"type": "physical", "damage": 6},
-                "right": {"effect": ["bleed"]}
+                "right": {"effect": ["bleed"]},
+                "heatup": True
             },
             "Double Slash": {
                 "dodge": 1,
                 "repeat": 2,
                 "middle": {"type": "physical", "damage": 5},
-                "right": {"effect": ["bleed"]}
+                "right": {"effect": ["bleed"]},
+                "heatup": True
             }
         },
         "Gravelord Nito": {
@@ -1551,18 +1593,21 @@ try:
                 "dodge": 1,
                 "repeat": 3,
                 "left": {"type": "push", "damage": 5},
-                "middle": {"effect": ["poison"]}
+                "middle": {"effect": ["poison"]},
+                "heatup": True
             },
             "Death's Embrace": {
                 "dodge": 2,
                 "left": {"type": "physical", "damage": 5},
-                "middle": {"effect": ["poison"]}
+                "middle": {"effect": ["poison"]},
+                "heatup": True
             },
             "Lunging Cleave": {
                 "dodge": 2,
                 "repeat": 2,
                 "middle": {"type": "physical", "damage": 5},
-                "right": {"effect": ["poison"]}
+                "right": {"effect": ["poison"]},
+                "heatup": True
             }
         },
         "Great Grey Wolf Sif": {
@@ -1626,19 +1671,22 @@ try:
                 "dodge": 2,
                 "repeat": 2,
                 "middle": {"type": "physical", "damage": 6},
-                "right": {"effect": ["stagger"]}
+                "right": {"effect": ["stagger"]},
+                "heatup": True
             },
             "Cyclone Strikes": {
                 "dodge": 2,
                 "repeat": 2,
                 "left": {"type": "physical", "damage": 7},
-                "middle": {"effect": ["stagger"]}
+                "middle": {"effect": ["stagger"]},
+                "heatup": True
             },
             "Savage Retreat": {
                 "dodge": 2,
                 "repeat": 3,
                 "left": {"type": "physical", "damage": 6},
-                "middle": {"effect": ["stagger"]}
+                "middle": {"effect": ["stagger"]},
+                "heatup": True
             },
             "Limping Strike": {
                 "dodge": 1,
@@ -1650,12 +1698,14 @@ try:
             "Ornstein": {
                 "health": 20,
                 "armor": 3,
-                "resist": 3
+                "resist": 3,
+                "heatup": 0
             },
             "Smough": {
                 "health": 30,
                 "armor": 2,
-                "resist": 2
+                "resist": 2,
+                "heatup": 0
             },
             "Gliding Stab & Hammer Smash": {
                 "Gliding Stab": {
@@ -1715,54 +1765,64 @@ try:
                 "dodge": 1,
                 "repeat": 3,
                 "middle": {"type": "magic", "damage": 5},
-                "right": {}
+                "right": {},
+                "heatup": "Ornstein"
             },
             "Charged Bolt": {
                 "dodge": 3,
                 "left": {"type": "magic", "damage": 6},
                 "middle": {},
-                "right": {}
+                "right": {},
+                "heatup": "Ornstein"
             },
             "Electric Clash": {
                 "dodge": 2,
                 "left": {"type": "magic", "damage": 6},
                 "middle": {},
-                "right": {}
+                "right": {},
+                "heatup": "Ornstein"
             },
             "Lightning Stab": {
                 "dodge": 1,
                 "middle": {"type": "magic", "damage": 7},
-                "right": {}
+                "right": {},
+                "heatup": "Ornstein"
             },
             "High Voltage": {
                 "dodge": 1,
                 "middle": {"type": "magic", "damage": 6},
-                "right": {}
+                "right": {},
+                "heatup": "Ornstein"
             },
             "Electric Hammer Smash": {
                 "dodge": 1,
                 "middle": {"type": "magic", "damage": 6},
-                "right": {}
+                "right": {},
+                "heatup": "Smough"
             },
             "Lightning Sweep": {
                 "dodge": 1,
                 "middle": {"type": "magic", "damage": 6},
-                "right": {}
+                "right": {},
+                "heatup": "Smough"
             },
             "Jumping Volt Slam": {
                 "dodge": 2,
                 "middle": {"type": "magic", "damage": 5},
-                "right": {}
+                "right": {},
+                "heatup": "Smough"
             },
             "Electric Bonzai Drop": {
                 "dodge": 1,
                 "middle": {"type": "magic", "damage": 7},
-                "right": {}
+                "right": {},
+                "heatup": "Smough"
             },
             "Charged Charge": {
                 "dodge": 2,
                 "middle": {"type": "magic", "damage": 6},
-                "right": {}
+                "right": {},
+                "heatup": "Smough"
             }
         },
         "Dancer of the Boreal Valley": {
@@ -1778,19 +1838,22 @@ try:
             "Blade Dance": {
                 "dodge": 1,
                 "repeat": 2,
-                "right": {"type": "physical", "damage": 5}
+                "right": {"type": "physical", "damage": 5},
+                "heatup": True
             },
             "Plunging Assault": {
                 "dodge": 1,
                 "repeat": 3,
                 "left": {"type": "push", "damage": 6},
                 "middle": {},
-                "right": {}
+                "right": {},
+                "heatup": True
             },
             "Whirling Blades": {
                 "dodge": 1,
                 "repeat": 4,
-                "right": {"type": "physical", "damage": 6}
+                "right": {"type": "physical", "damage": 6},
+                "heatup": True
             },
             "Double Slash": {
                 "dodge": 1,
@@ -1899,26 +1962,30 @@ try:
                 "dodge": 2,
                 "left": {"type": "push", "damage": 5},
                 "middle": {"type": "magic", "damage": 5},
-                "right": {}
+                "right": {},
+                "heatup": True
             },
             "Leaping Fury": {
                 "dodge": 2,
                 "left": {"type": "push", "damage": 5},
                 "middle": {"type": "push", "damage": 6},
-                "right": {}
+                "right": {},
+                "heatup": True
             },
             "Lunging Cleave": {
                 "dodge": 2,
                 "left": {"type": "push", "damage": 5},
                 "middle": {"type": "physical", "damage": 6},
-                "right": {}
+                "right": {},
+                "heatup": True
             }
         },
         "Sir Alonne": {
             "Lunging Slash Combo": {
                 "dodge": 2,
                 "repeat": 2,
-                "middle": {"type": "physical", "damage": 6}
+                "middle": {"type": "physical", "damage": 6},
+                "heatup": True
             },
             "health": 26,
             "heatup": 12,
@@ -1928,12 +1995,14 @@ try:
                 "dodge": 2,
                 "repeat": 3,
                 "middle": {"type": "physical", "damage": 5},
-                "right": {}
+                "right": {},
+                "heatup": True
             },
             "Stabbing Slash Combo": {
                 "dodge": 2,
                 "repeat": 2,
-                "middle": {"type": "physical", "damage": 6}
+                "middle": {"type": "physical", "damage": 6},
+                "heatup": True
             },
             "Fast Katana Lunge": {
                 "dodge": 2,
@@ -2023,18 +2092,21 @@ try:
             "Lumbering Swings": {
                 "dodge": 1,
                 "repeat": 2,
-                "right": {"type": "physical", "damage": 7}
+                "right": {"type": "physical", "damage": 7},
+                "heatup": True
             },
             "Sweeping Strikes": {
                 "dodge": 2,
                 "middle": {"type": "physical", "damage": 7},
-                "right": {"type": "physical", "damage": 7}
+                "right": {"type": "physical", "damage": 7},
+                "heatup": True
             },
             "Crushing Leaps": {
                 "dodge": 2,
                 "left": {"type": "push", "damage": 7},
                 "middle": {"type": "push", "damage": 7},
-                "right": {}
+                "right": {},
+                "heatup": True
             },
             "Sidestep Right Sweep": {
                 "dodge": 2,
@@ -2114,27 +2186,32 @@ try:
             "Dark Orb Barrage": {
                 "dodge": 3,
                 "left": {"type": "magic", "damage": 5},
-                "middle": {}
+                "middle": {},
+                "heatup": True
             },
             "Descending Darkness": {
                 "dodge": 2,
                 "left": {"type": "magic", "damage": 6},
-                "middle": {}
+                "middle": {},
+                "heatup": True
             },
             "Abyss Rain": {
                 "dodge": 3,
                 "left": {"type": "magic", "damage": 4},
-                "middle": {}
+                "middle": {},
+                "heatup": True
             },
             "Abyss Cage": {
                 "dodge": 2,
                 "left": {"type": "magic", "damage": 6},
-                "middle": {}
+                "middle": {},
+                "heatup": True
             },
             "Ring of Darkfire": {
                 "dodge": 1,
                 "left": {"type": "magic", "damage": 7},
-                "middle": {}
+                "middle": {},
+                "heatup": True
             }
         },
         "The Four Kings": {
@@ -2182,61 +2259,73 @@ try:
             },
             "Evasive Slash": {
                 "dodge": 1,
-                "middle": {"type": "physical", "damage": 6}
+                "middle": {"type": "physical", "damage": 6},
+                "heatup": 2
             },
             "Thrust & Retreat": {
                 "dodge": 2,
-                "middle": {"type": "physical", "damage": 6}
+                "middle": {"type": "physical", "damage": 6},
+                "heatup": 2
             },
             "Cautious Arrow Mass": {
                 "dodge": 1,
-                "middle": {"type": "magic", "damage": 5}
+                "middle": {"type": "magic", "damage": 5},
+                "heatup": 2
             },
             "Evasive Abyss Arrow": {
                 "dodge": 2,
-                "middle": {"type": "magic", "damage": 5}
+                "middle": {"type": "magic", "damage": 5},
+                "heatup": 2
             },
             "Precision Slash": {
                 "dodge": 3,
                 "middle": {"type": "physical", "damage": 5},
-                "right": {}
+                "right": {},
+                "heatup": 3
             },
             "Unerring Thrust": {
                 "dodge": 3,
                 "middle": {"type": "physical", "damage": 6},
-                "right": {}
+                "right": {},
+                "heatup": 3
             },
             "Blazing Wrath": {
                 "dodge": 3,
                 "left": {"type": "magic", "damage": 4},
                 "middle": {},
-                "right": {}
+                "right": {},
+                "heatup": 3
             },
             "Pinpoint Homing Arrows": {
                 "dodge": 3,
                 "middle": {"type": "magic", "damage": 4},
-                "right": {}
+                "right": {},
+                "heatup": 3
             },
             "Executioner's Slash": {
                 "dodge": 2,
                 "middle": {"type": "physical", "damage": 5},
-                "right": {"effect": ["stagger"]}
+                "right": {"effect": ["stagger"]},
+                "heatup": 4
             },
             "Shockwave": {
                 "dodge": 1,
                 "left": {"type": "magic", "damage": 5},
                 "middle": {"effect": ["stagger"]},
-                "right": {}
+                "right": {},
+                "heatup": 4
             },
             "Into the Abyss": {
                 "dodge": 2,
                 "middle": {"type": "magic", "damage": 5},
-                "right": {"effect": ["stagger"]}
+                "right": {"effect": ["stagger"]},
+                "heatup": 4
             },
             "Lifedrain Death Grasp": {
                 "dodge": 2,
                 "middle": {"type": "magic", "damage": 5},
-                "right": {"effect": ["stagger"]}
+                "right": {"effect": ["stagger"]},
+                "heatup": 4
             }
         },
         "The Last Giant": {
@@ -2274,47 +2363,57 @@ try:
             },
             "Sweeping Strike": {
                 "dodge": 2,
-                "right": {"type": "physical", "damage": 7}
+                "right": {"type": "physical", "damage": 7},
+                "arm": True
             },
             "Backhand Strike": {
                 "dodge": 2,
-                "right": {"type": "physical", "damage": 7}
+                "right": {"type": "physical", "damage": 7},
+                "arm": True
             },
             "Clubbing Blow": {
                 "dodge": 2,
-                "right": {"type": "physical", "damage": 7}
+                "right": {"type": "physical", "damage": 7},
+                "arm": True
             },
             "Heavy Swings": {
                 "dodge": 1,
                 "repeat": 2,
-                "middle": {"type": "physical", "damage": 6}
+                "middle": {"type": "physical", "damage": 6},
+                "arm": True
             },
             "Overhead Smash": {
                 "dodge": 3,
                 "middle": {"type": "physical", "damage": 6},
-                "right": {"effect": ["stagger"]}
+                "right": {"effect": ["stagger"]},
+                "arm": True
             },
             "Arm Club Sweep": {
                 "dodge": 2,
-                "right": {"type": "physical", "damage": 7}
+                "right": {"type": "physical", "damage": 7},
+                "heatup": True
             },
             "Arm Club Backhand": {
                 "dodge": 2,
-                "right": {"type": "physical", "damage": 7}
+                "right": {"type": "physical", "damage": 7},
+                "heatup": True
             },
             "Beat You With It": {
                 "dodge": 2,
-                "right": {"type": "physical", "damage": 7}
+                "right": {"type": "physical", "damage": 7},
+                "heatup": True
             },
             "Armed Swings": {
                 "dodge": 1,
                 "repeat": 2,
-                "middle": {"type": "physical", "damage": 6}
+                "middle": {"type": "physical", "damage": 6},
+                "heatup": True
             },
             "Arm Smash": {
                 "dodge": 3,
                 "middle": {"type": "physical", "damage": 6},
-                "right": {"effect": ["stagger"]}
+                "right": {"effect": ["stagger"]},
+                "heatup": True
             },
             "Falling Slam": {
                 "dodge": 1,
@@ -2380,7 +2479,8 @@ try:
             "Cage Grasp Inferno": {
                 "dodge": 1,
                 "left": {"type": "magic", "damage": 5},
-                "middle": {}
+                "middle": {},
+                "heatup": True
             }
         },
         "Gaping Dragon": {
@@ -2437,25 +2537,29 @@ try:
                 "dodge": 2,
                 "left": {"type": "magic", "damage": 5},
                 "middle": {"effect": ["corrosion"]},
-                "right": {}
+                "right": {},
+                "heatup": True
             },
             "Corrosive Ooze (Front Left)": {
                 "dodge": 2,
                 "left": {"type": "magic", "damage": 6},
                 "middle": {"effect": ["corrosion"]},
-                "right": {}
+                "right": {},
+                "heatup": True
             },
             "Corrosive Ooze (Front Right)": {
                 "dodge": 2,
                 "left": {"type": "magic", "damage": 6},
                 "middle": {"effect": ["corrosion"]},
-                "right": {}
+                "right": {},
+                "heatup": True
             },
             "Corrosive Ooze (Front)": {
                 "dodge": 2,
                 "left": {"type": "magic", "damage": 7},
                 "middle": {"effect": ["corrosion"]},
-                "right": {}
+                "right": {},
+                "heatup": True
             }
         },
         "Vordt of the Boreal Valley": {
@@ -2472,88 +2576,108 @@ try:
             "resist": 3,
             "Tracking Charge": {
                 "dodge": 1,
-                "right": {"type": "push", "damage": 5}
+                "right": {"type": "push", "damage": 5},
+                "type": "move"
             },
             "Shove Right": {
                 "dodge": 1,
-                "left": {"type": "push", "damage": 5}
+                "left": {"type": "push", "damage": 5},
+                "type": "move"
             },
             "Shove Left": {
                 "dodge": 1,
-                "right": {"type": "push", "damage": 5}
+                "right": {"type": "push", "damage": 5},
+                "type": "move"
             },
             "Crushing Charge": {
                 "dodge": 1,
                 "left": {"type": "push", "damage": 5},
-                "middle": {}
+                "middle": {},
+                "type": "move"
             },
             "Jump Rush": {
                 "dodge": 1,
                 "left": {"type": "push", "damage": 5},
-                "middle": {}
+                "middle": {},
+                "type": "move"
             },
             "Trampling Charge": {
                 "dodge": 1,
-                "left": {"type": "push", "damage": 5}
+                "left": {"type": "push", "damage": 5},
+                "type": "move"
             },
             "Berserk Rush": {
                 "dodge": 2,
                 "repeat": 3,
                 "left": {"type": "push", "damage": 6},
-                "middle": {}
+                "middle": {},
+                "type": "move",
+                "heatup": True
             },
             "Berserk Trample": {
                 "dodge": 2,
                 "repeat": 2,
                 "left": {"type": "push", "damage": 6},
-                "middle": {}
+                "middle": {},
+                "type": "move",
+                "heatup": True
             },
             "Double Swipe": {
                 "dodge": 1,
                 "left": {"type": "magic", "damage": 5},
                 "middle": {"type": "magic", "damage": 5},
-                "right": {}
+                "right": {},
+                "type": "attack"
             },
             "Mace Thrust": {
                 "dodge": 3,
                 "left": {"type": "physical", "damage": 6},
                 "middle": {},
-                "right": {}
+                "right": {},
+                "type": "attack"
             },
             "Backhand Swipe": {
                 "dodge": 1,
                 "left": {"type": "magic", "damage": 5},
                 "middle": {},
-                "right": {}
+                "right": {},
+                "type": "attack"
             },
             "Retreating Sweep": {
                 "dodge": 2,
                 "left": {"type": "magic", "damage": 5},
-                "middle": {}
+                "middle": {},
+                "type": "attack"
             },
             "Hammerfist": {
                 "dodge": 2,
                 "left": {"type": "physical", "damage": 6},
                 "middle": {},
-                "right": {}
+                "right": {},
+                "type": "attack"
             },
             "Handle Slam": {
                 "dodge": 2,
                 "left": {"type": "physical", "damage": 6},
                 "middle": {},
-                "right": {}
+                "right": {},
+                "type": "attack"
             },
             "Wild Swings": {
                 "dodge": 1,
                 "repeat": 3,
                 "left": {"type": "magic", "damage": 6},
-                "middle": {}
+                "middle": {},
+                "type": "attack",
+                "heatup": True
             },
             "Hammerfist Combo": {
                 "dodge": 1,
                 "repeat": 2,
                 "left": {"type": "physical", "damage": 6},
-                "middle": {}
+                "middle": {},
+                "type": "attack",
+                "heatup": True
             }
         },
         "Black Dragon Kalameet": {
@@ -2622,7 +2746,8 @@ try:
             },
             "Hellfire Barrage": {
                 "dodge": 2,
-                "middle": {"type": "magic", "damage": 6}
+                "middle": {"type": "magic", "damage": 6},
+                "heatup": True
             }
         },
         "Old Iron King": {
@@ -2670,19 +2795,22 @@ try:
                 "dodge": 2,
                 "left": {"type": "physical", "damage": 6},
                 "middle": {"type": "physical", "damage": 6},
-                "right": {}
+                "right": {},
+                "heatup": True
             },
             "Firestorm": {
                 "dodge": 2,
                 "left": {"type": "magic", "damage": 5},
                 "middle": {},
-                "right": {}
+                "right": {},
+                "heatup": True
             },
             "Magma Blast": {
                 "dodge": 3,
                 "left": {"type": "magic", "damage": 6},
                 "middle": {},
-                "right": {}
+                "right": {},
+                "heatup": True
             },
             "Fire Beam (Left)": {
                 "dodge": 1,
@@ -2721,7 +2849,8 @@ try:
                 "dodge": 2,
                 "repeat": 2,
                 "left": {"type": "physical", "damage": 7},
-                "middle": {}
+                "middle": {},
+                "heatup": True
             },
             "Trampling Charge": {
                 "dodge": 2,
@@ -2752,7 +2881,8 @@ try:
             "Deadly Breath": {
                 "dodge": 3,
                 "middle": {"type": "magic", "damage": 6},
-                "right": {}
+                "right": {},
+                "heatup": True
             },
             "Rearing Charge": {
                 "dodge": 2,
@@ -2768,7 +2898,8 @@ try:
             "Merciless Charge": {
                 "dodge": 1,
                 "middle": {"type": "push", "damage": 6},
-                "right": {"type": "push", "damage": 6}
+                "right": {"type": "push", "damage": 6},
+                "heatup": True
             }
         }
     }

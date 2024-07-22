@@ -9,7 +9,7 @@ try:
 
     from dsbg_shuffle_enemies import bosses
     from dsbg_shuffle_events import events
-    from dsbg_shuffle_utility import PopupWindow, error_popup, log, baseFolder, pathSep
+    from dsbg_shuffle_utility import PopupWindow, clear_other_tab_images, error_popup, log, baseFolder, pathSep
 
 
     class CampaignFrame(ttk.Frame):
@@ -19,6 +19,13 @@ try:
             self.root = root
             
             self.campaign = []
+
+            self.v2Campaign = {
+                1: [],
+                2: [],
+                3: [],
+                4: []
+            }
 
             self.bossMenuItems = [
                 "Select Boss",
@@ -45,36 +52,62 @@ try:
             self.campaignTabButtonsFrame3.pack()
             self.campaignTabButtonsFrame4 = ttk.Frame(self)
             self.campaignTabButtonsFrame4.pack()
+            self.campaignTabButtonsFrame5 = ttk.Frame(self)
+            self.campaignTabButtonsFrame5.pack()
+            self.campaignTabButtonsFrame6 = ttk.Frame(self)
+            self.campaignTabButtonsFrame6.pack()
             self.campaignTabTreeviewFrame = ttk.Frame(self)
             self.campaignTabTreeviewFrame.pack(fill="both", expand=True)
 
-            self.deleteButton = ttk.Button(self.campaignTabButtonsFrame, text="Remove Card", width=16, command=self.delete_card_from_campaign)
+            self.l1 = ttk.Button(self.campaignTabButtonsFrame, text="Random Level 1", width=16, command=lambda x=1: self.app.encounterTab.random_encounter(level=x))
+            self.l2 = ttk.Button(self.campaignTabButtonsFrame, text="Random Level 2", width=16, command=lambda x=2: self.app.encounterTab.random_encounter(level=x))
+            self.l3 = ttk.Button(self.campaignTabButtonsFrame, text="Random Level 3", width=16, command=lambda x=3: self.app.encounterTab.random_encounter(level=x))
+            self.l4 = ttk.Button(self.campaignTabButtonsFrame, text="Random Level 4", width=16, command=lambda x=4: self.app.encounterTab.random_encounter(level=x))
+            if "level4" not in self.app.settings["encounterTypes"]:
+                self.l4["state"] = "disabled"
+            if ["level4"] == self.app.settings["encounterTypes"]:
+                self.l1["state"] = "disabled"
+                self.l2["state"] = "disabled"
+                self.l3["state"] = "disabled"
+            self.l1.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+            self.l2.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+            self.l3.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+            self.l4.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+
+            self.deleteButton = ttk.Button(self.campaignTabButtonsFrame2, text="Remove Card", width=16, command=self.delete_card_from_campaign)
             self.deleteButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-            self.moveUpButton = ttk.Button(self.campaignTabButtonsFrame, text="Move Up", width=16, command=self.move_up)
+            self.moveUpButton = ttk.Button(self.campaignTabButtonsFrame2, text="Move Up", width=16, command=self.move_up)
             self.moveUpButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-            self.moveDownButton = ttk.Button(self.campaignTabButtonsFrame, text="Move Down", width=16, command=self.move_down)
+            self.moveDownButton = ttk.Button(self.campaignTabButtonsFrame2, text="Move Down", width=16, command=self.move_down)
             self.moveDownButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
             
-            self.loadButton = ttk.Button(self.campaignTabButtonsFrame2, text="Load Campaign", width=16, command=self.load_campaign)
+            self.loadButton = ttk.Button(self.campaignTabButtonsFrame3, text="Load Campaign", width=16, command=self.load_campaign)
             self.loadButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-            self.saveButton = ttk.Button(self.campaignTabButtonsFrame2, text="Save Campaign", width=16, command=self.save_campaign)
+            self.saveButton = ttk.Button(self.campaignTabButtonsFrame3, text="Save Campaign", width=16, command=self.save_campaign)
             self.saveButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-            self.printEncounters = ttk.Button(self.campaignTabButtonsFrame2, text="Export to PDF", width=16, command=self.print_encounters)
+            self.printEncounters = ttk.Button(self.campaignTabButtonsFrame3, text="Export to PDF", width=16, command=self.print_encounters)
             self.printEncounters.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
 
-            self.randomMiniBossButton = ttk.Button(self.campaignTabButtonsFrame3, text="Add Mini Boss", width=16, command=lambda x="Mini Boss": self.add_random_boss_to_campaign(level=x))
+            self.randomMiniBossButton = ttk.Button(self.campaignTabButtonsFrame4, text="Add Mini Boss", width=16, command=lambda x="Mini Boss": self.add_random_boss_to_campaign(level=x))
             self.randomMiniBossButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-            self.randomMiniBossButton = ttk.Button(self.campaignTabButtonsFrame3, text="Add Main Boss", width=16, command=lambda x="Main Boss": self.add_random_boss_to_campaign(level=x))
+            self.randomMiniBossButton = ttk.Button(self.campaignTabButtonsFrame4, text="Add Main Boss", width=16, command=lambda x="Main Boss": self.add_random_boss_to_campaign(level=x))
             self.randomMiniBossButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-            self.randomMiniBossButton = ttk.Button(self.campaignTabButtonsFrame3, text="Add Mega Boss", width=16, command=lambda x="Mega Boss": self.add_random_boss_to_campaign(level=x))
+            self.randomMiniBossButton = ttk.Button(self.campaignTabButtonsFrame4, text="Add Mega Boss", width=16, command=lambda x="Mega Boss": self.add_random_boss_to_campaign(level=x))
             self.randomMiniBossButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
 
-            self.bossMenu = ttk.Combobox(self.campaignTabButtonsFrame4, state="readonly", values=self.bossMenuItems, textvariable=self.selectedBoss)
+            self.bossMenu = ttk.Combobox(self.campaignTabButtonsFrame5, state="readonly", values=self.bossMenuItems, textvariable=self.selectedBoss)
             self.bossMenu.current(0)
             self.bossMenu.config(width=17)
             self.bossMenu.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-            self.addBossButton = ttk.Button(self.campaignTabButtonsFrame4, text="Add Boss", width=16, command=self.add_boss_to_campaign)
+            self.addBossButton = ttk.Button(self.campaignTabButtonsFrame5, text="Add Boss", width=16, command=self.add_boss_to_campaign)
             self.addBossButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+
+            self.v1CampaignButton = ttk.Button(self.campaignTabButtonsFrame6, text="V1 Campaign", width=16, command=self.v1_campaign)
+            self.v1CampaignButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+            self.v2CampaignButton = ttk.Button(self.campaignTabButtonsFrame6, text="V2 Campaign", width=16, command=self.v2_campaign)
+            self.v2CampaignButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+            self.gravestoneButton = ttk.Button(self.campaignTabButtonsFrame6, text="V2 Gravestone", width=16, command=self.v2_campaign_gravestone)
+            self.gravestoneButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
         
             self.scrollbarTreeviewCampaign = ttk.Scrollbar(self.campaignTabTreeviewFrame)
             self.scrollbarTreeviewCampaign.pack(side="right", fill="y")
@@ -189,6 +222,30 @@ try:
                 raise
 
 
+        def add_card_to_v2_campaign_list(self, name, event=None):
+            """
+            Adds an encounter card to the v2 campaign generator list.
+            """
+            try:
+                log("Start of add_card_to_v2_campaign_list")
+
+                card = {
+                    "type": "encounter",
+                    "name": name,
+                    "expansion": self.app.selected["expansion"],
+                    "level": self.app.selected["level"],
+                    "enemies": self.app.encounterTab.newEnemies,
+                    "rewardTreasure": self.app.encounterTab.rewardTreasure
+                }
+
+                log("End of add_card_to_v2_campaign_list")
+
+                return card
+            except Exception as e:
+                error_popup(self.root, e)
+                raise
+
+
         def add_random_boss_to_campaign(self, level):
             """
             Adds a random boss to the campaign, visible in the campaign treeview.
@@ -197,7 +254,14 @@ try:
                 log("Start of add_random_boss_to_campaign, level={}".format(str(level)))
 
                 availableBosses = [boss for boss in bosses if bosses[boss]["level"] == level and bosses[boss]["expansions"] & self.app.availableExpansions]
+                if not availableBosses:
+                    log("End of add_random_boss_to_campaign (no bosses to choose from)")
+                    return
                 selectedBoss = choice(availableBosses)
+
+                if selectedBoss == "Executioner Chariot":
+                    self.app.encounterTab.load_encounter(encounter="Mega Boss Setup")
+                    self.add_card_to_campaign()
 
                 # Multiples need a different iid in the treeview, so append a number.
                 if selectedBoss + "_0" not in self.treeviewCampaign.get_children():
@@ -217,6 +281,12 @@ try:
                 }
 
                 self.campaign.append(card)
+                    
+                addedRow = self.treeviewCampaign.get_children()[-1]
+                if addedRow == "Executioner Chariot_0":
+                    addedRow = self.treeviewCampaign.get_children()[-2]
+                self.treeviewCampaign.focus(addedRow)
+                self.treeviewCampaign.selection_set(addedRow)
 
                 log("End of add_random_boss_to_campaign")
             except Exception as e:
@@ -283,7 +353,8 @@ try:
                     self.treeviewCampaign.delete(item)
 
                 # Remove the image displaying a deleted card.
-                self.app.display.config(image="")
+                clear_other_tab_images(self.app, "encounters", "campaign")
+                clear_other_tab_images(self.app, "events", "campaign")
 
                 log("End of delete_card_from_campaign")
             except Exception as e:
@@ -386,14 +457,15 @@ try:
                 raise
 
 
-        def move_down(self):
+        def move_down(self, leaves=None):
             """
             Move an item down in the campaign treeview, with corresponding movement in the campaign list.
             """
             try:
                 log("Start of move_down")
 
-                leaves = self.treeviewCampaign.selection()
+                if not leaves:
+                    leaves = self.treeviewCampaign.selection()
                 for i in reversed(leaves):
                     self.treeviewCampaign.move(i, self.treeviewCampaign.parent(i), self.treeviewCampaign.index(i) + 1)
                     self.campaign.insert(self.treeviewCampaign.index(i) - 1, self.campaign.pop(self.treeviewCampaign.index(i)))
@@ -416,9 +488,13 @@ try:
             try:
                 log("Start of load_campaign_card")
 
+                if self.app.notebook.tab(self.app.notebook.select(), "text") == "Campaign":
+                    clear_other_tab_images(self.app, "encounters", "campaign")
+                    clear_other_tab_images(self.app, "events", "campaign")
+
                 self.app.selected = None
                 self.app.encounterTab.rewardTreasure = None
-                self.app.display.unbind("<Button 1>")
+                self.app.displayTopLeft.unbind("<Button 1>")
 
                 tree = event.widget
 
@@ -449,9 +525,10 @@ try:
                 elif campaignCard["type"] == "boss":
                     # Create and display the boss image.
                     self.app.create_image(campaignCard["name"] + ".jpg", "encounter", 4)
-                    self.app.displayPhotoImage = ImageTk.PhotoImage(self.app.displayImage)
-                    self.app.display.image = self.app.displayPhotoImage
-                    self.app.display.config(image=self.app.displayPhotoImage)
+                    self.app.displayImages["encounters"][self.app.displayTopLeft]["image"] = ImageTk.PhotoImage(self.app.displayImage)
+                    self.app.displayImages["encounters"][self.app.displayTopLeft]["activeTab"] = None
+                    self.app.displayTopLeft.image = self.app.displayImages["encounters"][self.app.displayTopLeft]["image"]
+                    self.app.displayTopLeft.config(image=self.app.displayImages["encounters"][self.app.displayTopLeft]["image"])
                 elif campaignCard["type"] == "event":
                     self.app.eventTab.load_event(campaign=True, treeviewCampaign=tree)
 
@@ -570,7 +647,7 @@ try:
 
                             # Stage the encounter image
                             log("\tStaging " + encounter["name"] + ", level " + str(encounter["level"]) + " from " + encounter["expansion"])
-                            imageStage = ImageTk.getimage(self.app.displayPhotoImage)
+                            imageStage = ImageTk.getimage(self.app.displayImages["encounters"][self.app.displayTopLeft]["image"])
 
                             if i > standardCards:
                                 imageStage = imageStage.rotate(90, Image.NEAREST, expand=1)
@@ -614,6 +691,363 @@ try:
                 self.forPrinting = False
 
                 log("End of print_encounters")
+            except Exception as e:
+                error_popup(self.root, e)
+                raise
+
+
+        def v1_campaign(self, event=None):
+            """
+            Generates a random V1 campaign.
+
+            Optional Parameters:
+                event: tkinter.Event
+                    The tkinter Event that is the trigger.
+            """
+            try:
+                log("Start of v1_campaign")
+
+                if self.campaign:
+                    PopupWindow(self.root, labelText="Please remove all campaign items first.", firstButton="Ok")
+                    return
+
+                mega = False
+                chariot = False
+                
+                progress = PopupWindow(self.root, labelText="Generating encounters...", loadingImage=True)
+                
+                encounterList = [encounter for encounter in self.app.encounters if (
+                    all([
+                        any([frozenset(expCombo).issubset(self.app.availableExpansions) for expCombo in self.app.encounters[encounter]["expansionCombos"]["1"]]),
+                        any([frozenset(expCombo).issubset(self.app.availableExpansions) for expCombo in self.app.encounters[encounter]["expansionCombos"]["2"]]),
+                        True if "3" not in self.app.encounters[encounter]["expansionCombos"] else any([frozenset(expCombo).issubset(self.app.availableExpansions) for expCombo in self.app.encounters[encounter]["expansionCombos"]["3"]]),
+                        self.app.encounters[encounter]["expansion"] in self.app.v1Expansions
+                            ]))]
+
+                self.add_random_boss_to_campaign(level="Mini Boss")
+                self.add_random_boss_to_campaign(level="Main Boss")
+                self.add_random_boss_to_campaign(level="Mega Boss")
+
+                if len(self.campaign) >= 3:
+                    mega = True
+
+                for level in bosses[self.campaign[0]["name"]]["encounters"]:
+                    self.app.encounterTab.random_encounter(level=level, encounterList=encounterList)
+                    self.add_card_to_campaign()
+
+                for level in bosses[self.campaign[1]["name"]]["encounters"]:
+                    self.app.encounterTab.random_encounter(level=level, encounterList=encounterList)
+                    self.add_card_to_campaign()
+
+                if mega:
+                    if self.campaign[3]["name"] == "Executioner Chariot":
+                        chariot = True
+
+                    for level in bosses[self.campaign[2 + (1 if chariot else 0)]["name"]]["encounters"]:
+                        self.app.encounterTab.random_encounter(level=level, encounterList=encounterList)
+                        self.add_card_to_campaign()
+
+                    if chariot:
+                        bossSetup = ("Mega Boss Setup_0",)
+                        boss3 = (self.campaign[3]["name"] + "_0",)
+                        for _ in range(10):
+                            self.move_down(leaves=bossSetup)
+                    else:
+                        boss3 = (self.campaign[2]["name"] + "_0",)
+
+                    for _ in range(9 + (1 if chariot else 0)):
+                        self.move_down(leaves=boss3)
+
+                boss1 = (self.campaign[0]["name"] + "_0",)
+                boss2 = (self.campaign[1]["name"] + "_0",)
+
+                for _ in range(8):
+                    self.move_down(leaves=boss2)
+
+                for _ in range(4):
+                    self.move_down(leaves=boss1)
+                    
+                firstRow = self.treeviewCampaign.get_children()[0]
+                self.treeviewCampaign.focus(firstRow)
+                self.treeviewCampaign.selection_set(firstRow)
+
+                progress.destroy()
+
+                log("End of v1_campaign")
+            except Exception as e:
+                error_popup(self.root, e)
+                raise
+
+
+        def v2_campaign(self, event=None):
+            """
+            Generates a random V2 campaign, piece by piece.
+            """
+            try:
+                log("Start of v2_campaign")
+
+                level1Cnt = len([e for e in self.campaign if e["level"] == 1])
+
+                if not self.campaign and level1Cnt > 0:
+                    self.v2Campaign = {
+                        1: [],
+                        2: [],
+                        3: [],
+                        4: []
+                    }
+                elif [e for e in self.campaign if e["type"] != "event"] and level1Cnt == 0:
+                    PopupWindow(self.root, labelText="Please remove all campaign items first.", firstButton="Ok")
+                    return
+                
+                clear_other_tab_images(self.app, "encounters", "campaign")
+
+                mega = self.generate_v2_campaign_encounters()
+
+                if level1Cnt < 3:
+                    self.v2_campaign_pick_encounter(1)
+                    return
+
+                if len([e for e in self.campaign if e["level"] == 2]) < 1:
+                    self.v2_campaign_pick_encounter(2)
+                    return
+                
+                if not [e for e in self.campaign if e["level"] == "Mini Boss"]:
+                    self.add_random_boss_to_campaign(level="Mini Boss")
+                    return
+
+                if len([e for e in self.campaign if e["level"] == 2]) < 3:
+                    self.v2_campaign_pick_encounter(2)
+                    return
+
+                if len([e for e in self.campaign if e["level"] == 3]) < 2:
+                    self.v2_campaign_pick_encounter(3)
+                    return
+                
+                if not [e for e in self.campaign if e["level"] == "Main Boss"]:
+                    self.add_random_boss_to_campaign(level="Main Boss")
+                    return
+
+                if mega:
+                    if len([e for e in self.campaign if e["level"] == 4]) < 1:
+                        self.v2_campaign_pick_encounter(4)
+                        return
+                    
+                    if "Executioner Chariot" in set([e["name"] for e in self.campaign]) and "Mega Boss Setup" not in set([e["name"] for e in self.campaign]):
+                        self.app.encounterTab.load_encounter(encounter="Mega Boss Setup")
+                        self.add_card_to_campaign()
+                        addedRow = self.treeviewCampaign.get_children()[-1]
+                        self.treeviewCampaign.focus(addedRow)
+                        self.treeviewCampaign.selection_set(addedRow)
+                        return
+                        
+                    if not [e for e in self.campaign if e["level"] == "Mega Boss"]:
+                        self.add_random_boss_to_campaign(level="Mega Boss")
+                        return
+
+                log("End of v2_campaign")
+            except Exception as e:
+                error_popup(self.root, e)
+                raise
+
+
+        def v2_campaign_pick_encounter(self, level):
+            """
+            Prompts the user to choose which encounter to keep.
+            """
+            try:
+                log("Start of generate_v2_campaign_encounters")
+
+                if len(self.v2Campaign[level]) < 2:
+                    self.generate_v2_campaign_encounters()
+
+                leftEncounter = self.v2Campaign[level].pop()
+                rightEncounter = self.v2Campaign[level].pop()
+
+                self.load_v2_campaign_card(leftEncounter)
+                self.load_v2_campaign_card(rightEncounter, True)
+            
+                p = PopupWindow(self.master, labelText="Which encounter do you want to play?", rightButton=True, leftButton=True)
+                self.root.wait_window(p)
+                
+                clear_other_tab_images(self.app, "encounters", "campaign", self.app.displayTopRight)
+
+                if p.answer:
+                    self.load_v2_campaign_card(leftEncounter)
+                else:
+                    self.load_v2_campaign_card(rightEncounter)
+
+                self.add_card_to_campaign()
+                
+                addedRow = self.treeviewCampaign.get_children()[-1]
+                self.treeviewCampaign.focus(addedRow)
+                self.treeviewCampaign.selection_set(addedRow)
+
+                log("End of generate_v2_campaign_encounters")
+            except Exception as e:
+                error_popup(self.root, e)
+                raise
+
+
+        def generate_v2_campaign_encounters(self):
+            """
+            Generate encounters for the v2 campaign generator.
+            """
+            try:
+                log("Start of generate_v2_campaign_encounters")
+                
+                clear_other_tab_images(self.app, "encounters", "campaign")
+                clear_other_tab_images(self.app, "events", "campaign")
+
+                mega = True if any([boss for boss in bosses if (
+                    bosses[boss]["level"] == "Mega Boss"
+                    and bosses[boss]["expansions"] & self.app.availableExpansions)]) else False
+                level1Cnt = len([e for e in self.campaign if e["level"] == 1])
+                level2Cnt = len([e for e in self.campaign if e["level"] == 2])
+                level3Cnt = len([e for e in self.campaign if e["level"] == 3])
+                level4Cnt = len([e for e in self.campaign if e["level"] == 4])
+
+                if (
+                    (level1Cnt < 3 and len(self.v2Campaign[1]) < 2)
+                    or (level2Cnt < 3 and len(self.v2Campaign[2]) < 2)
+                    or (level3Cnt < 2 and len(self.v2Campaign[3]) < 2)
+                    or (mega and level4Cnt < 1 and len(self.v2Campaign[4]) < 2)
+                    ):
+                    progress = PopupWindow(self.root, labelText="Generating encounters...", loadingImage=True)
+
+                    if mega and level4Cnt < 1 and len(self.v2Campaign[4]) < 2:
+                        encounterListLevel4 = [encounter for encounter in self.app.encounters if (
+                            all([
+                                any([frozenset(expCombo).issubset(self.app.availableExpansions) for expCombo in self.app.encounters[encounter]["expansionCombos"]["1"]]),
+                                any([frozenset(expCombo).issubset(self.app.availableExpansions) for expCombo in self.app.encounters[encounter]["expansionCombos"]["2"]]),
+                                True if "3" not in self.app.encounters[encounter]["expansionCombos"] else any([frozenset(expCombo).issubset(self.app.availableExpansions) for expCombo in self.app.encounters[encounter]["expansionCombos"]["3"]]),
+                                self.app.encounters[encounter]["level"] == 4
+                                    ]))]
+                
+                        self.v2_campaign_add_encounters(encounterListLevel4, 4, 1, 2)
+
+                    if (
+                        level1Cnt < 3
+                        or level2Cnt < 3
+                        or level3Cnt < 2
+                        ):
+                        encounterList = [encounter for encounter in self.app.encounters if (
+                            all([
+                                any([frozenset(expCombo).issubset(self.app.availableExpansions) for expCombo in self.app.encounters[encounter]["expansionCombos"]["1"]]),
+                                any([frozenset(expCombo).issubset(self.app.availableExpansions) for expCombo in self.app.encounters[encounter]["expansionCombos"]["2"]]),
+                                True if "3" not in self.app.encounters[encounter]["expansionCombos"] else any([frozenset(expCombo).issubset(self.app.availableExpansions) for expCombo in self.app.encounters[encounter]["expansionCombos"]["3"]]),
+                                self.app.encounters[encounter]["expansion"] in self.app.v2Expansions
+                                    ]))]
+
+                        if len(self.v2Campaign[1]) < 2:
+                            self.v2_campaign_add_encounters(encounterList, 1, 3, 6)
+
+                        if len(self.v2Campaign[2]) < 2:
+                            self.v2_campaign_add_encounters(encounterList, 2, 3, 6)
+
+                        if len(self.v2Campaign[3]) < 2:
+                            self.v2_campaign_add_encounters(encounterList, 3, 2, 4)
+
+                    progress.destroy()
+
+                log("End of generate_v2_campaign_encounters")
+
+                return mega
+            except Exception as e:
+                error_popup(self.root, e)
+                raise
+
+
+        def v2_campaign_add_encounters(self, encounterList, level, levelCnt, encCnt):
+            """
+            Generate encounters for the v2 campaign generator.
+            """
+            try:
+                log("Start of v2_campaign_add_encounters")
+                
+                while len(self.v2Campaign[level]) < (encCnt if len([e for e in self.campaign if e["level"] == level]) < levelCnt else 2):
+                    self.app.encounterTab.random_encounter(level=level, encounterList=encounterList)
+                    # Make sure we don't get two of the same name
+                    name = self.app.selected["name"] + (" (TSC)" if self.app.selected["expansion"] == "The Sunless City" and self.app.selected["name"] in set(["Broken Passageway", "Central Plaza"]) else "")
+                    if name in set([c["name"] for c in self.v2Campaign[level]]) or name in set([e["name"] for e in self.campaign]):
+                        continue
+                    self.v2Campaign[level].append(self.add_card_to_v2_campaign_list(name))
+
+                log("End of v2_campaign_add_encounters")
+            except Exception as e:
+                error_popup(self.root, e)
+                raise
+
+
+        def load_v2_campaign_card(self, card, right=False):
+            """
+            Display pre-generated v2 encounter card.
+            """
+            try:
+                log("Start of load_v2_campaign_card")
+
+                self.app.selected = card
+                self.app.encounterTab.rewardTreasure = None
+                self.app.displayTopLeft.unbind("<Button 1>")
+                
+                if not right:
+                    # Remove keyword tooltips from the previous card shown, if there are any.
+                    for tooltip in self.app.tooltips:
+                        tooltip.destroy()
+
+                self.app.encounterTab.rewardTreasure = card.get("rewardTreasure")
+
+                log("\tOpening " + baseFolder + "\\lib\\dsbg_shuffle_encounters\\".replace("\\", pathSep) + card["name"] + str(self.app.numberOfCharacters) + ".json")
+
+                # Get the enemy slots for this card.
+                with open(baseFolder + "\\lib\\dsbg_shuffle_encounters\\".replace("\\", pathSep) + card["name"] + str(self.app.numberOfCharacters) + ".json") as alternativesFile:
+                    alts = load(alternativesFile)
+
+                    # Create the encounter card with saved enemies and tooltips.
+                    self.app.encounterTab.newEnemies = card["enemies"]
+                    self.app.encounterTab.edit_encounter_card(card["name"], card["expansion"], card["level"], alts["enemySlots"], right=right, campaignGen=True)
+
+                log("End of load_v2_campaign_card")
+            except Exception as e:
+                error_popup(self.root, e)
+                raise
+
+
+        def v2_campaign_gravestone(self):
+            """
+            Display pre-generated v2 encounter card.
+            """
+            try:
+                log("Start of v2_campaign_gravestone")
+
+                if not len([e for e in self.campaign if e["level"] == 1]):
+                    log("End of v2_campaign_gravestone (nothing done)")
+                    return
+
+                mega = self.generate_v2_campaign_encounters()
+
+                if len([e for e in self.campaign if e["level"] == 1]) < 3:
+                    level = 1
+                elif len([e for e in self.campaign if e["level"] == 2]) < 3:
+                    level = 2
+                elif len([e for e in self.campaign if e["level"] == 3]) < 2:
+                    level = 3
+                elif mega and len([e for e in self.campaign if e["level"] == 4]) < 1:
+                    level = 4
+                else:
+                    log("End of v2_campaign_gravestone (nothing done)")
+                    return
+                
+                encounter = self.v2Campaign[level].pop()
+
+                self.load_v2_campaign_card(encounter)
+            
+                p = PopupWindow(self.master, labelText="Keep or discard this encounter card?", keepButton=True, discardButton=True)
+                self.root.wait_window(p)
+
+                if p.answer:
+                    self.v2Campaign[level].append(encounter)
+
+                log("End of v2_campaign_gravestone")
             except Exception as e:
                 error_popup(self.root, e)
                 raise
