@@ -18,7 +18,7 @@ It also contains ways to build campaigns, event card management, and enemy behav
 ## Roadmap
 Future official expansions.
 
-Maybe a v2 campaign generator.
+Custom encounter builder.
 
 
 ## FAQ
@@ -32,7 +32,7 @@ I'm willing, but only if there's interest in it.  If you know of some great fan-
 
 ### Can we add custom enemies/encounters ourselves?
 
-No (unless you branch the code and do it yourself), and I don't intend to support that.  Calculating enemy strength and generating enemy combinations for an encounter can take hours depending on your machine and the size of the encounter.
+I may create a way to build your own encounters, but they wouldn't be able to have their enemies shuffled.  But shuffle-able encounters and custom enemies?  No (unless you branch the code and do it yourself), and I don't intend to support that.  Calculating enemy strength and generating enemy combinations for an encounter can take hours depending on your machine and the size of the encounter.
 
 ### I found a bug!
 
