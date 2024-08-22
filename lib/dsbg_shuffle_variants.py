@@ -86,22 +86,22 @@ try:
             # Load the enemy variants files.
             self.variants = {}
             i = self.app.progress.progressVar.get()
-            for enemy in list(enemiesDict.keys()) + list(bosses.keys()):
-                i += 3
-                self.app.progress.progressVar.set(i)
-                root.update_idletasks()
+            # for enemy in list(enemiesDict.keys()) + list(bosses.keys()):
+            #     i += 3
+            #     self.app.progress.progressVar.set(i)
+            #     root.update_idletasks()
                 
-                with open(baseFolder + "\\lib\\dsbg_shuffle_difficulty\\dsbg_shuffle_difficulty_" + enemy + ".json", "r") as f:
-                    enemyDifficulty = load(f)
+            #     with open(baseFolder + "\\lib\\dsbg_shuffle_difficulty\\dsbg_shuffle_difficulty_" + enemy + ".json", "r") as f:
+            #         enemyDifficulty = load(f)
 
-                self.variants[enemy] = {1: {}, 2: {}, 3: {}, 4: {}}
-                for x in range(1, 5):
-                    for diffInc in enemyDifficulty[str(x)]:
-                        self.variants[enemy][x][float(diffInc)] = {}
-                        for defKey in enemyDifficulty[str(x)][diffInc]:
-                            self.variants[enemy][x][float(diffInc)][frozenset([""] if not defKey else [int(k) for k in defKey.split(",")])] = enemyDifficulty[str(x)][diffInc][defKey]
+            #     self.variants[enemy] = {1: {}, 2: {}, 3: {}, 4: {}}
+            #     for x in range(1, 5):
+            #         for diffInc in enemyDifficulty[str(x)]:
+            #             self.variants[enemy][x][float(diffInc)] = {}
+            #             for defKey in enemyDifficulty[str(x)][diffInc]:
+            #                 self.variants[enemy][x][float(diffInc)][frozenset([""] if not defKey else [int(k) for k in defKey.split(",")])] = enemyDifficulty[str(x)][diffInc][defKey]
 
-                    self.variants[enemy][x] = {k: self.variants[enemy][x][k] for k in sorted(self.variants[enemy][x])}
+            #         self.variants[enemy][x] = {k: self.variants[enemy][x][k] for k in sorted(self.variants[enemy][x])}
 
             self.variantsTabButtonsFrame = ttk.Frame(self)
             self.variantsTabButtonsFrame.pack()
