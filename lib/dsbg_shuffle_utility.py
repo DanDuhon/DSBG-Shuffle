@@ -387,6 +387,22 @@ def set_display_bindings_by_tab(app, smoughActive=False):
             app.displayBottomRight.unbind("<Shift-Control-1>")
 
 
+def on_frame_configure(canvas):
+    """Reset the scroll region to encompass the inner frame"""
+    canvas.configure(scrollregion=canvas.bbox("all"))
+
+
+def _bound_to_mousewheel(app, event=None):
+    app.displayCanvas.bind_all("<MouseWheel>", _on_mousewheel)
+
+
+def _unbound_to_mousewheel(app, event=None):
+    app.displayCanvas.unbind_all("<MouseWheel>")
+
+
+def _on_mousewheel(app, event=None):
+    app.displayCanvas.yview_scroll(int(-1*(event.delta/120)), "units")
+
 
 def clear_other_tab_images(app, lookupTab, activeTab, name=None, onlyDisplay=None):
     if not getattr(app, "displayTopLeft", None):

@@ -7,6 +7,7 @@ try:
     import webbrowser
     from json import load
     from PIL import Image, ImageTk
+    from rembg import remove
     from tkinter import ttk
 
     from dsbg_shuffle_behavior_decks import BehaviorDeckFrame
@@ -174,7 +175,7 @@ try:
                         }
                     }
 
-                self.tileOrientations = {
+                self.tileLayouts = {
                     "1 Tile": {
                         "layout": self.create_image("custom_encounter_layout_1_tile.png", "layout", 99, extensionProvided=True),
                         "startingNodesHorizontal": self.create_image("custom_encounter_1_tile_starting_nodes_horizontal.png", "nodes1TileHorizontal", 99, extensionProvided=True),
@@ -1049,7 +1050,7 @@ try:
                 raise
 
 
-        def create_image(self, imageFileName, imageType, level=None, expansion=None, extensionProvided=False):
+        def create_image(self, imageFileName, imageType, level=None, expansion=None, pathProvided=False, extensionProvided=False):
             """
             Create an image to be displayed in the encounter frame.
 
@@ -1111,7 +1112,11 @@ try:
                     self.displayImage = Image.open(imagePath).resize((155, 55), Image.Resampling.LANCZOS)
                     image = ImageTk.PhotoImage(self.displayImage)
                 else:
-                    imagePath = baseFolder + "\\lib\\dsbg_shuffle_images\\".replace("\\", pathSep) + imageFileName
+                    if pathProvided:
+                        imagePath = imageFileName
+                    else:
+                        imagePath = baseFolder + "\\lib\\dsbg_shuffle_images\\".replace("\\", pathSep) + imageFileName
+
                     log("\tOpening " + imagePath)
 
                     if imageType == "enemyOld":
@@ -1215,6 +1220,56 @@ try:
                         image = Image.open(imagePath).resize((40, 60), Image.Resampling.LANCZOS)
                     elif imageType == "terrain":
                         image = Image.open(imagePath).resize((21, 24), Image.Resampling.LANCZOS)
+                    elif imageType == "iconText":
+                        i = Image.open(imagePath)
+                        width, height = i.size
+                        if width > height:
+                            mod = 10 / width
+                        else:
+                            mod = 10 / height
+                        img = Image.new("RGBA", (10, 10), (0, 0, 0, 0))
+                        img.paste(im=Image.open(imagePath).resize((int(width * mod), int(height * mod)), Image.Resampling.LANCZOS))
+                        image = ImageTk.PhotoImage(img)
+                    elif imageType == "iconEnemy":
+                        i = Image.open(imagePath)
+                        width, height = i.size
+                        if width > height:
+                            mod = 22 / width
+                        else:
+                            mod = 22 / height
+                        img = Image.new("RGBA", (22, 22), (0, 0, 0, 0))
+                        img.paste(im=Image.open(imagePath).resize((int(width * mod), int(height * mod)), Image.Resampling.LANCZOS))
+                        image = ImageTk.PhotoImage(img)
+                    elif imageType == "iconTextRemBG":
+                        i = Image.open(imagePath)
+                        with open(i, "rb") as i:
+                            input = i.read()
+                            o = remove(input)
+                        imageBox = o.getbbox()
+                        c = o.crop(imageBox)
+                        width, height = c.size
+                        if width > height:
+                            mod = 10 / width
+                        else:
+                            mod = 10 / height
+                        img = Image.new("RGBA", (10, 10), (0, 0, 0, 0))
+                        img.paste(im=Image.open(c).resize((int(width * mod), int(height * mod)), Image.Resampling.LANCZOS))
+                        image = ImageTk.PhotoImage(img)
+                    elif imageType == "iconEnemyRemBG":
+                        i = Image.open(imagePath)
+                        with open(i, "rb") as i:
+                            input = i.read()
+                            o = remove(input)
+                        imageBox = o.getbbox()
+                        c = o.crop(imageBox)
+                        width, height = c.size
+                        if width > height:
+                            mod = 22 / width
+                        else:
+                            mod = 22 / height
+                        img = Image.new("RGBA", (22, 22), (0, 0, 0, 0))
+                        img.paste(im=Image.open(c).resize((int(width * mod), int(height * mod)), Image.Resampling.LANCZOS))
+                        image = ImageTk.PhotoImage(img)
 
                 log("\tEnd of create_image")
 
