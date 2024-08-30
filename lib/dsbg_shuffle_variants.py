@@ -142,40 +142,33 @@ try:
             self.removeButton = ttk.Button(self.variantsTabButtonsFrame2, text="Remove Variant", width=16, command=self.remove_variant_card)
             self.removeButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
 
-            self.healthMenuList = ["", "Heath Allowed", "Heath Required", "Heath Banned"]
-            self.healthMenuVal = tk.StringVar(value=self.healthMenuList[1])
-            self.healthMenu = ttk.OptionMenu(self.variantsTabMenuFrame, self.healthMenuVal, *self.healthMenuList)
-            self.healthMenu.config(width=17)
+            self.healthMenuList = ["Heath Allowed", "Heath Required", "Heath Banned"]
+            self.healthMenuVal = tk.StringVar(value=self.healthMenuList[0])
+            self.healthMenu = ttk.Combobox(self.variantsTabMenuFrame, state="readonly", width=19, values=self.healthMenuList, textvariable=self.healthMenuVal)
             self.healthMenu.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-            self.armorMenuList = ["", "Armor Allowed", "Armor Required", "Armor Banned"]
-            self.armorMenuVal = tk.StringVar(value=self.armorMenuList[1])
-            self.armorMenu = ttk.OptionMenu(self.variantsTabMenuFrame, self.armorMenuVal, *self.armorMenuList)
-            self.armorMenu.config(width=17)
+            self.armorMenuList = ["Armor Allowed", "Armor Required", "Armor Banned"]
+            self.armorMenuVal = tk.StringVar(value=self.armorMenuList[0])
+            self.armorMenu = ttk.Combobox(self.variantsTabMenuFrame, state="readonly", width=19, values=self.armorMenuList, textvariable=self.armorMenuVal)
             self.armorMenu.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-            self.resistMenuList = ["", "Resist Allowed", "Resist Required", "Resist Banned"]
-            self.resistMenuVal = tk.StringVar(value=self.resistMenuList[1])
-            self.resistMenu = ttk.OptionMenu(self.variantsTabMenuFrame2, self.resistMenuVal, *self.resistMenuList)
-            self.resistMenu.config(width=17)
+            self.resistMenuList = ["Resist Allowed", "Resist Required", "Resist Banned"]
+            self.resistMenuVal = tk.StringVar(value=self.resistMenuList[0])
+            self.resistMenu = ttk.Combobox(self.variantsTabMenuFrame, state="readonly", width=19, values=self.resistMenuList, textvariable=self.resistMenuVal)
             self.resistMenu.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-            self.damageMenuList = ["", "Damage Allowed", "Damage Required", "Damage Banned"]
-            self.damageMenuVal = tk.StringVar(value=self.damageMenuList[1])
-            self.damageMenu = ttk.OptionMenu(self.variantsTabMenuFrame2, self.damageMenuVal, *self.damageMenuList)
-            self.damageMenu.config(width=17)
+            self.damageMenuList = ["Damage Allowed", "Damage Required", "Damage Banned"]
+            self.damageMenuVal = tk.StringVar(value=self.damageMenuList[0])
+            self.damageMenu = ttk.Combobox(self.variantsTabMenuFrame2, state="readonly", width=19, values=self.damageMenuList, textvariable=self.damageMenuVal)
             self.damageMenu.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-            self.dodgeMenuList = ["", "Dodge Allowed", "Dodge Required", "Dodge Banned"]
-            self.dodgeMenuVal = tk.StringVar(value=self.dodgeMenuList[1])
-            self.dodgeMenu = ttk.OptionMenu(self.variantsTabMenuFrame3, self.dodgeMenuVal, *self.dodgeMenuList)
-            self.dodgeMenu.config(width=17)
+            self.dodgeMenuList = ["Dodge Allowed", "Dodge Required", "Dodge Banned"]
+            self.dodgeMenuVal = tk.StringVar(value=self.dodgeMenuList[0])
+            self.dodgeMenu = ttk.Combobox(self.variantsTabMenuFrame2, state="readonly", width=19, values=self.dodgeMenuList, textvariable=self.dodgeMenuVal)
             self.dodgeMenu.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-            self.repeatMenuList = ["", "Repeat Allowed", "Repeat Required", "Repeat Banned"]
-            self.repeatMenuVal = tk.StringVar(value=self.repeatMenuList[1])
-            self.repeatMenu = ttk.OptionMenu(self.variantsTabMenuFrame3, self.repeatMenuVal, *self.repeatMenuList)
-            self.repeatMenu.config(width=17)
+            self.repeatMenuList = ["Repeat Allowed", "Repeat Required", "Repeat Banned"]
+            self.repeatMenuVal = tk.StringVar(value=self.repeatMenuList[0])
+            self.repeatMenu = ttk.Combobox(self.variantsTabMenuFrame3, state="readonly", width=19, values=self.repeatMenuList, textvariable=self.repeatMenuVal)
             self.repeatMenu.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-            self.conditionsMenuList = ["", "Conditions Allowed", "Conditions Required", "Conditions Banned"]
-            self.conditionsMenuVal = tk.StringVar(value=self.conditionsMenuList[1])
-            self.conditionsMenu = ttk.OptionMenu(self.variantsTabMenuFrame3, self.conditionsMenuVal, *self.conditionsMenuList)
-            self.conditionsMenu.config(width=17)
+            self.conditionsMenuList = ["Conditions Allowed", "Conditions Required", "Conditions Banned"]
+            self.conditionsMenuVal = tk.StringVar(value=self.conditionsMenuList[0])
+            self.conditionsMenu = ttk.Combobox(self.variantsTabMenuFrame3, state="readonly", width=19, values=self.conditionsMenuList, textvariable=self.conditionsMenuVal)
             self.conditionsMenu.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
 
             self.variantMenus = {

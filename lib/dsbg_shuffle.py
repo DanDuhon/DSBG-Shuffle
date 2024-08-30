@@ -6,8 +6,7 @@ try:
     import tkinter as tk
     import webbrowser
     from json import load
-    from PIL import Image, ImageTk
-    from rembg import remove
+    from PIL import Image, ImageTk, UnidentifiedImageError
     from tkinter import ttk
 
     from dsbg_shuffle_behavior_decks import BehaviorDeckFrame
@@ -1224,12 +1223,13 @@ try:
                         i = Image.open(imagePath)
                         width, height = i.size
                         if width > height:
-                            mod = 10 / width
+                            mod = 12 / width
                         else:
-                            mod = 10 / height
-                        img = Image.new("RGBA", (10, 10), (0, 0, 0, 0))
+                            mod = 12 / height
+                        img = Image.new("RGBA", (12, 12), (0, 0, 0, 0))
                         img.paste(im=Image.open(imagePath).resize((int(width * mod), int(height * mod)), Image.Resampling.LANCZOS))
-                        image = ImageTk.PhotoImage(img)
+                        log("\tEnd of create_image")
+                        return img, ImageTk.PhotoImage(img)
                     elif imageType == "iconEnemy":
                         i = Image.open(imagePath)
                         width, height = i.size
@@ -1239,41 +1239,27 @@ try:
                             mod = 22 / height
                         img = Image.new("RGBA", (22, 22), (0, 0, 0, 0))
                         img.paste(im=Image.open(imagePath).resize((int(width * mod), int(height * mod)), Image.Resampling.LANCZOS))
-                        image = ImageTk.PhotoImage(img)
-                    elif imageType == "iconTextRemBG":
+                        log("\tEnd of create_image")
+                        return img, ImageTk.PhotoImage(img)
+                    elif imageType == "iconSet":
                         i = Image.open(imagePath)
-                        with open(i, "rb") as i:
-                            input = i.read()
-                            o = remove(input)
-                        imageBox = o.getbbox()
-                        c = o.crop(imageBox)
-                        width, height = c.size
+                        width, height = i.size
                         if width > height:
-                            mod = 10 / width
+                            mod = 63 / width
                         else:
-                            mod = 10 / height
-                        img = Image.new("RGBA", (10, 10), (0, 0, 0, 0))
-                        img.paste(im=Image.open(c).resize((int(width * mod), int(height * mod)), Image.Resampling.LANCZOS))
-                        image = ImageTk.PhotoImage(img)
-                    elif imageType == "iconEnemyRemBG":
-                        i = Image.open(imagePath)
-                        with open(i, "rb") as i:
-                            input = i.read()
-                            o = remove(input)
-                        imageBox = o.getbbox()
-                        c = o.crop(imageBox)
-                        width, height = c.size
-                        if width > height:
-                            mod = 22 / width
-                        else:
-                            mod = 22 / height
-                        img = Image.new("RGBA", (22, 22), (0, 0, 0, 0))
-                        img.paste(im=Image.open(c).resize((int(width * mod), int(height * mod)), Image.Resampling.LANCZOS))
-                        image = ImageTk.PhotoImage(img)
+                            mod = 63 / height
+                        img = Image.new("RGBA", (63, 63), (0, 0, 0, 0))
+                        img.paste(im=Image.open(imagePath).resize((int(width * mod), int(height * mod)), Image.Resampling.LANCZOS))
+                        log("\tEnd of create_image")
+                        return img, ImageTk.PhotoImage(img)
 
                 log("\tEnd of create_image")
 
                 return image
+            except UnidentifiedImageError:
+                p = PopupWindow(root, "Invalid image file chosen.", firstButton="Ok")
+                root.wait_window(p)
+                raise
             except Exception as e:
                 error_popup(root, e)
                 raise
