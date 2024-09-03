@@ -31,6 +31,8 @@ try:
 
                 with open(baseFolder + "\\lib\\dsbg_shuffle_encounters.json".replace("\\", pathSep)) as encountersFile:
                     self.encounters = load(encountersFile)
+                    
+                self.customEncounters = [e.split("_") for e in set([os.path.splitext(f)[0] for f in os.listdir(baseFolder + "\\lib\\dsbg_shuffle_custom_encounters".replace("\\", pathSep)) if f.count("_") == 2 and ".jpg" in f])]
 
                 self.selected = None
                 self.forPrinting = False
@@ -1092,7 +1094,10 @@ try:
                         fileName += " (TSC)"
                     fileName += ".jpg" if not extensionProvided else ""
 
-                    imagePath = baseFolder + "\\lib\\dsbg_shuffle_images\\".replace("\\", pathSep) + fileName
+                    if pathProvided:
+                        imagePath = fileName
+                    else:
+                        imagePath = baseFolder + "\\lib\\dsbg_shuffle_images\\".replace("\\", pathSep) + fileName
                     log("\tOpening " + imagePath)
                     self.displayImage = Image.open(imagePath).resize((width, height), Image.Resampling.LANCZOS)
                     image = ImageTk.PhotoImage(self.displayImage)
