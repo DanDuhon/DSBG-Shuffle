@@ -33,6 +33,24 @@ try:
                     self.encounters = load(encountersFile)
                     
                 self.customEncounters = [e.split("_") for e in set([os.path.splitext(f)[0] for f in os.listdir(baseFolder + "\\lib\\dsbg_shuffle_custom_encounters".replace("\\", pathSep)) if f.count("_") == 2 and ".jpg" in f])]
+                
+                for enc in self.customEncounters:
+                    self.encounters["Custom - " + enc[1]] = {
+                        "name": enc[1],
+                        "expansion": enc[0],
+                        "level": int(enc[2]),
+                        "expansionCombos": {
+                            "1": [[enc[0]]],
+                            "2": [[enc[0]]],
+                            "3": [[enc[0]]],
+                            "4": [[enc[0]]]
+                            },
+                        "alts": {
+                            "enemySlots": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                            "alternatives": {enc[0]: []},
+                            "original": []
+                            }
+                        }
 
                 self.selected = None
                 self.forPrinting = False
@@ -913,7 +931,7 @@ try:
                 oldTreasureSwapOption = self.settings["treasureSwapOption"]
                 oldCustomEnemyList = self.settings["customEnemyList"]
 
-                s = SettingsWindow(root, self.coreSets)
+                s = SettingsWindow(app, root, self.coreSets)
 
                 self.wait_window(s.top)
 

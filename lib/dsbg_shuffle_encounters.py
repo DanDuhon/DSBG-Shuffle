@@ -1455,21 +1455,6 @@ try:
                         True if "3" not in self.app.encounters[encounter]["expansionCombos"] else any([frozenset(expCombo).issubset(self.app.availableExpansions) for expCombo in self.app.encounters[encounter]["expansionCombos"]["3"]]),
                         self.app.encounters[encounter]["expansion"] in ((self.app.v1Expansions if "v1" in self.app.settings["encounterTypes"] else set()) | (self.app.v2Expansions if "v2" in self.app.settings["encounterTypes"] else set()) | (self.app.level4Expansions if "level4" in self.app.settings["encounterTypes"] else set()))
                             ]))]
-                
-                addEncounters = {}
-                for enc in self.app.customEncounters:
-                    addEncounters[enc[1]] = {
-                        "name": enc[1],
-                        "expansion": enc[0],
-                        "level": enc[2],
-                        "expansionCombos": {
-                            "1": [[enc[0]]],
-                            "2": [[enc[0]]],
-                            "3": [[enc[0]]],
-                            "4": [[enc[0]]]
-                        }
-                        }
-
 
                 log("End of set_encounter_list")
             except Exception as e:
@@ -1603,6 +1588,9 @@ try:
 
                 clear_other_tab_images(self.app, "encounters", "encounters")
 
+                # if "Custom - " in encounter:
+                #     displayPhotoImage = self.app.create_image(encounter.replace("Custom - ", "") + ".jpg", "encounter", level, expansion)
+
                 if not customEnemyListCheck:
                     self.treeviewEncounters.unbind("<<TreeviewSelect>>")
 
@@ -1630,10 +1618,13 @@ try:
 
                 self.app.selected = self.app.encounters[encounterName]
 
-                # Get the possible alternative enemies from the encounter's file.
-                log("\tOpening " + baseFolder + "\\lib\\dsbg_shuffle_encounters\\".replace("\\", pathSep) + encounterName + str(self.app.numberOfCharacters) + ".json")
-                with open(baseFolder + "\\lib\\dsbg_shuffle_encounters\\".replace("\\", pathSep) + encounterName + str(self.app.numberOfCharacters) + ".json") as alternativesFile:
-                    alts = load(alternativesFile)
+                if "Custom - " in encounterName:
+                    alts = self.app.encounters[encounterName]["alts"]
+                else:
+                    # Get the possible alternative enemies from the encounter's file.
+                    log("\tOpening " + baseFolder + "\\lib\\dsbg_shuffle_encounters\\".replace("\\", pathSep) + encounterName + str(self.app.numberOfCharacters) + ".json")
+                    with open(baseFolder + "\\lib\\dsbg_shuffle_encounters\\".replace("\\", pathSep) + encounterName + str(self.app.numberOfCharacters) + ".json") as alternativesFile:
+                        alts = load(alternativesFile)
 
                 self.app.selected["alternatives"] = []
                 self.app.selected["enemySlots"] = alts["enemySlots"]
