@@ -1069,7 +1069,7 @@ try:
                 raise
 
 
-        def create_image(self, imageFileName, imageType, level=None, expansion=None, pathProvided=False, extensionProvided=False):
+        def create_image(self, imageFileName, imageType, level=None, expansion=None, pathProvided=False, extensionProvided=False, customEncounter=False):
             """
             Create an image to be displayed in the encounter frame.
 
@@ -1114,6 +1114,9 @@ try:
 
                     if pathProvided:
                         imagePath = fileName
+                    elif customEncounter:
+                        key = "Custom - " + fileName[:-4]
+                        imagePath = baseFolder + "\\lib\\dsbg_shuffle_custom_encounters\\".replace("\\", pathSep) + self.encounters[key]["expansion"] + "_" + fileName[:-4] + "_" + str(self.encounters[key]["level"]) + ".jpg"
                     else:
                         imagePath = baseFolder + "\\lib\\dsbg_shuffle_images\\".replace("\\", pathSep) + fileName
                     log("\tOpening " + imagePath)

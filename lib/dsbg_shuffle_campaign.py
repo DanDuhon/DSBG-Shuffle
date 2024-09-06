@@ -417,7 +417,7 @@ try:
 
                 # Check to see if there are any invalid names or levels in the JSON file.
                 # This is about as sure as I can be that you can't load random JSON into the app.
-                if any([(item["name"] not in self.app.encounters and item["name"] not in bosses and item["name"] not in events) or item["type"] not in set(["encounter", "boss", "event"]) or item["level"] not in set([1, 2, 3, 4, "Mini Boss", "Main Boss", "Mega Boss", " "]) for item in self.campaign]):
+                if any([(item["name"] not in self.app.encounters and "Custom - " + item["name"] not in self.app.encounters and item["name"] not in bosses and item["name"] not in events) or item["type"] not in set(["encounter", "boss", "event"]) or item["level"] not in set([1, 2, 3, 4, "Mini Boss", "Main Boss", "Mega Boss", " "]) for item in self.campaign]):
                     self.app.set_bindings_buttons_menus(False)
                     PopupWindow(self.root, labelText="Invalid DSBG-Shuffle campaign file.", firstButton="Ok")
                     self.app.set_bindings_buttons_menus(True)
@@ -511,17 +511,21 @@ try:
                 campaignCard = [e for e in self.campaign if e["iid"] == tree.selection()[0]][0]
 
                 if campaignCard["type"] == "encounter":
-                    self.app.encounterTab.rewardTreasure = campaignCard.get("rewardTreasure")
+                    if "Custom - " + campaignCard["name"] in self.app.encounters:
+                        self.app.encounterTab.newEnemies = []
+                        self.app.encounterTab.edit_encounter_card(campaignCard["name"], campaignCard["expansion"], campaignCard["level"], [], customEncounter=True)
+                    else:
+                        self.app.encounterTab.rewardTreasure = campaignCard.get("rewardTreasure")
 
-                    log("\tOpening " + baseFolder + "\\lib\\dsbg_shuffle_encounters\\".replace("\\", pathSep) + campaignCard["name"] + str(self.app.numberOfCharacters) + ".json")
+                        log("\tOpening " + baseFolder + "\\lib\\dsbg_shuffle_encounters\\".replace("\\", pathSep) + campaignCard["name"] + str(self.app.numberOfCharacters) + ".json")
 
-                    # Get the enemy slots for this card.
-                    with open(baseFolder + "\\lib\\dsbg_shuffle_encounters\\".replace("\\", pathSep) + campaignCard["name"] + str(self.app.numberOfCharacters) + ".json") as alternativesFile:
-                        alts = load(alternativesFile)
+                        # Get the enemy slots for this card.
+                        with open(baseFolder + "\\lib\\dsbg_shuffle_encounters\\".replace("\\", pathSep) + campaignCard["name"] + str(self.app.numberOfCharacters) + ".json") as alternativesFile:
+                            alts = load(alternativesFile)
 
-                    # Create the encounter card with saved enemies and tooltips.
-                    self.app.encounterTab.newEnemies = campaignCard["enemies"]
-                    self.app.encounterTab.edit_encounter_card(campaignCard["name"], campaignCard["expansion"], campaignCard["level"], alts["enemySlots"])
+                        # Create the encounter card with saved enemies and tooltips.
+                        self.app.encounterTab.newEnemies = campaignCard["enemies"]
+                        self.app.encounterTab.edit_encounter_card(campaignCard["name"], campaignCard["expansion"], campaignCard["level"], alts["enemySlots"])
                 elif campaignCard["type"] == "boss":
                     # Create and display the boss image.
                     self.app.create_image(campaignCard["name"] + ".jpg", "encounter", 4)

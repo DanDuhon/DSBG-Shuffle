@@ -80,6 +80,7 @@ try:
 
                 for s in list(set([e[0] for e in self.app.customEncounters])):
                     self.expansions[s] = {"button": None, "value": tk.IntVar(), "displayName": s + " (Custom)"}
+                    self.expansions[s]["value"].set(1 if s in self.settings["availableExpansions"] else 0)
 
                 self.expansionTab = VerticalScrolledFrame(self.notebook)
                 self.notebook.add(self.expansionTab, text="Enabled Expansions")
@@ -380,7 +381,7 @@ try:
             try:
                 log("Start of toggle_expansion")
 
-                if expansion in {
+                if " (Custom)" in self.expansions[expansion]["displayName"] or expansion in {
                     "Characters Expansion",
                     "Level 4 Encounters",
                     "Asylum Demon",
@@ -393,7 +394,7 @@ try:
                     "The Four Kings",
                     "The Last Giant"
                     }:
-                    log("End of toggle_expansion (Characters Expansion or Level 4 Encounters, nothing to do)")
+                    log("End of toggle_expansion (Characters Expansion, Level 4 Encounters, or custom set - nothing to do)")
                     return
 
                 self.enemies[expansion]["value"].set(self.expansions[expansion]["value"].get())
