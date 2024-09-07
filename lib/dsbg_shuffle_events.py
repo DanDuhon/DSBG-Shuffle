@@ -205,7 +205,7 @@ try:
                     tooltip.destroy()
 
                 # Create and display the event image.
-                self.app.create_image(events[eventSelected]["name"] + ".jpg", "encounter", 4)
+                self.app.create_image(events[eventSelected]["name"] + ".jpg", "event", 4)
                 displayPhotoImage = ImageTk.PhotoImage(self.app.displayImage)
                 self.app.displayTopLeft.image = displayPhotoImage
                 self.app.displayTopLeft.config(image=displayPhotoImage)

@@ -375,20 +375,20 @@ try:
                 if ("Ornstein" in self.selectedVariant or "Smough" in self.selectedVariant) and (self.selectedVariant.count("&") == 2 or "data" in self.selectedVariant):
                     if "data" not in self.selectedVariant:
                         # Create and display the variant image.
-                        self.variantPhotoImage = self.app.create_image(self.selectedVariant + ".jpg", "encounter", 4)
+                        self.variantPhotoImage = self.app.create_image(self.selectedVariant + ".jpg", "enemyCard")
 
                         self.edit_variant_card_os(fromDeck=fromDeck)
                     else:
                         for enemy in ["Ornstein", "Smough"]:
                             # Create and display the variant image.
-                            self.variantPhotoImage = self.app.create_image(enemy + " - data.jpg", "encounter", 4)
+                            self.variantPhotoImage = self.app.create_image(enemy + " - data.jpg", "enemyCard")
 
                             self.edit_variant_card_os(enemy=enemy, healthMod=healthMod if healthMod else {"Ornstein": 0, "Smough": 0}, fromDeck=fromDeck)
                 else:
                     self.selectedVariant += " - data" if "-" not in self.selectedVariant else ""
                     
                     # Create and display the variant image.
-                    self.variantPhotoImage = self.app.create_image((self.selectedVariant[:self.selectedVariant.index("_")] + self.selectedVariant.replace(variant, "") if "_" in self.selectedVariant else self.selectedVariant) + ".jpg", "encounter", 4)
+                    self.variantPhotoImage = self.app.create_image((self.selectedVariant[:self.selectedVariant.index("_")] + self.selectedVariant.replace(variant, "") if "_" in self.selectedVariant else self.selectedVariant) + ".jpg", "enemyCard")
 
                     self.edit_variant_card(variant=self.selectedVariant, bottomLeftDisplay=bottomLeftDisplay, bottomRightDisplay=bottomRightDisplay, lockedTree=fromLocked, armorerDennis=armorerDennis, oldIronKing=oldIronKing, pursuer=pursuer, healthMod=healthMod, fromDeck=fromDeck)
 
@@ -577,18 +577,18 @@ try:
                 if ("Ornstein" in self.selectedVariant or "Smough" in self.selectedVariant) and (self.selectedVariant.count("&") == 2 or "data" in self.selectedVariant):
                     if "data" not in self.selectedVariant:
                         # Create and display the variant image.
-                        self.variantPhotoImage = self.app.create_image(self.selectedVariant + ".jpg", "encounter", 4)
+                        self.variantPhotoImage = self.app.create_image(self.selectedVariant + ".jpg", "enemyCard")
 
                         self.edit_variant_card_os(variant=mods, lockedTree=True, fromDeck=fromDeck)
                     else:
                         for enemy in ["Ornstein", "Smough"]:
                             # Create and display the variant image.
-                            self.variantPhotoImage = self.app.create_image(enemy + " - data.jpg", "encounter", 4)
+                            self.variantPhotoImage = self.app.create_image(enemy + " - data.jpg", "enemyCard")
 
                             self.edit_variant_card_os(variant=mods, lockedTree=True, enemy=enemy, healthMod=healthMod if healthMod else {"Ornstein": 0, "Smough": 0}, fromDeck=fromDeck)
                 else:
                     # Create and display the variant image.
-                    self.variantPhotoImage = self.app.create_image(self.selectedVariant + ".jpg", "encounter", 4)
+                    self.variantPhotoImage = self.app.create_image(self.selectedVariant + ".jpg", "enemyCard")
 
                     self.edit_variant_card(variant=mods, lockedTree=True, armorerDennis=armorerDennis, oldIronKing=oldIronKing, pursuer=pursuer, healthMod=healthMod, fromDeck=fromDeck, bottomLeftDisplay=bottomLeftDisplay, bottomRightDisplay=bottomRightDisplay)
 

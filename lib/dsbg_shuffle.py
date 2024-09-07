@@ -11,7 +11,8 @@ try:
 
     from dsbg_shuffle_behavior_decks import BehaviorDeckFrame
     from dsbg_shuffle_campaign import CampaignFrame
-    from dsbg_shuffle_encounters import EncountersFrame, EncounterBuilderFrame
+    from dsbg_shuffle_encounters import EncountersFrame
+    from dsbg_shuffle_encounter_builder import EncounterBuilderFrame
     from dsbg_shuffle_enemies import enemyIds, enemiesDict, bosses
     from dsbg_shuffle_events import EventsFrame
     from dsbg_shuffle_settings import SettingsWindow
@@ -169,15 +170,15 @@ try:
                 startingVertical = self.create_image("custom_encounter_starting_nodes_vertical.png", "nodesVertical", 99, extensionProvided=True)
 
                 self.terrain = {
-                    "Barrel": self.create_image("custom_encounter_Barrel.png", "terrain", 99, extensionProvided=True),
-                    "Envoy Banner": self.create_image("custom_encounter_Envoy Banner.png", "terrain", 99, extensionProvided=True),
-                    "Exit": self.create_image("custom_encounter_Exit.png", "terrain", 99, extensionProvided=True),
-                    "Fang Boar": self.create_image("custom_encounter_Fang Boar.png", "terrain", 99, extensionProvided=True),
-                    "Gravestone": self.create_image("custom_encounter_Gravestone.png", "terrain", 99, extensionProvided=True),
-                    "Lever": self.create_image("custom_encounter_Lever.png", "terrain", 99, extensionProvided=True),
-                    "Shrine": self.create_image("custom_encounter_Shrine.png", "terrain", 99, extensionProvided=True),
-                    "Torch": self.create_image("custom_encounter_Torch.png", "terrain", 99, extensionProvided=True),
-                    "Treasure Chest": self.create_image("custom_encounter_Treasure Chest.png", "terrain", 99, extensionProvided=True)
+                    "Barrel": self.create_image("barrel.png", "terrain", 99, extensionProvided=True),
+                    "Envoy Banner": self.create_image("envoy_banner.png", "terrain", 99, extensionProvided=True),
+                    "Exit": self.create_image("exit.png", "terrain", 99, extensionProvided=True),
+                    "Fang Boar": self.create_image("fang_boar.png", "terrain", 99, extensionProvided=True),
+                    "Gravestone": self.create_image("gravestone.png", "terrain", 99, extensionProvided=True),
+                    "Lever": self.create_image("lever.png", "terrain", 99, extensionProvided=True),
+                    "Shrine": self.create_image("shrine.png", "terrain", 99, extensionProvided=True),
+                    "Torch": self.create_image("torch.png", "terrain", 99, extensionProvided=True),
+                    "Treasure Chest": self.create_image("treasure_chest.png", "terrain", 99, extensionProvided=True)
                 }
 
                 self.tileNumbers = {}
@@ -1118,21 +1119,49 @@ try:
                         key = "Custom - " + fileName[:-4]
                         imagePath = baseFolder + "\\lib\\dsbg_shuffle_custom_encounters\\".replace("\\", pathSep) + self.encounters[key]["expansion"] + "_" + fileName[:-4] + "_" + str(self.encounters[key]["level"]) + ".jpg"
                     else:
-                        imagePath = baseFolder + "\\lib\\dsbg_shuffle_images\\".replace("\\", pathSep) + fileName
+                        imagePath = baseFolder + "\\lib\\dsbg_shuffle_images\\encounters\\".replace("\\", pathSep) + fileName
+                    log("\tOpening " + imagePath)
+                    self.displayImage = Image.open(imagePath).resize((width, height), Image.Resampling.LANCZOS)
+                    image = ImageTk.PhotoImage(self.displayImage)
+                elif imageType == "event":
+                    width = 305
+                    height = 424
+                        
+                    fileName = imageFileName[:-4] if not extensionProvided else imageFileName
+                    fileName += ".jpg" if not extensionProvided else ""
+
+                    if pathProvided:
+                        imagePath = fileName
+                    else:
+                        imagePath = baseFolder + "\\lib\\dsbg_shuffle_images\\events\\".replace("\\", pathSep) + fileName
+                    log("\tOpening " + imagePath)
+                    self.displayImage = Image.open(imagePath).resize((width, height), Image.Resampling.LANCZOS)
+                    image = ImageTk.PhotoImage(self.displayImage)
+                elif imageType == "enemyCard":
+                    width = 305
+                    height = 424
+                        
+                    fileName = imageFileName[:-4] if not extensionProvided else imageFileName
+                    fileName += ".jpg" if not extensionProvided else ""
+
+                    if pathProvided:
+                        imagePath = fileName
+                    else:
+                        imagePath = baseFolder + "\\lib\\dsbg_shuffle_images\\enemies\\".replace("\\", pathSep) + fileName
                     log("\tOpening " + imagePath)
                     self.displayImage = Image.open(imagePath).resize((width, height), Image.Resampling.LANCZOS)
                     image = ImageTk.PhotoImage(self.displayImage)
                 elif imageType == "enemyText":
-                    imagePath = baseFolder + "\\lib\\dsbg_shuffle_images\\".replace("\\", pathSep) + imageFileName[:-4] + " rule bg.jpg"
+                    imagePath = baseFolder + "\\lib\\dsbg_shuffle_images\\enemies\\".replace("\\", pathSep) + imageFileName[:-4] + " rule bg.jpg"
                     log("\tOpening " + imagePath)
                     image = Image.open(imagePath).resize((14, 14), Image.Resampling.LANCZOS)
                 elif imageType == "healthTracker":
-                    imagePath = baseFolder + "\\lib\\dsbg_shuffle_images\\".replace("\\", pathSep) + imageFileName
+                    imagePath = baseFolder + "\\lib\\dsbg_shuffle_images\\enemies\\".replace("\\", pathSep) + imageFileName
                     log("\tOpening " + imagePath)
                     self.displayImage = Image.open(imagePath).resize((102, 55), Image.Resampling.LANCZOS)
                     image = ImageTk.PhotoImage(self.displayImage)
                 elif imageType == "fourKingsHealth":
-                    imagePath = baseFolder + "\\lib\\dsbg_shuffle_images\\".replace("\\", pathSep) + imageFileName
+                    imagePath = baseFolder + "\\lib\\dsbg_shuffle_images\\enemies\\".replace("\\", pathSep) + imageFileName
                     log("\tOpening " + imagePath)
                     self.displayImage = Image.open(imagePath).resize((155, 55), Image.Resampling.LANCZOS)
                     image = ImageTk.PhotoImage(self.displayImage)
@@ -1140,7 +1169,73 @@ try:
                     if pathProvided:
                         imagePath = imageFileName
                     else:
-                        imagePath = baseFolder + "\\lib\\dsbg_shuffle_images\\".replace("\\", pathSep) + imageFileName
+                        subfolder = None
+
+                        if imageType in {
+                            "enemyOld",
+                            "enemyOldLevel4",
+                            "enemyNew",
+                            "move"
+                        }:
+                            subfolder = "enemies\\"
+                        elif imageType in {
+                            "enemyNode",
+                            "attack",
+                            "repeat",
+                            "push",
+                            "bleed",
+                            "frostbite",
+                            "poison",
+                            "stagger",
+                            "calamity",
+                            "corrosion",
+                            "terrain"
+                        }:
+                            subfolder = "icons\\"
+                        elif imageType in {
+                            "barrage",
+                            "bitterCold",
+                            "darkness",
+                            "eerie",
+                            "gangAlonne",
+                            "gangHollow",
+                            "gangSilverKnight",
+                            "gangSkeleton",
+                            "hidden",
+                            "illusion",
+                            "mimic",
+                            "onslaught",
+                            "poisonMist",
+                            "snowstorm",
+                            "timer",
+                            "trial"
+                        }:
+                            subfolder = "encounters\\"
+                        elif imageType in {
+                            "tileLayout",
+                            "tileLayout1Tile",
+                            "nodesStartingHorizontal1Tile",
+                            "nodesStartingVertical1Tile",
+                            "tileLayoutLevel4",
+                            "nodesStartingHorizontalLevel4",
+                            "nodesStartingVerticalLevel4",
+                            "levelIcon",
+                            "reward",
+                            "layout",
+                            "nodesLevel4Vertical",
+                            "nodesLevel4Horizontal",
+                            "nodes1TileVertical",
+                            "nodes1TileHorizontal",
+                            "nodesHorizontal",
+                            "nodesVertical",
+                            "tileNum"
+                        }:
+                            subfolder = "custom_encounters\\"
+
+                        if subfolder:
+                            imagePath = baseFolder + "\\lib\\dsbg_shuffle_images\\" + subfolder.replace("\\", pathSep) + imageFileName
+                        else:
+                            imagePath = baseFolder + "\\lib\\dsbg_shuffle_images\\".replace("\\", pathSep) + imageFileName
 
                     log("\tOpening " + imagePath)
 
@@ -1153,8 +1248,6 @@ try:
                             image = Image.open(imagePath).resize((32, 32), Image.Resampling.LANCZOS)
                     elif imageType == "enemyNew":
                         image = Image.open(imagePath).resize((22, 22), Image.Resampling.LANCZOS)
-                    elif imageType == "resurrection":
-                        image = Image.open(imagePath).resize((9, 17), Image.Resampling.LANCZOS)
                     elif imageType == "enemyNode":
                         image = Image.open(imagePath).resize((12, 12), Image.Resampling.LANCZOS)
                     elif imageType == "attack":
