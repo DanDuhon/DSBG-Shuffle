@@ -13,10 +13,11 @@ try:
         Window in which the user selects which expansions they own and whether they want to see
         V1, V1, or both styles of encounters when being shown encounters.
         """
-        def __init__(self, root, coreSets):
+        def __init__(self, app, root, coreSets):
             try:
                 log("Creating settings window")
                 self.root = root
+                self.app = app
                 top = self.top = tk.Toplevel(root)
                 top.attributes('-alpha', 0.0)
                 top.wait_visibility()
@@ -76,6 +77,10 @@ try:
                     "The Four Kings": {"button": None, "value": tk.IntVar(), "displayName": "The Four Kings"},
                     "The Last Giant": {"button": None, "value": tk.IntVar(), "displayName": "The Last Giant"}
                 }
+
+                for s in list(set([e[0] for e in self.app.customEncounters])):
+                    self.expansions[s] = {"button": None, "value": tk.IntVar(), "displayName": s + " (Custom)"}
+                    self.expansions[s]["value"].set(1 if s in self.settings["availableExpansions"] else 0)
 
                 self.expansionTab = VerticalScrolledFrame(self.notebook)
                 self.notebook.add(self.expansionTab, text="Enabled Expansions")
@@ -376,7 +381,7 @@ try:
             try:
                 log("Start of toggle_expansion")
 
-                if expansion in {
+                if " (Custom)" in self.expansions[expansion]["displayName"] or expansion in {
                     "Characters Expansion",
                     "Level 4 Encounters",
                     "Asylum Demon",
@@ -389,7 +394,7 @@ try:
                     "The Four Kings",
                     "The Last Giant"
                     }:
-                    log("End of toggle_expansion (Characters Expansion or Level 4 Encounters, nothing to do)")
+                    log("End of toggle_expansion (Characters Expansion, Level 4 Encounters, or custom set - nothing to do)")
                     return
 
                 self.enemies[expansion]["value"].set(self.expansions[expansion]["value"].get())

@@ -36,10 +36,14 @@ if windowsOs:
     font = ImageFont.truetype(baseFolder + "\\lib\\Adobe Caslon Pro Semibold.ttf", 12)
     font2 = ImageFont.truetype(baseFolder + "\\lib\\OptimusPrinceps.ttf", 24)
     font3 = ImageFont.truetype(baseFolder + "\\lib\\OptimusPrinceps.ttf", 30)
+    fontEncounterName = ImageFont.truetype(baseFolder + "\\lib\\OptimusPrinceps.ttf", 28)
+    fontFlavor = ImageFont.truetype(baseFolder + "\\lib\\Adobe Caslon Pro Semibold Italic.ttf", 12)
 else:
     font = ImageFont.truetype("./Adobe Caslon Pro Semibold.ttf", 12)
     font2 = ImageFont.truetype("./OptimusPrinceps.ttf", 24)
     font3 = ImageFont.truetype("./OptimusPrinceps.ttf", 30)
+    fontEncounterName = ImageFont.truetype("./OptimusPrinceps.ttf", 28)
+    fontFlavor = ImageFont.truetype("./Adobe Caslon Pro Semibold Italic.ttf", 12)
 
 
 class CreateToolTip(object):
@@ -382,6 +386,22 @@ def set_display_bindings_by_tab(app, smoughActive=False):
             app.displayBottomRight.unbind("<Control-1>")
             app.displayBottomRight.unbind("<Shift-Control-1>")
 
+
+def on_frame_configure(canvas):
+    """Reset the scroll region to encompass the inner frame"""
+    canvas.configure(scrollregion=canvas.bbox("all"))
+
+
+def _bound_to_mousewheel(app, event=None):
+    app.displayCanvas.bind_all("<MouseWheel>", _on_mousewheel)
+
+
+def _unbound_to_mousewheel(app, event=None):
+    app.displayCanvas.unbind_all("<MouseWheel>")
+
+
+def _on_mousewheel(app, event=None):
+    app.displayCanvas.yview_scroll(int(-1*(event.delta/120)), "units")
 
 
 def clear_other_tab_images(app, lookupTab, activeTab, name=None, onlyDisplay=None):

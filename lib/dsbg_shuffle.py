@@ -6,12 +6,13 @@ try:
     import tkinter as tk
     import webbrowser
     from json import load
-    from PIL import Image, ImageTk
+    from PIL import Image, ImageTk, UnidentifiedImageError
     from tkinter import ttk
 
     from dsbg_shuffle_behavior_decks import BehaviorDeckFrame
     from dsbg_shuffle_campaign import CampaignFrame
     from dsbg_shuffle_encounters import EncountersFrame
+    from dsbg_shuffle_encounter_builder import EncounterBuilderFrame
     from dsbg_shuffle_enemies import enemyIds, enemiesDict, bosses
     from dsbg_shuffle_events import EventsFrame
     from dsbg_shuffle_settings import SettingsWindow
@@ -31,6 +32,26 @@ try:
 
                 with open(baseFolder + "\\lib\\dsbg_shuffle_encounters.json".replace("\\", pathSep)) as encountersFile:
                     self.encounters = load(encountersFile)
+                    
+                self.customEncounters = [e.split("_") for e in set([os.path.splitext(f)[0] for f in os.listdir(baseFolder + "\\lib\\dsbg_shuffle_custom_encounters".replace("\\", pathSep)) if f.count("_") == 2 and ".jpg" in f])]
+                
+                for enc in self.customEncounters:
+                    self.encounters["Custom - " + enc[1]] = {
+                        "name": enc[1],
+                        "expansion": enc[0],
+                        "level": int(enc[2]),
+                        "expansionCombos": {
+                            "1": [[enc[0]]],
+                            "2": [[enc[0]]],
+                            "3": [[enc[0]]],
+                            "4": [[enc[0]]]
+                            },
+                        "alts": {
+                            "enemySlots": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                            "alternatives": {enc[0]: []},
+                            "original": []
+                            }
+                        }
 
                 self.selected = None
                 self.forPrinting = False
@@ -78,13 +99,6 @@ try:
                     self.allEnemies[enemy]["imageNew"] = self.create_image(enemy + ".png", "enemyNew")
                     self.allEnemies[enemy]["image text"] = self.create_image(enemy + ".png", "enemyText")
                     self.allEnemies[enemy]["image text" if self.forPrinting else "photo image text"] = ImageTk.PhotoImage(self.create_image(enemy + ".png", "enemyText"))
-                
-                self.progress.label.config(text="Loading treasure...")
-                if self.settings["treasureSwapOption"] in {"Similar Soul Cost", "Tier Based"}:
-                    generate_treasure_soul_cost(self.availableExpansions, self.charactersActive, root, self.progress)
-                i = len([t for t in treasures if not treasures[t]["character"] or treasures[t]["character"] in self.charactersActive])
-                if self.settings["treasureSwapOption"] == "Tier Based":
-                    populate_treasure_tiers(self.availableExpansions, self.charactersActive)
 
                 # Icons
                 self.enemyNode2 = self.create_image("enemy_node_2.png", "enemyNode")
@@ -129,6 +143,414 @@ try:
                 self.snowstorm = self.create_image("snowstorm.png", "snowstorm")
                 self.timer = self.create_image("timer.png", "timer")
                 self.trial = self.create_image("trial.png", "trial")
+
+                self.customEncounter1TileImage = self.create_image("custom_encounter_1_tile_no_traps.jpg", "encounter", 1, extensionProvided=True)
+                self.customEncounter1TileTrapsImage = self.create_image("custom_encounter_1_tile_traps.jpg", "encounter", 1, extensionProvided=True)
+                self.customEncounter2TileImage = self.create_image("custom_encounter_2_tile.jpg", "encounter", 1, extensionProvided=True)
+                self.customEncounter3TileImage = self.create_image("custom_encounter_3_tile.jpg", "encounter", 1, extensionProvided=True)
+                self.customEncounterLevel4Image = self.create_image("custom_encounter_1_tile_level_4_no_traps.jpg", "encounter", 1, extensionProvided=True)
+                self.customEncounterLevel4TrapsImage = self.create_image("custom_encounter_1_tile_level_4_traps.jpg", "encounter", 1, extensionProvided=True)
+
+                self.rewardsDrawIcon = self.create_image("custom_encounter_rewards_draw.png", "reward", 99, extensionProvided=True)
+                self.rewardsRefreshIcon = self.create_image("custom_encounter_rewards_refresh.png", "reward", 99, extensionProvided=True)
+                self.rewardsSearchIcon = self.create_image("custom_encounter_rewards_search.png", "reward", 99, extensionProvided=True)
+                self.rewardsShortcutIcon = self.create_image("custom_encounter_rewards_shortcut.png", "reward", 99, extensionProvided=True)
+                self.rewardsSoulsIcon = self.create_image("custom_encounter_rewards_souls.png", "reward", 99, extensionProvided=True)
+                self.rewardsSoulsPlayersIcon = self.create_image("custom_encounter_rewards_souls_players.png", "reward", 99, extensionProvided=True)
+                self.rewardsTrialIcon = self.create_image("custom_encounter_rewards_trial.png", "reward", 99, extensionProvided=True)
+
+                self.levelIcons = {
+                    1: self.create_image("custom_encounter_level1_icon.png", "levelIcon", 99, extensionProvided=True),
+                    2: self.create_image("custom_encounter_level2_icon.png", "levelIcon", 99, extensionProvided=True),
+                    3: self.create_image("custom_encounter_level3_icon.png", "levelIcon", 99, extensionProvided=True),
+                    4: self.create_image("custom_encounter_level4_icon.png", "levelIcon", 99, extensionProvided=True)
+                    }
+
+                startingHorizontal = self.create_image("custom_encounter_starting_nodes_horizontal.png", "nodesHorizontal", 99, extensionProvided=True)
+                startingVertical = self.create_image("custom_encounter_starting_nodes_vertical.png", "nodesVertical", 99, extensionProvided=True)
+
+                self.terrain = {
+                    "Barrel": self.create_image("barrel.png", "terrain", 99, extensionProvided=True),
+                    "Envoy Banner": self.create_image("envoy_banner.png", "terrain", 99, extensionProvided=True),
+                    "Exit": self.create_image("exit.png", "terrain", 99, extensionProvided=True),
+                    "Fang Boar": self.create_image("fang_boar.png", "terrain", 99, extensionProvided=True),
+                    "Gravestone": self.create_image("gravestone.png", "terrain", 99, extensionProvided=True),
+                    "Lever": self.create_image("lever.png", "terrain", 99, extensionProvided=True),
+                    "Shrine": self.create_image("shrine.png", "terrain", 99, extensionProvided=True),
+                    "Torch": self.create_image("torch.png", "terrain", 99, extensionProvided=True),
+                    "Treasure Chest": self.create_image("treasure_chest.png", "terrain", 99, extensionProvided=True)
+                }
+
+                self.tileNumbers = {}
+                for x in range(1, 4):
+                    s = str(x)
+                    self.tileNumbers[x] = {
+                        "starting": {
+                            "traps": self.create_image("custom_encounter_starting_" + s + "_traps.png", "tileNum", 99, extensionProvided=True),
+                            "noTraps": self.create_image("custom_encounter_starting_" + s + "_no_traps.png", "tileNum", 99, extensionProvided=True)
+                        },
+                        "notStarting": {
+                            "traps": self.create_image("custom_encounter_not_starting_" + s + "_traps.png", "tileNum", 99, extensionProvided=True),
+                            "noTraps": self.create_image("custom_encounter_not_starting_" + s + "_no_traps.png", "tileNum", 99, extensionProvided=True)
+                        }
+                    }
+
+                self.tileLayouts = {
+                    "1 Tile": {
+                        "layout": self.create_image("custom_encounter_layout_1_tile.png", "layout", 99, extensionProvided=True),
+                        "startingNodesHorizontal": self.create_image("custom_encounter_1_tile_starting_nodes_horizontal.png", "nodes1TileHorizontal", 99, extensionProvided=True),
+                        "startingNodesVertical": self.create_image("custom_encounter_1_tile_starting_nodes_vertical.png", "nodes1TileVertical", 99, extensionProvided=True),
+                        "box": {
+                            1: {
+                                "North": (59, 414),
+                                "South": (59, 555),
+                                "East": (198, 414),
+                                "West": (59, 414)
+                                }
+                            }
+                        },
+                    "1 Tile Level 4": {
+                        "layout": self.create_image("custom_encounter_layout_1_tile_level_4.png", "layout", 99, extensionProvided=True),
+                        "startingNodesHorizontal": self.create_image("custom_encounter_level_4_starting_nodes_horizontal.png", "nodesLevel4Horizontal", 99, extensionProvided=True),
+                        "startingNodesVertical": self.create_image("custom_encounter_level_4_starting_nodes_vertical.png", "nodesLevel4Vertical", 99, extensionProvided=True),
+                        "box": {
+                            1: {
+                                "North": (47, 403),
+                                "South": (47, 570),
+                                "East": (212, 403),
+                                "West": (47, 403)
+                                }
+                            }
+                        },
+                    "2 Tiles Horizontal": {
+                        "layout": self.create_image("custom_encounter_layout_2_tiles_horizontal.png", "layout", 99, extensionProvided=True),
+                        "startingNodesHorizontal": startingHorizontal,
+                        "startingNodesVertical": startingVertical,
+                        "box": {
+                            1: {
+                                "North": (44, 452),
+                                "South": (44, 524),
+                                "East": (115, 452),
+                                "West": (44, 452)
+                                },
+                            2: {
+                                "North": (152, 452),
+                                "South": (152, 524),
+                                "East": (223, 452),
+                                "West": (152, 452)
+                                }
+                            }
+                        },
+                    "2 Tiles Vertical": {
+                        "layout": self.create_image("custom_encounter_layout_2_tiles_vertical.png", "layout", 99, extensionProvided=True),
+                        "startingNodesHorizontal": startingHorizontal,
+                        "startingNodesVertical": startingVertical,
+                        "box": {
+                            1: {
+                                "North": (98, 402),
+                                "South": (98, 474),
+                                "East": (169, 402),
+                                "West": (98, 402)
+                                },
+                            2: {
+                                "North": (98, 509),
+                                "South": (98, 581),
+                                "East": (169, 509),
+                                "West": (98, 509)
+                                }
+                            }
+                        },
+                    "2 Tiles Illusion": {
+                        "layout": self.create_image("custom_encounter_layout_2_tiles_illusion.png", "layout", 99, extensionProvided=True),
+                        "startingNodesHorizontal": startingHorizontal,
+                        "startingNodesVertical": startingVertical,
+                        "box": {
+                            1: {
+                                "North": (98, 382),
+                                "South": (98, 454),
+                                "East": (169, 382),
+                                "West": (98, 382)
+                                }
+                            }
+                        },
+                    "2 Tiles Separated": {
+                        "layout": self.create_image("custom_encounter_layout_2_tiles_separated.png", "layout", 99, extensionProvided=True),
+                        "startingNodesHorizontal": startingHorizontal,
+                        "startingNodesVertical": startingVertical,
+                        "box": {
+                            1: {
+                                "North": (98, 382),
+                                "South": (98, 454),
+                                "East": (169, 382),
+                                "West": (98, 382)
+                                },
+                            2: {
+                                "North": (98, 522),
+                                "South": (98, 594),
+                                "East": (169, 522),
+                                "West": (98, 522)
+                                }
+                            }
+                        },
+                    "3 Tiles Vertical": {
+                        "layout": self.create_image("custom_encounter_layout_3_tile_vertical.png", "layout", 99, extensionProvided=True),
+                        "startingNodesHorizontal": startingHorizontal,
+                        "startingNodesVertical": startingVertical,
+                        "box": {
+                            1: {
+                                "North": (98, 347),
+                                "South": (98, 419),
+                                "East": (169, 347),
+                                "West": (98, 347)
+                                },
+                            2: {
+                                "North": (98, 455),
+                                "South": (98, 527),
+                                "East": (169, 455),
+                                "West": (98, 455)
+                                },
+                            3: {
+                                "North": (98, 562),
+                                "South": (98, 654),
+                                "East": (169, 562),
+                                "West": (98, 562)
+                                }
+                            }
+                        },
+                    "3 Tiles: 1 NE, 2 NW, 3 SW": {
+                        "layout": self.create_image("custom_encounter_layout_3_tiles_1_NE_2_NW_3_SW.png", "layout", 99, extensionProvided=True),
+                        "startingNodesHorizontal": startingHorizontal,
+                        "startingNodesVertical": startingVertical,
+                        "box": {
+                            1: {
+                                "North": (151, 402),
+                                "South": (151, 474),
+                                "East": (222, 402),
+                                "West": (151, 402)
+                                },
+                            2: {
+                                "North": (45, 402),
+                                "South": (45, 474),
+                                "East": (116, 402),
+                                "West": (45, 402)
+                                },
+                            3: {
+                                "North": (45, 509),
+                                "South": (45, 581),
+                                "East": (116, 509),
+                                "West": (45, 509)
+                                }
+                            }
+                        },
+                    "3 Tiles: 1 NW, 2 NE, 3 SW": {
+                        "layout": self.create_image("custom_encounter_layout_3_tiles_1_NW_2_NE_3_SW.png", "layout", 99, extensionProvided=True),
+                        "startingNodesHorizontal": startingHorizontal,
+                        "startingNodesVertical": startingVertical,
+                        "box": {
+                            1: {
+                                "North": (45, 402),
+                                "South": (45, 474),
+                                "East": (116, 402),
+                                "West": (45, 402)
+                                },
+                            2: {
+                                "North": (151, 402),
+                                "South": (151, 474),
+                                "East": (222, 402),
+                                "West": (151, 402)
+                                },
+                            3: {
+                                "North": (45, 509),
+                                "South": (45, 581),
+                                "East": (116, 509),
+                                "West": (45, 509)
+                                }
+                            }
+                        },
+                    "3 Tiles: 1 NW, 2 SW, 3 SE": {
+                        "layout": self.create_image("custom_encounter_layout_3_tiles_1_NW_2_SW_3_SE.png", "layout", 99, extensionProvided=True),
+                        "startingNodesHorizontal": startingHorizontal,
+                        "startingNodesVertical": startingVertical,
+                        "box": {
+                            1: {
+                                "North": (45, 402),
+                                "South": (45, 474),
+                                "East": (116, 402),
+                                "West": (45, 402)
+                                },
+                            2: {
+                                "North": (45, 509),
+                                "South": (45, 581),
+                                "East": (116, 509),
+                                "West": (45, 509)
+                                },
+                            3: {
+                                "North": (151, 509),
+                                "South": (151, 581),
+                                "East": (222, 509),
+                                "West": (151, 509)
+                                }
+                            }
+                        },
+                    "3 Tiles: 1 SE, 2 NE, 3 NW": {
+                        "layout": self.create_image("custom_encounter_layout_3_tiles_1_SE_2_NE_3_NW.png", "layout", 99, extensionProvided=True),
+                        "startingNodesHorizontal": startingHorizontal,
+                        "startingNodesVertical": startingVertical,
+                        "box": {
+                            1: {
+                                "North": (151, 509),
+                                "South": (151, 581),
+                                "East": (222, 509),
+                                "West": (151, 509)
+                                },
+                            2: {
+                                "North": (151, 402),
+                                "South": (151, 474),
+                                "East": (222, 402),
+                                "West": (151, 402)
+                                },
+                            3: {
+                                "North": (45, 402),
+                                "South": (45, 474),
+                                "East": (116, 402),
+                                "West": (45, 402)
+                                }
+                            }
+                        },
+                    "3 Tiles: 1 SW, 2 NW, 3 SE": {
+                        "layout": self.create_image("custom_encounter_layout_3_tiles_1_SW_2_NW_3_SE.png", "layout", 99, extensionProvided=True),
+                        "startingNodesHorizontal": startingHorizontal,
+                        "startingNodesVertical": startingVertical,
+                        "box": {
+                            1: {
+                                "North": (45, 509),
+                                "South": (45, 581),
+                                "East": (116, 509),
+                                "West": (45, 509)
+                                },
+                            2: {
+                                "North": (45, 402),
+                                "South": (45, 474),
+                                "East": (116, 402),
+                                "West": (45, 402)
+                                },
+                            3: {
+                                "North": (151, 509),
+                                "South": (151, 581),
+                                "East": (222, 509),
+                                "West": (151, 509)
+                                }
+                            }
+                        },
+                    "3 Tiles: 1 SW, 2 SE, 3 NE": {
+                        "layout": self.create_image("custom_encounter_layout_3_tiles_1_SW_2_SE_3_NE.png", "layout", 99, extensionProvided=True),
+                        "startingNodesHorizontal": startingHorizontal,
+                        "startingNodesVertical": startingVertical,
+                        "box": {
+                            1: {
+                                "North": (45, 509),
+                                "South": (45, 581),
+                                "East": (116, 509),
+                                "West": (45, 509)
+                                },
+                            2: {
+                                "North": (151, 509),
+                                "South": (151, 581),
+                                "East": (222, 509),
+                                "West": (151, 509)
+                                },
+                            3: {
+                                "North": (151, 402),
+                                "South": (151, 474),
+                                "East": (222, 402),
+                                "West": (151, 402)
+                                }
+                            }
+                        },
+                    "3 Tiles Illusion": {
+                        "layout": self.create_image("custom_encounter_layout_3_tiles_illusion.png", "layout", 99, extensionProvided=True),
+                        "startingNodesHorizontal": startingHorizontal,
+                        "startingNodesVertical": startingVertical,
+                        "box": {
+                            1: {
+                                "North": (38, 393),
+                                "South": (38, 465),
+                                "East": (109, 393),
+                                "West": (38, 393)
+                                }
+                            }
+                        },
+                    "3 Tiles Separated": {
+                        "layout": self.create_image("custom_encounter_layout_3_tiles_separated.png", "layout", 99, extensionProvided=True),
+                        "startingNodesHorizontal": startingHorizontal,
+                        "startingNodesVertical": startingVertical,
+                        "box": {
+                            1: {
+                                "North": (38, 393),
+                                "South": (38, 465),
+                                "East": (109, 393),
+                                "West": (38, 393)
+                                }
+                            }
+                        },
+                    "3 Tiles, Tile 1 Separated": {
+                        "layout": self.create_image("custom_encounter_layout_3_tiles_1_separate.png", "layout", 99, extensionProvided=True),
+                        "startingNodesHorizontal": startingHorizontal,
+                        "startingNodesVertical": startingVertical,
+                        "box": {
+                            1: {
+                                "North": (39, 393),
+                                "South": (39, 465),
+                                "East": (110, 393),
+                                "West": (39, 393)
+                                },
+                            2: {
+                                "North": (39, 514),
+                                "South": (39, 586),
+                                "East": (110, 514),
+                                "West": (39, 514)
+                                },
+                            3: {
+                                "North": (145, 514),
+                                "South": (145, 586),
+                                "East": (216, 514),
+                                "West": (145, 514)
+                                }
+                            }
+                        },
+                    "3 Tiles, Tile 3 Separated": {
+                        "layout": self.create_image("custom_encounter_layout_3_tiles_3_separate.png", "layout", 99, extensionProvided=True),
+                        "startingNodesHorizontal": startingHorizontal,
+                        "startingNodesVertical": startingVertical,
+                        "box": {
+                            1: {
+                                "North": (38, 407),
+                                "South": (38, 479),
+                                "East": (109, 407),
+                                "West": (38, 407)
+                                },
+                            2: {
+                                "North": (38, 514),
+                                "South": (38, 586),
+                                "East": (109, 514),
+                                "West": (38, 514)
+                                },
+                            3: {
+                                "North": (158, 514),
+                                "South": (158, 586),
+                                "East": (229, 514),
+                                "West": (158, 514)
+                                }
+                            }
+                        }
+                }
+                
+                self.progress.label.config(text="Loading treasure...")
+                if self.settings["treasureSwapOption"] in {"Similar Soul Cost", "Tier Based"}:
+                    generate_treasure_soul_cost(self.availableExpansions, self.charactersActive, root, self.progress)
+                i = len([t for t in treasures if not treasures[t]["character"] or treasures[t]["character"] in self.charactersActive])
+                if self.settings["treasureSwapOption"] == "Tier Based":
+                    populate_treasure_tiers(self.availableExpansions, self.charactersActive)
 
                 self.create_tabs()
                 self.create_buttons()
@@ -198,6 +620,9 @@ try:
 
                 self.behaviorDeckTab = BehaviorDeckFrame(root=root, app=self)
                 self.notebook.add(self.behaviorDeckTab, text="Behavior Decks")
+
+                self.encounterBuilderTab = EncounterBuilderFrame(root=root, app=self)
+                self.notebook.add(self.encounterBuilderTab, text="Encounter Builder")
 
                 self.encounterTab = EncountersFrame(root=root, app=self)
                 for index in [0, 1]:
@@ -507,7 +932,7 @@ try:
                 oldTreasureSwapOption = self.settings["treasureSwapOption"]
                 oldCustomEnemyList = self.settings["customEnemyList"]
 
-                s = SettingsWindow(root, self.coreSets)
+                s = SettingsWindow(app, root, self.coreSets)
 
                 self.wait_window(s.top)
 
@@ -645,7 +1070,7 @@ try:
                 raise
 
 
-        def create_image(self, imageFileName, imageType, level=None, expansion=None):
+        def create_image(self, imageFileName, imageType, level=None, expansion=None, pathProvided=False, extensionProvided=False, customEncounter=False):
             """
             Create an image to be displayed in the encounter frame.
 
@@ -683,31 +1108,135 @@ try:
                         width = 400
                         height = 685
 
-                    fileName = imageFileName[:-4]
+                    fileName = imageFileName[:-4] if not extensionProvided else imageFileName
                     if expansion == "The Sunless City" and imageFileName[:-4] in set(["Broken Passageway", "Central Plaza"]):
                         fileName += " (TSC)"
-                    fileName += ".jpg"
+                    fileName += ".jpg" if not extensionProvided else ""
 
-                    imagePath = baseFolder + "\\lib\\dsbg_shuffle_images\\".replace("\\", pathSep) + fileName
+                    if pathProvided:
+                        imagePath = fileName
+                    elif customEncounter:
+                        key = "Custom - " + fileName[:-4]
+                        imagePath = baseFolder + "\\lib\\dsbg_shuffle_custom_encounters\\".replace("\\", pathSep) + self.encounters[key]["expansion"] + "_" + fileName[:-4] + "_" + str(self.encounters[key]["level"]) + ".jpg"
+                    else:
+                        imagePath = baseFolder + "\\lib\\dsbg_shuffle_images\\encounters\\".replace("\\", pathSep) + fileName
+                    log("\tOpening " + imagePath)
+                    self.displayImage = Image.open(imagePath).resize((width, height), Image.Resampling.LANCZOS)
+                    image = ImageTk.PhotoImage(self.displayImage)
+                elif imageType == "event":
+                    width = 305
+                    height = 424
+                        
+                    fileName = imageFileName[:-4] if not extensionProvided else imageFileName
+                    fileName += ".jpg" if not extensionProvided else ""
+
+                    if pathProvided:
+                        imagePath = fileName
+                    else:
+                        imagePath = baseFolder + "\\lib\\dsbg_shuffle_images\\events\\".replace("\\", pathSep) + fileName
+                    log("\tOpening " + imagePath)
+                    self.displayImage = Image.open(imagePath).resize((width, height), Image.Resampling.LANCZOS)
+                    image = ImageTk.PhotoImage(self.displayImage)
+                elif imageType == "enemyCard":
+                    width = 305
+                    height = 424
+                        
+                    fileName = imageFileName[:-4] if not extensionProvided else imageFileName
+                    fileName += ".jpg" if not extensionProvided else ""
+
+                    if pathProvided:
+                        imagePath = fileName
+                    else:
+                        imagePath = baseFolder + "\\lib\\dsbg_shuffle_images\\enemies\\".replace("\\", pathSep) + fileName
                     log("\tOpening " + imagePath)
                     self.displayImage = Image.open(imagePath).resize((width, height), Image.Resampling.LANCZOS)
                     image = ImageTk.PhotoImage(self.displayImage)
                 elif imageType == "enemyText":
-                    imagePath = baseFolder + "\\lib\\dsbg_shuffle_images\\".replace("\\", pathSep) + imageFileName[:-4] + " rule bg.jpg"
+                    imagePath = baseFolder + "\\lib\\dsbg_shuffle_images\\enemies\\".replace("\\", pathSep) + imageFileName[:-4] + " rule bg.jpg"
                     log("\tOpening " + imagePath)
                     image = Image.open(imagePath).resize((14, 14), Image.Resampling.LANCZOS)
                 elif imageType == "healthTracker":
-                    imagePath = baseFolder + "\\lib\\dsbg_shuffle_images\\".replace("\\", pathSep) + imageFileName
+                    imagePath = baseFolder + "\\lib\\dsbg_shuffle_images\\enemies\\".replace("\\", pathSep) + imageFileName
                     log("\tOpening " + imagePath)
                     self.displayImage = Image.open(imagePath).resize((102, 55), Image.Resampling.LANCZOS)
                     image = ImageTk.PhotoImage(self.displayImage)
                 elif imageType == "fourKingsHealth":
-                    imagePath = baseFolder + "\\lib\\dsbg_shuffle_images\\".replace("\\", pathSep) + imageFileName
+                    imagePath = baseFolder + "\\lib\\dsbg_shuffle_images\\enemies\\".replace("\\", pathSep) + imageFileName
                     log("\tOpening " + imagePath)
                     self.displayImage = Image.open(imagePath).resize((155, 55), Image.Resampling.LANCZOS)
                     image = ImageTk.PhotoImage(self.displayImage)
                 else:
-                    imagePath = baseFolder + "\\lib\\dsbg_shuffle_images\\".replace("\\", pathSep) + imageFileName
+                    if pathProvided:
+                        imagePath = imageFileName
+                    else:
+                        subfolder = None
+
+                        if imageType in {
+                            "enemyOld",
+                            "enemyOldLevel4",
+                            "enemyNew",
+                            "move"
+                        }:
+                            subfolder = "enemies\\"
+                        elif imageType in {
+                            "enemyNode",
+                            "attack",
+                            "repeat",
+                            "push",
+                            "bleed",
+                            "frostbite",
+                            "poison",
+                            "stagger",
+                            "calamity",
+                            "corrosion",
+                            "terrain"
+                        }:
+                            subfolder = "icons\\"
+                        elif imageType in {
+                            "barrage",
+                            "bitterCold",
+                            "darkness",
+                            "eerie",
+                            "gangAlonne",
+                            "gangHollow",
+                            "gangSilverKnight",
+                            "gangSkeleton",
+                            "hidden",
+                            "illusion",
+                            "mimic",
+                            "onslaught",
+                            "poisonMist",
+                            "snowstorm",
+                            "timer",
+                            "trial"
+                        }:
+                            subfolder = "encounters\\"
+                        elif imageType in {
+                            "tileLayout",
+                            "tileLayout1Tile",
+                            "nodesStartingHorizontal1Tile",
+                            "nodesStartingVertical1Tile",
+                            "tileLayoutLevel4",
+                            "nodesStartingHorizontalLevel4",
+                            "nodesStartingVerticalLevel4",
+                            "levelIcon",
+                            "reward",
+                            "layout",
+                            "nodesLevel4Vertical",
+                            "nodesLevel4Horizontal",
+                            "nodes1TileVertical",
+                            "nodes1TileHorizontal",
+                            "nodesHorizontal",
+                            "nodesVertical",
+                            "tileNum"
+                        }:
+                            subfolder = "custom_encounters\\"
+
+                        if subfolder:
+                            imagePath = baseFolder + "\\lib\\dsbg_shuffle_images\\" + subfolder.replace("\\", pathSep) + imageFileName
+                        else:
+                            imagePath = baseFolder + "\\lib\\dsbg_shuffle_images\\".replace("\\", pathSep) + imageFileName
+
                     log("\tOpening " + imagePath)
 
                     if imageType == "enemyOld":
@@ -719,8 +1248,6 @@ try:
                             image = Image.open(imagePath).resize((32, 32), Image.Resampling.LANCZOS)
                     elif imageType == "enemyNew":
                         image = Image.open(imagePath).resize((22, 22), Image.Resampling.LANCZOS)
-                    elif imageType == "resurrection":
-                        image = Image.open(imagePath).resize((9, 17), Image.Resampling.LANCZOS)
                     elif imageType == "enemyNode":
                         image = Image.open(imagePath).resize((12, 12), Image.Resampling.LANCZOS)
                     elif imageType == "attack":
@@ -775,10 +1302,83 @@ try:
                         image = Image.open(imagePath).resize((31, 13), Image.Resampling.LANCZOS)
                     elif imageType == "trial":
                         image = Image.open(imagePath).resize((26, 13), Image.Resampling.LANCZOS)
+                    elif imageType == "tileLayout":
+                        image = Image.open(imagePath).resize((235, 329), Image.Resampling.LANCZOS)
+                    elif imageType == "tileLayout1Tile":
+                        image = Image.open(imagePath).resize((235, 329), Image.Resampling.LANCZOS)
+                    elif imageType == "nodesStartingHorizontal1Tile":
+                        image = Image.open(imagePath).resize((80, 11), Image.Resampling.LANCZOS)
+                    elif imageType == "nodesStartingVertical1Tile":
+                        image = Image.open(imagePath).resize((10, 83), Image.Resampling.LANCZOS)
+                    elif imageType == "tileLayoutLevel4":
+                        image = Image.open(imagePath).resize((235, 329), Image.Resampling.LANCZOS)
+                    elif imageType == "nodesStartingHorizontalLevel4":
+                        image = Image.open(imagePath).resize((80, 11), Image.Resampling.LANCZOS)
+                    elif imageType == "nodesStartingVerticalLevel4":
+                        image = Image.open(imagePath).resize((10, 83), Image.Resampling.LANCZOS)
+                    elif imageType == "levelIcon":
+                        image = Image.open(imagePath).resize((63, 63), Image.Resampling.LANCZOS)
+                    elif imageType == "reward":
+                        image = Image.open(imagePath).resize((112, 111), Image.Resampling.LANCZOS)
+                    elif imageType == "layout":
+                        image = Image.open(imagePath).resize((235, 329), Image.Resampling.LANCZOS)
+                    elif imageType == "nodesLevel4Vertical":
+                        image = Image.open(imagePath).resize((16, 182), Image.Resampling.LANCZOS)
+                    elif imageType == "nodesLevel4Horizontal":
+                        image = Image.open(imagePath).resize((182, 16), Image.Resampling.LANCZOS)
+                    elif imageType == "nodes1TileVertical":
+                        image = Image.open(imagePath).resize((20, 161), Image.Resampling.LANCZOS)
+                    elif imageType == "nodes1TileHorizontal":
+                        image = Image.open(imagePath).resize((159, 20), Image.Resampling.LANCZOS)
+                    elif imageType == "nodesHorizontal":
+                        image = Image.open(imagePath).resize((81, 9), Image.Resampling.LANCZOS)
+                    elif imageType == "nodesVertical":
+                        image = Image.open(imagePath).resize((9, 82), Image.Resampling.LANCZOS)
+                    elif imageType == "tileNum":
+                        image = Image.open(imagePath).resize((40, 60), Image.Resampling.LANCZOS)
+                    elif imageType == "terrain":
+                        image = Image.open(imagePath).resize((21, 24), Image.Resampling.LANCZOS)
+                    elif imageType == "iconText":
+                        i = Image.open(imagePath)
+                        width, height = i.size
+                        if width > height:
+                            mod = 12 / width
+                        else:
+                            mod = 12 / height
+                        img = Image.new("RGBA", (12, 12), (0, 0, 0, 0))
+                        img.paste(im=Image.open(imagePath).resize((int(width * mod), int(height * mod)), Image.Resampling.LANCZOS))
+                        log("\tEnd of create_image")
+                        return img, ImageTk.PhotoImage(img)
+                    elif imageType == "iconEnemy":
+                        i = Image.open(imagePath)
+                        width, height = i.size
+                        if width > height:
+                            mod = 22 / width
+                        else:
+                            mod = 22 / height
+                        img = Image.new("RGBA", (22, 22), (0, 0, 0, 0))
+                        img.paste(im=Image.open(imagePath).resize((int(width * mod), int(height * mod)), Image.Resampling.LANCZOS))
+                        log("\tEnd of create_image")
+                        return img, ImageTk.PhotoImage(img)
+                    elif imageType == "iconSet":
+                        i = Image.open(imagePath)
+                        width, height = i.size
+                        if width > height:
+                            mod = 63 / width
+                        else:
+                            mod = 63 / height
+                        img = Image.new("RGBA", (63, 63), (0, 0, 0, 0))
+                        img.paste(im=Image.open(imagePath).resize((int(width * mod), int(height * mod)), Image.Resampling.LANCZOS))
+                        log("\tEnd of create_image")
+                        return img, ImageTk.PhotoImage(img)
 
                 log("\tEnd of create_image")
 
                 return image
+            except UnidentifiedImageError:
+                p = PopupWindow(root, "Invalid image file chosen.", firstButton="Ok")
+                root.wait_window(p)
+                raise
             except Exception as e:
                 error_popup(root, e)
                 raise

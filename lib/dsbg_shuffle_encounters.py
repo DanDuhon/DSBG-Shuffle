@@ -427,7 +427,7 @@ try:
                     # If the encounter clicked on is already displayed, no need to load it again,
                     # just shuffle the enemies.
                     if self.app.encounters[encounterName] == self.app.selected:
-                        self.shuffle_enemies()
+                        self.shuffle_enemies(customEncounter="Custom - " in encounterName)
                         self.treeviewEncounters.bind("<<TreeviewSelect>>", self.load_encounter)
                         set_display_bindings_by_tab(self.app)
                         log("\tEnd of load_encounter")
@@ -435,10 +435,13 @@ try:
 
                 self.app.selected = self.app.encounters[encounterName]
 
-                # Get the possible alternative enemies from the encounter's file.
-                log("\tOpening " + baseFolder + "\\lib\\dsbg_shuffle_encounters\\".replace("\\", pathSep) + encounterName + str(self.app.numberOfCharacters) + ".json")
-                with open(baseFolder + "\\lib\\dsbg_shuffle_encounters\\".replace("\\", pathSep) + encounterName + str(self.app.numberOfCharacters) + ".json") as alternativesFile:
-                    alts = load(alternativesFile)
+                if "Custom - " in encounterName:
+                    alts = self.app.encounters[encounterName]["alts"]
+                else:
+                    # Get the possible alternative enemies from the encounter's file.
+                    log("\tOpening " + baseFolder + "\\lib\\dsbg_shuffle_encounters\\".replace("\\", pathSep) + encounterName + str(self.app.numberOfCharacters) + ".json")
+                    with open(baseFolder + "\\lib\\dsbg_shuffle_encounters\\".replace("\\", pathSep) + encounterName + str(self.app.numberOfCharacters) + ".json") as alternativesFile:
+                        alts = load(alternativesFile)
 
                 self.app.selected["alternatives"] = []
                 self.app.selected["enemySlots"] = alts["enemySlots"]
@@ -453,7 +456,7 @@ try:
                 self.newTiles = dict()
 
                 if not customEnemyListCheck:
-                    self.shuffle_enemies()
+                    self.shuffle_enemies(customEncounter="Custom - " in encounterName)
                     self.treeviewEncounters.bind("<<TreeviewSelect>>", self.load_encounter)
                     set_display_bindings_by_tab(self.app)
 
@@ -484,6 +487,11 @@ try:
                     log("\tEnd of show_original")
                     return
 
+                if "Custom - " + self.app.selected["name"] in self.app.encounters:
+                    log("\tCustom encounter - nothing to do")
+                    log("\tEnd of show_original")
+                    return
+
                 self.rewardTreasure = None
 
                 self.newEnemies = self.app.selected["original"]
@@ -496,7 +504,7 @@ try:
                 raise
 
 
-        def shuffle_enemies(self, event=None):
+        def shuffle_enemies(self, event=None, customEncounter=False):
             """
             Pick a new set of enemies to display in the encounter.
 
@@ -519,16 +527,19 @@ try:
 
                 self.rewardTreasure = None
 
-                # Make sure a new set of enemies is chosen each time, otherwise it
-                # feels like the program isn't doing anything.
-                oldEnemies = [e for e in self.newEnemies]
-                self.newEnemies = choice(self.app.selected["alternatives"])
-                # Check to see if there are multiple alternatives.
-                if len(set([tuple(a) for a in self.app.selected["alternatives"]])) > 1:
-                    while self.newEnemies == oldEnemies:
-                        self.newEnemies = choice(self.app.selected["alternatives"])
+                if customEncounter or "Custom - " + self.app.selected["name"] in self.app.encounters:
+                    self.newEnemies = []
+                else:
+                    # Make sure a new set of enemies is chosen each time, otherwise it
+                    # feels like the program isn't doing anything.
+                    oldEnemies = [e for e in self.newEnemies]
+                    self.newEnemies = choice(self.app.selected["alternatives"])
+                    # Check to see if there are multiple alternatives.
+                    if len(set([tuple(a) for a in self.app.selected["alternatives"]])) > 1:
+                        while self.newEnemies == oldEnemies:
+                            self.newEnemies = choice(self.app.selected["alternatives"])
 
-                self.edit_encounter_card(self.app.selected["name"], self.app.selected["expansion"], self.app.selected["level"], self.app.selected["enemySlots"])
+                self.edit_encounter_card(self.app.selected["name"], self.app.selected["expansion"], self.app.selected["level"], self.app.selected["enemySlots"], customEncounter=customEncounter or "Custom - " + self.app.selected["name"] in self.app.encounters)
 
                 log("\tEnd of shuffle_enemies")
             except Exception as e:
@@ -536,7 +547,7 @@ try:
                 raise
 
 
-        def edit_encounter_card(self, name, expansion, level, enemySlots, campaignGen=False, right=False, original=False):
+        def edit_encounter_card(self, name, expansion, level, enemySlots, campaignGen=False, right=False, original=False, customEncounter=False):
             """
             Modify the encounter card image with the new enemies and treasure reward, if applicable.
 
@@ -563,7 +574,7 @@ try:
             try:
                 log("Start of edit_encounter_card, name={}, expansion={}, level={}, enemySlots={}, right={}".format(str(name), str(expansion), str(level), str(enemySlots), str(right)))
 
-                displayPhotoImage = self.app.create_image(name + ".jpg", "encounter", level, expansion)
+                displayPhotoImage = self.app.create_image(name + ".jpg", "encounter", level, expansion, customEncounter=customEncounter)
 
                 self.newTiles = {
                     1: [[], [], [], []],
