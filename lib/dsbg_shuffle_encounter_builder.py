@@ -819,7 +819,7 @@ try:
                     + "_"
                     + self.customEncounter["encounterName"].strip().replace("\n", " ")
                     + "_"
-                    + str(self.customEncounter["encounterlevel"])
+                    + str(self.customEncounter["level"])
                     + ".json")
 
                 saveIcons = {}
@@ -848,8 +848,6 @@ try:
             try:
                 log("Start of load_custom_encounter")
 
-                self.new_custom_encounter()
-
                 # Prompt the user to find the encounter file.
                 file = filedialog.askopenfilename(initialdir=baseFolder + "\\lib\\dsbg_shuffle_custom_encounters".replace("\\", pathSep), filetypes = [(".json", ".json")])
 
@@ -865,6 +863,8 @@ try:
                     self.app.set_bindings_buttons_menus(True)
                     log("End of load_custom_encounter (invalid file)")
                     return
+
+                self.new_custom_encounter()
 
                 log("Loading file " + file)
 
