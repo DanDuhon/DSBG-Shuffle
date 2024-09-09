@@ -1426,6 +1426,7 @@ try:
             v.write("\n".join([str(line).replace("\n", "") for line in version]))
 
         response = requests.get("https://api.github.com/repos/DanDuhon/DSBG-Shuffle/releases/latest")
+        input(response.json()["name"])
         if version[0].replace("\n", "") != response.json()["name"]:
             p = PopupWindow(root, "A new version of DSBG-Shuffle is available!\nCheck it out on Github!\n\nIf you don't want to see this notification anymore,\ndisable checking for updates in the settings.", firstButton="Ok", secondButton=True)
             root.wait_window(p)
