@@ -1,4 +1,5 @@
 try:
+    import errno
     import tkinter as tk
     from collections import Counter
     from json import load
@@ -461,6 +462,12 @@ try:
                     set_display_bindings_by_tab(self.app)
 
                 log("\tEnd of load_encounter")
+            except EnvironmentError as err:
+                if "Custom - " in encounterName and err.errno == errno.ENOENT: # ENOENT -> "no entity" -> "file not found"
+                    # Handling for this occurred in create_image.
+                    return
+                else:
+                    raise
             except Exception as e:
                 error_popup(self.root, e)
                 raise
@@ -542,6 +549,12 @@ try:
                 self.edit_encounter_card(self.app.selected["name"], self.app.selected["expansion"], self.app.selected["level"], self.app.selected["enemySlots"], customEncounter=customEncounter or "Custom - " + self.app.selected["name"] in self.app.encounters)
 
                 log("\tEnd of shuffle_enemies")
+            except EnvironmentError as err:
+                if customEncounter and err.errno == errno.ENOENT: # ENOENT -> "no entity" -> "file not found"
+                    # Handling for this occurred in create_image.
+                    return
+                else:
+                    raise
             except Exception as e:
                 error_popup(self.root, e)
                 raise
@@ -760,6 +773,12 @@ try:
 
 
                 log("\tEnd of edit_encounter_card")
+            except EnvironmentError as err:
+                if customEncounter and err.errno == errno.ENOENT: # ENOENT -> "no entity" -> "file not found"
+                    # Handling for this occurred in create_image.
+                    return
+                else:
+                    raise
             except Exception as e:
                 error_popup(self.root, e)
                 raise

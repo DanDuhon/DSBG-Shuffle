@@ -1,9 +1,10 @@
 try:
+    import errno
     import tkinter as tk
     from copy import deepcopy
     from datetime import datetime
     from json import dump, load
-    from os import path
+    from os import listdir, path
     from PIL import ImageTk, ImageDraw, UnidentifiedImageError
     from tkinter import filedialog, ttk
 
@@ -211,20 +212,18 @@ try:
             vcmdY = (self.register(self.callback_y))
             self.positionLabel = ttk.Label(self.iconsFrame, text="Position\t")
             self.positionLabel.grid(column=0, row=4, padx=5, pady=5, sticky=tk.W)
-            self.xPositionLabel = ttk.Label(self.iconsFrame, text="x:")
+            self.xPositionLabel = ttk.Label(self.iconsFrame, text="\nx:\n0-400")
             self.xPositionLabel.grid(column=1, row=4, padx=5, pady=5, sticky=tk.W)
             self.xPositionVal = tk.StringVar()
             self.xPositionEntry = ttk.Entry(self.iconsFrame, textvariable=self.xPositionVal, width=4, validate="all", validatecommand=(vcmdX, "%P"))
             self.xPositionEntry.grid(column=2, row=4, padx=5, pady=5, sticky=tk.W)
-            self.yPositionLabel = ttk.Label(self.iconsFrame, text="y:")
+            self.yPositionLabel = ttk.Label(self.iconsFrame, text="\ny:\n0-685")
             self.yPositionLabel.grid(column=3, row=4, padx=5, pady=5, sticky=tk.E)
             self.yPositionVal = tk.StringVar()
             self.yPositionEntry = ttk.Entry(self.iconsFrame, textvariable=self.yPositionVal, width=4, validate="all", validatecommand=(vcmdY, "%P"))
             self.yPositionEntry.grid(column=4, row=4, padx=5, pady=5, sticky=tk.E)
-            self.xPositionLabel = ttk.Label(self.iconsFrame, text="x: 0-400\ty: 0-685")
-            self.xPositionLabel.grid(column=5, row=4, padx=5, pady=5, sticky=tk.W)
-            # self.iconView = tk.Label(self.iconsFrame, width=26, height=2)
-            # self.iconView.grid(column=6, row=4, pady=5, rowspan=2, sticky=tk.NSEW)
+            self.iconView = tk.Label(self.iconsFrame, width=26, height=2)
+            self.iconView.grid(column=5, row=4, pady=5, sticky=tk.NSEW)
 
             self.eNames = [""] + enemyNames
             self.terrainNames = [
@@ -835,6 +834,16 @@ try:
                     dump(saveEncounter, encounterFile)
 
                 self.customEncounter["image"].save(path.splitext(file)[0] + ".jpg")
+                
+                self.app.add_custom_encounters()
+                self.app.allExpansions = set([self.app.encounters[encounter]["expansion"] for encounter in self.app.encounters]) | set(["Phantoms"])
+                self.app.level4Expansions = set([self.app.encounters[encounter]["expansion"] for encounter in self.app.encounters if self.app.encounters[encounter]["level"] == 4])
+                self.app.availableExpansions = set(self.app.settings["availableExpansions"])
+                self.app.v2Expansions = (self.app.allExpansions - self.app.v1Expansions - self.app.level4Expansions)
+                self.app.encounterTab.set_encounter_list()
+                self.app.encounterTab.treeviewEncounters.pack_forget()
+                self.app.encounterTab.treeviewEncounters.destroy()
+                self.app.encounterTab.create_encounters_treeview()
 
                 self.encounterSaveLabelVal.set((" " * 64) + "Saved " + datetime.now().strftime("%H:%M:%S"))
 
@@ -970,6 +979,12 @@ try:
             except UnidentifiedImageError:
                 # Handling for this occurred in create_image.
                 return
+            except EnvironmentError as err:
+                if err.errno == errno.ENOENT: # ENOENT -> "no entity" -> "file not found"
+                    # Handling for this occurred in create_image.
+                    return
+                else:
+                    raise
             except Exception as e:
                 error_popup(self.root, e)
                 raise
@@ -1102,8 +1117,8 @@ try:
                     errors.append("size")
 
                 if errors:
-                    # self.iconView.config(image="")
-                    # self.iconView.image=None
+                    self.iconView.config(image="")
+                    self.iconView.image=None
                     errorText = "Required:\n" + ", ".join(errors)
                     self.iconImageErrorsVal.set(errorText)
                     return
@@ -1140,13 +1155,19 @@ try:
                 self.currentIcon["image"] = i
                 self.currentIcon["photoImage"] = p
 
-                # self.iconView.config(image=p)
-                # self.iconView.image=p
+                self.iconView.config(image=p)
+                self.iconView.image=p
 
                 log("\tEnd of choose_icon_image")
             except UnidentifiedImageError:
                 # Handling for this occurred in create_image.
                 return
+            except EnvironmentError as err:
+                if err.errno == errno.ENOENT: # ENOENT -> "no entity" -> "file not found"
+                    # Handling for this occurred in create_image.
+                    return
+                else:
+                    raise
             except Exception as e:
                 error_popup(self.root, e)
                 raise

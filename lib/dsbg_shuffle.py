@@ -1,5 +1,6 @@
 try:
     import datetime
+    import errno
     import os
     import requests
     import sys
@@ -32,26 +33,8 @@ try:
 
                 with open(baseFolder + "\\lib\\dsbg_shuffle_encounters.json".replace("\\", pathSep)) as encountersFile:
                     self.encounters = load(encountersFile)
-                    
-                self.customEncounters = [e.split("_") for e in set([os.path.splitext(f)[0] for f in os.listdir(baseFolder + "\\lib\\dsbg_shuffle_custom_encounters".replace("\\", pathSep)) if f.count("_") == 2 and ".jpg" in f])]
-                
-                for enc in self.customEncounters:
-                    self.encounters["Custom - " + enc[1]] = {
-                        "name": enc[1],
-                        "expansion": enc[0],
-                        "level": int(enc[2]),
-                        "expansionCombos": {
-                            "1": [[enc[0]]],
-                            "2": [[enc[0]]],
-                            "3": [[enc[0]]],
-                            "4": [[enc[0]]]
-                            },
-                        "alts": {
-                            "enemySlots": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                            "alternatives": {enc[0]: []},
-                            "original": []
-                            }
-                        }
+
+                self.add_custom_encounters()
 
                 self.selected = None
                 self.forPrinting = False
@@ -757,6 +740,39 @@ try:
                 raise
 
 
+        def add_custom_encounters(self):
+            """
+            Adds custom encounters to the list of all encounters.
+            """
+            try:
+                log("Start of add_custom_encounters")
+                    
+                self.customEncounters = [e.split("_") for e in set([os.path.splitext(f)[0] for f in os.listdir(baseFolder + "\\lib\\dsbg_shuffle_custom_encounters".replace("\\", pathSep)) if f.count("_") == 2 and ".jpg" in f])]
+                
+                for enc in [enc for enc in self.customEncounters if "Custom - " + enc[1] not in self.encounters]:
+                    self.encounters["Custom - " + enc[1]] = {
+                        "name": enc[1],
+                        "expansion": enc[0],
+                        "level": int(enc[2]),
+                        "expansionCombos": {
+                            "1": [[enc[0]]],
+                            "2": [[enc[0]]],
+                            "3": [[enc[0]]],
+                            "4": [[enc[0]]]
+                            },
+                        "alts": {
+                            "enemySlots": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                            "alternatives": {enc[0]: []},
+                            "original": []
+                            }
+                        }
+
+                log("End of add_custom_encounters")
+            except Exception as e:
+                error_popup(root, e)
+                raise
+
+
         def set_bindings_buttons_menus(self, enable):
             """
             Sets keybindings to the appropriate function.
@@ -1342,10 +1358,10 @@ try:
                         i = Image.open(imagePath)
                         width, height = i.size
                         if width > height:
-                            mod = 12 / width
+                            mod = 13 / width
                         else:
-                            mod = 12 / height
-                        img = Image.new("RGBA", (12, 12), (0, 0, 0, 0))
+                            mod = 13 / height
+                        img = Image.new("RGBA", (13, 13), (0, 0, 0, 0))
                         img.paste(im=Image.open(imagePath).resize((int(width * mod), int(height * mod)), Image.Resampling.LANCZOS))
                         log("\tEnd of create_image")
                         return img, ImageTk.PhotoImage(img)
@@ -1378,6 +1394,12 @@ try:
             except UnidentifiedImageError:
                 p = PopupWindow(root, "Invalid image file chosen.", firstButton="Ok")
                 root.wait_window(p)
+                raise
+            except EnvironmentError as err:
+                if err.errno == errno.ENOENT: # ENOENT -> "no entity" -> "file not found"
+                    if customEncounter:
+                        p = PopupWindow(root, "Custom encounter file not found.\nWas it deleted?", firstButton="Ok")
+                        root.wait_window(p)
                 raise
             except Exception as e:
                 error_popup(root, e)
@@ -1426,9 +1448,12 @@ try:
             v.write("\n".join([str(line).replace("\n", "") for line in version]))
 
         response = requests.get("https://api.github.com/repos/DanDuhon/DSBG-Shuffle/releases/latest")
-        input(response.json()["name"])
         if version[0].replace("\n", "") != response.json()["name"]:
-            p = PopupWindow(root, "A new version of DSBG-Shuffle is available!\nCheck it out on Github!\n\nIf you don't want to see this notification anymore,\ndisable checking for updates in the settings.", firstButton="Ok", secondButton=True)
+            p = PopupWindow(root, "A new version of DSBG-Shuffle is available!\nCurrent:\t"
+                            + version[0].replace("\n", "")
+                            + "\nNew:\t"
+                            + response.json()["name"]
+                            + "\nCheck it out on Github!\n\nIf you don't want to see this notification anymore,\ndisable checking for updates in the settings.", firstButton="Ok", secondButton=True)
             root.wait_window(p)
 
     s = ttk.Style()
