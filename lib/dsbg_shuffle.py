@@ -1380,10 +1380,10 @@ try:
                         i = Image.open(imagePath)
                         width, height = i.size
                         if width > height:
-                            mod = 63 / width
+                            mod = 60 / width
                         else:
-                            mod = 63 / height
-                        img = Image.new("RGBA", (63, 63), (0, 0, 0, 0))
+                            mod = 60 / height
+                        img = Image.new("RGBA", (60, 60), (0, 0, 0, 0))
                         img.paste(im=Image.open(imagePath).resize((int(width * mod), int(height * mod)), Image.Resampling.LANCZOS))
                         log("\tEnd of create_image")
                         return img, ImageTk.PhotoImage(img)

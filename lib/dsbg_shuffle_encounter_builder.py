@@ -124,20 +124,25 @@ try:
             self.rewardDrawEntry = tk.Text(self.infoFrame5, width=17, height=2)
             self.rewardDrawEntry.grid(column=1, row=3, padx=5, pady=5, sticky=tk.W)
             
+            self.rewardRefreshLabel = ttk.Label(self.infoFrame5, text="Refresh\nReward\t")
+            self.rewardRefreshLabel.grid(column=0, row=4, padx=5, pady=5)
+            self.rewardRefreshEntry = tk.Text(self.infoFrame5, width=17, height=2)
+            self.rewardRefreshEntry.grid(column=1, row=4, padx=5, pady=5, sticky=tk.W)
+            
             self.rewardTrialLabel = ttk.Label(self.infoFrame5, text="Trial\nReward\t")
-            self.rewardTrialLabel.grid(column=0, row=4, padx=5, pady=5)
+            self.rewardTrialLabel.grid(column=0, row=5, padx=5, pady=5)
             self.rewardTrialEntry = tk.Text(self.infoFrame5, width=17, height=2)
-            self.rewardTrialEntry.grid(column=1, row=4, padx=5, pady=5, sticky=tk.W)
+            self.rewardTrialEntry.grid(column=1, row=5, padx=5, pady=5, sticky=tk.W)
             
             self.keywordsLabel = ttk.Label(self.infoFrame5, text="Keywords")
-            self.keywordsLabel.grid(column=2, row=1, padx=(24, 5), pady=5, sticky=tk.W)
-            self.keywordsEntry = tk.Text(self.infoFrame5, width=39, height=2)
+            self.keywordsLabel.grid(column=2, row=1, padx=(24, 5), pady=5, sticky=tk.NW)
+            self.keywordsEntry = tk.Text(self.infoFrame5, width=39, height=3)
             self.keywordsEntry.grid(column=3, row=1, pady=5, columnspan=2, sticky=tk.W)
             
             self.specialRulesLabel = ttk.Label(self.infoFrame5, text="Special\nRules")
-            self.specialRulesLabel.grid(column=2, row=2, padx=(24, 5), pady=5, sticky=tk.W)
-            self.specialRulesEntry = tk.Text(self.infoFrame5, width=39, height=8)
-            self.specialRulesEntry.grid(column=3, row=2, pady=5, rowspan=3, columnspan=2, sticky=tk.W)
+            self.specialRulesLabel.grid(column=2, row=2, padx=(24, 5), pady=5, sticky=tk.NW)
+            self.specialRulesEntry = tk.Text(self.infoFrame5, width=39, height=12)
+            self.specialRulesEntry.grid(column=3, row=2, pady=5, rowspan=4, columnspan=2, sticky=tk.W)
             
             self.tileLayoutLabel = ttk.Label(self.infoFrame6, text="Tile\nLayout\t")
             self.tileLayoutLabel.pack(side=tk.LEFT, anchor=tk.W, padx=5, pady=5)
@@ -517,6 +522,7 @@ try:
                 self.rewardSoulsEntry.delete("1.0", tk.END)
                 self.rewardSearchEntry.delete("1.0", tk.END)
                 self.rewardDrawEntry.delete("1.0", tk.END)
+                self.rewardRefreshEntry.delete("1.0", tk.END)
                 self.rewardTrialEntry.delete("1.0", tk.END)
                 self.keywordsEntry.delete("1.0", tk.END)
                 self.specialRulesEntry.delete("1.0", tk.END)
@@ -613,6 +619,13 @@ try:
                     imageWithText.text((20, y), "\n" + self.rewardDrawEntry.get("1.0", "end"), "black", font)
                     lineCount += 2 + self.rewardDrawEntry.get("1.0", "end").strip().count("\n")
 
+                # Reward Refresh
+                if self.rewardRefreshEntry.get("1.0", "end").strip():
+                    y = 195 + round(12.5 * lineCount)
+                    self.app.displayImage.paste(im=self.app.rewardsRefreshIcon, box=(20, y), mask=self.app.rewardsRefreshIcon)
+                    imageWithText.text((20, y), "\n" + self.rewardRefreshEntry.get("1.0", "end"), "black", font)
+                    lineCount += 2 + self.rewardRefreshEntry.get("1.0", "end").strip().count("\n")
+
                 # Reward Trial
                 if self.rewardTrialEntry.get("1.0", "end").strip():
                     y = 195 + round(12.5 * lineCount)
@@ -699,6 +712,7 @@ try:
                 self.customEncounter["rewardSoulsPerPlayer"] = self.rewardSoulsPerPlayerVal.get()
                 self.customEncounter["rewardSearch"] = self.rewardSearchEntry.get("1.0", "end")
                 self.customEncounter["rewardDraw"] = self.rewardDrawEntry.get("1.0", "end")
+                self.customEncounter["rewardRefresh"] = self.rewardRefreshEntry.get("1.0", "end")
                 self.customEncounter["rewardTrial"] = self.rewardTrialEntry.get("1.0", "end")
                 self.customEncounter["rewardShortcut"] = self.shortcutVal.get()
                 self.customEncounter["layout"] = self.tileLayoutMenuVal.get()
@@ -875,13 +889,20 @@ try:
 
                 with open(file, "r") as f:
                     self.customEncounter = load(f)
+                    
+                # I forgot Refresh rewards - add that if this is an older custom encounter file.
+                if set(self.customEncounter.keys()) == {
+                        "set", "numberOfTiles", "level", "encounterName", "flavor", "objective", "keywords",
+                        "specialRules", "rewardSouls", "rewardSoulsPerPlayer", "rewardSearch", "rewardDraw",
+                        "rewardTrial", "rewardShortcut", "layout", "icons", "tileSelections"}:
+                    self.customEncounter["rewardRefresh"] = ""
 
                 # Check to see if there are any invalid keys in the JSON file.
                 # This is about as sure as I can be that you can't load random JSON into the app.
                 if set(self.customEncounter.keys()) != {
                         "set", "numberOfTiles", "level", "encounterName", "flavor", "objective", "keywords",
                         "specialRules", "rewardSouls", "rewardSoulsPerPlayer", "rewardSearch", "rewardDraw",
-                        "rewardTrial", "rewardShortcut", "layout", "icons", "tileSelections"}:
+                        "rewardRefresh", "rewardTrial", "rewardShortcut", "layout", "icons", "tileSelections"}:
                     self.app.set_bindings_buttons_menus(False)
                     PopupWindow(self.root, labelText="Invalid DSBG-Shuffle encounter file.", firstButton="Ok")
                     self.app.set_bindings_buttons_menus(True)
@@ -902,6 +923,8 @@ try:
                 self.iconMenuList = [icon for icon in self.icons.keys()]
                 self.iconMenu.config(values=self.iconMenuList)
                 self.iconMenu.set("")
+                
+                self.encounterSaveLabelVal.set("")
 
                 # Need to fill in all the GUI elements.
                 self.encounterSetEntry.insert(tk.END, self.customEncounter["set"])
@@ -916,8 +939,12 @@ try:
                 self.rewardSoulsPerPlayerVal.set(self.customEncounter["rewardSoulsPerPlayer"])
                 self.rewardSearchEntry.insert(tk.END, self.customEncounter["rewardSearch"])
                 self.rewardDrawEntry.insert(tk.END, self.customEncounter["rewardDraw"])
+                self.rewardRefreshEntry.insert(tk.END, self.customEncounter["rewardRefresh"])
                 self.rewardTrialEntry.insert(tk.END, self.customEncounter["rewardTrial"])
                 self.shortcutVal.set(self.customEncounter["rewardShortcut"])
+                    
+                self.update_lists()
+
                 self.tileLayoutMenuVal.set(self.customEncounter["layout"])
                 self.tileSelections[1]["startingTile"]["value"].set(self.customEncounter["tileSelections"]["1"]["startingTile"]["value"])
                 self.tileSelections[1]["startingNodes"]["value"].set(self.customEncounter["tileSelections"]["1"]["startingNodes"]["value"])
@@ -970,8 +997,6 @@ try:
 
                 for tile in range(1, 4):
                     self.toggle_starting_nodes_menu(tile=tile)
-                    
-                self.update_lists()
 
                 self.apply_changes()
                 
@@ -995,6 +1020,10 @@ try:
                 log("Start of change_icon")
 
                 icon = self.iconMenu.get()
+
+                if not icon:
+                    log("End of change_icon")
+                    return
 
                 if self.icons[icon]["size"] == "iconEnemy":
                     size = "Enemy/Terrain"
@@ -1151,7 +1180,7 @@ try:
                     i, p = self.app.create_image(file, size, 99, pathProvided=True, extensionProvided=True)
 
                 self.currentIcon["size"] = size
-                self.currentIcon["file"] = fileName[0] + "_" + size + ".png"
+                self.currentIcon["file"] = path.splitext(path.basename(file))[0] + ".png"
                 self.currentIcon["image"] = i
                 self.currentIcon["photoImage"] = p
 
