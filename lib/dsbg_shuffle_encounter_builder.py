@@ -544,7 +544,7 @@ try:
                 raise
 
             
-        def apply_changes(self, event=None, fromSaveIcon=False):
+        def apply_changes(self, event=None):
             try:
                 log("Start of apply_changes")
 
@@ -566,17 +566,14 @@ try:
                     displayPhotoImage = self.app.create_image("custom_encounter_3_tile.jpg", "encounter", 1, extensionProvided=True)
                 else:
                     return
-                
-                if not fromSaveIcon:
-                    self.save_custom_icon()
 
                 imageWithText = ImageDraw.Draw(self.app.displayImage)
                 
                 # Encounter Name
-                imageWithText.text((80, 25 + (10 if self.encounterNameEntry.get("1.0", "end").count("\n") == 1 else 0)), self.encounterNameEntry.get("1.0", "end"), "white", fontEncounterName)
+                imageWithText.text((80, 25 + (10 if self.encounterNameEntry.get("1.0", "end").strip().count("\n") < 1 else 0)), self.encounterNameEntry.get("1.0", "end"), "white", fontEncounterName)
                 
                 # Flavor Text
-                imageWithText.text((20, 88 + (7 if self.flavorEntry.get("1.0", "end").count("\n") == 1 else 0)), self.flavorEntry.get("1.0", "end"), "black", fontFlavor)
+                imageWithText.text((20, 88 + (7 if self.flavorEntry.get("1.0", "end").strip().count("\n") < 1 else 0)), self.flavorEntry.get("1.0", "end"), "black", fontFlavor)
                 
                 # Objective Text
                 imageWithText.text((20, 146), self.objectiveEntry.get("1.0", "end"), "black", font)
@@ -683,27 +680,26 @@ try:
                                 enemy = self.tileSelections[tile][row]["enemies"][e]["value"].get()
                                 image = self.app.allEnemies[enemy]["imageNew"]
                                 self.app.displayImage.paste(im=image, box=box, mask=image)
-
                 # Custom Icons
                 for icon in [icon for icon in self.icons if "" not in self.icons[icon]["position"]]:
                     image = self.icons[icon]["image"]
                     box = (int(self.icons[icon]["position"][0]), int(self.icons[icon]["position"][1]))
                     self.app.displayImage.paste(im=image, box=box, mask=image)
 
-                self.customEncounter["set"] = self.encounterSetEntry.get("1.0", "end").strip()
+                self.customEncounter["set"] = self.encounterSetEntry.get("1.0", "end")
                 self.customEncounter["image"] = self.app.displayImage.copy()
                 self.customEncounter["numberOfTiles"] = self.numberOfTilesMenuVal.get()
                 self.customEncounter["level"] = self.levelMenuVal.get()
-                self.customEncounter["encounterName"] = self.encounterNameEntry.get("1.0", "end").strip()
-                self.customEncounter["flavor"] = self.flavorEntry.get("1.0", "end").strip()
-                self.customEncounter["objective"] = self.objectiveEntry.get("1.0", "end").strip()
-                self.customEncounter["keywords"] = self.keywordsEntry.get("1.0", "end").strip()
-                self.customEncounter["specialRules"] = self.specialRulesEntry.get("1.0", "end").strip()
-                self.customEncounter["rewardSouls"] = self.rewardSoulsEntry.get("1.0", "end").strip()
+                self.customEncounter["encounterName"] = self.encounterNameEntry.get("1.0", "end")
+                self.customEncounter["flavor"] = self.flavorEntry.get("1.0", "end")
+                self.customEncounter["objective"] = self.objectiveEntry.get("1.0", "end")
+                self.customEncounter["keywords"] = self.keywordsEntry.get("1.0", "end")
+                self.customEncounter["specialRules"] = self.specialRulesEntry.get("1.0", "end")
+                self.customEncounter["rewardSouls"] = self.rewardSoulsEntry.get("1.0", "end")
                 self.customEncounter["rewardSoulsPerPlayer"] = self.rewardSoulsPerPlayerVal.get()
-                self.customEncounter["rewardSearch"] = self.rewardSearchEntry.get("1.0", "end").strip()
-                self.customEncounter["rewardDraw"] = self.rewardDrawEntry.get("1.0", "end").strip()
-                self.customEncounter["rewardTrial"] = self.rewardTrialEntry.get("1.0", "end").strip()
+                self.customEncounter["rewardSearch"] = self.rewardSearchEntry.get("1.0", "end")
+                self.customEncounter["rewardDraw"] = self.rewardDrawEntry.get("1.0", "end")
+                self.customEncounter["rewardTrial"] = self.rewardTrialEntry.get("1.0", "end")
                 self.customEncounter["rewardShortcut"] = self.shortcutVal.get()
                 self.customEncounter["layout"] = self.tileLayoutMenuVal.get()
                 self.customEncounter["icons"] = {k: v for k, v in self.icons.items() if "" not in self.icons[k]["position"]}
@@ -814,9 +810,9 @@ try:
                 file = (
                     baseFolder
                     + "\\lib\\dsbg_shuffle_custom_encounters\\".replace("\\", pathSep)
-                    + self.customEncounter["set"].strip().replace("\n", " ")
+                    + " ".join(self.customEncounter["set"].strip().replace("\n", " ").split())
                     + "_"
-                    + self.customEncounter["encounterName"].strip().replace("\n", " ")
+                    + " ".join(self.customEncounter["encounterName"].strip().replace("\n", " ").split())
                     + "_"
                     + str(self.customEncounter["level"])
                     + ".json")
@@ -893,7 +889,7 @@ try:
                     log("End of load_custom_encounter (invalid file)")
                     return
                 
-                self.customEncounter["image"] = self.app.create_image(self.customEncounter["encounterName"].strip() + ".jpg", "encounter", 1, customEncounter=True)
+                self.customEncounter["image"] = self.app.create_image(" ".join(self.customEncounter["encounterName"].strip().replace("\n", " ").split()) + ".jpg", "encounter", 1, customEncounter=True)
                 for icon in self.customEncounter["icons"]:
                     if not path.isfile(self.customEncounter["icons"][icon]["file"]):
                         PopupWindow(self.root, labelText="Missing custom icon image for " + icon + ".", firstButton="Ok")
@@ -905,8 +901,7 @@ try:
                 self.icons = self.customEncounter["icons"]
                 self.iconMenuList = [icon for icon in self.icons.keys()]
                 self.iconMenu.config(values=self.iconMenuList)
-                self.iconMenu.set(self.iconMenuList[-1])
-                self.change_icon()
+                self.iconMenu.set("")
 
                 # Need to fill in all the GUI elements.
                 self.encounterSetEntry.insert(tk.END, self.customEncounter["set"])
@@ -972,6 +967,11 @@ try:
                 self.tileSelections[3][4]["enemies"][1]["value"].set(self.customEncounter["tileSelections"]["3"]["4"]["enemies"]["1"]["value"])
                 self.tileSelections[3][4]["enemies"][2]["value"].set(self.customEncounter["tileSelections"]["3"]["4"]["enemies"]["2"]["value"])
                 self.tileSelections[3][4]["enemies"][3]["value"].set(self.customEncounter["tileSelections"]["3"]["4"]["enemies"]["3"]["value"])
+
+                for tile in range(1, 4):
+                    self.toggle_starting_nodes_menu(tile=tile)
+                    
+                self.update_lists()
 
                 self.apply_changes()
                 
@@ -1046,7 +1046,7 @@ try:
                     "position": None
                 }
                 self.iconMenu.config(values=self.iconMenuList)
-                self.iconMenu.set(self.iconMenuList[0])
+                self.iconMenu.set("")
                 
                 log("End of delete_custom_icon")
             except Exception as e:
@@ -1094,7 +1094,7 @@ try:
                 
                 self.customEncounter["icons"] = {k: v for k, v in self.icons.items() if "" not in self.icons[k]["position"]}
 
-                self.apply_changes(fromSaveIcon=True)
+                self.apply_changes()
 
                 self.iconSaveErrorsVal.set("Saved " + datetime.now().strftime("%H:%M:%S"))
 
