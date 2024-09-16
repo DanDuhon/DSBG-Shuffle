@@ -891,10 +891,10 @@ try:
                 
                 self.customEncounter["image"] = self.app.create_image(" ".join(self.customEncounter["encounterName"].strip().replace("\n", " ").split()) + ".jpg", "encounter", 1, customEncounter=True)
                 for icon in self.customEncounter["icons"]:
-                    if not path.isfile(self.customEncounter["icons"][icon]["file"]):
+                    if not path.isfile(baseFolder + "\\lib\\dsbg_shuffle_custom_icon_images\\".replace("\\", pathSep) + self.customEncounter["icons"][icon]["file"]):
                         PopupWindow(self.root, labelText="Missing custom icon image for " + icon + ".", firstButton="Ok")
                         return
-                    i, p = self.app.create_image(self.customEncounter["icons"][icon]["file"], self.customEncounter["icons"][icon]["size"], 99, pathProvided=True, extensionProvided=True)
+                    i, p = self.app.create_image(baseFolder + "\\lib\\dsbg_shuffle_custom_icon_images\\".replace("\\", pathSep) + self.customEncounter["icons"][icon]["file"], self.customEncounter["icons"][icon]["size"], 99, pathProvided=True, extensionProvided=True)
                     self.customEncounter["icons"][icon]["image"] = i
                     self.customEncounter["icons"][icon]["photoImage"] = p
 
@@ -1017,7 +1017,7 @@ try:
                 self.iconSizeMenu.set(size)
                 self.xPositionVal.set(str(self.currentIcon["position"][0] if self.currentIcon["position"] else ""))
                 self.yPositionVal.set(str(self.currentIcon["position"][1] if self.currentIcon["position"] else ""))
-                self.choose_icon_image(file=self.currentIcon["file"])
+                self.choose_icon_image(file=baseFolder + "\\lib\\dsbg_shuffle_custom_icon_images\\".replace("\\", pathSep) + self.currentIcon["file"])
                 
                 log("End of change_icon")
             except Exception as e:
@@ -1090,7 +1090,7 @@ try:
                     "file": deepcopy(self.currentIcon["file"])
                     }
 
-                self.icons[icon]["image"], self.icons[icon]["photoImage"] = self.app.create_image(self.currentIcon["file"], self.currentIcon["size"], 99, pathProvided=True, extensionProvided=True)
+                self.icons[icon]["image"], self.icons[icon]["photoImage"] = self.app.create_image(baseFolder + "\\lib\\dsbg_shuffle_custom_icon_images\\".replace("\\", pathSep) + self.currentIcon["file"], self.currentIcon["size"], 99, pathProvided=True, extensionProvided=True)
                 
                 self.customEncounter["icons"] = {k: v for k, v in self.icons.items() if "" not in self.icons[k]["position"]}
 
@@ -1151,7 +1151,7 @@ try:
                     i, p = self.app.create_image(file, size, 99, pathProvided=True, extensionProvided=True)
 
                 self.currentIcon["size"] = size
-                self.currentIcon["file"] = file
+                self.currentIcon["file"] = fileName[0] + "_" + size + ".png"
                 self.currentIcon["image"] = i
                 self.currentIcon["photoImage"] = p
 
