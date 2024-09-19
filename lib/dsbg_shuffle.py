@@ -142,6 +142,8 @@ try:
                 self.rewardsSoulsPlayersIcon = self.create_image("custom_encounter_rewards_souls_players.png", "reward", 99, extensionProvided=True)
                 self.rewardsTrialIcon = self.create_image("custom_encounter_rewards_trial.png", "reward", 99, extensionProvided=True)
 
+                self.emptySetIcon = self.create_image("empty_set_icon.png", "levelIcon", 99, extensionProvided=True)
+
                 self.levelIcons = {
                     1: self.create_image("custom_encounter_level1_icon.png", "levelIcon", 99, extensionProvided=True),
                     2: self.create_image("custom_encounter_level2_icon.png", "levelIcon", 99, extensionProvided=True),
@@ -1086,7 +1088,7 @@ try:
                 raise
 
 
-        def create_image(self, imageFileName, imageType, level=None, expansion=None, pathProvided=False, extensionProvided=False, customEncounter=False):
+        def create_image(self, imageFileName, imageType, level=None, expansion=None, pathProvided=False, extensionProvided=False, customEncounter=False, emptySetIcon=False):
             """
             Create an image to be displayed in the encounter frame.
 
@@ -1110,7 +1112,7 @@ try:
             try:
                 log("Start of create_image, imageFileName={}, imageType={}, level={}, expansion={}".format(str(imageFileName), str(imageType), str(level), str(expansion)))
 
-                if imageType == "encounter":
+                if imageType in {"encounter", "customEncounter"}:
                     if imageFileName == "Ornstein & Smough.jpg" or imageFileName == "Ornstein & Smough - data.jpg":
                         width = 305
                         height = 850
@@ -1134,6 +1136,8 @@ try:
                     elif customEncounter:
                         key = "Custom - " + fileName[:-4]
                         imagePath = baseFolder + "\\lib\\dsbg_shuffle_custom_encounters\\".replace("\\", pathSep) + self.encounters[key]["expansion"] + "_" + fileName[:-4] + "_" + str(self.encounters[key]["level"]) + ".jpg"
+                    elif "custom_encounter_" in fileName:
+                        imagePath = baseFolder + "\\lib\\dsbg_shuffle_images\\custom_encounters\\".replace("\\", pathSep) + fileName
                     else:
                         imagePath = baseFolder + "\\lib\\dsbg_shuffle_images\\encounters\\".replace("\\", pathSep) + fileName
                     log("\tOpening " + imagePath)
@@ -1228,6 +1232,7 @@ try:
                         }:
                             subfolder = "encounters\\"
                         elif imageType in {
+                            "emptySetIcon",
                             "tileLayout",
                             "tileLayout1Tile",
                             "nodesStartingHorizontal1Tile",
@@ -1377,13 +1382,15 @@ try:
                         log("\tEnd of create_image")
                         return img, ImageTk.PhotoImage(img)
                     elif imageType == "iconSet":
+                        x = 55 if not emptySetIcon else 58
+                        y = 56 if not emptySetIcon else 59
                         i = Image.open(imagePath)
                         width, height = i.size
                         if width > height:
-                            mod = 60 / width
+                            mod = x / width
                         else:
-                            mod = 60 / height
-                        img = Image.new("RGBA", (60, 60), (0, 0, 0, 0))
+                            mod = y / height
+                        img = Image.new("RGBA", (x, y), (0, 0, 0, 0))
                         img.paste(im=Image.open(imagePath).resize((int(width * mod), int(height * mod)), Image.Resampling.LANCZOS))
                         log("\tEnd of create_image")
                         return img, ImageTk.PhotoImage(img)

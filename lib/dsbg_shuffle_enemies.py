@@ -112,8 +112,6 @@ try:
         "Vordt of the Boreal Valley": {"name": "Vordt of the Boreal Valley", "type": "boss", "level": "Mega Boss", "encounters": [4], "expansions": set(["Vordt of the Boreal Valley"]), "cards": 0}
     }
 
-    enemyNames = sorted([e.name for e in enemies], key=lambda x: (1 if enemiesDict[x].cards == 1 else 2, enemiesDict[x].expansions if enemiesDict[x].cards > 1 else {"a",}, enemiesDict[x].name))
-
 except Exception as e:
     log(e, exception=True)
     raise
