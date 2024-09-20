@@ -29,16 +29,16 @@ try:
 
             self.bossMenuItems = [
                 "Select Boss",
-                "--Mini Bosses--"
+                "--------Mini Bosses-----------"
                 ]
             for boss in [boss for boss in bosses if bosses[boss]["level"] == "Mini Boss" and bosses[boss]["expansions"] & self.app.availableExpansions]:
                 self.bossMenuItems.append(bosses[boss]["name"])
 
-            self.bossMenuItems.append("--Main Bosses--")
+            self.bossMenuItems += ["", "--------Main Bosses----------"]
             for boss in [boss for boss in bosses if bosses[boss]["level"] == "Main Boss" and bosses[boss]["expansions"] & self.app.availableExpansions]:
                 self.bossMenuItems.append(bosses[boss]["name"])
 
-            self.bossMenuItems.append("--Mega Bosses--")
+            self.bossMenuItems += ["", "--------Mega Bosses---------"]
             for boss in [boss for boss in bosses if bosses[boss]["level"] == "Mega Boss" and bosses[boss]["expansions"] & self.app.availableExpansions]:
                 self.bossMenuItems.append(bosses[boss]["name"])
 
@@ -97,7 +97,7 @@ try:
 
             self.bossMenu = ttk.Combobox(self.campaignTabButtonsFrame5, state="readonly", values=self.bossMenuItems, textvariable=self.selectedBoss)
             self.bossMenu.current(0)
-            self.bossMenu.config(width=17)
+            self.bossMenu.config(width=23)
             self.bossMenu.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
             self.addBossButton = ttk.Button(self.campaignTabButtonsFrame5, text="Add Boss", width=16, command=self.add_boss_to_campaign)
             self.addBossButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)

@@ -131,8 +131,8 @@ try:
                 self.customEncounter1TileTrapsImage = self.create_image("custom_encounter_1_tile_traps.jpg", "encounter", 1, extensionProvided=True)
                 self.customEncounter2TileImage = self.create_image("custom_encounter_2_tile.jpg", "encounter", 1, extensionProvided=True)
                 self.customEncounter3TileImage = self.create_image("custom_encounter_3_tile.jpg", "encounter", 1, extensionProvided=True)
-                self.customEncounterLevel4Image = self.create_image("custom_encounter_1_tile_level_4_no_traps.jpg", "encounter", 1, extensionProvided=True)
-                self.customEncounterLevel4TrapsImage = self.create_image("custom_encounter_1_tile_level_4_traps.jpg", "encounter", 1, extensionProvided=True)
+                self.customEncounter4x4Image = self.create_image("custom_encounter_1_tile_4x4_no_traps.jpg", "encounter", 1, extensionProvided=True)
+                self.customEncounter4x4TrapsImage = self.create_image("custom_encounter_1_tile_4x4_traps.jpg", "encounter", 1, extensionProvided=True)
 
                 self.rewardsDrawIcon = self.create_image("custom_encounter_rewards_draw.png", "reward", 99, extensionProvided=True)
                 self.rewardsRefreshIcon = self.create_image("custom_encounter_rewards_refresh.png", "reward", 99, extensionProvided=True)
@@ -1438,7 +1438,7 @@ try:
 
     root = tk.Tk()
     root.withdraw()
-    root.attributes('-alpha', 0.0)
+    root.attributes("-alpha", 0.0)
         
     root.title("DSBG-Shuffle")
     root.tk.call("source", baseFolder + "\\Azure-ttk-theme-main\\azure.tcl".replace("\\", pathSep))
@@ -1468,10 +1468,10 @@ try:
     app = Application(root)
     app.pack(fill="both", expand=True)
 
+    root.option_add("*TCombobox*Listbox*Background", "#202020")
+
     center(root)
-    x_cordinate = int((root.winfo_screenwidth() / 2) - (root.winfo_width() / 2))
-    y_cordinate = int((root.winfo_screenheight() / 2) - (root.winfo_height() / 2))
-    root.attributes('-alpha', 1.0)
+    root.attributes("-alpha", 1.0)
     root.mainloop()
     log("Closing application")
     root.destroy()

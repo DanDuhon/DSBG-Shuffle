@@ -25,10 +25,8 @@ try:
 
             self.newEncounterButton = ttk.Button(self.customEncountersButtonFrame, text="New Encounter", width=16, command=self.new_custom_encounter)
             self.newEncounterButton.grid(column=0, row=0, padx=5, pady=5)
-            self.applyButton = ttk.Button(self.customEncountersButtonFrame, text="Apply Changes", width=16, command=self.apply_changes)
-            self.applyButton.grid(column=1, row=0, padx=5, pady=5)
             self.loadButton = ttk.Button(self.customEncountersButtonFrame, text="Load Encounter", width=16, command=self.load_custom_encounter)
-            self.loadButton.grid(column=2, row=0, padx=5, pady=5)
+            self.loadButton.grid(column=2, row=0, padx=(175, 5), pady=5)
             self.saveButton = ttk.Button(self.customEncountersButtonFrame, text="Save Encounter", width=16, command=self.save_custom_encounter)
             self.saveButton.grid(column=3, row=0, padx=5, pady=5)
             
@@ -89,6 +87,9 @@ try:
             
         def apply_changes(self, event=None):
             try:
+                if not hasattr(self, "encounterBuilderScroll") or not hasattr(self.app, "encounterTab"):
+                    return
+                
                 log("Start of apply_changes")
 
                 e = self.encounterBuilderScroll
@@ -97,10 +98,10 @@ try:
 
                 self.app.encounterTab.apply_keyword_tooltips(None, None)
                 
-                if e.numberOfTilesMenuVal.get() == "1" and e.levelMenuVal.get() == "4" and e.tileSelections[1]["traps"]["value"].get() == 1:
-                    displayPhotoImage = self.app.create_image("custom_encounter_1_tile_level_4_traps.jpg", "customEncounter", 1, extensionProvided=True)
-                elif e.numberOfTilesMenuVal.get() == "1" and e.levelMenuVal.get() == "4":
-                    displayPhotoImage = self.app.create_image("custom_encounter_1_tile_level_4_no_traps.jpg", "customEncounter", 1, extensionProvided=True)
+                if e.numberOfTilesMenuVal.get() == "1" and e.tileLayoutMenu.get() == "1 Tile 4x4" and e.tileSelections[1]["traps"]["value"].get() == 1:
+                    displayPhotoImage = self.app.create_image("custom_encounter_1_tile_4x4_traps.jpg", "customEncounter", 1, extensionProvided=True)
+                elif e.numberOfTilesMenuVal.get() == "1" and e.tileLayoutMenu.get() == "1 Tile 4x4":
+                    displayPhotoImage = self.app.create_image("custom_encounter_1_tile_4x4_no_traps.jpg", "customEncounter", 1, extensionProvided=True)
                 elif e.numberOfTilesMenuVal.get() == "1" and e.tileSelections[1]["traps"]["value"].get() == 1:
                     displayPhotoImage = self.app.create_image("custom_encounter_1_tile_traps.jpg", "customEncounter", 1, extensionProvided=True)
                 elif e.numberOfTilesMenuVal.get() == "1":
@@ -222,7 +223,7 @@ try:
 
                 # Terrain
                 for tile in range(1, int(e.numberOfTilesMenuVal.get()) + 1):
-                    for row in range(1, 5 if e.levelMenu.get() == "4" and e.tileLayoutMenu.get() == "1 Tile Level 4" else 3):
+                    for row in range(1, 5 if e.tileLayoutMenu.get() == "1 Tile 4x4" else 3):
                         box = (301, 380 + (29 * (row - 1)) + (122 * (tile - 1)) + (29 if e.levelMenuVal.get() == "4" else 0))
                         if e.tileSelections[tile][row]["terrain"]["value"].get() in self.app.terrain:
                             image = self.app.terrain[e.tileSelections[tile][row]["terrain"]["value"].get()]
@@ -230,7 +231,7 @@ try:
 
                 # Enemies
                 for tile in range(1, int(e.numberOfTilesMenuVal.get()) + 1):
-                    for row in range(1, 5 if e.levelMenu.get() == "4" and e.tileLayoutMenu.get() == "1 Tile Level 4" else 3):
+                    for row in range(1, 5 if e.tileLayoutMenu.get() == "1 Tile 4x4" else 3):
                         for en in range(1, 4):
                             box = (300 + (29 * (en - 1)), 323 + (29 * (row - 1)) + (122 * (tile - 1)))
                             if e.tileSelections[tile][row]["enemies"][en]["value"].get() in self.app.allEnemies:
@@ -490,7 +491,7 @@ try:
                 e.tileSelections[1][2]["enemies"][1]["value"].set(self.customEncounter["tileSelections"]["1"]["2"]["enemies"]["1"]["value"])
                 e.tileSelections[1][2]["enemies"][2]["value"].set(self.customEncounter["tileSelections"]["1"]["2"]["enemies"]["2"]["value"])
                 e.tileSelections[1][2]["enemies"][3]["value"].set(self.customEncounter["tileSelections"]["1"]["2"]["enemies"]["3"]["value"])
-                if e.numberOfTilesMenuVal.get() == "1" and e.levelMenuVal.get() == "4" and e.tileLayoutMenuVal.get() == "1 Tile Level 4":
+                if e.numberOfTilesMenuVal.get() == "1" and e.tileLayoutMenuVal.get() == "1 Tile 4x4":
                     e.tileSelections[1][3]["enemies"][1]["value"].set(self.customEncounter["tileSelections"]["2"]["3"]["enemies"]["1"]["value"])
                     e.tileSelections[1][3]["enemies"][2]["value"].set(self.customEncounter["tileSelections"]["2"]["3"]["enemies"]["2"]["value"])
                     e.tileSelections[1][3]["enemies"][3]["value"].set(self.customEncounter["tileSelections"]["2"]["3"]["enemies"]["3"]["value"])
@@ -546,6 +547,8 @@ try:
             self.app = app
             self.root = root
             self.topFrame = topFrame
+            
+            self._afterId = None
 
             self.rowSelectionMenuList = []
             self.tileSelectionMenuList = []
@@ -554,26 +557,24 @@ try:
             self.eNamesDict = {enemiesDict[e].name: str(enemiesDict[e].expansions).replace("Dark Souls The Board Game", "Core") for e in enemiesDict}
 
             self.eNames = (
-                [""] + [" --- The Sunless City/Core ---- "]
-                + sorted([enemiesDict[e].name for e in enemiesDict if enemiesDict[e].expansions == set(["The Sunless City", "Dark Souls The Board Game"])])
-                + [""] + [" ------ The Sunless City ------ "]
-                + sorted([enemiesDict[e].name for e in enemiesDict if enemiesDict[e].expansions == set(["The Sunless City"])])
-                + [""] + [" -- Painted World of Ariamis -- "]
-                + sorted([enemiesDict[e].name for e in enemiesDict if enemiesDict[e].expansions == set(["Painted World of Ariamis"])])
-                + [""] + [" ------- Tomb of Giants ------- "]
-                + sorted([enemiesDict[e].name for e in enemiesDict if enemiesDict[e].expansions == set(["Tomb of Giants"])])
-                + [""] + [" ------------ Core ------------ "]
-                + sorted([enemiesDict[e].name for e in enemiesDict if enemiesDict[e].expansions == set(["Dark Souls The Board Game"])])
-                + [""] + [" ---------- Darkroot ---------- "]
-                + sorted([enemiesDict[e].name for e in enemiesDict if enemiesDict[e].expansions == set(["Darkroot"])])
-                + [""] + [" --------- Explorers ---------- "]
-                + sorted([enemiesDict[e].name for e in enemiesDict if enemiesDict[e].expansions == set(["Explorers"])])
-                + [""] + [" --------- Iron Keep ---------- "]
-                + sorted([enemiesDict[e].name for e in enemiesDict if enemiesDict[e].expansions == set(["Iron Keep"])])
-                + [""] + [" ---- Executioner Chariot ----- "]
-                + sorted([enemiesDict[e].name for e in enemiesDict if enemiesDict[e].expansions == set(["Executioner Chariot"])])
-                + [""] + [" --------- Phantoms ----------- "]
-                + sorted([enemiesDict[e].name for e in enemiesDict if enemiesDict[e].expansions == set(["Phantoms"])])
+                [""] +   ["----------- Core -------------"]
+                + sorted([enemiesDict[e].name for e in enemiesDict if "Dark Souls The Board Game" in enemiesDict[e].expansions])
+                + [""] + ["---------- Darkroot ----------"]
+                + sorted([enemiesDict[e].name for e in enemiesDict if "Darkroot" in enemiesDict[e].expansions])
+                + [""] + ["--------- Explorers ----------"]
+                + sorted([enemiesDict[e].name for e in enemiesDict if "Explorers" in enemiesDict[e].expansions])
+                + [""] + ["--------- Iron Keep ----------"]
+                + sorted([enemiesDict[e].name for e in enemiesDict if "Iron Keep" in enemiesDict[e].expansions])
+                + [""] + ["---- Executioner Chariot -----"]
+                + sorted([enemiesDict[e].name for e in enemiesDict if "Executioner Chariot" in enemiesDict[e].expansions])
+                + [""] + ["-- Painted World of Ariamis --"]
+                + sorted([enemiesDict[e].name for e in enemiesDict if "Painted World of Ariamis" in enemiesDict[e].expansions])
+                + [""] + ["------ The Sunless City ------"]
+                + sorted([enemiesDict[e].name for e in enemiesDict if "The Sunless City" in enemiesDict[e].expansions])
+                + [""] + ["------- Tomb of Giants -------"]
+                + sorted([enemiesDict[e].name for e in enemiesDict if "Tomb of Giants" in enemiesDict[e].expansions])
+                + [""] + ["--------- Phantoms -----------"]
+                + sorted([enemiesDict[e].name for e in enemiesDict if "Phantoms" in enemiesDict[e].expansions])
                 )
                 
             self.terrainNames = [
@@ -599,26 +600,30 @@ try:
             self.infoFrame3.pack(side=tk.TOP, anchor=tk.W)
             self.infoFrame4 = ttk.Frame(self.interior)
             self.infoFrame4.pack(side=tk.TOP, anchor=tk.W)
-            self.infoFrame5 = ttk.Frame(self.interior)
-            self.infoFrame5.pack(side=tk.TOP, anchor=tk.W)
-            self.infoFrame6 = ttk.Frame(self.interior)
-            self.infoFrame6.pack(side=tk.TOP, anchor=tk.W)
             self.separator1 = ttk.Separator(self.interior)
             self.separator1.pack(side=tk.TOP, anchor=tk.W, padx=5, pady=5, fill="x")
+            self.infoFrame5 = ttk.Frame(self.interior)
+            self.infoFrame5.pack(side=tk.TOP, anchor=tk.W)
+            self.separator2 = ttk.Separator(self.interior)
+            self.separator2.pack(side=tk.TOP, anchor=tk.W, padx=5, pady=5, fill="x")
+            self.infoFrame6 = ttk.Frame(self.interior)
+            self.infoFrame6.pack(side=tk.TOP, anchor=tk.W)
+            self.separator3 = ttk.Separator(self.interior)
+            self.separator3.pack(side=tk.TOP, anchor=tk.W, padx=5, pady=5, fill="x")
             self.layoutFrame1 = ttk.Frame(self.interior)
             self.layoutFrame1.pack(side=tk.TOP, anchor=tk.W)
             self.tileFrame1 = ttk.Frame(self.interior)
             self.tileFrame1.pack(side=tk.TOP, anchor=tk.W)
-            self.separator2 = ttk.Separator(self.interior)
-            self.separator2.pack(side=tk.TOP, anchor=tk.W, padx=5, pady=5, fill="x")
-            self.tileFrame2 = ttk.Frame(self.interior)
-            self.tileFrame2.pack(side=tk.TOP, anchor=tk.W)
-            self.separator3 = ttk.Separator(self.interior)
-            self.separator3.pack(side=tk.TOP, anchor=tk.W, padx=5, pady=5, fill="x")
-            self.tileFrame3 = ttk.Frame(self.interior)
-            self.tileFrame3.pack(side=tk.TOP, anchor=tk.W)
             self.separator4 = ttk.Separator(self.interior)
             self.separator4.pack(side=tk.TOP, anchor=tk.W, padx=5, pady=5, fill="x")
+            self.tileFrame2 = ttk.Frame(self.interior)
+            self.tileFrame2.pack(side=tk.TOP, anchor=tk.W)
+            self.separator5 = ttk.Separator(self.interior)
+            self.separator5.pack(side=tk.TOP, anchor=tk.W, padx=5, pady=5, fill="x")
+            self.tileFrame3 = ttk.Frame(self.interior)
+            self.tileFrame3.pack(side=tk.TOP, anchor=tk.W)
+            self.separator6 = ttk.Separator(self.interior)
+            self.separator6.pack(side=tk.TOP, anchor=tk.W, padx=5, pady=5, fill="x")
             self.iconsFrame = ttk.Frame(self.interior)
             self.iconsFrame.pack(side=tk.TOP, anchor=tk.W)
             self.iconsFrame2 = ttk.Frame(self.interior)
@@ -633,13 +638,14 @@ try:
             self.encounterSaveLabel.grid(column=2, row=0, padx=5, pady=5)
             
             self.emptySetIconVal = tk.IntVar()
-            self.emptySetIcon = ttk.Checkbutton(self.infoFrame1, text="Empty Set Icon", variable=self.emptySetIconVal)
+            self.emptySetIcon = ttk.Checkbutton(self.infoFrame1, text="Empty Set Icon", variable=self.emptySetIconVal, command=self.topFrame.apply_changes)
             self.emptySetIcon.grid(column=3, row=0, padx=24, pady=5)
             self.emptySetIcon.state(["!alternate"])
             
             self.encounterNameLabel = ttk.Label(self.infoFrame2, text="Encounter\nName\t")
             self.encounterNameLabel.pack(side=tk.LEFT, anchor=tk.NW, padx=5, pady=5)
             self.encounterNameEntry = tk.Text(self.infoFrame2, width=17, height=2)
+            self.encounterNameEntry.bind("<KeyRelease>", self.handle_wait)
             self.encounterNameEntry.pack(side=tk.LEFT, anchor=tk.W, padx=5, pady=5)
             
             self.levelLabel = ttk.Label(self.infoFrame2, text="Encounter\nLevel")
@@ -655,87 +661,98 @@ try:
             self.previousLevelMenuVal = ""
             self.levelMenu.pack(side=tk.LEFT, anchor=tk.W, padx=5, pady=5)
             
-            self.numberOfTilesLabel = ttk.Label(self.infoFrame2, text="Number\nof Tiles")
-            self.numberOfTilesLabel.pack(side=tk.LEFT, anchor=tk.W, padx=(40, 5), pady=5)
-            self.numberOfTilesMenuList = ["1", "2", "3"]
-            self.numberOfTilesMenuVal = tk.StringVar()
-            self.numberOfTilesMenuVal.set(self.numberOfTilesMenuList[0])
-            self.previousNumberOfTilesMenuVal = ""
-            self.numberOfTilesMenu = ttk.Combobox(self.infoFrame2, width=5, state="readonly", values=self.numberOfTilesMenuList, textvariable=self.numberOfTilesMenuVal)
-            self.numberOfTilesMenu.bind("<<ComboboxSelected>>", self.update_lists)
-            self.numberOfTilesMenu.unbind_class("TCombobox", "<MouseWheel>")
-            self.numberOfTilesMenu.unbind_class("TCombobox", "<ButtonPress-4>")
-            self.numberOfTilesMenu.unbind_class("TCombobox", "<ButtonPress-5>")
-            self.numberOfTilesMenu.pack(side=tk.LEFT, anchor=tk.W, padx=5, pady=5)
-            
             self.flavorLabel = ttk.Label(self.infoFrame3, text="Flavor\nText\t")
             self.flavorLabel.pack(side=tk.LEFT, anchor=tk.NW, padx=5, pady=5)
             self.flavorEntry = tk.Text(self.infoFrame3, width=70, height=2)
+            self.flavorEntry.bind("<KeyRelease>", self.handle_wait)
             self.flavorEntry.pack(side=tk.LEFT, anchor=tk.W, padx=5, pady=5)
             
             self.objectiveLabel = ttk.Label(self.infoFrame4, text="Objective\t")
             self.objectiveLabel.pack(side=tk.LEFT, anchor=tk.NW, padx=5, pady=5)
             self.objectiveEntry = tk.Text(self.infoFrame4, width=70, height=2)
+            self.objectiveEntry.bind("<KeyRelease>", self.handle_wait)
             self.objectiveEntry.pack(side=tk.LEFT, anchor=tk.W, padx=5, pady=5)
+
+            self.rewardsTitle = ttk.Label(self.infoFrame5, text=(" " * 30) + "Rewards/Special Rules", font=("Arial", 16))
+            self.rewardsTitle.grid(column=0, row=0, padx=5, pady=5, columnspan=6, sticky=tk.W)
             
             self.rewardSoulsPerPlayerVal = tk.IntVar()
-            self.rewardSoulsPerPlayer = ttk.Checkbutton(self.infoFrame5, text="Souls Reward\nPer Player", variable=self.rewardSoulsPerPlayerVal)
-            self.rewardSoulsPerPlayer.grid(column=1, row=0, padx=5, pady=5, sticky=tk.W)
+            self.rewardSoulsPerPlayer = ttk.Checkbutton(self.infoFrame5, text="Souls Reward\nPer Player", variable=self.rewardSoulsPerPlayerVal, command=self.topFrame.apply_changes)
+            self.rewardSoulsPerPlayer.grid(column=1, row=1, padx=5, pady=5, sticky=tk.W)
             self.rewardSoulsPerPlayer.state(["!alternate"])
             
             self.shortcutVal = tk.IntVar()
-            self.shortcut = ttk.Checkbutton(self.infoFrame5, text="Shortcut\nReward", variable=self.shortcutVal)
-            self.shortcut.grid(column=2, row=0, padx=5, pady=5, sticky=tk.W)
+            self.shortcut = ttk.Checkbutton(self.infoFrame5, text="Shortcut\nReward", variable=self.shortcutVal, command=self.topFrame.apply_changes)
+            self.shortcut.grid(column=2, row=1, padx=5, pady=5, sticky=tk.W)
             self.shortcut.state(["!alternate"])
             
             self.rewardSoulsLabel = ttk.Label(self.infoFrame5, text="Souls\nReward\t")
-            self.rewardSoulsLabel.grid(column=0, row=1, padx=5, pady=5)
+            self.rewardSoulsLabel.grid(column=0, row=2, padx=5, pady=5)
             self.rewardSoulsEntry = tk.Text(self.infoFrame5, width=17, height=2)
-            self.rewardSoulsEntry.grid(column=1, row=1, padx=5, pady=5, sticky=tk.W)
+            self.rewardSoulsEntry.bind("<KeyRelease>", self.handle_wait)
+            self.rewardSoulsEntry.grid(column=1, row=2, padx=5, pady=5, sticky=tk.W)
             
             self.rewardSearchLabel = ttk.Label(self.infoFrame5, text="Search\nReward\t")
-            self.rewardSearchLabel.grid(column=0, row=2, padx=5, pady=5)
+            self.rewardSearchLabel.grid(column=0, row=3, padx=5, pady=5)
             self.rewardSearchEntry = tk.Text(self.infoFrame5, width=17, height=2)
-            self.rewardSearchEntry.grid(column=1, row=2, padx=5, pady=5, sticky=tk.W)
+            self.rewardSearchEntry.bind("<KeyRelease>", self.handle_wait)
+            self.rewardSearchEntry.grid(column=1, row=3, padx=5, pady=5, sticky=tk.W)
             
             self.rewardDrawLabel = ttk.Label(self.infoFrame5, text="Draw\nReward\t")
-            self.rewardDrawLabel.grid(column=0, row=3, padx=5, pady=5)
+            self.rewardDrawLabel.grid(column=0, row=4, padx=5, pady=5)
             self.rewardDrawEntry = tk.Text(self.infoFrame5, width=17, height=2)
-            self.rewardDrawEntry.grid(column=1, row=3, padx=5, pady=5, sticky=tk.W)
+            self.rewardDrawEntry.bind("<KeyRelease>", self.handle_wait)
+            self.rewardDrawEntry.grid(column=1, row=4, padx=5, pady=5, sticky=tk.W)
             
             self.rewardRefreshLabel = ttk.Label(self.infoFrame5, text="Refresh\nReward\t")
-            self.rewardRefreshLabel.grid(column=0, row=4, padx=5, pady=5)
+            self.rewardRefreshLabel.grid(column=0, row=5, padx=5, pady=5)
             self.rewardRefreshEntry = tk.Text(self.infoFrame5, width=17, height=2)
-            self.rewardRefreshEntry.grid(column=1, row=4, padx=5, pady=5, sticky=tk.W)
+            self.rewardRefreshEntry.bind("<KeyRelease>", self.handle_wait)
+            self.rewardRefreshEntry.grid(column=1, row=5, padx=5, pady=5, sticky=tk.W)
             
             self.rewardTrialLabel = ttk.Label(self.infoFrame5, text="Trial\nReward\t")
-            self.rewardTrialLabel.grid(column=0, row=5, padx=5, pady=5)
+            self.rewardTrialLabel.grid(column=0, row=6, padx=5, pady=5)
             self.rewardTrialEntry = tk.Text(self.infoFrame5, width=17, height=2)
-            self.rewardTrialEntry.grid(column=1, row=5, padx=5, pady=5, sticky=tk.W)
+            self.rewardTrialEntry.bind("<KeyRelease>", self.handle_wait)
+            self.rewardTrialEntry.grid(column=1, row=6, padx=5, pady=5, sticky=tk.W)
             
             self.keywordsLabel = ttk.Label(self.infoFrame5, text="Keywords")
-            self.keywordsLabel.grid(column=2, row=1, padx=(24, 5), pady=5, sticky=tk.NW)
+            self.keywordsLabel.grid(column=2, row=2, padx=(24, 5), pady=5, sticky=tk.NW)
             self.keywordsEntry = tk.Text(self.infoFrame5, width=39, height=3)
-            self.keywordsEntry.grid(column=3, row=1, pady=5, columnspan=2, sticky=tk.W)
+            self.keywordsEntry.bind("<KeyRelease>", self.handle_wait)
+            self.keywordsEntry.grid(column=3, row=2, pady=5, columnspan=2, sticky=tk.W)
             
             self.specialRulesLabel = ttk.Label(self.infoFrame5, text="Special\nRules")
-            self.specialRulesLabel.grid(column=2, row=2, padx=(24, 5), pady=5, sticky=tk.NW)
+            self.specialRulesLabel.grid(column=2, row=3, padx=(24, 5), pady=5, sticky=tk.NW)
             self.specialRulesEntry = tk.Text(self.infoFrame5, width=39, height=12)
-            self.specialRulesEntry.grid(column=3, row=2, pady=5, rowspan=4, columnspan=2, sticky=tk.W)
+            self.specialRulesEntry.bind("<KeyRelease>", self.handle_wait)
+            self.specialRulesEntry.grid(column=3, row=3, pady=5, rowspan=4, columnspan=2, sticky=tk.W)
             
-            self.tileLayoutLabel = ttk.Label(self.infoFrame6, text="Tile\nLayout\t")
+            self.numberOfTilesLabel = ttk.Label(self.infoFrame6, text="Number\nof Tiles")
+            self.numberOfTilesLabel.pack(side=tk.LEFT, anchor=tk.W, padx=5, pady=5)
+            self.numberOfTilesMenuList = ["1", "2", "3"]
+            self.numberOfTilesMenuVal = tk.StringVar()
+            self.numberOfTilesMenuVal.set(self.numberOfTilesMenuList[0])
+            self.previousNumberOfTilesMenuVal = ""
+            self.numberOfTilesMenu = ttk.Combobox(self.infoFrame6, width=5, state="readonly", values=self.numberOfTilesMenuList, textvariable=self.numberOfTilesMenuVal)
+            self.numberOfTilesMenu.bind("<<ComboboxSelected>>", self.update_lists)
+            self.numberOfTilesMenu.unbind_class("TCombobox", "<MouseWheel>")
+            self.numberOfTilesMenu.unbind_class("TCombobox", "<ButtonPress-4>")
+            self.numberOfTilesMenu.unbind_class("TCombobox", "<ButtonPress-5>")
+            self.numberOfTilesMenu.pack(side=tk.LEFT, anchor=tk.W, padx=(11, 5), pady=5)
+            
+            self.tileLayoutLabel = ttk.Label(self.infoFrame6, text="\t          Tile\n\t          Layout")
             self.tileLayoutLabel.pack(side=tk.LEFT, anchor=tk.W, padx=5, pady=5)
             self.tileLayoutMenuList = []
             self.tileLayoutMenuVal = tk.StringVar()
             self.tileLayoutMenu = ttk.Combobox(self.infoFrame6, width=30, state="readonly", values=self.tileLayoutMenuList, textvariable=self.tileLayoutMenuVal)
             self.previousTileLayoutMenuVal = ""
-            self.tileLayoutMenu.config(state="disabled")
             self.tileLayoutMenu.bind("<KeyRelease>", self.search_layout_combobox)
             self.tileLayoutMenu.bind("<<ComboboxSelected>>", self.update_lists)
             self.tileLayoutMenu.unbind_class("TCombobox", "<MouseWheel>")
             self.tileLayoutMenu.unbind_class("TCombobox", "<ButtonPress-4>")
             self.tileLayoutMenu.unbind_class("TCombobox", "<ButtonPress-5>")
-            self.tileLayoutMenu.pack(side=tk.LEFT, anchor=tk.W, padx=5, pady=5)
+            self.tileLayoutMenu.pack(side=tk.LEFT, anchor=tk.W, padx=18, pady=5)
 
             self.tileSelections = {}
             
@@ -753,12 +770,13 @@ try:
                     "startingTile": {"value": tk.IntVar()},
                     "startingNodesLabel": ttk.Label(frame, text="\tStarting\n\tNodes\t"),
                     "startingNodes": {"value": tk.StringVar()},
-                    "terrainLabel": ttk.Label(frame, text="Terrain Row")
+                    "terrainLabel": ttk.Label(frame, text="Terrain")
                 }
 
-                self.tileSelections[tile]["traps"]["widget"] = ttk.Checkbutton(frame, text="Traps", variable=self.tileSelections[tile]["traps"]["value"])
-                self.tileSelections[tile]["startingTile"]["widget"] = ttk.Checkbutton(frame, text="Starting Tile", variable=self.tileSelections[tile]["startingTile"]["value"], command=lambda x=tile: self.toggle_starting_nodes_menu(tile=x))
+                self.tileSelections[tile]["traps"]["widget"] = ttk.Checkbutton(frame, text="Traps", variable=self.tileSelections[tile]["traps"]["value"], command=self.topFrame.apply_changes)
+                self.tileSelections[tile]["startingTile"]["widget"] = ttk.Checkbutton(frame, text="Starting\nTile", variable=self.tileSelections[tile]["startingTile"]["value"], command=lambda x=tile: self.toggle_starting_nodes_menu(tile=x))
                 self.tileSelections[tile]["startingNodes"]["widget"] = ttk.Combobox(frame, state="readonly", values=self.startingNodesMenuList, textvariable=self.tileSelections[tile]["startingNodes"]["value"])
+                self.tileSelections[tile]["startingNodes"]["widget"].bind("<<ComboboxSelected>>", self.topFrame.apply_changes)
                 self.tileSelections[tile]["startingNodes"]["widget"].unbind_class("TCombobox", "<MouseWheel>")
                 self.tileSelections[tile]["startingNodes"]["widget"].unbind_class("TCombobox", "<ButtonPress-4>")
                 self.tileSelections[tile]["startingNodes"]["widget"].unbind_class("TCombobox", "<ButtonPress-5>")
@@ -766,7 +784,6 @@ try:
                 self.tileSelections[tile]["traps"]["widget"].state(["!alternate"])
                 self.tileSelections[tile]["startingTile"]["widget"].state(["!alternate"])
                 self.tileSelections[tile]["startingNodes"]["widget"].config(width=8)
-                self.tileSelections[tile]["startingNodes"]["widget"].config(state="disabled")
                 
                 for row in range(1, 5):
                     if tile > 1 and row > 2:
@@ -783,80 +800,39 @@ try:
                     }
 
                     for x in range(1, 4):
-                        self.tileSelections[tile][row]["enemies"][x]["widget"] = ttk.Combobox(frame, height=30 if len(self.eNames) > 30 else len(self.eNames), width=25, values=self.eNames, textvariable=self.tileSelections[tile][row]["enemies"][x]["value"])
+                        self.tileSelections[tile][row]["enemies"][x]["widget"] = ttk.Combobox(frame, height=int(28 * (self.root.winfo_screenheight() / 1080)), width=25, values=self.eNames, textvariable=self.tileSelections[tile][row]["enemies"][x]["value"])
                         self.tileSelections[tile][row]["enemies"][x]["widget"].set("")
                         self.tileSelections[tile][row]["enemies"][x]["widget"].bind("<KeyRelease>", self.search_enemy_combobox)
+                        self.tileSelections[tile][row]["enemies"][x]["widget"].bind("<<ComboboxSelected>>", self.topFrame.apply_changes)
                         self.tileSelections[tile][row]["enemies"][x]["widget"].unbind_class("TCombobox", "<MouseWheel>")
                         self.tileSelections[tile][row]["enemies"][x]["widget"].unbind_class("TCombobox", "<ButtonPress-4>")
                         self.tileSelections[tile][row]["enemies"][x]["widget"].unbind_class("TCombobox", "<ButtonPress-5>")
 
-                    self.tileSelections[tile][row]["terrain"]["widget"] = ttk.Combobox(frame, height=len(self.terrainNames), width=15, values=self.terrainNames, textvariable=self.tileSelections[tile][row]["terrain"]["value"])
+                    self.tileSelections[tile][row]["terrain"]["widget"] = ttk.Combobox(frame, height=int(28 * (self.root.winfo_screenheight() / 1080)) if len(self.terrainNames) > int(28 * (self.root.winfo_screenheight() / 1080)) else len(self.terrainNames), width=15, values=self.terrainNames, textvariable=self.tileSelections[tile][row]["terrain"]["value"])
                     self.tileSelections[tile][row]["terrain"]["widget"].set("")
                     self.tileSelections[tile][row]["terrain"]["widget"].bind("<KeyRelease>", self.search_terrain_combobox)
+                    self.tileSelections[tile][row]["terrain"]["widget"].bind("<<ComboboxSelected>>", self.topFrame.apply_changes)
                     self.tileSelections[tile][row]["terrain"]["widget"].unbind_class("TCombobox", "<MouseWheel>")
                     self.tileSelections[tile][row]["terrain"]["widget"].unbind_class("TCombobox", "<ButtonPress-4>")
                     self.tileSelections[tile][row]["terrain"]["widget"].unbind_class("TCombobox", "<ButtonPress-5>")
                     
             self.tileSelections[1]["label"].grid(column=0, row=0, padx=5, pady=5, sticky=tk.W, columnspan=4)
-            self.tileSelections[1]["traps"]["widget"].grid(column=0, row=1, padx=5, pady=5, sticky=tk.E)
-            self.tileSelections[1]["startingTile"]["widget"].grid(column=1, row=1, padx=(40, 5), pady=5)
-            self.tileSelections[1]["startingNodesLabel"].grid(column=2, row=1, padx=5, pady=5, sticky=tk.W)
-            self.tileSelections[1]["startingNodes"]["widget"].grid(column=3, row=1, padx=5, pady=5, sticky=tk.W)
-            self.tileSelections[1][1]["enemyLabel"].grid(column=0, row=2, padx=5, pady=5)
-            self.tileSelections[1][1]["enemies"][1]["widget"].grid(column=0, row=3, padx=5, pady=5)
-            self.tileSelections[1][1]["enemies"][2]["widget"].grid(column=0, row=4, padx=5, pady=5)
-            self.tileSelections[1][1]["enemies"][3]["widget"].grid(column=0, row=5, padx=5, pady=5)
-            self.tileSelections[1][2]["enemyLabel"].grid(column=1, row=2, padx=5, pady=5, columnspan=2)
-            self.tileSelections[1][2]["enemies"][1]["widget"].grid(column=1, row=3, padx=5, pady=5, columnspan=2)
-            self.tileSelections[1][2]["enemies"][2]["widget"].grid(column=1, row=4, padx=5, pady=5, columnspan=2)
-            self.tileSelections[1][2]["enemies"][3]["widget"].grid(column=1, row=5, padx=5, pady=5, columnspan=2)
-            self.tileSelections[1]["terrainLabel"].grid(column=3, row=2, padx=5, pady=5, sticky=tk.W)
-            self.tileSelections[1][1]["terrain"]["widget"].grid(column=3, row=3, padx=5, pady=5)
-            self.tileSelections[1][2]["terrain"]["widget"].grid(column=3, row=4, padx=5, pady=5)
+            self.tileSelections[1]["traps"]["widget"].grid(column=1, row=1, pady=5)
+            self.tileSelections[1]["startingTile"]["widget"].grid(column=2, row=1, pady=5, sticky=tk.W)
+            self.tileSelections[1][1]["enemyLabel"].grid(column=0, row=2, padx=5, pady=5, columnspan=2)
+            self.tileSelections[1][1]["enemies"][1]["widget"].grid(column=0, row=3, padx=5, pady=5, columnspan=2)
+            self.tileSelections[1][1]["enemies"][2]["widget"].grid(column=0, row=4, padx=5, pady=5, columnspan=2)
+            self.tileSelections[1][1]["enemies"][3]["widget"].grid(column=0, row=5, padx=5, pady=5, columnspan=2)
+            self.tileSelections[1][2]["enemyLabel"].grid(column=2, row=2, padx=5, pady=5, columnspan=2)
+            self.tileSelections[1][2]["enemies"][1]["widget"].grid(column=2, row=3, padx=5, pady=5, columnspan=2)
+            self.tileSelections[1][2]["enemies"][2]["widget"].grid(column=2, row=4, padx=5, pady=5, columnspan=2)
+            self.tileSelections[1][2]["enemies"][3]["widget"].grid(column=2, row=5, padx=5, pady=5, columnspan=2)
+            self.tileSelections[1]["terrainLabel"].grid(column=4, row=2, padx=5, pady=5, sticky=tk.W, columnspan=2)
+            self.tileSelections[1][1]["terrain"]["widget"].grid(column=4, row=3, padx=5, pady=5, columnspan=2, sticky=tk.W)
+            self.tileSelections[1][2]["terrain"]["widget"].grid(column=4, row=4, padx=5, pady=5, columnspan=2, sticky=tk.W)
 
             self.tileSelections[2]["label"].grid(column=0, row=0, padx=5, pady=5, sticky=tk.W, columnspan=4)
             self.tileSelections[3]["label"].grid(column=0, row=0, padx=5, pady=5, sticky=tk.W, columnspan=4)
-            
-            self.tileSelections[1][3]["enemyLabel"].grid_forget()
-            self.tileSelections[1][3]["enemies"][1]["widget"].grid_forget()
-            self.tileSelections[1][3]["enemies"][2]["widget"].grid_forget()
-            self.tileSelections[1][3]["enemies"][3]["widget"].grid_forget()
-            self.tileSelections[1][4]["enemyLabel"].grid_forget()
-            self.tileSelections[1][4]["enemies"][1]["widget"].grid_forget()
-            self.tileSelections[1][4]["enemies"][2]["widget"].grid_forget()
-            self.tileSelections[1][4]["enemies"][3]["widget"].grid_forget()
-            self.tileSelections[1][3]["terrain"]["widget"].grid_forget()
-            self.tileSelections[1][4]["terrain"]["widget"].grid_forget()
-            self.tileSelections[2]["traps"]["widget"].grid_forget()
-            self.tileSelections[2]["startingTile"]["widget"].grid_forget()
-            self.tileSelections[2]["startingNodesLabel"].grid_forget()
-            self.tileSelections[2]["startingNodes"]["widget"].grid_forget()
-            self.tileSelections[2][1]["enemyLabel"].grid_forget()
-            self.tileSelections[2][1]["enemies"][1]["widget"].grid_forget()
-            self.tileSelections[2][1]["enemies"][2]["widget"].grid_forget()
-            self.tileSelections[2][1]["enemies"][3]["widget"].grid_forget()
-            self.tileSelections[2][2]["enemyLabel"].grid_forget()
-            self.tileSelections[2][2]["enemies"][1]["widget"].grid_forget()
-            self.tileSelections[2][2]["enemies"][2]["widget"].grid_forget()
-            self.tileSelections[2][2]["enemies"][3]["widget"].grid_forget()
-            self.tileSelections[2]["terrainLabel"].grid_forget()
-            self.tileSelections[2][1]["terrain"]["widget"].grid_forget()
-            self.tileSelections[2][2]["terrain"]["widget"].grid_forget()
-            self.tileSelections[3]["traps"]["widget"].grid_forget()
-            self.tileSelections[3]["startingTile"]["widget"].grid_forget()
-            self.tileSelections[3]["startingNodesLabel"].grid_forget()
-            self.tileSelections[3]["startingNodes"]["widget"].grid_forget()
-            self.tileSelections[3][1]["enemyLabel"].grid_forget()
-            self.tileSelections[3][1]["enemies"][1]["widget"].grid_forget()
-            self.tileSelections[3][1]["enemies"][2]["widget"].grid_forget()
-            self.tileSelections[3][1]["enemies"][3]["widget"].grid_forget()
-            self.tileSelections[3][2]["enemyLabel"].grid_forget()
-            self.tileSelections[3][2]["enemies"][1]["widget"].grid_forget()
-            self.tileSelections[3][2]["enemies"][2]["widget"].grid_forget()
-            self.tileSelections[3][2]["enemies"][3]["widget"].grid_forget()
-            self.tileSelections[3]["terrainLabel"].grid_forget()
-            self.tileSelections[3][1]["terrain"]["widget"].grid_forget()
-            self.tileSelections[3][2]["terrain"]["widget"].grid_forget()
 
             self.icons = {}
             self.currentIcon = {
@@ -887,7 +863,7 @@ try:
             
             self.iconNameLabel = ttk.Label(self.iconsFrame, text="Icon Name\t")
             self.iconNameLabel.grid(column=0, row=3, padx=5, pady=5)
-            self.iconNameEntry = tk.Text(self.iconsFrame, width=26, height=1)
+            self.iconNameEntry = tk.Text(self.iconsFrame, width=25, height=1)
             self.iconNameEntry.grid(column=1, row=3, padx=5, pady=5, columnspan=4)
             self.saveIconButton = ttk.Button(self.iconsFrame, text="Save Icon", width=16, command=self.save_custom_icon)
             self.saveIconButton.grid(column=5, row=3, padx=(5, 0), pady=5)
@@ -928,6 +904,15 @@ try:
             self.iconView.grid(column=5, row=5, pady=5, sticky=tk.NSEW)
 
 
+        def handle_wait(self, event):
+            # cancel the old job
+            if self._afterId is not None:
+                self.after_cancel(self._afterId)
+
+            # create a new job
+            self.after(1, self.topFrame.apply_changes())
+
+
         def search_layout_combobox(self, event):
             try:
                 log("Start of search_layout_combobox")
@@ -951,10 +936,10 @@ try:
 
                 w = event.widget
                 val = w.get()
-                if val == "" or " --" in val:
+                if val == "" or "--" in val:
                     w["values"] = self.eNames
                 else:
-                    w["values"] = [e for e in self.eNames if val.lower() in e.lower() or (e in self.eNamesDict and val.lower() in self.eNamesDict[e].lower())]
+                    w["values"] = sorted(list(set([e for e in self.eNames if val.lower() in e.lower() or (e in self.eNamesDict and val.lower() in self.eNamesDict[e].lower())])))
                 
                 log("End of search_enemy_combobox")
             except Exception as e:
@@ -994,6 +979,8 @@ try:
                 self.previousNumberOfTilesMenuVal = tiles
                 self.previousLevelMenuVal = level
                 self.previousTileLayoutMenuVal = layout
+
+                self.topFrame.apply_changes()
                 
                 log("End of update_lists")
             except Exception as e:
@@ -1008,7 +995,6 @@ try:
                 self.tileLayoutMenuList = [k for k in self.app.tileLayouts.keys() if tiles + " Tile" in k]
                 self.tileLayoutMenu.config(values=self.tileLayoutMenuList)
                 self.tileLayoutMenu.set(self.tileLayoutMenuList[0])
-                self.tileLayoutMenu.config(state="active")
                 
                 log("End of update_tile_layout_list")
             except Exception as e:
@@ -1020,10 +1006,9 @@ try:
             try:
                 log("Start of update_tile_sections, tiles={}".format(str(tiles)))
 
-                level = self.levelMenu.get()
                 layout = self.tileLayoutMenu.get()
 
-                if level == "4" and layout == "1 Tile Level 4" and not self.tileSelections[1][3]["enemyLabel"].winfo_viewable():
+                if layout == "1 Tile 4x4" and not self.tileSelections[1][3]["enemyLabel"].winfo_viewable():
                     self.tileSelections[1][3]["enemyLabel"].grid(column=0, row=6, padx=5, pady=5)
                     self.tileSelections[1][3]["enemies"][1]["widget"].grid(column=0, row=7, padx=5, pady=5)
                     self.tileSelections[1][3]["enemies"][2]["widget"].grid(column=0, row=8, padx=5, pady=5)
@@ -1123,9 +1108,13 @@ try:
                 log("Start of toggle_starting_nodes_menu, tile={}".format(str(tile)))
 
                 if self.tileSelections[tile]["startingTile"]["value"].get() == 1:
-                    self.tileSelections[tile]["startingNodes"]["widget"].configure(state="active")
+                    self.tileSelections[tile]["startingNodesLabel"].grid(column=3, row=1, pady=5, sticky=tk.W)
+                    self.tileSelections[tile]["startingNodes"]["widget"].grid(column=4, row=1, pady=5, sticky=tk.W)
                 else:
-                    self.tileSelections[tile]["startingNodes"]["widget"].configure(state="disabled")
+                    self.tileSelections[tile]["startingNodes"]["widget"].grid_forget()
+                    self.tileSelections[tile]["startingNodesLabel"].grid_forget()
+
+                self.topFrame.apply_changes()
                 
                 log("End of toggle_starting_nodes_menu")
             except Exception as e:
