@@ -628,18 +628,21 @@ try:
             self.iconsFrame.pack(side=tk.TOP, anchor=tk.W)
             self.iconsFrame2 = ttk.Frame(self.interior)
             self.iconsFrame2.pack(side=tk.TOP, anchor=tk.W)
+
+            self.encounterTitle = ttk.Label(self.infoFrame1, text=(" " * 35) + "Encounter Data", font=("Arial", 16))
+            self.encounterTitle.grid(column=0, row=0, padx=5, pady=5, columnspan=6, sticky=tk.W)
             
             self.encounterSetLabel = ttk.Label(self.infoFrame1, text="Set Name")
-            self.encounterSetLabel.grid(column=0, row=0, padx=5, pady=5)
+            self.encounterSetLabel.grid(column=0, row=1, padx=5, pady=5)
             self.encounterSetEntry = tk.Text(self.infoFrame1, width=17, height=1)
-            self.encounterSetEntry.grid(column=1, row=0, padx=5, pady=5)
+            self.encounterSetEntry.grid(column=1, row=1, padx=5, pady=5)
             self.encounterSaveLabelVal = tk.StringVar()
             self.encounterSaveLabel = ttk.Label(self.infoFrame1, textvariable=self.encounterSaveLabelVal)
-            self.encounterSaveLabel.grid(column=2, row=0, padx=5, pady=5)
+            self.encounterSaveLabel.grid(column=2, row=1, padx=5, pady=5)
             
             self.emptySetIconVal = tk.IntVar()
             self.emptySetIcon = ttk.Checkbutton(self.infoFrame1, text="Empty Set Icon", variable=self.emptySetIconVal, command=self.topFrame.apply_changes)
-            self.emptySetIcon.grid(column=3, row=0, padx=24, pady=5)
+            self.emptySetIcon.grid(column=3, row=1, padx=24, pady=5)
             self.emptySetIcon.state(["!alternate"])
             
             self.encounterNameLabel = ttk.Label(self.infoFrame2, text="Encounter\nName\t")
