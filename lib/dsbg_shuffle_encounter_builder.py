@@ -122,14 +122,18 @@ try:
                     self.app.displayImage.paste(im=self.app.emptySetIcon, box=(11, 15), mask=self.app.emptySetIcon)
                 
                 # Encounter Name
-                W, H = (354, 89)
-                w, h = imageWithText.textsize(e.encounterNameEntry.get("1.0", "end"))
-                imageWithText.text(((W-w)/2, (H-h)/2), e.encounterNameEntry.get("1.0", "end"), fill="white", font=fontEncounterName)
+                if e.encounterNameEntry.get("1.0", "end").strip():
+                    for i, substring in enumerate(e.encounterNameEntry.get("1.0", "end").strip().split("\n")):
+                        w, h = (360, 26 + (i * 26))
+                        l = imageWithText.textlength(substring)
+                        imageWithText.text(((w-l)/2, h), substring, fill="white", font=fontEncounterName)
                 
                 # Flavor Text
-                W, H = (400, 218)
-                w, h = imageWithText.textsize(e.flavorEntry.get("1.0", "end"))
-                imageWithText.text(((W-w)/2, (H-h)/2), e.flavorEntry.get("1.0", "end"), fill="black", font=fontFlavor)
+                if e.flavorEntry.get("1.0", "end").strip():
+                    for i, substring in enumerate(e.flavorEntry.get("1.0", "end").strip().split("\n")):
+                        w, h = (407, 89 + (i * 13))
+                        l = imageWithText.textlength(substring)
+                        imageWithText.text(((w-l)/2, h), substring, fill="black", font=fontFlavor)
                 
                 # Objective Text
                 imageWithText.text((20, 146), e.objectiveEntry.get("1.0", "end"), "black", font)
@@ -555,6 +559,7 @@ try:
             self.topFrame = topFrame
             
             self._afterId = None
+            self.bind("<Button-1>", self.clear_text_selection)
 
             self.rowSelectionMenuList = []
             self.tileSelectionMenuList = []
@@ -630,20 +635,36 @@ try:
             self.tileFrame3.pack(side=tk.TOP, anchor=tk.W)
             self.separator6 = ttk.Separator(self.interior)
             self.separator6.pack(side=tk.TOP, anchor=tk.W, padx=5, pady=5, fill="x")
-            self.iconsFrame = ttk.Frame(self.interior)
-            self.iconsFrame.pack(side=tk.TOP, anchor=tk.W)
+            self.iconsFrame1 = ttk.Frame(self.interior)
+            self.iconsFrame1.pack(side=tk.TOP, anchor=tk.W)
             self.iconsFrame2 = ttk.Frame(self.interior)
             self.iconsFrame2.pack(side=tk.TOP, anchor=tk.W)
+            
+            self.infoFrame1.bind("<Button-1>", self.clear_text_selection)
+            self.infoFrame2.bind("<Button-1>", self.clear_text_selection)
+            self.infoFrame3.bind("<Button-1>", self.clear_text_selection)
+            self.infoFrame4.bind("<Button-1>", self.clear_text_selection)
+            self.infoFrame5.bind("<Button-1>", self.clear_text_selection)
+            self.infoFrame6.bind("<Button-1>", self.clear_text_selection)
+            self.layoutFrame1.bind("<Button-1>", self.clear_text_selection)
+            self.tileFrame1.bind("<Button-1>", self.clear_text_selection)
+            self.tileFrame2.bind("<Button-1>", self.clear_text_selection)
+            self.tileFrame3.bind("<Button-1>", self.clear_text_selection)
+            self.iconsFrame1.bind("<Button-1>", self.clear_text_selection)
+            self.iconsFrame2.bind("<Button-1>", self.clear_text_selection)
 
             self.encounterTitle = ttk.Label(self.infoFrame1, text=(" " * 35) + "Encounter Data", font=("Arial", 16))
+            self.encounterTitle.bind("<Button-1>", self.clear_text_selection)
             self.encounterTitle.grid(column=0, row=0, padx=5, pady=5, columnspan=6, sticky=tk.W)
             
             self.encounterSetLabel = ttk.Label(self.infoFrame1, text="Set Name")
+            self.encounterSetLabel.bind("<Button-1>", self.clear_text_selection)
             self.encounterSetLabel.grid(column=0, row=1, padx=5, pady=5)
             self.encounterSetEntry = tk.Text(self.infoFrame1, width=17, height=1, bg="#181818")
             self.encounterSetEntry.grid(column=1, row=1, padx=5, pady=5)
             self.encounterSaveLabelVal = tk.StringVar()
             self.encounterSaveLabel = ttk.Label(self.infoFrame1, textvariable=self.encounterSaveLabelVal)
+            self.encounterSaveLabel.bind("<Button-1>", self.clear_text_selection)
             self.encounterSaveLabel.grid(column=2, row=1, padx=5, pady=5)
             
             self.emptySetIconVal = tk.IntVar()
@@ -652,12 +673,14 @@ try:
             self.emptySetIcon.state(["!alternate"])
             
             self.encounterNameLabel = ttk.Label(self.infoFrame2, text="Encounter\nName\t")
+            self.encounterNameLabel.bind("<Button-1>", self.clear_text_selection)
             self.encounterNameLabel.pack(side=tk.LEFT, anchor=tk.NW, padx=5, pady=5)
             self.encounterNameEntry = tk.Text(self.infoFrame2, width=17, height=2, bg="#181818")
             self.encounterNameEntry.bind("<KeyRelease>", self.handle_wait)
             self.encounterNameEntry.pack(side=tk.LEFT, anchor=tk.W, padx=5, pady=5)
             
             self.levelLabel = ttk.Label(self.infoFrame2, text="Encounter\nLevel")
+            self.levelLabel.bind("<Button-1>", self.clear_text_selection)
             self.levelLabel.pack(side=tk.LEFT, anchor=tk.W, padx=(40, 5), pady=5)
             self.levelMenuList = ["1", "2", "3", "4"]
             self.levelMenuVal = tk.StringVar()
@@ -671,18 +694,21 @@ try:
             self.levelMenu.pack(side=tk.LEFT, anchor=tk.W, padx=5, pady=5)
             
             self.flavorLabel = ttk.Label(self.infoFrame3, text="Flavor\nText\t")
+            self.flavorLabel.bind("<Button-1>", self.clear_text_selection)
             self.flavorLabel.pack(side=tk.LEFT, anchor=tk.NW, padx=5, pady=5)
             self.flavorEntry = tk.Text(self.infoFrame3, width=70, height=2, bg="#181818")
             self.flavorEntry.bind("<KeyRelease>", self.handle_wait)
             self.flavorEntry.pack(side=tk.LEFT, anchor=tk.W, padx=5, pady=5)
             
             self.objectiveLabel = ttk.Label(self.infoFrame4, text="Objective\t")
+            self.objectiveLabel.bind("<Button-1>", self.clear_text_selection)
             self.objectiveLabel.pack(side=tk.LEFT, anchor=tk.NW, padx=5, pady=5)
             self.objectiveEntry = tk.Text(self.infoFrame4, width=70, height=2, bg="#181818")
             self.objectiveEntry.bind("<KeyRelease>", self.handle_wait)
             self.objectiveEntry.pack(side=tk.LEFT, anchor=tk.W, padx=5, pady=5)
 
             self.rewardsTitle = ttk.Label(self.infoFrame5, text=(" " * 30) + "Rewards/Special Rules", font=("Arial", 16))
+            self.rewardsTitle.bind("<Button-1>", self.clear_text_selection)
             self.rewardsTitle.grid(column=0, row=0, padx=5, pady=5, columnspan=6, sticky=tk.W)
             
             self.rewardSoulsPerPlayerVal = tk.IntVar()
@@ -696,48 +722,56 @@ try:
             self.shortcut.state(["!alternate"])
             
             self.rewardSoulsLabel = ttk.Label(self.infoFrame5, text="Souls\nReward\t")
+            self.rewardSoulsLabel.bind("<Button-1>", self.clear_text_selection)
             self.rewardSoulsLabel.grid(column=0, row=2, padx=5, pady=5)
             self.rewardSoulsEntry = tk.Text(self.infoFrame5, width=17, height=2, bg="#181818")
             self.rewardSoulsEntry.bind("<KeyRelease>", self.handle_wait)
             self.rewardSoulsEntry.grid(column=1, row=2, padx=5, pady=5, sticky=tk.W)
             
             self.rewardSearchLabel = ttk.Label(self.infoFrame5, text="Search\nReward\t")
+            self.rewardSearchLabel.bind("<Button-1>", self.clear_text_selection)
             self.rewardSearchLabel.grid(column=0, row=3, padx=5, pady=5)
             self.rewardSearchEntry = tk.Text(self.infoFrame5, width=17, height=2, bg="#181818")
             self.rewardSearchEntry.bind("<KeyRelease>", self.handle_wait)
             self.rewardSearchEntry.grid(column=1, row=3, padx=5, pady=5, sticky=tk.W)
             
             self.rewardDrawLabel = ttk.Label(self.infoFrame5, text="Draw\nReward\t")
+            self.rewardDrawLabel.bind("<Button-1>", self.clear_text_selection)
             self.rewardDrawLabel.grid(column=0, row=4, padx=5, pady=5)
             self.rewardDrawEntry = tk.Text(self.infoFrame5, width=17, height=2, bg="#181818")
             self.rewardDrawEntry.bind("<KeyRelease>", self.handle_wait)
             self.rewardDrawEntry.grid(column=1, row=4, padx=5, pady=5, sticky=tk.W)
             
             self.rewardRefreshLabel = ttk.Label(self.infoFrame5, text="Refresh\nReward\t")
+            self.rewardRefreshLabel.bind("<Button-1>", self.clear_text_selection)
             self.rewardRefreshLabel.grid(column=0, row=5, padx=5, pady=5)
             self.rewardRefreshEntry = tk.Text(self.infoFrame5, width=17, height=2, bg="#181818")
             self.rewardRefreshEntry.bind("<KeyRelease>", self.handle_wait)
             self.rewardRefreshEntry.grid(column=1, row=5, padx=5, pady=5, sticky=tk.W)
             
             self.rewardTrialLabel = ttk.Label(self.infoFrame5, text="Trial\nReward\t")
+            self.rewardTrialLabel.bind("<Button-1>", self.clear_text_selection)
             self.rewardTrialLabel.grid(column=0, row=6, padx=5, pady=5)
             self.rewardTrialEntry = tk.Text(self.infoFrame5, width=17, height=2, bg="#181818")
             self.rewardTrialEntry.bind("<KeyRelease>", self.handle_wait)
             self.rewardTrialEntry.grid(column=1, row=6, padx=5, pady=5, sticky=tk.W)
             
             self.keywordsLabel = ttk.Label(self.infoFrame5, text="Keywords")
+            self.keywordsLabel.bind("<Button-1>", self.clear_text_selection)
             self.keywordsLabel.grid(column=2, row=2, padx=(24, 5), pady=5, sticky=tk.NW)
             self.keywordsEntry = tk.Text(self.infoFrame5, width=39, height=3, bg="#181818")
             self.keywordsEntry.bind("<KeyRelease>", self.handle_wait)
             self.keywordsEntry.grid(column=3, row=2, pady=5, columnspan=2, sticky=tk.W)
             
             self.specialRulesLabel = ttk.Label(self.infoFrame5, text="Special\nRules")
+            self.specialRulesLabel.bind("<Button-1>", self.clear_text_selection)
             self.specialRulesLabel.grid(column=2, row=3, padx=(24, 5), pady=5, sticky=tk.NW)
             self.specialRulesEntry = tk.Text(self.infoFrame5, width=39, height=12, bg="#181818")
             self.specialRulesEntry.bind("<KeyRelease>", self.handle_wait)
             self.specialRulesEntry.grid(column=3, row=3, pady=5, rowspan=4, columnspan=2, sticky=tk.W)
             
             self.numberOfTilesLabel = ttk.Label(self.infoFrame6, text="Number\nof Tiles")
+            self.numberOfTilesLabel.bind("<Button-1>", self.clear_text_selection)
             self.numberOfTilesLabel.pack(side=tk.LEFT, anchor=tk.W, padx=5, pady=5)
             self.numberOfTilesMenuList = ["1", "2", "3"]
             self.numberOfTilesMenuVal = tk.StringVar()
@@ -751,6 +785,7 @@ try:
             self.numberOfTilesMenu.pack(side=tk.LEFT, anchor=tk.W, padx=(11, 5), pady=5)
             
             self.tileLayoutLabel = ttk.Label(self.infoFrame6, text="\t          Tile\n\t          Layout")
+            self.tileLayoutLabel.bind("<Button-1>", self.clear_text_selection)
             self.tileLayoutLabel.pack(side=tk.LEFT, anchor=tk.W, padx=5, pady=5)
             self.tileLayoutMenuList = []
             self.tileLayoutMenuVal = tk.StringVar()
@@ -782,6 +817,10 @@ try:
                     "terrainLabel": ttk.Label(frame, text="Terrain")
                 }
 
+                self.tileSelections[tile]["label"].bind("<Button-1>", self.clear_text_selection)
+                self.tileSelections[tile]["startingNodesLabel"].bind("<Button-1>", self.clear_text_selection)
+                self.tileSelections[tile]["terrainLabel"].bind("<Button-1>", self.clear_text_selection)
+
                 self.tileSelections[tile]["traps"]["widget"] = ttk.Checkbutton(frame, text="Traps", variable=self.tileSelections[tile]["traps"]["value"], command=self.topFrame.apply_changes)
                 self.tileSelections[tile]["startingTile"]["widget"] = ttk.Checkbutton(frame, text="Starting\nTile", variable=self.tileSelections[tile]["startingTile"]["value"], command=lambda x=tile: self.toggle_starting_nodes_menu(tile=x))
                 self.tileSelections[tile]["startingNodes"]["widget"] = ttk.Combobox(frame, state="readonly", values=self.startingNodesMenuList, textvariable=self.tileSelections[tile]["startingNodes"]["value"])
@@ -807,6 +846,7 @@ try:
                         },
                         "terrain": {"value": tk.StringVar()}
                     }
+                    self.tileSelections[tile][row]["enemyLabel"].bind("<Button-1>", self.clear_text_selection)
 
                     for x in range(1, 4):
                         self.tileSelections[tile][row]["enemies"][x]["widget"] = ttk.Combobox(frame, height=int(28 * (self.root.winfo_screenheight() / 1080)), width=25, values=self.eNames, textvariable=self.tileSelections[tile][row]["enemies"][x]["value"])
@@ -853,66 +893,92 @@ try:
                 "position": None
             }
             
-            self.iconTitle = ttk.Label(self.iconsFrame, text=(" " * 40) + "Custom Icons", font=("Arial", 16))
+            self.iconTitle = ttk.Label(self.iconsFrame1, text=(" " * 40) + "Custom Icons", font=("Arial", 16))
+            self.iconTitle.bind("<Button-1>", self.clear_text_selection)
             self.iconTitle.grid(column=0, row=0, padx=5, pady=5, columnspan=6, sticky=tk.W)
-            self.iconWarningLabel = ttk.Label(self.iconsFrame, text="Please check the wiki for details on how to use custom icons!")
+            self.iconWarningLabel = ttk.Label(self.iconsFrame1, text="Please check the wiki for details on how to use custom icons!")
+            self.iconWarningLabel.bind("<Button-1>", self.clear_text_selection)
             self.iconWarningLabel.grid(column=0, row=1, padx=5, pady=5, columnspan=6, sticky=tk.W)
-            self.iconLabel = ttk.Label(self.iconsFrame, text="Custom Icons\t")
+            self.iconLabel = ttk.Label(self.iconsFrame1, text="Custom Icons\t")
+            self.iconLabel.bind("<Button-1>", self.clear_text_selection)
             self.iconLabel.grid(column=0, row=2, padx=5, pady=5)
             self.iconMenuList = []
             self.iconMenuVal = tk.StringVar()
-            self.iconMenu = ttk.Combobox(self.iconsFrame, width=24, state="readonly", values=self.iconMenuList, textvariable=self.iconMenuVal)
+            self.iconMenu = ttk.Combobox(self.iconsFrame1, width=24, state="readonly", values=self.iconMenuList, textvariable=self.iconMenuVal)
             self.iconMenu.bind("<<ComboboxSelected>>", self.change_icon)
             self.iconMenu.unbind_class("TCombobox", "<MouseWheel>")
             self.iconMenu.unbind_class("TCombobox", "<ButtonPress-4>")
             self.iconMenu.unbind_class("TCombobox", "<ButtonPress-5>")
             self.iconMenu.grid(column=1, row=2, padx=5, pady=5, columnspan=4, sticky=tk.W)
-            self.deleteIconButton = ttk.Button(self.iconsFrame, text="Delete Icon", width=16, command=self.delete_custom_icon)
+            self.deleteIconButton = ttk.Button(self.iconsFrame1, text="Delete Icon", width=16, command=self.delete_custom_icon)
             self.deleteIconButton.grid(column=5, row=2, padx=(5, 0), pady=5)
             
-            self.iconNameLabel = ttk.Label(self.iconsFrame, text="Icon Name\t")
+            self.iconNameLabel = ttk.Label(self.iconsFrame1, text="Icon Name\t")
+            self.iconNameLabel.bind("<Button-1>", self.clear_text_selection)
             self.iconNameLabel.grid(column=0, row=3, padx=5, pady=5)
-            self.iconNameEntry = tk.Text(self.iconsFrame, width=25, height=1, bg="#181818")
+            self.iconNameEntry = tk.Text(self.iconsFrame1, width=25, height=1, bg="#181818")
             self.iconNameEntry.grid(column=1, row=3, padx=5, pady=5, columnspan=4)
-            self.saveIconButton = ttk.Button(self.iconsFrame, text="Save Icon", width=16, command=self.save_custom_icon)
+            self.saveIconButton = ttk.Button(self.iconsFrame1, text="Save Icon", width=16, command=self.save_custom_icon)
             self.saveIconButton.grid(column=5, row=3, padx=(5, 0), pady=5)
             self.iconSaveErrorsVal = tk.StringVar()
-            self.iconSaveErrors = tk.Label(self.iconsFrame, width=26, height=2, textvariable=self.iconSaveErrorsVal)
+            self.iconSaveErrors = tk.Label(self.iconsFrame1, width=26, height=2, textvariable=self.iconSaveErrorsVal)
+            self.iconSaveErrors.bind("<Button-1>", self.clear_text_selection)
             self.iconSaveErrors.grid(column=6, row=3, pady=5, sticky=tk.W)
             
-            self.iconSizeLabel = ttk.Label(self.iconsFrame, text="Icon Size\t")
+            self.iconSizeLabel = ttk.Label(self.iconsFrame1, text="Icon Size\t")
+            self.iconSizeLabel.bind("<Button-1>", self.clear_text_selection)
             self.iconSizeLabel.grid(column=0, row=4, padx=5, pady=5, sticky=tk.W)
             self.iconSizeMenuList = ["Text", "Enemy/Terrain", "Set Icon"]
             self.iconSizeMenuVal = tk.StringVar()
-            self.iconSizeMenu = ttk.Combobox(self.iconsFrame, width=24, state="readonly", values=self.iconSizeMenuList, textvariable=self.iconSizeMenuVal)
+            self.iconSizeMenu = ttk.Combobox(self.iconsFrame1, width=24, state="readonly", values=self.iconSizeMenuList, textvariable=self.iconSizeMenuVal)
             self.iconSizeMenu.unbind_class("TCombobox", "<MouseWheel>")
             self.iconSizeMenu.unbind_class("TCombobox", "<ButtonPress-4>")
             self.iconSizeMenu.unbind_class("TCombobox", "<ButtonPress-5>")
             self.iconSizeMenu.grid(column=1, row=4, padx=5, pady=5, columnspan=4, sticky=tk.W)
-            self.chooseIconButton = ttk.Button(self.iconsFrame, text="Choose Image", width=16, command=self.choose_icon_image)
+            self.chooseIconButton = ttk.Button(self.iconsFrame1, text="Choose Image", width=16, command=self.choose_icon_image)
             self.chooseIconButton.grid(column=5, row=4, padx=(5, 0), pady=5)
             self.iconImageErrorsVal = tk.StringVar()
-            self.iconImageErrors = tk.Label(self.iconsFrame, width=26, height=2, textvariable=self.iconImageErrorsVal)
+            self.iconImageErrors = tk.Label(self.iconsFrame1, width=26, height=2, textvariable=self.iconImageErrorsVal)
+            self.iconImageErrors.bind("<Button-1>", self.clear_text_selection)
             self.iconImageErrors.grid(column=6, row=4, pady=5, rowspan=2, sticky=tk.NW)
             
             vcmdX = (self.register(self.callback_x))
             vcmdY = (self.register(self.callback_y))
-            self.positionLabel = ttk.Label(self.iconsFrame, text="Position\t")
+            self.positionLabel = ttk.Label(self.iconsFrame1, text="Position\t")
+            self.positionLabel.bind("<Button-1>", self.clear_text_selection)
             self.positionLabel.grid(column=0, row=5, padx=5, pady=5, sticky=tk.W)
-            self.xPositionLabel = ttk.Label(self.iconsFrame, text="\nx:\n0-400")
+            self.xPositionLabel = ttk.Label(self.iconsFrame1, text="\nx:\n0-400")
+            self.xPositionLabel.bind("<Button-1>", self.clear_text_selection)
             self.xPositionLabel.grid(column=1, row=5, padx=5, pady=5, sticky=tk.W)
             self.xPositionVal = tk.StringVar()
-            self.xPositionEntry = ttk.Entry(self.iconsFrame, textvariable=self.xPositionVal, width=4, validate="all", validatecommand=(vcmdX, "%P"))
+            self.xPositionEntry = ttk.Entry(self.iconsFrame1, textvariable=self.xPositionVal, width=4, validate="all", validatecommand=(vcmdX, "%P"))
             self.xPositionEntry.bind("<KeyRelease>", self.handle_wait_icon)
             self.xPositionEntry.grid(column=2, row=5, padx=5, pady=5, sticky=tk.W)
-            self.yPositionLabel = ttk.Label(self.iconsFrame, text="\ny:\n0-685")
+            self.yPositionLabel = ttk.Label(self.iconsFrame1, text="\ny:\n0-685")
+            self.yPositionLabel.bind("<Button-1>", self.clear_text_selection)
             self.yPositionLabel.grid(column=3, row=5, padx=5, pady=5, sticky=tk.E)
             self.yPositionVal = tk.StringVar()
-            self.yPositionEntry = ttk.Entry(self.iconsFrame, textvariable=self.yPositionVal, width=4, validate="all", validatecommand=(vcmdY, "%P"))
+            self.yPositionEntry = ttk.Entry(self.iconsFrame1, textvariable=self.yPositionVal, width=4, validate="all", validatecommand=(vcmdY, "%P"))
             self.yPositionEntry.bind("<KeyRelease>", self.handle_wait_icon)
             self.yPositionEntry.grid(column=4, row=5, padx=5, pady=5, sticky=tk.E)
-            self.iconView = tk.Label(self.iconsFrame, width=30, height=2)
+            self.iconView = tk.Label(self.iconsFrame1, width=30, height=2)
+            self.iconView.bind("<Button-1>", self.clear_text_selection)
             self.iconView.grid(column=5, row=5, pady=5, sticky=tk.NSEW)
+
+
+        def clear_text_selection(self, event):
+            self.encounterSetEntry.tag_remove(tk.SEL, "1.0", tk.END)
+            self.encounterNameEntry.tag_remove(tk.SEL, "1.0", tk.END)
+            self.flavorEntry.tag_remove(tk.SEL, "1.0", tk.END)
+            self.objectiveEntry.tag_remove(tk.SEL, "1.0", tk.END)
+            self.rewardSoulsEntry.tag_remove(tk.SEL, "1.0", tk.END)
+            self.rewardSearchEntry.tag_remove(tk.SEL, "1.0", tk.END)
+            self.rewardDrawEntry.tag_remove(tk.SEL, "1.0", tk.END)
+            self.rewardRefreshEntry.tag_remove(tk.SEL, "1.0", tk.END)
+            self.rewardTrialEntry.tag_remove(tk.SEL, "1.0", tk.END)
+            self.keywordsEntry.tag_remove(tk.SEL, "1.0", tk.END)
+            self.specialRulesEntry.tag_remove(tk.SEL, "1.0", tk.END)
+            self.iconNameEntry.tag_remove(tk.SEL, "1.0", tk.END)
 
 
         def handle_wait(self, event):
