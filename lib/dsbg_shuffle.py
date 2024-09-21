@@ -194,10 +194,10 @@ try:
                                 }
                             }
                         },
-                    "1 Tile Level 4": {
-                        "layout": self.create_image("custom_encounter_layout_1_tile_level_4.png", "layout", 99, extensionProvided=True),
-                        "startingNodesHorizontal": self.create_image("custom_encounter_level_4_starting_nodes_horizontal.png", "nodesLevel4Horizontal", 99, extensionProvided=True),
-                        "startingNodesVertical": self.create_image("custom_encounter_level_4_starting_nodes_vertical.png", "nodesLevel4Vertical", 99, extensionProvided=True),
+                    "1 Tile 4x4": {
+                        "layout": self.create_image("custom_encounter_layout_1_tile_4x4.png", "layout", 99, extensionProvided=True),
+                        "startingNodesHorizontal": self.create_image("custom_encounter_4x4_starting_nodes_horizontal.png", "nodesLevel4Horizontal", 99, extensionProvided=True),
+                        "startingNodesVertical": self.create_image("custom_encounter_4x4_starting_nodes_vertical.png", "nodesLevel4Vertical", 99, extensionProvided=True),
                         "box": {
                             1: {
                                 "North": (47, 403),
@@ -1468,7 +1468,7 @@ try:
     app = Application(root)
     app.pack(fill="both", expand=True)
 
-    root.option_add("*TCombobox*Listbox*Background", "#202020")
+    root.option_add("*TCombobox*Listbox*Background", "#181818")
 
     center(root)
     root.attributes("-alpha", 1.0)

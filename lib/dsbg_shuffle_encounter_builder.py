@@ -120,10 +120,14 @@ try:
                     self.app.displayImage.paste(im=self.app.emptySetIcon, box=(11, 15), mask=self.app.emptySetIcon)
                 
                 # Encounter Name
-                imageWithText.text((80, 25 + (10 if e.encounterNameEntry.get("1.0", "end").strip().count("\n") < 1 else 0)), e.encounterNameEntry.get("1.0", "end"), "white", fontEncounterName)
+                W, H = (354, 89)
+                w, h = imageWithText.textsize(e.encounterNameEntry.get("1.0", "end"))
+                imageWithText.text(((W-w)/2, (H-h)/2), e.encounterNameEntry.get("1.0", "end"), fill="white", font=fontEncounterName)
                 
                 # Flavor Text
-                imageWithText.text((20, 88 + (7 if e.flavorEntry.get("1.0", "end").strip().count("\n") < 1 else 0)), e.flavorEntry.get("1.0", "end"), "black", fontFlavor)
+                W, H = (400, 218)
+                w, h = imageWithText.textsize(e.flavorEntry.get("1.0", "end"))
+                imageWithText.text(((W-w)/2, (H-h)/2), e.flavorEntry.get("1.0", "end"), fill="black", font=fontFlavor)
                 
                 # Objective Text
                 imageWithText.text((20, 146), e.objectiveEntry.get("1.0", "end"), "black", font)
@@ -748,7 +752,7 @@ try:
             self.tileLayoutLabel.pack(side=tk.LEFT, anchor=tk.W, padx=5, pady=5)
             self.tileLayoutMenuList = []
             self.tileLayoutMenuVal = tk.StringVar()
-            self.tileLayoutMenu = ttk.Combobox(self.infoFrame6, width=30, state="readonly", values=self.tileLayoutMenuList, textvariable=self.tileLayoutMenuVal)
+            self.tileLayoutMenu = ttk.Combobox(self.infoFrame6, height=11, width=30, state="readonly", values=self.tileLayoutMenuList, textvariable=self.tileLayoutMenuVal)
             self.previousTileLayoutMenuVal = ""
             self.tileLayoutMenu.bind("<KeyRelease>", self.search_layout_combobox)
             self.tileLayoutMenu.bind("<<ComboboxSelected>>", self.update_lists)
