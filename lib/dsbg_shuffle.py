@@ -69,6 +69,8 @@ try:
                 self.grid_rowconfigure(index=2, weight=0)
                 self.displayScrollbar = ttk.Scrollbar(root)
                 self.displayScrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+                
+                self.bind("<1>", lambda event: event.widget.focus_set())
 
                 # Create images
                 self.progress.label.config(text = "Loading images... ")
@@ -584,33 +586,42 @@ try:
                     self.settings = load(settingsFile)
 
                 self.paned = ttk.PanedWindow(self)
+                self.paned.bind("<1>", lambda event: event.widget.focus_set())
                 self.paned.grid_rowconfigure(index=0, weight=1)
                 self.paned.grid(row=1, column=0, pady=(5, 5), padx=(5, 5), sticky="nsew", columnspan=4)
 
                 self.pane = ttk.Frame(self.paned, padding=5)
+                self.pane.bind("<1>", lambda event: event.widget.focus_set())
                 self.pane.grid_rowconfigure(index=0, weight=1)
                 self.paned.add(self.pane, weight=1)
 
                 self.notebook = ttk.Notebook(self.paned, width=600)
+                self.notebook.bind("<1>", lambda event: event.widget.focus_set())
                 self.notebook.bind('<<NotebookTabChanged>>', self.tab_change)
                 self.notebook.pack(fill="both", expand=True)
 
                 self.campaignTab = CampaignFrame(root=root, app=self)
+                self.campaignTab.bind("<1>", lambda event: event.widget.focus_set())
                 self.notebook.add(self.campaignTab, text="Campaign")
                 
                 self.eventTab = EventsFrame(root=root, app=self)
+                self.eventTab.bind("<1>", lambda event: event.widget.focus_set())
                 self.notebook.add(self.eventTab, text="Events")
 
                 self.variantsTab = VariantsFrame(root=root, app=self)
+                self.variantsTab.bind("<1>", lambda event: event.widget.focus_set())
                 self.notebook.add(self.variantsTab, text="Behavior Variants")
 
                 self.behaviorDeckTab = BehaviorDeckFrame(root=root, app=self)
+                self.behaviorDeckTab.bind("<1>", lambda event: event.widget.focus_set())
                 self.notebook.add(self.behaviorDeckTab, text="Behavior Decks")
 
                 self.encounterBuilderTab = EncounterBuilderFrame(root=root, app=self)
+                self.encounterBuilderTab.bind("<1>", lambda event: event.widget.focus_set())
                 self.notebook.add(self.encounterBuilderTab, text="Encounter Builder")
 
                 self.encounterTab = EncountersFrame(root=root, app=self)
+                self.encounterTab.bind("<1>", lambda event: event.widget.focus_set())
                 for index in [0, 1]:
                     self.encounterTab.columnconfigure(index=index, weight=1)
                     self.encounterTab.rowconfigure(index=index, weight=1)
