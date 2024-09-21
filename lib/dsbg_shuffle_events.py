@@ -191,7 +191,12 @@ try:
                 elif campaign:
                     eventSelected = treeviewCampaign.selection()[0]
                 else:
+                    if not self.currentEvent:
+                        log("End of load_event (nothing done)")
+                        return
                     eventSelected = self.currentEvent
+
+                self.currentEvent = eventSelected
 
                 if "_" in eventSelected:
                     eventSelected = eventSelected[:eventSelected.index("_")]

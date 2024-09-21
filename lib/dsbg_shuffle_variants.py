@@ -347,6 +347,11 @@ try:
                         self.app.displayImages["variantsLocked"][self.app.displayTopLeft]["name"] = None
                         self.app.displayImages["variantsLocked"][self.app.displayTopLeft]["activeTab"] = None
                 else:
+                    if not variant:
+                        self.treeviewVariantsList.bind("<<TreeviewSelect>>", self.load_variant_card)
+                        self.treeviewVariantsLocked.bind("<<TreeviewSelect>>", self.load_variant_card_locked)
+                        log("End of load_variant_card (nothing done)")
+                        return
                     self.selectedVariant = variant
 
                 if self.selectedVariant[-1] == "_":

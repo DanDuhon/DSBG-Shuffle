@@ -496,7 +496,7 @@ try:
                 self.app.encounterTab.rewardTreasure = None
                 self.app.displayTopLeft.unbind("<Button 1>")
 
-                tree = event.widget
+                tree = self.treeviewCampaign
 
                 # Don't update the image shown if you've selected more than one card.
                 if len(tree.selection()) != 1:

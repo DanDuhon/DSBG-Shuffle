@@ -19,7 +19,7 @@ try:
     from dsbg_shuffle_settings import SettingsWindow
     from dsbg_shuffle_tooltip_reference import tooltipText
     from dsbg_shuffle_treasure import generate_treasure_soul_cost, populate_treasure_tiers, treasures
-    from dsbg_shuffle_utility import CreateToolTip, PopupWindow, enable_binding, center, do_nothing, log, error_popup, baseFolder, pathSep
+    from dsbg_shuffle_utility import CreateToolTip, PopupWindow, clear_other_tab_images, enable_binding, center, do_nothing, log, error_popup, baseFolder, pathSep
     from dsbg_shuffle_variants import VariantsFrame
 
 
@@ -592,6 +592,7 @@ try:
                 self.paned.add(self.pane, weight=1)
 
                 self.notebook = ttk.Notebook(self.paned, width=600)
+                self.notebook.bind('<<NotebookTabChanged>>', self.tab_change)
                 self.notebook.pack(fill="both", expand=True)
 
                 self.campaignTab = CampaignFrame(root=root, app=self)
@@ -618,6 +619,40 @@ try:
                 self.notebook.select(0)
 
                 log("End of create_tabs")
+            except Exception as e:
+                error_popup(root, e)
+                raise
+
+
+        def tab_change(self, event=None):
+            """
+            Clear the current image and open the last selected image, if any.
+
+            Optional Parameters:
+                event: tkinter.Event
+                    The tkinter Event that is the trigger.
+            """
+            try:
+                log("Start of tab_change")
+
+                if self.notebook.tab(self.notebook.select(), "text") == "Encounters" and self.encounterTab.treeviewEncounters.selection():
+                    tree = self.encounterTab.treeviewEncounters
+                    self.encounterTab.load_encounter(encounter=tree.item(tree.selection())["text"])
+                elif self.notebook.tab(self.notebook.select(), "text") == "Campaign" and self.campaignTab.treeviewCampaign.selection():
+                    self.campaignTab.load_campaign_card()
+                elif self.notebook.tab(self.notebook.select(), "text") == "Events":
+                    self.eventTab.load_event()
+                elif self.notebook.tab(self.notebook.select(), "text") == "Behavior Decks" and self.behaviorDeckTab.treeviewDecks.selection():
+                    self.behaviorDeckTab.display_deck_cards()
+                elif self.notebook.tab(self.notebook.select(), "text") == "Behavior Variants":
+                    self.variantsTab.load_variant_card()
+                elif self.notebook.tab(self.notebook.select(), "text") == "Encounter Builder":
+                    self.encounterBuilderTab.apply_changes()
+                else:
+                    log("End of tab_change (cleared image only)")
+                    return
+
+                log("End of tab_change")
             except Exception as e:
                 error_popup(root, e)
                 raise

@@ -33,6 +33,8 @@ try:
             self.encounterBuilderScroll = EncounterBuilderScrollFrame(root=root, app=app, topFrame=self)
             self.encounterBuilderScroll.pack(side=tk.TOP, anchor=tk.W, expand=True, fill="both")
 
+
+        def __call__(self):
             self.new_custom_encounter()
 
 
@@ -69,8 +71,6 @@ try:
                 e.levelMenu.set(e.levelMenuList[0])
                 e.numberOfTilesMenu.set(e.numberOfTilesMenuList[0])
                 e.tileLayoutMenu.set("")
-
-                e.update_lists()
                 
                 clear_other_tab_images(self.app, "encounters", "encounters")
                 if getattr(self.app, "displayTopLeft", None):
@@ -78,6 +78,8 @@ try:
                     self.app.displayImages["encounters"][self.app.displayTopLeft]["activeTab"] = "custom"
                     self.app.displayTopLeft.config(image="")
                     self.app.displayTopLeft.image=None
+
+                e.update_lists()
                 
                 log("End of new_custom_encounter")
             except Exception as e:
@@ -638,7 +640,7 @@ try:
             
             self.encounterSetLabel = ttk.Label(self.infoFrame1, text="Set Name")
             self.encounterSetLabel.grid(column=0, row=1, padx=5, pady=5)
-            self.encounterSetEntry = tk.Text(self.infoFrame1, width=17, height=1)
+            self.encounterSetEntry = tk.Text(self.infoFrame1, width=17, height=1, bg="#181818")
             self.encounterSetEntry.grid(column=1, row=1, padx=5, pady=5)
             self.encounterSaveLabelVal = tk.StringVar()
             self.encounterSaveLabel = ttk.Label(self.infoFrame1, textvariable=self.encounterSaveLabelVal)
@@ -651,7 +653,7 @@ try:
             
             self.encounterNameLabel = ttk.Label(self.infoFrame2, text="Encounter\nName\t")
             self.encounterNameLabel.pack(side=tk.LEFT, anchor=tk.NW, padx=5, pady=5)
-            self.encounterNameEntry = tk.Text(self.infoFrame2, width=17, height=2)
+            self.encounterNameEntry = tk.Text(self.infoFrame2, width=17, height=2, bg="#181818")
             self.encounterNameEntry.bind("<KeyRelease>", self.handle_wait)
             self.encounterNameEntry.pack(side=tk.LEFT, anchor=tk.W, padx=5, pady=5)
             
@@ -670,13 +672,13 @@ try:
             
             self.flavorLabel = ttk.Label(self.infoFrame3, text="Flavor\nText\t")
             self.flavorLabel.pack(side=tk.LEFT, anchor=tk.NW, padx=5, pady=5)
-            self.flavorEntry = tk.Text(self.infoFrame3, width=70, height=2)
+            self.flavorEntry = tk.Text(self.infoFrame3, width=70, height=2, bg="#181818")
             self.flavorEntry.bind("<KeyRelease>", self.handle_wait)
             self.flavorEntry.pack(side=tk.LEFT, anchor=tk.W, padx=5, pady=5)
             
             self.objectiveLabel = ttk.Label(self.infoFrame4, text="Objective\t")
             self.objectiveLabel.pack(side=tk.LEFT, anchor=tk.NW, padx=5, pady=5)
-            self.objectiveEntry = tk.Text(self.infoFrame4, width=70, height=2)
+            self.objectiveEntry = tk.Text(self.infoFrame4, width=70, height=2, bg="#181818")
             self.objectiveEntry.bind("<KeyRelease>", self.handle_wait)
             self.objectiveEntry.pack(side=tk.LEFT, anchor=tk.W, padx=5, pady=5)
 
@@ -695,43 +697,43 @@ try:
             
             self.rewardSoulsLabel = ttk.Label(self.infoFrame5, text="Souls\nReward\t")
             self.rewardSoulsLabel.grid(column=0, row=2, padx=5, pady=5)
-            self.rewardSoulsEntry = tk.Text(self.infoFrame5, width=17, height=2)
+            self.rewardSoulsEntry = tk.Text(self.infoFrame5, width=17, height=2, bg="#181818")
             self.rewardSoulsEntry.bind("<KeyRelease>", self.handle_wait)
             self.rewardSoulsEntry.grid(column=1, row=2, padx=5, pady=5, sticky=tk.W)
             
             self.rewardSearchLabel = ttk.Label(self.infoFrame5, text="Search\nReward\t")
             self.rewardSearchLabel.grid(column=0, row=3, padx=5, pady=5)
-            self.rewardSearchEntry = tk.Text(self.infoFrame5, width=17, height=2)
+            self.rewardSearchEntry = tk.Text(self.infoFrame5, width=17, height=2, bg="#181818")
             self.rewardSearchEntry.bind("<KeyRelease>", self.handle_wait)
             self.rewardSearchEntry.grid(column=1, row=3, padx=5, pady=5, sticky=tk.W)
             
             self.rewardDrawLabel = ttk.Label(self.infoFrame5, text="Draw\nReward\t")
             self.rewardDrawLabel.grid(column=0, row=4, padx=5, pady=5)
-            self.rewardDrawEntry = tk.Text(self.infoFrame5, width=17, height=2)
+            self.rewardDrawEntry = tk.Text(self.infoFrame5, width=17, height=2, bg="#181818")
             self.rewardDrawEntry.bind("<KeyRelease>", self.handle_wait)
             self.rewardDrawEntry.grid(column=1, row=4, padx=5, pady=5, sticky=tk.W)
             
             self.rewardRefreshLabel = ttk.Label(self.infoFrame5, text="Refresh\nReward\t")
             self.rewardRefreshLabel.grid(column=0, row=5, padx=5, pady=5)
-            self.rewardRefreshEntry = tk.Text(self.infoFrame5, width=17, height=2)
+            self.rewardRefreshEntry = tk.Text(self.infoFrame5, width=17, height=2, bg="#181818")
             self.rewardRefreshEntry.bind("<KeyRelease>", self.handle_wait)
             self.rewardRefreshEntry.grid(column=1, row=5, padx=5, pady=5, sticky=tk.W)
             
             self.rewardTrialLabel = ttk.Label(self.infoFrame5, text="Trial\nReward\t")
             self.rewardTrialLabel.grid(column=0, row=6, padx=5, pady=5)
-            self.rewardTrialEntry = tk.Text(self.infoFrame5, width=17, height=2)
+            self.rewardTrialEntry = tk.Text(self.infoFrame5, width=17, height=2, bg="#181818")
             self.rewardTrialEntry.bind("<KeyRelease>", self.handle_wait)
             self.rewardTrialEntry.grid(column=1, row=6, padx=5, pady=5, sticky=tk.W)
             
             self.keywordsLabel = ttk.Label(self.infoFrame5, text="Keywords")
             self.keywordsLabel.grid(column=2, row=2, padx=(24, 5), pady=5, sticky=tk.NW)
-            self.keywordsEntry = tk.Text(self.infoFrame5, width=39, height=3)
+            self.keywordsEntry = tk.Text(self.infoFrame5, width=39, height=3, bg="#181818")
             self.keywordsEntry.bind("<KeyRelease>", self.handle_wait)
             self.keywordsEntry.grid(column=3, row=2, pady=5, columnspan=2, sticky=tk.W)
             
             self.specialRulesLabel = ttk.Label(self.infoFrame5, text="Special\nRules")
             self.specialRulesLabel.grid(column=2, row=3, padx=(24, 5), pady=5, sticky=tk.NW)
-            self.specialRulesEntry = tk.Text(self.infoFrame5, width=39, height=12)
+            self.specialRulesEntry = tk.Text(self.infoFrame5, width=39, height=12, bg="#181818")
             self.specialRulesEntry.bind("<KeyRelease>", self.handle_wait)
             self.specialRulesEntry.grid(column=3, row=3, pady=5, rowspan=4, columnspan=2, sticky=tk.W)
             
@@ -870,7 +872,7 @@ try:
             
             self.iconNameLabel = ttk.Label(self.iconsFrame, text="Icon Name\t")
             self.iconNameLabel.grid(column=0, row=3, padx=5, pady=5)
-            self.iconNameEntry = tk.Text(self.iconsFrame, width=25, height=1)
+            self.iconNameEntry = tk.Text(self.iconsFrame, width=25, height=1, bg="#181818")
             self.iconNameEntry.grid(column=1, row=3, padx=5, pady=5, columnspan=4)
             self.saveIconButton = ttk.Button(self.iconsFrame, text="Save Icon", width=16, command=self.save_custom_icon)
             self.saveIconButton.grid(column=5, row=3, padx=(5, 0), pady=5)
@@ -901,11 +903,13 @@ try:
             self.xPositionLabel.grid(column=1, row=5, padx=5, pady=5, sticky=tk.W)
             self.xPositionVal = tk.StringVar()
             self.xPositionEntry = ttk.Entry(self.iconsFrame, textvariable=self.xPositionVal, width=4, validate="all", validatecommand=(vcmdX, "%P"))
+            self.xPositionEntry.bind("<KeyRelease>", self.handle_wait_icon)
             self.xPositionEntry.grid(column=2, row=5, padx=5, pady=5, sticky=tk.W)
             self.yPositionLabel = ttk.Label(self.iconsFrame, text="\ny:\n0-685")
             self.yPositionLabel.grid(column=3, row=5, padx=5, pady=5, sticky=tk.E)
             self.yPositionVal = tk.StringVar()
             self.yPositionEntry = ttk.Entry(self.iconsFrame, textvariable=self.yPositionVal, width=4, validate="all", validatecommand=(vcmdY, "%P"))
+            self.yPositionEntry.bind("<KeyRelease>", self.handle_wait_icon)
             self.yPositionEntry.grid(column=4, row=5, padx=5, pady=5, sticky=tk.E)
             self.iconView = tk.Label(self.iconsFrame, width=30, height=2)
             self.iconView.grid(column=5, row=5, pady=5, sticky=tk.NSEW)
@@ -918,6 +922,15 @@ try:
 
             # create a new job
             self.after(1, self.topFrame.apply_changes())
+
+
+        def handle_wait_icon(self, event):
+            # cancel the old job
+            if self._afterId is not None:
+                self.after_cancel(self._afterId)
+
+            # create a new job
+            self.after(1, self.save_custom_icon())
 
 
         def search_layout_combobox(self, event):
