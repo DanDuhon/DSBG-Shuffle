@@ -645,7 +645,10 @@ try:
                 elif self.notebook.tab(self.notebook.select(), "text") == "Behavior Decks" and self.behaviorDeckTab.treeviewDecks.selection():
                     self.behaviorDeckTab.display_deck_cards()
                 elif self.notebook.tab(self.notebook.select(), "text") == "Behavior Variants":
-                    self.variantsTab.load_variant_card()
+                    if self.variantsTab.treeviewVariantsLocked.selection():
+                        self.variantsTab.load_variant_card_locked(variant=self.variantsTab.treeviewVariantsLocked.selection()[0])
+                    elif self.variantsTab.treeviewVariantsList.selection():
+                        self.variantsTab.load_variant_card(variant=self.variantsTab.treeviewVariantsList.selection()[0])
                 elif self.notebook.tab(self.notebook.select(), "text") == "Encounter Builder":
                     self.encounterBuilderTab.apply_changes()
                 else:
