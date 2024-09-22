@@ -36,9 +36,7 @@ try:
             
             self.encounterBuilderScroll = EncounterBuilderScrollFrame(root=root, app=app, topFrame=self)
             self.encounterBuilderScroll.pack(side=tk.TOP, anchor=tk.W, expand=True, fill="both")
-
-
-        def __call__(self):
+            
             self.new_custom_encounter()
 
 
@@ -74,7 +72,6 @@ try:
                 e.shortcut.state(["!selected"])
                 e.levelMenu.set(e.levelMenuList[0])
                 e.numberOfTilesMenu.set(e.numberOfTilesMenuList[0])
-                e.tileLayoutMenu.set("")
                 
                 clear_other_tab_images(self.app, "encounters", "encounters")
                 if getattr(self.app, "displayTopLeft", None):
@@ -596,7 +593,7 @@ try:
                 "Treasure Chest"
             ]
 
-            self.startingNodesMenuList = ["North", "East", "South", "West"]
+            self.startingNodesMenuList = ["", "North", "East", "South", "West"]
             
             self.infoFrame1 = ttk.Frame(self.interior)
             self.infoFrame1.pack(side=tk.TOP, anchor=tk.W)
@@ -654,7 +651,7 @@ try:
             
             self.encounterSetLabel = ttk.Label(self.infoFrame1, text="Set Name")
             self.encounterSetLabel.bind("<1>", lambda event: event.widget.focus_set())
-            self.encounterSetLabel.grid(column=0, row=1, padx=5, pady=5)
+            self.encounterSetLabel.grid(column=0, row=1, padx=(5, 4), pady=5)
             self.encounterSetEntry = tk.Text(self.infoFrame1, width=17, height=1, bg="#181818")
             self.encounterSetEntry.grid(column=1, row=1, padx=5, pady=5)
             self.encounterSaveLabelVal = tk.StringVar()
@@ -669,7 +666,7 @@ try:
             
             self.encounterNameLabel = ttk.Label(self.infoFrame2, text="Encounter\nName\t")
             self.encounterNameLabel.bind("<1>", lambda event: event.widget.focus_set())
-            self.encounterNameLabel.pack(side=tk.LEFT, anchor=tk.NW, padx=5, pady=5)
+            self.encounterNameLabel.pack(side=tk.LEFT, anchor=tk.NW, padx=(5, 3), pady=5)
             self.encounterNameEntry = tk.Text(self.infoFrame2, width=17, height=2, bg="#181818")
             self.encounterNameEntry.bind("<KeyRelease>", self.handle_wait)
             self.encounterNameEntry.pack(side=tk.LEFT, anchor=tk.W, padx=5, pady=5)
@@ -859,6 +856,8 @@ try:
                     
             self.tileSelections[1]["label"].grid(column=0, row=0, padx=5, pady=5, sticky=tk.W, columnspan=4)
             self.tileSelections[1]["traps"]["widget"].grid(column=1, row=1, pady=5)
+            self.tileSelections[1]["startingNodesLabel"].grid(column=2, row=1, pady=5)
+            self.tileSelections[1]["startingNodes"]["widget"].grid(column=3, row=1, pady=5)
             self.tileSelections[1][1]["enemyLabel"].grid(column=0, row=2, padx=5, pady=5, columnspan=2)
             self.tileSelections[1][1]["enemies"][1]["widget"].grid(column=0, row=3, padx=5, pady=5, columnspan=2)
             self.tileSelections[1][1]["enemies"][2]["widget"].grid(column=0, row=4, padx=5, pady=5, columnspan=2)
@@ -908,7 +907,7 @@ try:
             self.iconNameLabel.bind("<1>", lambda event: event.widget.focus_set())
             self.iconNameLabel.grid(column=0, row=3, padx=5, pady=5)
             self.iconNameEntry = tk.Text(self.iconsFrame1, width=25, height=1, bg="#181818")
-            self.iconNameEntry.grid(column=1, row=3, padx=5, pady=5, columnspan=4)
+            self.iconNameEntry.grid(column=1, row=3, padx=5, pady=5, columnspan=4, sticky=tk.W)
             self.saveIconButton = ttk.Button(self.iconsFrame1, text="Save Icon", width=16, command=self.save_custom_icon)
             self.saveIconButton.grid(column=5, row=3, padx=(5, 0), pady=5)
             self.iconSaveErrorsVal = tk.StringVar()
@@ -1099,6 +1098,8 @@ try:
                 if int(tiles) > 1 and not self.tileSelections[2]["traps"]["widget"].winfo_viewable():
                     self.tileSelections[2]["label"].grid(column=0, row=0, padx=5, pady=5, sticky=tk.W, columnspan=4)
                     self.tileSelections[2]["traps"]["widget"].grid(column=1, row=1, pady=5)
+                    self.tileSelections[2]["startingNodesLabel"].grid(column=2, row=1, pady=5)
+                    self.tileSelections[2]["startingNodes"]["widget"].grid(column=3, row=1, pady=5)
                     self.tileSelections[2][1]["enemyLabel"].grid(column=0, row=2, padx=5, pady=5, columnspan=2)
                     self.tileSelections[2][1]["enemies"][1]["widget"].grid(column=0, row=3, padx=5, pady=5, columnspan=2)
                     self.tileSelections[2][1]["enemies"][2]["widget"].grid(column=0, row=4, padx=5, pady=5, columnspan=2)
@@ -1129,6 +1130,8 @@ try:
                 if int(tiles) > 2 and not self.tileSelections[3]["traps"]["widget"].winfo_viewable():
                     self.tileSelections[3]["label"].grid(column=0, row=0, padx=5, pady=5, sticky=tk.W, columnspan=4)
                     self.tileSelections[3]["traps"]["widget"].grid(column=1, row=1, pady=5)
+                    self.tileSelections[3]["startingNodesLabel"].grid(column=2, row=1, pady=5)
+                    self.tileSelections[3]["startingNodes"]["widget"].grid(column=3, row=1, pady=5)
                     self.tileSelections[3][1]["enemyLabel"].grid(column=0, row=2, padx=5, pady=5, columnspan=2)
                     self.tileSelections[3][1]["enemies"][1]["widget"].grid(column=0, row=3, padx=5, pady=5, columnspan=2)
                     self.tileSelections[3][1]["enemies"][2]["widget"].grid(column=0, row=4, padx=5, pady=5, columnspan=2)

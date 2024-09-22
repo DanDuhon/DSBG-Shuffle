@@ -680,7 +680,7 @@ try:
                 log("Start of create_display_frame")
 
                 self.displayCanvas = tk.Canvas(self, width=820, yscrollcommand=self.displayScrollbar.set)
-                self.displayFrame = ttk.Frame(self.displayCanvas)
+                self.displayFrame = ttk.Frame(self.displayCanvas, style="Frame1.TFrame")
                 self.displayFrame.columnconfigure(index=0, weight=1, minsize=410)
                 self.displayCanvas.grid(row=0, column=4, padx=10, pady=(10, 0), sticky="nsew", rowspan=2)
                 self.displayCanvas.create_window((0,0), window=self.displayFrame, anchor=tk.NW)
@@ -689,16 +689,16 @@ try:
                 self.displayFrame.bind("<Leave>", self._unbound_to_mousewheel)
                 self.displayFrame.bind("<Configure>", lambda event, canvas=self.displayCanvas: self.on_frame_configure(canvas))
 
-                self.displayTopLeft = ttk.Label(self.displayFrame)
+                self.displayTopLeft = ttk.Label(self.displayFrame, background="#242424")
                 self.displayTopLeft.image = None
                 self.displayTopLeft.grid(column=0, row=0, sticky="nsew")
-                self.displayTopRight = ttk.Label(self.displayFrame)
+                self.displayTopRight = ttk.Label(self.displayFrame, background="#242424")
                 self.displayTopRight.image = None
                 self.displayTopRight.grid(column=1, row=0, sticky="nsew", columnspan=2)
-                self.displayBottomLeft = ttk.Label(self.displayFrame)
+                self.displayBottomLeft = ttk.Label(self.displayFrame, background="#242424")
                 self.displayBottomLeft.image = None
                 self.displayBottomLeft.grid(column=0, row=1, sticky="nsew")
-                self.displayBottomRight = ttk.Label(self.displayFrame)
+                self.displayBottomRight = ttk.Label(self.displayFrame, background="#242424")
                 self.displayBottomRight.image = None
                 self.displayBottomRight.grid(column=1, row=1, sticky="nsew", columnspan=2)
 
@@ -902,7 +902,7 @@ try:
             try:
                 log("Start of create_buttons")
 
-                self.buttonsFrame = ttk.Frame(self)
+                self.buttonsFrame = ttk.Frame(self, style="Frame1.TFrame")
                 self.buttonsFrame.grid(row=0, column=0, pady=(10, 0), sticky="nw")
                 self.buttonsFrame.columnconfigure(index=0, weight=1)
                 self.campaignButton = ttk.Button(self.buttonsFrame, text="Add to Campaign", width=16, command=self.campaignTab.add_card_to_campaign)
@@ -1519,6 +1519,7 @@ try:
     app.pack(fill="both", expand=True)
 
     root.option_add("*TCombobox*Listbox*Background", "#181818")
+    root.configure(background="#242424")
 
     center(root)
     root.attributes("-alpha", 1.0)
