@@ -1513,6 +1513,7 @@ try:
             root.wait_window(p)
 
     s = ttk.Style()
+    s.configure("Frame1.TFrame", background="#242424")
 
     app = Application(root)
     app.pack(fill="both", expand=True)

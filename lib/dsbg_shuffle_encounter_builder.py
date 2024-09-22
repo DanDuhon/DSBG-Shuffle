@@ -21,9 +21,11 @@ try:
             self.customEncounter = {}
             self.bind("<1>", lambda event: event.widget.focus_set())
 
-            self.customEncountersButtonFrame = ttk.Frame(self)
+            self.customEncountersButtonFrame = ttk.Frame(self, style="Frame1.TFrame")
             self.customEncountersButtonFrame.bind("<1>", lambda event: event.widget.focus_set())
             self.customEncountersButtonFrame.pack(side=tk.TOP, anchor=tk.W)
+            self.separator = ttk.Separator(self)
+            self.separator.pack(side=tk.TOP, anchor=tk.W, padx=5, pady=5, fill="x")
 
             self.newEncounterButton = ttk.Button(self.customEncountersButtonFrame, text="New Encounter", width=16, command=self.new_custom_encounter)
             self.newEncounterButton.grid(column=0, row=0, padx=5, pady=5)
@@ -202,7 +204,7 @@ try:
 
                     # Starting nodes
                     for tile in range(1, 4):
-                        if e.tileSelections[tile]["startingTile"]["value"].get() == 1 and e.tileSelections[tile]["startingNodes"]["value"].get():
+                        if e.tileSelections[tile]["startingNodes"]["value"].get():
                             startingNodesLocation = e.tileSelections[tile]["startingNodes"]["value"].get()
                             if tile not in tileLayout["box"]:
                                 continue
@@ -220,16 +222,16 @@ try:
 
                         box = (334, 377 + (122 * (tile - 1)))
 
-                        if e.tileSelections[tile]["startingTile"]["value"].get() == 1 and e.tileSelections[tile]["traps"]["value"].get() == 1:
+                        if e.tileSelections[tile]["startingNodes"]["value"].get() and e.tileSelections[tile]["traps"]["value"].get() == 1:
                             image = self.app.tileNumbers[tile]["starting"]["traps"]
                             self.app.displayImage.paste(im=image, box=box, mask=image)
-                        elif e.tileSelections[tile]["startingTile"]["value"].get() == 1 and e.tileSelections[tile]["traps"]["value"].get() != 1:
+                        elif e.tileSelections[tile]["startingNodes"]["value"].get() and e.tileSelections[tile]["traps"]["value"].get() != 1:
                             image = self.app.tileNumbers[tile]["starting"]["noTraps"]
                             self.app.displayImage.paste(im=image, box=box, mask=image)
-                        elif e.tileSelections[tile]["startingTile"]["value"].get() != 1 and e.tileSelections[tile]["traps"]["value"].get() == 1:
+                        elif not e.tileSelections[tile]["startingNodes"]["value"].get() and e.tileSelections[tile]["traps"]["value"].get() == 1:
                             image = self.app.tileNumbers[tile]["notStarting"]["traps"]
                             self.app.displayImage.paste(im=image, box=box, mask=image)
-                        elif e.tileSelections[tile]["startingTile"]["value"].get() != 1 and e.tileSelections[tile]["traps"]["value"].get() != 1:
+                        elif not e.tileSelections[tile]["startingNodes"]["value"].get() and e.tileSelections[tile]["traps"]["value"].get() != 1:
                             image = self.app.tileNumbers[tile]["notStarting"]["noTraps"]
                             self.app.displayImage.paste(im=image, box=box, mask=image)
 
@@ -278,7 +280,6 @@ try:
                 self.customEncounter["icons"] = {k: v for k, v in e.icons.items() if "" not in e.icons[k]["position"]}
                 self.customEncounter["tileSelections"] = {
                     1: {
-                        "startingTile": {"value": e.tileSelections[1]["startingTile"]["value"].get()},
                         "startingNodes": {"value": e.tileSelections[1]["startingNodes"]["value"].get()},
                         "traps": {"value": e.tileSelections[1]["traps"]["value"].get()},
                         1: {"terrain": {"value": e.tileSelections[1][1]["terrain"]["value"].get()},
@@ -307,7 +308,6 @@ try:
                             }}
                         },
                     2: {
-                        "startingTile": {"value": e.tileSelections[2]["startingTile"]["value"].get()},
                         "startingNodes": {"value": e.tileSelections[2]["startingNodes"]["value"].get()},
                         "traps": {"value": e.tileSelections[2]["traps"]["value"].get()},
                         1: {"terrain": {"value": e.tileSelections[2][1]["terrain"]["value"].get()},
@@ -324,7 +324,6 @@ try:
                             }}
                         },
                     3: {
-                        "startingTile": {"value": e.tileSelections[3]["startingTile"]["value"].get()},
                         "startingNodes": {"value": e.tileSelections[3]["startingNodes"]["value"].get()},
                         "traps": {"value": e.tileSelections[3]["traps"]["value"].get()},
                         1: {"terrain": {"value": e.tileSelections[3][1]["terrain"]["value"].get()},
@@ -493,7 +492,6 @@ try:
                 e.update_lists()
 
                 e.tileLayoutMenuVal.set(self.customEncounter["layout"])
-                e.tileSelections[1]["startingTile"]["value"].set(self.customEncounter["tileSelections"]["1"]["startingTile"]["value"])
                 e.tileSelections[1]["startingNodes"]["value"].set(self.customEncounter["tileSelections"]["1"]["startingNodes"]["value"])
                 e.tileSelections[1]["traps"]["value"].set(self.customEncounter["tileSelections"]["1"]["traps"]["value"])
                 e.tileSelections[1][1]["terrain"]["value"].set(self.customEncounter["tileSelections"]["1"]["1"]["terrain"]["value"])
@@ -512,7 +510,6 @@ try:
                     e.tileSelections[1][4]["enemies"][2]["value"].set(self.customEncounter["tileSelections"]["2"]["4"]["enemies"]["2"]["value"])
                     e.tileSelections[1][4]["enemies"][3]["value"].set(self.customEncounter["tileSelections"]["2"]["4"]["enemies"]["3"]["value"])
                     e.tileSelections[1][4]["terrain"]["value"].set(self.customEncounter["tileSelections"]["2"]["1"]["terrain"]["value"])
-                e.tileSelections[2]["startingTile"]["value"].set(self.customEncounter["tileSelections"]["2"]["startingTile"]["value"])
                 e.tileSelections[2]["startingNodes"]["value"].set(self.customEncounter["tileSelections"]["2"]["startingNodes"]["value"])
                 e.tileSelections[2]["traps"]["value"].set(self.customEncounter["tileSelections"]["2"]["traps"]["value"])
                 e.tileSelections[2][1]["terrain"]["value"].set(self.customEncounter["tileSelections"]["2"]["1"]["terrain"]["value"])
@@ -522,7 +519,6 @@ try:
                 e.tileSelections[2][2]["enemies"][1]["value"].set(self.customEncounter["tileSelections"]["2"]["2"]["enemies"]["1"]["value"])
                 e.tileSelections[2][2]["enemies"][2]["value"].set(self.customEncounter["tileSelections"]["2"]["2"]["enemies"]["2"]["value"])
                 e.tileSelections[2][2]["enemies"][3]["value"].set(self.customEncounter["tileSelections"]["2"]["2"]["enemies"]["3"]["value"])
-                e.tileSelections[3]["startingTile"]["value"].set(self.customEncounter["tileSelections"]["3"]["startingTile"]["value"])
                 e.tileSelections[3]["startingNodes"]["value"].set(self.customEncounter["tileSelections"]["3"]["startingNodes"]["value"])
                 e.tileSelections[3]["traps"]["value"].set(self.customEncounter["tileSelections"]["3"]["traps"]["value"])
                 e.tileSelections[3][1]["terrain"]["value"].set(self.customEncounter["tileSelections"]["3"]["1"]["terrain"]["value"])
@@ -532,9 +528,6 @@ try:
                 e.tileSelections[3][2]["enemies"][1]["value"].set(self.customEncounter["tileSelections"]["3"]["2"]["enemies"]["1"]["value"])
                 e.tileSelections[3][2]["enemies"][2]["value"].set(self.customEncounter["tileSelections"]["3"]["2"]["enemies"]["2"]["value"])
                 e.tileSelections[3][2]["enemies"][3]["value"].set(self.customEncounter["tileSelections"]["3"]["2"]["enemies"]["3"]["value"])
-
-                for tile in range(1, 4):
-                    e.toggle_starting_nodes_menu(tile=tile)
 
                 self.apply_changes()
                 
@@ -813,7 +806,6 @@ try:
                 self.tileSelections[tile] = {
                     "label": ttk.Label(frame, text=(" " * 46) + "Tile " + str(tile), font=("Arial", 16)),
                     "traps": {"value": tk.IntVar()},
-                    "startingTile": {"value": tk.IntVar()},
                     "startingNodesLabel": ttk.Label(frame, text="\tStarting\n\tNodes\t"),
                     "startingNodes": {"value": tk.StringVar()},
                     "terrainLabel": ttk.Label(frame, text="Terrain")
@@ -824,7 +816,6 @@ try:
                 self.tileSelections[tile]["terrainLabel"].bind("<1>", lambda event: event.widget.focus_set())
 
                 self.tileSelections[tile]["traps"]["widget"] = ttk.Checkbutton(frame, text="Traps", variable=self.tileSelections[tile]["traps"]["value"], command=self.topFrame.apply_changes)
-                self.tileSelections[tile]["startingTile"]["widget"] = ttk.Checkbutton(frame, text="Starting\nTile", variable=self.tileSelections[tile]["startingTile"]["value"], command=lambda x=tile: self.toggle_starting_nodes_menu(tile=x))
                 self.tileSelections[tile]["startingNodes"]["widget"] = ttk.Combobox(frame, state="readonly", values=self.startingNodesMenuList, textvariable=self.tileSelections[tile]["startingNodes"]["value"])
                 self.tileSelections[tile]["startingNodes"]["widget"].bind("<<ComboboxSelected>>", self.topFrame.apply_changes)
                 self.tileSelections[tile]["startingNodes"]["widget"].unbind_class("TCombobox", "<MouseWheel>")
@@ -832,7 +823,6 @@ try:
                 self.tileSelections[tile]["startingNodes"]["widget"].unbind_class("TCombobox", "<ButtonPress-5>")
                 
                 self.tileSelections[tile]["traps"]["widget"].state(["!alternate"])
-                self.tileSelections[tile]["startingTile"]["widget"].state(["!alternate"])
                 self.tileSelections[tile]["startingNodes"]["widget"].config(width=8)
                 
                 for row in range(1, 5):
@@ -869,7 +859,6 @@ try:
                     
             self.tileSelections[1]["label"].grid(column=0, row=0, padx=5, pady=5, sticky=tk.W, columnspan=4)
             self.tileSelections[1]["traps"]["widget"].grid(column=1, row=1, pady=5)
-            self.tileSelections[1]["startingTile"]["widget"].grid(column=2, row=1, pady=5, sticky=tk.W)
             self.tileSelections[1][1]["enemyLabel"].grid(column=0, row=2, padx=5, pady=5, columnspan=2)
             self.tileSelections[1][1]["enemies"][1]["widget"].grid(column=0, row=3, padx=5, pady=5, columnspan=2)
             self.tileSelections[1][1]["enemies"][2]["widget"].grid(column=0, row=4, padx=5, pady=5, columnspan=2)
@@ -1110,7 +1099,6 @@ try:
                 if int(tiles) > 1 and not self.tileSelections[2]["traps"]["widget"].winfo_viewable():
                     self.tileSelections[2]["label"].grid(column=0, row=0, padx=5, pady=5, sticky=tk.W, columnspan=4)
                     self.tileSelections[2]["traps"]["widget"].grid(column=1, row=1, pady=5)
-                    self.tileSelections[2]["startingTile"]["widget"].grid(column=2, row=1, pady=5, sticky=tk.W)
                     self.tileSelections[2][1]["enemyLabel"].grid(column=0, row=2, padx=5, pady=5, columnspan=2)
                     self.tileSelections[2][1]["enemies"][1]["widget"].grid(column=0, row=3, padx=5, pady=5, columnspan=2)
                     self.tileSelections[2][1]["enemies"][2]["widget"].grid(column=0, row=4, padx=5, pady=5, columnspan=2)
@@ -1122,10 +1110,8 @@ try:
                     self.tileSelections[2]["terrainLabel"].grid(column=4, row=2, padx=5, pady=5, sticky=tk.W, columnspan=2)
                     self.tileSelections[2][1]["terrain"]["widget"].grid(column=4, row=3, padx=5, pady=5, columnspan=2, sticky=tk.W)
                     self.tileSelections[2][2]["terrain"]["widget"].grid(column=4, row=4, padx=5, pady=5, columnspan=2, sticky=tk.W)
-                    self.toggle_starting_nodes_menu(tile=2)
                 else:
                     self.tileSelections[2]["traps"]["widget"].grid_forget()
-                    self.tileSelections[2]["startingTile"]["widget"].grid_forget()
                     self.tileSelections[2]["startingNodesLabel"].grid_forget()
                     self.tileSelections[2]["startingNodes"]["widget"].grid_forget()
                     self.tileSelections[2][1]["enemyLabel"].grid_forget()
@@ -1143,7 +1129,6 @@ try:
                 if int(tiles) > 2 and not self.tileSelections[3]["traps"]["widget"].winfo_viewable():
                     self.tileSelections[3]["label"].grid(column=0, row=0, padx=5, pady=5, sticky=tk.W, columnspan=4)
                     self.tileSelections[3]["traps"]["widget"].grid(column=1, row=1, pady=5)
-                    self.tileSelections[3]["startingTile"]["widget"].grid(column=2, row=1, pady=5, sticky=tk.W)
                     self.tileSelections[3][1]["enemyLabel"].grid(column=0, row=2, padx=5, pady=5, columnspan=2)
                     self.tileSelections[3][1]["enemies"][1]["widget"].grid(column=0, row=3, padx=5, pady=5, columnspan=2)
                     self.tileSelections[3][1]["enemies"][2]["widget"].grid(column=0, row=4, padx=5, pady=5, columnspan=2)
@@ -1155,10 +1140,8 @@ try:
                     self.tileSelections[3]["terrainLabel"].grid(column=4, row=2, padx=5, pady=5, sticky=tk.W, columnspan=2)
                     self.tileSelections[3][1]["terrain"]["widget"].grid(column=4, row=3, padx=5, pady=5, columnspan=2, sticky=tk.W)
                     self.tileSelections[3][2]["terrain"]["widget"].grid(column=4, row=4, padx=5, pady=5, columnspan=2, sticky=tk.W)
-                    self.toggle_starting_nodes_menu(tile=3)
                 else:
                     self.tileSelections[3]["traps"]["widget"].grid_forget()
-                    self.tileSelections[3]["startingTile"]["widget"].grid_forget()
                     self.tileSelections[3]["startingNodesLabel"].grid_forget()
                     self.tileSelections[3]["startingNodes"]["widget"].grid_forget()
                     self.tileSelections[3][1]["enemyLabel"].grid_forget()
@@ -1174,25 +1157,6 @@ try:
                     self.tileSelections[3][2]["terrain"]["widget"].grid_forget()
                 
                 log("End of update_tile_sections")
-            except Exception as e:
-                error_popup(self.root, e)
-                raise
-
-
-        def toggle_starting_nodes_menu(self, tile, event=None):
-            try:
-                log("Start of toggle_starting_nodes_menu, tile={}".format(str(tile)))
-
-                if self.tileSelections[tile]["startingTile"]["value"].get() == 1:
-                    self.tileSelections[tile]["startingNodesLabel"].grid(column=3, row=1, pady=5, sticky=tk.W)
-                    self.tileSelections[tile]["startingNodes"]["widget"].grid(column=4, row=1, pady=5, sticky=tk.W)
-                else:
-                    self.tileSelections[tile]["startingNodes"]["widget"].grid_forget()
-                    self.tileSelections[tile]["startingNodesLabel"].grid_forget()
-
-                self.topFrame.apply_changes()
-                
-                log("End of toggle_starting_nodes_menu")
             except Exception as e:
                 error_popup(self.root, e)
                 raise
