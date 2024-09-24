@@ -38,12 +38,16 @@ if windowsOs:
     font3 = ImageFont.truetype(baseFolder + "\\lib\\OptimusPrinceps.ttf", 30)
     fontEncounterName = ImageFont.truetype(baseFolder + "\\lib\\OptimusPrinceps.ttf", 28)
     fontFlavor = ImageFont.truetype(baseFolder + "\\lib\\Adobe Caslon Pro Semibold Italic.ttf", 12)
+    fontSize11 = ImageFont.truetype(baseFolder + "\\lib\\Adobe Caslon Pro Semibold.ttf", 11)
+    fontSize10 = ImageFont.truetype(baseFolder + "\\lib\\Adobe Caslon Pro Semibold.ttf", 10)
 else:
     font = ImageFont.truetype("./Adobe Caslon Pro Semibold.ttf", 12)
     font2 = ImageFont.truetype("./OptimusPrinceps.ttf", 24)
     font3 = ImageFont.truetype("./OptimusPrinceps.ttf", 30)
     fontEncounterName = ImageFont.truetype("./OptimusPrinceps.ttf", 28)
     fontFlavor = ImageFont.truetype("./Adobe Caslon Pro Semibold Italic.ttf", 12)
+    fontSize11 = ImageFont.truetype(baseFolder + "\\lib\\Adobe Caslon Pro Semibold.ttf", 11)
+    fontSize10 = ImageFont.truetype(baseFolder + "\\lib\\Adobe Caslon Pro Semibold.ttf", 10)
 
 
 class CreateToolTip(object):

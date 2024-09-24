@@ -129,13 +129,6 @@ try:
                 self.timer = self.create_image("timer.png", "timer")
                 self.trial = self.create_image("trial.png", "trial")
 
-                self.customEncounter1TileImage = self.create_image("custom_encounter_1_tile_no_traps.jpg", "encounter", 1, extensionProvided=True)
-                self.customEncounter1TileTrapsImage = self.create_image("custom_encounter_1_tile_traps.jpg", "encounter", 1, extensionProvided=True)
-                self.customEncounter2TileImage = self.create_image("custom_encounter_2_tile.jpg", "encounter", 1, extensionProvided=True)
-                self.customEncounter3TileImage = self.create_image("custom_encounter_3_tile.jpg", "encounter", 1, extensionProvided=True)
-                self.customEncounter4x4Image = self.create_image("custom_encounter_1_tile_4x4_no_traps.jpg", "encounter", 1, extensionProvided=True)
-                self.customEncounter4x4TrapsImage = self.create_image("custom_encounter_1_tile_4x4_traps.jpg", "encounter", 1, extensionProvided=True)
-
                 self.rewardsDrawIcon = self.create_image("custom_encounter_rewards_draw.png", "reward", 99, extensionProvided=True)
                 self.rewardsRefreshIcon = self.create_image("custom_encounter_rewards_refresh.png", "reward", 99, extensionProvided=True)
                 self.rewardsSearchIcon = self.create_image("custom_encounter_rewards_search.png", "reward", 99, extensionProvided=True)
@@ -189,10 +182,10 @@ try:
                         "startingNodesVertical": self.create_image("custom_encounter_1_tile_starting_nodes_vertical.png", "nodes1TileVertical", 99, extensionProvided=True),
                         "box": {
                             1: {
-                                "North": (59, 414),
-                                "South": (59, 555),
-                                "East": (198, 414),
-                                "West": (59, 414)
+                                1: (59, 414),
+                                2: (59, 555),
+                                3: (59, 414),
+                                4: (198, 414)
                                 }
                             }
                         },
@@ -202,10 +195,10 @@ try:
                         "startingNodesVertical": self.create_image("custom_encounter_4x4_starting_nodes_vertical.png", "nodesLevel4Vertical", 99, extensionProvided=True),
                         "box": {
                             1: {
-                                "North": (47, 403),
-                                "South": (47, 570),
-                                "East": (212, 403),
-                                "West": (47, 403)
+                                1: (47, 403),
+                                2: (47, 570),
+                                3: (47, 403),
+                                4: (212, 403)
                                 }
                             }
                         },
@@ -215,16 +208,16 @@ try:
                         "startingNodesVertical": startingVertical,
                         "box": {
                             1: {
-                                "North": (44, 452),
-                                "South": (44, 524),
-                                "East": (115, 452),
-                                "West": (44, 452)
+                                1: (44, 452),
+                                2: (44, 524),
+                                3: (44, 452),
+                                4: (115, 452)
                                 },
                             2: {
-                                "North": (152, 452),
-                                "South": (152, 524),
-                                "East": (223, 452),
-                                "West": (152, 452)
+                                1: (152, 452),
+                                2: (152, 524),
+                                3: (152, 452),
+                                4: (223, 452)
                                 }
                             }
                         },
@@ -234,16 +227,16 @@ try:
                         "startingNodesVertical": startingVertical,
                         "box": {
                             1: {
-                                "North": (98, 402),
-                                "South": (98, 474),
-                                "East": (169, 402),
-                                "West": (98, 402)
+                                1: (98, 402),
+                                2: (98, 474),
+                                3: (98, 402),
+                                4: (169, 402)
                                 },
                             2: {
-                                "North": (98, 509),
-                                "South": (98, 581),
-                                "East": (169, 509),
-                                "West": (98, 509)
+                                1: (98, 509),
+                                2: (98, 581),
+                                3: (98, 509),
+                                4: (169, 509)
                                 }
                             }
                         },
@@ -253,10 +246,10 @@ try:
                         "startingNodesVertical": startingVertical,
                         "box": {
                             1: {
-                                "North": (98, 382),
-                                "South": (98, 454),
-                                "East": (169, 382),
-                                "West": (98, 382)
+                                1: (98, 382),
+                                2: (98, 454),
+                                3: (98, 382),
+                                4: (169, 382)
                                 }
                             }
                         },
@@ -266,16 +259,16 @@ try:
                         "startingNodesVertical": startingVertical,
                         "box": {
                             1: {
-                                "North": (98, 382),
-                                "South": (98, 454),
-                                "East": (169, 382),
-                                "West": (98, 382)
+                                1: (98, 382),
+                                2: (98, 454),
+                                3: (98, 382),
+                                4: (169, 382)
                                 },
                             2: {
-                                "North": (98, 522),
-                                "South": (98, 594),
-                                "East": (169, 522),
-                                "West": (98, 522)
+                                1: (98, 522),
+                                2: (98, 594),
+                                3: (98, 522),
+                                4: (169, 522)
                                 }
                             }
                         },
@@ -285,22 +278,22 @@ try:
                         "startingNodesVertical": startingVertical,
                         "box": {
                             1: {
-                                "North": (98, 347),
-                                "South": (98, 419),
-                                "East": (169, 347),
-                                "West": (98, 347)
+                                1: (98, 347),
+                                2: (98, 419),
+                                3: (98, 347),
+                                4: (169, 347)
                                 },
                             2: {
-                                "North": (98, 455),
-                                "South": (98, 527),
-                                "East": (169, 455),
-                                "West": (98, 455)
+                                1: (98, 455),
+                                2: (98, 527),
+                                3: (98, 455),
+                                4: (169, 455)
                                 },
                             3: {
-                                "North": (98, 562),
-                                "South": (98, 654),
-                                "East": (169, 562),
-                                "West": (98, 562)
+                                1: (98, 562),
+                                2: (98, 654),
+                                3: (98, 562),
+                                4: (169, 562)
                                 }
                             }
                         },
@@ -310,22 +303,22 @@ try:
                         "startingNodesVertical": startingVertical,
                         "box": {
                             1: {
-                                "North": (151, 402),
-                                "South": (151, 474),
-                                "East": (222, 402),
-                                "West": (151, 402)
+                                1: (151, 402),
+                                2: (151, 474),
+                                3: (151, 402),
+                                4: (222, 402)
                                 },
                             2: {
-                                "North": (45, 402),
-                                "South": (45, 474),
-                                "East": (116, 402),
-                                "West": (45, 402)
+                                1: (45, 402),
+                                2: (45, 474),
+                                3: (45, 402),
+                                4: (116, 402)
                                 },
                             3: {
-                                "North": (45, 509),
-                                "South": (45, 581),
-                                "East": (116, 509),
-                                "West": (45, 509)
+                                1: (45, 509),
+                                2: (45, 581),
+                                3: (45, 509),
+                                4: (116, 509)
                                 }
                             }
                         },
@@ -335,22 +328,22 @@ try:
                         "startingNodesVertical": startingVertical,
                         "box": {
                             1: {
-                                "North": (45, 402),
-                                "South": (45, 474),
-                                "East": (116, 402),
-                                "West": (45, 402)
+                                1: (45, 402),
+                                2: (45, 474),
+                                3: (45, 402),
+                                4: (116, 402)
                                 },
                             2: {
-                                "North": (151, 402),
-                                "South": (151, 474),
-                                "East": (222, 402),
-                                "West": (151, 402)
+                                1: (151, 402),
+                                2: (151, 474),
+                                3: (151, 402),
+                                4: (222, 402)
                                 },
                             3: {
-                                "North": (45, 509),
-                                "South": (45, 581),
-                                "East": (116, 509),
-                                "West": (45, 509)
+                                1: (45, 509),
+                                2: (45, 581),
+                                3: (45, 509),
+                                4: (116, 509)
                                 }
                             }
                         },
@@ -360,22 +353,22 @@ try:
                         "startingNodesVertical": startingVertical,
                         "box": {
                             1: {
-                                "North": (45, 402),
-                                "South": (45, 474),
-                                "East": (116, 402),
-                                "West": (45, 402)
+                                1: (45, 402),
+                                2: (45, 474),
+                                3: (45, 402),
+                                4: (116, 402)
                                 },
                             2: {
-                                "North": (45, 509),
-                                "South": (45, 581),
-                                "East": (116, 509),
-                                "West": (45, 509)
+                                1: (45, 509),
+                                2: (45, 581),
+                                3: (45, 509),
+                                4: (116, 509)
                                 },
                             3: {
-                                "North": (151, 509),
-                                "South": (151, 581),
-                                "East": (222, 509),
-                                "West": (151, 509)
+                                1: (151, 509),
+                                2: (151, 581),
+                                3: (151, 509),
+                                4: (222, 509)
                                 }
                             }
                         },
@@ -385,22 +378,22 @@ try:
                         "startingNodesVertical": startingVertical,
                         "box": {
                             1: {
-                                "North": (151, 509),
-                                "South": (151, 581),
-                                "East": (222, 509),
-                                "West": (151, 509)
+                                1: (151, 509),
+                                2: (151, 581),
+                                3: (151, 509),
+                                4: (222, 509)
                                 },
                             2: {
-                                "North": (151, 402),
-                                "South": (151, 474),
-                                "East": (222, 402),
-                                "West": (151, 402)
+                                1: (151, 402),
+                                2: (151, 474),
+                                3: (151, 402),
+                                4: (222, 402)
                                 },
                             3: {
-                                "North": (45, 402),
-                                "South": (45, 474),
-                                "East": (116, 402),
-                                "West": (45, 402)
+                                1: (45, 402),
+                                2: (45, 474),
+                                3: (45, 402),
+                                4: (116, 402)
                                 }
                             }
                         },
@@ -410,22 +403,22 @@ try:
                         "startingNodesVertical": startingVertical,
                         "box": {
                             1: {
-                                "North": (45, 509),
-                                "South": (45, 581),
-                                "East": (116, 509),
-                                "West": (45, 509)
+                                1: (45, 509),
+                                2: (45, 581),
+                                3: (45, 509),
+                                4: (116, 509)
                                 },
                             2: {
-                                "North": (45, 402),
-                                "South": (45, 474),
-                                "East": (116, 402),
-                                "West": (45, 402)
+                                1: (45, 402),
+                                2: (45, 474),
+                                3: (45, 402),
+                                4: (116, 402)
                                 },
                             3: {
-                                "North": (151, 509),
-                                "South": (151, 581),
-                                "East": (222, 509),
-                                "West": (151, 509)
+                                1: (151, 509),
+                                2: (151, 581),
+                                3: (151, 509),
+                                4: (222, 509)
                                 }
                             }
                         },
@@ -435,22 +428,22 @@ try:
                         "startingNodesVertical": startingVertical,
                         "box": {
                             1: {
-                                "North": (45, 509),
-                                "South": (45, 581),
-                                "East": (116, 509),
-                                "West": (45, 509)
+                                1: (45, 509),
+                                2: (45, 581),
+                                3: (45, 509),
+                                4: (116, 509)
                                 },
                             2: {
-                                "North": (151, 509),
-                                "South": (151, 581),
-                                "East": (222, 509),
-                                "West": (151, 509)
+                                1: (151, 509),
+                                2: (151, 581),
+                                3: (151, 509),
+                                4: (222, 509)
                                 },
                             3: {
-                                "North": (151, 402),
-                                "South": (151, 474),
-                                "East": (222, 402),
-                                "West": (151, 402)
+                                1: (151, 402),
+                                2: (151, 474),
+                                3: (151, 402),
+                                4: (222, 402)
                                 }
                             }
                         },
@@ -460,10 +453,10 @@ try:
                         "startingNodesVertical": startingVertical,
                         "box": {
                             1: {
-                                "North": (38, 393),
-                                "South": (38, 465),
-                                "East": (109, 393),
-                                "West": (38, 393)
+                                1: (38, 393),
+                                2: (38, 465),
+                                3: (38, 393),
+                                4: (109, 393)
                                 }
                             }
                         },
@@ -473,10 +466,10 @@ try:
                         "startingNodesVertical": startingVertical,
                         "box": {
                             1: {
-                                "North": (38, 393),
-                                "South": (38, 465),
-                                "East": (109, 393),
-                                "West": (38, 393)
+                                1: (38, 393),
+                                2: (38, 465),
+                                3: (38, 393),
+                                4: (109, 393)
                                 }
                             }
                         },
@@ -486,22 +479,22 @@ try:
                         "startingNodesVertical": startingVertical,
                         "box": {
                             1: {
-                                "North": (39, 393),
-                                "South": (39, 465),
-                                "East": (110, 393),
-                                "West": (39, 393)
+                                1: (39, 393),
+                                2: (39, 465),
+                                3: (39, 393),
+                                4: (110, 393)
                                 },
                             2: {
-                                "North": (39, 514),
-                                "South": (39, 586),
-                                "East": (110, 514),
-                                "West": (39, 514)
+                                1: (39, 514),
+                                2: (39, 586),
+                                3: (39, 514),
+                                4: (110, 514)
                                 },
                             3: {
-                                "North": (145, 514),
-                                "South": (145, 586),
-                                "East": (216, 514),
-                                "West": (145, 514)
+                                1: (145, 514),
+                                2: (145, 586),
+                                3: (145, 514),
+                                4: (216, 514)
                                 }
                             }
                         },
@@ -511,22 +504,22 @@ try:
                         "startingNodesVertical": startingVertical,
                         "box": {
                             1: {
-                                "North": (38, 407),
-                                "South": (38, 479),
-                                "East": (109, 407),
-                                "West": (38, 407)
+                                1: (38, 407),
+                                2: (38, 479),
+                                3: (38, 407),
+                                4: (109, 407)
                                 },
                             2: {
-                                "North": (38, 514),
-                                "South": (38, 586),
-                                "East": (109, 514),
-                                "West": (38, 514)
+                                1: (38, 514),
+                                2: (38, 586),
+                                3: (38, 514),
+                                4: (109, 514)
                                 },
                             3: {
-                                "North": (158, 514),
-                                "South": (158, 586),
-                                "East": (229, 514),
-                                "West": (158, 514)
+                                1: (158, 514),
+                                2: (158, 586),
+                                3: (158, 514),
+                                4: (229, 514)
                                 }
                             }
                         }
@@ -680,7 +673,7 @@ try:
                 log("Start of create_display_frame")
 
                 self.displayCanvas = tk.Canvas(self, width=820, yscrollcommand=self.displayScrollbar.set)
-                self.displayFrame = ttk.Frame(self.displayCanvas, style="Frame1.TFrame")
+                self.displayFrame = ttk.Frame(self.displayCanvas)
                 self.displayFrame.columnconfigure(index=0, weight=1, minsize=410)
                 self.displayCanvas.grid(row=0, column=4, padx=10, pady=(10, 0), sticky="nsew", rowspan=2)
                 self.displayCanvas.create_window((0,0), window=self.displayFrame, anchor=tk.NW)
@@ -689,16 +682,16 @@ try:
                 self.displayFrame.bind("<Leave>", self._unbound_to_mousewheel)
                 self.displayFrame.bind("<Configure>", lambda event, canvas=self.displayCanvas: self.on_frame_configure(canvas))
 
-                self.displayTopLeft = ttk.Label(self.displayFrame, background="#242424")
+                self.displayTopLeft = ttk.Label(self.displayFrame)
                 self.displayTopLeft.image = None
                 self.displayTopLeft.grid(column=0, row=0, sticky="nsew")
-                self.displayTopRight = ttk.Label(self.displayFrame, background="#242424")
+                self.displayTopRight = ttk.Label(self.displayFrame)
                 self.displayTopRight.image = None
                 self.displayTopRight.grid(column=1, row=0, sticky="nsew", columnspan=2)
-                self.displayBottomLeft = ttk.Label(self.displayFrame, background="#242424")
+                self.displayBottomLeft = ttk.Label(self.displayFrame)
                 self.displayBottomLeft.image = None
                 self.displayBottomLeft.grid(column=0, row=1, sticky="nsew")
-                self.displayBottomRight = ttk.Label(self.displayFrame, background="#242424")
+                self.displayBottomRight = ttk.Label(self.displayFrame)
                 self.displayBottomRight.image = None
                 self.displayBottomRight.grid(column=1, row=1, sticky="nsew", columnspan=2)
 
@@ -902,7 +895,7 @@ try:
             try:
                 log("Start of create_buttons")
 
-                self.buttonsFrame = ttk.Frame(self, style="Frame1.TFrame")
+                self.buttonsFrame = ttk.Frame(self)
                 self.buttonsFrame.grid(row=0, column=0, pady=(10, 0), sticky="nw")
                 self.buttonsFrame.columnconfigure(index=0, weight=1)
                 self.campaignButton = ttk.Button(self.buttonsFrame, text="Add to Campaign", width=16, command=self.campaignTab.add_card_to_campaign)
@@ -1513,13 +1506,11 @@ try:
             root.wait_window(p)
 
     s = ttk.Style()
-    s.configure("Frame1.TFrame", background="#242424")
 
     app = Application(root)
     app.pack(fill="both", expand=True)
 
     root.option_add("*TCombobox*Listbox*Background", "#181818")
-    root.configure(background="#242424")
 
     center(root)
     root.attributes("-alpha", 1.0)
