@@ -726,47 +726,60 @@ try:
             self.levelRadio4 = ttk.Radiobutton(self.infoFrame1, text="4", variable=self.levelRadioVal, value=4, command=self.update_lists)
             self.levelRadio4.grid(column=3, row=2, padx=(278, 5), pady=5, sticky=tk.W)
 
+            vcmdScale = (self.register(self.callback_scale))
             self.encounterScale1Label = ttk.Label(self.infoFrame2, text="Line 1\nCentering\t")
             self.encounterScale1Label.bind("<1>", lambda event: event.widget.focus_set())
             self.encounterScale1Label.grid(column=0, row=3, padx=5, pady=5, sticky=tk.W, columnspan=2)
             self.encounterScale1Val = tk.IntVar()
-            self.encounterScale1 = ttk.Scale(self.infoFrame2, from_=0, to=600, variable=self.encounterScale1Val, command=self.topFrame.apply_changes)
-            self.encounterScale1.grid(column=0, row=3, padx=(77, 22), pady=5, sticky=tk.EW, columnspan=3)
+            self.encounterScale1 = ttk.Scale(self.infoFrame2, from_=0, to=400, variable=self.encounterScale1Val, command=self.topFrame.apply_changes)
+            self.encounterScale1.grid(column=0, row=3, padx=(77, 22), pady=5, sticky=tk.EW, columnspan=2)
+            self.encounterScale1Entry = ttk.Entry(self.infoFrame2, textvariable=self.encounterScale1Val, width=4, validate="all", validatecommand=(vcmdScale, "%P"))
+            self.encounterScale1Entry.bind("<KeyRelease>", self.handle_wait)
+            self.encounterScale1Entry.grid(column=2, row=3, padx=5, pady=5, sticky=tk.W)
 
             self.encounterScale2Label = ttk.Label(self.infoFrame2, text="Line 2\nCentering\t")
             self.encounterScale2Label.bind("<1>", lambda event: event.widget.focus_set())
-            self.encounterScale2Label.grid(column=3, row=3, padx=(30, 5), pady=5, sticky=tk.W, columnspan=2)
+            self.encounterScale2Label.grid(column=2, row=3, padx=(102, 5), pady=5, sticky=tk.W)
             self.encounterScale2Val = tk.IntVar()
-            self.encounterScale2 = ttk.Scale(self.infoFrame2, from_=0, to=600, variable=self.encounterScale2Val, command=self.topFrame.apply_changes)
-            self.encounterScale2.grid(column=3, row=3, padx=(107, 5), pady=5, sticky=tk.EW, columnspan=3)
+            self.encounterScale2 = ttk.Scale(self.infoFrame2, from_=0, to=400, variable=self.encounterScale2Val, command=self.topFrame.apply_changes)
+            self.encounterScale2.grid(column=2, row=3, padx=(179, 5), pady=5, sticky=tk.EW, columnspan=4)
+            self.encounterScale2Entry = ttk.Entry(self.infoFrame2, textvariable=self.encounterScale2Val, width=4, validate="all", validatecommand=(vcmdScale, "%P"))
+            self.encounterScale2Entry.bind("<KeyRelease>", self.handle_wait)
+            self.encounterScale2Entry.grid(column=6, row=3, padx=5, pady=5, sticky=tk.E)
             
             self.flavorLabel = ttk.Label(self.infoFrame2, text="Flavor\nText\t")
             self.flavorLabel.bind("<1>", lambda event: event.widget.focus_set())
             self.flavorLabel.grid(column=0, row=4, padx=5, pady=5, sticky=tk.W)
             self.flavorEntry = tk.Text(self.infoFrame2, width=70, height=2, bg="#181818")
             self.flavorEntry.bind("<KeyRelease>", self.handle_wait)
-            self.flavorEntry.grid(column=1, row=4, padx=5, pady=5, columnspan=5, sticky=tk.W)
+            self.flavorEntry.grid(column=1, row=4, padx=5, pady=5, columnspan=6, sticky=tk.W)
 
             self.flavorScale1Label = ttk.Label(self.infoFrame2, text="Line 1\nCentering\t")
             self.flavorScale1Label.bind("<1>", lambda event: event.widget.focus_set())
             self.flavorScale1Label.grid(column=0, row=5, padx=5, pady=5, sticky=tk.W, columnspan=2)
             self.flavorScale1Val = tk.IntVar()
-            self.flavorScale1 = ttk.Scale(self.infoFrame2, from_=0, to=1000, variable=self.flavorScale1Val, command=self.topFrame.apply_changes)
-            self.flavorScale1.grid(column=0, row=5, padx=(77, 20), pady=5, sticky=tk.EW, columnspan=3)
+            self.flavorScale1 = ttk.Scale(self.infoFrame2, from_=0, to=400, variable=self.flavorScale1Val, command=self.topFrame.apply_changes)
+            self.flavorScale1.grid(column=0, row=5, padx=(77, 20), pady=5, sticky=tk.EW, columnspan=2)
+            self.flavorScale1Entry = ttk.Entry(self.infoFrame2, textvariable=self.flavorScale1Val, width=4, validate="all", validatecommand=(vcmdScale, "%P"))
+            self.flavorScale1Entry.bind("<KeyRelease>", self.handle_wait)
+            self.flavorScale1Entry.grid(column=2, row=5, padx=5, pady=5, sticky=tk.W)
 
             self.flavorScale2Label = ttk.Label(self.infoFrame2, text="Line 2\nCentering\t")
             self.flavorScale2Label.bind("<1>", lambda event: event.widget.focus_set())
-            self.flavorScale2Label.grid(column=3, row=5, padx=(30, 5), pady=5, sticky=tk.W, columnspan=2)
+            self.flavorScale2Label.grid(column=2, row=5, padx=(102, 5), pady=5, sticky=tk.W)
             self.flavorScale2Val = tk.IntVar()
-            self.flavorScale2 = ttk.Scale(self.infoFrame2, from_=0, to=1000, variable=self.flavorScale2Val, command=self.topFrame.apply_changes)
-            self.flavorScale2.grid(column=3, row=5, padx=(107, 5), pady=5, sticky=tk.EW, columnspan=3)
+            self.flavorScale2 = ttk.Scale(self.infoFrame2, from_=0, to=400, variable=self.flavorScale2Val, command=self.topFrame.apply_changes)
+            self.flavorScale2.grid(column=2, row=5, padx=(179, 5), pady=5, sticky=tk.EW, columnspan=4)
+            self.flavorScale2Entry = ttk.Entry(self.infoFrame2, textvariable=self.flavorScale2Val, width=4, validate="all", validatecommand=(vcmdScale, "%P"))
+            self.flavorScale2Entry.bind("<KeyRelease>", self.handle_wait)
+            self.flavorScale2Entry.grid(column=6, row=5, padx=5, pady=5, sticky=tk.E)
             
             self.objectiveLabel = ttk.Label(self.infoFrame2, text="Objective\t")
             self.objectiveLabel.bind("<1>", lambda event: event.widget.focus_set())
             self.objectiveLabel.grid(column=0, row=6, padx=5, pady=5, sticky=tk.W)
             self.objectiveEntry = tk.Text(self.infoFrame2, width=70, height=2, bg="#181818")
             self.objectiveEntry.bind("<KeyRelease>", self.handle_wait)
-            self.objectiveEntry.grid(column=1, row=6, padx=5, pady=5, columnspan=5, sticky=tk.W)
+            self.objectiveEntry.grid(column=1, row=6, padx=5, pady=5, columnspan=6, sticky=tk.W)
 
             self.rewardsTitle = ttk.Label(self.infoFrame3, text=(" " * 30) + "Rewards/Special Rules", font=("Arial", 16))
             self.rewardsTitle.bind("<1>", lambda event: event.widget.focus_set())
@@ -1458,6 +1471,42 @@ try:
                     return
                 else:
                     raise
+            except Exception as e:
+                error_popup(self.root, e)
+                raise
+
+
+        def callback_scale(self, P):
+            """
+            Validates whether the input is an integer in range.
+            """
+            try:
+                log("Start of callback_scale")
+
+                if (str.isdigit(P) or ("." in P and P.count(".") <= 1)) and float(P) <= 400:
+                    log("End of callback_scale")
+                    return True
+                else:
+                    log("End of callback_scale")
+                    return False
+            except Exception as e:
+                error_popup(self.root, e)
+                raise
+
+
+        def callback_flavor(self, P):
+            """
+            Validates whether the input is an integer in range.
+            """
+            try:
+                log("Start of callback_x")
+
+                if (str.isdigit(P) and int(P) <= 1000) or str(P) == "":
+                    log("End of callback_x")
+                    return True
+                else:
+                    log("End of callback_x")
+                    return False
             except Exception as e:
                 error_popup(self.root, e)
                 raise
