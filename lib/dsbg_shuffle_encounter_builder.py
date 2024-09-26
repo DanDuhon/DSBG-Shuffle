@@ -104,7 +104,7 @@ try:
                 raise
 
             
-        def apply_changes(self, event=None):
+        def apply_changes(self, event=None, scaleVal=None, scaleNum=None):
             try:
                 if not hasattr(self, "encounterBuilderScroll") or not hasattr(self.app, "encounterTab"):
                     return
@@ -116,6 +116,9 @@ try:
                 clear_other_tab_images(self.app, "encounters", "encounters")
 
                 self.app.encounterTab.apply_keyword_tooltips(None, None)
+
+                if scaleVal:
+                    scaleVal.set(int(round(float(scaleNum))))
                 
                 if e.numberOfTilesRadioVal.get() == 1 and e.tileLayoutMenu.get() == "1 Tile 4x4" and e.tileSelections["1"]["traps"]["value"].get() == 1:
                     displayPhotoImage = self.app.create_image("custom_encounter_1_tile_4x4_traps.jpg", "customEncounter", 1, extensionProvided=True)
@@ -731,7 +734,7 @@ try:
             self.encounterScale1Label.bind("<1>", lambda event: event.widget.focus_set())
             self.encounterScale1Label.grid(column=0, row=3, padx=5, pady=5, sticky=tk.W, columnspan=2)
             self.encounterScale1Val = tk.IntVar()
-            self.encounterScale1 = ttk.Scale(self.infoFrame2, from_=0, to=400, variable=self.encounterScale1Val, command=self.topFrame.apply_changes)
+            self.encounterScale1 = ttk.Scale(self.infoFrame2, from_=0, to=400, variable=self.encounterScale1Val, command=lambda x: self.topFrame.apply_changes(scaleVal=self.encounterScale1Val, scaleNum=x))
             self.encounterScale1.grid(column=0, row=3, padx=(77, 22), pady=5, sticky=tk.EW, columnspan=2)
             self.encounterScale1Entry = ttk.Entry(self.infoFrame2, textvariable=self.encounterScale1Val, width=4, validate="all", validatecommand=(vcmdScale, "%P"))
             self.encounterScale1Entry.bind("<KeyRelease>", self.handle_wait)
@@ -741,7 +744,7 @@ try:
             self.encounterScale2Label.bind("<1>", lambda event: event.widget.focus_set())
             self.encounterScale2Label.grid(column=2, row=3, padx=(102, 5), pady=5, sticky=tk.W)
             self.encounterScale2Val = tk.IntVar()
-            self.encounterScale2 = ttk.Scale(self.infoFrame2, from_=0, to=400, variable=self.encounterScale2Val, command=self.topFrame.apply_changes)
+            self.encounterScale2 = ttk.Scale(self.infoFrame2, from_=0, to=400, variable=self.encounterScale2Val, command=lambda x: self.topFrame.apply_changes(scaleVal=self.encounterScale2Val, scaleNum=x))
             self.encounterScale2.grid(column=2, row=3, padx=(179, 5), pady=5, sticky=tk.EW, columnspan=4)
             self.encounterScale2Entry = ttk.Entry(self.infoFrame2, textvariable=self.encounterScale2Val, width=4, validate="all", validatecommand=(vcmdScale, "%P"))
             self.encounterScale2Entry.bind("<KeyRelease>", self.handle_wait)
@@ -758,7 +761,7 @@ try:
             self.flavorScale1Label.bind("<1>", lambda event: event.widget.focus_set())
             self.flavorScale1Label.grid(column=0, row=5, padx=5, pady=5, sticky=tk.W, columnspan=2)
             self.flavorScale1Val = tk.IntVar()
-            self.flavorScale1 = ttk.Scale(self.infoFrame2, from_=0, to=400, variable=self.flavorScale1Val, command=self.topFrame.apply_changes)
+            self.flavorScale1 = ttk.Scale(self.infoFrame2, from_=0, to=400, variable=self.flavorScale1Val, command=lambda x: self.topFrame.apply_changes(scaleVal=self.flavorScale1Val, scaleNum=x))
             self.flavorScale1.grid(column=0, row=5, padx=(77, 20), pady=5, sticky=tk.EW, columnspan=2)
             self.flavorScale1Entry = ttk.Entry(self.infoFrame2, textvariable=self.flavorScale1Val, width=4, validate="all", validatecommand=(vcmdScale, "%P"))
             self.flavorScale1Entry.bind("<KeyRelease>", self.handle_wait)
@@ -768,7 +771,7 @@ try:
             self.flavorScale2Label.bind("<1>", lambda event: event.widget.focus_set())
             self.flavorScale2Label.grid(column=2, row=5, padx=(102, 5), pady=5, sticky=tk.W)
             self.flavorScale2Val = tk.IntVar()
-            self.flavorScale2 = ttk.Scale(self.infoFrame2, from_=0, to=400, variable=self.flavorScale2Val, command=self.topFrame.apply_changes)
+            self.flavorScale2 = ttk.Scale(self.infoFrame2, from_=0, to=400, variable=self.flavorScale2Val, command=lambda x: self.topFrame.apply_changes(scaleVal=self.flavorScale2Val, scaleNum=x))
             self.flavorScale2.grid(column=2, row=5, padx=(179, 5), pady=5, sticky=tk.EW, columnspan=4)
             self.flavorScale2Entry = ttk.Entry(self.infoFrame2, textvariable=self.flavorScale2Val, width=4, validate="all", validatecommand=(vcmdScale, "%P"))
             self.flavorScale2Entry.bind("<KeyRelease>", self.handle_wait)
@@ -1483,7 +1486,7 @@ try:
             try:
                 log("Start of callback_scale")
 
-                if (str.isdigit(P) or ("." in P and P.count(".") <= 1)) and float(P) <= 400:
+                if str.isdigit(P) and int(P) <= 400:
                     log("End of callback_scale")
                     return True
                 else:
