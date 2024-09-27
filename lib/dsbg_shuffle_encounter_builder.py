@@ -60,7 +60,11 @@ try:
                 
                 e.encounterSetEntry.delete("1.0", tk.END)
                 e.encounterNameEntry.delete("1.0", tk.END)
+                e.encounterScale1Val.set(0)
+                e.encounterScale2Val.set(0)
                 e.flavorEntry.delete("1.0", tk.END)
+                e.flavorScale1Val.set(0)
+                e.flavorScale2Val.set(0)
                 e.objectiveEntry.delete("1.0", tk.END)
                 e.rewardSoulsEntry.delete("1.0", tk.END)
                 e.rewardSearchEntry.delete("1.0", tk.END)
@@ -104,9 +108,9 @@ try:
                 raise
 
             
-        def apply_changes(self, event=None, scaleVal=None, scaleNum=None):
+        def apply_changes(self, event=None):
             try:
-                if not hasattr(self, "encounterBuilderScroll") or not hasattr(self.app, "encounterTab"):
+                if not hasattr(self, "encounterBuilderScroll") or not hasattr(self.app, "encounterTab") or self.app.notebook.tab(self.app.notebook.select(), "text") != "Encounter Builder":
                     return
                 
                 log("Start of apply_changes")
@@ -116,9 +120,6 @@ try:
                 clear_other_tab_images(self.app, "encounters", "encounters")
 
                 self.app.encounterTab.apply_keyword_tooltips(None, None)
-
-                if scaleVal:
-                    scaleVal.set(int(round(float(scaleNum))))
                 
                 if e.numberOfTilesRadioVal.get() == 1 and e.tileLayoutMenu.get() == "1 Tile 4x4" and e.tileSelections["1"]["traps"]["value"].get() == 1:
                     displayPhotoImage = self.app.create_image("custom_encounter_1_tile_4x4_traps.jpg", "customEncounter", 1, extensionProvided=True)
@@ -141,8 +142,8 @@ try:
                 
                 # Encounter Name
                 if e.encounterNameEntry.get("1.0", "end").strip():
-                    e.encounterScale1Val.set(e.encounterScale1.get())
-                    e.encounterScale2Val.set(e.encounterScale2.get())
+                    e.encounterScale1Val.set(int(round(float(e.encounterScale1.get()))))
+                    e.encounterScale2Val.set(int(round(float(e.encounterScale2.get()))))
                     for i, substring in enumerate(e.encounterNameEntry.get("1.0", "end").strip().split("\n")):
                         if i == 0:
                             w = e.encounterScale1Val.get()
@@ -154,8 +155,8 @@ try:
                 
                 # Flavor Text
                 if e.flavorEntry.get("1.0", "end").strip():
-                    e.flavorScale1Val.set(e.flavorScale1.get())
-                    e.flavorScale2Val.set(e.flavorScale2.get())
+                    e.flavorScale1Val.set(int(round(float(e.flavorScale1.get()))))
+                    e.flavorScale2Val.set(int(round(float(e.flavorScale2.get()))))
                     for i, substring in enumerate(e.flavorEntry.get("1.0", "end").strip().split("\n")):
                         if i == 0:
                             w = e.flavorScale1Val.get()
@@ -483,6 +484,34 @@ try:
 
                 with open(file, "r") as f:
                     self.customEncounter = load(f)
+                
+                # Legacy conversion
+                if set(self.customEncounter.keys()) == {
+                        "set", "objective", "keywords", "rewardSouls", "rewardDraw", "layout", "encounterName",
+                        "rewardSoulsPerPlayer", "rewardTrial", "tileSelections", "icons", "rewardSearch",
+                        "flavor", "rewardShortcut", "level", "rewardRefresh", "specialRules", "numberOfTiles"}:
+                    self.customEncounter["rewardRefresh"] = ""
+                    self.customEncounter["emptySetIcon"] = 0
+                    self.customEncounter["specialRulesTextSize"] = 12
+                    self.customEncounter["encounterScale1"] = 0
+                    self.customEncounter["encounterScale2"] = 0
+                    self.customEncounter["flavorScale1"] = 0
+                    self.customEncounter["flavorScale2"] = 0
+                    self.customEncounter["encounterName"] = "\n".join([substring.strip() for substring in self.customEncounter["encounterName"].split("\n")])
+                    self.customEncounter["flavor"] = "\n".join([substring.strip() for substring in self.customEncounter["flavor"].split("\n")])
+                    for tile in self.customEncounter["tileSelections"]:
+                        if "startingTile" in self.customEncounter["tileSelections"][tile]:
+                            del self.customEncounter["tileSelections"][tile]["startingTile"]
+                        if self.customEncounter["tileSelections"][tile]["startingNodes"]["value"] == "North":
+                            self.customEncounter["tileSelections"][tile]["startingNodes"]["value"] = 1
+                        elif self.customEncounter["tileSelections"][tile]["startingNodes"]["value"] == "South":
+                            self.customEncounter["tileSelections"][tile]["startingNodes"]["value"] = 2
+                        elif self.customEncounter["tileSelections"][tile]["startingNodes"]["value"] == "West":
+                            self.customEncounter["tileSelections"][tile]["startingNodes"]["value"] = 3
+                        elif self.customEncounter["tileSelections"][tile]["startingNodes"]["value"] == "East":
+                            self.customEncounter["tileSelections"][tile]["startingNodes"]["value"] = 4
+                        else:
+                            self.customEncounter["tileSelections"][tile]["startingNodes"]["value"] = 0
 
                 # Check to see if there are any invalid keys in the JSON file.
                 # This is about as sure as I can be that you can't load random JSON into the app.
@@ -729,14 +758,14 @@ try:
             self.levelRadio4 = ttk.Radiobutton(self.infoFrame1, text="4", variable=self.levelRadioVal, value=4, command=self.update_lists)
             self.levelRadio4.grid(column=3, row=2, padx=(278, 5), pady=5, sticky=tk.W)
 
-            vcmdScale = (self.register(self.callback_scale))
+            vcmdName = (self.register(self.callback_name))
             self.encounterScale1Label = ttk.Label(self.infoFrame2, text="Line 1\nCentering\t")
             self.encounterScale1Label.bind("<1>", lambda event: event.widget.focus_set())
             self.encounterScale1Label.grid(column=0, row=3, padx=5, pady=5, sticky=tk.W, columnspan=2)
             self.encounterScale1Val = tk.IntVar()
-            self.encounterScale1 = ttk.Scale(self.infoFrame2, from_=0, to=400, variable=self.encounterScale1Val, command=lambda x: self.topFrame.apply_changes(scaleVal=self.encounterScale1Val, scaleNum=x))
+            self.encounterScale1 = ttk.Scale(self.infoFrame2, from_=0, to=400, variable=self.encounterScale1Val, command=self.topFrame.apply_changes)
             self.encounterScale1.grid(column=0, row=3, padx=(77, 22), pady=5, sticky=tk.EW, columnspan=2)
-            self.encounterScale1Entry = ttk.Entry(self.infoFrame2, textvariable=self.encounterScale1Val, width=4, validate="all", validatecommand=(vcmdScale, "%P"))
+            self.encounterScale1Entry = ttk.Entry(self.infoFrame2, textvariable=self.encounterScale1Val, width=4, validate="all", validatecommand=(vcmdName, "%P"))
             self.encounterScale1Entry.bind("<KeyRelease>", self.handle_wait)
             self.encounterScale1Entry.grid(column=2, row=3, padx=5, pady=5, sticky=tk.W)
 
@@ -744,9 +773,9 @@ try:
             self.encounterScale2Label.bind("<1>", lambda event: event.widget.focus_set())
             self.encounterScale2Label.grid(column=2, row=3, padx=(102, 5), pady=5, sticky=tk.W)
             self.encounterScale2Val = tk.IntVar()
-            self.encounterScale2 = ttk.Scale(self.infoFrame2, from_=0, to=400, variable=self.encounterScale2Val, command=lambda x: self.topFrame.apply_changes(scaleVal=self.encounterScale2Val, scaleNum=x))
+            self.encounterScale2 = ttk.Scale(self.infoFrame2, from_=0, to=400, variable=self.encounterScale2Val, command=self.topFrame.apply_changes)
             self.encounterScale2.grid(column=2, row=3, padx=(179, 5), pady=5, sticky=tk.EW, columnspan=4)
-            self.encounterScale2Entry = ttk.Entry(self.infoFrame2, textvariable=self.encounterScale2Val, width=4, validate="all", validatecommand=(vcmdScale, "%P"))
+            self.encounterScale2Entry = ttk.Entry(self.infoFrame2, textvariable=self.encounterScale2Val, width=4, validate="all", validatecommand=(vcmdName, "%P"))
             self.encounterScale2Entry.bind("<KeyRelease>", self.handle_wait)
             self.encounterScale2Entry.grid(column=6, row=3, padx=5, pady=5, sticky=tk.E)
             
@@ -757,13 +786,14 @@ try:
             self.flavorEntry.bind("<KeyRelease>", self.handle_wait)
             self.flavorEntry.grid(column=1, row=4, padx=5, pady=5, columnspan=6, sticky=tk.W)
 
+            vcmdFlavor = (self.register(self.callback_flavor))
             self.flavorScale1Label = ttk.Label(self.infoFrame2, text="Line 1\nCentering\t")
             self.flavorScale1Label.bind("<1>", lambda event: event.widget.focus_set())
             self.flavorScale1Label.grid(column=0, row=5, padx=5, pady=5, sticky=tk.W, columnspan=2)
             self.flavorScale1Val = tk.IntVar()
-            self.flavorScale1 = ttk.Scale(self.infoFrame2, from_=0, to=400, variable=self.flavorScale1Val, command=lambda x: self.topFrame.apply_changes(scaleVal=self.flavorScale1Val, scaleNum=x))
+            self.flavorScale1 = ttk.Scale(self.infoFrame2, from_=0, to=600, variable=self.flavorScale1Val, command=self.topFrame.apply_changes)
             self.flavorScale1.grid(column=0, row=5, padx=(77, 20), pady=5, sticky=tk.EW, columnspan=2)
-            self.flavorScale1Entry = ttk.Entry(self.infoFrame2, textvariable=self.flavorScale1Val, width=4, validate="all", validatecommand=(vcmdScale, "%P"))
+            self.flavorScale1Entry = ttk.Entry(self.infoFrame2, textvariable=self.flavorScale1Val, width=4, validate="all", validatecommand=(vcmdFlavor, "%P"))
             self.flavorScale1Entry.bind("<KeyRelease>", self.handle_wait)
             self.flavorScale1Entry.grid(column=2, row=5, padx=5, pady=5, sticky=tk.W)
 
@@ -771,9 +801,9 @@ try:
             self.flavorScale2Label.bind("<1>", lambda event: event.widget.focus_set())
             self.flavorScale2Label.grid(column=2, row=5, padx=(102, 5), pady=5, sticky=tk.W)
             self.flavorScale2Val = tk.IntVar()
-            self.flavorScale2 = ttk.Scale(self.infoFrame2, from_=0, to=400, variable=self.flavorScale2Val, command=lambda x: self.topFrame.apply_changes(scaleVal=self.flavorScale2Val, scaleNum=x))
+            self.flavorScale2 = ttk.Scale(self.infoFrame2, from_=0, to=600, variable=self.flavorScale2Val, command=self.topFrame.apply_changes)
             self.flavorScale2.grid(column=2, row=5, padx=(179, 5), pady=5, sticky=tk.EW, columnspan=4)
-            self.flavorScale2Entry = ttk.Entry(self.infoFrame2, textvariable=self.flavorScale2Val, width=4, validate="all", validatecommand=(vcmdScale, "%P"))
+            self.flavorScale2Entry = ttk.Entry(self.infoFrame2, textvariable=self.flavorScale2Val, width=4, validate="all", validatecommand=(vcmdFlavor, "%P"))
             self.flavorScale2Entry.bind("<KeyRelease>", self.handle_wait)
             self.flavorScale2Entry.grid(column=6, row=5, padx=5, pady=5, sticky=tk.E)
             
@@ -1479,18 +1509,18 @@ try:
                 raise
 
 
-        def callback_scale(self, P):
+        def callback_name(self, P):
             """
             Validates whether the input is an integer in range.
             """
             try:
-                log("Start of callback_scale")
+                log("Start of callback_name")
 
                 if str.isdigit(P) and int(P) <= 400:
-                    log("End of callback_scale")
+                    log("End of callback_name")
                     return True
                 else:
-                    log("End of callback_scale")
+                    log("End of callback_name")
                     return False
             except Exception as e:
                 error_popup(self.root, e)
@@ -1504,7 +1534,7 @@ try:
             try:
                 log("Start of callback_x")
 
-                if (str.isdigit(P) and int(P) <= 1000) or str(P) == "":
+                if (str.isdigit(P) and int(P) <= 600) or str(P) == "":
                     log("End of callback_x")
                     return True
                 else:
