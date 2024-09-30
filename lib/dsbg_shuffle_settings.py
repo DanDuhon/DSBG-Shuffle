@@ -217,8 +217,10 @@ try:
                     "Warrior": {"button": None, "value": tk.IntVar()}
                 }
 
-                self.characterFrame = ttk.LabelFrame(parent, text="Characters Being Played (up to 4)", padding=(20, 10))
-                self.characterFrame.grid(row=0, column=3, padx=(20, 10), pady=(20, 10), sticky="nsew", rowspan=3)
+                self.characterLabelFrame = ttk.LabelFrame(parent, text="Characters Being Played (up to 4)", padding=(20, 10))
+                self.characterLabelFrame.grid(row=0, column=3, padx=(20, 10), pady=(20, 10), sticky="nsew", rowspan=3)
+                self.characterFrame = ttk.Frame(self.characterLabelFrame)
+                self.characterFrame.pack(fill=tk.BOTH, expand=True)
                 for i, character in enumerate(self.charactersActive):
                     self.charactersActive[character]["value"].set(1 if character in self.settings["charactersActive"] else 0)
                     self.charactersActive[character]["button"] = ttk.Checkbutton(self.characterFrame, text=character, variable=self.charactersActive[character]["value"], command=self.check_max_characters)
@@ -234,16 +236,18 @@ try:
             try:
                 log("Start of create_invaders_pane")
 
-                self.invadersFrame = ttk.LabelFrame(parent, text="Include Invaders", padding=(20, 10))
-                self.invadersFrame.grid(row=0, column=4, padx=(20, 10), pady=(20, 10), sticky="nsew")
+                self.invadersLabelFrame = ttk.LabelFrame(parent, text="Include Invaders", padding=(20, 10))
+                self.invadersLabelFrame.grid(row=0, column=4, padx=(20, 10), pady=(20, 10), sticky="nsew")
+                self.invadersFrame = ttk.Frame(self.invadersLabelFrame)
+                self.invadersFrame.pack(fill=tk.BOTH, expand=True)
                 self.invadersLabel = ttk.Label(self.invadersFrame, text="Max invaders allowed", justify="center", font=("-size", 12))
                 self.invadersLabel.grid(row=0, column=0, padx=5, pady=10, sticky="nsew")
                 
-                self.maxInvaders = {"scale": None, "value": tk.IntVar(), "tooltipText": "This many invaders can take the place of enemies."}
+                self.maxInvaders = {"scale": None, "value": tk.IntVar(), "tooltipText": "This many invaders can take the place of and equal number of enemies."}
                 self.maxInvaders["scale"] = ttk.LabeledScale(self.invadersFrame, from_=0, to=5, variable=self.maxInvaders["value"])
-                self.maxInvaders["value"].set(self.settings["maxInvaders"])
                 self.maxInvaders["scale"].grid(row=1, column=0, padx=5, pady=10, sticky="nsew")
                 CreateToolTip(self.invadersLabel, self.maxInvaders["tooltipText"])
+                self.maxInvaders["value"].set(self.settings["maxInvaders"])
 
                 log("End of create_invaders_pane")
             except Exception as e:
@@ -263,8 +267,10 @@ try:
                 }
 
                 self.treasureSwapOption = tk.StringVar(value=self.settings["treasureSwapOption"])
-                self.treasureSwapFrame = ttk.LabelFrame(parent, text="Treasure Swap Options", padding=(20, 10))
-                self.treasureSwapFrame.grid(row=1, column=4, padx=(20, 10), pady=(20, 10), sticky="nsew", rowspan=2)
+                self.treasureSwapLabelFrame = ttk.LabelFrame(parent, text="Treasure Swap Options", padding=(20, 10))
+                self.treasureSwapLabelFrame.grid(row=1, column=4, padx=(20, 10), pady=(20, 10), sticky="nsew", rowspan=2)
+                self.treasureSwapFrame = ttk.Frame(self.treasureSwapLabelFrame)
+                self.treasureSwapFrame.pack(fill=tk.BOTH, expand=True)
                 for i, option in enumerate(self.treasureSwapOptions):
                     self.treasureSwapOptions[option]["button"] = ttk.Radiobutton(self.treasureSwapFrame, text=option, variable=self.treasureSwapOption, value=option)
                     self.treasureSwapOptions[option]["button"].grid(row=i, column=0, padx=5, pady=10, sticky="nsew")
@@ -286,14 +292,16 @@ try:
                     "level4": {"button": None, "value": tk.IntVar()}
                 }
 
-                self.shownEncounterFrame = ttk.LabelFrame(parent, text="Encounters Shown", padding=(20, 10))
-                self.shownEncounterFrame.grid(row=0, column=5, padx=(20, 10), pady=(20, 10), sticky="nsew")
+                self.shownEncountersLabelFrame = ttk.LabelFrame(parent, text="Encounters Shown", padding=(20, 10))
+                self.shownEncountersLabelFrame.grid(row=0, column=5, padx=(20, 10), pady=(20, 10), sticky="nsew")
+                self.shownEncountersFrame = ttk.Frame(self.shownEncountersLabelFrame)
+                self.shownEncountersFrame.pack(fill=tk.BOTH, expand=True)
                 self.shownEncounters["v1"]["value"].set(1 if "v1" in self.settings["encounterTypes"] else 0)
                 self.shownEncounters["v2"]["value"].set(1 if "v2" in self.settings["encounterTypes"] else 0)
                 self.shownEncounters["level4"]["value"].set(1 if "level4" in self.settings["encounterTypes"] else 0)
-                self.shownEncounters["v1"]["button"] = ttk.Checkbutton(self.shownEncounterFrame, text="V1 Encounters", variable=self.shownEncounters["v1"]["value"])
-                self.shownEncounters["v2"]["button"] = ttk.Checkbutton(self.shownEncounterFrame, text="V2 Encounters", variable=self.shownEncounters["v2"]["value"])
-                self.shownEncounters["level4"]["button"] = ttk.Checkbutton(self.shownEncounterFrame, text="Level 4 Encounters", variable=self.shownEncounters["level4"]["value"])
+                self.shownEncounters["v1"]["button"] = ttk.Checkbutton(self.shownEncountersFrame, text="V1 Encounters", variable=self.shownEncounters["v1"]["value"])
+                self.shownEncounters["v2"]["button"] = ttk.Checkbutton(self.shownEncountersFrame, text="V2 Encounters", variable=self.shownEncounters["v2"]["value"])
+                self.shownEncounters["level4"]["button"] = ttk.Checkbutton(self.shownEncountersFrame, text="Level 4 Encounters", variable=self.shownEncounters["level4"]["value"])
                 self.shownEncounters["v1"]["button"].grid(row=0, column=0, padx=5, pady=10, sticky="nsew")
                 self.shownEncounters["v2"]["button"].grid(row=1, column=0, padx=5, pady=10, sticky="nsew")
                 self.shownEncounters["level4"]["button"].grid(row=2, column=0, padx=5, pady=10, sticky="nsew")
@@ -309,8 +317,10 @@ try:
                 log("Start of create_update_check_pane")
 
                 self.updateCheck = {"button": None, "value": tk.IntVar(), "tooltipText": "If enabled, makes an API call to Github once a month when the app is opened to check for a new version.\n\nThe app won't download anything or update itself but will let you know if there's a new version."}
-                self.updateCheckFrame = ttk.LabelFrame(parent, text="Check For Updates", padding=(20, 10))
-                self.updateCheckFrame.grid(row=1, column=5, padx=(20, 10), pady=(20, 10), sticky="nsew", rowspan=2)
+                self.updateCheckLabelFrame = ttk.LabelFrame(parent, text="Check For Updates", padding=(20, 10))
+                self.updateCheckLabelFrame.grid(row=1, column=5, padx=(20, 10), pady=(20, 10), sticky="nsew", rowspan=2)
+                self.updateCheckFrame = ttk.Frame(self.updateCheckLabelFrame)
+                self.updateCheckFrame.pack(fill=tk.BOTH, expand=True)
                 self.updateCheck["value"].set(1 if "on" in self.settings["updateCheck"] else 0)
                 self.updateCheck["button"] = ttk.Checkbutton(self.updateCheckFrame, text="Check for updates", variable=self.updateCheck["value"])
                 self.updateCheck["button"].grid(row=0, column=0, padx=5, pady=10, sticky="nsew")

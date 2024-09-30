@@ -142,29 +142,37 @@ try:
                 
                 # Encounter Name
                 if e.encounterNameEntry.get("1.0", "end").strip():
-                    e.encounterScale1Val.set(int(round(float(e.encounterScale1.get()))))
-                    e.encounterScale2Val.set(int(round(float(e.encounterScale2.get()))))
+                    lines = len(e.encounterNameEntry.get("1.0", "end").strip().split("\n"))
                     for i, substring in enumerate(e.encounterNameEntry.get("1.0", "end").strip().split("\n")):
-                        if i == 0:
-                            w = e.encounterScale1Val.get()
-                        else:
-                            w = e.encounterScale2Val.get()
-                        w, h = (w, 26 + (i * 26))
-                        l = imageWithText.textlength(substring)
-                        imageWithText.text(((w-l)/2, h), substring, fill="white", font=fontEncounterName)
+                        _, _, w, h = imageWithText.textbbox((0, 0), "QJ" + substring, font=fontEncounterName, align="center")
+                        imageWithText.text(((432-w)/2, (((108 if lines == 1 else 84)-h)/2) + (i * 26)), substring, font=fontEncounterName, fill="white")
+                    # e.encounterScale1Val.set(int(round(float(e.encounterScale1.get()))))
+                    # e.encounterScale2Val.set(int(round(float(e.encounterScale2.get()))))
+                    # for i, substring in enumerate(e.encounterNameEntry.get("1.0", "end").strip().split("\n")):
+                    #     if i == 0:
+                    #         w = e.encounterScale1Val.get()
+                    #     else:
+                    #         w = e.encounterScale2Val.get()
+                    #     w, h = (w, 26 + (i * 26))
+                    #     l = imageWithText.textlength(substring)
+                    #     imageWithText.text(((w-l)/2, h), substring, fill="white", font=fontEncounterName)
                 
                 # Flavor Text
                 if e.flavorEntry.get("1.0", "end").strip():
-                    e.flavorScale1Val.set(int(round(float(e.flavorScale1.get()))))
-                    e.flavorScale2Val.set(int(round(float(e.flavorScale2.get()))))
+                    lines = len(e.flavorEntry.get("1.0", "end").strip().split("\n"))
                     for i, substring in enumerate(e.flavorEntry.get("1.0", "end").strip().split("\n")):
-                        if i == 0:
-                            w = e.flavorScale1Val.get()
-                        else:
-                            w = e.flavorScale2Val.get()
-                        w, h = (w, 89 + (i * 13))
-                        l = imageWithText.textlength(substring)
-                        imageWithText.text(((w-l)/2, h), substring, fill="black", font=fontFlavor)
+                        _, _, w, h = imageWithText.textbbox((0, 0), "Qq" + substring, font=fontFlavor, align="center")
+                        imageWithText.text(((416-w)/2, (((202 if lines == 1 else 190)-h)/2) + (i * 13)), substring, font=fontFlavor, fill="black")
+                    # e.flavorScale1Val.set(int(round(float(e.flavorScale1.get()))))
+                    # e.flavorScale2Val.set(int(round(float(e.flavorScale2.get()))))
+                    # for i, substring in enumerate(e.flavorEntry.get("1.0", "end").strip().split("\n")):
+                    #     if i == 0:
+                    #         w = e.flavorScale1Val.get()
+                    #     else:
+                    #         w = e.flavorScale2Val.get()
+                    #     w, h = (w, 89 + (i * 13))
+                    #     l = imageWithText.textlength(substring)
+                    #     imageWithText.text(((w-l)/2, h), substring, fill="black", font=fontFlavor)
                 
                 # Objective Text
                 imageWithText.text((20, 146), e.objectiveEntry.get("1.0", "end").strip(), "black", font)
