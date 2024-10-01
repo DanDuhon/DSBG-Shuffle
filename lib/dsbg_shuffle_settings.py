@@ -240,14 +240,23 @@ try:
                 self.invadersLabelFrame.grid(row=0, column=4, padx=(20, 10), pady=(20, 10), sticky="nsew")
                 self.invadersFrame = ttk.Frame(self.invadersLabelFrame)
                 self.invadersFrame.pack(fill=tk.BOTH, expand=True)
-                self.invadersLabel = ttk.Label(self.invadersFrame, text="Max invaders allowed", justify="center", font=("-size", 12))
-                self.invadersLabel.grid(row=0, column=0, padx=5, pady=10, sticky="nsew")
+                self.invadersLabel = ttk.Label(self.invadersFrame, text="Number of invaders allowed to take the place of an\nequal number of enemies in an encounter.", justify=tk.CENTER)
+                self.invadersLabel.grid(row=0, column=0, padx=5, pady=10, columnspan=6)
                 
-                self.maxInvaders = {"scale": None, "value": tk.IntVar(), "tooltipText": "This many invaders can take the place of and equal number of enemies."}
-                self.maxInvaders["scale"] = ttk.LabeledScale(self.invadersFrame, from_=0, to=5, variable=self.maxInvaders["value"])
-                self.maxInvaders["scale"].grid(row=1, column=0, padx=5, pady=10, sticky="nsew")
-                CreateToolTip(self.invadersLabel, self.maxInvaders["tooltipText"])
-                self.maxInvaders["value"].set(self.settings["maxInvaders"])
+                self.maxInvadersVal = tk.IntVar()
+                self.maxInvadersRadio0 = ttk.Radiobutton(self.invadersFrame, text="0", variable=self.maxInvadersVal, value=0)
+                self.maxInvadersRadio0.grid(row=1, column=0)
+                self.maxInvadersRadio1 = ttk.Radiobutton(self.invadersFrame, text="1", variable=self.maxInvadersVal, value=1)
+                self.maxInvadersRadio1.grid(row=1, column=1)
+                self.maxInvadersRadio2 = ttk.Radiobutton(self.invadersFrame, text="2", variable=self.maxInvadersVal, value=2)
+                self.maxInvadersRadio2.grid(row=1, column=2)
+                self.maxInvadersRadio3 = ttk.Radiobutton(self.invadersFrame, text="3", variable=self.maxInvadersVal, value=3)
+                self.maxInvadersRadio3.grid(row=1, column=3)
+                self.maxInvadersRadio4 = ttk.Radiobutton(self.invadersFrame, text="4", variable=self.maxInvadersVal, value=4)
+                self.maxInvadersRadio4.grid(row=1, column=4)
+                self.maxInvadersRadio5 = ttk.Radiobutton(self.invadersFrame, text="5", variable=self.maxInvadersVal, value=5)
+                self.maxInvadersRadio5.grid(row=1, column=5)
+                self.maxInvadersVal.set(self.settings["maxInvaders"])
 
                 log("End of create_invaders_pane")
             except Exception as e:
@@ -260,10 +269,10 @@ try:
                 log("Start of create_treasure_swap_pane")
 
                 self.treasureSwapOptions = {
-                    "Similar Soul Cost": {"button": None, "value": tk.StringVar(value="Similar Soul Cost"), "tooltipText": "Rewards an item of the same type as the original that also costs about the same souls in leveling stats in order to equip it"},
-                    "Tier Based": {"button": None, "value": tk.StringVar(value="Tier Based"), "tooltipText": "Splits treasure into equal tiers based on soul cost to equip and rewards an item in the same tier as the original reward."},
-                    "Generic Treasure": {"button": None, "value": tk.StringVar(value="Generic Treasure"), "tooltipText": "Changes all specific item rewards to a number of draws equal to the encounter level."},
-                    "Original": {"button": None, "value": tk.StringVar(value="Original"), "tooltipText": "Display the original reward on the card only."}
+                    "Similar Soul Cost\n    Rewards an item of the same type as the\n    original that also costs about the same\n    souls in leveling stats in order to equip it.": {"button": None, "value": tk.StringVar(value="Similar Soul Cost")},
+                    "Tier Based\n    Splits treasure into equal tiers based on\n    soul cost to equip and rewards an item\n    in the same tier as the original reward.": {"button": None, "value": tk.StringVar(value="Tier Based")},
+                    "Generic Treasure\n    Changes all specific item rewards to a\n    number of draws equal to the encounter\n    level.": {"button": None, "value": tk.StringVar(value="Generic Treasure")},
+                    "Original\n    Display the original reward on the card only.": {"button": None, "value": tk.StringVar(value="Original")}
                 }
 
                 self.treasureSwapOption = tk.StringVar(value=self.settings["treasureSwapOption"])
@@ -274,7 +283,6 @@ try:
                 for i, option in enumerate(self.treasureSwapOptions):
                     self.treasureSwapOptions[option]["button"] = ttk.Radiobutton(self.treasureSwapFrame, text=option, variable=self.treasureSwapOption, value=option)
                     self.treasureSwapOptions[option]["button"].grid(row=i, column=0, padx=5, pady=10, sticky="nsew")
-                    CreateToolTip(self.treasureSwapOptions[option]["button"], self.treasureSwapOptions[option]["tooltipText"])
 
                 log("End of create_treasure_swap_pane")
             except Exception as e:
@@ -316,7 +324,7 @@ try:
             try:
                 log("Start of create_update_check_pane")
 
-                self.updateCheck = {"button": None, "value": tk.IntVar(), "tooltipText": "If enabled, makes an API call to Github once a month when the app is opened to check for a new version.\n\nThe app won't download anything or update itself but will let you know if there's a new version."}
+                self.updateCheck = {"button": None, "value": tk.IntVar()}
                 self.updateCheckLabelFrame = ttk.LabelFrame(parent, text="Check For Updates", padding=(20, 10))
                 self.updateCheckLabelFrame.grid(row=1, column=5, padx=(20, 10), pady=(20, 10), sticky="nsew", rowspan=2)
                 self.updateCheckFrame = ttk.Frame(self.updateCheckLabelFrame)
@@ -324,7 +332,8 @@ try:
                 self.updateCheck["value"].set(1 if "on" in self.settings["updateCheck"] else 0)
                 self.updateCheck["button"] = ttk.Checkbutton(self.updateCheckFrame, text="Check for updates", variable=self.updateCheck["value"])
                 self.updateCheck["button"].grid(row=0, column=0, padx=5, pady=10, sticky="nsew")
-                CreateToolTip(self.updateCheck["button"], self.updateCheck["tooltipText"])
+                self.updateLabel = ttk.Label(self.updateCheckFrame, text="If enabled, makes an\nAPI call to Github once\na month when the\napp is opened to check\nfor a new version.\n\nThe app won't\ndownload anything or\nupdate itself but will\nlet you know if\nthere's a new version.")
+                self.updateLabel.grid(row=1, column=0, padx=5, pady=10)
 
                 log("End of create_update_check_pane")
             except Exception as e:
@@ -501,7 +510,7 @@ try:
                     "charactersActive": list(charactersActive),
                     "treasureSwapOption": self.treasureSwapOption.get(),
                     "updateCheck": "on" if self.updateCheck["value"].get() == 1 else "off",
-                    "maxInvaders": self.maxInvaders["value"].get()
+                    "maxInvaders": self.maxInvadersVal.get()
                 }
 
                 if newSettings != self.settings:

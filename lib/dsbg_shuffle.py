@@ -1511,6 +1511,7 @@ try:
     app.pack(fill="both", expand=True)
 
     root.option_add("*TCombobox*Listbox*Background", "#181818")
+    root.option_add("*TCombobox*Listbox.selectForeground", "white")
 
     center(root)
     root.attributes("-alpha", 1.0)

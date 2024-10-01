@@ -53,18 +53,14 @@ try:
 
                 e = self.encounterBuilderScroll
 
-                e.iconMenuVal.set("")
-                e.iconImageErrorsVal.set("")
+                # e.iconMenuVal.set("")
+                # e.iconImageErrorsVal.set("")
                 e.xPositionVal.set("")
                 e.yPositionVal.set("")
                 
                 e.encounterSetEntry.delete("1.0", tk.END)
                 e.encounterNameEntry.delete("1.0", tk.END)
-                e.encounterScale1Val.set(0)
-                e.encounterScale2Val.set(0)
                 e.flavorEntry.delete("1.0", tk.END)
-                e.flavorScale1Val.set(0)
-                e.flavorScale2Val.set(0)
                 e.objectiveEntry.delete("1.0", tk.END)
                 e.rewardSoulsEntry.delete("1.0", tk.END)
                 e.rewardSearchEntry.delete("1.0", tk.END)
@@ -146,16 +142,6 @@ try:
                     for i, substring in enumerate(e.encounterNameEntry.get("1.0", "end").strip().split("\n")):
                         _, _, w, h = imageWithText.textbbox((0, 0), "QJ" + substring, font=fontEncounterName, align="center")
                         imageWithText.text(((432-w)/2, (((108 if lines == 1 else 84)-h)/2) + (i * 26)), substring, font=fontEncounterName, fill="white")
-                    # e.encounterScale1Val.set(int(round(float(e.encounterScale1.get()))))
-                    # e.encounterScale2Val.set(int(round(float(e.encounterScale2.get()))))
-                    # for i, substring in enumerate(e.encounterNameEntry.get("1.0", "end").strip().split("\n")):
-                    #     if i == 0:
-                    #         w = e.encounterScale1Val.get()
-                    #     else:
-                    #         w = e.encounterScale2Val.get()
-                    #     w, h = (w, 26 + (i * 26))
-                    #     l = imageWithText.textlength(substring)
-                    #     imageWithText.text(((w-l)/2, h), substring, fill="white", font=fontEncounterName)
                 
                 # Flavor Text
                 if e.flavorEntry.get("1.0", "end").strip():
@@ -163,16 +149,6 @@ try:
                     for i, substring in enumerate(e.flavorEntry.get("1.0", "end").strip().split("\n")):
                         _, _, w, h = imageWithText.textbbox((0, 0), "Qq" + substring, font=fontFlavor, align="center")
                         imageWithText.text(((416-w)/2, (((202 if lines == 1 else 190)-h)/2) + (i * 13)), substring, font=fontFlavor, fill="black")
-                    # e.flavorScale1Val.set(int(round(float(e.flavorScale1.get()))))
-                    # e.flavorScale2Val.set(int(round(float(e.flavorScale2.get()))))
-                    # for i, substring in enumerate(e.flavorEntry.get("1.0", "end").strip().split("\n")):
-                    #     if i == 0:
-                    #         w = e.flavorScale1Val.get()
-                    #     else:
-                    #         w = e.flavorScale2Val.get()
-                    #     w, h = (w, 89 + (i * 13))
-                    #     l = imageWithText.textlength(substring)
-                    #     imageWithText.text(((w-l)/2, h), substring, fill="black", font=fontFlavor)
                 
                 # Objective Text
                 imageWithText.text((20, 146), e.objectiveEntry.get("1.0", "end").strip(), "black", font)
@@ -181,7 +157,9 @@ try:
                 keywords = e.keywordsEntry.get("1.0", "end").strip()
                 if keywords:
                     imageWithText.text((141, 195), keywords, "black", fontFlavor)
-                rulesNewlines = 0 if not keywords else keywords.count("\n")
+                    rulesNewlines = 1 + keywords.count("\n")
+                else:
+                    rulesNewlines = 0
                 
                 # Special Rules
                 specialRules = e.specialRulesEntry.get("1.0", "end").strip()
@@ -201,7 +179,7 @@ try:
 
                     lineCount = 0
                     for i, substring in enumerate(specialRules.split("\n\n")):
-                        imageWithText.text((141, 195 + int((lineCount if i > 0 else 0) * lineMod) + int(i * substringMod)), ("\n" + ("\n" * rulesNewlines) if keywords and i == 0 else "") + substring, "black", f)
+                        imageWithText.text((141, 200 + int(((lineCount if i > 0 else 0) + rulesNewlines) * lineMod) + int(i * substringMod)), substring, "black", f)
                         lineCount += substring.count("\n") + 1
 
                 # Encounter Level
@@ -308,98 +286,94 @@ try:
                                 image = self.app.allEnemies[enemy]["imageNew"]
                                 self.app.displayImage.paste(im=image, box=box, mask=image)
 
-                # Custom Icons
-                for icon in [icon for icon in e.icons if "" not in e.icons[icon]["position"]]:
-                    image = e.icons[icon]["image"]
-                    box = (int(e.icons[icon]["position"][0]), int(e.icons[icon]["position"][1]))
-                    self.app.displayImage.paste(im=image, box=box, mask=image)
+                # # Custom Icons
+                # for icon in [icon for icon in e.icons if "" not in e.icons[icon]["position"]]:
+                #     image = e.icons[icon]["image"]
+                #     box = (int(e.icons[icon]["position"][0]), int(e.icons[icon]["position"][1]))
+                #     self.app.displayImage.paste(im=image, box=box, mask=image)
 
-                self.customEncounter["set"] = e.encounterSetEntry.get("1.0", "end").strip()
-                self.customEncounter["emptySetIcon"] = e.emptySetIconVal.get()
-                self.customEncounter["image"] = self.app.displayImage.copy()
-                self.customEncounter["numberOfTiles"] = e.numberOfTilesRadioVal.get()
-                self.customEncounter["level"] = e.levelRadioVal.get()
-                self.customEncounter["encounterName"] = e.encounterNameEntry.get("1.0", "end").strip()
-                self.customEncounter["encounterScale1"] = e.encounterScale1Val.get()
-                self.customEncounter["encounterScale2"] = e.encounterScale2Val.get()
-                self.customEncounter["flavor"] = e.flavorEntry.get("1.0", "end").strip()
-                self.customEncounter["flavorScale1"] = e.flavorScale1Val.get()
-                self.customEncounter["flavorScale2"] = e.flavorScale2Val.get()
-                self.customEncounter["objective"] = e.objectiveEntry.get("1.0", "end").strip()
-                self.customEncounter["keywords"] = e.keywordsEntry.get("1.0", "end").strip()
-                self.customEncounter["specialRules"] = e.specialRulesEntry.get("1.0", "end").strip()
-                self.customEncounter["specialRulesTextSize"] = e.specialRulesTextSizeVal.get()
-                self.customEncounter["rewardSouls"] = e.rewardSoulsEntry.get("1.0", "end").strip()
-                self.customEncounter["rewardSoulsPerPlayer"] = e.rewardSoulsPerPlayerVal.get()
-                self.customEncounter["rewardSearch"] = e.rewardSearchEntry.get("1.0", "end").strip()
-                self.customEncounter["rewardDraw"] = e.rewardDrawEntry.get("1.0", "end").strip()
-                self.customEncounter["rewardRefresh"] = e.rewardRefreshEntry.get("1.0", "end").strip()
-                self.customEncounter["rewardTrial"] = e.rewardTrialEntry.get("1.0", "end").strip()
-                self.customEncounter["rewardShortcut"] = e.shortcutVal.get()
-                self.customEncounter["layout"] = e.tileLayoutMenuVal.get()
-                self.customEncounter["icons"] = {k: v for k, v in e.icons.items() if "" not in e.icons[k]["position"]}
-                self.customEncounter["tileSelections"] = {
-                    "1": {
-                        "startingNodes": {"value": e.tileSelections["1"]["startingNodes"]["value"].get()},
-                        "traps": {"value": e.tileSelections["1"]["traps"]["value"].get()},
-                        "1": {"terrain": {"value": e.tileSelections["1"]["1"]["terrain"]["value"].get()},
-                            "enemies": {
-                                "1": {"value": e.tileSelections["1"]["1"]["enemies"]["1"]["value"].get()},
-                                "2": {"value": e.tileSelections["1"]["1"]["enemies"]["2"]["value"].get()},
-                                "3": {"value": e.tileSelections["1"]["1"]["enemies"]["3"]["value"].get()}
-                            }},
-                        "2": {"terrain": {"value": e.tileSelections["1"]["2"]["terrain"]["value"].get()},
-                            "enemies": {
-                                "1": {"value": e.tileSelections["1"]["2"]["enemies"]["1"]["value"].get()},
-                                "2": {"value": e.tileSelections["1"]["2"]["enemies"]["2"]["value"].get()},
-                                "3": {"value": e.tileSelections["1"]["2"]["enemies"]["3"]["value"].get()}
-                            }},
-                        "3": {"terrain": {"value": e.tileSelections["1"]["3"]["terrain"]["value"].get()},
-                            "enemies": {
-                                "1": {"value": e.tileSelections["1"]["3"]["enemies"]["1"]["value"].get()},
-                                "2": {"value": e.tileSelections["1"]["3"]["enemies"]["2"]["value"].get()},
-                                "3": {"value": e.tileSelections["1"]["3"]["enemies"]["3"]["value"].get()}
-                            }},
-                        "4": {"terrain": {"value": e.tileSelections["1"]["4"]["terrain"]["value"].get()},
-                            "enemies": {
-                                "1": {"value": e.tileSelections["1"]["4"]["enemies"]["1"]["value"].get()},
-                                "2": {"value": e.tileSelections["1"]["4"]["enemies"]["2"]["value"].get()},
-                                "3": {"value": e.tileSelections["1"]["4"]["enemies"]["3"]["value"].get()}
-                            }}
-                        },
-                    "2": {
-                        "startingNodes": {"value": e.tileSelections["2"]["startingNodes"]["value"].get()},
-                        "traps": {"value": e.tileSelections["2"]["traps"]["value"].get()},
-                        "1": {"terrain": {"value": e.tileSelections["2"]["1"]["terrain"]["value"].get()},
-                            "enemies": {
-                                "1": {"value": e.tileSelections["2"]["1"]["enemies"]["1"]["value"].get()},
-                                "2": {"value": e.tileSelections["2"]["1"]["enemies"]["2"]["value"].get()},
-                                "3": {"value": e.tileSelections["2"]["1"]["enemies"]["3"]["value"].get()}
-                            }},
-                        "2": {"terrain": {"value": e.tileSelections["2"]["2"]["terrain"]["value"].get()},
-                            "enemies": {
-                                "1": {"value": e.tileSelections["2"]["2"]["enemies"]["1"]["value"].get()},
-                                "2": {"value": e.tileSelections["2"]["2"]["enemies"]["2"]["value"].get()},
-                                "3": {"value": e.tileSelections["2"]["2"]["enemies"]["3"]["value"].get()}
-                            }}
-                        },
-                    "3": {
-                        "startingNodes": {"value": e.tileSelections["3"]["startingNodes"]["value"].get()},
-                        "traps": {"value": e.tileSelections["3"]["traps"]["value"].get()},
-                        "1": {"terrain": {"value": e.tileSelections["3"]["1"]["terrain"]["value"].get()},
-                            "enemies": {
-                                "1": {"value": e.tileSelections["3"]["1"]["enemies"]["1"]["value"].get()},
-                                "2": {"value": e.tileSelections["3"]["1"]["enemies"]["2"]["value"].get()},
-                                "3": {"value": e.tileSelections["3"]["1"]["enemies"]["3"]["value"].get()}
-                            }},
-                        "2": {"terrain": {"value": e.tileSelections["3"]["2"]["terrain"]["value"].get()},
-                            "enemies": {
-                                "1": {"value": e.tileSelections["3"]["2"]["enemies"]["1"]["value"].get()},
-                                "2": {"value": e.tileSelections["3"]["2"]["enemies"]["2"]["value"].get()},
-                                "3": {"value": e.tileSelections["3"]["2"]["enemies"]["3"]["value"].get()}
-                            }}
-                        }
-                    }
+                # self.customEncounter["set"] = e.encounterSetEntry.get("1.0", "end").strip()
+                # self.customEncounter["emptySetIcon"] = e.emptySetIconVal.get()
+                # self.customEncounter["image"] = self.app.displayImage.copy()
+                # self.customEncounter["numberOfTiles"] = e.numberOfTilesRadioVal.get()
+                # self.customEncounter["level"] = e.levelRadioVal.get()
+                # self.customEncounter["encounterName"] = e.encounterNameEntry.get("1.0", "end").strip()
+                # self.customEncounter["flavor"] = e.flavorEntry.get("1.0", "end").strip()
+                # self.customEncounter["objective"] = e.objectiveEntry.get("1.0", "end").strip()
+                # self.customEncounter["keywords"] = e.keywordsEntry.get("1.0", "end").strip()
+                # self.customEncounter["specialRules"] = e.specialRulesEntry.get("1.0", "end").strip()
+                # self.customEncounter["specialRulesTextSize"] = e.specialRulesTextSizeVal.get()
+                # self.customEncounter["rewardSouls"] = e.rewardSoulsEntry.get("1.0", "end").strip()
+                # self.customEncounter["rewardSoulsPerPlayer"] = e.rewardSoulsPerPlayerVal.get()
+                # self.customEncounter["rewardSearch"] = e.rewardSearchEntry.get("1.0", "end").strip()
+                # self.customEncounter["rewardDraw"] = e.rewardDrawEntry.get("1.0", "end").strip()
+                # self.customEncounter["rewardRefresh"] = e.rewardRefreshEntry.get("1.0", "end").strip()
+                # self.customEncounter["rewardTrial"] = e.rewardTrialEntry.get("1.0", "end").strip()
+                # self.customEncounter["rewardShortcut"] = e.shortcutVal.get()
+                # self.customEncounter["layout"] = e.tileLayoutMenuVal.get()
+                # self.customEncounter["icons"] = {k: v for k, v in e.icons.items() if "" not in e.icons[k]["position"]}
+                # self.customEncounter["tileSelections"] = {
+                #     "1": {
+                #         "startingNodes": {"value": e.tileSelections["1"]["startingNodes"]["value"].get()},
+                #         "traps": {"value": e.tileSelections["1"]["traps"]["value"].get()},
+                #         "1": {"terrain": {"value": e.tileSelections["1"]["1"]["terrain"]["value"].get()},
+                #             "enemies": {
+                #                 "1": {"value": e.tileSelections["1"]["1"]["enemies"]["1"]["value"].get()},
+                #                 "2": {"value": e.tileSelections["1"]["1"]["enemies"]["2"]["value"].get()},
+                #                 "3": {"value": e.tileSelections["1"]["1"]["enemies"]["3"]["value"].get()}
+                #             }},
+                #         "2": {"terrain": {"value": e.tileSelections["1"]["2"]["terrain"]["value"].get()},
+                #             "enemies": {
+                #                 "1": {"value": e.tileSelections["1"]["2"]["enemies"]["1"]["value"].get()},
+                #                 "2": {"value": e.tileSelections["1"]["2"]["enemies"]["2"]["value"].get()},
+                #                 "3": {"value": e.tileSelections["1"]["2"]["enemies"]["3"]["value"].get()}
+                #             }},
+                #         "3": {"terrain": {"value": e.tileSelections["1"]["3"]["terrain"]["value"].get()},
+                #             "enemies": {
+                #                 "1": {"value": e.tileSelections["1"]["3"]["enemies"]["1"]["value"].get()},
+                #                 "2": {"value": e.tileSelections["1"]["3"]["enemies"]["2"]["value"].get()},
+                #                 "3": {"value": e.tileSelections["1"]["3"]["enemies"]["3"]["value"].get()}
+                #             }},
+                #         "4": {"terrain": {"value": e.tileSelections["1"]["4"]["terrain"]["value"].get()},
+                #             "enemies": {
+                #                 "1": {"value": e.tileSelections["1"]["4"]["enemies"]["1"]["value"].get()},
+                #                 "2": {"value": e.tileSelections["1"]["4"]["enemies"]["2"]["value"].get()},
+                #                 "3": {"value": e.tileSelections["1"]["4"]["enemies"]["3"]["value"].get()}
+                #             }}
+                #         },
+                #     "2": {
+                #         "startingNodes": {"value": e.tileSelections["2"]["startingNodes"]["value"].get()},
+                #         "traps": {"value": e.tileSelections["2"]["traps"]["value"].get()},
+                #         "1": {"terrain": {"value": e.tileSelections["2"]["1"]["terrain"]["value"].get()},
+                #             "enemies": {
+                #                 "1": {"value": e.tileSelections["2"]["1"]["enemies"]["1"]["value"].get()},
+                #                 "2": {"value": e.tileSelections["2"]["1"]["enemies"]["2"]["value"].get()},
+                #                 "3": {"value": e.tileSelections["2"]["1"]["enemies"]["3"]["value"].get()}
+                #             }},
+                #         "2": {"terrain": {"value": e.tileSelections["2"]["2"]["terrain"]["value"].get()},
+                #             "enemies": {
+                #                 "1": {"value": e.tileSelections["2"]["2"]["enemies"]["1"]["value"].get()},
+                #                 "2": {"value": e.tileSelections["2"]["2"]["enemies"]["2"]["value"].get()},
+                #                 "3": {"value": e.tileSelections["2"]["2"]["enemies"]["3"]["value"].get()}
+                #             }}
+                #         },
+                #     "3": {
+                #         "startingNodes": {"value": e.tileSelections["3"]["startingNodes"]["value"].get()},
+                #         "traps": {"value": e.tileSelections["3"]["traps"]["value"].get()},
+                #         "1": {"terrain": {"value": e.tileSelections["3"]["1"]["terrain"]["value"].get()},
+                #             "enemies": {
+                #                 "1": {"value": e.tileSelections["3"]["1"]["enemies"]["1"]["value"].get()},
+                #                 "2": {"value": e.tileSelections["3"]["1"]["enemies"]["2"]["value"].get()},
+                #                 "3": {"value": e.tileSelections["3"]["1"]["enemies"]["3"]["value"].get()}
+                #             }},
+                #         "2": {"terrain": {"value": e.tileSelections["3"]["2"]["terrain"]["value"].get()},
+                #             "enemies": {
+                #                 "1": {"value": e.tileSelections["3"]["2"]["enemies"]["1"]["value"].get()},
+                #                 "2": {"value": e.tileSelections["3"]["2"]["enemies"]["2"]["value"].get()},
+                #                 "3": {"value": e.tileSelections["3"]["2"]["enemies"]["3"]["value"].get()}
+                #             }}
+                #         }
+                #     }
 
                 displayPhotoImage = ImageTk.PhotoImage(self.app.displayImage)
                 self.app.displayTopLeft.config(image=displayPhotoImage)
@@ -527,8 +501,7 @@ try:
                         "set", "numberOfTiles", "level", "encounterName", "flavor", "objective", "keywords",
                         "specialRules", "rewardSouls", "rewardSoulsPerPlayer", "rewardSearch", "rewardDraw",
                         "rewardRefresh", "rewardTrial", "rewardShortcut", "layout", "icons", "tileSelections",
-                        "emptySetIcon", "encounterScale1", "encounterScale2", "flavorScale1", "flavorScale2",
-                        "specialRulesTextSize"}:
+                        "emptySetIcon", "specialRulesTextSize"}:
                     self.app.set_bindings_buttons_menus(False)
                     PopupWindow(self.root, labelText="Invalid DSBG-Shuffle encounter file.", firstButton="Ok")
                     self.app.set_bindings_buttons_menus(True)
@@ -765,62 +738,20 @@ try:
             self.levelRadio3.grid(column=3, row=2, padx=(225, 5), pady=5, sticky=tk.W)
             self.levelRadio4 = ttk.Radiobutton(self.infoFrame1, text="4", variable=self.levelRadioVal, value=4, command=self.update_lists)
             self.levelRadio4.grid(column=3, row=2, padx=(278, 5), pady=5, sticky=tk.W)
-
-            vcmdName = (self.register(self.callback_name))
-            self.encounterScale1Label = ttk.Label(self.infoFrame2, text="Line 1\nCentering\t")
-            self.encounterScale1Label.bind("<1>", lambda event: event.widget.focus_set())
-            self.encounterScale1Label.grid(column=0, row=3, padx=5, pady=5, sticky=tk.W, columnspan=2)
-            self.encounterScale1Val = tk.IntVar()
-            self.encounterScale1 = ttk.Scale(self.infoFrame2, from_=0, to=400, variable=self.encounterScale1Val, command=self.topFrame.apply_changes)
-            self.encounterScale1.grid(column=0, row=3, padx=(77, 22), pady=5, sticky=tk.EW, columnspan=2)
-            self.encounterScale1Entry = ttk.Entry(self.infoFrame2, textvariable=self.encounterScale1Val, width=4, validate="all", validatecommand=(vcmdName, "%P"))
-            self.encounterScale1Entry.bind("<KeyRelease>", self.handle_wait)
-            self.encounterScale1Entry.grid(column=2, row=3, padx=5, pady=5, sticky=tk.W)
-
-            self.encounterScale2Label = ttk.Label(self.infoFrame2, text="Line 2\nCentering\t")
-            self.encounterScale2Label.bind("<1>", lambda event: event.widget.focus_set())
-            self.encounterScale2Label.grid(column=2, row=3, padx=(102, 5), pady=5, sticky=tk.W)
-            self.encounterScale2Val = tk.IntVar()
-            self.encounterScale2 = ttk.Scale(self.infoFrame2, from_=0, to=400, variable=self.encounterScale2Val, command=self.topFrame.apply_changes)
-            self.encounterScale2.grid(column=2, row=3, padx=(179, 5), pady=5, sticky=tk.EW, columnspan=4)
-            self.encounterScale2Entry = ttk.Entry(self.infoFrame2, textvariable=self.encounterScale2Val, width=4, validate="all", validatecommand=(vcmdName, "%P"))
-            self.encounterScale2Entry.bind("<KeyRelease>", self.handle_wait)
-            self.encounterScale2Entry.grid(column=6, row=3, padx=5, pady=5, sticky=tk.E)
             
             self.flavorLabel = ttk.Label(self.infoFrame2, text="Flavor\nText\t")
             self.flavorLabel.bind("<1>", lambda event: event.widget.focus_set())
-            self.flavorLabel.grid(column=0, row=4, padx=5, pady=5, sticky=tk.W)
+            self.flavorLabel.grid(column=0, row=3, padx=5, pady=5, sticky=tk.W)
             self.flavorEntry = tk.Text(self.infoFrame2, width=70, height=2, bg="#181818")
             self.flavorEntry.bind("<KeyRelease>", self.handle_wait)
-            self.flavorEntry.grid(column=1, row=4, padx=5, pady=5, columnspan=6, sticky=tk.W)
-
-            vcmdFlavor = (self.register(self.callback_flavor))
-            self.flavorScale1Label = ttk.Label(self.infoFrame2, text="Line 1\nCentering\t")
-            self.flavorScale1Label.bind("<1>", lambda event: event.widget.focus_set())
-            self.flavorScale1Label.grid(column=0, row=5, padx=5, pady=5, sticky=tk.W, columnspan=2)
-            self.flavorScale1Val = tk.IntVar()
-            self.flavorScale1 = ttk.Scale(self.infoFrame2, from_=0, to=600, variable=self.flavorScale1Val, command=self.topFrame.apply_changes)
-            self.flavorScale1.grid(column=0, row=5, padx=(77, 20), pady=5, sticky=tk.EW, columnspan=2)
-            self.flavorScale1Entry = ttk.Entry(self.infoFrame2, textvariable=self.flavorScale1Val, width=4, validate="all", validatecommand=(vcmdFlavor, "%P"))
-            self.flavorScale1Entry.bind("<KeyRelease>", self.handle_wait)
-            self.flavorScale1Entry.grid(column=2, row=5, padx=5, pady=5, sticky=tk.W)
-
-            self.flavorScale2Label = ttk.Label(self.infoFrame2, text="Line 2\nCentering\t")
-            self.flavorScale2Label.bind("<1>", lambda event: event.widget.focus_set())
-            self.flavorScale2Label.grid(column=2, row=5, padx=(102, 5), pady=5, sticky=tk.W)
-            self.flavorScale2Val = tk.IntVar()
-            self.flavorScale2 = ttk.Scale(self.infoFrame2, from_=0, to=600, variable=self.flavorScale2Val, command=self.topFrame.apply_changes)
-            self.flavorScale2.grid(column=2, row=5, padx=(179, 5), pady=5, sticky=tk.EW, columnspan=4)
-            self.flavorScale2Entry = ttk.Entry(self.infoFrame2, textvariable=self.flavorScale2Val, width=4, validate="all", validatecommand=(vcmdFlavor, "%P"))
-            self.flavorScale2Entry.bind("<KeyRelease>", self.handle_wait)
-            self.flavorScale2Entry.grid(column=6, row=5, padx=5, pady=5, sticky=tk.E)
+            self.flavorEntry.grid(column=1, row=3, padx=5, pady=5, columnspan=6, sticky=tk.W)
             
             self.objectiveLabel = ttk.Label(self.infoFrame2, text="Objective\t")
             self.objectiveLabel.bind("<1>", lambda event: event.widget.focus_set())
-            self.objectiveLabel.grid(column=0, row=6, padx=5, pady=5, sticky=tk.W)
+            self.objectiveLabel.grid(column=0, row=4, padx=5, pady=5, sticky=tk.W)
             self.objectiveEntry = tk.Text(self.infoFrame2, width=70, height=2, bg="#181818")
             self.objectiveEntry.bind("<KeyRelease>", self.handle_wait)
-            self.objectiveEntry.grid(column=1, row=6, padx=5, pady=5, columnspan=6, sticky=tk.W)
+            self.objectiveEntry.grid(column=1, row=4, padx=5, pady=5, columnspan=6, sticky=tk.W)
 
             self.rewardsTitle = ttk.Label(self.infoFrame3, text=(" " * 30) + "Rewards/Special Rules", font=("Arial", 16))
             self.rewardsTitle.bind("<1>", lambda event: event.widget.focus_set())
@@ -1013,7 +944,7 @@ try:
             self.icons = {}
             self.currentIcon = {
                 "label": None,
-                "file": None,
+                "file": "",
                 "image": None,
                 "photoImage": None,
                 "size": None,
@@ -1026,73 +957,111 @@ try:
             self.iconTitle = ttk.Label(self.iconsFrame1, text=(" " * 40) + "Custom Icons", font=("Arial", 16))
             self.iconTitle.bind("<1>", lambda event: event.widget.focus_set())
             self.iconTitle.grid(column=0, row=0, padx=5, pady=5, columnspan=6, sticky=tk.W)
-            self.iconWarningLabel = ttk.Label(self.iconsFrame1, text="Please check the wiki for details on how to use custom icons!")
-            self.iconWarningLabel.bind("<1>", lambda event: event.widget.focus_set())
-            self.iconWarningLabel.grid(column=0, row=1, padx=5, pady=5, columnspan=6, sticky=tk.W)
-            self.iconImageErrorsVal = tk.StringVar()
-            self.iconSaveErrors = tk.Label(self.iconsFrame1, width=26, textvariable=self.iconImageErrorsVal)
-            self.iconSaveErrors.bind("<1>", lambda event: event.widget.focus_set())
-            self.iconSaveErrors.grid(column=0, row=2, pady=5, columnspan=6, sticky=tk.W)
-            self.iconLabel = ttk.Label(self.iconsFrame1, text="Saved Icons\t")
-            self.iconLabel.bind("<1>", lambda event: event.widget.focus_set())
-            self.iconLabel.grid(column=0, row=3, padx=5, pady=5, sticky=tk.W)
-            self.iconMenuList = []
-            self.iconMenuVal = tk.StringVar()
-            self.iconMenu = ttk.Combobox(self.iconsFrame1, width=24, state="readonly", values=self.iconMenuList, textvariable=self.iconMenuVal)
-            self.iconMenu.bind("<<ComboboxSelected>>", self.change_icon)
-            self.iconMenu.unbind_class("TCombobox", "<MouseWheel>")
-            self.iconMenu.unbind_class("TCombobox", "<ButtonPress-4>")
-            self.iconMenu.unbind_class("TCombobox", "<ButtonPress-5>")
-            self.iconMenu.grid(column=1, row=3, padx=5, pady=5, columnspan=4, sticky=tk.W)
-            self.deleteIconButton = ttk.Button(self.iconsFrame1, text="Delete Icon", width=16, command=self.delete_custom_icon)
-            self.deleteIconButton.grid(column=4, row=3, padx=(5, 0), pady=5)
+            # self.iconWarningLabel = ttk.Label(self.iconsFrame1, text="Please check the wiki for details on how to use custom icons!")
+            # self.iconWarningLabel.bind("<1>", lambda event: event.widget.focus_set())
+            # self.iconWarningLabel.grid(column=0, row=1, padx=5, pady=5, columnspan=6, sticky=tk.W)
+            # self.iconImageErrorsVal = tk.StringVar()
+            # self.iconSaveErrors = tk.Label(self.iconsFrame1, width=26, textvariable=self.iconImageErrorsVal)
+            # self.iconSaveErrors.bind("<1>", lambda event: event.widget.focus_set())
+            # self.iconSaveErrors.grid(column=0, row=2, pady=5, columnspan=6, sticky=tk.W)
+            # self.iconLabel = ttk.Label(self.iconsFrame1, text="Saved Icons\t")
+            # self.iconLabel.bind("<1>", lambda event: event.widget.focus_set())
+            # self.iconLabel.grid(column=0, row=3, padx=5, pady=5, sticky=tk.W)
+            # self.iconMenuList = []
+            # self.iconMenuVal = tk.StringVar()
+            # self.iconMenu = ttk.Combobox(self.iconsFrame1, width=24, state="readonly", values=self.iconMenuList, textvariable=self.iconMenuVal)
+            # self.iconMenu.bind("<<ComboboxSelected>>", self.change_icon)
+            # self.iconMenu.unbind_class("TCombobox", "<MouseWheel>")
+            # self.iconMenu.unbind_class("TCombobox", "<ButtonPress-4>")
+            # self.iconMenu.unbind_class("TCombobox", "<ButtonPress-5>")
+            # self.iconMenu.grid(column=1, row=3, padx=5, pady=5, columnspan=4, sticky=tk.W)
+            # self.deleteIconButton = ttk.Button(self.iconsFrame1, text="Delete Icon", width=16, command=self.delete_custom_icon)
+            # self.deleteIconButton.grid(column=4, row=3, padx=(5, 0), pady=5)
             
             self.iconNameLabel = ttk.Label(self.iconsFrame1, text="Icon Name\t")
             self.iconNameLabel.bind("<1>", lambda event: event.widget.focus_set())
-            self.iconNameLabel.grid(column=0, row=4, padx=5, pady=5, sticky=tk.W)
-            self.iconNameEntry = tk.Text(self.iconsFrame1, width=25, height=1, bg="#181818")
-            self.iconNameEntry.grid(column=1, row=4, padx=5, pady=5, columnspan=4, sticky=tk.W)
-            self.saveIconButton = ttk.Button(self.iconsFrame1, text="Save Icon", width=16, command=self.save_custom_icon)
-            self.saveIconButton.grid(column=4, row=4, padx=(5, 0), pady=5)
+            self.iconNameLabel.grid(column=0, row=1, padx=5, pady=(5, 25), sticky=tk.W)
+            self.iconNameEntry = tk.Text(self.iconsFrame1, width=20, height=1, bg="#181818")
+            self.iconNameEntry.grid(column=1, row=1, padx=(25, 5), pady=(5, 25), columnspan=2, sticky=tk.W)
             
-            self.iconSizeLabel = ttk.Label(self.iconsFrame1, text="Icon Size\t")
+            self.iconSizeLabel = ttk.Label(self.iconsFrame1, text="Icon Type\t")
             self.iconSizeLabel.bind("<1>", lambda event: event.widget.focus_set())
-            self.iconSizeLabel.grid(column=0, row=5, padx=5, pady=5, sticky=tk.W)
-            self.iconSizeMenuList = ["Text", "Enemy/Terrain", "Set Icon"]
-            self.iconSizeMenuVal = tk.StringVar()
-            self.iconSizeMenu = ttk.Combobox(self.iconsFrame1, width=24, state="readonly", values=self.iconSizeMenuList, textvariable=self.iconSizeMenuVal)
-            self.iconSizeMenu.unbind_class("TCombobox", "<MouseWheel>")
-            self.iconSizeMenu.unbind_class("TCombobox", "<ButtonPress-4>")
-            self.iconSizeMenu.unbind_class("TCombobox", "<ButtonPress-5>")
-            self.iconSizeMenu.grid(column=1, row=5, padx=5, pady=5, columnspan=4, sticky=tk.W)
-            self.chooseIconButton = ttk.Button(self.iconsFrame1, text="Choose Image", width=16, command=self.choose_icon_image)
-            self.chooseIconButton.grid(column=4, row=5, padx=(5, 0), pady=5, sticky=tk.N)
+            self.iconSizeLabel.grid(column=0, row=2, padx=5, pady=5, sticky=tk.W)
+            # self.iconSizeMenuList = ["Text", "Enemy/Terrain", "Set Icon"]
+            self.iconSizeVal = tk.IntVar()
+            self.iconSizeRadio1 = ttk.Radiobutton(self.iconsFrame1, text="Text", variable=self.iconSizeVal, value=0, command=lambda x=baseFolder + "\\lib\\dsbg_shuffle_custom_icon_images\\".replace("\\", pathSep) + self.currentIcon["file"]: self.choose_icon_image(file=x))
+            self.iconSizeRadio1.grid(column=0, row=3, padx=5, pady=5, sticky=tk.W)
+            self.iconSizeRadio2 = ttk.Radiobutton(self.iconsFrame1, text="Enemy/Terrain", variable=self.iconSizeVal, value=1, command=lambda x=baseFolder + "\\lib\\dsbg_shuffle_custom_icon_images\\".replace("\\", pathSep) + self.currentIcon["file"]: self.choose_icon_image(file=x))
+            self.iconSizeRadio2.grid(column=0, row=4, padx=5, pady=5, sticky=tk.W)
+            self.iconSizeRadio3 = ttk.Radiobutton(self.iconsFrame1, text="Set Icon", variable=self.iconSizeVal, value=2, command=lambda x=baseFolder + "\\lib\\dsbg_shuffle_custom_icon_images\\".replace("\\", pathSep) + self.currentIcon["file"]: self.choose_icon_image(file=x))
+            self.iconSizeRadio3.grid(column=0, row=5, padx=5, pady=5, sticky=tk.W)
+            # self.iconSizeMenuVal = tk.StringVar()
+            # self.iconSizeMenu = ttk.Combobox(self.iconsFrame1, width=24, state="readonly", values=self.iconSizeMenuList, textvariable=self.iconSizeMenuVal)
+            # self.iconSizeMenu.unbind_class("TCombobox", "<MouseWheel>")
+            # self.iconSizeMenu.unbind_class("TCombobox", "<ButtonPress-4>")
+            # self.iconSizeMenu.unbind_class("TCombobox", "<ButtonPress-5>")
+            # self.iconSizeMenu.grid(column=1, row=5, padx=5, pady=5, columnspan=4, sticky=tk.W)
+            # self.chooseIconButton = ttk.Button(self.iconsFrame1, text="Choose Image", width=16, command=self.choose_icon_image)
+            # self.chooseIconButton.grid(column=4, row=5, padx=(5, 0), pady=5, sticky=tk.N)
             
             vcmdX = (self.register(self.callback_x))
             vcmdY = (self.register(self.callback_y))
             self.positionLabel = ttk.Label(self.iconsFrame1, text="Position\t")
             self.positionLabel.bind("<1>", lambda event: event.widget.focus_set())
-            self.positionLabel.grid(column=0, row=6, padx=5, pady=5, sticky=tk.W)
+            self.positionLabel.grid(column=1, row=2, padx=(25, 5), pady=5, sticky=tk.NW, columnspan=2)
             self.xPositionLabel = ttk.Label(self.iconsFrame1, text="x:\n0-400\n")
             self.xPositionLabel.bind("<1>", lambda event: event.widget.focus_set())
-            self.xPositionLabel.grid(column=1, row=6, pady=5, padx=(3, 0), sticky=tk.W)
+            self.xPositionLabel.grid(column=1, row=3, pady=5, padx=(25, 5), sticky=tk.NW, rowspan=2)
             self.xPositionVal = tk.StringVar()
             self.xPositionEntry = ttk.Entry(self.iconsFrame1, textvariable=self.xPositionVal, width=4, validate="all", validatecommand=(vcmdX, "%P"))
             self.xPositionEntry.bind("<KeyRelease>", self.handle_wait_icon)
-            self.xPositionEntry.grid(column=1, row=6, padx=(44, 5), pady=5, sticky=tk.W)
+            self.xPositionEntry.grid(column=1, row=3, padx=(64, 5), pady=5, sticky=tk.NW, rowspan=2)
             self.yPositionLabel = ttk.Label(self.iconsFrame1, text="y:\n0-685\n")
             self.yPositionLabel.bind("<1>", lambda event: event.widget.focus_set())
-            self.yPositionLabel.grid(column=2, row=6, padx=(6, 0), pady=5, sticky=tk.W)
+            self.yPositionLabel.grid(column=1, row=4, padx=(25, 0), pady=5, sticky=tk.NW, rowspan=2)
             self.yPositionVal = tk.StringVar()
             self.yPositionEntry = ttk.Entry(self.iconsFrame1, textvariable=self.yPositionVal, width=4, validate="all", validatecommand=(vcmdY, "%P"))
             self.yPositionEntry.bind("<KeyRelease>", self.handle_wait_icon)
-            self.yPositionEntry.grid(column=2, row=6, padx=(47, 5), pady=5, sticky=tk.E)
-            self.iconViewLabel = ttk.Label(self.iconsFrame1, text="Image")
-            self.iconViewLabel.bind("<1>", lambda event: event.widget.focus_set())
-            self.iconViewLabel.grid(column=0, row=7, padx=5, pady=5, sticky=tk.W)
-            self.iconView = tk.Label(self.iconsFrame1, width=30)
+            self.yPositionEntry.grid(column=1, row=4, padx=(64, 5), pady=5, sticky=tk.NW, rowspan=2)
+            # self.iconViewLabel = ttk.Label(self.iconsFrame1, text="Image")
+            # self.iconViewLabel.bind("<1>", lambda event: event.widget.focus_set())
+            # self.iconViewLabel.grid(column=0, row=5, padx=5, pady=5, sticky=tk.W)
+            self.chooseIconButton = ttk.Button(self.iconsFrame1, text="Choose Image", width=16, command=lambda x=True: self.choose_icon_image(buttonSource=x))
+            self.chooseIconButton.grid(column=1, row=7, padx=(5, 0), pady=5, columnspan=2)
+            self.saveIconButton = ttk.Button(self.iconsFrame1, text="Save Icon", width=16, command=self.save_custom_icon)
+            self.saveIconButton.grid(column=1, row=8, padx=(5, 0), pady=5, columnspan=2)
+            
+            self.iconView = tk.Label(self.iconsFrame1)
             self.iconView.bind("<1>", lambda event: event.widget.focus_set())
-            self.iconView.grid(column=0, row=7, padx=(100, 0), pady=5, sticky=tk.NSEW, columnspan=3)
+            self.iconView.grid(column=0, row=6, padx=5, pady=5, sticky=tk.NSEW, rowspan=3)
+
+            self.customIconsFrame = ttk.Frame(self.iconsFrame1)
+            self.scrollbarTreeviewCustomIcons = ttk.Scrollbar(self.customIconsFrame)
+            self.scrollbarTreeviewCustomIcons.pack(side="right", fill="y")
+            self.treeviewCustomIcons = ttk.Treeview(
+                self.iconsFrame1,
+                selectmode="browse",
+                columns=("Name", "Type", "Enabled", "Image"),
+                yscrollcommand=self.scrollbarTreeviewCustomIcons.set,
+                height=9
+            )
+
+            self.treeviewCustomIcons.grid(column=3, row=1, padx=(15, 0), pady=5, rowspan=9, sticky=tk.NW)
+            self.scrollbarTreeviewCustomIcons.config(command=self.treeviewCustomIcons.yview)
+
+            self.treeviewCustomIcons.column('#0', width=0)
+
+            self.treeviewCustomIcons.heading("Name", text="Name", anchor=tk.W)
+            self.treeviewCustomIcons.heading("Type", text="Type", anchor=tk.W)
+            self.treeviewCustomIcons.heading("Enabled", text="Enabled", anchor=tk.W)
+            self.treeviewCustomIcons.heading("Image", text="Image", anchor=tk.W)
+            self.treeviewCustomIcons.column("Name", anchor=tk.W, width=72)
+            self.treeviewCustomIcons.column("Type", anchor=tk.W, width=50)
+            self.treeviewCustomIcons.column("Enabled", anchor=tk.W, width=50)
+            self.treeviewCustomIcons.column("Image", anchor=tk.W, width=50)
+
+            self.saveIconButton = ttk.Button(self.iconsFrame1, text="Delete Icon", width=16, command=self.delete_custom_icon)
+            self.saveIconButton.grid(column=3, row=8, padx=(5, 0), pady=5, sticky=tk.E)
 
 
         def handle_wait(self, event):
@@ -1387,7 +1356,7 @@ try:
                     self.iconMenuVal.set("")
                 self.currentIcon = {
                     "label": None,
-                    "file": None,
+                    "file": "",
                     "image": None,
                     "photoImage": None,
                     "size": None,
@@ -1395,6 +1364,8 @@ try:
                 }
                 self.iconMenu.config(values=self.iconMenuList)
                 self.iconMenu.set("")
+
+                self.topFrame.apply_changes()
                 
                 log("End of delete_custom_icon")
             except Exception as e:
@@ -1451,32 +1422,21 @@ try:
                 raise
 
 
-        def choose_icon_image(self, event=None, file=None):
+        def choose_icon_image(self, event=None, file=None, buttonSource=False):
             try:
                 log("Start of choose_icon_image, file={}".format(str(file)))
 
-                errors = []
-
-                if self.iconSizeMenu.get() not in {"Enemy/Terrain", "Text", "Set Icon"}:
-                    errors.append("size")
-
-                if errors:
-                    self.iconView.config(image="")
-                    self.iconView.image=None
-                    errorText = "Required: " + ", ".join(errors)
-                    self.iconImageErrorsVal.set(errorText)
+                if file and not self.currentIcon["file"]:
                     return
-
-                self.iconImageErrorsVal.set("")
-
-                if self.iconSizeMenu.get() == "Enemy/Terrain":
+                
+                if self.iconSizeVal.get() == 0:
                     size = "iconEnemy"
-                elif self.iconSizeMenu.get() == "Text":
+                elif self.iconSizeVal.get() == 1:
                     size = "iconText"
-                elif self.iconSizeMenu.get() == "Set Icon":
+                elif self.iconSizeVal.get() == 2:
                     size = "iconSet"
                 
-                if not file:
+                if not file and buttonSource:
                     file = filedialog.askopenfilename(initialdir=baseFolder)
 
                     # If they canceled, do nothing.
@@ -1484,13 +1444,17 @@ try:
                         return
                     
                     fileName = path.splitext(path.basename(file))
-                    newFile = baseFolder + "\\lib\\dsbg_shuffle_custom_icon_images\\".replace("\\", pathSep) + fileName[0] + "_" + size + ".png"
-                    if not path.isfile(newFile):
-                        i, p = self.app.create_image(file, size, 99, pathProvided=True, extensionProvided=True)
-                        i.save(newFile)
-                    else:
-                        i, p = self.app.create_image(newFile, size, 99, pathProvided=True, extensionProvided=True)
-                    file = newFile
+
+                    sizes = {"iconEnemy", "iconText", "iconSet"}
+
+                    for imSize in list(sizes - set([size])) + [size]:
+                        newFile = baseFolder + "\\lib\\dsbg_shuffle_custom_icon_images\\".replace("\\", pathSep) + fileName[0] + "_" + imSize + ".png"
+                        if not path.isfile(newFile):
+                            i, p = self.app.create_image(file, imSize, 99, pathProvided=True, extensionProvided=True)
+                            i.save(newFile)
+                        else:
+                            i, p = self.app.create_image(newFile, imSize, 99, pathProvided=True, extensionProvided=True)
+                        file = newFile
                 else:
                     i, p = self.app.create_image(file, size, 99, pathProvided=True, extensionProvided=True)
 
