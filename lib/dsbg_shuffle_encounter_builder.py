@@ -1,6 +1,7 @@
 try:
     import errno
     import tkinter as tk
+    from bisect import bisect_left
     from copy import deepcopy
     from datetime import datetime
     from json import dump, load
@@ -953,30 +954,15 @@ try:
 
             self.iconsFrame1.columnconfigure(4, minsize=180)
             self.iconsFrame1.rowconfigure(7, minsize=70)
+
+            with open(baseFolder + "\\lib\\dsbg_shuffle_custom_icon_images\\customIconsDict.json".replace("\\", pathSep), "r") as f:
+                d = load(f)
+
+            self.customIconsDict = {k: v for k, v in d.items() if k == "lookup" or path.isfile(baseFolder + "\\lib\\dsbg_shuffle_custom_icon_images\\".replace("\\", pathSep) + k)}
             
             self.iconTitle = ttk.Label(self.iconsFrame1, text=(" " * 40) + "Custom Icons", font=("Arial", 16))
             self.iconTitle.bind("<1>", lambda event: event.widget.focus_set())
             self.iconTitle.grid(column=0, row=0, padx=5, pady=5, columnspan=6, sticky=tk.W)
-            # self.iconWarningLabel = ttk.Label(self.iconsFrame1, text="Please check the wiki for details on how to use custom icons!")
-            # self.iconWarningLabel.bind("<1>", lambda event: event.widget.focus_set())
-            # self.iconWarningLabel.grid(column=0, row=1, padx=5, pady=5, columnspan=6, sticky=tk.W)
-            # self.iconImageErrorsVal = tk.StringVar()
-            # self.iconSaveErrors = tk.Label(self.iconsFrame1, width=26, textvariable=self.iconImageErrorsVal)
-            # self.iconSaveErrors.bind("<1>", lambda event: event.widget.focus_set())
-            # self.iconSaveErrors.grid(column=0, row=2, pady=5, columnspan=6, sticky=tk.W)
-            # self.iconLabel = ttk.Label(self.iconsFrame1, text="Saved Icons\t")
-            # self.iconLabel.bind("<1>", lambda event: event.widget.focus_set())
-            # self.iconLabel.grid(column=0, row=3, padx=5, pady=5, sticky=tk.W)
-            # self.iconMenuList = []
-            # self.iconMenuVal = tk.StringVar()
-            # self.iconMenu = ttk.Combobox(self.iconsFrame1, width=24, state="readonly", values=self.iconMenuList, textvariable=self.iconMenuVal)
-            # self.iconMenu.bind("<<ComboboxSelected>>", self.change_icon)
-            # self.iconMenu.unbind_class("TCombobox", "<MouseWheel>")
-            # self.iconMenu.unbind_class("TCombobox", "<ButtonPress-4>")
-            # self.iconMenu.unbind_class("TCombobox", "<ButtonPress-5>")
-            # self.iconMenu.grid(column=1, row=3, padx=5, pady=5, columnspan=4, sticky=tk.W)
-            # self.deleteIconButton = ttk.Button(self.iconsFrame1, text="Delete Icon", width=16, command=self.delete_custom_icon)
-            # self.deleteIconButton.grid(column=4, row=3, padx=(5, 0), pady=5)
             
             self.iconNameLabel = ttk.Label(self.iconsFrame1, text="Icon Name\t")
             self.iconNameLabel.bind("<1>", lambda event: event.widget.focus_set())
@@ -984,25 +970,16 @@ try:
             self.iconNameEntry = tk.Text(self.iconsFrame1, width=20, height=1, bg="#181818")
             self.iconNameEntry.grid(column=1, row=1, padx=(25, 5), pady=(5, 25), columnspan=2, sticky=tk.W)
             
-            self.iconSizeLabel = ttk.Label(self.iconsFrame1, text="Icon Type\t")
+            self.iconSizeLabel = ttk.Label(self.iconsFrame1, text="Icon Size\t")
             self.iconSizeLabel.bind("<1>", lambda event: event.widget.focus_set())
             self.iconSizeLabel.grid(column=0, row=2, padx=5, pady=5, sticky=tk.W)
-            # self.iconSizeMenuList = ["Text", "Enemy/Terrain", "Set Icon"]
             self.iconSizeVal = tk.IntVar()
-            self.iconSizeRadio1 = ttk.Radiobutton(self.iconsFrame1, text="Text", variable=self.iconSizeVal, value=0, command=lambda x=baseFolder + "\\lib\\dsbg_shuffle_custom_icon_images\\".replace("\\", pathSep) + self.currentIcon["file"]: self.choose_icon_image(file=x))
+            self.iconSizeRadio1 = ttk.Radiobutton(self.iconsFrame1, text="Text", variable=self.iconSizeVal, value=0, command=lambda: self.choose_icon_image(file=baseFolder + "\\lib\\dsbg_shuffle_custom_icon_images\\".replace("\\", pathSep) + self.currentIcon["file"][:self.currentIcon["file"].rfind("_")+1] + "iconText.png"))
             self.iconSizeRadio1.grid(column=0, row=3, padx=5, pady=5, sticky=tk.W)
-            self.iconSizeRadio2 = ttk.Radiobutton(self.iconsFrame1, text="Enemy/Terrain", variable=self.iconSizeVal, value=1, command=lambda x=baseFolder + "\\lib\\dsbg_shuffle_custom_icon_images\\".replace("\\", pathSep) + self.currentIcon["file"]: self.choose_icon_image(file=x))
+            self.iconSizeRadio2 = ttk.Radiobutton(self.iconsFrame1, text="Enemy/Terrain", variable=self.iconSizeVal, value=1, command=lambda: self.choose_icon_image(file=baseFolder + "\\lib\\dsbg_shuffle_custom_icon_images\\".replace("\\", pathSep) + self.currentIcon["file"][:self.currentIcon["file"].rfind("_")+1] + "iconEnemy.png"))
             self.iconSizeRadio2.grid(column=0, row=4, padx=5, pady=5, sticky=tk.W)
-            self.iconSizeRadio3 = ttk.Radiobutton(self.iconsFrame1, text="Set Icon", variable=self.iconSizeVal, value=2, command=lambda x=baseFolder + "\\lib\\dsbg_shuffle_custom_icon_images\\".replace("\\", pathSep) + self.currentIcon["file"]: self.choose_icon_image(file=x))
+            self.iconSizeRadio3 = ttk.Radiobutton(self.iconsFrame1, text="Set Icon", variable=self.iconSizeVal, value=2, command=lambda: self.choose_icon_image(file=baseFolder + "\\lib\\dsbg_shuffle_custom_icon_images\\".replace("\\", pathSep) + self.currentIcon["file"][:self.currentIcon["file"].rfind("_")+1] + "iconSet.png"))
             self.iconSizeRadio3.grid(column=0, row=5, padx=5, pady=5, sticky=tk.W)
-            # self.iconSizeMenuVal = tk.StringVar()
-            # self.iconSizeMenu = ttk.Combobox(self.iconsFrame1, width=24, state="readonly", values=self.iconSizeMenuList, textvariable=self.iconSizeMenuVal)
-            # self.iconSizeMenu.unbind_class("TCombobox", "<MouseWheel>")
-            # self.iconSizeMenu.unbind_class("TCombobox", "<ButtonPress-4>")
-            # self.iconSizeMenu.unbind_class("TCombobox", "<ButtonPress-5>")
-            # self.iconSizeMenu.grid(column=1, row=5, padx=5, pady=5, columnspan=4, sticky=tk.W)
-            # self.chooseIconButton = ttk.Button(self.iconsFrame1, text="Choose Image", width=16, command=self.choose_icon_image)
-            # self.chooseIconButton.grid(column=4, row=5, padx=(5, 0), pady=5, sticky=tk.N)
             
             vcmdX = (self.register(self.callback_x))
             vcmdY = (self.register(self.callback_y))
@@ -1011,25 +988,26 @@ try:
             self.positionLabel.grid(column=1, row=2, padx=(25, 5), pady=5, sticky=tk.NW, columnspan=2)
             self.xPositionLabel = ttk.Label(self.iconsFrame1, text="x:\n0-400\n")
             self.xPositionLabel.bind("<1>", lambda event: event.widget.focus_set())
-            self.xPositionLabel.grid(column=1, row=3, pady=5, padx=(25, 5), sticky=tk.NW, rowspan=2)
+            self.xPositionLabel.grid(column=1, row=3, padx=(25, 5), sticky=tk.NW, rowspan=2)
             self.xPositionVal = tk.StringVar()
             self.xPositionEntry = ttk.Entry(self.iconsFrame1, textvariable=self.xPositionVal, width=4, validate="all", validatecommand=(vcmdX, "%P"))
             self.xPositionEntry.bind("<KeyRelease>", self.handle_wait_icon)
             self.xPositionEntry.grid(column=1, row=3, padx=(64, 5), pady=5, sticky=tk.NW, rowspan=2)
             self.yPositionLabel = ttk.Label(self.iconsFrame1, text="y:\n0-685\n")
             self.yPositionLabel.bind("<1>", lambda event: event.widget.focus_set())
-            self.yPositionLabel.grid(column=1, row=4, padx=(25, 0), pady=5, sticky=tk.NW, rowspan=2)
+            self.yPositionLabel.grid(column=1, row=4, padx=(25, 0), sticky=tk.NW, rowspan=2)
             self.yPositionVal = tk.StringVar()
             self.yPositionEntry = ttk.Entry(self.iconsFrame1, textvariable=self.yPositionVal, width=4, validate="all", validatecommand=(vcmdY, "%P"))
             self.yPositionEntry.bind("<KeyRelease>", self.handle_wait_icon)
             self.yPositionEntry.grid(column=1, row=4, padx=(64, 5), pady=5, sticky=tk.NW, rowspan=2)
-            # self.iconViewLabel = ttk.Label(self.iconsFrame1, text="Image")
-            # self.iconViewLabel.bind("<1>", lambda event: event.widget.focus_set())
-            # self.iconViewLabel.grid(column=0, row=5, padx=5, pady=5, sticky=tk.W)
             self.chooseIconButton = ttk.Button(self.iconsFrame1, text="Choose Image", width=16, command=lambda x=True: self.choose_icon_image(buttonSource=x))
             self.chooseIconButton.grid(column=1, row=7, padx=(5, 0), pady=5, columnspan=2)
             self.saveIconButton = ttk.Button(self.iconsFrame1, text="Save Icon", width=16, command=self.save_custom_icon)
             self.saveIconButton.grid(column=1, row=8, padx=(5, 0), pady=5, columnspan=2)
+            self.iconImageErrorsVal = tk.StringVar()
+            self.iconSaveErrors = tk.Label(self.iconsFrame1, width=26, textvariable=self.iconImageErrorsVal)
+            self.iconSaveErrors.bind("<1>", lambda event: event.widget.focus_set())
+            self.iconSaveErrors.grid(column=3, row=8, pady=5, sticky=tk.W)
             
             self.iconView = tk.Label(self.iconsFrame1)
             self.iconView.bind("<1>", lambda event: event.widget.focus_set())
@@ -1382,8 +1360,6 @@ try:
 
                 if not icon:
                     errors.append("name")
-                if not self.currentIcon["size"]:
-                    errors.append("size")
                 if not self.currentIcon["image"]:
                     errors.append("image")
 
@@ -1395,17 +1371,17 @@ try:
                 self.iconImageErrorsVal.set("")
 
                 self.currentIcon["label"] = icon
+
+                self.customIconsDict["lookup"][icon] = deepcopy(self.currentIcon["file"])
                 
                 if icon and icon not in self.icons:
-                    self.iconMenuList.append(icon)
-                    self.iconMenu.config(values=self.iconMenuList)
-                    self.iconMenu.set(self.iconMenuList[-1])
+                    contents = [(self.treeviewCustomIcons.item(child)["values"][1], self.treeviewCustomIcons.item(child)["values"][0]) for child in self.treeviewCustomIcons.get_children("")]
+                    c = (self.currentIcon["size"].replace("icon", ""), self.currentIcon["label"])
+                    self.treeviewCustomIcons.insert(parent="", index=bisect_left(contents, (c[0], c[1])), values=(c[1], c[0]), tags=True)
                     
                 self.icons[icon] = {
                     "label": icon,
-                    "size": deepcopy(self.currentIcon["size"]),
-                    "position": (self.xPositionEntry.get(), self.yPositionEntry.get()),
-                    "file": deepcopy(self.currentIcon["file"])
+                    "position": (self.xPositionEntry.get(), self.yPositionEntry.get())
                     }
 
                 self.icons[icon]["image"], self.icons[icon]["photoImage"] = self.app.create_image(baseFolder + "\\lib\\dsbg_shuffle_custom_icon_images\\".replace("\\", pathSep) + self.currentIcon["file"], self.currentIcon["size"], 99, pathProvided=True, extensionProvided=True)
@@ -1430,9 +1406,9 @@ try:
                     return
                 
                 if self.iconSizeVal.get() == 0:
-                    size = "iconEnemy"
-                elif self.iconSizeVal.get() == 1:
                     size = "iconText"
+                elif self.iconSizeVal.get() == 1:
+                    size = "iconEnemy"
                 elif self.iconSizeVal.get() == 2:
                     size = "iconSet"
                 
@@ -1455,11 +1431,16 @@ try:
                         else:
                             i, p = self.app.create_image(newFile, imSize, 99, pathProvided=True, extensionProvided=True)
                         file = newFile
+
+                    self.customIconsDict[path.basename(file)] = {
+                        "originalFileName": fileName[0] + fileName[1],
+                        "size": size
+                    }
                 else:
                     i, p = self.app.create_image(file, size, 99, pathProvided=True, extensionProvided=True)
 
+                self.currentIcon["file"] = path.basename(file)
                 self.currentIcon["size"] = size
-                self.currentIcon["file"] = path.splitext(path.basename(file))[0] + ".png"
                 self.currentIcon["image"] = i
                 self.currentIcon["photoImage"] = p
 
@@ -1476,42 +1457,6 @@ try:
                     return
                 else:
                     raise
-            except Exception as e:
-                error_popup(self.root, e)
-                raise
-
-
-        def callback_name(self, P):
-            """
-            Validates whether the input is an integer in range.
-            """
-            try:
-                log("Start of callback_name")
-
-                if str.isdigit(P) and int(P) <= 400:
-                    log("End of callback_name")
-                    return True
-                else:
-                    log("End of callback_name")
-                    return False
-            except Exception as e:
-                error_popup(self.root, e)
-                raise
-
-
-        def callback_flavor(self, P):
-            """
-            Validates whether the input is an integer in range.
-            """
-            try:
-                log("Start of callback_x")
-
-                if (str.isdigit(P) and int(P) <= 600) or str(P) == "":
-                    log("End of callback_x")
-                    return True
-                else:
-                    log("End of callback_x")
-                    return False
             except Exception as e:
                 error_popup(self.root, e)
                 raise
