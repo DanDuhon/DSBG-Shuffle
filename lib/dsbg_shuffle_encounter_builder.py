@@ -10,7 +10,7 @@ try:
     from tkinter import filedialog, ttk
 
     from dsbg_shuffle_enemies import enemiesDict
-    from dsbg_shuffle_utility import PopupWindow, VerticalScrolledFrame, clear_other_tab_images, error_popup, log, baseFolder, font, fontSize11, fontSize10, fontEncounterName, fontFlavor, pathSep
+    from dsbg_shuffle_utility import PopupWindow, VerticalScrolledFrame, clear_other_tab_images, error_popup, log, set_display_bindings_by_tab, baseFolder, font, fontSize11, fontSize10, fontEncounterName, fontFlavor, pathSep
 
 
     class EncounterBuilderFrame(ttk.Frame):
@@ -608,6 +608,22 @@ try:
                 raise
 
 
+        def get_coords(self, event=None):
+            try:
+                log("Start of get_coords")
+
+                e = self.encounterBuilderScroll
+
+                x, y = event.x - 2, event.y - 2
+                if 0 <= x <= 400 and 0 <= y <= 685:
+                    e.coordsLabel.config(text="Clicked x: " + str(x) + ", y: " + str(y))
+                
+                log("End of get_coords")
+            except Exception as e:
+                error_popup(self.root, e)
+                raise
+
+
     class EncounterBuilderScrollFrame(VerticalScrolledFrame):
         def __init__(self, app, root, topFrame):
             super(EncounterBuilderScrollFrame, self).__init__(parent=topFrame)
@@ -942,7 +958,11 @@ try:
             self.tileSelections["2"]["label"].grid(column=0, row=0, padx=5, pady=5, sticky=tk.W, columnspan=4)
             self.tileSelections["3"]["label"].grid(column=0, row=0, padx=5, pady=5, sticky=tk.W, columnspan=4)
 
-            self.icons = {}
+            with open(baseFolder + "\\lib\\dsbg_shuffle_custom_icons.json".replace("\\", pathSep), "r") as f:
+                d = load(f)
+
+            self.customIconsDict = {k: v for k, v in d.items() if k == "lookup" or path.isfile(baseFolder + "\\lib\\dsbg_shuffle_custom_icon_images\\".replace("\\", pathSep) + k)}
+
             self.currentIcon = {
                 "label": None,
                 "file": "",
@@ -954,11 +974,6 @@ try:
 
             self.iconsFrame1.columnconfigure(4, minsize=180)
             self.iconsFrame1.rowconfigure(7, minsize=70)
-
-            with open(baseFolder + "\\lib\\dsbg_shuffle_custom_icon_images\\customIconsDict.json".replace("\\", pathSep), "r") as f:
-                d = load(f)
-
-            self.customIconsDict = {k: v for k, v in d.items() if k == "lookup" or path.isfile(baseFolder + "\\lib\\dsbg_shuffle_custom_icon_images\\".replace("\\", pathSep) + k)}
             
             self.iconTitle = ttk.Label(self.iconsFrame1, text=(" " * 40) + "Custom Icons", font=("Arial", 16))
             self.iconTitle.bind("<1>", lambda event: event.widget.focus_set())
@@ -1000,6 +1015,9 @@ try:
             self.yPositionEntry = ttk.Entry(self.iconsFrame1, textvariable=self.yPositionVal, width=4, validate="all", validatecommand=(vcmdY, "%P"))
             self.yPositionEntry.bind("<KeyRelease>", self.handle_wait_icon)
             self.yPositionEntry.grid(column=1, row=4, padx=(64, 5), pady=5, sticky=tk.NW, rowspan=2)
+            self.coordsLabel = ttk.Label(self.iconsFrame1)
+            self.coordsLabel.bind("<1>", lambda event: event.widget.focus_set())
+            self.coordsLabel.grid(column=1, row=5, padx=(25, 0), sticky=tk.SW)
             self.chooseIconButton = ttk.Button(self.iconsFrame1, text="Choose Image", width=16, command=lambda x=True: self.choose_icon_image(buttonSource=x))
             self.chooseIconButton.grid(column=1, row=7, padx=(5, 0), pady=5, columnspan=2)
             self.saveIconButton = ttk.Button(self.iconsFrame1, text="Save Icon", width=16, command=self.save_custom_icon)
@@ -1037,6 +1055,8 @@ try:
             self.treeviewCustomIcons.column("Type", anchor=tk.W, width=50)
             self.treeviewCustomIcons.column("Enabled", anchor=tk.W, width=50)
             self.treeviewCustomIcons.column("Image", anchor=tk.W, width=50)
+            
+            self.treeviewCustomIcons.bind("<<TreeviewSelect>>", self.change_icon)
 
             self.saveIconButton = ttk.Button(self.iconsFrame1, text="Delete Icon", width=16, command=self.delete_custom_icon)
             self.saveIconButton.grid(column=3, row=8, padx=(5, 0), pady=5, sticky=tk.E)
@@ -1286,17 +1306,20 @@ try:
             try:
                 log("Start of change_icon")
 
-                icon = self.iconMenu.get()
+                tree = event.widget
+
+                lookup = self.customIconsDict["lookup"][tree.item(tree.selection()[0])["values"][0]]
+                icon = self.customIconsDict[lookup]
 
                 if not icon:
                     log("End of change_icon")
                     return
 
-                if self.icons[icon]["size"] == "iconEnemy":
+                if icon["size"] == "iconEnemy":
                     size = "Enemy/Terrain"
-                elif self.icons[icon]["size"] == "iconText":
+                elif icon["size"] == "iconText":
                     size = "Text"
-                elif self.icons[icon]["size"] == "iconSet":
+                elif icon["size"] == "iconSet":
                     size = "Set Icon"
 
                 self.currentIcon = {
@@ -1309,8 +1332,6 @@ try:
                 }
                 self.iconNameEntry.delete("1.0", tk.END)
                 self.iconNameEntry.insert("end-1c", icon)
-                self.iconSizeMenuVal.set(size)
-                self.iconSizeMenu.set(size)
                 self.xPositionVal.set(str(self.currentIcon["position"][0] if self.currentIcon["position"] else ""))
                 self.yPositionVal.set(str(self.currentIcon["position"][1] if self.currentIcon["position"] else ""))
                 self.choose_icon_image(file=baseFolder + "\\lib\\dsbg_shuffle_custom_icon_images\\".replace("\\", pathSep) + self.currentIcon["file"])
@@ -1373,12 +1394,15 @@ try:
                 self.currentIcon["label"] = icon
 
                 self.customIconsDict["lookup"][icon] = deepcopy(self.currentIcon["file"])
+
+                with open(baseFolder + "\\lib\\dsbg_shuffle_custom_icons.json".replace("\\", pathSep), "w") as iconsFile:
+                    dump(self.customIconsDict, iconsFile)
                 
-                if icon and icon not in self.icons:
+                if icon and icon not in self.customIconsDict["lookup"]:
                     contents = [(self.treeviewCustomIcons.item(child)["values"][1], self.treeviewCustomIcons.item(child)["values"][0]) for child in self.treeviewCustomIcons.get_children("")]
                     c = (self.currentIcon["size"].replace("icon", ""), self.currentIcon["label"])
                     self.treeviewCustomIcons.insert(parent="", index=bisect_left(contents, (c[0], c[1])), values=(c[1], c[0]), tags=True)
-                    
+
                 self.icons[icon] = {
                     "label": icon,
                     "position": (self.xPositionEntry.get(), self.yPositionEntry.get())
@@ -1419,6 +1443,13 @@ try:
                     if not file:
                         return
                     
+                    if path.basename(file) in self.customIconsDict:
+                        self.app.set_bindings_buttons_menus(False)
+                        p = PopupWindow(self.root, labelText="Invalid DSBG-Shuffle encounter file.", yesButton=True, noButton=True)
+                        self.app.set_bindings_buttons_menus(True)
+                        if not p.answer:
+                            return
+                    
                     fileName = path.splitext(path.basename(file))
 
                     sizes = {"iconEnemy", "iconText", "iconSet"}
@@ -1434,8 +1465,12 @@ try:
 
                     self.customIconsDict[path.basename(file)] = {
                         "originalFileName": fileName[0] + fileName[1],
+                        "file": path.basename(file),
                         "size": size
                     }
+
+                    with open(baseFolder + "\\lib\\dsbg_shuffle_custom_icons.json".replace("\\", pathSep), "w") as iconsFile:
+                        dump(self.customIconsDict, iconsFile)
                 else:
                     i, p = self.app.create_image(file, size, 99, pathProvided=True, extensionProvided=True)
 

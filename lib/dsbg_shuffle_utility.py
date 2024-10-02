@@ -389,6 +389,20 @@ def set_display_bindings_by_tab(app, smoughActive=False):
             app.displayBottomRight.unbind("<Shift-Button 3>")
             app.displayBottomRight.unbind("<Control-1>")
             app.displayBottomRight.unbind("<Shift-Control-1>")
+    elif tab == "Encounter Builder":
+        app.displayTopLeft.bind("<Button 1>", app.encounterBuilderTab.get_coords)
+
+        app.displayTopRight.unbind("<Button 1>")
+        app.displayTopRight.unbind("<Shift-Button 1>")
+        app.displayTopRight.unbind("<Shift-Button 3>")
+        app.displayTopRight.unbind("<Control-1>")
+        app.displayTopRight.unbind("<Shift-Control-1>")
+
+        app.displayBottomRight.unbind("<Button 1>")
+        app.displayBottomRight.unbind("<Shift-Button 1>")
+        app.displayBottomRight.unbind("<Shift-Button 3>")
+        app.displayBottomRight.unbind("<Control-1>")
+        app.displayBottomRight.unbind("<Shift-Control-1>")
 
 
 def on_frame_configure(canvas):

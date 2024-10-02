@@ -19,7 +19,7 @@ try:
     from dsbg_shuffle_settings import SettingsWindow
     from dsbg_shuffle_tooltip_reference import tooltipText
     from dsbg_shuffle_treasure import generate_treasure_soul_cost, populate_treasure_tiers, treasures
-    from dsbg_shuffle_utility import CreateToolTip, PopupWindow, clear_other_tab_images, enable_binding, center, do_nothing, log, error_popup, baseFolder, pathSep
+    from dsbg_shuffle_utility import CreateToolTip, PopupWindow, center, do_nothing, enable_binding, error_popup, log, set_display_bindings_by_tab, baseFolder, pathSep
     from dsbg_shuffle_variants import VariantsFrame
 
 
@@ -658,6 +658,8 @@ try:
                 else:
                     log("End of tab_change (cleared image only)")
                     return
+                
+                set_display_bindings_by_tab(self)
 
                 log("End of tab_change")
             except Exception as e:
