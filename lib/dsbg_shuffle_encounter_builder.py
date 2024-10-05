@@ -19,7 +19,7 @@ try:
             self.app = app
             self.root = root
 
-            self.customEncounter = {}
+            self.customEncounter = {"icons": {}}
             self.bind("<1>", lambda event: event.widget.focus_set())
 
             self.customEncountersButtonFrame = ttk.Frame(self)
@@ -54,8 +54,7 @@ try:
 
                 e = self.encounterBuilderScroll
 
-                # e.iconMenuVal.set("")
-                # e.iconImageErrorsVal.set("")
+                e.iconImageErrorsVal.set("")
                 e.xPositionVal.set("")
                 e.yPositionVal.set("")
                 
@@ -375,6 +374,8 @@ try:
                 #             }}
                 #         }
                 #     }
+
+                e.iconImageErrorsVal.set("")
 
                 displayPhotoImage = ImageTk.PhotoImage(self.app.displayImage)
                 self.app.displayTopLeft.config(image=displayPhotoImage)
@@ -705,11 +706,15 @@ try:
             self.separator6 = ttk.Separator(self.interior)
             self.separator6.pack(side=tk.TOP, anchor=tk.W, padx=5, pady=5, fill="x")
             self.iconsFrame1 = ttk.Frame(self.interior)
-            self.iconsFrame1.pack(side=tk.TOP, anchor=tk.W)
+            self.iconsFrame1.pack(side=tk.TOP, anchor=tk.W, padx=5, pady=5, fill="x")
             self.iconsFrame2 = ttk.Frame(self.interior)
-            self.iconsFrame2.pack(side=tk.TOP, anchor=tk.W)
+            self.iconsFrame2.pack(side=tk.TOP, anchor=tk.W, padx=5, pady=5, fill="x")
             self.iconsFrame3 = ttk.Frame(self.interior)
-            self.iconsFrame3.pack(side=tk.TOP, anchor=tk.W)
+            self.iconsFrame3.pack(side=tk.TOP, anchor=tk.W, padx=5, pady=5, fill="x")
+            self.iconsFrame4 = ttk.Frame(self.interior)
+            self.iconsFrame4.pack(side=tk.TOP, anchor=tk.W, padx=5, pady=5, fill="x")
+            self.iconsFrame5 = ttk.Frame(self.interior)
+            self.iconsFrame5.pack(side=tk.TOP, anchor=tk.W, padx=5, pady=5, fill="x")
             
             self.infoFrame1.bind("<1>", lambda event: event.widget.focus_set())
             self.infoFrame2.bind("<1>", lambda event: event.widget.focus_set())
@@ -960,29 +965,25 @@ try:
             self.tileSelections["2"]["label"].grid(column=0, row=0, padx=5, pady=5, sticky=tk.W, columnspan=4)
             self.tileSelections["3"]["label"].grid(column=0, row=0, padx=5, pady=5, sticky=tk.W, columnspan=4)
 
-            with open(baseFolder + "\\lib\\dsbg_shuffle_custom_icons.json".replace("\\", pathSep), "r") as f:
-                d = load(f)
-
-            self.customIconsDict = {k: v for k, v in d.items() if k == "lookup" or path.isfile(baseFolder + "\\lib\\dsbg_shuffle_custom_icon_images\\".replace("\\", pathSep) + k)}
-
-            self.currentIcon = {
-                "label": None,
-                "file": "",
-                "image": None,
-                "photoImage": None,
-                "size": None,
-                "position": None
-            }
+            self.currentIcon = None
+            self.currentSize = None
+            self.currentFile = None
+            #     self.customIconsTreeviewDict[str(i)] = {
+            #         "index": self.customIconsDict[c]["index"],
+            #         "values": self.customIconsDict[c]["values"],
+            #         "image": self.customIconsDict[c]["image"]
+            #     }
+            #     self.treeviewCustomIcons.insert(parent="", index=self.customIconsDict[c]["index"], values=self.customIconsDict[c]["values"], image=self.self.customIconsDict[c]["image"], tags=False, open=True)
 
             self.iconsFrame1.columnconfigure(4, minsize=180)
             self.iconsFrame1.rowconfigure(7, minsize=70)
             
-            self.iconTitle = ttk.Label(self.iconsFrame1, text="Custom Icons", font=("Arial", 16), justify="center")
+            self.iconTitle = ttk.Label(self.iconsFrame1, text=(" " * 40) + "Custom Icons", font=("Arial", 16), justify="center")
             self.iconTitle.bind("<1>", lambda event: event.widget.focus_set())
             self.iconTitle.pack(expand=True, fill="x")
             
-            # vcmdX = (self.register(self.callback_x))
-            # vcmdY = (self.register(self.callback_y))
+            vcmdX = (self.register(self.callback_x))
+            vcmdY = (self.register(self.callback_y))
             # self.positionLabel = ttk.Label(self.iconsFrame1, text="Position\t")
             # self.positionLabel.bind("<1>", lambda event: event.widget.focus_set())
             # self.positionLabel.grid(column=1, row=2, padx=(25, 5), pady=5, sticky=tk.NW, columnspan=2)
@@ -990,15 +991,15 @@ try:
             # self.xPositionLabel.bind("<1>", lambda event: event.widget.focus_set())
             # self.xPositionLabel.grid(column=1, row=3, padx=(25, 5), sticky=tk.NW, rowspan=2)
             self.xPositionVal = tk.StringVar()
-            # self.xPositionEntry = ttk.Entry(self.iconsFrame1, textvariable=self.xPositionVal, width=4, validate="all", validatecommand=(vcmdX, "%P"))
-            # self.xPositionEntry.bind("<KeyRelease>", self.handle_wait_icon)
+            self.xPositionEntry = ttk.Entry(self.iconsFrame1, textvariable=self.xPositionVal, width=4, validate="all", validatecommand=(vcmdX, "%P"))
+            self.xPositionEntry.bind("<KeyRelease>", self.handle_wait_icon)
             # self.xPositionEntry.grid(column=1, row=3, padx=(64, 5), pady=5, sticky=tk.NW, rowspan=2)
             # self.yPositionLabel = ttk.Label(self.iconsFrame1, text="y:\n0-685\n")
             # self.yPositionLabel.bind("<1>", lambda event: event.widget.focus_set())
             # self.yPositionLabel.grid(column=1, row=4, padx=(25, 0), sticky=tk.NW, rowspan=2)
             self.yPositionVal = tk.StringVar()
-            # self.yPositionEntry = ttk.Entry(self.iconsFrame1, textvariable=self.yPositionVal, width=4, validate="all", validatecommand=(vcmdY, "%P"))
-            # self.yPositionEntry.bind("<KeyRelease>", self.handle_wait_icon)
+            self.yPositionEntry = ttk.Entry(self.iconsFrame1, textvariable=self.yPositionVal, width=4, validate="all", validatecommand=(vcmdY, "%P"))
+            self.yPositionEntry.bind("<KeyRelease>", self.handle_wait_icon)
             # self.yPositionEntry.grid(column=1, row=4, padx=(64, 5), pady=5, sticky=tk.NW, rowspan=2)
             # self.coordsLabel = ttk.Label(self.iconsFrame1)
             # self.coordsLabel.bind("<1>", lambda event: event.widget.focus_set())
@@ -1011,19 +1012,16 @@ try:
             # self.iconSaveErrors = tk.Label(self.iconsFrame1, width=26, textvariable=self.iconImageErrorsVal)
             # self.iconSaveErrors.bind("<1>", lambda event: event.widget.focus_set())
             # self.iconSaveErrors.grid(column=3, row=8, pady=5, sticky=tk.W)
-            
-            self.iconView = tk.Label(self.iconsFrame3)
-            self.iconView.bind("<1>", lambda event: event.widget.focus_set())
-            self.iconView.grid(column=0, row=6, padx=5, pady=5, sticky=tk.NSEW, rowspan=3)
 
+            self.customIconsTreeviewDict = {}
             self.customIconsTreeviewFrame = ttk.Frame(self.iconsFrame2)
-            self.customIconsTreeviewFrame.pack()
+            self.customIconsTreeviewFrame.pack(fill="x")
             self.scrollbarTreeviewCustomIcons = ttk.Scrollbar(self.customIconsTreeviewFrame)
             self.scrollbarTreeviewCustomIcons.pack(side="right", fill="y")
             self.treeviewCustomIcons = ttk.Treeview(
                 self.customIconsTreeviewFrame,
                 selectmode="browse",
-                columns=("Name", "Type", "Image"),
+                columns=("Name", "Size"),
                 yscrollcommand=self.scrollbarTreeviewCustomIcons.set,
                 height=9
             )
@@ -1034,33 +1032,99 @@ try:
             self.treeviewCustomIcons.column('#0', width=0)
 
             self.treeviewCustomIcons.heading("Name", text="Name", anchor=tk.W)
-            self.treeviewCustomIcons.heading("Type", text="Type", anchor=tk.W)
-            self.treeviewCustomIcons.heading("Image", text="Image", anchor=tk.W)
-            self.treeviewCustomIcons.column("Name", anchor=tk.W, width=72)
-            self.treeviewCustomIcons.column("Type", anchor=tk.W, width=50)
-            self.treeviewCustomIcons.column("Image", anchor=tk.W, width=50)
+            self.treeviewCustomIcons.heading("Size", text="Size", anchor=tk.W)
+            self.treeviewCustomIcons.column("Name", anchor=tk.W)
+            self.treeviewCustomIcons.column("Size", anchor=tk.W)
             
             self.treeviewCustomIcons.bind("<<TreeviewSelect>>", self.change_icon)
+
+            with open(baseFolder + "\\lib\\dsbg_shuffle_custom_icons.json".replace("\\", pathSep), "r") as f:
+                d = load(f)
+
+            self.customIconsDict = {(tuple(k.split("||")) if k != "lookup" else k): v for k, v in d.items() if k == "lookup" or path.isfile(baseFolder + "\\lib\\dsbg_shuffle_custom_icon_images\\".replace("\\", pathSep) + d[k]["file"])}
+            for k in self.customIconsDict:
+                if k == "lookup":
+                    continue
+
+                if self.customIconsDict[k]["size"] == "iconText":
+                    sizeDisplay = "Text"
+                elif self.customIconsDict[k]["size"] == "iconEnemy":
+                    sizeDisplay = "Enemy/Terrain"
+                elif self.customIconsDict[k]["size"] == "iconSet":
+                    sizeDisplay = "Set Icon"
+
+                contents = [(self.treeviewCustomIcons.item(child)["values"][1], self.treeviewCustomIcons.item(child)["values"][0]) for child in self.treeviewCustomIcons.get_children()]
+                iid = str(len(contents))
+                c = (sizeDisplay, self.customIconsDict[k]["label"])
+                if self.customIconsDict[k]["label"] not in set([c[1] for c in contents]):
+                    self.customIconsTreeviewDict[c[1]] = {
+                        "iid": iid,
+                        "index": bisect_left(contents, (c[0], c[1])),
+                        "values": (c[1], c[0]),
+                        "image": self.customIconsDict[k]["treeviewPhotoImage"]
+                    }
+                    self.treeviewCustomIcons.insert(parent="", iid=iid, index=self.customIconsTreeviewDict[c[1]]["index"], values=self.customIconsTreeviewDict[c[1]]["values"], image=self.customIconsTreeviewDict[c[1]]["image"], tags=False, open=True)
             
             self.iconNameLabel = ttk.Label(self.iconsFrame3, text="Icon Name\t")
             self.iconNameLabel.bind("<1>", lambda event: event.widget.focus_set())
-            self.iconNameLabel.grid(column=0, row=2, padx=5, pady=(5, 25), sticky=tk.W)
+            self.iconNameLabel.grid(column=0, row=0, padx=5, pady=5, sticky=tk.W)
             self.iconNameEntry = tk.Text(self.iconsFrame3, width=20, height=1, bg="#181818")
-            self.iconNameEntry.grid(column=1, row=2, padx=(25, 5), pady=(5, 25), columnspan=2, sticky=tk.W)
+            self.iconNameEntry.grid(column=0, row=0, padx=(80, 25), pady=5, sticky=tk.W)
+            
+            self.iconView = tk.Label(self.iconsFrame3)
+            self.iconView.bind("<1>", lambda event: event.widget.focus_set())
+            self.iconView.grid(column=0, row=1, padx=5, pady=5, sticky=tk.NSEW, columnspan=2, rowspan=3)
             
             self.iconSizeLabel = ttk.Label(self.iconsFrame3, text="Icon Size\t")
             self.iconSizeLabel.bind("<1>", lambda event: event.widget.focus_set())
-            self.iconSizeLabel.grid(column=0, row=3, padx=5, pady=5, sticky=tk.W)
+            self.iconSizeLabel.grid(column=2, row=0, padx=5, pady=5, sticky=tk.W)
             self.iconSizeVal = tk.IntVar()
-            self.iconSizeRadio1 = ttk.Radiobutton(self.iconsFrame3, text="Text", variable=self.iconSizeVal, value=0, command=lambda: self.choose_icon_image(file=baseFolder + "\\lib\\dsbg_shuffle_custom_icon_images\\".replace("\\", pathSep) + self.currentIcon["file"][:self.currentIcon["file"].rfind("_")+1] + "iconText.png"))
-            self.iconSizeRadio1.grid(column=0, row=4, padx=5, pady=5, sticky=tk.W)
-            self.iconSizeRadio2 = ttk.Radiobutton(self.iconsFrame3, text="Enemy/Terrain", variable=self.iconSizeVal, value=1, command=lambda: self.choose_icon_image(file=baseFolder + "\\lib\\dsbg_shuffle_custom_icon_images\\".replace("\\", pathSep) + self.currentIcon["file"][:self.currentIcon["file"].rfind("_")+1] + "iconEnemy.png"))
-            self.iconSizeRadio2.grid(column=0, row=5, padx=5, pady=5, sticky=tk.W)
-            self.iconSizeRadio3 = ttk.Radiobutton(self.iconsFrame3, text="Set Icon", variable=self.iconSizeVal, value=2, command=lambda: self.choose_icon_image(file=baseFolder + "\\lib\\dsbg_shuffle_custom_icon_images\\".replace("\\", pathSep) + self.currentIcon["file"][:self.currentIcon["file"].rfind("_")+1] + "iconSet.png"))
-            self.iconSizeRadio3.grid(column=0, row=6, padx=5, pady=5, sticky=tk.W)
+            self.iconSizeRadio1 = ttk.Radiobutton(self.iconsFrame3, text="Text", variable=self.iconSizeVal, value=0, command=lambda: self.choose_icon_image(file=self.customIconsDict.get((self.currentIcon, self.currentSize), {}).get("originalFileFullPath", None)))
+            self.iconSizeRadio1.grid(column=2, row=1, padx=5, pady=5, sticky=tk.W)
+            self.iconSizeRadio2 = ttk.Radiobutton(self.iconsFrame3, text="Enemy/Terrain", variable=self.iconSizeVal, value=1, command=lambda: self.choose_icon_image(file=self.customIconsDict.get((self.currentIcon, self.currentSize), {}).get("originalFileFullPath", None)))
+            self.iconSizeRadio2.grid(column=2, row=2, padx=5, pady=5, sticky=tk.W)
+            self.iconSizeRadio3 = ttk.Radiobutton(self.iconsFrame3, text="Set Icon", variable=self.iconSizeVal, value=2, command=lambda: self.choose_icon_image(file=self.customIconsDict.get((self.currentIcon, self.currentSize), {}).get("originalFileFullPath", None)))
+            self.iconSizeRadio3.grid(column=2, row=3, padx=5, pady=5, sticky=tk.W)
+            
+            self.chooseIconButton = ttk.Button(self.iconsFrame3, text="Choose Image", width=16, command=lambda x=True: self.choose_icon_image(buttonSource=x))
+            self.chooseIconButton.grid(column=3, row=0, padx=5, pady=5, sticky=tk.E)
+            self.saveIconButton = ttk.Button(self.iconsFrame3, text="Save Icon", width=16, command=lambda: self.save_custom_icon(file=self.currentIcon))
+            self.saveIconButton.grid(column=3, row=1, padx=5, pady=5, sticky=tk.E)
+            self.iconImageErrorsVal = tk.StringVar()
+            self.iconSaveErrors = tk.Label(self.iconsFrame3, width=26, textvariable=self.iconImageErrorsVal)
+            self.iconSaveErrors.bind("<1>", lambda event: event.widget.focus_set())
+            self.iconSaveErrors.grid(column=3, row=2, pady=5)
+            self.saveIconButton = ttk.Button(self.iconsFrame3, text="Delete Icon", width=16, command=self.delete_custom_icon)
+            self.saveIconButton.grid(column=3, row=3, padx=5, pady=5, sticky=tk.E)
+            self.saveIconButton = ttk.Button(self.iconsFrame3, text="Add to Encounter", width=16, command=self.delete_custom_icon)
+            self.saveIconButton.grid(column=0, row=4, padx=5, pady=5, sticky=tk.W)
 
-            # self.saveIconButton = ttk.Button(self.iconsFrame1, text="Delete Icon", width=16, command=self.delete_custom_icon)
-            # self.saveIconButton.grid(column=3, row=8, padx=(5, 0), pady=5, sticky=tk.E)
+            self.encounterIconsTreeviewDict = {}
+            self.encounterIconsTreeviewFrame = ttk.Frame(self.iconsFrame4)
+            self.encounterIconsTreeviewFrame.pack(fill="x")
+            self.scrollbarTreeviewEncounterIcons = ttk.Scrollbar(self.encounterIconsTreeviewFrame)
+            self.scrollbarTreeviewEncounterIcons.pack(side="right", fill="y")
+            self.treeviewEncounterIcons = ttk.Treeview(
+                self.encounterIconsTreeviewFrame,
+                selectmode="browse",
+                columns=("Name", "Size", "Position"),
+                yscrollcommand=self.scrollbarTreeviewEncounterIcons.set,
+                height=9
+            )
+
+            self.treeviewEncounterIcons.pack(expand=True, fill="both")
+            self.scrollbarTreeviewEncounterIcons.config(command=self.treeviewEncounterIcons.yview)
+
+            self.treeviewEncounterIcons.column('#0', width=0)
+
+            self.treeviewEncounterIcons.heading("Name", text="Name", anchor=tk.W)
+            self.treeviewEncounterIcons.heading("Size", text="Size", anchor=tk.W)
+            self.treeviewEncounterIcons.heading("Position", text="Position", anchor=tk.W)
+            self.treeviewEncounterIcons.column("Name", anchor=tk.W)
+            self.treeviewEncounterIcons.column("Size", anchor=tk.W)
+            self.treeviewEncounterIcons.column("Position", anchor=tk.W)
+            
+            #self.treeviewEncounterIcons.bind("<<TreeviewSelect>>", self.change_icon_encounter)
 
 
         def handle_wait(self, event):
@@ -1078,7 +1142,7 @@ try:
                 self.after_cancel(self._afterId)
 
             # create a new job
-            self.after(1, self.save_custom_icon())
+            self.after(1, self.save_custom_icon(file=self.currentIcon))
 
 
         def search_layout_combobox(self, event):
@@ -1309,33 +1373,30 @@ try:
 
                 tree = event.widget
 
-                lookup = self.customIconsDict["lookup"][tree.item(tree.selection()[0])["values"][0]]
-                icon = self.customIconsDict[lookup]
-
-                if not icon:
+                if not tree.selection():
                     log("End of change_icon")
                     return
 
-                if icon["size"] == "iconEnemy":
-                    size = "Enemy/Terrain"
-                elif icon["size"] == "iconText":
-                    size = "Text"
-                elif icon["size"] == "iconSet":
-                    size = "Set Icon"
+                lookup = self.customIconsDict["lookup"][tree.item(tree.selection()[0])["values"][0]]
 
-                self.currentIcon = {
-                    "label": icon,
-                    "file": self.icons[icon]["file"],
-                    "size": self.icons[icon]["size"],
-                    "position": self.icons[icon]["position"],
-                    "image": self.icons[icon]["image"],
-                    "photoImage": self.icons[icon]["photoImage"]
-                }
+                if not self.customIconsDict[lookup]:
+                    log("End of change_icon")
+                    return
+
+                self.currentIcon = self.customIconsDict[lookup]["originalFileName"]
+                self.currentSize = self.customIconsDict[lookup]["size"]
+                self.currentFile = self.customIconsDict[lookup]["file"]
                 self.iconNameEntry.delete("1.0", tk.END)
-                self.iconNameEntry.insert("end-1c", icon)
-                self.xPositionVal.set(str(self.currentIcon["position"][0] if self.currentIcon["position"] else ""))
-                self.yPositionVal.set(str(self.currentIcon["position"][1] if self.currentIcon["position"] else ""))
-                self.choose_icon_image(file=baseFolder + "\\lib\\dsbg_shuffle_custom_icon_images\\".replace("\\", pathSep) + self.currentIcon["file"])
+                self.iconNameEntry.insert("end-1c", self.customIconsDict[lookup]["label"])
+
+                if self.customIconsDict[lookup]["size"] == "iconText":
+                    self.iconSizeVal.set(0)
+                elif self.customIconsDict[lookup]["size"] == "iconEnemy":
+                    self.iconSizeVal.set(1)
+                elif self.customIconsDict[lookup]["size"] == "iconSet":
+                    self.iconSizeVal.set(2)
+
+                self.choose_icon_image(file=baseFolder + "\\lib\\dsbg_shuffle_custom_icon_images\\".replace("\\", pathSep) + self.customIconsDict[lookup]["file"])
                 
                 log("End of change_icon")
             except Exception as e:
@@ -1347,23 +1408,20 @@ try:
             try:
                 log("Start of delete_custom_icon")
 
+                if not self.treeviewCustomIcons.selection():
+                    log("End delete_custom_icon")
+                    return
+                
+                sel = self.treeviewCustomIcons.selection()
+                
+                del self.customIconsDict[(self.currentIcon, self.currentSize)]
+                
+                self.treeviewCustomIcons.delete(sel)
+
+                self.iconNameEntry.delete("1.0", tk.END)
                 self.iconImageErrorsVal.set("")
-                self.iconSaveErrors.config(image="")
-                self.iconSaveErrors.image = None
-                if self.currentIcon["label"] in self.icons:
-                    del self.icons[self.currentIcon["label"]]
-                    self.iconMenuList.remove(self.currentIcon["label"])
-                    self.iconMenuVal.set("")
-                self.currentIcon = {
-                    "label": None,
-                    "file": "",
-                    "image": None,
-                    "photoImage": None,
-                    "size": None,
-                    "position": None
-                }
-                self.iconMenu.config(values=self.iconMenuList)
-                self.iconMenu.set("")
+                self.iconView.config(image="")
+                self.iconView.image = None
 
                 self.topFrame.apply_changes()
                 
@@ -1373,16 +1431,30 @@ try:
                 raise
 
 
-        def save_custom_icon(self, event=None):
+        def save_custom_icon(self, file, event=None):
             try:
                 log("Start of save_custom_icon")
 
+                if not file:
+                    log("End of save_custom_icon")
+                    return
+
                 errors = []
                 icon = self.iconNameEntry.get("1.0", "end").strip()
+                
+                if self.iconSizeVal.get() == 0:
+                    size = "iconText"
+                    sizeDisplay = "Text"
+                elif self.iconSizeVal.get() == 1:
+                    size = "iconEnemy"
+                    sizeDisplay = "Enemy/Terrain"
+                elif self.iconSizeVal.get() == 2:
+                    size = "iconSet"
+                    sizeDisplay = "Set Icon"
 
                 if not icon:
                     errors.append("name")
-                if not self.currentIcon["image"]:
+                if (file, size) not in self.customIconsDict or not self.customIconsDict[(file, size)]["image"]:
                     errors.append("image")
 
                 if errors:
@@ -1392,27 +1464,47 @@ try:
 
                 self.iconImageErrorsVal.set("")
 
-                self.currentIcon["label"] = icon
+                self.customIconsDict[(file, size)]["label"] = icon
 
-                self.customIconsDict["lookup"][icon] = deepcopy(self.currentIcon["file"])
+                self.customIconsDict["lookup"][icon] = (file, size)
+
+                saveDict = {}
+                for key in self.customIconsDict:
+                    if key == "lookup":
+                        saveDict["lookup"] = self.customIconsDict["lookup"]
+                    else:
+                        saveDict["||".join(key)] = {k: v for k, v in self.customIconsDict[key].items() if "mage" not in k}
 
                 with open(baseFolder + "\\lib\\dsbg_shuffle_custom_icons.json".replace("\\", pathSep), "w") as iconsFile:
-                    dump(self.customIconsDict, iconsFile)
-                
-                if icon and icon not in self.customIconsDict["lookup"]:
-                    contents = [(self.treeviewCustomIcons.item(child)["values"][1], self.treeviewCustomIcons.item(child)["values"][0]) for child in self.treeviewCustomIcons.get_children("")]
-                    c = (self.currentIcon["size"].replace("icon", ""), self.currentIcon["label"])
-                    self.treeviewCustomIcons.insert(parent="", index=bisect_left(contents, (c[0], c[1])), values=(c[1], c[0]), tags=True)
+                    dump(saveDict, iconsFile)
 
-                self.icons[icon] = {
+                self.topFrame.customEncounter["icons"][icon] = {
                     "label": icon,
                     "position": (self.xPositionEntry.get(), self.yPositionEntry.get())
                     }
 
-                self.icons[icon]["image"], self.icons[icon]["photoImage"] = self.app.create_image(baseFolder + "\\lib\\dsbg_shuffle_custom_icon_images\\".replace("\\", pathSep) + self.currentIcon["file"], self.currentIcon["size"], 99, pathProvided=True, extensionProvided=True)
-                
-                self.topFrame.customEncounter["icons"] = {k: v for k, v in self.icons.items() if "" not in self.icons[k]["position"]}
+                self.topFrame.customEncounter["icons"][icon]["image"], self.topFrame.customEncounter["icons"][icon]["photoImage"] = self.app.create_image(self.customIconsDict[(file, size)]["originalFileFullPath"], self.customIconsDict[(file, size)]["size"], 99, pathProvided=True, extensionProvided=True)
 
+                newFile = baseFolder + "\\lib\\dsbg_shuffle_custom_icon_images\\".replace("\\", pathSep) + self.customIconsDict[(file, size)]["file"]
+                if not path.isfile(newFile):
+                    self.topFrame.customEncounter["icons"][icon]["image"].save(newFile)
+
+                self.currentFile = deepcopy(self.customIconsDict[(file, size)]["file"])
+
+                contents = [(self.treeviewCustomIcons.item(child)["values"][1], self.treeviewCustomIcons.item(child)["values"][0]) for child in self.treeviewCustomIcons.get_children()]
+                iid = str(len(contents))
+                c = (sizeDisplay, self.customIconsDict[(file, size)]["label"])
+                if icon not in set([c[1] for c in contents]):
+                    self.customIconsTreeviewDict[c[1]] = {
+                        "iid": iid,
+                        "index": bisect_left(contents, (c[0], c[1])),
+                        "values": (c[1], c[0]),
+                        "image": self.customIconsDict[(file, size)]["treeviewPhotoImage"]
+                    }
+                    self.treeviewCustomIcons.insert(parent="", iid=iid, index=self.customIconsTreeviewDict[c[1]]["index"], values=self.customIconsTreeviewDict[c[1]]["values"], image=self.customIconsTreeviewDict[c[1]]["image"], tags=False, open=True)
+                else:
+                    self.treeviewCustomIcons.item(self.customIconsTreeviewDict[c[1]]["iid"], values=(c[1], c[0]))
+                
                 self.topFrame.apply_changes()
 
                 self.iconImageErrorsVal.set("Saved " + datetime.now().strftime("%H:%M:%S"))
@@ -1427,7 +1519,8 @@ try:
             try:
                 log("Start of choose_icon_image, file={}".format(str(file)))
 
-                if file and not self.currentIcon["file"]:
+                if not buttonSource and not self.currentIcon:
+                    log("\tEnd of choose_icon_image")
                     return
                 
                 if self.iconSizeVal.get() == 0:
@@ -1436,52 +1529,52 @@ try:
                     size = "iconEnemy"
                 elif self.iconSizeVal.get() == 2:
                     size = "iconSet"
+
+                self.currentSize = deepcopy(size)
                 
-                if not file and buttonSource:
+                if buttonSource:
                     file = filedialog.askopenfilename(initialdir=baseFolder)
+
+                    self.currentIcon = path.basename(file)
 
                     # If they canceled, do nothing.
                     if not file:
                         return
                     
-                    if path.basename(file) in self.customIconsDict:
+                    if (self.currentIcon, size) in self.customIconsDict:
                         self.app.set_bindings_buttons_menus(False)
-                        p = PopupWindow(self.root, labelText="Invalid DSBG-Shuffle encounter file.", yesButton=True, noButton=True)
+                        p = PopupWindow(self.root, labelText="Replace existing icon image?", yesButton=True, noButton=True)
                         self.app.set_bindings_buttons_menus(True)
                         if not p.answer:
                             return
                     
-                    fileName = path.splitext(path.basename(file))
+                    fileName = path.splitext(self.currentIcon)
+                    self.currentFile = fileName[0] + fileName[1]
 
-                    sizes = {"iconEnemy", "iconText", "iconSet"}
-
-                    for imSize in list(sizes - set([size])) + [size]:
-                        newFile = baseFolder + "\\lib\\dsbg_shuffle_custom_icon_images\\".replace("\\", pathSep) + fileName[0] + "_" + imSize + ".png"
-                        if not path.isfile(newFile):
-                            i, p = self.app.create_image(file, imSize, 99, pathProvided=True, extensionProvided=True)
-                            i.save(newFile)
-                        else:
-                            i, p = self.app.create_image(newFile, imSize, 99, pathProvided=True, extensionProvided=True)
-                        file = newFile
-
-                    self.customIconsDict[path.basename(file)] = {
-                        "originalFileName": fileName[0] + fileName[1],
-                        "file": path.basename(file),
-                        "size": size
-                    }
-
-                    with open(baseFolder + "\\lib\\dsbg_shuffle_custom_icons.json".replace("\\", pathSep), "w") as iconsFile:
-                        dump(self.customIconsDict, iconsFile)
-                else:
                     i, p = self.app.create_image(file, size, 99, pathProvided=True, extensionProvided=True)
 
-                self.currentIcon["file"] = path.basename(file)
-                self.currentIcon["size"] = size
-                self.currentIcon["image"] = i
-                self.currentIcon["photoImage"] = p
+                if (self.currentIcon, size) not in self.customIconsDict:
+                    i, p = self.app.create_image(file, size, 99, pathProvided=True, extensionProvided=True)
+                    self.customIconsDict[(self.currentIcon, size)] = {
+                        "originalFileName": self.currentFile,
+                        "originalFileFullPath": file,
+                        "file": self.currentIcon[:-4] + "_" + size + ".png",
+                        "size": size,
+                        "image": i,
+                        "photoImage": p
+                    }
+                else:
+                    p = self.customIconsDict[(self.currentIcon, size)]["photoImage"]
+
+                if size != "iconText" and "treeviewPhotoImage" not in self.customIconsDict[(self.currentIcon, size)]:
+                    _, self.customIconsDict[(self.currentIcon, size)]["treeviewPhotoImage"] = self.app.create_image(file, "iconText", 99, pathProvided=True, extensionProvided=True)
+                elif "treeviewPhotoImage" not in self.customIconsDict[(self.currentIcon, size)]:
+                    self.customIconsDict[(self.currentIcon, size)]["treeviewPhotoImage"] = p
 
                 self.iconView.config(image=p)
                 self.iconView.image=p
+
+                self.iconImageErrorsVal.set("")
 
                 log("\tEnd of choose_icon_image")
             except UnidentifiedImageError:
