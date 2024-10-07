@@ -510,41 +510,52 @@ try:
                         else:
                             self.customEncounter["tileSelections"][tile]["startingNodes"]["value"] = 0
 
-                # Custom Icon legacy conversion
-                lookupsToAdd = {}
-                for icon in self.customEncounter["icons"]:
-                    if "file" in self.customEncounter["icons"][icon]:
-                        label = self.customEncounter["icons"][icon]["label"]
-                        size = self.customEncounter["icons"][icon]["size"]
-                        file = self.customEncounter["icons"][icon]["file"]
-                        fileName = path.basename(file)
-                        position = self.customEncounter["icons"][icon]["position"]
-                        iconCount = len([int(k) for k in self.customEncounter["icons"].keys() if k.isdigit()] + [k for k in e.customIconsDict if k != "lookup"])
-                        iid = str(iconCount)
-                        if (fileName, size) not in e.customIconsDict:
-                            e.customIconsDict["lookup"][label] = (fileName, size)
-                            e.customIconsDict[(fileName, size)] = {
-                                "originalFileName": fileName,
-                                "originalFileFullPath": file,
-                                "file": fileName,
-                                "size": size,
-                                "label": label,
-                                "iid": iid
+                    if "encounterScale1" in self.customEncounter:
+                        del self.customEncounter["encounterScale1"]
+                    if "encounterScale2" in self.customEncounter:
+                        del self.customEncounter["encounterScale2"]
+                    if "flavorScale1" in self.customEncounter:
+                        del self.customEncounter["flavorScale1"]
+                    if "flavorScale2" in self.customEncounter:
+                        del self.customEncounter["flavorScale2"]
+
+                    # Custom Icon legacy conversion
+                    lookupsToAdd = {}
+                    for icon in self.customEncounter["icons"]:
+                        if "file" in self.customEncounter["icons"][icon]:
+                            label = self.customEncounter["icons"][icon]["label"]
+                            size = self.customEncounter["icons"][icon]["size"]
+                            file = self.customEncounter["icons"][icon]["file"]
+                            fileName = path.basename(file)
+                            position = self.customEncounter["icons"][icon]["position"]
+                            iconCount = len([int(k) for k in self.customEncounter["icons"].keys() if k.isdigit()] + [k for k in e.customIconsDict if k != "lookup"])
+                            iid = str(iconCount)
+                            if (fileName, size) not in e.customIconsDict:
+                                e.customIconsDict["lookup"][label] = (fileName, size)
+                                e.customIconsDict[(fileName, size)] = {
+                                    "originalFileName": fileName,
+                                    "originalFileFullPath": file,
+                                    "file": fileName,
+                                    "size": size,
+                                    "label": label,
+                                    "iid": iid
+                                }
+                            lookupsToAdd[iid] = {
+                                "lookup": (fileName, size),
+                                "position": deepcopy(position)
                             }
-                        lookupsToAdd[iid] = {
-                            "lookup": (fileName, size),
-                            "position": deepcopy(position)
-                        }
 
-                self.customEncounter["icons"] = self.customEncounter["icons"] | lookupsToAdd
+                    self.customEncounter["icons"] = self.customEncounter["icons"] | lookupsToAdd
 
-                keysToDelete = []
-                for icon in self.customEncounter["icons"]:
-                    if not icon.isdigit():
-                        keysToDelete.append(icon)
+                    keysToDelete = []
+                    for icon in self.customEncounter["icons"]:
+                        if not icon.isdigit():
+                            keysToDelete.append(icon)
 
-                for key in keysToDelete:
-                    del self.customEncounter["icons"][key]
+                    for key in keysToDelete:
+                        del self.customEncounter["icons"][key]
+
+                    #self.save_custom_encounter()
 
                 # Check to see if there are any invalid keys in the JSON file.
                 # This is about as sure as I can be that you can't load random JSON into the app.
@@ -568,6 +579,8 @@ try:
                     e.customIconsDict[lookup]["image"] = i
                     e.customIconsDict[lookup]["photoImage"] = p
 
+                    _, e.customIconsDict[lookup]["treeviewImage"] = self.app.create_image(baseFolder + "\\lib\\dsbg_shuffle_custom_icon_images\\".replace("\\", pathSep) + e.customIconsDict[lookup]["file"], "iconTreeview", 99, pathProvided=True, extensionProvided=True, emptySetIcon=self.customEncounter["emptySetIcon"])
+
                     if e.customIconsDict[lookup]["size"] == "iconText":
                         sizeDisplay = "Text"
                     elif e.customIconsDict[lookup]["size"] == "iconEnemy":
@@ -583,7 +596,7 @@ try:
                         "iid": iid,
                         "index": bisect_left(contents, (c[0], c[1])),
                         "values": (c[1], c[0]),
-                        "image": e.customIconsDict[lookup]["photoImage"]
+                        "image": e.customIconsDict[lookup]["treeviewImage"]
                     }
                     e.treeviewCustomIcons.insert(parent="", iid=iid, index=e.customIconsTreeviewDict[c[1]]["index"], values=e.customIconsTreeviewDict[c[1]]["values"], image=e.customIconsTreeviewDict[c[1]]["image"], tags=False, open=True)
                     e.customIconsDict[lookup]["iid"] = iid
@@ -693,9 +706,8 @@ try:
                 if 0 <= x <= 400 and 0 <= y <= 685:
                     for icon in e.encounterIcons:
                         if e.encounterIcons[icon]["lockVal"].get():
-                            continue
-                        e.encounterIcons[icon]["position"][0].set(x)
-                        e.encounterIcons[icon]["position"][1].set(y)
+                            e.encounterIcons[icon]["position"][0].set(x)
+                            e.encounterIcons[icon]["position"][1].set(y)
 
                 self.apply_changes()
                 
@@ -1502,9 +1514,10 @@ try:
                     self.customIconsTreeviewDict[c[1]] = {
                         "iid": iid,
                         "index": bisect_left(contents, (c[0], c[1])),
-                        "values": (c[1], c[0]),
-                        "image": self.customIconsDict[(file, size)]["photoImage"]
+                        "values": (c[1], c[0])
                     }
+                    _, self.customIconsDict[(file, size)]["treeviewImage"] = self.app.create_image(baseFolder + "\\lib\\dsbg_shuffle_custom_icon_images\\".replace("\\", pathSep) + self.customIconsDict[(file, size)]["file"], "iconTreeview", 99, pathProvided=True, extensionProvided=True)
+                    self.customIconsTreeviewDict[c[1]]["image"] = self.customIconsDict[(file, size)]["treeviewImage"]
                     self.treeviewCustomIcons.insert(parent="", iid=iid, index=self.customIconsTreeviewDict[c[1]]["index"], values=self.customIconsTreeviewDict[c[1]]["values"], image=self.customIconsTreeviewDict[c[1]]["image"], tags=False, open=True)
                     self.customIconsDict[(file, size)]["iid"] = iid
                 else:
@@ -1640,7 +1653,7 @@ try:
 
                 self.encounterIcons[id]["xEntry"] = ttk.Entry(self.iconsFrame4, textvariable=self.encounterIcons[id]["position"][0], width=4, validate="all", validatecommand=(self.vcmdX, "%P"))
                 self.encounterIcons[id]["yEntry"] = ttk.Entry(self.iconsFrame4, textvariable=self.encounterIcons[id]["position"][1], width=4, validate="all", validatecommand=(self.vcmdY, "%P"))
-                self.encounterIcons[id]["lock"] = ttk.Checkbutton(self.iconsFrame4, text="Lock Position", variable=self.encounterIcons[id]["lockVal"], style="Switch.TCheckbutton")
+                self.encounterIcons[id]["lock"] = ttk.Checkbutton(self.iconsFrame4, text="Click Position", variable=self.encounterIcons[id]["lockVal"], style="Switch.TCheckbutton")
                 self.encounterIcons[id]["view"].config(image=self.encounterIcons[id]["viewImage"])
                 self.encounterIcons[id]["view"].image = self.encounterIcons[id]["viewImage"]
 
@@ -1652,6 +1665,7 @@ try:
                         if lookup in set([self.topFrame.customEncounter["icons"][l]["lookup"] for l in self.topFrame.customEncounter["icons"]]) and pos[0] and pos[1]:
                             self.encounterIcons[id]["position"][0].set(pos[0])
                             self.encounterIcons[id]["position"][1].set(pos[1])
+                        else:
                             self.encounterIcons[id]["lock"].invoke()
 
                 self.encounterIcons[id]["view"].bind("<1>", lambda event: event.widget.focus_set())

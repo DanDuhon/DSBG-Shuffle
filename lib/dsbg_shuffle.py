@@ -140,7 +140,6 @@ try:
                 self.emptySetIcon = self.create_image("empty_set_icon.png", "levelIcon", 99, extensionProvided=True)
                 
                 _, self.iconBg1PhotoImage = self.create_image("icon_background1.jpg", "iconBg1", 99, extensionProvided=True)
-                _, self.iconBg2PhotoImage = self.create_image("icon_background2.jpg", "iconBg2", 99, extensionProvided=True)
 
                 self.levelIcons = {
                     1: self.create_image("custom_encounter_level1_icon.png", "levelIcon", 99, extensionProvided=True),
@@ -1298,7 +1297,8 @@ try:
                             "nodesVertical",
                             "tileNum",
                             "iconBg1",
-                            "iconBg2"
+                            "iconBg2",
+                            "iconBg3"
                         }:
                             subfolder = "custom_encounters\\"
 
@@ -1408,6 +1408,21 @@ try:
                         image = Image.open(imagePath).resize((40, 60), Image.Resampling.LANCZOS)
                     elif imageType == "terrain":
                         image = Image.open(imagePath).resize((21, 24), Image.Resampling.LANCZOS)
+                    elif imageType == "iconTreeview":
+                        i = Image.open(imagePath)
+                        width, height = i.size
+                        if width > height:
+                            mod = 20 / width
+                        else:
+                            mod = 20 / height
+                        img, _ = self.create_image("icon_background3.jpg", "iconBg3", 99, extensionProvided=True)
+                        im = Image.open(imagePath).resize((int(width * mod), int(height * mod)), Image.Resampling.LANCZOS)
+                        bgW, bgH = img.size
+                        iW, iH = im.size
+                        offset = ((bgW - iW) // 2, (bgH - iH) // 2)
+                        img.paste(im=im, box=offset, mask=im)
+                        log("\tEnd of create_image")
+                        return img, ImageTk.PhotoImage(img)
                     elif imageType == "iconText":
                         i = Image.open(imagePath)
                         width, height = i.size
@@ -1475,6 +1490,9 @@ try:
                         return image, ImageTk.PhotoImage(image)
                     elif imageType == "iconBg2":
                         image = Image.open(imagePath).resize((74, 75), Image.Resampling.LANCZOS)
+                        return image, ImageTk.PhotoImage(image)
+                    elif imageType == "iconBg3":
+                        image = Image.open(imagePath).resize((20, 20), Image.Resampling.LANCZOS)
                         return image, ImageTk.PhotoImage(image)
 
                 log("\tEnd of create_image")
