@@ -138,6 +138,9 @@ try:
                 self.rewardsTrialIcon = self.create_image("custom_encounter_rewards_trial.png", "reward", 99, extensionProvided=True)
 
                 self.emptySetIcon = self.create_image("empty_set_icon.png", "levelIcon", 99, extensionProvided=True)
+                
+                _, self.iconBg1PhotoImage = self.create_image("icon_background1.jpg", "iconBg1", 99, extensionProvided=True)
+                _, self.iconBg2PhotoImage = self.create_image("icon_background2.jpg", "iconBg2", 99, extensionProvided=True)
 
                 self.levelIcons = {
                     1: self.create_image("custom_encounter_level1_icon.png", "levelIcon", 99, extensionProvided=True),
@@ -1132,7 +1135,7 @@ try:
                 raise
 
 
-        def create_image(self, imageFileName, imageType, level=None, expansion=None, pathProvided=False, extensionProvided=False, customEncounter=False, emptySetIcon=False):
+        def create_image(self, imageFileName, imageType, level=None, expansion=None, pathProvided=False, extensionProvided=False, customEncounter=False, emptySetIcon=False, addToBg1=False, addToBg2=False):
             """
             Create an image to be displayed in the encounter frame.
 
@@ -1293,7 +1296,9 @@ try:
                             "nodes1TileHorizontal",
                             "nodesHorizontal",
                             "nodesVertical",
-                            "tileNum"
+                            "tileNum",
+                            "iconBg1",
+                            "iconBg2"
                         }:
                             subfolder = "custom_encounters\\"
 
@@ -1410,8 +1415,17 @@ try:
                             mod = 13 / width
                         else:
                             mod = 13 / height
-                        img = Image.new("RGBA", (13, 13), (0, 0, 0, 0))
-                        img.paste(im=Image.open(imagePath).resize((int(width * mod), int(height * mod)), Image.Resampling.LANCZOS))
+                        if addToBg1:
+                            img, _ = self.create_image("icon_background1.jpg", "iconBg1", 99, extensionProvided=True)
+                        elif addToBg2:
+                            img, _ = self.create_image("icon_background2.jpg", "iconBg2", 99, extensionProvided=True)
+                        else:
+                            img = Image.new("RGBA", (13, 13), (0, 0, 0, 0))
+                        im = Image.open(imagePath).resize((int(width * mod), int(height * mod)), Image.Resampling.LANCZOS)
+                        bgW, bgH = img.size
+                        iW, iH = im.size
+                        offset = ((bgW - iW) // 2, (bgH - iH) // 2)
+                        img.paste(im=im, box=offset, mask=im)
                         log("\tEnd of create_image")
                         return img, ImageTk.PhotoImage(img)
                     elif imageType == "iconEnemy":
@@ -1421,8 +1435,17 @@ try:
                             mod = 22 / width
                         else:
                             mod = 22 / height
-                        img = Image.new("RGBA", (22, 22), (0, 0, 0, 0))
-                        img.paste(im=Image.open(imagePath).resize((int(width * mod), int(height * mod)), Image.Resampling.LANCZOS))
+                        if addToBg1:
+                            img, _ = self.create_image("icon_background1.jpg", "iconBg1", 99, extensionProvided=True)
+                        elif addToBg2:
+                            img, _ = self.create_image("icon_background2.jpg", "iconBg2", 99, extensionProvided=True)
+                        else:
+                            img = Image.new("RGBA", (22, 22), (0, 0, 0, 0))
+                        im = Image.open(imagePath).resize((int(width * mod), int(height * mod)), Image.Resampling.LANCZOS)
+                        bgW, bgH = img.size
+                        iW, iH = im.size
+                        offset = ((bgW - iW) // 2, (bgH - iH) // 2)
+                        img.paste(im=im, box=offset, mask=im)
                         log("\tEnd of create_image")
                         return img, ImageTk.PhotoImage(img)
                     elif imageType == "iconSet":
@@ -1434,10 +1457,25 @@ try:
                             mod = x / width
                         else:
                             mod = y / height
-                        img = Image.new("RGBA", (x, y), (0, 0, 0, 0))
-                        img.paste(im=Image.open(imagePath).resize((int(width * mod), int(height * mod)), Image.Resampling.LANCZOS))
+                        if addToBg1:
+                            img, _ = self.create_image("icon_background1.jpg", "iconBg1", 99, extensionProvided=True)
+                        elif addToBg2:
+                            img, _ = self.create_image("icon_background2.jpg", "iconBg2", 99, extensionProvided=True)
+                        else:
+                            img = Image.new("RGBA", (x, y), (0, 0, 0, 0))
+                        im = Image.open(imagePath).resize((int(width * mod), int(height * mod)), Image.Resampling.LANCZOS)
+                        bgW, bgH = img.size
+                        iW, iH = im.size
+                        offset = ((bgW - iW) // 2, (bgH - iH) // 2)
+                        img.paste(im=im, box=offset, mask=im)
                         log("\tEnd of create_image")
                         return img, ImageTk.PhotoImage(img)
+                    elif imageType == "iconBg1":
+                        image = Image.open(imagePath).resize((242, 143), Image.Resampling.LANCZOS)
+                        return image, ImageTk.PhotoImage(image)
+                    elif imageType == "iconBg2":
+                        image = Image.open(imagePath).resize((74, 75), Image.Resampling.LANCZOS)
+                        return image, ImageTk.PhotoImage(image)
 
                 log("\tEnd of create_image")
 

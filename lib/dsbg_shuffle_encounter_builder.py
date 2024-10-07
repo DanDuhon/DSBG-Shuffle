@@ -55,8 +55,6 @@ try:
                 e = self.encounterBuilderScroll
 
                 e.iconImageErrorsVal.set("")
-                e.xPositionVal.set("")
-                e.yPositionVal.set("")
                 
                 e.encounterSetEntry.delete("1.0", tk.END)
                 e.encounterNameEntry.delete("1.0", tk.END)
@@ -71,6 +69,19 @@ try:
                 e.specialRulesEntry.delete("1.0", tk.END)
                 e.specialRulesTextSizeVal.set(12)
                 e.iconNameEntry.delete("1.0", tk.END)
+                
+                e.iconView.config(image=self.app.iconBg1PhotoImage)
+                e.iconView.image=self.app.iconBg1PhotoImage
+
+                for icon in e.encounterIcons:
+                    e.encounterIcons[icon]["view"].grid_forget()
+                    e.encounterIcons[icon]["posLabel"].grid_forget()
+                    e.encounterIcons[icon]["xLabel"].grid_forget()
+                    e.encounterIcons[icon]["xEntry"].grid_forget()
+                    e.encounterIcons[icon]["yLabel"].grid_forget()
+                    e.encounterIcons[icon]["yEntry"].grid_forget()
+                    
+                e.encounterIcons = {}
 
                 e.rewardSoulsPerPlayer.state(["!selected"])
                 e.shortcut.state(["!selected"])
@@ -286,94 +297,104 @@ try:
                                 image = self.app.allEnemies[enemy]["imageNew"]
                                 self.app.displayImage.paste(im=image, box=box, mask=image)
 
-                # # Custom Icons
-                # for icon in [icon for icon in e.icons if "" not in e.icons[icon]["position"]]:
-                #     image = e.icons[icon]["image"]
-                #     box = (int(e.icons[icon]["position"][0]), int(e.icons[icon]["position"][1]))
-                #     self.app.displayImage.paste(im=image, box=box, mask=image)
+                # Custom Icons
+                for icon in [icon for icon in e.encounterIcons if e.encounterIcons[icon]["position"][0].get() != "" and e.encounterIcons[icon]["position"][1].get() != ""]:
+                    image = e.customIconsDict[e.encounterIcons[icon]["lookup"]]["image"]
+                    box = (int(e.encounterIcons[icon]["position"][0].get()), int(e.encounterIcons[icon]["position"][1].get()))
+                    self.app.displayImage.paste(im=image, box=box, mask=image)
 
-                # self.customEncounter["set"] = e.encounterSetEntry.get("1.0", "end").strip()
-                # self.customEncounter["emptySetIcon"] = e.emptySetIconVal.get()
-                # self.customEncounter["image"] = self.app.displayImage.copy()
-                # self.customEncounter["numberOfTiles"] = e.numberOfTilesRadioVal.get()
-                # self.customEncounter["level"] = e.levelRadioVal.get()
-                # self.customEncounter["encounterName"] = e.encounterNameEntry.get("1.0", "end").strip()
-                # self.customEncounter["flavor"] = e.flavorEntry.get("1.0", "end").strip()
-                # self.customEncounter["objective"] = e.objectiveEntry.get("1.0", "end").strip()
-                # self.customEncounter["keywords"] = e.keywordsEntry.get("1.0", "end").strip()
-                # self.customEncounter["specialRules"] = e.specialRulesEntry.get("1.0", "end").strip()
-                # self.customEncounter["specialRulesTextSize"] = e.specialRulesTextSizeVal.get()
-                # self.customEncounter["rewardSouls"] = e.rewardSoulsEntry.get("1.0", "end").strip()
-                # self.customEncounter["rewardSoulsPerPlayer"] = e.rewardSoulsPerPlayerVal.get()
-                # self.customEncounter["rewardSearch"] = e.rewardSearchEntry.get("1.0", "end").strip()
-                # self.customEncounter["rewardDraw"] = e.rewardDrawEntry.get("1.0", "end").strip()
-                # self.customEncounter["rewardRefresh"] = e.rewardRefreshEntry.get("1.0", "end").strip()
-                # self.customEncounter["rewardTrial"] = e.rewardTrialEntry.get("1.0", "end").strip()
-                # self.customEncounter["rewardShortcut"] = e.shortcutVal.get()
-                # self.customEncounter["layout"] = e.tileLayoutMenuVal.get()
-                # self.customEncounter["icons"] = {k: v for k, v in e.icons.items() if "" not in e.icons[k]["position"]}
-                # self.customEncounter["tileSelections"] = {
-                #     "1": {
-                #         "startingNodes": {"value": e.tileSelections["1"]["startingNodes"]["value"].get()},
-                #         "traps": {"value": e.tileSelections["1"]["traps"]["value"].get()},
-                #         "1": {"terrain": {"value": e.tileSelections["1"]["1"]["terrain"]["value"].get()},
-                #             "enemies": {
-                #                 "1": {"value": e.tileSelections["1"]["1"]["enemies"]["1"]["value"].get()},
-                #                 "2": {"value": e.tileSelections["1"]["1"]["enemies"]["2"]["value"].get()},
-                #                 "3": {"value": e.tileSelections["1"]["1"]["enemies"]["3"]["value"].get()}
-                #             }},
-                #         "2": {"terrain": {"value": e.tileSelections["1"]["2"]["terrain"]["value"].get()},
-                #             "enemies": {
-                #                 "1": {"value": e.tileSelections["1"]["2"]["enemies"]["1"]["value"].get()},
-                #                 "2": {"value": e.tileSelections["1"]["2"]["enemies"]["2"]["value"].get()},
-                #                 "3": {"value": e.tileSelections["1"]["2"]["enemies"]["3"]["value"].get()}
-                #             }},
-                #         "3": {"terrain": {"value": e.tileSelections["1"]["3"]["terrain"]["value"].get()},
-                #             "enemies": {
-                #                 "1": {"value": e.tileSelections["1"]["3"]["enemies"]["1"]["value"].get()},
-                #                 "2": {"value": e.tileSelections["1"]["3"]["enemies"]["2"]["value"].get()},
-                #                 "3": {"value": e.tileSelections["1"]["3"]["enemies"]["3"]["value"].get()}
-                #             }},
-                #         "4": {"terrain": {"value": e.tileSelections["1"]["4"]["terrain"]["value"].get()},
-                #             "enemies": {
-                #                 "1": {"value": e.tileSelections["1"]["4"]["enemies"]["1"]["value"].get()},
-                #                 "2": {"value": e.tileSelections["1"]["4"]["enemies"]["2"]["value"].get()},
-                #                 "3": {"value": e.tileSelections["1"]["4"]["enemies"]["3"]["value"].get()}
-                #             }}
-                #         },
-                #     "2": {
-                #         "startingNodes": {"value": e.tileSelections["2"]["startingNodes"]["value"].get()},
-                #         "traps": {"value": e.tileSelections["2"]["traps"]["value"].get()},
-                #         "1": {"terrain": {"value": e.tileSelections["2"]["1"]["terrain"]["value"].get()},
-                #             "enemies": {
-                #                 "1": {"value": e.tileSelections["2"]["1"]["enemies"]["1"]["value"].get()},
-                #                 "2": {"value": e.tileSelections["2"]["1"]["enemies"]["2"]["value"].get()},
-                #                 "3": {"value": e.tileSelections["2"]["1"]["enemies"]["3"]["value"].get()}
-                #             }},
-                #         "2": {"terrain": {"value": e.tileSelections["2"]["2"]["terrain"]["value"].get()},
-                #             "enemies": {
-                #                 "1": {"value": e.tileSelections["2"]["2"]["enemies"]["1"]["value"].get()},
-                #                 "2": {"value": e.tileSelections["2"]["2"]["enemies"]["2"]["value"].get()},
-                #                 "3": {"value": e.tileSelections["2"]["2"]["enemies"]["3"]["value"].get()}
-                #             }}
-                #         },
-                #     "3": {
-                #         "startingNodes": {"value": e.tileSelections["3"]["startingNodes"]["value"].get()},
-                #         "traps": {"value": e.tileSelections["3"]["traps"]["value"].get()},
-                #         "1": {"terrain": {"value": e.tileSelections["3"]["1"]["terrain"]["value"].get()},
-                #             "enemies": {
-                #                 "1": {"value": e.tileSelections["3"]["1"]["enemies"]["1"]["value"].get()},
-                #                 "2": {"value": e.tileSelections["3"]["1"]["enemies"]["2"]["value"].get()},
-                #                 "3": {"value": e.tileSelections["3"]["1"]["enemies"]["3"]["value"].get()}
-                #             }},
-                #         "2": {"terrain": {"value": e.tileSelections["3"]["2"]["terrain"]["value"].get()},
-                #             "enemies": {
-                #                 "1": {"value": e.tileSelections["3"]["2"]["enemies"]["1"]["value"].get()},
-                #                 "2": {"value": e.tileSelections["3"]["2"]["enemies"]["2"]["value"].get()},
-                #                 "3": {"value": e.tileSelections["3"]["2"]["enemies"]["3"]["value"].get()}
-                #             }}
-                #         }
-                #     }
+                self.customEncounter["set"] = e.encounterSetEntry.get("1.0", "end").strip()
+                self.customEncounter["emptySetIcon"] = e.emptySetIconVal.get()
+                self.customEncounter["image"] = self.app.displayImage.copy()
+                self.customEncounter["numberOfTiles"] = e.numberOfTilesRadioVal.get()
+                self.customEncounter["level"] = e.levelRadioVal.get()
+                self.customEncounter["encounterName"] = e.encounterNameEntry.get("1.0", "end").strip()
+                self.customEncounter["flavor"] = e.flavorEntry.get("1.0", "end").strip()
+                self.customEncounter["objective"] = e.objectiveEntry.get("1.0", "end").strip()
+                self.customEncounter["keywords"] = e.keywordsEntry.get("1.0", "end").strip()
+                self.customEncounter["specialRules"] = e.specialRulesEntry.get("1.0", "end").strip()
+                self.customEncounter["specialRulesTextSize"] = e.specialRulesTextSizeVal.get()
+                self.customEncounter["rewardSouls"] = e.rewardSoulsEntry.get("1.0", "end").strip()
+                self.customEncounter["rewardSoulsPerPlayer"] = e.rewardSoulsPerPlayerVal.get()
+                self.customEncounter["rewardSearch"] = e.rewardSearchEntry.get("1.0", "end").strip()
+                self.customEncounter["rewardDraw"] = e.rewardDrawEntry.get("1.0", "end").strip()
+                self.customEncounter["rewardRefresh"] = e.rewardRefreshEntry.get("1.0", "end").strip()
+                self.customEncounter["rewardTrial"] = e.rewardTrialEntry.get("1.0", "end").strip()
+                self.customEncounter["rewardShortcut"] = e.shortcutVal.get()
+                self.customEncounter["layout"] = e.tileLayoutMenuVal.get()
+                for id in e.encounterIcons:
+                    if e.encounterIcons[id]["position"][0].get() == "" or e.encounterIcons[id]["position"][1].get() == "":
+                        continue
+
+                    newId = 0 if id == 0 else max(self.customEncounter["icons"].keys()) + 1
+
+                    self.customEncounter["icons"][newId] = {
+                        "lookup": e.encounterIcons[id]["lookup"],
+                        "position": (e.encounterIcons[id]["position"][0].get(), e.encounterIcons[id]["position"][1].get())
+                    }
+
+                self.customEncounter["tileSelections"] = {
+                    "1": {
+                        "startingNodes": {"value": e.tileSelections["1"]["startingNodes"]["value"].get()},
+                        "traps": {"value": e.tileSelections["1"]["traps"]["value"].get()},
+                        "1": {"terrain": {"value": e.tileSelections["1"]["1"]["terrain"]["value"].get()},
+                            "enemies": {
+                                "1": {"value": e.tileSelections["1"]["1"]["enemies"]["1"]["value"].get()},
+                                "2": {"value": e.tileSelections["1"]["1"]["enemies"]["2"]["value"].get()},
+                                "3": {"value": e.tileSelections["1"]["1"]["enemies"]["3"]["value"].get()}
+                            }},
+                        "2": {"terrain": {"value": e.tileSelections["1"]["2"]["terrain"]["value"].get()},
+                            "enemies": {
+                                "1": {"value": e.tileSelections["1"]["2"]["enemies"]["1"]["value"].get()},
+                                "2": {"value": e.tileSelections["1"]["2"]["enemies"]["2"]["value"].get()},
+                                "3": {"value": e.tileSelections["1"]["2"]["enemies"]["3"]["value"].get()}
+                            }},
+                        "3": {"terrain": {"value": e.tileSelections["1"]["3"]["terrain"]["value"].get()},
+                            "enemies": {
+                                "1": {"value": e.tileSelections["1"]["3"]["enemies"]["1"]["value"].get()},
+                                "2": {"value": e.tileSelections["1"]["3"]["enemies"]["2"]["value"].get()},
+                                "3": {"value": e.tileSelections["1"]["3"]["enemies"]["3"]["value"].get()}
+                            }},
+                        "4": {"terrain": {"value": e.tileSelections["1"]["4"]["terrain"]["value"].get()},
+                            "enemies": {
+                                "1": {"value": e.tileSelections["1"]["4"]["enemies"]["1"]["value"].get()},
+                                "2": {"value": e.tileSelections["1"]["4"]["enemies"]["2"]["value"].get()},
+                                "3": {"value": e.tileSelections["1"]["4"]["enemies"]["3"]["value"].get()}
+                            }}
+                        },
+                    "2": {
+                        "startingNodes": {"value": e.tileSelections["2"]["startingNodes"]["value"].get()},
+                        "traps": {"value": e.tileSelections["2"]["traps"]["value"].get()},
+                        "1": {"terrain": {"value": e.tileSelections["2"]["1"]["terrain"]["value"].get()},
+                            "enemies": {
+                                "1": {"value": e.tileSelections["2"]["1"]["enemies"]["1"]["value"].get()},
+                                "2": {"value": e.tileSelections["2"]["1"]["enemies"]["2"]["value"].get()},
+                                "3": {"value": e.tileSelections["2"]["1"]["enemies"]["3"]["value"].get()}
+                            }},
+                        "2": {"terrain": {"value": e.tileSelections["2"]["2"]["terrain"]["value"].get()},
+                            "enemies": {
+                                "1": {"value": e.tileSelections["2"]["2"]["enemies"]["1"]["value"].get()},
+                                "2": {"value": e.tileSelections["2"]["2"]["enemies"]["2"]["value"].get()},
+                                "3": {"value": e.tileSelections["2"]["2"]["enemies"]["3"]["value"].get()}
+                            }}
+                        },
+                    "3": {
+                        "startingNodes": {"value": e.tileSelections["3"]["startingNodes"]["value"].get()},
+                        "traps": {"value": e.tileSelections["3"]["traps"]["value"].get()},
+                        "1": {"terrain": {"value": e.tileSelections["3"]["1"]["terrain"]["value"].get()},
+                            "enemies": {
+                                "1": {"value": e.tileSelections["3"]["1"]["enemies"]["1"]["value"].get()},
+                                "2": {"value": e.tileSelections["3"]["1"]["enemies"]["2"]["value"].get()},
+                                "3": {"value": e.tileSelections["3"]["1"]["enemies"]["3"]["value"].get()}
+                            }},
+                        "2": {"terrain": {"value": e.tileSelections["3"]["2"]["terrain"]["value"].get()},
+                            "enemies": {
+                                "1": {"value": e.tileSelections["3"]["2"]["enemies"]["1"]["value"].get()},
+                                "2": {"value": e.tileSelections["3"]["2"]["enemies"]["2"]["value"].get()},
+                                "3": {"value": e.tileSelections["3"]["2"]["enemies"]["3"]["value"].get()}
+                            }}
+                        }
+                    }
 
                 e.iconImageErrorsVal.set("")
 
@@ -408,14 +429,7 @@ try:
                     + str(self.customEncounter["level"])
                     + ".json")
 
-                saveIcons = {}
-                for icon in e.icons:
-                    if "" in e.icons[icon]["position"]:
-                        continue
-                    saveIcons[icon] = {k: v for k, v in e.icons[icon].items() if k not in {"image", "photoImage"}}
-
-                saveEncounter = {k: v for k, v in self.customEncounter.items() if k not in {"image", "icons"}}
-                saveEncounter["icons"] = saveIcons
+                saveEncounter = {k: v for k, v in self.customEncounter.items() if k not in {"image", }}
 
                 with open(file, "w") as encounterFile:
                     dump(saveEncounter, encounterFile)
@@ -468,19 +482,18 @@ try:
 
                 with open(file, "r") as f:
                     self.customEncounter = load(f)
+
+                customEncounterKeys = {
+                        "set", "numberOfTiles", "level", "encounterName", "flavor", "objective", "keywords",
+                        "specialRules", "rewardSouls", "rewardSoulsPerPlayer", "rewardSearch", "rewardDraw",
+                        "rewardRefresh", "rewardTrial", "rewardShortcut", "layout", "icons", "tileSelections",
+                        "emptySetIcon", "specialRulesTextSize"}
                 
                 # Legacy conversion
-                if set(self.customEncounter.keys()) == {
-                        "set", "objective", "keywords", "rewardSouls", "rewardDraw", "layout", "encounterName",
-                        "rewardSoulsPerPlayer", "rewardTrial", "tileSelections", "icons", "rewardSearch",
-                        "flavor", "rewardShortcut", "level", "rewardRefresh", "specialRules", "numberOfTiles"}:
+                if set(self.customEncounter.keys()) != customEncounterKeys:
                     self.customEncounter["rewardRefresh"] = ""
-                    self.customEncounter["emptySetIcon"] = 0
+                    self.customEncounter["emptySetIcon"] = False
                     self.customEncounter["specialRulesTextSize"] = 12
-                    self.customEncounter["encounterScale1"] = 0
-                    self.customEncounter["encounterScale2"] = 0
-                    self.customEncounter["flavorScale1"] = 0
-                    self.customEncounter["flavorScale2"] = 0
                     self.customEncounter["encounterName"] = "\n".join([substring.strip() for substring in self.customEncounter["encounterName"].split("\n")])
                     self.customEncounter["flavor"] = "\n".join([substring.strip() for substring in self.customEncounter["flavor"].split("\n")])
                     for tile in self.customEncounter["tileSelections"]:
@@ -497,32 +510,97 @@ try:
                         else:
                             self.customEncounter["tileSelections"][tile]["startingNodes"]["value"] = 0
 
+                # Custom Icon legacy conversion
+                lookupsToAdd = {}
+                for icon in self.customEncounter["icons"]:
+                    if "file" in self.customEncounter["icons"][icon]:
+                        label = self.customEncounter["icons"][icon]["label"]
+                        size = self.customEncounter["icons"][icon]["size"]
+                        file = self.customEncounter["icons"][icon]["file"]
+                        fileName = path.basename(file)
+                        position = self.customEncounter["icons"][icon]["position"]
+                        iconCount = len([int(k) for k in self.customEncounter["icons"].keys() if k.isdigit()] + [k for k in e.customIconsDict if k != "lookup"])
+                        iid = str(iconCount)
+                        if (fileName, size) not in e.customIconsDict:
+                            e.customIconsDict["lookup"][label] = (fileName, size)
+                            e.customIconsDict[(fileName, size)] = {
+                                "originalFileName": fileName,
+                                "originalFileFullPath": file,
+                                "file": fileName,
+                                "size": size,
+                                "label": label,
+                                "iid": iid
+                            }
+                        lookupsToAdd[iid] = {
+                            "lookup": (fileName, size),
+                            "position": deepcopy(position)
+                        }
+
+                self.customEncounter["icons"] = self.customEncounter["icons"] | lookupsToAdd
+
+                keysToDelete = []
+                for icon in self.customEncounter["icons"]:
+                    if not icon.isdigit():
+                        keysToDelete.append(icon)
+
+                for key in keysToDelete:
+                    del self.customEncounter["icons"][key]
+
                 # Check to see if there are any invalid keys in the JSON file.
                 # This is about as sure as I can be that you can't load random JSON into the app.
-                if set(self.customEncounter.keys()) != {
-                        "set", "numberOfTiles", "level", "encounterName", "flavor", "objective", "keywords",
-                        "specialRules", "rewardSouls", "rewardSoulsPerPlayer", "rewardSearch", "rewardDraw",
-                        "rewardRefresh", "rewardTrial", "rewardShortcut", "layout", "icons", "tileSelections",
-                        "emptySetIcon", "specialRulesTextSize"}:
+                if set(self.customEncounter.keys()) != customEncounterKeys:
                     self.app.set_bindings_buttons_menus(False)
                     PopupWindow(self.root, labelText="Invalid DSBG-Shuffle encounter file.", firstButton="Ok")
                     self.app.set_bindings_buttons_menus(True)
-                    self.campaign = []
                     log("End of load_custom_encounter (invalid file)")
                     return
                 
                 for icon in self.customEncounter["icons"]:
-                    if not path.isfile(baseFolder + "\\lib\\dsbg_shuffle_custom_icon_images\\".replace("\\", pathSep) + self.customEncounter["icons"][icon]["file"]):
-                        PopupWindow(self.root, labelText="Missing custom icon image for " + icon + ".", firstButton="Ok")
+                    self.customEncounter["icons"][icon]["lookup"] = tuple(self.customEncounter["icons"][icon]["lookup"])
+                
+                # Check to make sure that this encounter's icons exist in a way we expect.
+                for icon in self.customEncounter["icons"]:
+                    lookup = self.customEncounter["icons"][icon]["lookup"]
+                    if not path.isfile(baseFolder + "\\lib\\dsbg_shuffle_custom_icon_images\\".replace("\\", pathSep) + e.customIconsDict[lookup]["file"]):
+                        PopupWindow(self.root, labelText="Missing custom icon image for " + e.customIconsDict[lookup]["label"] + ".", firstButton="Ok")
                         return
-                    i, p = self.app.create_image(baseFolder + "\\lib\\dsbg_shuffle_custom_icon_images\\".replace("\\", pathSep) + self.customEncounter["icons"][icon]["file"], self.customEncounter["icons"][icon]["size"], 99, pathProvided=True, extensionProvided=True, emptySetIcon=self.customEncounter["emptySetIcon"])
-                    self.customEncounter["icons"][icon]["image"] = i
-                    self.customEncounter["icons"][icon]["photoImage"] = p
+                    i, p = self.app.create_image(baseFolder + "\\lib\\dsbg_shuffle_custom_icon_images\\".replace("\\", pathSep) + e.customIconsDict[lookup]["file"], e.customIconsDict[lookup]["size"], 99, pathProvided=True, extensionProvided=True, emptySetIcon=self.customEncounter["emptySetIcon"])
+                    e.customIconsDict[lookup]["image"] = i
+                    e.customIconsDict[lookup]["photoImage"] = p
 
-                e.icons = self.customEncounter["icons"]
-                e.iconMenuList = [icon for icon in e.icons.keys()]
-                e.iconMenu.config(values=e.iconMenuList)
-                e.iconMenu.set("")
+                    if e.customIconsDict[lookup]["size"] == "iconText":
+                        sizeDisplay = "Text"
+                    elif e.customIconsDict[lookup]["size"] == "iconEnemy":
+                        sizeDisplay = "Enemy/Terrain"
+                    elif e.customIconsDict[lookup]["size"] == "iconSet":
+                        sizeDisplay = "Set Icon"
+                    
+                contents = [(e.treeviewCustomIcons.item(child)["values"][1], e.treeviewCustomIcons.item(child)["values"][0]) for child in e.treeviewCustomIcons.get_children()]
+                iid = str(len(contents))
+                c = (sizeDisplay, e.customIconsDict[lookup]["label"])
+                if icon not in set([c[1] for c in contents]):
+                    e.customIconsTreeviewDict[c[1]] = {
+                        "iid": iid,
+                        "index": bisect_left(contents, (c[0], c[1])),
+                        "values": (c[1], c[0]),
+                        "image": e.customIconsDict[lookup]["photoImage"]
+                    }
+                    e.treeviewCustomIcons.insert(parent="", iid=iid, index=e.customIconsTreeviewDict[c[1]]["index"], values=e.customIconsTreeviewDict[c[1]]["values"], image=e.customIconsTreeviewDict[c[1]]["image"], tags=False, open=True)
+                    e.customIconsDict[lookup]["iid"] = iid
+
+                    e.treeviewCustomIcons.focus(iid)
+                    e.treeviewCustomIcons.selection_set(iid)
+                    e.add_icon_to_encounter()
+
+                saveDict = {}
+                for key in e.customIconsDict:
+                    if key == "lookup":
+                        saveDict["lookup"] = e.customIconsDict["lookup"]
+                    else:
+                        saveDict["||".join(key)] = {k: v for k, v in e.customIconsDict[key].items() if "mage" not in k}
+
+                with open(baseFolder + "\\lib\\dsbg_shuffle_custom_icons.json".replace("\\", pathSep), "w") as iconsFile:
+                    dump(saveDict, iconsFile)
                 
                 self.encounterSaveLabelVal.set("")
 
@@ -532,11 +610,7 @@ try:
                 e.numberOfTilesRadioVal.set(self.customEncounter["numberOfTiles"])
                 e.levelRadioVal.set(self.customEncounter["level"])
                 e.encounterNameEntry.insert(tk.END, self.customEncounter["encounterName"])
-                e.encounterScale1Val.set(self.customEncounter["encounterScale1"])
-                e.encounterScale2Val.set(self.customEncounter["encounterScale2"])
                 e.flavorEntry.insert(tk.END, self.customEncounter["flavor"])
-                e.flavorScale1Val.set(self.customEncounter["flavorScale1"])
-                e.flavorScale2Val.set(self.customEncounter["flavorScale2"])
                 e.objectiveEntry.insert(tk.END, self.customEncounter["objective"])
                 e.keywordsEntry.insert(tk.END, self.customEncounter["keywords"])
                 e.specialRulesEntry.insert(tk.END, self.customEncounter["specialRules"])
@@ -617,7 +691,13 @@ try:
 
                 x, y = event.x - 2, event.y - 2
                 if 0 <= x <= 400 and 0 <= y <= 685:
-                    e.coordsLabel.config(text="Clicked x: " + str(x) + ", y: " + str(y))
+                    for icon in e.encounterIcons:
+                        if e.encounterIcons[icon]["lockVal"].get():
+                            continue
+                        e.encounterIcons[icon]["position"][0].set(x)
+                        e.encounterIcons[icon]["position"][1].set(y)
+
+                self.apply_changes()
                 
                 log("End of get_coords")
             except Exception as e:
@@ -968,13 +1048,7 @@ try:
             self.currentIcon = None
             self.currentSize = None
             self.currentFile = None
-            #     self.customIconsTreeviewDict[str(i)] = {
-            #         "index": self.customIconsDict[c]["index"],
-            #         "values": self.customIconsDict[c]["values"],
-            #         "image": self.customIconsDict[c]["image"]
-            #     }
-            #     self.treeviewCustomIcons.insert(parent="", index=self.customIconsDict[c]["index"], values=self.customIconsDict[c]["values"], image=self.self.customIconsDict[c]["image"], tags=False, open=True)
-
+            
             self.iconsFrame1.columnconfigure(4, minsize=180)
             self.iconsFrame1.rowconfigure(7, minsize=70)
             
@@ -982,36 +1056,8 @@ try:
             self.iconTitle.bind("<1>", lambda event: event.widget.focus_set())
             self.iconTitle.pack(expand=True, fill="x")
             
-            vcmdX = (self.register(self.callback_x))
-            vcmdY = (self.register(self.callback_y))
-            # self.positionLabel = ttk.Label(self.iconsFrame1, text="Position\t")
-            # self.positionLabel.bind("<1>", lambda event: event.widget.focus_set())
-            # self.positionLabel.grid(column=1, row=2, padx=(25, 5), pady=5, sticky=tk.NW, columnspan=2)
-            # self.xPositionLabel = ttk.Label(self.iconsFrame1, text="x:\n0-400\n")
-            # self.xPositionLabel.bind("<1>", lambda event: event.widget.focus_set())
-            # self.xPositionLabel.grid(column=1, row=3, padx=(25, 5), sticky=tk.NW, rowspan=2)
-            self.xPositionVal = tk.StringVar()
-            self.xPositionEntry = ttk.Entry(self.iconsFrame1, textvariable=self.xPositionVal, width=4, validate="all", validatecommand=(vcmdX, "%P"))
-            self.xPositionEntry.bind("<KeyRelease>", self.handle_wait_icon)
-            # self.xPositionEntry.grid(column=1, row=3, padx=(64, 5), pady=5, sticky=tk.NW, rowspan=2)
-            # self.yPositionLabel = ttk.Label(self.iconsFrame1, text="y:\n0-685\n")
-            # self.yPositionLabel.bind("<1>", lambda event: event.widget.focus_set())
-            # self.yPositionLabel.grid(column=1, row=4, padx=(25, 0), sticky=tk.NW, rowspan=2)
-            self.yPositionVal = tk.StringVar()
-            self.yPositionEntry = ttk.Entry(self.iconsFrame1, textvariable=self.yPositionVal, width=4, validate="all", validatecommand=(vcmdY, "%P"))
-            self.yPositionEntry.bind("<KeyRelease>", self.handle_wait_icon)
-            # self.yPositionEntry.grid(column=1, row=4, padx=(64, 5), pady=5, sticky=tk.NW, rowspan=2)
-            # self.coordsLabel = ttk.Label(self.iconsFrame1)
-            # self.coordsLabel.bind("<1>", lambda event: event.widget.focus_set())
-            # self.coordsLabel.grid(column=1, row=5, padx=(25, 0), sticky=tk.SW)
-            # self.chooseIconButton = ttk.Button(self.iconsFrame1, text="Choose Image", width=16, command=lambda x=True: self.choose_icon_image(buttonSource=x))
-            # self.chooseIconButton.grid(column=1, row=7, padx=(5, 0), pady=5, columnspan=2)
-            # self.saveIconButton = ttk.Button(self.iconsFrame1, text="Save Icon", width=16, command=self.save_custom_icon)
-            # self.saveIconButton.grid(column=1, row=8, padx=(5, 0), pady=5, columnspan=2)
-            # self.iconImageErrorsVal = tk.StringVar()
-            # self.iconSaveErrors = tk.Label(self.iconsFrame1, width=26, textvariable=self.iconImageErrorsVal)
-            # self.iconSaveErrors.bind("<1>", lambda event: event.widget.focus_set())
-            # self.iconSaveErrors.grid(column=3, row=8, pady=5, sticky=tk.W)
+            self.vcmdX = (self.register(self.callback_x))
+            self.vcmdY = (self.register(self.callback_y))
 
             self.customIconsTreeviewDict = {}
             self.customIconsTreeviewFrame = ttk.Frame(self.iconsFrame2)
@@ -1038,6 +1084,10 @@ try:
             
             self.treeviewCustomIcons.bind("<<TreeviewSelect>>", self.change_icon)
 
+            if not path.isfile(baseFolder + "\\lib\\dsbg_shuffle_custom_icons.json".replace("\\", pathSep)):
+                with open(baseFolder + "\\lib\\dsbg_shuffle_custom_icons.json".replace("\\", pathSep), "w") as iconsFile:
+                    dump({"lookup": {}}, iconsFile)
+
             with open(baseFolder + "\\lib\\dsbg_shuffle_custom_icons.json".replace("\\", pathSep), "r") as f:
                 d = load(f)
 
@@ -1057,11 +1107,12 @@ try:
                 iid = str(len(contents))
                 c = (sizeDisplay, self.customIconsDict[k]["label"])
                 if self.customIconsDict[k]["label"] not in set([c[1] for c in contents]):
+                    _, tp = self.app.create_image(baseFolder + "\\lib\\dsbg_shuffle_custom_icon_images\\".replace("\\", pathSep) + self.customIconsDict[k]["file"], "iconText", 99, pathProvided=True, extensionProvided=True)
                     self.customIconsTreeviewDict[c[1]] = {
                         "iid": iid,
                         "index": bisect_left(contents, (c[0], c[1])),
                         "values": (c[1], c[0]),
-                        "image": self.customIconsDict[k]["treeviewPhotoImage"]
+                        "image": tp
                     }
                     self.treeviewCustomIcons.insert(parent="", iid=iid, index=self.customIconsTreeviewDict[c[1]]["index"], values=self.customIconsTreeviewDict[c[1]]["values"], image=self.customIconsTreeviewDict[c[1]]["image"], tags=False, open=True)
             
@@ -1072,6 +1123,8 @@ try:
             self.iconNameEntry.grid(column=0, row=0, padx=(80, 25), pady=5, sticky=tk.W)
             
             self.iconView = tk.Label(self.iconsFrame3)
+            self.iconView.config(image=self.app.iconBg1PhotoImage)
+            self.iconView.image=self.app.iconBg1PhotoImage
             self.iconView.bind("<1>", lambda event: event.widget.focus_set())
             self.iconView.grid(column=0, row=1, padx=5, pady=5, sticky=tk.NSEW, columnspan=2, rowspan=3)
             
@@ -1094,37 +1147,12 @@ try:
             self.iconSaveErrors = tk.Label(self.iconsFrame3, width=26, textvariable=self.iconImageErrorsVal)
             self.iconSaveErrors.bind("<1>", lambda event: event.widget.focus_set())
             self.iconSaveErrors.grid(column=3, row=2, pady=5)
-            self.saveIconButton = ttk.Button(self.iconsFrame3, text="Delete Icon", width=16, command=self.delete_custom_icon)
-            self.saveIconButton.grid(column=3, row=3, padx=5, pady=5, sticky=tk.E)
-            self.saveIconButton = ttk.Button(self.iconsFrame3, text="Add to Encounter", width=16, command=self.delete_custom_icon)
-            self.saveIconButton.grid(column=0, row=4, padx=5, pady=5, sticky=tk.W)
+            self.deleteIconButton = ttk.Button(self.iconsFrame3, text="Delete Icon", width=16, command=self.delete_custom_icon)
+            self.deleteIconButton.grid(column=3, row=3, padx=5, pady=5, sticky=tk.E)
+            self.addToEncounterButton = ttk.Button(self.iconsFrame3, text="Add to Encounter", width=16, command=self.add_icon_to_encounter)
+            self.addToEncounterButton.grid(column=0, row=4, padx=5, pady=5, sticky=tk.W)
 
-            self.encounterIconsTreeviewDict = {}
-            self.encounterIconsTreeviewFrame = ttk.Frame(self.iconsFrame4)
-            self.encounterIconsTreeviewFrame.pack(fill="x")
-            self.scrollbarTreeviewEncounterIcons = ttk.Scrollbar(self.encounterIconsTreeviewFrame)
-            self.scrollbarTreeviewEncounterIcons.pack(side="right", fill="y")
-            self.treeviewEncounterIcons = ttk.Treeview(
-                self.encounterIconsTreeviewFrame,
-                selectmode="browse",
-                columns=("Name", "Size", "Position"),
-                yscrollcommand=self.scrollbarTreeviewEncounterIcons.set,
-                height=9
-            )
-
-            self.treeviewEncounterIcons.pack(expand=True, fill="both")
-            self.scrollbarTreeviewEncounterIcons.config(command=self.treeviewEncounterIcons.yview)
-
-            self.treeviewEncounterIcons.column('#0', width=0)
-
-            self.treeviewEncounterIcons.heading("Name", text="Name", anchor=tk.W)
-            self.treeviewEncounterIcons.heading("Size", text="Size", anchor=tk.W)
-            self.treeviewEncounterIcons.heading("Position", text="Position", anchor=tk.W)
-            self.treeviewEncounterIcons.column("Name", anchor=tk.W)
-            self.treeviewEncounterIcons.column("Size", anchor=tk.W)
-            self.treeviewEncounterIcons.column("Position", anchor=tk.W)
-            
-            #self.treeviewEncounterIcons.bind("<<TreeviewSelect>>", self.change_icon_encounter)
+            self.encounterIcons = {}
 
 
         def handle_wait(self, event):
@@ -1134,15 +1162,6 @@ try:
 
             # create a new job
             self.after(1, self.topFrame.apply_changes())
-
-
-        def handle_wait_icon(self, event):
-            # cancel the old job
-            if self._afterId is not None:
-                self.after_cancel(self._afterId)
-
-            # create a new job
-            self.after(1, self.save_custom_icon(file=self.currentIcon))
 
 
         def search_layout_combobox(self, event):
@@ -1377,7 +1396,7 @@ try:
                     log("End of change_icon")
                     return
 
-                lookup = self.customIconsDict["lookup"][tree.item(tree.selection()[0])["values"][0]]
+                lookup = tuple(self.customIconsDict["lookup"][tree.item(tree.selection()[0])["values"][0]])
 
                 if not self.customIconsDict[lookup]:
                     log("End of change_icon")
@@ -1420,8 +1439,8 @@ try:
 
                 self.iconNameEntry.delete("1.0", tk.END)
                 self.iconImageErrorsVal.set("")
-                self.iconView.config(image="")
-                self.iconView.image = None
+                self.iconView.config(image=self.app.iconBg1PhotoImage)
+                self.iconView.image=self.app.iconBg1PhotoImage
 
                 self.topFrame.apply_changes()
                 
@@ -1468,26 +1487,11 @@ try:
 
                 self.customIconsDict["lookup"][icon] = (file, size)
 
-                saveDict = {}
-                for key in self.customIconsDict:
-                    if key == "lookup":
-                        saveDict["lookup"] = self.customIconsDict["lookup"]
-                    else:
-                        saveDict["||".join(key)] = {k: v for k, v in self.customIconsDict[key].items() if "mage" not in k}
-
-                with open(baseFolder + "\\lib\\dsbg_shuffle_custom_icons.json".replace("\\", pathSep), "w") as iconsFile:
-                    dump(saveDict, iconsFile)
-
-                self.topFrame.customEncounter["icons"][icon] = {
-                    "label": icon,
-                    "position": (self.xPositionEntry.get(), self.yPositionEntry.get())
-                    }
-
-                self.topFrame.customEncounter["icons"][icon]["image"], self.topFrame.customEncounter["icons"][icon]["photoImage"] = self.app.create_image(self.customIconsDict[(file, size)]["originalFileFullPath"], self.customIconsDict[(file, size)]["size"], 99, pathProvided=True, extensionProvided=True)
+                i, _ = self.app.create_image(self.customIconsDict[(file, size)]["originalFileFullPath"], self.customIconsDict[(file, size)]["size"], 99, pathProvided=True, extensionProvided=True)
 
                 newFile = baseFolder + "\\lib\\dsbg_shuffle_custom_icon_images\\".replace("\\", pathSep) + self.customIconsDict[(file, size)]["file"]
                 if not path.isfile(newFile):
-                    self.topFrame.customEncounter["icons"][icon]["image"].save(newFile)
+                    i.save(newFile)
 
                 self.currentFile = deepcopy(self.customIconsDict[(file, size)]["file"])
 
@@ -1499,11 +1503,22 @@ try:
                         "iid": iid,
                         "index": bisect_left(contents, (c[0], c[1])),
                         "values": (c[1], c[0]),
-                        "image": self.customIconsDict[(file, size)]["treeviewPhotoImage"]
+                        "image": self.customIconsDict[(file, size)]["photoImage"]
                     }
                     self.treeviewCustomIcons.insert(parent="", iid=iid, index=self.customIconsTreeviewDict[c[1]]["index"], values=self.customIconsTreeviewDict[c[1]]["values"], image=self.customIconsTreeviewDict[c[1]]["image"], tags=False, open=True)
+                    self.customIconsDict[(file, size)]["iid"] = iid
                 else:
                     self.treeviewCustomIcons.item(self.customIconsTreeviewDict[c[1]]["iid"], values=(c[1], c[0]))
+
+                saveDict = {}
+                for key in self.customIconsDict:
+                    if key == "lookup":
+                        saveDict["lookup"] = self.customIconsDict["lookup"]
+                    else:
+                        saveDict["||".join(key)] = {k: v for k, v in self.customIconsDict[key].items() if "mage" not in k}
+
+                with open(baseFolder + "\\lib\\dsbg_shuffle_custom_icons.json".replace("\\", pathSep), "w") as iconsFile:
+                    dump(saveDict, iconsFile)
                 
                 self.topFrame.apply_changes()
 
@@ -1563,16 +1578,17 @@ try:
                         "image": i,
                         "photoImage": p
                     }
+                elif "photoImage" not in self.customIconsDict[(self.currentIcon, size)]:
+                    i, p = self.app.create_image(file, size, 99, pathProvided=True, extensionProvided=True)
+                    self.customIconsDict[(self.currentIcon, size)]["image"] = i
+                    self.customIconsDict[(self.currentIcon, size)]["photoImage"] = p
                 else:
                     p = self.customIconsDict[(self.currentIcon, size)]["photoImage"]
+                
+                _, self.iconViewImg = self.app.create_image(file, size, 99, pathProvided=True, extensionProvided=True, addToBg1=True)
 
-                if size != "iconText" and "treeviewPhotoImage" not in self.customIconsDict[(self.currentIcon, size)]:
-                    _, self.customIconsDict[(self.currentIcon, size)]["treeviewPhotoImage"] = self.app.create_image(file, "iconText", 99, pathProvided=True, extensionProvided=True)
-                elif "treeviewPhotoImage" not in self.customIconsDict[(self.currentIcon, size)]:
-                    self.customIconsDict[(self.currentIcon, size)]["treeviewPhotoImage"] = p
-
-                self.iconView.config(image=p)
-                self.iconView.image=p
+                self.iconView.config(image=self.iconViewImg)
+                self.iconView.image=self.iconViewImg
 
                 self.iconImageErrorsVal.set("")
 
@@ -1586,6 +1602,96 @@ try:
                     return
                 else:
                     raise
+            except Exception as e:
+                error_popup(self.root, e)
+                raise
+
+
+        def add_icon_to_encounter(self, event=None):
+            try:
+                log("Start of add_icon_to_encounter")
+
+                if not self.treeviewCustomIcons.selection():
+                    log("End of add_icon_to_encounter")
+                    return
+
+                if not self.encounterIcons:
+                    id = 0
+                else:
+                    id = max(self.encounterIcons.keys()) + 2
+
+                self.encounterIcons[id] = {}
+
+                file = [self.customIconsDict[k]["file"] for k in self.customIconsDict if "iid" in self.customIconsDict[k] and self.customIconsDict[k]["iid"] == self.treeviewCustomIcons.selection()[0]][0]
+                size = [self.customIconsDict[k]["size"] for k in self.customIconsDict if "iid" in self.customIconsDict[k] and self.customIconsDict[k]["iid"] == self.treeviewCustomIcons.selection()[0]][0]
+                _, image = self.app.create_image(baseFolder + "\\lib\\dsbg_shuffle_custom_icon_images\\".replace("\\", pathSep) + file, size, 99, pathProvided=True, extensionProvided=True, addToBg2=True)
+                
+                self.encounterIcons[id] = {
+                    "lookup": [k for k in self.customIconsDict if "iid" in self.customIconsDict[k] and self.customIconsDict[k]["iid"] == self.treeviewCustomIcons.selection()[0]][0],
+                    "view": tk.Label(self.iconsFrame4),
+                    "viewImage": image,
+                    "posLabel": ttk.Label(self.iconsFrame4, text="Position\t"),
+                    "xLabel": ttk.Label(self.iconsFrame4, text="x (0-400):"),
+                    "yLabel": ttk.Label(self.iconsFrame4, text="y (0-685):"),
+                    "position": (tk.StringVar(), tk.StringVar()),
+                    "lockVal": tk.IntVar(),
+                    "remove": ttk.Button(self.iconsFrame4, text="Remove Icon", width=16, command=lambda: self.remove_icon_from_encounter(id))
+                }
+
+                self.encounterIcons[id]["xEntry"] = ttk.Entry(self.iconsFrame4, textvariable=self.encounterIcons[id]["position"][0], width=4, validate="all", validatecommand=(self.vcmdX, "%P"))
+                self.encounterIcons[id]["yEntry"] = ttk.Entry(self.iconsFrame4, textvariable=self.encounterIcons[id]["position"][1], width=4, validate="all", validatecommand=(self.vcmdY, "%P"))
+                self.encounterIcons[id]["lock"] = ttk.Checkbutton(self.iconsFrame4, text="Lock Position", variable=self.encounterIcons[id]["lockVal"], style="Switch.TCheckbutton")
+                self.encounterIcons[id]["view"].config(image=self.encounterIcons[id]["viewImage"])
+                self.encounterIcons[id]["view"].image = self.encounterIcons[id]["viewImage"]
+
+                if id in self.encounterIcons:
+                    lookup = self.encounterIcons[id]["lookup"]
+                    posList = [self.topFrame.customEncounter["icons"][l]["position"] for l in self.topFrame.customEncounter["icons"] if self.topFrame.customEncounter["icons"][l]["lookup"] == lookup]
+                    if posList:
+                        pos = posList[0]
+                        if lookup in set([self.topFrame.customEncounter["icons"][l]["lookup"] for l in self.topFrame.customEncounter["icons"]]) and pos[0] and pos[1]:
+                            self.encounterIcons[id]["position"][0].set(pos[0])
+                            self.encounterIcons[id]["position"][1].set(pos[1])
+                            self.encounterIcons[id]["lock"].invoke()
+
+                self.encounterIcons[id]["view"].bind("<1>", lambda event: event.widget.focus_set())
+                self.encounterIcons[id]["posLabel"].bind("<1>", lambda event: event.widget.focus_set())
+                self.encounterIcons[id]["xLabel"].bind("<1>", lambda event: event.widget.focus_set())
+                self.encounterIcons[id]["xEntry"].bind("<KeyRelease>", self.handle_wait)
+                self.encounterIcons[id]["yLabel"].bind("<1>", lambda event: event.widget.focus_set())
+                self.encounterIcons[id]["yEntry"].bind("<KeyRelease>", self.handle_wait)
+                self.encounterIcons[id]["lock"].bind("<1>", lambda event: event.widget.focus_set())
+                self.encounterIcons[id]["view"].grid(column=0, row=id, padx=5, pady=(20, 5), sticky=tk.W, rowspan=2)
+                self.encounterIcons[id]["posLabel"].grid(column=1, row=id, padx=5, pady=(20, 5), sticky=tk.W, rowspan=2)
+                self.encounterIcons[id]["xLabel"].grid(column=2, row=id, padx=5, pady=(20, 6), sticky=tk.W)
+                self.encounterIcons[id]["xEntry"].grid(column=3, row=id, padx=5, pady=(20, 5), sticky=tk.W)
+                self.encounterIcons[id]["yLabel"].grid(column=2, row=id+1, padx=5, sticky=tk.W)
+                self.encounterIcons[id]["yEntry"].grid(column=3, row=id+1, padx=5, pady=(3, 0), sticky=tk.W)
+                self.encounterIcons[id]["lock"].grid(column=4, row=id, padx=5, pady=(20, 5), sticky=tk.W, rowspan=2)
+                self.encounterIcons[id]["remove"].grid(column=5, row=id, padx=11, pady=(20, 5), sticky=tk.E, rowspan=2)
+
+                log("End of add_icon_to_encounter")
+            except Exception as e:
+                error_popup(self.root, e)
+                raise
+
+
+        def remove_icon_from_encounter(self, id, event=None):
+            try:
+                log("Start of remove_icon_from_encounter")
+
+                self.encounterIcons[id]["view"].grid_forget()
+                self.encounterIcons[id]["posLabel"].grid_forget()
+                self.encounterIcons[id]["xLabel"].grid_forget()
+                self.encounterIcons[id]["xEntry"].grid_forget()
+                self.encounterIcons[id]["yLabel"].grid_forget()
+                self.encounterIcons[id]["yEntry"].grid_forget()
+                self.encounterIcons[id]["lock"].grid_forget()
+                self.encounterIcons[id]["remove"].grid_forget()
+
+                del self.encounterIcons[id]
+
+                log("End of remove_icon_from_encounter")
             except Exception as e:
                 error_popup(self.root, e)
                 raise
