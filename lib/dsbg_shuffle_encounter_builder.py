@@ -90,7 +90,8 @@ try:
 
                 for tile in range(1, 4):
                     e.tileSelections[str(tile)]["traps"]["value"].set(0)
-                    e.tileSelections[str(tile)]["startingNodes"]["value"].set(0)
+                    e.tileSelections[str(tile)]["startingNodes"]["tileValue"].set(0)
+                    e.tileSelections[str(tile)]["startingNodes"]["nodesValue"].set(0)
                     for row in range(1, 5):
                         if tile > 1 and row > 2:
                             continue
@@ -248,8 +249,8 @@ try:
 
                     # Starting nodes
                     for tile in range(1, 4):
-                        if e.tileSelections[str(tile)]["startingNodes"]["value"].get():
-                            startingNodesLocation = e.tileSelections[str(tile)]["startingNodes"]["value"].get()
+                        if e.tileSelections[str(tile)]["startingNodes"]["tileValue"].get() and e.tileSelections[str(tile)]["startingNodes"]["nodesValue"].get():
+                            startingNodesLocation = e.tileSelections[str(tile)]["startingNodes"]["nodesValue"].get()
                             if tile not in tileLayout["box"]:
                                 continue
                             box = tileLayout["box"][tile][startingNodesLocation]
@@ -266,16 +267,16 @@ try:
 
                         box = (334, 377 + (122 * (tile - 1)))
 
-                        if e.tileSelections[str(tile)]["startingNodes"]["value"].get() and e.tileSelections[str(tile)]["traps"]["value"].get() == 1:
+                        if e.tileSelections[str(tile)]["startingNodes"]["tileValue"].get() and e.tileSelections[str(tile)]["traps"]["value"].get() == 1:
                             image = self.app.tileNumbers[tile]["starting"]["traps"]
                             self.app.displayImage.paste(im=image, box=box, mask=image)
-                        elif e.tileSelections[str(tile)]["startingNodes"]["value"].get() and e.tileSelections[str(tile)]["traps"]["value"].get() != 1:
+                        elif e.tileSelections[str(tile)]["startingNodes"]["tileValue"].get() and e.tileSelections[str(tile)]["traps"]["value"].get() != 1:
                             image = self.app.tileNumbers[tile]["starting"]["noTraps"]
                             self.app.displayImage.paste(im=image, box=box, mask=image)
-                        elif not e.tileSelections[str(tile)]["startingNodes"]["value"].get() and e.tileSelections[str(tile)]["traps"]["value"].get() == 1:
+                        elif not e.tileSelections[str(tile)]["startingNodes"]["tileValue"].get() and e.tileSelections[str(tile)]["traps"]["value"].get() == 1:
                             image = self.app.tileNumbers[tile]["notStarting"]["traps"]
                             self.app.displayImage.paste(im=image, box=box, mask=image)
-                        elif not e.tileSelections[str(tile)]["startingNodes"]["value"].get() and e.tileSelections[str(tile)]["traps"]["value"].get() != 1:
+                        elif not e.tileSelections[str(tile)]["startingNodes"]["tileValue"].get() and e.tileSelections[str(tile)]["traps"]["value"].get() != 1:
                             image = self.app.tileNumbers[tile]["notStarting"]["noTraps"]
                             self.app.displayImage.paste(im=image, box=box, mask=image)
 
@@ -326,16 +327,19 @@ try:
                     if e.encounterIcons[id]["position"][0].get() == "" or e.encounterIcons[id]["position"][1].get() == "":
                         continue
 
-                    newId = 0 if id == 0 else max(self.customEncounter["icons"].keys()) + 1
+                    newId = 0 if id == 0 else max([int(k) for k in self.customEncounter["icons"].keys()]) + 1
 
-                    self.customEncounter["icons"][newId] = {
+                    self.customEncounter["icons"][str(newId)] = {
                         "lookup": e.encounterIcons[id]["lookup"],
                         "position": (e.encounterIcons[id]["position"][0].get(), e.encounterIcons[id]["position"][1].get())
                     }
 
                 self.customEncounter["tileSelections"] = {
                     "1": {
-                        "startingNodes": {"value": e.tileSelections["1"]["startingNodes"]["value"].get()},
+                        "startingNodes": {
+                            "tileValue": e.tileSelections["1"]["startingNodes"]["tileValue"].get(),
+                            "nodesValue": e.tileSelections["1"]["startingNodes"]["nodesValue"].get()
+                            },
                         "traps": {"value": e.tileSelections["1"]["traps"]["value"].get()},
                         "1": {"terrain": {"value": e.tileSelections["1"]["1"]["terrain"]["value"].get()},
                             "enemies": {
@@ -363,7 +367,10 @@ try:
                             }}
                         },
                     "2": {
-                        "startingNodes": {"value": e.tileSelections["2"]["startingNodes"]["value"].get()},
+                        "startingNodes": {
+                            "tileValue": e.tileSelections["2"]["startingNodes"]["tileValue"].get(),
+                            "nodesValue": e.tileSelections["2"]["startingNodes"]["nodesValue"].get()
+                            },
                         "traps": {"value": e.tileSelections["2"]["traps"]["value"].get()},
                         "1": {"terrain": {"value": e.tileSelections["2"]["1"]["terrain"]["value"].get()},
                             "enemies": {
@@ -379,7 +386,10 @@ try:
                             }}
                         },
                     "3": {
-                        "startingNodes": {"value": e.tileSelections["3"]["startingNodes"]["value"].get()},
+                        "startingNodes": {
+                            "tileValue": e.tileSelections["3"]["startingNodes"]["tileValue"].get(),
+                            "nodesValue": e.tileSelections["3"]["startingNodes"]["nodesValue"].get()
+                            },
                         "traps": {"value": e.tileSelections["3"]["traps"]["value"].get()},
                         "1": {"terrain": {"value": e.tileSelections["3"]["1"]["terrain"]["value"].get()},
                             "enemies": {
@@ -488,74 +498,6 @@ try:
                         "specialRules", "rewardSouls", "rewardSoulsPerPlayer", "rewardSearch", "rewardDraw",
                         "rewardRefresh", "rewardTrial", "rewardShortcut", "layout", "icons", "tileSelections",
                         "emptySetIcon", "specialRulesTextSize"}
-                
-                # Legacy conversion
-                if set(self.customEncounter.keys()) != customEncounterKeys:
-                    self.customEncounter["rewardRefresh"] = ""
-                    self.customEncounter["emptySetIcon"] = False
-                    self.customEncounter["specialRulesTextSize"] = 12
-                    self.customEncounter["encounterName"] = "\n".join([substring.strip() for substring in self.customEncounter["encounterName"].split("\n")])
-                    self.customEncounter["flavor"] = "\n".join([substring.strip() for substring in self.customEncounter["flavor"].split("\n")])
-                    for tile in self.customEncounter["tileSelections"]:
-                        if "startingTile" in self.customEncounter["tileSelections"][tile]:
-                            del self.customEncounter["tileSelections"][tile]["startingTile"]
-                        if self.customEncounter["tileSelections"][tile]["startingNodes"]["value"] == "North":
-                            self.customEncounter["tileSelections"][tile]["startingNodes"]["value"] = 1
-                        elif self.customEncounter["tileSelections"][tile]["startingNodes"]["value"] == "South":
-                            self.customEncounter["tileSelections"][tile]["startingNodes"]["value"] = 2
-                        elif self.customEncounter["tileSelections"][tile]["startingNodes"]["value"] == "West":
-                            self.customEncounter["tileSelections"][tile]["startingNodes"]["value"] = 3
-                        elif self.customEncounter["tileSelections"][tile]["startingNodes"]["value"] == "East":
-                            self.customEncounter["tileSelections"][tile]["startingNodes"]["value"] = 4
-                        else:
-                            self.customEncounter["tileSelections"][tile]["startingNodes"]["value"] = 0
-
-                    if "encounterScale1" in self.customEncounter:
-                        del self.customEncounter["encounterScale1"]
-                    if "encounterScale2" in self.customEncounter:
-                        del self.customEncounter["encounterScale2"]
-                    if "flavorScale1" in self.customEncounter:
-                        del self.customEncounter["flavorScale1"]
-                    if "flavorScale2" in self.customEncounter:
-                        del self.customEncounter["flavorScale2"]
-
-                    # Custom Icon legacy conversion
-                    lookupsToAdd = {}
-                    for icon in self.customEncounter["icons"]:
-                        if "file" in self.customEncounter["icons"][icon]:
-                            label = self.customEncounter["icons"][icon]["label"]
-                            size = self.customEncounter["icons"][icon]["size"]
-                            file = self.customEncounter["icons"][icon]["file"]
-                            fileName = path.basename(file)
-                            position = self.customEncounter["icons"][icon]["position"]
-                            iconCount = len([int(k) for k in self.customEncounter["icons"].keys() if k.isdigit()] + [k for k in e.customIconsDict if k != "lookup"])
-                            iid = str(iconCount)
-                            if (fileName, size) not in e.customIconsDict:
-                                e.customIconsDict["lookup"][label] = (fileName, size)
-                                e.customIconsDict[(fileName, size)] = {
-                                    "originalFileName": fileName,
-                                    "originalFileFullPath": file,
-                                    "file": fileName,
-                                    "size": size,
-                                    "label": label,
-                                    "iid": iid
-                                }
-                            lookupsToAdd[iid] = {
-                                "lookup": (fileName, size),
-                                "position": deepcopy(position)
-                            }
-
-                    self.customEncounter["icons"] = self.customEncounter["icons"] | lookupsToAdd
-
-                    keysToDelete = []
-                    for icon in self.customEncounter["icons"]:
-                        if not icon.isdigit():
-                            keysToDelete.append(icon)
-
-                    for key in keysToDelete:
-                        del self.customEncounter["icons"][key]
-
-                    #self.save_custom_encounter()
 
                 # Check to see if there are any invalid keys in the JSON file.
                 # This is about as sure as I can be that you can't load random JSON into the app.
@@ -570,16 +512,35 @@ try:
                     self.customEncounter["icons"][icon]["lookup"] = tuple(self.customEncounter["icons"][icon]["lookup"])
                 
                 # Check to make sure that this encounter's icons exist in a way we expect.
+                keysToDelete = []
                 for icon in self.customEncounter["icons"]:
                     lookup = self.customEncounter["icons"][icon]["lookup"]
-                    if not path.isfile(baseFolder + "\\lib\\dsbg_shuffle_custom_icon_images\\".replace("\\", pathSep) + e.customIconsDict[lookup]["file"]):
-                        PopupWindow(self.root, labelText="Missing custom icon image for " + e.customIconsDict[lookup]["label"] + ".", firstButton="Ok")
-                        return
-                    i, p = self.app.create_image(baseFolder + "\\lib\\dsbg_shuffle_custom_icon_images\\".replace("\\", pathSep) + e.customIconsDict[lookup]["file"], e.customIconsDict[lookup]["size"], 99, pathProvided=True, extensionProvided=True, emptySetIcon=self.customEncounter["emptySetIcon"])
+                    if not path.isfile(baseFolder + "\\lib\\dsbg_shuffle_custom_icon_images\\".replace("\\", pathSep) + lookup[0]):
+                        p = PopupWindow(self.root, labelText="Missing custom icon image " + lookup[0]+ ".\nRemove custom icon and continue loading?", yesButton=True, noButton=True)
+                        if not p.answer:
+                            return
+                        keysToDelete.append(lookup)
+                        legacy = True
+                        continue
+
+                    iconCount = len([int(k) for k in self.customEncounter["icons"].keys() if k.isdigit()] + [k for k in e.customIconsDict if k != "lookup"])
+                    iid = str(iconCount)
+                    if lookup not in e.customIconsDict:
+                        e.customIconsDict["lookup"][lookup[0]] = lookup
+                        e.customIconsDict[lookup] = {
+                            "originalFileName": lookup[0],
+                            "originalFileFullPath": baseFolder + "\\lib\\dsbg_shuffle_custom_icon_images\\".replace("\\", pathSep) + lookup[0],
+                            "file": lookup[0],
+                            "size": lookup[1],
+                            "label": lookup[0],
+                            "iid": iid
+                        }
+
+                    i, p = self.app.create_image(e.customIconsDict[lookup]["originalFileFullPath"], lookup[1], 99, pathProvided=True, extensionProvided=True, emptySetIcon=self.customEncounter["emptySetIcon"])
                     e.customIconsDict[lookup]["image"] = i
                     e.customIconsDict[lookup]["photoImage"] = p
 
-                    _, e.customIconsDict[lookup]["treeviewImage"] = self.app.create_image(baseFolder + "\\lib\\dsbg_shuffle_custom_icon_images\\".replace("\\", pathSep) + e.customIconsDict[lookup]["file"], "iconTreeview", 99, pathProvided=True, extensionProvided=True, emptySetIcon=self.customEncounter["emptySetIcon"])
+                    _, e.customIconsDict[lookup]["treeviewImage"] = self.app.create_image(baseFolder + "\\lib\\dsbg_shuffle_custom_icon_images\\".replace("\\", pathSep) + lookup[0], "iconTreeview", 99, pathProvided=True, extensionProvided=True, emptySetIcon=self.customEncounter["emptySetIcon"])
 
                     if e.customIconsDict[lookup]["size"] == "iconText":
                         sizeDisplay = "Text"
@@ -587,6 +548,9 @@ try:
                         sizeDisplay = "Enemy/Terrain"
                     elif e.customIconsDict[lookup]["size"] == "iconSet":
                         sizeDisplay = "Set Icon"
+
+                for key in keysToDelete:
+                    del self.customEncounter["icons"][key]
                     
                 contents = [(e.treeviewCustomIcons.item(child)["values"][1], e.treeviewCustomIcons.item(child)["values"][0]) for child in e.treeviewCustomIcons.get_children()]
                 iid = str(len(contents))
@@ -639,7 +603,8 @@ try:
                 e.update_lists(apply=False)
 
                 e.tileLayoutMenuVal.set(self.customEncounter["layout"])
-                e.tileSelections["1"]["startingNodes"]["value"].set(self.customEncounter["tileSelections"]["1"]["startingNodes"]["value"])
+                e.tileSelections["1"]["startingNodes"]["tileValue"].set(self.customEncounter["tileSelections"]["1"]["startingNodes"]["tileValue"])
+                e.tileSelections["1"]["startingNodes"]["nodesValue"].set(self.customEncounter["tileSelections"]["1"]["startingNodes"]["nodesValue"])
                 e.tileSelections["1"]["traps"]["value"].set(self.customEncounter["tileSelections"]["1"]["traps"]["value"])
                 e.tileSelections["1"]["1"]["enemies"]["1"]["value"].set(self.customEncounter["tileSelections"]["1"]["1"]["enemies"]["1"]["value"])
                 e.tileSelections["1"]["1"]["enemies"]["2"]["value"].set(self.customEncounter["tileSelections"]["1"]["1"]["enemies"]["2"]["value"])
@@ -658,7 +623,8 @@ try:
                     e.tileSelections["1"]["4"]["enemies"]["2"]["value"].set(self.customEncounter["tileSelections"]["1"]["4"]["enemies"]["2"]["value"])
                     e.tileSelections["1"]["4"]["enemies"]["3"]["value"].set(self.customEncounter["tileSelections"]["1"]["4"]["enemies"]["3"]["value"])
                     e.tileSelections["1"]["4"]["terrain"]["value"].set(self.customEncounter["tileSelections"]["1"]["4"]["terrain"]["value"])
-                e.tileSelections["2"]["startingNodes"]["value"].set(self.customEncounter["tileSelections"]["2"]["startingNodes"]["value"])
+                e.tileSelections["2"]["startingNodes"]["tileValue"].set(self.customEncounter["tileSelections"]["2"]["startingNodes"]["tileValue"])
+                e.tileSelections["2"]["startingNodes"]["nodesValue"].set(self.customEncounter["tileSelections"]["2"]["startingNodes"]["nodesValue"])
                 e.tileSelections["2"]["traps"]["value"].set(self.customEncounter["tileSelections"]["2"]["traps"]["value"])
                 e.tileSelections["2"]["1"]["enemies"]["1"]["value"].set(self.customEncounter["tileSelections"]["2"]["1"]["enemies"]["1"]["value"])
                 e.tileSelections["2"]["1"]["enemies"]["2"]["value"].set(self.customEncounter["tileSelections"]["2"]["1"]["enemies"]["2"]["value"])
@@ -668,7 +634,8 @@ try:
                 e.tileSelections["2"]["2"]["enemies"]["2"]["value"].set(self.customEncounter["tileSelections"]["2"]["2"]["enemies"]["2"]["value"])
                 e.tileSelections["2"]["2"]["enemies"]["3"]["value"].set(self.customEncounter["tileSelections"]["2"]["2"]["enemies"]["3"]["value"])
                 e.tileSelections["2"]["2"]["terrain"]["value"].set(self.customEncounter["tileSelections"]["2"]["2"]["terrain"]["value"])
-                e.tileSelections["3"]["startingNodes"]["value"].set(self.customEncounter["tileSelections"]["3"]["startingNodes"]["value"])
+                e.tileSelections["3"]["startingNodes"]["tileValue"].set(self.customEncounter["tileSelections"]["3"]["startingNodes"]["tileValue"])
+                e.tileSelections["3"]["startingNodes"]["nodesValue"].set(self.customEncounter["tileSelections"]["3"]["startingNodes"]["nodesValue"])
                 e.tileSelections["3"]["traps"]["value"].set(self.customEncounter["tileSelections"]["3"]["traps"]["value"])
                 e.tileSelections["3"]["1"]["enemies"]["1"]["value"].set(self.customEncounter["tileSelections"]["3"]["1"]["enemies"]["1"]["value"])
                 e.tileSelections["3"]["1"]["enemies"]["2"]["value"].set(self.customEncounter["tileSelections"]["3"]["1"]["enemies"]["2"]["value"])
@@ -680,6 +647,9 @@ try:
                 e.tileSelections["3"]["2"]["terrain"]["value"].set(self.customEncounter["tileSelections"]["3"]["2"]["terrain"]["value"])
 
                 self.apply_changes()
+
+                if legacy:
+                    self.save_custom_encounter()
                 
                 log("End of load_custom_encounter")
             except UnidentifiedImageError:
@@ -803,6 +773,8 @@ try:
             self.iconsFrame2.pack(side=tk.TOP, anchor=tk.W, padx=5, pady=5, fill="x")
             self.iconsFrame3 = ttk.Frame(self.interior)
             self.iconsFrame3.pack(side=tk.TOP, anchor=tk.W, padx=5, pady=5, fill="x")
+            self.separator7 = ttk.Separator(self.interior)
+            self.separator7.pack(side=tk.TOP, anchor=tk.W, padx=5, pady=5, fill="x")
             self.iconsFrame4 = ttk.Frame(self.interior)
             self.iconsFrame4.pack(side=tk.TOP, anchor=tk.W, padx=5, pady=5, fill="x")
             self.iconsFrame5 = ttk.Frame(self.interior)
@@ -842,7 +814,6 @@ try:
             self.encounterNameEntry.grid(column=1, row=2, padx=5, pady=5, columnspan=2, sticky=tk.W)
 
             self.levelRadioVal = tk.IntVar()
-            self.previouslevelRadioVal = 0
             self.levelLabel = ttk.Label(self.infoFrame1, text="Encounter\nLevel")
             self.levelLabel.bind("<1>", lambda event: event.widget.focus_set())
             self.levelLabel.grid(column=3, row=2, padx=(47, 5), pady=5, sticky=tk.W)
@@ -950,7 +921,6 @@ try:
             self.tileLayoutMenuVal = tk.StringVar()
             self.tileLayoutMenu = ttk.Combobox(self.infoFrame4, height=11, width=37, state="readonly", values=self.tileLayoutMenuList, textvariable=self.tileLayoutMenuVal)
             self.previousTileLayoutMenuVal = ""
-            self.tileLayoutMenu.bind("<KeyRelease>", self.search_layout_combobox)
             self.tileLayoutMenu.bind("<<ComboboxSelected>>", self.update_lists)
             self.tileLayoutMenu.unbind_class("TCombobox", "<MouseWheel>")
             self.tileLayoutMenu.unbind_class("TCombobox", "<ButtonPress-4>")
@@ -970,6 +940,12 @@ try:
             self.numberOfTilesRadio3.grid(column=0, row=0, padx=(161, 5), pady=5, sticky=tk.W)
 
             self.tileSelections = {}
+
+            self.previousStartingTileVal = {
+                "1": 0,
+                "2": 0,
+                "3": 0
+            }
             
             for tile in range(1, 4):
                 if tile == 1:
@@ -984,7 +960,7 @@ try:
                     "traps": {"value": tk.IntVar()},
                     "enemiesLabel": ttk.Label(frame, text="Enemies"),
                     "startingNodesLabel": ttk.Label(frame, text="Starting Nodes"),
-                    "startingNodes": {"value": tk.IntVar()},
+                    "startingNodes": {"tileValue": tk.IntVar(), "nodesValue": tk.IntVar()},
                     "terrainLabel": ttk.Label(frame, text="Terrain")
                 }
 
@@ -994,13 +970,13 @@ try:
                 self.tileSelections[str(tile)]["enemiesLabel"].bind("<1>", lambda event: event.widget.focus_set())
 
                 self.tileSelections[str(tile)]["traps"]["widget"] = ttk.Checkbutton(frame, text="Traps", variable=self.tileSelections[str(tile)]["traps"]["value"], command=self.topFrame.apply_changes)
-
+                
                 self.tileSelections[str(tile)]["startingNodes"]["widgets"] = {
-                    "None": ttk.Radiobutton(frame, text="None", variable=self.tileSelections[str(tile)]["startingNodes"]["value"], value=0, command=self.topFrame.apply_changes),
-                    "Up": ttk.Radiobutton(frame, text="Up", variable=self.tileSelections[str(tile)]["startingNodes"]["value"], value=1, command=self.topFrame.apply_changes),
-                    "Down": ttk.Radiobutton(frame, text="Down", variable=self.tileSelections[str(tile)]["startingNodes"]["value"], value=2, command=self.topFrame.apply_changes),
-                    "Left": ttk.Radiobutton(frame, text="Left", variable=self.tileSelections[str(tile)]["startingNodes"]["value"], value=3, command=self.topFrame.apply_changes),
-                    "Right": ttk.Radiobutton(frame, text="Right", variable=self.tileSelections[str(tile)]["startingNodes"]["value"], value=4, command=self.topFrame.apply_changes)
+                    "toggle": ttk.Checkbutton(frame, text="Starting Tile", variable=self.tileSelections[str(tile)]["startingNodes"]["tileValue"], command=self.update_lists),
+                    "Up": ttk.Radiobutton(frame, text="Up", variable=self.tileSelections[str(tile)]["startingNodes"]["nodesValue"], value=1, command=self.topFrame.apply_changes),
+                    "Down": ttk.Radiobutton(frame, text="Down", variable=self.tileSelections[str(tile)]["startingNodes"]["nodesValue"], value=2, command=self.topFrame.apply_changes),
+                    "Left": ttk.Radiobutton(frame, text="Left", variable=self.tileSelections[str(tile)]["startingNodes"]["nodesValue"], value=3, command=self.topFrame.apply_changes),
+                    "Right": ttk.Radiobutton(frame, text="Right", variable=self.tileSelections[str(tile)]["startingNodes"]["nodesValue"], value=4, command=self.topFrame.apply_changes)
                 }
                 
                 self.tileSelections[str(tile)]["traps"]["widget"].state(["!alternate"])
@@ -1046,13 +1022,8 @@ try:
             self.tileSelections["1"]["terrainLabel"].grid(column=0, row=4, padx=5, pady=5, sticky=tk.W)
             self.tileSelections["1"]["1"]["terrain"]["widget"].grid(column=0, row=5, padx=5, pady=5, sticky=tk.W)
             self.tileSelections["1"]["2"]["terrain"]["widget"].grid(column=0, row=6, padx=5, pady=5, sticky=tk.W)
-            self.tileSelections["1"]["traps"]["widget"].grid(column=1, row=5, padx=5, pady=5)
-            self.tileSelections["1"]["startingNodesLabel"].grid(column=2, row=4, padx=5, pady=4, sticky=tk.W)
-            self.tileSelections["1"]["startingNodes"]["widgets"]["None"].grid(column=2, row=4, padx=(100, 6), sticky=tk.E)
-            self.tileSelections["1"]["startingNodes"]["widgets"]["Up"].grid(column=2, row=5, padx=5, sticky=tk.W)
-            self.tileSelections["1"]["startingNodes"]["widgets"]["Down"].grid(column=2, row=5, padx=(100, 5), sticky=tk.E)
-            self.tileSelections["1"]["startingNodes"]["widgets"]["Left"].grid(column=2, row=6, padx=5, sticky=tk.W)
-            self.tileSelections["1"]["startingNodes"]["widgets"]["Right"].grid(column=2, row=6, padx=(100, 8), sticky=tk.E)
+            self.tileSelections["1"]["startingNodes"]["widgets"]["toggle"].grid(column=1, row=5, padx=5, pady=5)
+            self.tileSelections["1"]["traps"]["widget"].grid(column=1, row=6, padx=(45, 5), pady=5, sticky=tk.W)
 
             self.tileSelections["2"]["label"].grid(column=0, row=0, padx=5, pady=5, sticky=tk.W, columnspan=4)
             self.tileSelections["3"]["label"].grid(column=0, row=0, padx=5, pady=5, sticky=tk.W, columnspan=4)
@@ -1176,23 +1147,6 @@ try:
             self.after(1, self.topFrame.apply_changes())
 
 
-        def search_layout_combobox(self, event):
-            try:
-                log("Start of search_layout_combobox")
-
-                w = event.widget
-                val = w.get()
-                if val == "":
-                    w["values"] = self.tileLayoutMenuList
-                else:
-                    w["values"] = [e for e in self.tileLayoutMenuList if val.lower() in e.lower()]
-                
-                log("End of search_layout_combobox")
-            except Exception as e:
-                error_popup(self.root, e)
-                raise
-
-
         def search_enemy_combobox(self, event):
             try:
                 log("Start of search_enemy_combobox, variant")
@@ -1232,16 +1186,23 @@ try:
                 log("Start of update_lists")
 
                 tiles = self.numberOfTilesRadioVal.get()
-                level = '1'#self.levelMenu.get()
                 layout = self.tileLayoutMenu.get()
                 if self.previousnumberOfTilesRadioVal != tiles:
                     self.update_tile_layout_list(tiles)
                     self.update_tile_sections(tiles)
+                elif (
+                    self.previousStartingTileVal["1"] != self.tileSelections["1"]["startingNodes"]["tileValue"].get()
+                    or self.previousStartingTileVal["2"] != self.tileSelections["2"]["startingNodes"]["tileValue"].get()
+                    or self.previousStartingTileVal["3"] != self.tileSelections["3"]["startingNodes"]["tileValue"].get()
+                    ):
+                    self.update_tile_sections(tiles)
                 elif tiles == 1 and layout != self.previousTileLayoutMenuVal:
                     self.update_tile_sections(tiles)
                 self.previousnumberOfTilesRadioVal = tiles
-                self.previouslevelRadioVal = level
                 self.previousTileLayoutMenuVal = layout
+
+                for tile in range(1, 4):
+                    self.previousStartingTileVal[str(tile)] = self.tileSelections[str(tile)]["startingNodes"]["tileValue"].get()
 
                 self.tileLayoutMenu.selection_clear()
 
@@ -1274,42 +1235,51 @@ try:
 
                 layout = self.tileLayoutMenu.get()
 
-                if layout == "1 Tile 4x4" and not self.tileSelections["1"]["3"]["enemies"]["1"]["widget"].winfo_viewable():
-                    self.tileSelections["1"]["terrainLabel"].grid_forget()
-                    self.tileSelections["1"]["1"]["terrain"]["widget"].grid_forget()
-                    self.tileSelections["1"]["2"]["terrain"]["widget"].grid_forget()
-                    self.tileSelections["1"]["traps"]["widget"].grid_forget()
-                    self.tileSelections["1"]["startingNodesLabel"].grid_forget()
-                    self.tileSelections["1"]["startingNodes"]["widgets"]["None"].grid_forget()
-                    self.tileSelections["1"]["startingNodes"]["widgets"]["Up"].grid_forget()
-                    self.tileSelections["1"]["startingNodes"]["widgets"]["Down"].grid_forget()
-                    self.tileSelections["1"]["startingNodes"]["widgets"]["Left"].grid_forget()
-                    self.tileSelections["1"]["startingNodes"]["widgets"]["Right"].grid_forget()
+                if layout == "1 Tile 4x4":
+                    if not self.tileSelections["1"]["3"]["enemies"]["1"]["widget"].winfo_viewable():
+                        self.tileSelections["1"]["terrainLabel"].grid_forget()
+                        self.tileSelections["1"]["1"]["terrain"]["widget"].grid_forget()
+                        self.tileSelections["1"]["2"]["terrain"]["widget"].grid_forget()
+                        self.tileSelections["1"]["traps"]["widget"].grid_forget()
+                        self.tileSelections["1"]["startingNodesLabel"].grid_forget()
+                        self.tileSelections["1"]["startingNodes"]["widgets"]["toggle"].grid_forget()
+                        self.tileSelections["1"]["startingNodes"]["widgets"]["Up"].grid_forget()
+                        self.tileSelections["1"]["startingNodes"]["widgets"]["Down"].grid_forget()
+                        self.tileSelections["1"]["startingNodes"]["widgets"]["Left"].grid_forget()
+                        self.tileSelections["1"]["startingNodes"]["widgets"]["Right"].grid_forget()
 
-                    self.tileSelections["1"]["1"]["enemies"]["1"]["widget"].grid(column=0, row=4, padx=(5, 11), pady=5, sticky=tk.W)
-                    self.tileSelections["1"]["1"]["enemies"]["2"]["widget"].grid(column=1, row=4, padx=(5, 11), pady=5, sticky=tk.W)
-                    self.tileSelections["1"]["1"]["enemies"]["3"]["widget"].grid(column=2, row=4, padx=(5, 11), pady=5, sticky=tk.W)
-                    self.tileSelections["1"]["2"]["enemies"]["1"]["widget"].grid(column=0, row=5, padx=(5, 11), pady=5, sticky=tk.W)
-                    self.tileSelections["1"]["2"]["enemies"]["2"]["widget"].grid(column=1, row=5, padx=(5, 11), pady=5, sticky=tk.W)
-                    self.tileSelections["1"]["2"]["enemies"]["3"]["widget"].grid(column=2, row=5, padx=(5, 11), pady=5, sticky=tk.W)
-                    self.tileSelections["1"]["3"]["enemies"]["1"]["widget"].grid(column=0, row=6, padx=(5, 11), pady=5, sticky=tk.W)
-                    self.tileSelections["1"]["3"]["enemies"]["2"]["widget"].grid(column=1, row=6, padx=(5, 11), pady=5, sticky=tk.W)
-                    self.tileSelections["1"]["3"]["enemies"]["3"]["widget"].grid(column=2, row=6, padx=(5, 11), pady=5, sticky=tk.W)
-                    self.tileSelections["1"]["4"]["enemies"]["1"]["widget"].grid(column=0, row=7, padx=(5, 11), pady=5, sticky=tk.W)
-                    self.tileSelections["1"]["4"]["enemies"]["2"]["widget"].grid(column=1, row=7, padx=(5, 11), pady=5, sticky=tk.W)
-                    self.tileSelections["1"]["4"]["enemies"]["3"]["widget"].grid(column=2, row=7, padx=(5, 11), pady=5, sticky=tk.W)
-                    self.tileSelections["1"]["terrainLabel"].grid(column=0, row=8, padx=5, pady=5, sticky=tk.W)
-                    self.tileSelections["1"]["1"]["terrain"]["widget"].grid(column=0, row=9, padx=5, pady=5, sticky=tk.W)
-                    self.tileSelections["1"]["2"]["terrain"]["widget"].grid(column=0, row=10, padx=5, pady=5, sticky=tk.W)
-                    self.tileSelections["1"]["3"]["terrain"]["widget"].grid(column=0, row=11, padx=5, pady=5, sticky=tk.W)
-                    self.tileSelections["1"]["4"]["terrain"]["widget"].grid(column=0, row=12, padx=5, pady=5, sticky=tk.W)
-                    self.tileSelections["1"]["traps"]["widget"].grid(column=1, row=9, padx=5, pady=5)
-                    self.tileSelections["1"]["startingNodesLabel"].grid(column=2, row=8, padx=5, pady=4, sticky=tk.W)
-                    self.tileSelections["1"]["startingNodes"]["widgets"]["None"].grid(column=2, row=8, padx=(100, 6), sticky=tk.E)
-                    self.tileSelections["1"]["startingNodes"]["widgets"]["Up"].grid(column=2, row=9, padx=5, sticky=tk.W)
-                    self.tileSelections["1"]["startingNodes"]["widgets"]["Down"].grid(column=2, row=9, padx=(100, 5), sticky=tk.E)
-                    self.tileSelections["1"]["startingNodes"]["widgets"]["Left"].grid(column=2, row=10, padx=5, sticky=tk.W)
-                    self.tileSelections["1"]["startingNodes"]["widgets"]["Right"].grid(column=2, row=10, padx=(100, 8), sticky=tk.E)
+                        self.tileSelections["1"]["1"]["enemies"]["1"]["widget"].grid(column=0, row=2, padx=(5, 11), pady=5, sticky=tk.W)
+                        self.tileSelections["1"]["1"]["enemies"]["2"]["widget"].grid(column=1, row=2, padx=(5, 11), pady=5, sticky=tk.W)
+                        self.tileSelections["1"]["1"]["enemies"]["3"]["widget"].grid(column=2, row=2, padx=(5, 11), pady=5, sticky=tk.W)
+                        self.tileSelections["1"]["2"]["enemies"]["1"]["widget"].grid(column=0, row=3, padx=(5, 11), pady=5, sticky=tk.W)
+                        self.tileSelections["1"]["2"]["enemies"]["2"]["widget"].grid(column=1, row=3, padx=(5, 11), pady=5, sticky=tk.W)
+                        self.tileSelections["1"]["2"]["enemies"]["3"]["widget"].grid(column=2, row=3, padx=(5, 11), pady=5, sticky=tk.W)
+                        self.tileSelections["1"]["3"]["enemies"]["1"]["widget"].grid(column=0, row=4, padx=(5, 11), pady=5, sticky=tk.W)
+                        self.tileSelections["1"]["3"]["enemies"]["2"]["widget"].grid(column=1, row=4, padx=(5, 11), pady=5, sticky=tk.W)
+                        self.tileSelections["1"]["3"]["enemies"]["3"]["widget"].grid(column=2, row=4, padx=(5, 11), pady=5, sticky=tk.W)
+                        self.tileSelections["1"]["4"]["enemies"]["1"]["widget"].grid(column=0, row=5, padx=(5, 11), pady=5, sticky=tk.W)
+                        self.tileSelections["1"]["4"]["enemies"]["2"]["widget"].grid(column=1, row=5, padx=(5, 11), pady=5, sticky=tk.W)
+                        self.tileSelections["1"]["4"]["enemies"]["3"]["widget"].grid(column=2, row=5, padx=(5, 11), pady=5, sticky=tk.W)
+                        self.tileSelections["1"]["terrainLabel"].grid(column=0, row=6, padx=5, pady=5, sticky=tk.W)
+                        self.tileSelections["1"]["1"]["terrain"]["widget"].grid(column=0, row=7, padx=5, pady=5, sticky=tk.W)
+                        self.tileSelections["1"]["2"]["terrain"]["widget"].grid(column=0, row=8, padx=5, pady=5, sticky=tk.W)
+                        self.tileSelections["1"]["3"]["terrain"]["widget"].grid(column=0, row=9, padx=5, pady=5, sticky=tk.W)
+                        self.tileSelections["1"]["4"]["terrain"]["widget"].grid(column=0, row=10, padx=5, pady=5, sticky=tk.W)
+                        self.tileSelections["1"]["startingNodes"]["widgets"]["toggle"].grid(column=1, row=7, padx=5, pady=5)
+                        self.tileSelections["1"]["traps"]["widget"].grid(column=1, row=8, padx=(45, 5), pady=5, sticky=tk.W)
+
+                    if self.tileSelections["1"]["startingNodes"]["tileValue"].get() and not self.tileSelections["1"]["startingNodesLabel"].winfo_viewable():
+                        self.tileSelections["1"]["startingNodesLabel"].grid(column=2, row=7, padx=5, pady=4, sticky=tk.W)
+                        self.tileSelections["1"]["startingNodes"]["widgets"]["Up"].grid(column=2, row=8, padx=5, sticky=tk.W)
+                        self.tileSelections["1"]["startingNodes"]["widgets"]["Down"].grid(column=2, row=8, padx=(100, 5), sticky=tk.E)
+                        self.tileSelections["1"]["startingNodes"]["widgets"]["Left"].grid(column=2, row=9, padx=5, sticky=tk.W)
+                        self.tileSelections["1"]["startingNodes"]["widgets"]["Right"].grid(column=2, row=9, padx=(100, 8), sticky=tk.E)
+                    else:
+                        self.tileSelections["1"]["startingNodesLabel"].grid_forget()
+                        self.tileSelections["1"]["startingNodes"]["widgets"]["Up"].grid_forget()
+                        self.tileSelections["1"]["startingNodes"]["widgets"]["Down"].grid_forget()
+                        self.tileSelections["1"]["startingNodes"]["widgets"]["Left"].grid_forget()
+                        self.tileSelections["1"]["startingNodes"]["widgets"]["Right"].grid_forget()
                 else:
                     self.tileSelections["1"]["3"]["enemies"]["1"]["widget"].grid_forget()
                     self.tileSelections["1"]["3"]["enemies"]["2"]["widget"].grid_forget()
@@ -1317,8 +1287,36 @@ try:
                     self.tileSelections["1"]["4"]["enemies"]["1"]["widget"].grid_forget()
                     self.tileSelections["1"]["4"]["enemies"]["2"]["widget"].grid_forget()
                     self.tileSelections["1"]["4"]["enemies"]["3"]["widget"].grid_forget()
+                    self.tileSelections["1"]["terrainLabel"].grid_forget()
+                    self.tileSelections["1"]["1"]["terrain"]["widget"].grid_forget()
+                    self.tileSelections["1"]["2"]["terrain"]["widget"].grid_forget()
                     self.tileSelections["1"]["3"]["terrain"]["widget"].grid_forget()
                     self.tileSelections["1"]["4"]["terrain"]["widget"].grid_forget()
+                    self.tileSelections["1"]["startingNodes"]["widgets"]["toggle"].grid_forget()
+                    self.tileSelections["1"]["traps"]["widget"].grid_forget()
+                    self.tileSelections["1"]["terrainLabel"].grid(column=0, row=4, padx=5, pady=5, sticky=tk.W)
+                    self.tileSelections["1"]["1"]["terrain"]["widget"].grid(column=0, row=5, padx=5, pady=5, sticky=tk.W)
+                    self.tileSelections["1"]["2"]["terrain"]["widget"].grid(column=0, row=6, padx=5, pady=5, sticky=tk.W)
+                    self.tileSelections["1"]["startingNodes"]["widgets"]["toggle"].grid(column=1, row=5, padx=5, pady=5)
+                    self.tileSelections["1"]["traps"]["widget"].grid(column=1, row=6, padx=(45, 5), pady=5, sticky=tk.W)
+
+                    if self.tileSelections["1"]["startingNodes"]["tileValue"].get():
+                        self.tileSelections["1"]["startingNodesLabel"].grid_forget()
+                        self.tileSelections["1"]["startingNodes"]["widgets"]["Up"].grid_forget()
+                        self.tileSelections["1"]["startingNodes"]["widgets"]["Down"].grid_forget()
+                        self.tileSelections["1"]["startingNodes"]["widgets"]["Left"].grid_forget()
+                        self.tileSelections["1"]["startingNodes"]["widgets"]["Right"].grid_forget()
+                        self.tileSelections["1"]["startingNodesLabel"].grid(column=2, row=4, padx=5, pady=4, sticky=tk.W)
+                        self.tileSelections["1"]["startingNodes"]["widgets"]["Up"].grid(column=2, row=5, padx=5, sticky=tk.W)
+                        self.tileSelections["1"]["startingNodes"]["widgets"]["Down"].grid(column=2, row=5, padx=(100, 5), sticky=tk.E)
+                        self.tileSelections["1"]["startingNodes"]["widgets"]["Left"].grid(column=2, row=6, padx=5, sticky=tk.W)
+                        self.tileSelections["1"]["startingNodes"]["widgets"]["Right"].grid(column=2, row=6, padx=(100, 8), sticky=tk.E)
+                    else:
+                        self.tileSelections["1"]["startingNodesLabel"].grid_forget()
+                        self.tileSelections["1"]["startingNodes"]["widgets"]["Up"].grid_forget()
+                        self.tileSelections["1"]["startingNodes"]["widgets"]["Down"].grid_forget()
+                        self.tileSelections["1"]["startingNodes"]["widgets"]["Left"].grid_forget()
+                        self.tileSelections["1"]["startingNodes"]["widgets"]["Right"].grid_forget()
                     
                 if int(tiles) > 1 and not self.tileSelections["2"]["terrainLabel"].winfo_viewable():
                     self.tileSelections["2"]["enemiesLabel"].grid(column=0, row=1, padx=5, pady=5, sticky=tk.W)
@@ -1331,14 +1329,22 @@ try:
                     self.tileSelections["2"]["terrainLabel"].grid(column=0, row=4, padx=5, pady=5, sticky=tk.W)
                     self.tileSelections["2"]["1"]["terrain"]["widget"].grid(column=0, row=5, padx=5, pady=5, sticky=tk.W)
                     self.tileSelections["2"]["2"]["terrain"]["widget"].grid(column=0, row=6, padx=5, pady=5, sticky=tk.W)
-                    self.tileSelections["2"]["traps"]["widget"].grid(column=1, row=5, padx=5, pady=5)
-                    self.tileSelections["2"]["startingNodesLabel"].grid(column=2, row=4, padx=5, pady=4, sticky=tk.W)
-                    self.tileSelections["2"]["startingNodes"]["widgets"]["None"].grid(column=2, row=4, padx=(100, 6), sticky=tk.E)
-                    self.tileSelections["2"]["startingNodes"]["widgets"]["Up"].grid(column=2, row=5, padx=5, sticky=tk.W)
-                    self.tileSelections["2"]["startingNodes"]["widgets"]["Down"].grid(column=2, row=5, padx=(100, 5), sticky=tk.E)
-                    self.tileSelections["2"]["startingNodes"]["widgets"]["Left"].grid(column=2, row=6, padx=5, sticky=tk.W)
-                    self.tileSelections["2"]["startingNodes"]["widgets"]["Right"].grid(column=2, row=6, padx=(100, 8), sticky=tk.E)
-                else:
+                    self.tileSelections["2"]["startingNodes"]["widgets"]["toggle"].grid(column=1, row=5, padx=5, pady=5)
+                    self.tileSelections["2"]["traps"]["widget"].grid(column=1, row=6, padx=(45, 5), pady=5, sticky=tk.W)
+
+                    if self.tileSelections["2"]["startingNodes"]["tileValue"].get():
+                        self.tileSelections["2"]["startingNodesLabel"].grid(column=2, row=4, padx=5, pady=4, sticky=tk.W)
+                        self.tileSelections["2"]["startingNodes"]["widgets"]["Up"].grid(column=2, row=5, padx=5, sticky=tk.W)
+                        self.tileSelections["2"]["startingNodes"]["widgets"]["Down"].grid(column=2, row=5, padx=(100, 5), sticky=tk.E)
+                        self.tileSelections["2"]["startingNodes"]["widgets"]["Left"].grid(column=2, row=6, padx=5, sticky=tk.W)
+                        self.tileSelections["2"]["startingNodes"]["widgets"]["Right"].grid(column=2, row=6, padx=(100, 8), sticky=tk.E)
+                    else:
+                        self.tileSelections["2"]["startingNodesLabel"].grid_forget()
+                        self.tileSelections["2"]["startingNodes"]["widgets"]["Up"].grid_forget()
+                        self.tileSelections["2"]["startingNodes"]["widgets"]["Down"].grid_forget()
+                        self.tileSelections["2"]["startingNodes"]["widgets"]["Left"].grid_forget()
+                        self.tileSelections["2"]["startingNodes"]["widgets"]["Right"].grid_forget()
+                elif int(tiles) == 1:
                     self.tileSelections["2"]["1"]["enemies"]["1"]["widget"].grid_forget()
                     self.tileSelections["2"]["1"]["enemies"]["2"]["widget"].grid_forget()
                     self.tileSelections["2"]["1"]["enemies"]["3"]["widget"].grid_forget()
@@ -1350,13 +1356,13 @@ try:
                     self.tileSelections["2"]["2"]["terrain"]["widget"].grid_forget()
                     self.tileSelections["2"]["traps"]["widget"].grid_forget()
                     self.tileSelections["2"]["startingNodesLabel"].grid_forget()
-                    self.tileSelections["2"]["startingNodes"]["widgets"]["None"].grid_forget()
+                    self.tileSelections["2"]["startingNodes"]["widgets"]["toggle"].grid_forget()
                     self.tileSelections["2"]["startingNodes"]["widgets"]["Up"].grid_forget()
                     self.tileSelections["2"]["startingNodes"]["widgets"]["Down"].grid_forget()
                     self.tileSelections["2"]["startingNodes"]["widgets"]["Left"].grid_forget()
                     self.tileSelections["2"]["startingNodes"]["widgets"]["Right"].grid_forget()
                     
-                if int(tiles) > 2 and not self.tileSelections["2"]["terrainLabel"].winfo_viewable():
+                if int(tiles) > 2 and not self.tileSelections["3"]["terrainLabel"].winfo_viewable():
                     self.tileSelections["3"]["enemiesLabel"].grid(column=0, row=1, padx=5, pady=5, sticky=tk.W)
                     self.tileSelections["3"]["1"]["enemies"]["1"]["widget"].grid(column=0, row=2, padx=(5, 11), pady=5, sticky=tk.W)
                     self.tileSelections["3"]["1"]["enemies"]["2"]["widget"].grid(column=1, row=2, padx=(5, 11), pady=5, sticky=tk.W)
@@ -1367,13 +1373,21 @@ try:
                     self.tileSelections["3"]["terrainLabel"].grid(column=0, row=4, padx=5, pady=5, sticky=tk.W)
                     self.tileSelections["3"]["1"]["terrain"]["widget"].grid(column=0, row=5, padx=5, pady=5, sticky=tk.W)
                     self.tileSelections["3"]["2"]["terrain"]["widget"].grid(column=0, row=6, padx=5, pady=5, sticky=tk.W)
-                    self.tileSelections["3"]["traps"]["widget"].grid(column=1, row=5, padx=5, pady=5)
-                    self.tileSelections["3"]["startingNodesLabel"].grid(column=2, row=4, padx=5, pady=4, sticky=tk.W)
-                    self.tileSelections["3"]["startingNodes"]["widgets"]["None"].grid(column=2, row=4, padx=(100, 6), sticky=tk.E)
-                    self.tileSelections["3"]["startingNodes"]["widgets"]["Up"].grid(column=2, row=5, padx=5, sticky=tk.W)
-                    self.tileSelections["3"]["startingNodes"]["widgets"]["Down"].grid(column=2, row=5, padx=(100, 5), sticky=tk.E)
-                    self.tileSelections["3"]["startingNodes"]["widgets"]["Left"].grid(column=2, row=6, padx=5, sticky=tk.W)
-                    self.tileSelections["3"]["startingNodes"]["widgets"]["Right"].grid(column=2, row=6, padx=(100, 8), sticky=tk.E)
+                    self.tileSelections["3"]["startingNodes"]["widgets"]["toggle"].grid(column=1, row=5, padx=5, pady=5)
+                    self.tileSelections["3"]["traps"]["widget"].grid(column=1, row=6, padx=(45, 5), pady=5, sticky=tk.W)
+
+                    if self.tileSelections["3"]["startingNodes"]["tileValue"].get():
+                        self.tileSelections["3"]["startingNodesLabel"].grid(column=2, row=4, padx=5, pady=4, sticky=tk.W)
+                        self.tileSelections["3"]["startingNodes"]["widgets"]["Up"].grid(column=2, row=5, padx=5, sticky=tk.W)
+                        self.tileSelections["3"]["startingNodes"]["widgets"]["Down"].grid(column=2, row=5, padx=(100, 5), sticky=tk.E)
+                        self.tileSelections["3"]["startingNodes"]["widgets"]["Left"].grid(column=2, row=6, padx=5, sticky=tk.W)
+                        self.tileSelections["3"]["startingNodes"]["widgets"]["Right"].grid(column=2, row=6, padx=(100, 8), sticky=tk.E)
+                    else:
+                        self.tileSelections["3"]["startingNodesLabel"].grid_forget()
+                        self.tileSelections["3"]["startingNodes"]["widgets"]["Up"].grid_forget()
+                        self.tileSelections["3"]["startingNodes"]["widgets"]["Down"].grid_forget()
+                        self.tileSelections["3"]["startingNodes"]["widgets"]["Left"].grid_forget()
+                        self.tileSelections["3"]["startingNodes"]["widgets"]["Right"].grid_forget()
                 else:
                     self.tileSelections["3"]["1"]["enemies"]["1"]["widget"].grid_forget()
                     self.tileSelections["3"]["1"]["enemies"]["2"]["widget"].grid_forget()
@@ -1386,7 +1400,7 @@ try:
                     self.tileSelections["3"]["2"]["terrain"]["widget"].grid_forget()
                     self.tileSelections["3"]["traps"]["widget"].grid_forget()
                     self.tileSelections["3"]["startingNodesLabel"].grid_forget()
-                    self.tileSelections["3"]["startingNodes"]["widgets"]["None"].grid_forget()
+                    self.tileSelections["3"]["startingNodes"]["widgets"]["toggle"].grid_forget()
                     self.tileSelections["3"]["startingNodes"]["widgets"]["Up"].grid_forget()
                     self.tileSelections["3"]["startingNodes"]["widgets"]["Down"].grid_forget()
                     self.tileSelections["3"]["startingNodes"]["widgets"]["Left"].grid_forget()
@@ -1495,7 +1509,11 @@ try:
 
                 self.iconImageErrorsVal.set("")
 
+                oldIconCount = sum([1 for k in self.customIconsDict if "label" in self.customIconsDict[k]])
+
                 self.customIconsDict[(file, size)]["label"] = icon
+                
+                newIconCount = sum([1 for k in self.customIconsDict if "label" in self.customIconsDict[k]])
 
                 self.customIconsDict["lookup"][icon] = (file, size)
 
@@ -1507,27 +1525,32 @@ try:
 
                 self.currentFile = deepcopy(self.customIconsDict[(file, size)]["file"])
 
-                contents = [(self.treeviewCustomIcons.item(child)["values"][1], self.treeviewCustomIcons.item(child)["values"][0]) for child in self.treeviewCustomIcons.get_children()]
-                iid = str(len(contents))
-                c = (sizeDisplay, self.customIconsDict[(file, size)]["label"])
-                if icon not in set([c[1] for c in contents]):
-                    self.customIconsTreeviewDict[c[1]] = {
-                        "iid": iid,
-                        "index": bisect_left(contents, (c[0], c[1])),
-                        "values": (c[1], c[0])
-                    }
-                    _, self.customIconsDict[(file, size)]["treeviewImage"] = self.app.create_image(baseFolder + "\\lib\\dsbg_shuffle_custom_icon_images\\".replace("\\", pathSep) + self.customIconsDict[(file, size)]["file"], "iconTreeview", 99, pathProvided=True, extensionProvided=True)
-                    self.customIconsTreeviewDict[c[1]]["image"] = self.customIconsDict[(file, size)]["treeviewImage"]
-                    self.treeviewCustomIcons.insert(parent="", iid=iid, index=self.customIconsTreeviewDict[c[1]]["index"], values=self.customIconsTreeviewDict[c[1]]["values"], image=self.customIconsTreeviewDict[c[1]]["image"], tags=False, open=True)
-                    self.customIconsDict[(file, size)]["iid"] = iid
+                if oldIconCount == newIconCount:
+                    self.treeviewCustomIcons.item(self.customIconsDict[(file, size)]["iid"], values=(icon, sizeDisplay))
                 else:
-                    self.treeviewCustomIcons.item(self.customIconsTreeviewDict[c[1]]["iid"], values=(c[1], c[0]))
+                    contents = [(self.treeviewCustomIcons.item(child)["values"][1], self.treeviewCustomIcons.item(child)["values"][0]) for child in self.treeviewCustomIcons.get_children()]
+                    iid = str(len(contents))
+                    c = (sizeDisplay, self.customIconsDict[(file, size)]["label"])
+                    if icon not in set([c[1] for c in contents]):
+                        self.customIconsTreeviewDict[c[1]] = {
+                            "iid": iid,
+                            "index": bisect_left(contents, (c[0], c[1])),
+                            "values": (c[1], c[0])
+                        }
+                        _, self.customIconsDict[(file, size)]["treeviewImage"] = self.app.create_image(baseFolder + "\\lib\\dsbg_shuffle_custom_icon_images\\".replace("\\", pathSep) + self.customIconsDict[(file, size)]["file"], "iconTreeview", 99, pathProvided=True, extensionProvided=True)
+                        self.customIconsTreeviewDict[c[1]]["image"] = self.customIconsDict[(file, size)]["treeviewImage"]
+                        self.treeviewCustomIcons.insert(parent="", iid=iid, index=self.customIconsTreeviewDict[c[1]]["index"], values=self.customIconsTreeviewDict[c[1]]["values"], image=self.customIconsTreeviewDict[c[1]]["image"], tags=False, open=True)
+                        self.customIconsDict[(file, size)]["iid"] = iid
+                        self.treeviewCustomIcons.focus(iid)
+                        self.treeviewCustomIcons.selection_set(iid)
+                    else:
+                        self.treeviewCustomIcons.item(self.customIconsTreeviewDict[c[1]]["iid"], values=(c[1], c[0]))
 
                 saveDict = {}
                 for key in self.customIconsDict:
                     if key == "lookup":
                         saveDict["lookup"] = self.customIconsDict["lookup"]
-                    else:
+                    elif "label" in self.customIconsDict[key]:
                         saveDict["||".join(key)] = {k: v for k, v in self.customIconsDict[key].items() if "mage" not in k}
 
                 with open(baseFolder + "\\lib\\dsbg_shuffle_custom_icons.json".replace("\\", pathSep), "w") as iconsFile:
@@ -1597,6 +1620,9 @@ try:
                     self.customIconsDict[(self.currentIcon, size)]["photoImage"] = p
                 else:
                     p = self.customIconsDict[(self.currentIcon, size)]["photoImage"]
+
+                w, h = self.customIconsDict[(self.currentIcon, size)]["image"].size
+                self.customIconsDict[(self.currentIcon, size)]["offset"] = (w / 2, h / 2)
                 
                 _, self.iconViewImg = self.app.create_image(file, size, 99, pathProvided=True, extensionProvided=True, addToBg1=True)
 
@@ -1631,7 +1657,7 @@ try:
                 if not self.encounterIcons:
                     id = 0
                 else:
-                    id = max(self.encounterIcons.keys()) + 2
+                    id = max(self.encounterIcons.keys()) + 3
 
                 self.encounterIcons[id] = {}
 
@@ -1643,7 +1669,7 @@ try:
                     "lookup": [k for k in self.customIconsDict if "iid" in self.customIconsDict[k] and self.customIconsDict[k]["iid"] == self.treeviewCustomIcons.selection()[0]][0],
                     "view": tk.Label(self.iconsFrame4),
                     "viewImage": image,
-                    "posLabel": ttk.Label(self.iconsFrame4, text="Position\t"),
+                    "noteVal": tk.StringVar(),
                     "xLabel": ttk.Label(self.iconsFrame4, text="x (0-400):"),
                     "yLabel": ttk.Label(self.iconsFrame4, text="y (0-685):"),
                     "position": (tk.StringVar(), tk.StringVar()),
@@ -1651,6 +1677,7 @@ try:
                     "remove": ttk.Button(self.iconsFrame4, text="Remove Icon", width=16, command=lambda: self.remove_icon_from_encounter(id))
                 }
 
+                self.encounterIcons[id]["note"] = ttk.Entry(self.iconsFrame4, textvariable=self.encounterIcons[id]["noteVal"], width=15)
                 self.encounterIcons[id]["xEntry"] = ttk.Entry(self.iconsFrame4, textvariable=self.encounterIcons[id]["position"][0], width=4, validate="all", validatecommand=(self.vcmdX, "%P"))
                 self.encounterIcons[id]["yEntry"] = ttk.Entry(self.iconsFrame4, textvariable=self.encounterIcons[id]["position"][1], width=4, validate="all", validatecommand=(self.vcmdY, "%P"))
                 self.encounterIcons[id]["lock"] = ttk.Checkbutton(self.iconsFrame4, text="Click Position", variable=self.encounterIcons[id]["lockVal"], style="Switch.TCheckbutton")
@@ -1665,24 +1692,21 @@ try:
                         if lookup in set([self.topFrame.customEncounter["icons"][l]["lookup"] for l in self.topFrame.customEncounter["icons"]]) and pos[0] and pos[1]:
                             self.encounterIcons[id]["position"][0].set(pos[0])
                             self.encounterIcons[id]["position"][1].set(pos[1])
-                        else:
-                            self.encounterIcons[id]["lock"].invoke()
 
                 self.encounterIcons[id]["view"].bind("<1>", lambda event: event.widget.focus_set())
-                self.encounterIcons[id]["posLabel"].bind("<1>", lambda event: event.widget.focus_set())
                 self.encounterIcons[id]["xLabel"].bind("<1>", lambda event: event.widget.focus_set())
                 self.encounterIcons[id]["xEntry"].bind("<KeyRelease>", self.handle_wait)
                 self.encounterIcons[id]["yLabel"].bind("<1>", lambda event: event.widget.focus_set())
                 self.encounterIcons[id]["yEntry"].bind("<KeyRelease>", self.handle_wait)
-                self.encounterIcons[id]["lock"].bind("<1>", lambda event: event.widget.focus_set())
-                self.encounterIcons[id]["view"].grid(column=0, row=id, padx=5, pady=(20, 5), sticky=tk.W, rowspan=2)
-                self.encounterIcons[id]["posLabel"].grid(column=1, row=id, padx=5, pady=(20, 5), sticky=tk.W, rowspan=2)
-                self.encounterIcons[id]["xLabel"].grid(column=2, row=id, padx=5, pady=(20, 6), sticky=tk.W)
-                self.encounterIcons[id]["xEntry"].grid(column=3, row=id, padx=5, pady=(20, 5), sticky=tk.W)
-                self.encounterIcons[id]["yLabel"].grid(column=2, row=id+1, padx=5, sticky=tk.W)
-                self.encounterIcons[id]["yEntry"].grid(column=3, row=id+1, padx=5, pady=(3, 0), sticky=tk.W)
-                self.encounterIcons[id]["lock"].grid(column=4, row=id, padx=5, pady=(20, 5), sticky=tk.W, rowspan=2)
-                self.encounterIcons[id]["remove"].grid(column=5, row=id, padx=11, pady=(20, 5), sticky=tk.E, rowspan=2)
+                self.encounterIcons[id]["lock"].bind("<1>", lambda event: self.toggle_position_switches(event=event, id=id))
+                self.encounterIcons[id]["view"].grid(column=0, row=id, padx=5, pady=(20, 5), sticky=tk.W, rowspan=3)
+                self.encounterIcons[id]["note"].grid(column=0, row=id+2, padx=5, pady=5, sticky=tk.W)
+                self.encounterIcons[id]["xLabel"].grid(column=1, row=id, padx=5, pady=(20, 6), sticky=tk.W)
+                self.encounterIcons[id]["xEntry"].grid(column=2, row=id, padx=5, pady=(20, 5), sticky=tk.W)
+                self.encounterIcons[id]["yLabel"].grid(column=1, row=id+1, padx=5, sticky=tk.W)
+                self.encounterIcons[id]["yEntry"].grid(column=2, row=id+1, padx=5, pady=(3, 0), sticky=tk.W)
+                self.encounterIcons[id]["lock"].grid(column=1, row=id+2, padx=5, pady=5, sticky=tk.W, columnspan=2)
+                self.encounterIcons[id]["remove"].grid(column=4, row=id, padx=11, pady=(20, 5), sticky=tk.E, rowspan=3)
 
                 log("End of add_icon_to_encounter")
             except Exception as e:
@@ -1705,7 +1729,30 @@ try:
 
                 del self.encounterIcons[id]
 
+                self.topFrame.apply_changes()
+
                 log("End of remove_icon_from_encounter")
+            except Exception as e:
+                error_popup(self.root, e)
+                raise
+
+
+        def toggle_position_switches(self, id, event=None):
+            try:
+                log("Start of toggle_position_switches")
+
+                if not event:
+                    log("End of toggle_position_switches")
+                    return
+
+                event.widget.focus_set()
+
+                if self.encounterIcons[id]["lockVal"].get() == 0:
+                    for i in [i for i in self.encounterIcons if i != id]:
+                        if self.encounterIcons[i]["lockVal"].get() == 1:
+                            self.encounterIcons[i]["lock"].invoke()
+
+                log("End of toggle_position_switches")
             except Exception as e:
                 error_popup(self.root, e)
                 raise
