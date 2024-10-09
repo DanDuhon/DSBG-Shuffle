@@ -300,7 +300,8 @@ try:
 
                 # Custom Icons
                 for icon in [icon for icon in e.encounterIcons if e.encounterIcons[icon]["position"][0].get() != "" and e.encounterIcons[icon]["position"][1].get() != ""]:
-                    image = e.customIconsDict[e.encounterIcons[icon]["lookup"]]["image"]
+                    lookup = e.encounterIcons[icon]["lookup"] if e.encounterIcons[icon]["lookup"] in e.customIconsDict else e.encounterIcons[icon]["lookup"]
+                    image = e.customIconsDict[lookup]["image"] if lookup in e.customIconsDict else self.app.iconsForCustom[e.encounterIcons[icon]["lookup"]]["image"]
                     box = (int(e.encounterIcons[icon]["position"][0].get()), int(e.encounterIcons[icon]["position"][1].get()))
                     self.app.displayImage.paste(im=image, box=box, mask=image)
 
@@ -331,7 +332,8 @@ try:
 
                     self.customEncounter["icons"][str(newId)] = {
                         "lookup": e.encounterIcons[id]["lookup"],
-                        "position": (e.encounterIcons[id]["position"][0].get(), e.encounterIcons[id]["position"][1].get())
+                        "position": (e.encounterIcons[id]["position"][0].get(), e.encounterIcons[id]["position"][1].get()),
+                        "note": e.encounterIcons[id]["noteVal"].get()
                     }
 
                 self.customEncounter["tileSelections"] = {
@@ -520,7 +522,6 @@ try:
                         if not p.answer:
                             return
                         keysToDelete.append(lookup)
-                        legacy = True
                         continue
 
                     iconCount = len([int(k) for k in self.customEncounter["icons"].keys() if k.isdigit()] + [k for k in e.customIconsDict if k != "lookup"])
@@ -540,7 +541,7 @@ try:
                     e.customIconsDict[lookup]["image"] = i
                     e.customIconsDict[lookup]["photoImage"] = p
 
-                    _, e.customIconsDict[lookup]["treeviewImage"] = self.app.create_image(baseFolder + "\\lib\\dsbg_shuffle_custom_icon_images\\".replace("\\", pathSep) + lookup[0], "iconTreeview", 99, pathProvided=True, extensionProvided=True, emptySetIcon=self.customEncounter["emptySetIcon"])
+                    e.customIconsDict[lookup]["treeviewImage"] = self.app.create_image(baseFolder + "\\lib\\dsbg_shuffle_custom_icon_images\\".replace("\\", pathSep) + lookup[0], "iconTreeview", 99, pathProvided=True, extensionProvided=True, emptySetIcon=self.customEncounter["emptySetIcon"])
 
                     if e.customIconsDict[lookup]["size"] == "iconText":
                         sizeDisplay = "Text"
@@ -562,7 +563,7 @@ try:
                         "values": (c[1], c[0]),
                         "image": e.customIconsDict[lookup]["treeviewImage"]
                     }
-                    e.treeviewCustomIcons.insert(parent="", iid=iid, index=e.customIconsTreeviewDict[c[1]]["index"], values=e.customIconsTreeviewDict[c[1]]["values"], image=e.customIconsTreeviewDict[c[1]]["image"], tags=False, open=True)
+                    e.treeviewCustomIcons.insert(parent="", iid=iid, index=e.customIconsTreeviewDict[c[1]]["index"], values=("   " + self.customIconsTreeviewDict[c[1]]["values"][0], self.customIconsTreeviewDict[c[1]]["values"][1]), image=e.customIconsTreeviewDict[c[1]]["image"], tags=False, open=True)
                     e.customIconsDict[lookup]["iid"] = iid
 
                     e.treeviewCustomIcons.focus(iid)
@@ -647,9 +648,6 @@ try:
                 e.tileSelections["3"]["2"]["terrain"]["value"].set(self.customEncounter["tileSelections"]["3"]["2"]["terrain"]["value"])
 
                 self.apply_changes()
-
-                if legacy:
-                    self.save_custom_encounter()
                 
                 log("End of load_custom_encounter")
             except UnidentifiedImageError:
@@ -736,8 +734,6 @@ try:
                 "Torch",
                 "Treasure Chest"
             ]
-
-            self.startingNodesMenuList = ["", "North", "East", "South", "West"]
             
             self.infoFrame1 = ttk.Frame(self.interior)
             self.infoFrame1.pack(side=tk.TOP, anchor=tk.W)
@@ -1066,6 +1062,126 @@ try:
             self.treeviewCustomIcons.column("Size", anchor=tk.W)
             
             self.treeviewCustomIcons.bind("<<TreeviewSelect>>", self.change_icon)
+            
+            # Conditions
+            self.treeviewCustomIcons.insert(parent="", index="end", iid="Conditions", values=("Conditions", ""), tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Conditions", index="end", iid="bleed", values=("   Bleed", "Text"), image=self.app.iconsForCustom["Bleed"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Conditions", index="end", iid="calamity", values=("   Calamity", "Text"), image=self.app.iconsForCustom["Calamity"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Conditions", index="end", iid="corrosion", values=("   Corrosion", "Text"), image=self.app.iconsForCustom["Corrosion"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Conditions", index="end", iid="frostbite", values=("   Frostbite", "Text"), image=self.app.iconsForCustom["Frostbite"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Conditions", index="end", iid="poison", values=("   Poison", "Text"), image=self.app.iconsForCustom["Poison"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Conditions", index="end", iid="stagger", values=("   Stagger", "Text"), image=self.app.iconsForCustom["Stagger"]["treeviewImage"], tags=False, open=False)
+            
+            # Enemies
+            self.treeviewCustomIcons.insert(parent="", index="end", iid="Core", values=("Enemies - Core", ""), tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Core", index="end", iid="Crossbow Hollow", values=("   Crossbow Hollow", "Text"), image=self.app.iconsForCustom["Crossbow Hollow"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Core", index="end", iid="Hollow Soldier", values=("   Hollow Soldier", "Text"), image=self.app.iconsForCustom["Hollow Soldier"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Core", index="end", iid="Large Hollow Soldier", values=("   Large Hollow Soldier", "Text"), image=self.app.iconsForCustom["Large Hollow Soldier"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Core", index="end", iid="Sentinel", values=("   Sentinel", "Text"), image=self.app.iconsForCustom["Sentinel"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Core", index="end", iid="Silver Knight Greatbowman", values=("   Silver Knight Greatbowman", "Text"), image=self.app.iconsForCustom["Silver Knight Greatbowman"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Core", index="end", iid="Silver Knight Swordsman", values=("   Silver Knight Swordsman", "Text"), image=self.app.iconsForCustom["Silver Knight Swordsman"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="", index="end", iid="Darkroot", values=("Enemies - Darkroot", ""), tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Darkroot", index="end", iid="Demonic Foliage", values=("   Demonic Foliage", "Text"), image=self.app.iconsForCustom["Demonic Foliage"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Darkroot", index="end", iid="Mushroom Child", values=("   Mushroom Child", "Text"), image=self.app.iconsForCustom["Mushroom Child"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Darkroot", index="end", iid="Mushroom Parent", values=("   Mushroom Parent", "Text"), image=self.app.iconsForCustom["Mushroom Parent"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Darkroot", index="end", iid="Plow Scarecrow", values=("   Plow Scarecrow", "Text"), image=self.app.iconsForCustom["Plow Scarecrow"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Darkroot", index="end", iid="Shears Scarecrow", values=("   Shears Scarecrow", "Text"), image=self.app.iconsForCustom["Shears Scarecrow"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Darkroot", index="end", iid="Stone Guardian", values=("   Stone Guardian", "Text"), image=self.app.iconsForCustom["Stone Guardian"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Darkroot", index="end", iid="Stone Knight", values=("   Stone Knight", "Text"), image=self.app.iconsForCustom["Stone Knight"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="", index="end", iid="Explorers", values=("Enemies - Explorers", ""), tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Explorers", index="end", iid="Firebomb Hollow", values=("   Firebomb Hollow", "Text"), image=self.app.iconsForCustom["Firebomb Hollow"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Explorers", index="end", iid="Hungry Mimic", values=("   Hungry Mimic", "Text"), image=self.app.iconsForCustom["Hungry Mimic"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Explorers", index="end", iid="Silver Knight Spearman", values=("   Silver Knight Spearman", "Text"), image=self.app.iconsForCustom["Silver Knight Spearman"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Explorers", index="end", iid="Voracious Mimic", values=("   Voracious Mimic", "Text"), image=self.app.iconsForCustom["Voracious Mimic"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="", index="end", iid="Iron Keep", values=("Enemies - Iron Keep", ""), tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Iron Keep", index="end", iid="Alonne Bow Knight", values=("   Alonne Bow Knight", "Text"), image=self.app.iconsForCustom["Alonne Bow Knight"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Iron Keep", index="end", iid="Alonne Knight Captain", values=("   Alonne Knight Captain", "Text"), image=self.app.iconsForCustom["Alonne Knight Captain"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Iron Keep", index="end", iid="Alonne Sword Knight", values=("   Alonne Sword Knight", "Text"), image=self.app.iconsForCustom["Alonne Sword Knight"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Iron Keep", index="end", iid="Ironclad Soldier", values=("   Ironclad Soldier", "Text"), image=self.app.iconsForCustom["Ironclad Soldier"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="", index="end", iid="Executioner Chariot", values=("Enemies - Executioner Chariot", ""), tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Executioner Chariot", index="end", iid="Black Hollow Mage", values=("   Black Hollow Mage", "Text"), image=self.app.iconsForCustom["Black Hollow Mage"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Executioner Chariot", index="end", iid="Falchion Skeleton", values=("   Falchion Skeleton", "Text"), image=self.app.iconsForCustom["Falchion Skeleton"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="", index="end", iid="Painted World of Ariamis", values=("Enemies - Painted World of Ariamis", ""), tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Painted World of Ariamis", index="end", iid="Bonewheel Skeleton", values=("   Bonewheel Skeleton", "Text"), image=self.app.iconsForCustom["Bonewheel Skeleton"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Painted World of Ariamis", index="end", iid="Crow Demon", values=("   Crow Demon", "Text"), image=self.app.iconsForCustom["Crow Demon"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Painted World of Ariamis", index="end", iid="Engorged Zombie", values=("   Engorged Zombie", "Text"), image=self.app.iconsForCustom["Engorged Zombie"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Painted World of Ariamis", index="end", iid="Phalanx", values=("   Phalanx", "Text"), image=self.app.iconsForCustom["Phalanx"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Painted World of Ariamis", index="end", iid="Phalanx Hollow", values=("   Phalanx Hollow", "Text"), image=self.app.iconsForCustom["Phalanx Hollow"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Painted World of Ariamis", index="end", iid="Snow Rat", values=("   Snow Rat", "Text"), image=self.app.iconsForCustom["Snow Rat"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="", index="end", iid="The Sunless City", values=("Enemies - The Sunless City", ""), tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="The Sunless City", index="end", iid="Crossbow Hollow TSC", values=("   Crossbow Hollow", "Text"), image=self.app.iconsForCustom["Crossbow Hollow"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="The Sunless City", index="end", iid="Hollow Soldier TSC", values=("   Hollow Soldier", "Text"), image=self.app.iconsForCustom["Hollow Soldier"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="The Sunless City", index="end", iid="Mimic", values=("   Mimic", "Text"), image=self.app.iconsForCustom["Mimic"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="The Sunless City", index="end", iid="Sentinel TSC", values=("   Sentinel", "Text"), image=self.app.iconsForCustom["Sentinel"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="The Sunless City", index="end", iid="Silver Knight Greatbowman TSC", values=("   Silver Knight Greatbowman", "Text"), image=self.app.iconsForCustom["Silver Knight Greatbowman"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="The Sunless City", index="end", iid="Silver Knight Swordsman TSC", values=("   Silver Knight Swordsman", "Text"), image=self.app.iconsForCustom["Silver Knight Swordsman"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="", index="end", iid="Tomb of Giants", values=("Enemies - Tomb of Giants", ""), tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Tomb of Giants", index="end", iid="Giant Skeleton Archer", values=("   Giant Skeleton Archer", "Text"), image=self.app.iconsForCustom["Giant Skeleton Archer"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Tomb of Giants", index="end", iid="Giant Skeleton Soldier", values=("   Giant Skeleton Soldier", "Text"), image=self.app.iconsForCustom["Giant Skeleton Soldier"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Tomb of Giants", index="end", iid="Necromancer", values=("   Necromancer", "Text"), image=self.app.iconsForCustom["Necromancer"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Tomb of Giants", index="end", iid="Skeleton Archer", values=("   Skeleton Archer", "Text"), image=self.app.iconsForCustom["Skeleton Archer"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Tomb of Giants", index="end", iid="Skeleton Beast", values=("   Skeleton Beast", "Text"), image=self.app.iconsForCustom["Skeleton Beast"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Tomb of Giants", index="end", iid="Skeleton Soldier", values=("   Skeleton Soldier", "Text"), image=self.app.iconsForCustom["Skeleton Soldier"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="", index="end", iid="Phantoms", values=("Enemies - Phantoms", ""), tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Phantoms", index="end", iid="Armorer Dennis", values=("   Armorer Dennis", "Text"), image=self.app.iconsForCustom["Armorer Dennis"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Phantoms", index="end", iid="Fencer Sharron", values=("   Fencer Sharron", "Text"), image=self.app.iconsForCustom["Fencer Sharron"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Phantoms", index="end", iid="Invader Brylex", values=("   Invader Brylex", "Text"), image=self.app.iconsForCustom["Invader Brylex"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Phantoms", index="end", iid="Kirk, Knight of Thorns", values=("   Kirk, Knight of Thorns", "Text"), image=self.app.iconsForCustom["Kirk, Knight of Thorns"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Phantoms", index="end", iid="Longfinger Kirk", values=("   Longfinger Kirk", "Text"), image=self.app.iconsForCustom["Longfinger Kirk"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Phantoms", index="end", iid="Maldron the Assassin", values=("   Maldron the Assassin", "Text"), image=self.app.iconsForCustom["Maldron the Assassin"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Phantoms", index="end", iid="Maneater Mildred", values=("   Maneater Mildred", "Text"), image=self.app.iconsForCustom["Maneater Mildred"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Phantoms", index="end", iid="Marvelous Chester", values=("   Marvelous Chester", "Text"), image=self.app.iconsForCustom["Marvelous Chester"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Phantoms", index="end", iid="Melinda the Butcher", values=("   Melinda the Butcher", "Text"), image=self.app.iconsForCustom["Melinda the Butcher"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Phantoms", index="end", iid="Oliver the Collector", values=("   Oliver the Collector", "Text"), image=self.app.iconsForCustom["Oliver the Collector"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Phantoms", index="end", iid="Paladin Leeroy", values=("   Paladin Leeroy", "Text"), image=self.app.iconsForCustom["Paladin Leeroy"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Phantoms", index="end", iid="Xanthous King Jeremiah", values=("   Xanthous King Jeremiah", "Text"), image=self.app.iconsForCustom["Xanthous King Jeremiah"]["treeviewImage"], tags=False, open=False)
+            
+            # Effects
+            self.treeviewCustomIcons.insert(parent="", index="end", iid="Effects", values=("Effects", ""), tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Effects", index="end", iid="Dodge", values=("   Dodge", "Text"), image=self.app.iconsForCustom["Dodge"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Effects", index="end", iid="Leap", values=("   Leap", "Text"), image=self.app.iconsForCustom["Leap"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Effects", index="end", iid="Magic", values=("   Magic", "Text"), image=self.app.iconsForCustom["Magic"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Effects", index="end", iid="Node Attack", values=("   Node Attack", "Text"), image=self.app.iconsForCustom["Node Attack"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Effects", index="end", iid="Push", values=("   Push", "Text"), image=self.app.iconsForCustom["Push"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Effects", index="end", iid="Range", values=("   Range", "Text"), image=self.app.iconsForCustom["Range"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Effects", index="end", iid="Repeat", values=("   Repeat", "Text"), image=self.app.iconsForCustom["Repeat"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Effects", index="end", iid="Shaft", values=("   Shaft", "Text"), image=self.app.iconsForCustom["Shaft"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Effects", index="end", iid="Shift", values=("   Shift", "Text"), image=self.app.iconsForCustom["Shift"]["treeviewImage"], tags=False, open=False)
+            
+            # Nodes
+            self.treeviewCustomIcons.insert(parent="", index="end", iid="Nodes", values=("Nodes", ""), tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Nodes", index="end", iid="Enemy Node 1", values=("   Enemy Node 1", "Text"), image=self.app.iconsForCustom["Enemy Node 1"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Nodes", index="end", iid="Enemy Node 2", values=("   Enemy Node 2", "Text"), image=self.app.iconsForCustom["Enemy Node 2"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Nodes", index="end", iid="Enemy Node 3", values=("   Enemy Node 3", "Text"), image=self.app.iconsForCustom["Enemy Node 3"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Nodes", index="end", iid="Enemy Node 4", values=("   Enemy Node 4", "Text"), image=self.app.iconsForCustom["Enemy Node 4"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Nodes", index="end", iid="Terrain Node 1", values=("   Terrain Node 1", "Text"), image=self.app.iconsForCustom["Terrain Node 1"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Nodes", index="end", iid="Terrain Node 2", values=("   Terrain Node 2", "Text"), image=self.app.iconsForCustom["Terrain Node 2"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Nodes", index="end", iid="Terrain Node 3", values=("   Terrain Node 3", "Text"), image=self.app.iconsForCustom["Terrain Node 3"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Nodes", index="end", iid="Terrain Node 4", values=("   Terrain Node 4", "Text"), image=self.app.iconsForCustom["Terrain Node 4"]["treeviewImage"], tags=False, open=False)
+            
+            # Terrain
+            self.treeviewCustomIcons.insert(parent="", index="end", iid="Terrain", values=("Terrain", ""), tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Terrain", index="end", iid="Barrel", values=("   Barrel", "Text"), image=self.app.iconsForCustom["Barrel"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Terrain", index="end", iid="Envoy Banner", values=("   Envoy Banner", "Text"), image=self.app.iconsForCustom["Envoy Banner"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Terrain", index="end", iid="Exit", values=("   Exit", "Text"), image=self.app.iconsForCustom["Exit"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Terrain", index="end", iid="Fang Boar", values=("   Fang Boar", "Text"), image=self.app.iconsForCustom["Fang Boar"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Terrain", index="end", iid="Gravestone", values=("   Gravestone", "Text"), image=self.app.iconsForCustom["Gravestone"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Terrain", index="end", iid="Lever", values=("   Lever", "Text"), image=self.app.iconsForCustom["Lever"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Terrain", index="end", iid="Shrine", values=("   Shrine", "Text"), image=self.app.iconsForCustom["Shrine"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Terrain", index="end", iid="Torch", values=("   Torch", "Text"), image=self.app.iconsForCustom["Torch"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Terrain", index="end", iid="Treasure Chest", values=("   Treasure Chest", "Text"), image=self.app.iconsForCustom["Treasure Chest"]["treeviewImage"], tags=False, open=False)
+            
+            # Other
+            self.treeviewCustomIcons.insert(parent="", index="end", iid="Other", values=("Other", ""), tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Other", index="end", iid="Aggro", values=("   Aggro", "Text"), image=self.app.iconsForCustom["Aggro"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Other", index="end", iid="Character Count", values=("   Character Count", "Text"), image=self.app.iconsForCustom["Character Count"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Other", index="end", iid="Die (Black)", values=("   Die (Black)", "Text"), image=self.app.iconsForCustom["Die (Black)"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Other", index="end", iid="Die (Blue)", values=("   Die (Blue)", "Text"), image=self.app.iconsForCustom["Die (Blue)"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Other", index="end", iid="Die (Orange)", values=("   Die (Orange)", "Text"), image=self.app.iconsForCustom["Die (Orange)"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Other", index="end", iid="Eerie", values=("   Eerie", "Text"), image=self.app.iconsForCustom["Eerie"]["treeviewImage"], tags=False, open=False)
+            
+            # Custom
+            self.treeviewCustomIcons.insert(parent="", index="end", iid="Custom", values=("Custom", ""), tags=False, open=False)
 
             if not path.isfile(baseFolder + "\\lib\\dsbg_shuffle_custom_icons.json".replace("\\", pathSep)):
                 with open(baseFolder + "\\lib\\dsbg_shuffle_custom_icons.json".replace("\\", pathSep), "w") as iconsFile:
@@ -1090,14 +1206,14 @@ try:
                 iid = str(len(contents))
                 c = (sizeDisplay, self.customIconsDict[k]["label"])
                 if self.customIconsDict[k]["label"] not in set([c[1] for c in contents]):
-                    _, tp = self.app.create_image(baseFolder + "\\lib\\dsbg_shuffle_custom_icon_images\\".replace("\\", pathSep) + self.customIconsDict[k]["file"], "iconText", 99, pathProvided=True, extensionProvided=True)
+                    tp = self.app.create_image(baseFolder + "\\lib\\dsbg_shuffle_custom_icon_images\\".replace("\\", pathSep) + self.customIconsDict[k]["file"], "iconTreeview", 99, pathProvided=True, extensionProvided=True)
                     self.customIconsTreeviewDict[c[1]] = {
                         "iid": iid,
                         "index": bisect_left(contents, (c[0], c[1])),
                         "values": (c[1], c[0]),
                         "image": tp
                     }
-                    self.treeviewCustomIcons.insert(parent="", iid=iid, index=self.customIconsTreeviewDict[c[1]]["index"], values=self.customIconsTreeviewDict[c[1]]["values"], image=self.customIconsTreeviewDict[c[1]]["image"], tags=False, open=True)
+                    self.treeviewCustomIcons.insert(parent="Custom", iid=iid, index=self.customIconsTreeviewDict[c[1]]["index"], values=("   " + self.customIconsTreeviewDict[c[1]]["values"][0], self.customIconsTreeviewDict[c[1]]["values"][1]), image=self.customIconsTreeviewDict[c[1]]["image"], tags=False, open=True)
             
             self.iconNameLabel = ttk.Label(self.iconsFrame3, text="Icon Name\t")
             self.iconNameLabel.bind("<1>", lambda event: event.widget.focus_set())
@@ -1418,30 +1534,40 @@ try:
 
                 tree = event.widget
 
-                if not tree.selection():
+                if not tree.selection() or tree.get_children(tree.selection()[0]):
                     log("End of change_icon")
                     return
-
-                lookup = tuple(self.customIconsDict["lookup"][tree.item(tree.selection()[0])["values"][0]])
-
-                if not self.customIconsDict[lookup]:
-                    log("End of change_icon")
-                    return
-
-                self.currentIcon = self.customIconsDict[lookup]["originalFileName"]
-                self.currentSize = self.customIconsDict[lookup]["size"]
-                self.currentFile = self.customIconsDict[lookup]["file"]
-                self.iconNameEntry.delete("1.0", tk.END)
-                self.iconNameEntry.insert("end-1c", self.customIconsDict[lookup]["label"])
-
-                if self.customIconsDict[lookup]["size"] == "iconText":
+                
+                if tree.parent(tree.selection()[0]) != "Custom":
                     self.iconSizeVal.set(0)
-                elif self.customIconsDict[lookup]["size"] == "iconEnemy":
-                    self.iconSizeVal.set(1)
-                elif self.customIconsDict[lookup]["size"] == "iconSet":
-                    self.iconSizeVal.set(2)
+                    self.iconSizeRadio1.config(state=tk.DISABLED)
+                    self.iconSizeRadio2.config(state=tk.DISABLED)
+                    self.iconSizeRadio3.config(state=tk.DISABLED)
+                    self.choose_icon_image(image=self.app.iconsForCustom[tree.item(tree.selection()[0])["values"][0].strip()]["photoImageBg1"])
+                else:
+                    self.iconSizeRadio1.config(state=tk.ACTIVE)
+                    self.iconSizeRadio2.config(state=tk.ACTIVE)
+                    self.iconSizeRadio3.config(state=tk.ACTIVE)
+                    lookup = tuple(self.customIconsDict["lookup"][tree.item(tree.selection()[0])["values"][0].strip()])
 
-                self.choose_icon_image(file=baseFolder + "\\lib\\dsbg_shuffle_custom_icon_images\\".replace("\\", pathSep) + self.customIconsDict[lookup]["file"])
+                    if not self.customIconsDict[lookup]:
+                        log("End of change_icon")
+                        return
+
+                    self.currentIcon = self.customIconsDict[lookup]["originalFileName"]
+                    self.currentSize = self.customIconsDict[lookup]["size"]
+                    self.currentFile = self.customIconsDict[lookup]["file"]
+                    self.iconNameEntry.delete("1.0", tk.END)
+                    self.iconNameEntry.insert("end-1c", self.customIconsDict[lookup]["label"])
+
+                    if self.customIconsDict[lookup]["size"] == "iconText":
+                        self.iconSizeVal.set(0)
+                    elif self.customIconsDict[lookup]["size"] == "iconEnemy":
+                        self.iconSizeVal.set(1)
+                    elif self.customIconsDict[lookup]["size"] == "iconSet":
+                        self.iconSizeVal.set(2)
+
+                    self.choose_icon_image(file=baseFolder + "\\lib\\dsbg_shuffle_custom_icon_images\\".replace("\\", pathSep) + self.customIconsDict[lookup]["file"])
                 
                 log("End of change_icon")
             except Exception as e:
@@ -1453,15 +1579,17 @@ try:
             try:
                 log("Start of delete_custom_icon")
 
-                if not self.treeviewCustomIcons.selection():
+                tree = self.treeviewCustomIcons
+
+                if not tree.selection() or tree.parent(tree.selection()[0]) != "Custom":
                     log("End delete_custom_icon")
                     return
                 
-                sel = self.treeviewCustomIcons.selection()
+                sel = tree.selection()
                 
                 del self.customIconsDict[(self.currentIcon, self.currentSize)]
                 
-                self.treeviewCustomIcons.delete(sel)
+                tree.delete(sel)
 
                 self.iconNameEntry.delete("1.0", tk.END)
                 self.iconImageErrorsVal.set("")
@@ -1480,10 +1608,6 @@ try:
             try:
                 log("Start of save_custom_icon")
 
-                if not file:
-                    log("End of save_custom_icon")
-                    return
-
                 errors = []
                 icon = self.iconNameEntry.get("1.0", "end").strip()
                 
@@ -1500,11 +1624,15 @@ try:
                 if not icon:
                     errors.append("name")
                 if (file, size) not in self.customIconsDict or not self.customIconsDict[(file, size)]["image"]:
-                    errors.append("image")
+                    errors.append("custom image")
 
                 if errors:
                     errorText = "Required: " + ", ".join(errors)
                     self.iconImageErrorsVal.set(errorText)
+                    return
+
+                if not file:
+                    log("End of save_custom_icon")
                     return
 
                 self.iconImageErrorsVal.set("")
@@ -1537,9 +1665,9 @@ try:
                             "index": bisect_left(contents, (c[0], c[1])),
                             "values": (c[1], c[0])
                         }
-                        _, self.customIconsDict[(file, size)]["treeviewImage"] = self.app.create_image(baseFolder + "\\lib\\dsbg_shuffle_custom_icon_images\\".replace("\\", pathSep) + self.customIconsDict[(file, size)]["file"], "iconTreeview", 99, pathProvided=True, extensionProvided=True)
+                        self.customIconsDict[(file, size)]["treeviewImage"] = self.app.create_image(baseFolder + "\\lib\\dsbg_shuffle_custom_icon_images\\".replace("\\", pathSep) + self.customIconsDict[(file, size)]["file"], "iconTreeview", 99, pathProvided=True, extensionProvided=True)
                         self.customIconsTreeviewDict[c[1]]["image"] = self.customIconsDict[(file, size)]["treeviewImage"]
-                        self.treeviewCustomIcons.insert(parent="", iid=iid, index=self.customIconsTreeviewDict[c[1]]["index"], values=self.customIconsTreeviewDict[c[1]]["values"], image=self.customIconsTreeviewDict[c[1]]["image"], tags=False, open=True)
+                        self.treeviewCustomIcons.insert(parent="Custom", iid=iid, index=self.customIconsTreeviewDict[c[1]]["index"], values=("   " + self.customIconsTreeviewDict[c[1]]["values"][0], self.customIconsTreeviewDict[c[1]]["values"][1]), image=self.customIconsTreeviewDict[c[1]]["image"], tags=False, open=True)
                         self.customIconsDict[(file, size)]["iid"] = iid
                         self.treeviewCustomIcons.focus(iid)
                         self.treeviewCustomIcons.selection_set(iid)
@@ -1566,70 +1694,78 @@ try:
                 raise
 
 
-        def choose_icon_image(self, event=None, file=None, buttonSource=False):
+        def choose_icon_image(self, event=None, file=None, buttonSource=False, image=None):
             try:
                 log("Start of choose_icon_image, file={}".format(str(file)))
 
-                if not buttonSource and not self.currentIcon:
-                    log("\tEnd of choose_icon_image")
-                    return
-                
-                if self.iconSizeVal.get() == 0:
-                    size = "iconText"
-                elif self.iconSizeVal.get() == 1:
-                    size = "iconEnemy"
-                elif self.iconSizeVal.get() == 2:
-                    size = "iconSet"
-
-                self.currentSize = deepcopy(size)
-                
-                if buttonSource:
-                    file = filedialog.askopenfilename(initialdir=baseFolder)
-
-                    self.currentIcon = path.basename(file)
-
-                    # If they canceled, do nothing.
-                    if not file:
+                if image:
+                    self.iconViewImg = image
+                else:
+                    if not buttonSource and not self.currentIcon:
+                        log("\tEnd of choose_icon_image")
                         return
                     
-                    if (self.currentIcon, size) in self.customIconsDict:
-                        self.app.set_bindings_buttons_menus(False)
-                        p = PopupWindow(self.root, labelText="Replace existing icon image?", yesButton=True, noButton=True)
-                        self.app.set_bindings_buttons_menus(True)
-                        if not p.answer:
-                            return
+                    if self.iconSizeVal.get() == 0:
+                        size = "iconText"
+                    elif self.iconSizeVal.get() == 1:
+                        size = "iconEnemy"
+                    elif self.iconSizeVal.get() == 2:
+                        size = "iconSet"
+
+                    self.currentSize = deepcopy(size)
                     
-                    fileName = path.splitext(self.currentIcon)
-                    self.currentFile = fileName[0] + fileName[1]
+                    if buttonSource:
+                        file = filedialog.askopenfilename(initialdir=baseFolder)
 
-                    i, p = self.app.create_image(file, size, 99, pathProvided=True, extensionProvided=True)
+                        self.currentIcon = path.basename(file)
 
-                if (self.currentIcon, size) not in self.customIconsDict:
-                    i, p = self.app.create_image(file, size, 99, pathProvided=True, extensionProvided=True)
-                    self.customIconsDict[(self.currentIcon, size)] = {
-                        "originalFileName": self.currentFile,
-                        "originalFileFullPath": file,
-                        "file": self.currentIcon[:-4] + "_" + size + ".png",
-                        "size": size,
-                        "image": i,
-                        "photoImage": p
-                    }
-                elif "photoImage" not in self.customIconsDict[(self.currentIcon, size)]:
-                    i, p = self.app.create_image(file, size, 99, pathProvided=True, extensionProvided=True)
-                    self.customIconsDict[(self.currentIcon, size)]["image"] = i
-                    self.customIconsDict[(self.currentIcon, size)]["photoImage"] = p
-                else:
-                    p = self.customIconsDict[(self.currentIcon, size)]["photoImage"]
+                        # If they canceled, do nothing.
+                        if not file:
+                            return
+                        
+                        if (self.currentIcon, size) in self.customIconsDict:
+                            self.app.set_bindings_buttons_menus(False)
+                            p = PopupWindow(self.root, labelText="Replace existing icon image?", yesButton=True, noButton=True)
+                            self.app.set_bindings_buttons_menus(True)
+                            if not p.answer:
+                                return
+                        
+                        fileName = path.splitext(self.currentIcon)
+                        self.currentFile = fileName[0] + fileName[1]
 
-                w, h = self.customIconsDict[(self.currentIcon, size)]["image"].size
-                self.customIconsDict[(self.currentIcon, size)]["offset"] = (w / 2, h / 2)
-                
-                _, self.iconViewImg = self.app.create_image(file, size, 99, pathProvided=True, extensionProvided=True, addToBg1=True)
+                        i, p = self.app.create_image(file, size, 99, pathProvided=True, extensionProvided=True)
+
+                    if (self.currentIcon, size) not in self.customIconsDict:
+                        i, p = self.app.create_image(file, size, 99, pathProvided=True, extensionProvided=True)
+                        self.customIconsDict[(self.currentIcon, size)] = {
+                            "originalFileName": self.currentFile,
+                            "originalFileFullPath": file,
+                            "file": self.currentIcon[:-4] + "_" + size + ".png",
+                            "size": size,
+                            "image": i,
+                            "photoImage": p
+                        }
+                    elif "photoImage" not in self.customIconsDict[(self.currentIcon, size)]:
+                        i, p = self.app.create_image(file, size, 99, pathProvided=True, extensionProvided=True)
+                        self.customIconsDict[(self.currentIcon, size)]["image"] = i
+                        self.customIconsDict[(self.currentIcon, size)]["photoImage"] = p
+                    else:
+                        p = self.customIconsDict[(self.currentIcon, size)]["photoImage"]
+
+                    w, h = self.customIconsDict[(self.currentIcon, size)]["image"].size
+                    self.customIconsDict[(self.currentIcon, size)]["offset"] = (w / 2, h / 2)
+                    
+                    _, self.iconViewImg = self.app.create_image(file, size, 99, pathProvided=True, extensionProvided=True, addToBg1=True)
 
                 self.iconView.config(image=self.iconViewImg)
                 self.iconView.image=self.iconViewImg
 
                 self.iconImageErrorsVal.set("")
+                
+                if not buttonSource and self.treeviewCustomIcons.parent(self.treeviewCustomIcons.selection()[0]) == "Custom":
+                    self.iconSizeRadio1.config(state=tk.ACTIVE)
+                    self.iconSizeRadio2.config(state=tk.ACTIVE)
+                    self.iconSizeRadio3.config(state=tk.ACTIVE)
 
                 log("\tEnd of choose_icon_image")
             except UnidentifiedImageError:
@@ -1650,7 +1786,9 @@ try:
             try:
                 log("Start of add_icon_to_encounter")
 
-                if not self.treeviewCustomIcons.selection():
+                tree = self.treeviewCustomIcons
+
+                if not tree.selection() or tree.get_children(tree.selection()[0]):
                     log("End of add_icon_to_encounter")
                     return
 
@@ -1661,12 +1799,17 @@ try:
 
                 self.encounterIcons[id] = {}
 
-                file = [self.customIconsDict[k]["file"] for k in self.customIconsDict if "iid" in self.customIconsDict[k] and self.customIconsDict[k]["iid"] == self.treeviewCustomIcons.selection()[0]][0]
-                size = [self.customIconsDict[k]["size"] for k in self.customIconsDict if "iid" in self.customIconsDict[k] and self.customIconsDict[k]["iid"] == self.treeviewCustomIcons.selection()[0]][0]
-                _, image = self.app.create_image(baseFolder + "\\lib\\dsbg_shuffle_custom_icon_images\\".replace("\\", pathSep) + file, size, 99, pathProvided=True, extensionProvided=True, addToBg2=True)
-                
+                if tree.parent(tree.selection()[0]) == "Custom":
+                    label = tree.item(tree.selection()[0])["values"][0].strip()
+                    lookup = tuple(self.customIconsDict["lookup"][label])
+                    file = self.customIconsDict[lookup]["file"]
+                    size = self.customIconsDict[lookup]["size"]
+                    _, image = self.app.create_image(baseFolder + "\\lib\\dsbg_shuffle_custom_icon_images\\".replace("\\", pathSep) + file, size, 99, pathProvided=True, extensionProvided=True, addToBg2=True)
+                else:
+                    image = self.app.iconsForCustom[tree.item(tree.selection()[0])["values"][0].strip()]["photoImageBg2"]
+
                 self.encounterIcons[id] = {
-                    "lookup": [k for k in self.customIconsDict if "iid" in self.customIconsDict[k] and self.customIconsDict[k]["iid"] == self.treeviewCustomIcons.selection()[0]][0],
+                    "lookup": tree.item(tree.selection()[0])["values"][0].strip() if tree.parent(tree.selection()[0]) != "Custom" else lookup,
                     "view": tk.Label(self.iconsFrame4),
                     "viewImage": image,
                     "noteVal": tk.StringVar(),
@@ -1685,6 +1828,7 @@ try:
                 self.encounterIcons[id]["view"].image = self.encounterIcons[id]["viewImage"]
 
                 if id in self.encounterIcons:
+                    #self.encounterIcons[id]["noteVal"].set()
                     lookup = self.encounterIcons[id]["lookup"]
                     posList = [self.topFrame.customEncounter["icons"][l]["position"] for l in self.topFrame.customEncounter["icons"] if self.topFrame.customEncounter["icons"][l]["lookup"] == lookup]
                     if posList:
@@ -1699,7 +1843,7 @@ try:
                 self.encounterIcons[id]["yLabel"].bind("<1>", lambda event: event.widget.focus_set())
                 self.encounterIcons[id]["yEntry"].bind("<KeyRelease>", self.handle_wait)
                 self.encounterIcons[id]["lock"].bind("<1>", lambda event: self.toggle_position_switches(event=event, id=id))
-                self.encounterIcons[id]["view"].grid(column=0, row=id, padx=5, pady=(20, 5), sticky=tk.W, rowspan=3)
+                self.encounterIcons[id]["view"].grid(column=0, row=id, padx=5, pady=(20, 5), sticky=tk.W, rowspan=2)
                 self.encounterIcons[id]["note"].grid(column=0, row=id+2, padx=5, pady=5, sticky=tk.W)
                 self.encounterIcons[id]["xLabel"].grid(column=1, row=id, padx=5, pady=(20, 6), sticky=tk.W)
                 self.encounterIcons[id]["xEntry"].grid(column=2, row=id, padx=5, pady=(20, 5), sticky=tk.W)
