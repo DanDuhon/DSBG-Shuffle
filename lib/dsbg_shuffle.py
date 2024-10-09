@@ -53,8 +53,7 @@ try:
                 self.allEnemies = {enemy: {} for enemy in enemiesDict}
 
                 root.withdraw()
-                i = 0
-                self.progress = PopupWindow(root, labelText="Starting up...", progressBar=True, progressMax=(len(self.allEnemies)*6) + (len(list(enemiesDict.keys()) + list(bosses.keys()))*3) + len([t for t in treasures if not treasures[t]["character"] or treasures[t]["character"] in self.charactersActive]), loadingImage=True)
+                self.progress = PopupWindow(root, labelText="Starting up...", progressBar=True, progressMax=1058 + (len(list(enemiesDict.keys()) + list(bosses.keys()))*3) + len([t for t in treasures if not treasures[t]["character"] or treasures[t]["character"] in self.charactersActive]), loadingImage=True)
 
                 # Delete images from staging
                 folder = baseFolder + "\\lib\\dsbg_shuffle_image_staging".replace("\\", pathSep)
@@ -76,17 +75,14 @@ try:
                 self.progress.label.config(text = "Loading images... ")
                 # Enemies
                 for enemy in self.allEnemies:
-                    i += 6
-                    self.progress.progressVar.set(i)
-                    root.update_idletasks()
-                    self.allEnemies[enemy]["imageOld"] = self.create_image(enemy + ".png", "enemyOld")
-                    self.allEnemies[enemy]["imageOldLevel4"] = self.create_image(enemy + ".png", "enemyOldLevel4")
-                    self.allEnemies[enemy]["imageNew"] = self.create_image(enemy + ".png", "enemyNew")
-                    self.allEnemies[enemy]["image text"] = self.create_image(enemy + ".png", "enemyText")
-                    self.allEnemies[enemy]["image text" if self.forPrinting else "photo image text"] = ImageTk.PhotoImage(self.create_image(enemy + ".png", "enemyText"))
+                    self.allEnemies[enemy]["imageOld"] = self.create_image(enemy + ".png", "enemyOld", progress=True)
+                    self.allEnemies[enemy]["imageOldLevel4"] = self.create_image(enemy + ".png", "enemyOldLevel4", progress=True)
+                    self.allEnemies[enemy]["imageNew"] = self.create_image(enemy + ".png", "enemyNew", progress=True)
+                    self.allEnemies[enemy]["image text"] = self.create_image(enemy + ".png", "enemyText", progress=True)
+                    self.allEnemies[enemy]["image text" if self.forPrinting else "photo image text"] = ImageTk.PhotoImage(self.create_image(enemy + ".png", "enemyText", progress=True))
 
                 # Icons
-                self.enemyNode2 = self.create_image("enemy_node_2.png", "enemyNode")
+                self.enemyNode2 = self.create_image("enemy_node_2.png", "enemyNode", progress=True)
                 self.attack = {
                     "physical": {},
                     "magic": {},
@@ -94,94 +90,274 @@ try:
                 }
                 for x in range(2, 14):
                     for y in ["physical", "magic", "push"]:
-                        self.attack[y][x] = self.create_image("attack_" + y + "_" + str(x) + ".png", y if y == "push" else "attack")
-                self.bleed = self.create_image("bleed.png", "bleed")
-                self.frostbite = self.create_image("frostbite.png", "frostbite")
-                self.poison = self.create_image("poison.png", "poison")
-                self.stagger = self.create_image("stagger.png", "stagger")
-                self.corrosion = self.create_image("corrosion.png", "corrosion")
-                self.calamity = self.create_image("calamity.png", "calamity")
+                        self.attack[y][x] = self.create_image("attack_" + y + "_" + str(x) + ".png", y if y == "push" else "attack", progress=True)
+                self.bleed = self.create_image("bleed.png", "bleed", progress=True)
+                self.frostbite = self.create_image("frostbite.png", "frostbite", progress=True)
+                self.poison = self.create_image("poison.png", "poison", progress=True)
+                self.stagger = self.create_image("stagger.png", "stagger", progress=True)
+                self.corrosion = self.create_image("corrosion.png", "corrosion", progress=True)
+                self.calamity = self.create_image("calamity.png", "calamity", progress=True)
                 self.repeat = {}
                 for x in range(2, 6):
-                    self.repeat[x] = self.create_image("repeat_" + str(x) + ".png", "repeat")
-                self.sksMove = self.create_image("sks_move.png", "move")
-                self.phalanxMove = self.create_image("phalanx_move.png", "move")
+                    self.repeat[x] = self.create_image("repeat_" + str(x) + ".png", "repeat", progress=True)
+                self.sksMove = self.create_image("sks_move.png", "move", progress=True)
+                self.phalanxMove = self.create_image("phalanx_move.png", "move", progress=True)
 
                 # Keywords
-                self.barrage = self.create_image("barrage.png", "barrage")
-                self.bitterCold = self.create_image("bitter_cold.png", "bitterCold")
-                self.darkness = self.create_image("darkness.png", "darkness")
-                self.eerie = self.create_image("eerie.png", "eerie")
-                self.gangAlonne = self.create_image("gang_alonne.png", "gangAlonne")
-                self.gangHollow = self.create_image("gang_hollow.png", "gangHollow")
-                self.gangSilverKnight = self.create_image("gang_silver_knight.png", "gangSilverKnight")
-                self.gangSkeleton = self.create_image("gang_skeleton.png", "gangSkeleton")
+                self.barrage = self.create_image("barrage.png", "barrage", progress=True)
+                self.bitterCold = self.create_image("bitter_cold.png", "bitterCold", progress=True)
+                self.darkness = self.create_image("darkness.png", "darkness", progress=True)
+                self.eerie = self.create_image("eerie.png", "eerie", progress=True)
+                self.gangAlonne = self.create_image("gang_alonne.png", "gangAlonne", progress=True)
+                self.gangHollow = self.create_image("gang_hollow.png", "gangHollow", progress=True)
+                self.gangSilverKnight = self.create_image("gang_silver_knight.png", "gangSilverKnight", progress=True)
+                self.gangSkeleton = self.create_image("gang_skeleton.png", "gangSkeleton", progress=True)
                 self.gangAlonnePhoto = ImageTk.PhotoImage(self.gangAlonne)
                 self.gangHollowPhoto = ImageTk.PhotoImage(self.gangHollow)
                 self.gangSilverKnightPhoto = ImageTk.PhotoImage(self.gangSilverKnight)
                 self.gangSkeletonPhoto = ImageTk.PhotoImage(self.gangSkeleton)
-                self.hidden = self.create_image("hidden.png", "hidden")
-                self.illusion = self.create_image("illusion.png", "illusion")
-                self.mimic = self.create_image("mimic_keyword.png", "mimic")
-                self.onslaught = self.create_image("onslaught.png", "onslaught")
-                self.poisonMist = self.create_image("poison_mist.png", "poisonMist")
-                self.snowstorm = self.create_image("snowstorm.png", "snowstorm")
-                self.timer = self.create_image("timer.png", "timer")
-                self.trial = self.create_image("trial.png", "trial")
+                self.hidden = self.create_image("hidden.png", "hidden", progress=True)
+                self.illusion = self.create_image("illusion.png", "illusion", progress=True)
+                self.mimic = self.create_image("mimic_keyword.png", "mimic", progress=True)
+                self.onslaught = self.create_image("onslaught.png", "onslaught", progress=True)
+                self.poisonMist = self.create_image("poison_mist.png", "poisonMist", progress=True)
+                self.snowstorm = self.create_image("snowstorm.png", "snowstorm", progress=True)
+                self.timer = self.create_image("timer.png", "timer", progress=True)
+                self.trial = self.create_image("trial.png", "trial", progress=True)
 
-                self.rewardsDrawIcon = self.create_image("custom_encounter_rewards_draw.png", "reward", 99, extensionProvided=True)
-                self.rewardsRefreshIcon = self.create_image("custom_encounter_rewards_refresh.png", "reward", 99, extensionProvided=True)
-                self.rewardsSearchIcon = self.create_image("custom_encounter_rewards_search.png", "reward", 99, extensionProvided=True)
-                self.rewardsShortcutIcon = self.create_image("custom_encounter_rewards_shortcut.png", "reward", 99, extensionProvided=True)
-                self.rewardsSoulsIcon = self.create_image("custom_encounter_rewards_souls.png", "reward", 99, extensionProvided=True)
-                self.rewardsSoulsPlayersIcon = self.create_image("custom_encounter_rewards_souls_players.png", "reward", 99, extensionProvided=True)
-                self.rewardsTrialIcon = self.create_image("custom_encounter_rewards_trial.png", "reward", 99, extensionProvided=True)
+                self.rewardsDrawIcon = self.create_image("custom_encounter_rewards_draw.png", "reward", 99, extensionProvided=True, progress=True)
+                self.rewardsRefreshIcon = self.create_image("custom_encounter_rewards_refresh.png", "reward", 99, extensionProvided=True, progress=True)
+                self.rewardsSearchIcon = self.create_image("custom_encounter_rewards_search.png", "reward", 99, extensionProvided=True, progress=True)
+                self.rewardsShortcutIcon = self.create_image("custom_encounter_rewards_shortcut.png", "reward", 99, extensionProvided=True, progress=True)
+                self.rewardsSoulsIcon = self.create_image("custom_encounter_rewards_souls.png", "reward", 99, extensionProvided=True, progress=True)
+                self.rewardsSoulsPlayersIcon = self.create_image("custom_encounter_rewards_souls_players.png", "reward", 99, extensionProvided=True, progress=True)
+                self.rewardsTrialIcon = self.create_image("custom_encounter_rewards_trial.png", "reward", 99, extensionProvided=True, progress=True)
 
-                self.emptySetIcon = self.create_image("empty_set_icon.png", "levelIcon", 99, extensionProvided=True)
+                self.emptySetIcon = self.create_image("empty_set_icon.png", "levelIcon", 99, extensionProvided=True, progress=True)
                 
-                _, self.iconBg1PhotoImage = self.create_image("icon_background1.jpg", "iconBg1", 99, extensionProvided=True)
+                _, self.iconBg1PhotoImage = self.create_image("icon_background1.jpg", "iconBg1", 99, extensionProvided=True, progress=True)
 
                 self.levelIcons = {
-                    1: self.create_image("custom_encounter_level1_icon.png", "levelIcon", 99, extensionProvided=True),
-                    2: self.create_image("custom_encounter_level2_icon.png", "levelIcon", 99, extensionProvided=True),
-                    3: self.create_image("custom_encounter_level3_icon.png", "levelIcon", 99, extensionProvided=True),
-                    4: self.create_image("custom_encounter_level4_icon.png", "levelIcon", 99, extensionProvided=True)
+                    1: self.create_image("custom_encounter_level1_icon.png", "levelIcon", 99, extensionProvided=True, progress=True),
+                    2: self.create_image("custom_encounter_level2_icon.png", "levelIcon", 99, extensionProvided=True, progress=True),
+                    3: self.create_image("custom_encounter_level3_icon.png", "levelIcon", 99, extensionProvided=True, progress=True),
+                    4: self.create_image("custom_encounter_level4_icon.png", "levelIcon", 99, extensionProvided=True, progress=True)
                     }
 
-                startingHorizontal = self.create_image("custom_encounter_starting_nodes_horizontal.png", "nodesHorizontal", 99, extensionProvided=True)
-                startingVertical = self.create_image("custom_encounter_starting_nodes_vertical.png", "nodesVertical", 99, extensionProvided=True)
+                startingHorizontal = self.create_image("custom_encounter_starting_nodes_horizontal.png", "nodesHorizontal", 99, extensionProvided=True, progress=True)
+                startingVertical = self.create_image("custom_encounter_starting_nodes_vertical.png", "nodesVertical", 99, extensionProvided=True, progress=True)
 
                 self.terrain = {
-                    "Barrel": self.create_image("barrel.png", "terrain", 99, extensionProvided=True),
-                    "Envoy Banner": self.create_image("envoy_banner.png", "terrain", 99, extensionProvided=True),
-                    "Exit": self.create_image("exit.png", "terrain", 99, extensionProvided=True),
-                    "Fang Boar": self.create_image("fang_boar.png", "terrain", 99, extensionProvided=True),
-                    "Gravestone": self.create_image("gravestone.png", "terrain", 99, extensionProvided=True),
-                    "Lever": self.create_image("lever.png", "terrain", 99, extensionProvided=True),
-                    "Shrine": self.create_image("shrine.png", "terrain", 99, extensionProvided=True),
-                    "Torch": self.create_image("torch.png", "terrain", 99, extensionProvided=True),
-                    "Treasure Chest": self.create_image("treasure_chest.png", "terrain", 99, extensionProvided=True)
+                    "Barrel": self.create_image("barrel.png", "terrain", 99, extensionProvided=True, progress=True),
+                    "Envoy Banner": self.create_image("envoy_banner.png", "terrain", 99, extensionProvided=True, progress=True),
+                    "Exit": self.create_image("exit.png", "terrain", 99, extensionProvided=True, progress=True),
+                    "Fang Boar": self.create_image("fang_boar.png", "terrain", 99, extensionProvided=True, progress=True),
+                    "Gravestone": self.create_image("gravestone.png", "terrain", 99, extensionProvided=True, progress=True),
+                    "Lever": self.create_image("lever.png", "terrain", 99, extensionProvided=True, progress=True),
+                    "Shrine": self.create_image("shrine.png", "terrain", 99, extensionProvided=True, progress=True),
+                    "Torch": self.create_image("torch.png", "terrain", 99, extensionProvided=True, progress=True),
+                    "Treasure Chest": self.create_image("treasure_chest.png", "terrain", 99, extensionProvided=True, progress=True)
                 }
+
+                self.iconsForCustom = {
+                    "Aggro": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Barrel": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Bleed": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Calamity": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Character Count": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Closest": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Corrosion": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Die (Black)": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Die (Blue)": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Die (Orange)": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Dodge": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Eerie": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Enemy Node 1": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Enemy Node 2": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Enemy Node 3": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Enemy Node 4": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Envoy Banner": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Exit": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Fang Boar": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Frostbite": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Gravestone": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Leap": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Lever": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Magic": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Node Attack": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Painted World of Ariamis": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Poison": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Push": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Range": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Repeat": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Shaft": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Shift": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Shrine": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Stagger": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Terrain Node 1": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Terrain Node 2": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Terrain Node 3": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Terrain Node 4": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "The Sunless City": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Tomb of Giants": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Torch": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Treasure Chest": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Alonne Bow Knight": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Alonne Knight Captain": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Alonne Sword Knight": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Black Hollow Mage": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Bonewheel Skeleton": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Crossbow Hollow": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Crow Demon": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Demonic Foliage": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Engorged Zombie": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Falchion Skeleton": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Firebomb Hollow": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Giant Skeleton Archer": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Giant Skeleton Soldier": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Hollow Soldier": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Ironclad Soldier": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Large Hollow Soldier": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Mushroom Child": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Mushroom Parent": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Necromancer": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Phalanx": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Phalanx Hollow": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Plow Scarecrow": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Sentinel": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Shears Scarecrow": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Silver Knight Greatbowman": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Silver Knight Spearman": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Silver Knight Swordsman": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Skeleton Archer": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Skeleton Beast": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Skeleton Soldier": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Snow Rat": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Stone Guardian": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Stone Knight": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Mimic": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Armorer Dennis": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Fencer Sharron": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Invader Brylex": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Kirk, Knight of Thorns": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Longfinger Kirk": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Maldron the Assassin": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Maneater Mildred": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Marvelous Chester": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Melinda the Butcher": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Oliver the Collector": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Paladin Leeroy": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Xanthous King Jeremiah": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Hungry Mimic": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None},
+                    "Voracious Mimic": {"image": None, "photoImage": None, "photoImageBg1": None, "photoImageBg2": None, "treeviewImage": None}
+                }
+                self.iconsForCustom["Aggro"]["image"], self.iconsForCustom["Aggro"]["photoImage"], self.iconsForCustom["Aggro"]["photoImageBg1"], self.iconsForCustom["Aggro"]["photoImageBg2"], self.iconsForCustom["Aggro"]["treeviewImage"] = self.create_image("aggro.png", "iconForCustom", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Barrel"]["image"], self.iconsForCustom["Barrel"]["photoImage"], self.iconsForCustom["Barrel"]["photoImageBg1"], self.iconsForCustom["Barrel"]["photoImageBg2"], self.iconsForCustom["Barrel"]["treeviewImage"] = self.create_image("barrel.png", "iconForCustom", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Bleed"]["image"], self.iconsForCustom["Bleed"]["photoImage"], self.iconsForCustom["Bleed"]["photoImageBg1"], self.iconsForCustom["Bleed"]["photoImageBg2"], self.iconsForCustom["Bleed"]["treeviewImage"] = self.create_image("bleed.png", "iconForCustom", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Calamity"]["image"], self.iconsForCustom["Calamity"]["photoImage"], self.iconsForCustom["Calamity"]["photoImageBg1"], self.iconsForCustom["Calamity"]["photoImageBg2"], self.iconsForCustom["Calamity"]["treeviewImage"] = self.create_image("calamity.png", "iconForCustom", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Character Count"]["image"], self.iconsForCustom["Character Count"]["photoImage"], self.iconsForCustom["Character Count"]["photoImageBg1"], self.iconsForCustom["Character Count"]["photoImageBg2"], self.iconsForCustom["Character Count"]["treeviewImage"] = self.create_image("character_count.png", "iconForCustom", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Closest"]["image"], self.iconsForCustom["Closest"]["photoImage"], self.iconsForCustom["Closest"]["photoImageBg1"], self.iconsForCustom["Closest"]["photoImageBg2"], self.iconsForCustom["Closest"]["treeviewImage"] = self.create_image("closest.png", "iconForCustom", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Corrosion"]["image"], self.iconsForCustom["Corrosion"]["photoImage"], self.iconsForCustom["Corrosion"]["photoImageBg1"], self.iconsForCustom["Corrosion"]["photoImageBg2"], self.iconsForCustom["Corrosion"]["treeviewImage"] = self.create_image("corrosion.png", "iconForCustom", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Die (Black)"]["image"], self.iconsForCustom["Die (Black)"]["photoImage"], self.iconsForCustom["Die (Black)"]["photoImageBg1"], self.iconsForCustom["Die (Black)"]["photoImageBg2"], self.iconsForCustom["Die (Black)"]["treeviewImage"] = self.create_image("die_black.png", "iconForCustom", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Die (Blue)"]["image"], self.iconsForCustom["Die (Blue)"]["photoImage"], self.iconsForCustom["Die (Blue)"]["photoImageBg1"], self.iconsForCustom["Die (Blue)"]["photoImageBg2"], self.iconsForCustom["Die (Blue)"]["treeviewImage"] = self.create_image("die_blue.png", "iconForCustom", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Die (Orange)"]["image"], self.iconsForCustom["Die (Orange)"]["photoImage"], self.iconsForCustom["Die (Orange)"]["photoImageBg1"], self.iconsForCustom["Die (Orange)"]["photoImageBg2"], self.iconsForCustom["Die (Orange)"]["treeviewImage"] = self.create_image("die_orange.png", "iconForCustom", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Dodge"]["image"], self.iconsForCustom["Dodge"]["photoImage"], self.iconsForCustom["Dodge"]["photoImageBg1"], self.iconsForCustom["Dodge"]["photoImageBg2"], self.iconsForCustom["Dodge"]["treeviewImage"] = self.create_image("dodge.png", "iconForCustom", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Eerie"]["image"], self.iconsForCustom["Eerie"]["photoImage"], self.iconsForCustom["Eerie"]["photoImageBg1"], self.iconsForCustom["Eerie"]["photoImageBg2"], self.iconsForCustom["Eerie"]["treeviewImage"] = self.create_image("eerie.png", "iconForCustom", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Enemy Node 1"]["image"], self.iconsForCustom["Enemy Node 1"]["photoImage"], self.iconsForCustom["Enemy Node 1"]["photoImageBg1"], self.iconsForCustom["Enemy Node 1"]["photoImageBg2"], self.iconsForCustom["Enemy Node 1"]["treeviewImage"] = self.create_image("enemy_node_1.png", "iconForCustom", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Enemy Node 2"]["image"], self.iconsForCustom["Enemy Node 2"]["photoImage"], self.iconsForCustom["Enemy Node 2"]["photoImageBg1"], self.iconsForCustom["Enemy Node 2"]["photoImageBg2"], self.iconsForCustom["Enemy Node 2"]["treeviewImage"] = self.create_image("enemy_node_2.png", "iconForCustom", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Enemy Node 3"]["image"], self.iconsForCustom["Enemy Node 3"]["photoImage"], self.iconsForCustom["Enemy Node 3"]["photoImageBg1"], self.iconsForCustom["Enemy Node 3"]["photoImageBg2"], self.iconsForCustom["Enemy Node 3"]["treeviewImage"] = self.create_image("enemy_node_3.png", "iconForCustom", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Enemy Node 4"]["image"], self.iconsForCustom["Enemy Node 4"]["photoImage"], self.iconsForCustom["Enemy Node 4"]["photoImageBg1"], self.iconsForCustom["Enemy Node 4"]["photoImageBg2"], self.iconsForCustom["Enemy Node 4"]["treeviewImage"] = self.create_image("enemy_node_4.png", "iconForCustom", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Envoy Banner"]["image"], self.iconsForCustom["Envoy Banner"]["photoImage"], self.iconsForCustom["Envoy Banner"]["photoImageBg1"], self.iconsForCustom["Envoy Banner"]["photoImageBg2"], self.iconsForCustom["Envoy Banner"]["treeviewImage"] = self.create_image("envoy_banner.png", "iconForCustom", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Exit"]["image"], self.iconsForCustom["Exit"]["photoImage"], self.iconsForCustom["Exit"]["photoImageBg1"], self.iconsForCustom["Exit"]["photoImageBg2"], self.iconsForCustom["Exit"]["treeviewImage"] = self.create_image("exit.png", "iconForCustom", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Fang Boar"]["image"], self.iconsForCustom["Fang Boar"]["photoImage"], self.iconsForCustom["Fang Boar"]["photoImageBg1"], self.iconsForCustom["Fang Boar"]["photoImageBg2"], self.iconsForCustom["Fang Boar"]["treeviewImage"] = self.create_image("fang_boar.png", "iconForCustom", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Frostbite"]["image"], self.iconsForCustom["Frostbite"]["photoImage"], self.iconsForCustom["Frostbite"]["photoImageBg1"], self.iconsForCustom["Frostbite"]["photoImageBg2"], self.iconsForCustom["Frostbite"]["treeviewImage"] = self.create_image("frostbite.png", "iconForCustom", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Gravestone"]["image"], self.iconsForCustom["Gravestone"]["photoImage"], self.iconsForCustom["Gravestone"]["photoImageBg1"], self.iconsForCustom["Gravestone"]["photoImageBg2"], self.iconsForCustom["Gravestone"]["treeviewImage"] = self.create_image("gravestone.png", "iconForCustom", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Leap"]["image"], self.iconsForCustom["Leap"]["photoImage"], self.iconsForCustom["Leap"]["photoImageBg1"], self.iconsForCustom["Leap"]["photoImageBg2"], self.iconsForCustom["Leap"]["treeviewImage"] = self.create_image("leap.png", "iconForCustom", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Lever"]["image"], self.iconsForCustom["Lever"]["photoImage"], self.iconsForCustom["Lever"]["photoImageBg1"], self.iconsForCustom["Lever"]["photoImageBg2"], self.iconsForCustom["Lever"]["treeviewImage"] = self.create_image("lever.png", "iconForCustom", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Magic"]["image"], self.iconsForCustom["Magic"]["photoImage"], self.iconsForCustom["Magic"]["photoImageBg1"], self.iconsForCustom["Magic"]["photoImageBg2"], self.iconsForCustom["Magic"]["treeviewImage"] = self.create_image("magic.png", "iconForCustom", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Node Attack"]["image"], self.iconsForCustom["Node Attack"]["photoImage"], self.iconsForCustom["Node Attack"]["photoImageBg1"], self.iconsForCustom["Node Attack"]["photoImageBg2"], self.iconsForCustom["Node Attack"]["treeviewImage"] = self.create_image("node_attack.png", "iconForCustom", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Poison"]["image"], self.iconsForCustom["Poison"]["photoImage"], self.iconsForCustom["Poison"]["photoImageBg1"], self.iconsForCustom["Poison"]["photoImageBg2"], self.iconsForCustom["Poison"]["treeviewImage"] = self.create_image("poison.png", "iconForCustom", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Push"]["image"], self.iconsForCustom["Push"]["photoImage"], self.iconsForCustom["Push"]["photoImageBg1"], self.iconsForCustom["Push"]["photoImageBg2"], self.iconsForCustom["Push"]["treeviewImage"] = self.create_image("push.png", "iconForCustom", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Range"]["image"], self.iconsForCustom["Range"]["photoImage"], self.iconsForCustom["Range"]["photoImageBg1"], self.iconsForCustom["Range"]["photoImageBg2"], self.iconsForCustom["Range"]["treeviewImage"] = self.create_image("range.png", "iconForCustom", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Repeat"]["image"], self.iconsForCustom["Repeat"]["photoImage"], self.iconsForCustom["Repeat"]["photoImageBg1"], self.iconsForCustom["Repeat"]["photoImageBg2"], self.iconsForCustom["Repeat"]["treeviewImage"] = self.create_image("repeat.png", "iconForCustom", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Shaft"]["image"], self.iconsForCustom["Shaft"]["photoImage"], self.iconsForCustom["Shaft"]["photoImageBg1"], self.iconsForCustom["Shaft"]["photoImageBg2"], self.iconsForCustom["Shaft"]["treeviewImage"] = self.create_image("shaft.png", "iconForCustom", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Shift"]["image"], self.iconsForCustom["Shift"]["photoImage"], self.iconsForCustom["Shift"]["photoImageBg1"], self.iconsForCustom["Shift"]["photoImageBg2"], self.iconsForCustom["Shift"]["treeviewImage"] = self.create_image("shift.png", "iconForCustom", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Shrine"]["image"], self.iconsForCustom["Shrine"]["photoImage"], self.iconsForCustom["Shrine"]["photoImageBg1"], self.iconsForCustom["Shrine"]["photoImageBg2"], self.iconsForCustom["Shrine"]["treeviewImage"] = self.create_image("shrine.png", "iconForCustom", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Stagger"]["image"], self.iconsForCustom["Stagger"]["photoImage"], self.iconsForCustom["Stagger"]["photoImageBg1"], self.iconsForCustom["Stagger"]["photoImageBg2"], self.iconsForCustom["Stagger"]["treeviewImage"] = self.create_image("stagger.png", "iconForCustom", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Terrain Node 1"]["image"], self.iconsForCustom["Terrain Node 1"]["photoImage"], self.iconsForCustom["Terrain Node 1"]["photoImageBg1"], self.iconsForCustom["Terrain Node 1"]["photoImageBg2"], self.iconsForCustom["Terrain Node 1"]["treeviewImage"] = self.create_image("terrain_node_1.png", "iconForCustom", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Terrain Node 2"]["image"], self.iconsForCustom["Terrain Node 2"]["photoImage"], self.iconsForCustom["Terrain Node 2"]["photoImageBg1"], self.iconsForCustom["Terrain Node 2"]["photoImageBg2"], self.iconsForCustom["Terrain Node 2"]["treeviewImage"] = self.create_image("terrain_node_2.png", "iconForCustom", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Terrain Node 3"]["image"], self.iconsForCustom["Terrain Node 3"]["photoImage"], self.iconsForCustom["Terrain Node 3"]["photoImageBg1"], self.iconsForCustom["Terrain Node 3"]["photoImageBg2"], self.iconsForCustom["Terrain Node 3"]["treeviewImage"] = self.create_image("terrain_node_3.png", "iconForCustom", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Terrain Node 4"]["image"], self.iconsForCustom["Terrain Node 4"]["photoImage"], self.iconsForCustom["Terrain Node 4"]["photoImageBg1"], self.iconsForCustom["Terrain Node 4"]["photoImageBg2"], self.iconsForCustom["Terrain Node 4"]["treeviewImage"] = self.create_image("terrain_node_4.png", "iconForCustom", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Torch"]["image"], self.iconsForCustom["Torch"]["photoImage"], self.iconsForCustom["Torch"]["photoImageBg1"], self.iconsForCustom["Torch"]["photoImageBg2"], self.iconsForCustom["Torch"]["treeviewImage"] = self.create_image("torch.png", "iconForCustom", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Treasure Chest"]["image"], self.iconsForCustom["Treasure Chest"]["photoImage"], self.iconsForCustom["Treasure Chest"]["photoImageBg1"], self.iconsForCustom["Treasure Chest"]["photoImageBg2"], self.iconsForCustom["Treasure Chest"]["treeviewImage"] = self.create_image("treasure_chest.png", "iconForCustom", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Alonne Bow Knight"]["image"], self.iconsForCustom["Alonne Bow Knight"]["photoImage"], self.iconsForCustom["Alonne Bow Knight"]["photoImageBg1"], self.iconsForCustom["Alonne Bow Knight"]["photoImageBg2"], self.iconsForCustom["Alonne Bow Knight"]["treeviewImage"] = self.create_image("Alonne Bow Knight.png", "iconForCustomEnemy", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Alonne Knight Captain"]["image"], self.iconsForCustom["Alonne Knight Captain"]["photoImage"], self.iconsForCustom["Alonne Knight Captain"]["photoImageBg1"], self.iconsForCustom["Alonne Knight Captain"]["photoImageBg2"], self.iconsForCustom["Alonne Knight Captain"]["treeviewImage"] = self.create_image("Alonne Knight Captain.png", "iconForCustomEnemy", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Alonne Sword Knight"]["image"], self.iconsForCustom["Alonne Sword Knight"]["photoImage"], self.iconsForCustom["Alonne Sword Knight"]["photoImageBg1"], self.iconsForCustom["Alonne Sword Knight"]["photoImageBg2"], self.iconsForCustom["Alonne Sword Knight"]["treeviewImage"] = self.create_image("Alonne Sword Knight.png", "iconForCustomEnemy", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Black Hollow Mage"]["image"], self.iconsForCustom["Black Hollow Mage"]["photoImage"], self.iconsForCustom["Black Hollow Mage"]["photoImageBg1"], self.iconsForCustom["Black Hollow Mage"]["photoImageBg2"], self.iconsForCustom["Black Hollow Mage"]["treeviewImage"] = self.create_image("Black Hollow Mage.png", "iconForCustomEnemy", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Bonewheel Skeleton"]["image"], self.iconsForCustom["Bonewheel Skeleton"]["photoImage"], self.iconsForCustom["Bonewheel Skeleton"]["photoImageBg1"], self.iconsForCustom["Bonewheel Skeleton"]["photoImageBg2"], self.iconsForCustom["Bonewheel Skeleton"]["treeviewImage"] = self.create_image("Bonewheel Skeleton.png", "iconForCustomEnemy", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Crossbow Hollow"]["image"], self.iconsForCustom["Crossbow Hollow"]["photoImage"], self.iconsForCustom["Crossbow Hollow"]["photoImageBg1"], self.iconsForCustom["Crossbow Hollow"]["photoImageBg2"], self.iconsForCustom["Crossbow Hollow"]["treeviewImage"] = self.create_image("Crossbow Hollow.png", "iconForCustomEnemy", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Crow Demon"]["image"], self.iconsForCustom["Crow Demon"]["photoImage"], self.iconsForCustom["Crow Demon"]["photoImageBg1"], self.iconsForCustom["Crow Demon"]["photoImageBg2"], self.iconsForCustom["Crow Demon"]["treeviewImage"] = self.create_image("Crow Demon.png", "iconForCustomEnemy", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Demonic Foliage"]["image"], self.iconsForCustom["Demonic Foliage"]["photoImage"], self.iconsForCustom["Demonic Foliage"]["photoImageBg1"], self.iconsForCustom["Demonic Foliage"]["photoImageBg2"], self.iconsForCustom["Demonic Foliage"]["treeviewImage"] = self.create_image("Demonic Foliage.png", "iconForCustomEnemy", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Engorged Zombie"]["image"], self.iconsForCustom["Engorged Zombie"]["photoImage"], self.iconsForCustom["Engorged Zombie"]["photoImageBg1"], self.iconsForCustom["Engorged Zombie"]["photoImageBg2"], self.iconsForCustom["Engorged Zombie"]["treeviewImage"] = self.create_image("Engorged Zombie.png", "iconForCustomEnemy", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Falchion Skeleton"]["image"], self.iconsForCustom["Falchion Skeleton"]["photoImage"], self.iconsForCustom["Falchion Skeleton"]["photoImageBg1"], self.iconsForCustom["Falchion Skeleton"]["photoImageBg2"], self.iconsForCustom["Falchion Skeleton"]["treeviewImage"] = self.create_image("Falchion Skeleton.png", "iconForCustomEnemy", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Firebomb Hollow"]["image"], self.iconsForCustom["Firebomb Hollow"]["photoImage"], self.iconsForCustom["Firebomb Hollow"]["photoImageBg1"], self.iconsForCustom["Firebomb Hollow"]["photoImageBg2"], self.iconsForCustom["Firebomb Hollow"]["treeviewImage"] = self.create_image("Firebomb Hollow.png", "iconForCustomEnemy", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Giant Skeleton Archer"]["image"], self.iconsForCustom["Giant Skeleton Archer"]["photoImage"], self.iconsForCustom["Giant Skeleton Archer"]["photoImageBg1"], self.iconsForCustom["Giant Skeleton Archer"]["photoImageBg2"], self.iconsForCustom["Giant Skeleton Archer"]["treeviewImage"] = self.create_image("Giant Skeleton Archer.png", "iconForCustomEnemy", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Giant Skeleton Soldier"]["image"], self.iconsForCustom["Giant Skeleton Soldier"]["photoImage"], self.iconsForCustom["Giant Skeleton Soldier"]["photoImageBg1"], self.iconsForCustom["Giant Skeleton Soldier"]["photoImageBg2"], self.iconsForCustom["Giant Skeleton Soldier"]["treeviewImage"] = self.create_image("Giant Skeleton Soldier.png", "iconForCustomEnemy", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Hollow Soldier"]["image"], self.iconsForCustom["Hollow Soldier"]["photoImage"], self.iconsForCustom["Hollow Soldier"]["photoImageBg1"], self.iconsForCustom["Hollow Soldier"]["photoImageBg2"], self.iconsForCustom["Hollow Soldier"]["treeviewImage"] = self.create_image("Hollow Soldier.png", "iconForCustomEnemy", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Ironclad Soldier"]["image"], self.iconsForCustom["Ironclad Soldier"]["photoImage"], self.iconsForCustom["Ironclad Soldier"]["photoImageBg1"], self.iconsForCustom["Ironclad Soldier"]["photoImageBg2"], self.iconsForCustom["Ironclad Soldier"]["treeviewImage"] = self.create_image("Ironclad Soldier.png", "iconForCustomEnemy", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Large Hollow Soldier"]["image"], self.iconsForCustom["Large Hollow Soldier"]["photoImage"], self.iconsForCustom["Large Hollow Soldier"]["photoImageBg1"], self.iconsForCustom["Large Hollow Soldier"]["photoImageBg2"], self.iconsForCustom["Large Hollow Soldier"]["treeviewImage"] = self.create_image("Large Hollow Soldier.png", "iconForCustomEnemy", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Mushroom Child"]["image"], self.iconsForCustom["Mushroom Child"]["photoImage"], self.iconsForCustom["Mushroom Child"]["photoImageBg1"], self.iconsForCustom["Mushroom Child"]["photoImageBg2"], self.iconsForCustom["Mushroom Child"]["treeviewImage"] = self.create_image("Mushroom Child.png", "iconForCustomEnemy", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Mushroom Parent"]["image"], self.iconsForCustom["Mushroom Parent"]["photoImage"], self.iconsForCustom["Mushroom Parent"]["photoImageBg1"], self.iconsForCustom["Mushroom Parent"]["photoImageBg2"], self.iconsForCustom["Mushroom Parent"]["treeviewImage"] = self.create_image("Mushroom Parent.png", "iconForCustomEnemy", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Necromancer"]["image"], self.iconsForCustom["Necromancer"]["photoImage"], self.iconsForCustom["Necromancer"]["photoImageBg1"], self.iconsForCustom["Necromancer"]["photoImageBg2"], self.iconsForCustom["Necromancer"]["treeviewImage"] = self.create_image("Necromancer.png", "iconForCustomEnemy", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Phalanx"]["image"], self.iconsForCustom["Phalanx"]["photoImage"], self.iconsForCustom["Phalanx"]["photoImageBg1"], self.iconsForCustom["Phalanx"]["photoImageBg2"], self.iconsForCustom["Phalanx"]["treeviewImage"] = self.create_image("Phalanx.png", "iconForCustomEnemy", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Phalanx Hollow"]["image"], self.iconsForCustom["Phalanx Hollow"]["photoImage"], self.iconsForCustom["Phalanx Hollow"]["photoImageBg1"], self.iconsForCustom["Phalanx Hollow"]["photoImageBg2"], self.iconsForCustom["Phalanx Hollow"]["treeviewImage"] = self.create_image("Phalanx Hollow.png", "iconForCustomEnemy", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Plow Scarecrow"]["image"], self.iconsForCustom["Plow Scarecrow"]["photoImage"], self.iconsForCustom["Plow Scarecrow"]["photoImageBg1"], self.iconsForCustom["Plow Scarecrow"]["photoImageBg2"], self.iconsForCustom["Plow Scarecrow"]["treeviewImage"] = self.create_image("Plow Scarecrow.png", "iconForCustomEnemy", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Sentinel"]["image"], self.iconsForCustom["Sentinel"]["photoImage"], self.iconsForCustom["Sentinel"]["photoImageBg1"], self.iconsForCustom["Sentinel"]["photoImageBg2"], self.iconsForCustom["Sentinel"]["treeviewImage"] = self.create_image("Sentinel.png", "iconForCustomEnemy", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Shears Scarecrow"]["image"], self.iconsForCustom["Shears Scarecrow"]["photoImage"], self.iconsForCustom["Shears Scarecrow"]["photoImageBg1"], self.iconsForCustom["Shears Scarecrow"]["photoImageBg2"], self.iconsForCustom["Shears Scarecrow"]["treeviewImage"] = self.create_image("Shears Scarecrow.png", "iconForCustomEnemy", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Silver Knight Greatbowman"]["image"], self.iconsForCustom["Silver Knight Greatbowman"]["photoImage"], self.iconsForCustom["Silver Knight Greatbowman"]["photoImageBg1"], self.iconsForCustom["Silver Knight Greatbowman"]["photoImageBg2"], self.iconsForCustom["Silver Knight Greatbowman"]["treeviewImage"] = self.create_image("Silver Knight Greatbowman.png", "iconForCustomEnemy", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Silver Knight Spearman"]["image"], self.iconsForCustom["Silver Knight Spearman"]["photoImage"], self.iconsForCustom["Silver Knight Spearman"]["photoImageBg1"], self.iconsForCustom["Silver Knight Spearman"]["photoImageBg2"], self.iconsForCustom["Silver Knight Spearman"]["treeviewImage"] = self.create_image("Silver Knight Spearman.png", "iconForCustomEnemy", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Silver Knight Swordsman"]["image"], self.iconsForCustom["Silver Knight Swordsman"]["photoImage"], self.iconsForCustom["Silver Knight Swordsman"]["photoImageBg1"], self.iconsForCustom["Silver Knight Swordsman"]["photoImageBg2"], self.iconsForCustom["Silver Knight Swordsman"]["treeviewImage"] = self.create_image("Silver Knight Swordsman.png", "iconForCustomEnemy", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Skeleton Archer"]["image"], self.iconsForCustom["Skeleton Archer"]["photoImage"], self.iconsForCustom["Skeleton Archer"]["photoImageBg1"], self.iconsForCustom["Skeleton Archer"]["photoImageBg2"], self.iconsForCustom["Skeleton Archer"]["treeviewImage"] = self.create_image("Skeleton Archer.png", "iconForCustomEnemy", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Skeleton Beast"]["image"], self.iconsForCustom["Skeleton Beast"]["photoImage"], self.iconsForCustom["Skeleton Beast"]["photoImageBg1"], self.iconsForCustom["Skeleton Beast"]["photoImageBg2"], self.iconsForCustom["Skeleton Beast"]["treeviewImage"] = self.create_image("Skeleton Beast.png", "iconForCustomEnemy", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Skeleton Soldier"]["image"], self.iconsForCustom["Skeleton Soldier"]["photoImage"], self.iconsForCustom["Skeleton Soldier"]["photoImageBg1"], self.iconsForCustom["Skeleton Soldier"]["photoImageBg2"], self.iconsForCustom["Skeleton Soldier"]["treeviewImage"] = self.create_image("Skeleton Soldier.png", "iconForCustomEnemy", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Snow Rat"]["image"], self.iconsForCustom["Snow Rat"]["photoImage"], self.iconsForCustom["Snow Rat"]["photoImageBg1"], self.iconsForCustom["Snow Rat"]["photoImageBg2"], self.iconsForCustom["Snow Rat"]["treeviewImage"] = self.create_image("Snow Rat.png", "iconForCustomEnemy", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Stone Guardian"]["image"], self.iconsForCustom["Stone Guardian"]["photoImage"], self.iconsForCustom["Stone Guardian"]["photoImageBg1"], self.iconsForCustom["Stone Guardian"]["photoImageBg2"], self.iconsForCustom["Stone Guardian"]["treeviewImage"] = self.create_image("Stone Guardian.png", "iconForCustomEnemy", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Stone Knight"]["image"], self.iconsForCustom["Stone Knight"]["photoImage"], self.iconsForCustom["Stone Knight"]["photoImageBg1"], self.iconsForCustom["Stone Knight"]["photoImageBg2"], self.iconsForCustom["Stone Knight"]["treeviewImage"] = self.create_image("Stone Knight.png", "iconForCustomEnemy", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Mimic"]["image"], self.iconsForCustom["Mimic"]["photoImage"], self.iconsForCustom["Mimic"]["photoImageBg1"], self.iconsForCustom["Mimic"]["photoImageBg2"], self.iconsForCustom["Mimic"]["treeviewImage"] = self.create_image("Mimic.png", "iconForCustomEnemy", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Armorer Dennis"]["image"], self.iconsForCustom["Armorer Dennis"]["photoImage"], self.iconsForCustom["Armorer Dennis"]["photoImageBg1"], self.iconsForCustom["Armorer Dennis"]["photoImageBg2"], self.iconsForCustom["Armorer Dennis"]["treeviewImage"] = self.create_image("Armorer Dennis.png", "iconForCustomEnemy", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Fencer Sharron"]["image"], self.iconsForCustom["Fencer Sharron"]["photoImage"], self.iconsForCustom["Fencer Sharron"]["photoImageBg1"], self.iconsForCustom["Fencer Sharron"]["photoImageBg2"], self.iconsForCustom["Fencer Sharron"]["treeviewImage"] = self.create_image("Fencer Sharron.png", "iconForCustomEnemy", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Invader Brylex"]["image"], self.iconsForCustom["Invader Brylex"]["photoImage"], self.iconsForCustom["Invader Brylex"]["photoImageBg1"], self.iconsForCustom["Invader Brylex"]["photoImageBg2"], self.iconsForCustom["Invader Brylex"]["treeviewImage"] = self.create_image("Invader Brylex.png", "iconForCustomEnemy", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Kirk, Knight of Thorns"]["image"], self.iconsForCustom["Kirk, Knight of Thorns"]["photoImage"], self.iconsForCustom["Kirk, Knight of Thorns"]["photoImageBg1"], self.iconsForCustom["Kirk, Knight of Thorns"]["photoImageBg2"], self.iconsForCustom["Kirk, Knight of Thorns"]["treeviewImage"] = self.create_image("Kirk, Knight of Thorns.png", "iconForCustomEnemy", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Longfinger Kirk"]["image"], self.iconsForCustom["Longfinger Kirk"]["photoImage"], self.iconsForCustom["Longfinger Kirk"]["photoImageBg1"], self.iconsForCustom["Longfinger Kirk"]["photoImageBg2"], self.iconsForCustom["Longfinger Kirk"]["treeviewImage"] = self.create_image("Longfinger Kirk.png", "iconForCustomEnemy", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Maldron the Assassin"]["image"], self.iconsForCustom["Maldron the Assassin"]["photoImage"], self.iconsForCustom["Maldron the Assassin"]["photoImageBg1"], self.iconsForCustom["Maldron the Assassin"]["photoImageBg2"], self.iconsForCustom["Maldron the Assassin"]["treeviewImage"] = self.create_image("Maldron the Assassin.png", "iconForCustomEnemy", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Maneater Mildred"]["image"], self.iconsForCustom["Maneater Mildred"]["photoImage"], self.iconsForCustom["Maneater Mildred"]["photoImageBg1"], self.iconsForCustom["Maneater Mildred"]["photoImageBg2"], self.iconsForCustom["Maneater Mildred"]["treeviewImage"] = self.create_image("Maneater Mildred.png", "iconForCustomEnemy", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Marvelous Chester"]["image"], self.iconsForCustom["Marvelous Chester"]["photoImage"], self.iconsForCustom["Marvelous Chester"]["photoImageBg1"], self.iconsForCustom["Marvelous Chester"]["photoImageBg2"], self.iconsForCustom["Marvelous Chester"]["treeviewImage"] = self.create_image("Marvelous Chester.png", "iconForCustomEnemy", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Melinda the Butcher"]["image"], self.iconsForCustom["Melinda the Butcher"]["photoImage"], self.iconsForCustom["Melinda the Butcher"]["photoImageBg1"], self.iconsForCustom["Melinda the Butcher"]["photoImageBg2"], self.iconsForCustom["Melinda the Butcher"]["treeviewImage"] = self.create_image("Melinda the Butcher.png", "iconForCustomEnemy", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Oliver the Collector"]["image"], self.iconsForCustom["Oliver the Collector"]["photoImage"], self.iconsForCustom["Oliver the Collector"]["photoImageBg1"], self.iconsForCustom["Oliver the Collector"]["photoImageBg2"], self.iconsForCustom["Oliver the Collector"]["treeviewImage"] = self.create_image("Oliver the Collector.png", "iconForCustomEnemy", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Paladin Leeroy"]["image"], self.iconsForCustom["Paladin Leeroy"]["photoImage"], self.iconsForCustom["Paladin Leeroy"]["photoImageBg1"], self.iconsForCustom["Paladin Leeroy"]["photoImageBg2"], self.iconsForCustom["Paladin Leeroy"]["treeviewImage"] = self.create_image("Paladin Leeroy.png", "iconForCustomEnemy", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Xanthous King Jeremiah"]["image"], self.iconsForCustom["Xanthous King Jeremiah"]["photoImage"], self.iconsForCustom["Xanthous King Jeremiah"]["photoImageBg1"], self.iconsForCustom["Xanthous King Jeremiah"]["photoImageBg2"], self.iconsForCustom["Xanthous King Jeremiah"]["treeviewImage"] = self.create_image("Xanthous King Jeremiah.png", "iconForCustomEnemy", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Hungry Mimic"]["image"], self.iconsForCustom["Hungry Mimic"]["photoImage"], self.iconsForCustom["Hungry Mimic"]["photoImageBg1"], self.iconsForCustom["Hungry Mimic"]["photoImageBg2"], self.iconsForCustom["Hungry Mimic"]["treeviewImage"] = self.create_image("Hungry Mimic.png", "iconForCustomEnemy", 99, extensionProvided=True, progress=True)
+                self.iconsForCustom["Voracious Mimic"]["image"], self.iconsForCustom["Voracious Mimic"]["photoImage"], self.iconsForCustom["Voracious Mimic"]["photoImageBg1"], self.iconsForCustom["Voracious Mimic"]["photoImageBg2"], self.iconsForCustom["Voracious Mimic"]["treeviewImage"] = self.create_image("Voracious Mimic.png", "iconForCustomEnemy", 99, extensionProvided=True, progress=True)
 
                 self.tileNumbers = {}
                 for x in range(1, 4):
                     s = str(x)
                     self.tileNumbers[x] = {
                         "starting": {
-                            "traps": self.create_image("custom_encounter_starting_" + s + "_traps.png", "tileNum", 99, extensionProvided=True),
-                            "noTraps": self.create_image("custom_encounter_starting_" + s + "_no_traps.png", "tileNum", 99, extensionProvided=True)
+                            "traps": self.create_image("custom_encounter_starting_" + s + "_traps.png", "tileNum", 99, extensionProvided=True, progress=True),
+                            "noTraps": self.create_image("custom_encounter_starting_" + s + "_no_traps.png", "tileNum", 99, extensionProvided=True, progress=True)
                         },
                         "notStarting": {
-                            "traps": self.create_image("custom_encounter_not_starting_" + s + "_traps.png", "tileNum", 99, extensionProvided=True),
-                            "noTraps": self.create_image("custom_encounter_not_starting_" + s + "_no_traps.png", "tileNum", 99, extensionProvided=True)
+                            "traps": self.create_image("custom_encounter_not_starting_" + s + "_traps.png", "tileNum", 99, extensionProvided=True, progress=True),
+                            "noTraps": self.create_image("custom_encounter_not_starting_" + s + "_no_traps.png", "tileNum", 99, extensionProvided=True, progress=True)
                         }
                     }
 
                 self.tileLayouts = {
                     "1 Tile": {
-                        "layout": self.create_image("custom_encounter_layout_1_tile.png", "layout", 99, extensionProvided=True),
-                        "startingNodesHorizontal": self.create_image("custom_encounter_1_tile_starting_nodes_horizontal.png", "nodes1TileHorizontal", 99, extensionProvided=True),
-                        "startingNodesVertical": self.create_image("custom_encounter_1_tile_starting_nodes_vertical.png", "nodes1TileVertical", 99, extensionProvided=True),
+                        "layout": self.create_image("custom_encounter_layout_1_tile.png", "layout", 99, extensionProvided=True, progress=True),
+                        "startingNodesHorizontal": self.create_image("custom_encounter_1_tile_starting_nodes_horizontal.png", "nodes1TileHorizontal", 99, extensionProvided=True, progress=True),
+                        "startingNodesVertical": self.create_image("custom_encounter_1_tile_starting_nodes_vertical.png", "nodes1TileVertical", 99, extensionProvided=True, progress=True),
                         "box": {
                             1: {
                                 1: (59, 414),
@@ -192,9 +368,9 @@ try:
                             }
                         },
                     "1 Tile 4x4": {
-                        "layout": self.create_image("custom_encounter_layout_1_tile_4x4.png", "layout", 99, extensionProvided=True),
-                        "startingNodesHorizontal": self.create_image("custom_encounter_4x4_starting_nodes_horizontal.png", "nodesLevel4Horizontal", 99, extensionProvided=True),
-                        "startingNodesVertical": self.create_image("custom_encounter_4x4_starting_nodes_vertical.png", "nodesLevel4Vertical", 99, extensionProvided=True),
+                        "layout": self.create_image("custom_encounter_layout_1_tile_4x4.png", "layout", 99, extensionProvided=True, progress=True),
+                        "startingNodesHorizontal": self.create_image("custom_encounter_4x4_starting_nodes_horizontal.png", "nodesLevel4Horizontal", 99, extensionProvided=True, progress=True),
+                        "startingNodesVertical": self.create_image("custom_encounter_4x4_starting_nodes_vertical.png", "nodesLevel4Vertical", 99, extensionProvided=True, progress=True),
                         "box": {
                             1: {
                                 1: (47, 403),
@@ -205,7 +381,7 @@ try:
                             }
                         },
                     "2 Tiles Horizontal": {
-                        "layout": self.create_image("custom_encounter_layout_2_tiles_horizontal.png", "layout", 99, extensionProvided=True),
+                        "layout": self.create_image("custom_encounter_layout_2_tiles_horizontal.png", "layout", 99, extensionProvided=True, progress=True),
                         "startingNodesHorizontal": startingHorizontal,
                         "startingNodesVertical": startingVertical,
                         "box": {
@@ -224,7 +400,7 @@ try:
                             }
                         },
                     "2 Tiles Vertical": {
-                        "layout": self.create_image("custom_encounter_layout_2_tiles_vertical.png", "layout", 99, extensionProvided=True),
+                        "layout": self.create_image("custom_encounter_layout_2_tiles_vertical.png", "layout", 99, extensionProvided=True, progress=True),
                         "startingNodesHorizontal": startingHorizontal,
                         "startingNodesVertical": startingVertical,
                         "box": {
@@ -243,7 +419,7 @@ try:
                             }
                         },
                     "2 Tiles Illusion": {
-                        "layout": self.create_image("custom_encounter_layout_2_tiles_illusion.png", "layout", 99, extensionProvided=True),
+                        "layout": self.create_image("custom_encounter_layout_2_tiles_illusion.png", "layout", 99, extensionProvided=True, progress=True),
                         "startingNodesHorizontal": startingHorizontal,
                         "startingNodesVertical": startingVertical,
                         "box": {
@@ -256,7 +432,7 @@ try:
                             }
                         },
                     "2 Tiles Separated": {
-                        "layout": self.create_image("custom_encounter_layout_2_tiles_separated.png", "layout", 99, extensionProvided=True),
+                        "layout": self.create_image("custom_encounter_layout_2_tiles_separated.png", "layout", 99, extensionProvided=True, progress=True),
                         "startingNodesHorizontal": startingHorizontal,
                         "startingNodesVertical": startingVertical,
                         "box": {
@@ -275,7 +451,7 @@ try:
                             }
                         },
                     "3 Tiles Vertical": {
-                        "layout": self.create_image("custom_encounter_layout_3_tile_vertical.png", "layout", 99, extensionProvided=True),
+                        "layout": self.create_image("custom_encounter_layout_3_tile_vertical.png", "layout", 99, extensionProvided=True, progress=True),
                         "startingNodesHorizontal": startingHorizontal,
                         "startingNodesVertical": startingVertical,
                         "box": {
@@ -300,7 +476,7 @@ try:
                             }
                         },
                     "3 Tiles: 1 NE, 2 NW, 3 SW": {
-                        "layout": self.create_image("custom_encounter_layout_3_tiles_1_NE_2_NW_3_SW.png", "layout", 99, extensionProvided=True),
+                        "layout": self.create_image("custom_encounter_layout_3_tiles_1_NE_2_NW_3_SW.png", "layout", 99, extensionProvided=True, progress=True),
                         "startingNodesHorizontal": startingHorizontal,
                         "startingNodesVertical": startingVertical,
                         "box": {
@@ -325,7 +501,7 @@ try:
                             }
                         },
                     "3 Tiles: 1 NW, 2 NE, 3 SW": {
-                        "layout": self.create_image("custom_encounter_layout_3_tiles_1_NW_2_NE_3_SW.png", "layout", 99, extensionProvided=True),
+                        "layout": self.create_image("custom_encounter_layout_3_tiles_1_NW_2_NE_3_SW.png", "layout", 99, extensionProvided=True, progress=True),
                         "startingNodesHorizontal": startingHorizontal,
                         "startingNodesVertical": startingVertical,
                         "box": {
@@ -350,7 +526,7 @@ try:
                             }
                         },
                     "3 Tiles: 1 NW, 2 SW, 3 SE": {
-                        "layout": self.create_image("custom_encounter_layout_3_tiles_1_NW_2_SW_3_SE.png", "layout", 99, extensionProvided=True),
+                        "layout": self.create_image("custom_encounter_layout_3_tiles_1_NW_2_SW_3_SE.png", "layout", 99, extensionProvided=True, progress=True),
                         "startingNodesHorizontal": startingHorizontal,
                         "startingNodesVertical": startingVertical,
                         "box": {
@@ -375,7 +551,7 @@ try:
                             }
                         },
                     "3 Tiles: 1 SE, 2 NE, 3 NW": {
-                        "layout": self.create_image("custom_encounter_layout_3_tiles_1_SE_2_NE_3_NW.png", "layout", 99, extensionProvided=True),
+                        "layout": self.create_image("custom_encounter_layout_3_tiles_1_SE_2_NE_3_NW.png", "layout", 99, extensionProvided=True, progress=True),
                         "startingNodesHorizontal": startingHorizontal,
                         "startingNodesVertical": startingVertical,
                         "box": {
@@ -400,7 +576,7 @@ try:
                             }
                         },
                     "3 Tiles: 1 SW, 2 NW, 3 SE": {
-                        "layout": self.create_image("custom_encounter_layout_3_tiles_1_SW_2_NW_3_SE.png", "layout", 99, extensionProvided=True),
+                        "layout": self.create_image("custom_encounter_layout_3_tiles_1_SW_2_NW_3_SE.png", "layout", 99, extensionProvided=True, progress=True),
                         "startingNodesHorizontal": startingHorizontal,
                         "startingNodesVertical": startingVertical,
                         "box": {
@@ -425,7 +601,7 @@ try:
                             }
                         },
                     "3 Tiles: 1 SW, 2 SE, 3 NE": {
-                        "layout": self.create_image("custom_encounter_layout_3_tiles_1_SW_2_SE_3_NE.png", "layout", 99, extensionProvided=True),
+                        "layout": self.create_image("custom_encounter_layout_3_tiles_1_SW_2_SE_3_NE.png", "layout", 99, extensionProvided=True, progress=True),
                         "startingNodesHorizontal": startingHorizontal,
                         "startingNodesVertical": startingVertical,
                         "box": {
@@ -450,7 +626,7 @@ try:
                             }
                         },
                     "3 Tiles Illusion": {
-                        "layout": self.create_image("custom_encounter_layout_3_tiles_illusion.png", "layout", 99, extensionProvided=True),
+                        "layout": self.create_image("custom_encounter_layout_3_tiles_illusion.png", "layout", 99, extensionProvided=True, progress=True),
                         "startingNodesHorizontal": startingHorizontal,
                         "startingNodesVertical": startingVertical,
                         "box": {
@@ -463,7 +639,7 @@ try:
                             }
                         },
                     "3 Tiles Separated": {
-                        "layout": self.create_image("custom_encounter_layout_3_tiles_separated.png", "layout", 99, extensionProvided=True),
+                        "layout": self.create_image("custom_encounter_layout_3_tiles_separated.png", "layout", 99, extensionProvided=True, progress=True),
                         "startingNodesHorizontal": startingHorizontal,
                         "startingNodesVertical": startingVertical,
                         "box": {
@@ -476,7 +652,7 @@ try:
                             }
                         },
                     "3 Tiles, Tile 1 Separated": {
-                        "layout": self.create_image("custom_encounter_layout_3_tiles_1_separate.png", "layout", 99, extensionProvided=True),
+                        "layout": self.create_image("custom_encounter_layout_3_tiles_1_separate.png", "layout", 99, extensionProvided=True, progress=True),
                         "startingNodesHorizontal": startingHorizontal,
                         "startingNodesVertical": startingVertical,
                         "box": {
@@ -501,7 +677,7 @@ try:
                             }
                         },
                     "3 Tiles, Tile 3 Separated": {
-                        "layout": self.create_image("custom_encounter_layout_3_tiles_3_separate.png", "layout", 99, extensionProvided=True),
+                        "layout": self.create_image("custom_encounter_layout_3_tiles_3_separate.png", "layout", 99, extensionProvided=True, progress=True),
                         "startingNodesHorizontal": startingHorizontal,
                         "startingNodesVertical": startingVertical,
                         "box": {
@@ -526,6 +702,8 @@ try:
                             }
                         }
                 }
+
+                i = int(self.progress.progressVar.get())
                 
                 self.progress.label.config(text="Loading treasure...")
                 if self.settings["treasureSwapOption"] in {"Similar Soul Cost", "Tier Based"}:
@@ -1134,7 +1312,7 @@ try:
                 raise
 
 
-        def create_image(self, imageFileName, imageType, level=None, expansion=None, pathProvided=False, extensionProvided=False, customEncounter=False, emptySetIcon=False, addToBg1=False, addToBg2=False):
+        def create_image(self, imageFileName, imageType, level=None, expansion=None, pathProvided=False, extensionProvided=False, customEncounter=False, emptySetIcon=False, addToBg1=False, addToBg2=False, progress=False):
             """
             Create an image to be displayed in the encounter frame.
 
@@ -1157,6 +1335,9 @@ try:
             """
             try:
                 log("Start of create_image, imageFileName={}, imageType={}, level={}, expansion={}".format(str(imageFileName), str(imageType), str(level), str(expansion)))
+
+                self.progress.progressVar.set(self.progress.progressVar.get()+1)
+                root.update_idletasks()
 
                 if imageType in {"encounter", "customEncounter"}:
                     if imageFileName == "Ornstein & Smough.jpg" or imageFileName == "Ornstein & Smough - data.jpg":
@@ -1241,7 +1422,8 @@ try:
                             "enemyOld",
                             "enemyOldLevel4",
                             "enemyNew",
-                            "move"
+                            "move",
+                            "iconForCustomEnemy"
                         }:
                             subfolder = "enemies\\"
                         elif imageType in {
@@ -1255,7 +1437,8 @@ try:
                             "stagger",
                             "calamity",
                             "corrosion",
-                            "terrain"
+                            "terrain",
+                            "iconForCustom"
                         }:
                             subfolder = "icons\\"
                         elif imageType in {
@@ -1408,6 +1591,12 @@ try:
                         image = Image.open(imagePath).resize((40, 60), Image.Resampling.LANCZOS)
                     elif imageType == "terrain":
                         image = Image.open(imagePath).resize((21, 24), Image.Resampling.LANCZOS)
+                    elif imageType in {"iconForCustom", "iconForCustomEnemy"}:
+                        i, pi = self.create_image(imagePath, "iconText", 99, pathProvided=True, extensionProvided=True)
+                        _, pibg1 = self.create_image(imagePath, "iconText", 99, pathProvided=True, extensionProvided=True, addToBg1=True)
+                        _, pibg2 = self.create_image(imagePath, "iconText", 99, pathProvided=True, extensionProvided=True, addToBg2=True)
+                        ti = self.create_image(imagePath, "iconTreeview", 99, pathProvided=True, extensionProvided=True)
+                        return i, pi, pibg1, pibg2, ti
                     elif imageType == "iconTreeview":
                         i = Image.open(imagePath)
                         width, height = i.size
@@ -1422,7 +1611,7 @@ try:
                         offset = ((bgW - iW) // 2, (bgH - iH) // 2)
                         img.paste(im=im, box=offset, mask=im)
                         log("\tEnd of create_image")
-                        return img, ImageTk.PhotoImage(img)
+                        return ImageTk.PhotoImage(img)
                     elif imageType == "iconText":
                         i = Image.open(imagePath)
                         width, height = i.size
@@ -1498,16 +1687,16 @@ try:
                 log("\tEnd of create_image")
 
                 return image
-            except UnidentifiedImageError:
-                p = PopupWindow(root, "Invalid image file chosen.", firstButton="Ok")
-                root.wait_window(p)
-                raise
-            except EnvironmentError as err:
-                if err.errno == errno.ENOENT: # ENOENT -> "no entity" -> "file not found"
-                    if customEncounter:
-                        p = PopupWindow(root, "Custom encounter file not found.\nWas it deleted?", firstButton="Ok")
-                        root.wait_window(p)
-                raise
+            # except UnidentifiedImageError:
+            #     p = PopupWindow(root, "Invalid image file chosen.", firstButton="Ok")
+            #     root.wait_window(p)
+            #     raise
+            # except EnvironmentError as err:
+            #     if err.errno == errno.ENOENT: # ENOENT -> "no entity" -> "file not found"
+            #         if customEncounter:
+            #             p = PopupWindow(root, "Custom encounter file not found.\nWas it deleted?", firstButton="Ok")
+            #             root.wait_window(p)
+            #     raise
             except Exception as e:
                 error_popup(root, e)
                 raise
