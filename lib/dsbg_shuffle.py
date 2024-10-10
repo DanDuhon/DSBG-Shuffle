@@ -53,7 +53,7 @@ try:
                 self.allEnemies = {enemy: {} for enemy in enemiesDict}
 
                 root.withdraw()
-                self.progress = PopupWindow(root, labelText="Starting up...", progressBar=True, progressMax=1058 + (len(list(enemiesDict.keys()) + list(bosses.keys()))*3) + len([t for t in treasures if not treasures[t]["character"] or treasures[t]["character"] in self.charactersActive]), loadingImage=True)
+                self.progress = PopupWindow(root, labelText="Starting up...", progressBar=True, progressMax=1050 + (len(list(enemiesDict.keys()) + list(bosses.keys()))*3) + len([t for t in treasures if not treasures[t]["character"] or treasures[t]["character"] in self.charactersActive]), loadingImage=True)
 
                 # Delete images from staging
                 folder = baseFolder + "\\lib\\dsbg_shuffle_image_staging".replace("\\", pathSep)
@@ -701,7 +701,7 @@ try:
                         }
                 }
 
-                i = int(self.progress.progressVar.get())
+                #print(self.progress.progressVar.get())
                 
                 self.progress.label.config(text="Loading treasure...")
                 if self.settings["treasureSwapOption"] in {"Similar Soul Cost", "Tier Based"}:
@@ -1334,8 +1334,9 @@ try:
             try:
                 log("Start of create_image, imageFileName={}, imageType={}, level={}, expansion={}".format(str(imageFileName), str(imageType), str(level), str(expansion)))
 
-                self.progress.progressVar.set(self.progress.progressVar.get()+1)
-                root.update_idletasks()
+                if progress:
+                    self.progress.progressVar.set(self.progress.progressVar.get()+1)
+                    root.update_idletasks()
 
                 if imageType in {"encounter", "customEncounter"}:
                     if imageFileName == "Ornstein & Smough.jpg" or imageFileName == "Ornstein & Smough - data.jpg":
@@ -1590,10 +1591,10 @@ try:
                     elif imageType == "terrain":
                         image = Image.open(imagePath).resize((21, 24), Image.Resampling.LANCZOS)
                     elif imageType in {"iconForCustom", "iconForCustomEnemy"}:
-                        i, pi = self.create_image(imagePath, "iconText", 99, pathProvided=True, extensionProvided=True)
-                        _, pibg1 = self.create_image(imagePath, "iconText", 99, pathProvided=True, extensionProvided=True, addToBg1=True)
-                        _, pibg2 = self.create_image(imagePath, "iconText", 99, pathProvided=True, extensionProvided=True, addToBg2=True)
-                        ti = self.create_image(imagePath, "iconTreeview", 99, pathProvided=True, extensionProvided=True)
+                        i, pi = self.create_image(imagePath, "iconText", 99, pathProvided=True, extensionProvided=True, progress=progress)
+                        _, pibg1 = self.create_image(imagePath, "iconText", 99, pathProvided=True, extensionProvided=True, addToBg1=True, progress=progress)
+                        _, pibg2 = self.create_image(imagePath, "iconText", 99, pathProvided=True, extensionProvided=True, addToBg2=True, progress=progress)
+                        ti = self.create_image(imagePath, "iconTreeview", 99, pathProvided=True, extensionProvided=True, progress=progress)
                         return i, pi, pibg1, pibg2, ti
                     elif imageType == "iconTreeview":
                         i = Image.open(imagePath)
@@ -1602,7 +1603,7 @@ try:
                             mod = 20 / width
                         else:
                             mod = 20 / height
-                        img, _ = self.create_image("icon_background3.jpg", "iconBg3", 99, extensionProvided=True)
+                        img, _ = self.create_image("icon_background3.jpg", "iconBg3", 99, extensionProvided=True, progress=progress)
                         im = Image.open(imagePath).resize((int(width * mod), int(height * mod)), Image.Resampling.LANCZOS)
                         bgW, bgH = img.size
                         iW, iH = im.size
@@ -1618,9 +1619,9 @@ try:
                         else:
                             mod = 13 / height
                         if addToBg1:
-                            img, _ = self.create_image("icon_background1.jpg", "iconBg1", 99, extensionProvided=True)
+                            img, _ = self.create_image("icon_background1.jpg", "iconBg1", 99, extensionProvided=True, progress=progress)
                         elif addToBg2:
-                            img, _ = self.create_image("icon_background2.jpg", "iconBg2", 99, extensionProvided=True)
+                            img, _ = self.create_image("icon_background2.jpg", "iconBg2", 99, extensionProvided=True, progress=progress)
                         else:
                             img = Image.new("RGBA", (13, 13), (0, 0, 0, 0))
                         im = Image.open(imagePath).resize((int(width * mod), int(height * mod)), Image.Resampling.LANCZOS)
@@ -1638,9 +1639,9 @@ try:
                         else:
                             mod = 22 / height
                         if addToBg1:
-                            img, _ = self.create_image("icon_background1.jpg", "iconBg1", 99, extensionProvided=True)
+                            img, _ = self.create_image("icon_background1.jpg", "iconBg1", 99, extensionProvided=True, progress=progress)
                         elif addToBg2:
-                            img, _ = self.create_image("icon_background2.jpg", "iconBg2", 99, extensionProvided=True)
+                            img, _ = self.create_image("icon_background2.jpg", "iconBg2", 99, extensionProvided=True, progress=progress)
                         else:
                             img = Image.new("RGBA", (22, 22), (0, 0, 0, 0))
                         im = Image.open(imagePath).resize((int(width * mod), int(height * mod)), Image.Resampling.LANCZOS)
@@ -1660,9 +1661,9 @@ try:
                         else:
                             mod = y / height
                         if addToBg1:
-                            img, _ = self.create_image("icon_background1.jpg", "iconBg1", 99, extensionProvided=True)
+                            img, _ = self.create_image("icon_background1.jpg", "iconBg1", 99, extensionProvided=True, progress=progress)
                         elif addToBg2:
-                            img, _ = self.create_image("icon_background2.jpg", "iconBg2", 99, extensionProvided=True)
+                            img, _ = self.create_image("icon_background2.jpg", "iconBg2", 99, extensionProvided=True, progress=progress)
                         else:
                             img = Image.new("RGBA", (x, y), (0, 0, 0, 0))
                         im = Image.open(imagePath).resize((int(width * mod), int(height * mod)), Image.Resampling.LANCZOS)
@@ -1685,16 +1686,16 @@ try:
                 log("\tEnd of create_image")
 
                 return image
-            # except UnidentifiedImageError:
-            #     p = PopupWindow(root, "Invalid image file chosen.", firstButton="Ok")
-            #     root.wait_window(p)
-            #     raise
-            # except EnvironmentError as err:
-            #     if err.errno == errno.ENOENT: # ENOENT -> "no entity" -> "file not found"
-            #         if customEncounter:
-            #             p = PopupWindow(root, "Custom encounter file not found.\nWas it deleted?", firstButton="Ok")
-            #             root.wait_window(p)
-            #     raise
+            except UnidentifiedImageError:
+                p = PopupWindow(root, "Invalid image file chosen.", firstButton="Ok")
+                root.wait_window(p)
+                raise
+            except EnvironmentError as err:
+                if err.errno == errno.ENOENT: # ENOENT -> "no entity" -> "file not found"
+                    if customEncounter:
+                        p = PopupWindow(root, "Custom encounter file not found.\nWas it deleted?", firstButton="Ok")
+                        root.wait_window(p)
+                raise
             except Exception as e:
                 error_popup(root, e)
                 raise
