@@ -75,7 +75,7 @@ try:
 
                 for icon in e.encounterIcons:
                     e.encounterIcons[icon]["view"].grid_forget()
-                    e.encounterIcons[icon]["posLabel"].grid_forget()
+                    e.encounterIcons[icon]["note"].grid_forget()
                     e.encounterIcons[icon]["xLabel"].grid_forget()
                     e.encounterIcons[icon]["xEntry"].grid_forget()
                     e.encounterIcons[icon]["yLabel"].grid_forget()
@@ -299,7 +299,7 @@ try:
                                 self.app.displayImage.paste(im=image, box=box, mask=image)
 
                 # Custom Icons
-                for icon in [icon for icon in e.encounterIcons if e.encounterIcons[icon]["position"][0].get() != "" and e.encounterIcons[icon]["position"][1].get() != ""]:
+                for icon in [icon for icon in e.encounterIcons if e.encounterIcons[icon]["position"][0].get() and e.encounterIcons[icon]["position"][1].get()]:
                     lookup = e.encounterIcons[icon]["lookup"] if e.encounterIcons[icon]["lookup"] in e.customIconsDict else e.encounterIcons[icon]["lookup"]
                     image = e.customIconsDict[lookup]["image"] if lookup in e.customIconsDict else self.app.iconsForCustom[e.encounterIcons[icon]["lookup"]]["image"]
                     box = (int(e.encounterIcons[icon]["position"][0].get()), int(e.encounterIcons[icon]["position"][1].get()))
@@ -324,13 +324,8 @@ try:
                 self.customEncounter["rewardTrial"] = e.rewardTrialEntry.get("1.0", "end").strip()
                 self.customEncounter["rewardShortcut"] = e.shortcutVal.get()
                 self.customEncounter["layout"] = e.tileLayoutMenuVal.get()
-                for id in e.encounterIcons:
-                    if e.encounterIcons[id]["position"][0].get() == "" or e.encounterIcons[id]["position"][1].get() == "":
-                        continue
-
-                    newId = 0 if id == 0 else max([int(k) for k in self.customEncounter["icons"].keys()]) + 1
-
-                    self.customEncounter["icons"][str(newId)] = {
+                for id in [id for id in e.encounterIcons if e.encounterIcons[id]["position"][0].get() and e.encounterIcons[id]["position"][1].get()]:
+                    self.customEncounter["icons"][str(id)] = {
                         "lookup": e.encounterIcons[id]["lookup"],
                         "position": (e.encounterIcons[id]["position"][0].get(), e.encounterIcons[id]["position"][1].get()),
                         "note": e.encounterIcons[id]["noteVal"].get()
@@ -1040,7 +1035,7 @@ try:
 
             self.customIconsTreeviewDict = {}
             self.customIconsTreeviewFrame = ttk.Frame(self.iconsFrame2)
-            self.customIconsTreeviewFrame.pack(fill="x")
+            self.customIconsTreeviewFrame.pack(side="left")
             self.scrollbarTreeviewCustomIcons = ttk.Scrollbar(self.customIconsTreeviewFrame)
             self.scrollbarTreeviewCustomIcons.pack(side="right", fill="y")
             self.treeviewCustomIcons = ttk.Treeview(
@@ -1054,23 +1049,14 @@ try:
             self.treeviewCustomIcons.pack(expand=True, fill="both")
             self.scrollbarTreeviewCustomIcons.config(command=self.treeviewCustomIcons.yview)
 
-            self.treeviewCustomIcons.column('#0', width=0)
+            self.treeviewCustomIcons.column('#0', width=50)
 
             self.treeviewCustomIcons.heading("Name", text="Name", anchor=tk.W)
             self.treeviewCustomIcons.heading("Size", text="Size", anchor=tk.W)
-            self.treeviewCustomIcons.column("Name", anchor=tk.W)
-            self.treeviewCustomIcons.column("Size", anchor=tk.W)
+            self.treeviewCustomIcons.column("Name", anchor=tk.W, width=210)
+            self.treeviewCustomIcons.column("Size", anchor=tk.W, width=80)
             
             self.treeviewCustomIcons.bind("<<TreeviewSelect>>", self.change_icon)
-            
-            # Conditions
-            self.treeviewCustomIcons.insert(parent="", index="end", iid="Conditions", values=("Conditions", ""), tags=False, open=False)
-            self.treeviewCustomIcons.insert(parent="Conditions", index="end", iid="bleed", values=("   Bleed", "Text"), image=self.app.iconsForCustom["Bleed"]["treeviewImage"], tags=False, open=False)
-            self.treeviewCustomIcons.insert(parent="Conditions", index="end", iid="calamity", values=("   Calamity", "Text"), image=self.app.iconsForCustom["Calamity"]["treeviewImage"], tags=False, open=False)
-            self.treeviewCustomIcons.insert(parent="Conditions", index="end", iid="corrosion", values=("   Corrosion", "Text"), image=self.app.iconsForCustom["Corrosion"]["treeviewImage"], tags=False, open=False)
-            self.treeviewCustomIcons.insert(parent="Conditions", index="end", iid="frostbite", values=("   Frostbite", "Text"), image=self.app.iconsForCustom["Frostbite"]["treeviewImage"], tags=False, open=False)
-            self.treeviewCustomIcons.insert(parent="Conditions", index="end", iid="poison", values=("   Poison", "Text"), image=self.app.iconsForCustom["Poison"]["treeviewImage"], tags=False, open=False)
-            self.treeviewCustomIcons.insert(parent="Conditions", index="end", iid="stagger", values=("   Stagger", "Text"), image=self.app.iconsForCustom["Stagger"]["treeviewImage"], tags=False, open=False)
             
             # Enemies
             self.treeviewCustomIcons.insert(parent="", index="end", iid="Core", values=("Enemies - Core", ""), tags=False, open=False)
@@ -1136,6 +1122,15 @@ try:
             self.treeviewCustomIcons.insert(parent="Phantoms", index="end", iid="Paladin Leeroy", values=("   Paladin Leeroy", "Text"), image=self.app.iconsForCustom["Paladin Leeroy"]["treeviewImage"], tags=False, open=False)
             self.treeviewCustomIcons.insert(parent="Phantoms", index="end", iid="Xanthous King Jeremiah", values=("   Xanthous King Jeremiah", "Text"), image=self.app.iconsForCustom["Xanthous King Jeremiah"]["treeviewImage"], tags=False, open=False)
             
+            # Conditions
+            self.treeviewCustomIcons.insert(parent="", index="end", iid="Conditions", values=("Conditions", ""), tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Conditions", index="end", iid="bleed", values=("   Bleed", "Text"), image=self.app.iconsForCustom["Bleed"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Conditions", index="end", iid="calamity", values=("   Calamity", "Text"), image=self.app.iconsForCustom["Calamity"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Conditions", index="end", iid="corrosion", values=("   Corrosion", "Text"), image=self.app.iconsForCustom["Corrosion"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Conditions", index="end", iid="frostbite", values=("   Frostbite", "Text"), image=self.app.iconsForCustom["Frostbite"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Conditions", index="end", iid="poison", values=("   Poison", "Text"), image=self.app.iconsForCustom["Poison"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Conditions", index="end", iid="stagger", values=("   Stagger", "Text"), image=self.app.iconsForCustom["Stagger"]["treeviewImage"], tags=False, open=False)
+            
             # Effects
             self.treeviewCustomIcons.insert(parent="", index="end", iid="Effects", values=("Effects", ""), tags=False, open=False)
             self.treeviewCustomIcons.insert(parent="Effects", index="end", iid="Dodge", values=("   Dodge", "Text"), image=self.app.iconsForCustom["Dodge"]["treeviewImage"], tags=False, open=False)
@@ -1178,7 +1173,6 @@ try:
             self.treeviewCustomIcons.insert(parent="Other", index="end", iid="Die (Black)", values=("   Die (Black)", "Text"), image=self.app.iconsForCustom["Die (Black)"]["treeviewImage"], tags=False, open=False)
             self.treeviewCustomIcons.insert(parent="Other", index="end", iid="Die (Blue)", values=("   Die (Blue)", "Text"), image=self.app.iconsForCustom["Die (Blue)"]["treeviewImage"], tags=False, open=False)
             self.treeviewCustomIcons.insert(parent="Other", index="end", iid="Die (Orange)", values=("   Die (Orange)", "Text"), image=self.app.iconsForCustom["Die (Orange)"]["treeviewImage"], tags=False, open=False)
-            self.treeviewCustomIcons.insert(parent="Other", index="end", iid="Eerie", values=("   Eerie", "Text"), image=self.app.iconsForCustom["Eerie"]["treeviewImage"], tags=False, open=False)
             
             # Custom
             self.treeviewCustomIcons.insert(parent="", index="end", iid="Custom", values=("Custom", ""), tags=False, open=False)
@@ -1534,7 +1528,7 @@ try:
 
                 tree = event.widget
 
-                if not tree.selection() or tree.get_children(tree.selection()[0]):
+                if not tree.selection() or tree.selection()[0] == "Custom" or tree.get_children(tree.selection()[0]):
                     log("End of change_icon")
                     return
                 
@@ -1654,12 +1648,12 @@ try:
                 self.currentFile = deepcopy(self.customIconsDict[(file, size)]["file"])
 
                 if oldIconCount == newIconCount:
-                    self.treeviewCustomIcons.item(self.customIconsDict[(file, size)]["iid"], values=(icon, sizeDisplay))
+                    self.treeviewCustomIcons.item(self.customIconsDict[(file, size)]["iid"], values=("   " + icon, sizeDisplay))
                 else:
-                    contents = [(self.treeviewCustomIcons.item(child)["values"][1], self.treeviewCustomIcons.item(child)["values"][0]) for child in self.treeviewCustomIcons.get_children()]
+                    contents = [(self.treeviewCustomIcons.item(child)["values"][1], self.treeviewCustomIcons.item(child)["values"][0]) for child in self.treeviewCustomIcons.get_children("Custom")]
                     iid = str(len(contents))
                     c = (sizeDisplay, self.customIconsDict[(file, size)]["label"])
-                    if icon not in set([c[1] for c in contents]):
+                    if icon not in set([c[1].strip() for c in contents]):
                         self.customIconsTreeviewDict[c[1]] = {
                             "iid": iid,
                             "index": bisect_left(contents, (c[0], c[1])),
@@ -1672,7 +1666,7 @@ try:
                         self.treeviewCustomIcons.focus(iid)
                         self.treeviewCustomIcons.selection_set(iid)
                     else:
-                        self.treeviewCustomIcons.item(self.customIconsTreeviewDict[c[1]]["iid"], values=(c[1], c[0]))
+                        self.treeviewCustomIcons.item(self.customIconsTreeviewDict[c[1]]["iid"], values=("   " + c[1], c[0]))
 
                 saveDict = {}
                 for key in self.customIconsDict:
@@ -1762,7 +1756,7 @@ try:
 
                 self.iconImageErrorsVal.set("")
                 
-                if not buttonSource and self.treeviewCustomIcons.parent(self.treeviewCustomIcons.selection()[0]) == "Custom":
+                if buttonSource or (not buttonSource and self.treeviewCustomIcons.selection() and self.treeviewCustomIcons.parent(self.treeviewCustomIcons.selection()[0]) == "Custom"):
                     self.iconSizeRadio1.config(state=tk.ACTIVE)
                     self.iconSizeRadio2.config(state=tk.ACTIVE)
                     self.iconSizeRadio3.config(state=tk.ACTIVE)
@@ -1863,7 +1857,7 @@ try:
                 log("Start of remove_icon_from_encounter")
 
                 self.encounterIcons[id]["view"].grid_forget()
-                self.encounterIcons[id]["posLabel"].grid_forget()
+                self.encounterIcons[id]["note"].grid_forget()
                 self.encounterIcons[id]["xLabel"].grid_forget()
                 self.encounterIcons[id]["xEntry"].grid_forget()
                 self.encounterIcons[id]["yLabel"].grid_forget()

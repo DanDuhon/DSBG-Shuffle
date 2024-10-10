@@ -266,7 +266,8 @@ class VerticalScrolledFrame(ttk.Frame):
 
 
     def _on_mousewheel(self, event):
-        self.canvas.yview_scroll(int(-1*(event.delta/120)), "units")
+        if event.widget.widgetName != "ttk::treeview":
+            self.canvas.yview_scroll(int(-1*(event.delta/120)), "units")
 
 
 def center(win):

@@ -508,7 +508,7 @@ try:
                     "customEnemyList": customEnemyList,
                     "encounterTypes": list(encounterTypes),
                     "charactersActive": list(charactersActive),
-                    "treasureSwapOption": self.treasureSwapOption.get(),
+                    "treasureSwapOption": self.treasureSwapOptions[self.treasureSwapOption.get()]["value"].get(),
                     "updateCheck": "on" if self.updateCheck["value"].get() == 1 else "off",
                     "maxInvaders": self.maxInvadersVal.get()
                 }
