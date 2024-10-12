@@ -10,7 +10,7 @@ try:
     from tkinter import filedialog, ttk
 
     from dsbg_shuffle_enemies import enemiesDict
-    from dsbg_shuffle_utility import PopupWindow, VerticalScrolledFrame, clear_other_tab_images, error_popup, log, set_display_bindings_by_tab, baseFolder, font, fontSize11, fontSize10, fontEncounterName, fontFlavor, pathSep
+    from dsbg_shuffle_utility import PopupWindow, VerticalScrolledFrame, clear_other_tab_images, error_popup, log, baseFolder, font, fontSize11, fontSize10, fontEncounterName, fontFlavor, pathSep
 
 
     class EncounterBuilderFrame(ttk.Frame):
@@ -28,22 +28,92 @@ try:
             self.separator = ttk.Separator(self)
             self.separator.pack(side=tk.TOP, anchor=tk.W, padx=5, pady=5, fill="x")
 
+            self.customEncountersTreeviewFrame = ttk.Frame(self.customEncountersButtonFrame)
+            self.customEncountersTreeviewFrame.grid(row=0, column=0, rowspan=3, sticky=tk.W)
+
+            self.scrollbarTreeviewCustomEncounters = ttk.Scrollbar(self.customEncountersTreeviewFrame)
+            self.scrollbarTreeviewCustomEncounters.pack(side="right", fill="y")
+
+            self.create_custom_encounter_treeview(topFrame=self)
+
             self.newEncounterButton = ttk.Button(self.customEncountersButtonFrame, text="New Encounter", width=16, command=self.new_custom_encounter)
-            self.newEncounterButton.grid(column=0, row=0, padx=5, pady=5)
-            self.loadButton = ttk.Button(self.customEncountersButtonFrame, text="Load Encounter", width=16, command=self.load_custom_encounter)
-            self.loadButton.grid(column=1, row=0, padx=5, pady=5)
+            self.newEncounterButton.grid(column=1, row=0, padx=5, pady=5, sticky=tk.NW)
             self.saveButton = ttk.Button(self.customEncountersButtonFrame, text="Save Encounter", width=16, command=self.save_custom_encounter)
-            self.saveButton.grid(column=2, row=0, padx=5, pady=5)
+            self.saveButton.grid(column=1, row=1, padx=5, pady=5, sticky=tk.SW)
             
             self.encounterSaveLabelVal = tk.StringVar()
             self.encounterSaveLabel = ttk.Label(self.customEncountersButtonFrame, textvariable=self.encounterSaveLabelVal)
             self.encounterSaveLabel.bind("<1>", lambda event: event.widget.focus_set())
-            self.encounterSaveLabel.grid(column=3, row=0, padx=5, pady=5)
-            
-            self.encounterBuilderScroll = EncounterBuilderScrollFrame(root=root, app=app, topFrame=self)
+            self.encounterSaveLabel.grid(column=1, row=2, padx=5, pady=5)
+                
+            self.encounterBuilderScroll = EncounterBuilderScrollFrame(root=self.root, app=self.app, topFrame=self)
             self.encounterBuilderScroll.pack(side=tk.TOP, anchor=tk.W, expand=True, fill="both")
             
             self.new_custom_encounter()
+
+
+        def create_custom_encounter_treeview(self, topFrame, event=None):
+            try:
+                log("Start of create_custom_encounter_treeview")
+
+                self.customEncountersDict = {}
+
+                self.treeviewCustomEncounters = ttk.Treeview(
+                    self.customEncountersTreeviewFrame,
+                    selectmode="browse",
+                    columns=("Name"),
+                    yscrollcommand=self.scrollbarTreeviewCustomEncounters.set,
+                    height=9
+                )
+
+                self.treeviewCustomEncounters.pack(expand=True, fill="both")
+                self.scrollbarTreeviewCustomEncounters.config(command=self.treeviewCustomEncounters.yview)
+
+                self.treeviewCustomEncounters.column("#0", anchor="w")
+                self.treeviewCustomEncounters.heading("#0", text="  Name", anchor="w")
+                
+                self.treeviewCustomEncounters.bind("<<TreeviewSelect>>", self.load_custom_encounter)
+
+                # Sort encounters by:
+                # 1. encounters that have more than just level 4 encounters first
+                # 2. New core sets first
+                # 3. V2 non-core sets
+                # 4. Original core set
+                # 5. Executioner Chariot at the top of the mega bosses list because it has non-level 4 encounters
+                # 6. By level
+                # 7. Alphabetically
+                encountersSorted = [encounter for encounter in sorted(self.app.customEncounters, key=lambda x: (
+                    x[0],
+                    x[2],
+                    x[1]))]
+                tvData = []
+                tvParents = dict()
+                x = 0
+                for e in encountersSorted:
+                    setName = e[0]
+                    eLevel = e[2]
+
+                    if setName not in [t[2] for t in tvData]:
+                        tvData.append(("", x, setName))
+                        tvParents[setName] = {"exp": tvData[-1][1]}
+                        x += 1
+
+                    if eLevel not in tvParents[setName]:
+                        tvData.append((tvParents[setName]["exp"], x, "Level " + str(eLevel)))
+                        tvParents[setName][eLevel] = tvData[-1][1]
+                        x += 1
+
+                    tvData.append((tvParents[setName][eLevel], x, e))
+                    self.customEncountersDict[str(x)] = e
+                    x += 1
+
+                for item in tvData:
+                    self.treeviewCustomEncounters.insert(parent=item[0], index="end", iid=item[1], text=item[2] if type(item[2]) == str else item[2][1], tags=False)
+                
+                log("End of create_custom_encounter_treeview")
+            except Exception as e:
+                error_popup(self.root, e)
+                raise
 
 
         def new_custom_encounter(self, event=None):
@@ -82,6 +152,19 @@ try:
                     e.encounterIcons[icon]["yEntry"].grid_forget()
                     e.encounterIcons[icon]["lock"].grid_forget()
                     e.encounterIcons[icon]["remove"].grid_forget()
+                    e.encounterIcons[icon]["view"].destroy()
+                    e.encounterIcons[icon]["note"].destroy()
+                    e.encounterIcons[icon]["xLabel"].destroy()
+                    e.encounterIcons[icon]["xEntry"].destroy()
+                    e.encounterIcons[icon]["yLabel"].destroy()
+                    e.encounterIcons[icon]["yEntry"].destroy()
+                    e.encounterIcons[icon]["lock"].destroy()
+                    e.encounterIcons[icon]["remove"].destroy()
+
+                e.iconsFrame4.grid_forget()
+                e.iconsFrame4.destroy()
+                e.iconsFrame4 = ttk.Frame(e.interior)
+                e.iconsFrame4.pack(side=tk.TOP, anchor=tk.W, padx=5, pady=5, fill="x")
                     
                 e.encounterIcons = {}
 
@@ -432,23 +515,22 @@ try:
                     self.encounterSaveLabelVal.set("Set and Name required.")
                     log("End of save_custom_encounter (not saved)")
                     return
+                
+                setName = " ".join(self.customEncounter["set"].strip().replace("\n", " ").split())
+                eName = " ".join(self.customEncounter["encounterName"].strip().replace("\n", " ").split())
+                level = str(self.customEncounter["level"])
 
                 file = (
                     baseFolder
                     + "\\lib\\dsbg_shuffle_custom_encounters\\".replace("\\", pathSep)
-                    + " ".join(self.customEncounter["set"].strip().replace("\n", " ").split())
-                    + "_"
-                    + " ".join(self.customEncounter["encounterName"].strip().replace("\n", " ").split())
-                    + "_"
-                    + str(self.customEncounter["level"])
-                    + ".json")
+                    + setName + "_" + eName + "_" + level)
 
                 saveEncounter = {k: v for k, v in self.customEncounter.items() if k not in {"image", }}
 
-                with open(file, "w") as encounterFile:
+                with open(file + ".json", "w") as encounterFile:
                     dump(saveEncounter, encounterFile)
 
-                self.customEncounter["image"].save(path.splitext(file)[0] + ".jpg")
+                self.customEncounter["image"].save(file + ".jpg")
                 
                 self.app.add_custom_encounters()
                 self.app.allExpansions = set([self.app.encounters[encounter]["expansion"] for encounter in self.app.encounters]) | set(["Phantoms"])
@@ -459,6 +541,9 @@ try:
                 self.app.encounterTab.treeviewEncounters.pack_forget()
                 self.app.encounterTab.treeviewEncounters.destroy()
                 self.app.encounterTab.create_encounters_treeview()
+                self.treeviewCustomEncounters.pack_forget()
+                self.treeviewCustomEncounters.destroy()
+                self.create_custom_encounter_treeview(topFrame=self)
 
                 self.encounterSaveLabelVal.set("Saved " + datetime.now().strftime("%H:%M:%S"))
 
@@ -472,25 +557,21 @@ try:
             try:
                 log("Start of load_custom_encounter")
 
+                tree = event.widget
+
+                if tree.get_children(tree.selection()[0]):
+                    log("End of load_custom_encounter (parent selected)")
+                    return
+
                 e = self.encounterBuilderScroll
 
-                # Prompt the user to find the encounter file.
-                file = filedialog.askopenfilename(initialdir=baseFolder + "\\lib\\dsbg_shuffle_custom_encounters".replace("\\", pathSep), filetypes = [(".json", ".json")])
-
-                # If the user did not select a file, do nothing.
-                if not file:
-                    log("End of load_custom_encounter (file dialog canceled)")
-                    return
-
-                # If the user did not select a JSON file, notify them that that was an invalid file.
-                if path.splitext(file)[1] != ".json":
-                    self.app.set_bindings_buttons_menus(False)
-                    PopupWindow(self.root, labelText="Invalid DSBG-Shuffle encounter file.", firstButton="Ok")
-                    self.app.set_bindings_buttons_menus(True)
-                    log("End of load_custom_encounter (invalid file)")
-                    return
-
                 self.new_custom_encounter()
+
+                fileName = self.customEncountersDict[tree.selection()[0]]
+                file = (
+                    baseFolder
+                    + "\\lib\\dsbg_shuffle_custom_encounters\\".replace("\\", pathSep)
+                    + "_".join(fileName) + ".json")
 
                 log("Loading file " + file)
 
@@ -1004,6 +1085,15 @@ try:
 
             self.treeviewCustomIcons.pack(expand=True, fill="both")
             self.scrollbarTreeviewCustomIcons.config(command=self.treeviewCustomIcons.yview)
+
+            self.treeviewCustomIcons.column('#0', width=50)
+
+            self.treeviewCustomIcons.heading("Name", text="Name", anchor=tk.W)
+            self.treeviewCustomIcons.heading("Size", text="Size", anchor=tk.W)
+            self.treeviewCustomIcons.column("Name", anchor=tk.W, width=210)
+            self.treeviewCustomIcons.column("Size", anchor=tk.W, width=80)
+            
+            self.treeviewCustomIcons.bind("<<TreeviewSelect>>", self.change_icon)
             
             self.addToEncounterButton = ttk.Button(self.iconsFrame2, text="Add to Encounter", width=16, command=self.add_icon_to_encounter)
             self.addToEncounterButton.grid(column=2, row=0, padx=5, pady=5, sticky=tk.NW)
@@ -1041,15 +1131,6 @@ try:
             self.iconSizeRadio2.grid(column=2, row=6, padx=5, pady=5, sticky=tk.W)
             self.iconSizeRadio3 = ttk.Radiobutton(self.iconsFrame2, text="Set Icon", variable=self.iconSizeVal, value=2, command=lambda: self.choose_icon_image(file=self.customIconsDict.get((self.currentIcon, self.currentSize), {}).get("originalFileFullPath", None)))
             self.iconSizeRadio3.grid(column=2, row=7, padx=5, pady=5, sticky=tk.W)
-
-            self.treeviewCustomIcons.column('#0', width=50)
-
-            self.treeviewCustomIcons.heading("Name", text="Name", anchor=tk.W)
-            self.treeviewCustomIcons.heading("Size", text="Size", anchor=tk.W)
-            self.treeviewCustomIcons.column("Name", anchor=tk.W, width=210)
-            self.treeviewCustomIcons.column("Size", anchor=tk.W, width=80)
-            
-            self.treeviewCustomIcons.bind("<<TreeviewSelect>>", self.change_icon)
             
             # Enemies
             self.treeviewCustomIcons.insert(parent="", index="end", iid="Core", values=("Enemies - Core", ""), tags=False, open=False)
@@ -1828,6 +1909,19 @@ try:
                 self.encounterIcons[id]["yEntry"].grid_forget()
                 self.encounterIcons[id]["lock"].grid_forget()
                 self.encounterIcons[id]["remove"].grid_forget()
+                self.encounterIcons[id]["view"].destroy()
+                self.encounterIcons[id]["note"].destroy()
+                self.encounterIcons[id]["xLabel"].destroy()
+                self.encounterIcons[id]["xEntry"].destroy()
+                self.encounterIcons[id]["yLabel"].destroy()
+                self.encounterIcons[id]["yEntry"].destroy()
+                self.encounterIcons[id]["lock"].destroy()
+                self.encounterIcons[id]["remove"].destroy()
+
+                self.iconsFrame4.grid_forget()
+                self.iconsFrame4.destroy()
+                self.iconsFrame4 = ttk.Frame(self.interior)
+                self.iconsFrame4.pack(side=tk.TOP, anchor=tk.W, padx=5, pady=5, fill="x")
 
                 del self.encounterIcons[id]
 
