@@ -83,31 +83,31 @@ try:
                 # 6. By level
                 # 7. Alphabetically
                 encountersSorted = [encounter for encounter in sorted(self.app.customEncounters, key=lambda x: (
-                    x[0],
-                    x[2],
-                    x[1]))]
-                tvData = []
+                    x[0].lower(),
+                    x[2].lower(),
+                    x[1].lower()))]
+                self.encountersTreeviewData = []
                 tvParents = dict()
                 x = 0
                 for e in encountersSorted:
                     setName = e[0]
                     eLevel = e[2]
 
-                    if setName not in [t[2] for t in tvData]:
-                        tvData.append(("", x, setName))
-                        tvParents[setName] = {"exp": tvData[-1][1]}
+                    if setName not in [t[2] for t in self.encountersTreeviewData]:
+                        self.encountersTreeviewData.append(("", x, setName))
+                        tvParents[setName] = {"exp": self.encountersTreeviewData[-1][1]}
                         x += 1
 
                     if eLevel not in tvParents[setName]:
-                        tvData.append((tvParents[setName]["exp"], x, "Level " + str(eLevel)))
-                        tvParents[setName][eLevel] = tvData[-1][1]
+                        self.encountersTreeviewData.append((tvParents[setName]["exp"], x, "Level " + str(eLevel)))
+                        tvParents[setName][eLevel] = self.encountersTreeviewData[-1][1]
                         x += 1
 
-                    tvData.append((tvParents[setName][eLevel], x, e))
+                    self.encountersTreeviewData.append((tvParents[setName][eLevel], x, e))
                     self.customEncountersDict[str(x)] = e
                     x += 1
 
-                for item in tvData:
+                for item in self.encountersTreeviewData:
                     self.treeviewCustomEncounters.insert(parent=item[0], index="end", iid=item[1], text=item[2] if type(item[2]) == str else item[2][1], tags=False)
                 
                 log("End of create_custom_encounter_treeview")
@@ -541,9 +541,22 @@ try:
                 self.app.encounterTab.treeviewEncounters.pack_forget()
                 self.app.encounterTab.treeviewEncounters.destroy()
                 self.app.encounterTab.create_encounters_treeview()
-                self.treeviewCustomEncounters.pack_forget()
-                self.treeviewCustomEncounters.destroy()
-                self.create_custom_encounter_treeview(topFrame=self)
+                
+                tree = self.treeviewCustomEncounters
+                setNames = sorted([tree.item(a)["text"].lower() for a in tree.get_children() if tree.get_children(a)])
+                if setName not in set(setNames):
+                    index = bisect_left(setNames, setName.lower())
+                    tree.insert(parent="", iid=setName, index=index, text=setName, tags=False, open=False)
+                setIid = [a for a in tree.get_children() if tree.item(a)["text"].strip() == setName][0]
+                levelNames = sorted([tree.item(a)["text"].lower() for a in tree.get_children(setIid)])
+                if "Level " + level not in set(levelNames):
+                    index = bisect_left(levelNames, "level " + level.lower())
+                    tree.insert(parent=setIid, iid=setName + "_" + level, index=index, text=("Level " + level), tags=False, open=False)
+                levelIid = [a for a in tree.get_children(setIid) if tree.item(a)["text"].strip() == "Level " + level][0]
+                encounterNames = sorted([tree.item(a)["text"].lower() for a in tree.get_children(levelIid)])
+                if eName not in encounterNames:
+                    index = bisect_left(encounterNames, eName.lower())
+                    tree.insert(parent=levelIid, index=index, text=eName, tags=False, open=False)
 
                 self.encounterSaveLabelVal.set("Saved " + datetime.now().strftime("%H:%M:%S"))
 
@@ -826,7 +839,7 @@ try:
             self.encounterSetLabel = ttk.Label(self.infoFrame1, text="Set Name")
             self.encounterSetLabel.bind("<1>", lambda event: event.widget.focus_set())
             self.encounterSetLabel.grid(column=0, row=1, padx=(5, 4), pady=5, sticky=tk.W)
-            self.encounterSetEntry = tk.Text(self.infoFrame1, width=24, height=1, bg="#181818")
+            self.encounterSetEntry = tk.Text(self.infoFrame1, width=24, height=1, bg="#181818", wrap=tk.WORD)
             self.encounterSetEntry.grid(column=1, row=1, padx=5, pady=5, columnspan=2, sticky=tk.W)
             
             self.emptySetIconVal = tk.IntVar()
@@ -837,7 +850,7 @@ try:
             self.encounterNameLabel = ttk.Label(self.infoFrame1, text="Encounter\nName\t")
             self.encounterNameLabel.bind("<1>", lambda event: event.widget.focus_set())
             self.encounterNameLabel.grid(column=0, row=2, padx=5, pady=5, sticky=tk.W)
-            self.encounterNameEntry = tk.Text(self.infoFrame1, width=24, height=2, bg="#181818")
+            self.encounterNameEntry = tk.Text(self.infoFrame1, width=24, height=2, bg="#181818", wrap=tk.WORD)
             self.encounterNameEntry.bind("<KeyRelease>", self.handle_wait)
             self.encounterNameEntry.grid(column=1, row=2, padx=5, pady=5, columnspan=2, sticky=tk.W)
 
@@ -857,14 +870,14 @@ try:
             self.flavorLabel = ttk.Label(self.infoFrame2, text="Flavor\nText\t")
             self.flavorLabel.bind("<1>", lambda event: event.widget.focus_set())
             self.flavorLabel.grid(column=0, row=3, padx=5, pady=5, sticky=tk.W)
-            self.flavorEntry = tk.Text(self.infoFrame2, width=70, height=2, bg="#181818")
+            self.flavorEntry = tk.Text(self.infoFrame2, width=70, height=2, bg="#181818", wrap=tk.WORD)
             self.flavorEntry.bind("<KeyRelease>", self.handle_wait)
             self.flavorEntry.grid(column=1, row=3, padx=5, pady=5, columnspan=6, sticky=tk.W)
             
             self.objectiveLabel = ttk.Label(self.infoFrame2, text="Objective\t")
             self.objectiveLabel.bind("<1>", lambda event: event.widget.focus_set())
             self.objectiveLabel.grid(column=0, row=4, padx=5, pady=5, sticky=tk.W)
-            self.objectiveEntry = tk.Text(self.infoFrame2, width=70, height=2, bg="#181818")
+            self.objectiveEntry = tk.Text(self.infoFrame2, width=70, height=2, bg="#181818", wrap=tk.WORD)
             self.objectiveEntry.bind("<KeyRelease>", self.handle_wait)
             self.objectiveEntry.grid(column=1, row=4, padx=5, pady=5, columnspan=6, sticky=tk.W)
 
@@ -885,49 +898,49 @@ try:
             self.rewardSoulsLabel = ttk.Label(self.infoFrame3, text="Souls\nReward\t")
             self.rewardSoulsLabel.bind("<1>", lambda event: event.widget.focus_set())
             self.rewardSoulsLabel.grid(column=0, row=2, padx=5, pady=5, sticky=tk.NW)
-            self.rewardSoulsEntry = tk.Text(self.infoFrame3, width=17, height=2, bg="#181818")
+            self.rewardSoulsEntry = tk.Text(self.infoFrame3, width=17, height=2, bg="#181818", wrap=tk.WORD)
             self.rewardSoulsEntry.bind("<KeyRelease>", self.handle_wait)
             self.rewardSoulsEntry.grid(column=1, row=2, padx=5, pady=5, sticky=tk.NW)
             
             self.rewardSearchLabel = ttk.Label(self.infoFrame3, text="Search\nReward\t")
             self.rewardSearchLabel.bind("<1>", lambda event: event.widget.focus_set())
             self.rewardSearchLabel.grid(column=0, row=3, padx=5, pady=5, rowspan=2, sticky=tk.NW)
-            self.rewardSearchEntry = tk.Text(self.infoFrame3, width=17, height=2, bg="#181818")
+            self.rewardSearchEntry = tk.Text(self.infoFrame3, width=17, height=2, bg="#181818", wrap=tk.WORD)
             self.rewardSearchEntry.bind("<KeyRelease>", self.handle_wait)
             self.rewardSearchEntry.grid(column=1, row=3, padx=5, pady=5, rowspan=2, sticky=tk.NW)
             
             self.rewardDrawLabel = ttk.Label(self.infoFrame3, text="Draw\nReward\t")
             self.rewardDrawLabel.bind("<1>", lambda event: event.widget.focus_set())
             self.rewardDrawLabel.grid(column=0, row=5, padx=5, pady=5, sticky=tk.NW)
-            self.rewardDrawEntry = tk.Text(self.infoFrame3, width=17, height=2, bg="#181818")
+            self.rewardDrawEntry = tk.Text(self.infoFrame3, width=17, height=2, bg="#181818", wrap=tk.WORD)
             self.rewardDrawEntry.bind("<KeyRelease>", self.handle_wait)
             self.rewardDrawEntry.grid(column=1, row=5, padx=5, pady=5, sticky=tk.NW)
             
             self.rewardRefreshLabel = ttk.Label(self.infoFrame3, text="Refresh\nReward\t")
             self.rewardRefreshLabel.bind("<1>", lambda event: event.widget.focus_set())
             self.rewardRefreshLabel.grid(column=0, row=6, padx=5, pady=5, sticky=tk.NW)
-            self.rewardRefreshEntry = tk.Text(self.infoFrame3, width=17, height=2, bg="#181818")
+            self.rewardRefreshEntry = tk.Text(self.infoFrame3, width=17, height=2, bg="#181818", wrap=tk.WORD)
             self.rewardRefreshEntry.bind("<KeyRelease>", self.handle_wait)
             self.rewardRefreshEntry.grid(column=1, row=6, padx=5, pady=5, sticky=tk.NW)
             
             self.rewardTrialLabel = ttk.Label(self.infoFrame3, text="Trial\nReward\t")
             self.rewardTrialLabel.bind("<1>", lambda event: event.widget.focus_set())
             self.rewardTrialLabel.grid(column=0, row=7, padx=5, pady=5, sticky=tk.NW)
-            self.rewardTrialEntry = tk.Text(self.infoFrame3, width=17, height=2, bg="#181818")
+            self.rewardTrialEntry = tk.Text(self.infoFrame3, width=17, height=2, bg="#181818", wrap=tk.WORD)
             self.rewardTrialEntry.bind("<KeyRelease>", self.handle_wait)
             self.rewardTrialEntry.grid(column=1, row=7, padx=5, pady=5, sticky=tk.NW)
             
             self.keywordsLabel = ttk.Label(self.infoFrame3, text="Keywords")
             self.keywordsLabel.bind("<1>", lambda event: event.widget.focus_set())
             self.keywordsLabel.grid(column=2, row=2, padx=(24, 5), pady=5, sticky=tk.NW)
-            self.keywordsEntry = tk.Text(self.infoFrame3, width=39, height=3, bg="#181818")
+            self.keywordsEntry = tk.Text(self.infoFrame3, width=39, height=3, bg="#181818", wrap=tk.WORD)
             self.keywordsEntry.bind("<KeyRelease>", self.handle_wait)
             self.keywordsEntry.grid(column=3, row=2, pady=5, rowspan=2, sticky=tk.NW)
             
             self.specialRulesLabel = ttk.Label(self.infoFrame3, text="Special\nRules")
             self.specialRulesLabel.bind("<1>", lambda event: event.widget.focus_set())
             self.specialRulesLabel.grid(column=2, row=4, padx=(24, 5), pady=5, sticky=tk.NW)
-            self.specialRulesEntry = tk.Text(self.infoFrame3, width=39, height=9, bg="#181818")
+            self.specialRulesEntry = tk.Text(self.infoFrame3, width=39, height=9, bg="#181818", wrap=tk.WORD)
             self.specialRulesEntry.bind("<KeyRelease>", self.handle_wait)
             self.specialRulesEntry.grid(column=3, row=4, pady=5, rowspan=3, sticky=tk.NW)
             
@@ -1103,7 +1116,7 @@ try:
             self.iconNameLabel = ttk.Label(self.iconsFrame2, text="Icon Name\t")
             self.iconNameLabel.bind("<1>", lambda event: event.widget.focus_set())
             self.iconNameLabel.grid(column=0, row=4, padx=5, pady=5, sticky=tk.W)
-            self.iconNameEntry = tk.Text(self.iconsFrame2, width=20, height=1, bg="#181818")
+            self.iconNameEntry = tk.Text(self.iconsFrame2, width=20, height=1, bg="#181818", wrap=tk.WORD)
             self.iconNameEntry.grid(column=0, row=4, padx=(80, 25), pady=5, sticky=tk.W)
             
             self.iconView = tk.Label(self.iconsFrame2)
