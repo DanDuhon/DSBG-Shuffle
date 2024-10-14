@@ -5,7 +5,7 @@ try:
     from copy import deepcopy
     from datetime import datetime
     from json import dump, load
-    from os import path
+    from os import path, unlink
     from PIL import ImageTk, ImageDraw, UnidentifiedImageError
     from tkinter import filedialog, ttk
 
@@ -29,7 +29,7 @@ try:
             self.separator.pack(side=tk.TOP, anchor=tk.W, padx=5, pady=5, fill="x")
 
             self.customEncountersTreeviewFrame = ttk.Frame(self.customEncountersButtonFrame)
-            self.customEncountersTreeviewFrame.grid(row=0, column=0, rowspan=3, sticky=tk.W)
+            self.customEncountersTreeviewFrame.grid(row=0, column=0, rowspan=4, sticky=tk.W)
 
             self.scrollbarTreeviewCustomEncounters = ttk.Scrollbar(self.customEncountersTreeviewFrame)
             self.scrollbarTreeviewCustomEncounters.pack(side="right", fill="y")
@@ -38,13 +38,15 @@ try:
 
             self.newEncounterButton = ttk.Button(self.customEncountersButtonFrame, text="New Encounter", width=16, command=self.new_custom_encounter)
             self.newEncounterButton.grid(column=1, row=0, padx=5, pady=5, sticky=tk.NW)
+            self.saveButton = ttk.Button(self.customEncountersButtonFrame, text="Delete Encounter", width=16, command=self.delete_custom_encounter)
+            self.saveButton.grid(column=1, row=1, padx=5, pady=5, sticky=tk.W)
             self.saveButton = ttk.Button(self.customEncountersButtonFrame, text="Save Encounter", width=16, command=self.save_custom_encounter)
-            self.saveButton.grid(column=1, row=1, padx=5, pady=5, sticky=tk.SW)
+            self.saveButton.grid(column=1, row=3, padx=5, pady=5, sticky=tk.SW)
             
             self.encounterSaveLabelVal = tk.StringVar()
             self.encounterSaveLabel = ttk.Label(self.customEncountersButtonFrame, textvariable=self.encounterSaveLabelVal)
             self.encounterSaveLabel.bind("<1>", lambda event: event.widget.focus_set())
-            self.encounterSaveLabel.grid(column=1, row=2, padx=5, pady=5)
+            self.encounterSaveLabel.grid(column=1, row=2, padx=5, pady=5, sticky=tk.SW)
                 
             self.encounterBuilderScroll = EncounterBuilderScrollFrame(root=self.root, app=self.app, topFrame=self)
             self.encounterBuilderScroll.pack(side=tk.TOP, anchor=tk.W, expand=True, fill="both")
@@ -566,14 +568,61 @@ try:
                 raise
 
 
+        def delete_custom_encounter(self, event=None):
+            try:
+                log("Start of delete_custom_encounter")
+
+                tree = self.treeviewCustomEncounters
+
+                if not tree.selection() or tree.get_children(tree.selection()[0]):
+                    log("End of load_custom_encounter (invalid selection)")
+                    return
+                
+                sel = tree.selection()[0]
+
+                p = PopupWindow(self.root, labelText="Really delete " + tree.item(sel)["text"] + "?", yesButton=True, noButton=True)
+                self.root.wait_window(p)
+                if not p.answer:
+                    log("End of delete_custom_encounter (no delete)")
+                    return
+                
+                level = tree.parent(sel)
+                setItem = tree.parent(level)
+                tree.delete(sel)
+                if not tree.get_children(level):
+                    tree.delete(level)
+                if not tree.get_children(setItem):
+                    tree.delete(setItem)
+
+                fileName = self.customEncountersDict[sel]
+                unlink(baseFolder + "\\lib\\dsbg_shuffle_custom_encounters\\".replace("\\", pathSep) + "_".join(fileName) + ".json")
+                unlink(baseFolder + "\\lib\\dsbg_shuffle_custom_encounters\\".replace("\\", pathSep) + "_".join(fileName) + ".jpg")
+                del self.customEncountersDict[sel]
+
+                self.app.add_custom_encounters()
+                self.app.allExpansions = set([self.app.encounters[encounter]["expansion"] for encounter in self.app.encounters]) | set(["Phantoms"])
+                self.app.level4Expansions = set([self.app.encounters[encounter]["expansion"] for encounter in self.app.encounters if self.app.encounters[encounter]["level"] == 4])
+                self.app.availableExpansions = set(self.app.settings["availableExpansions"])
+                self.app.v2Expansions = (self.app.allExpansions - self.app.v1Expansions - self.app.level4Expansions)
+                self.app.encounterTab.set_encounter_list()
+                self.app.encounterTab.treeviewEncounters.pack_forget()
+                self.app.encounterTab.treeviewEncounters.destroy()
+                self.app.encounterTab.create_encounters_treeview()
+
+                log("End of delete_custom_encounter")
+            except Exception as e:
+                error_popup(self.root, e)
+                raise
+
+
         def load_custom_encounter(self, event=None):
             try:
                 log("Start of load_custom_encounter")
 
                 tree = event.widget
 
-                if tree.get_children(tree.selection()[0]):
-                    log("End of load_custom_encounter (parent selected)")
+                if not tree.selection() or tree.get_children(tree.selection()[0]):
+                    log("End of load_custom_encounter (invalid selection)")
                     return
 
                 e = self.encounterBuilderScroll
@@ -616,6 +665,7 @@ try:
                     if (not path.isfile(baseFolder + "\\lib\\dsbg_shuffle_custom_icon_images\\".replace("\\", pathSep) + lookup[0])
                         or lookup not in e.customIconsDict):
                         p = PopupWindow(self.root, labelText="Missing custom icon image " + lookup[0] + ".\nRemove custom icon and continue loading?", yesButton=True, noButton=True)
+                        self.root.wait_window(p)
                         if not p.answer:
                             self.new_custom_encounter()
                             log("End of load_custom_encounter (stopped loading from missing icon)")
@@ -1775,6 +1825,7 @@ try:
                         if (self.currentIcon, size) in self.customIconsDict:
                             self.app.set_bindings_buttons_menus(False)
                             p = PopupWindow(self.root, labelText="Replace existing icon image?", yesButton=True, noButton=True)
+                            self.root.wait_window(p)
                             self.app.set_bindings_buttons_menus(True)
                             if not p.answer:
                                 return
