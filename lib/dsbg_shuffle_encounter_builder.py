@@ -76,14 +76,6 @@ try:
                 
                 self.treeviewCustomEncounters.bind("<<TreeviewSelect>>", self.load_custom_encounter)
 
-                # Sort encounters by:
-                # 1. encounters that have more than just level 4 encounters first
-                # 2. New core sets first
-                # 3. V2 non-core sets
-                # 4. Original core set
-                # 5. Executioner Chariot at the top of the mega bosses list because it has non-level 4 encounters
-                # 6. By level
-                # 7. Alphabetically
                 encountersSorted = [encounter for encounter in sorted(self.app.customEncounters, key=lambda x: (
                     x[0].lower(),
                     x[2].lower(),
@@ -558,7 +550,9 @@ try:
                 encounterNames = sorted([tree.item(a)["text"].lower() for a in tree.get_children(levelIid)])
                 if eName not in encounterNames:
                     index = bisect_left(encounterNames, eName.lower())
-                    tree.insert(parent=levelIid, index=index, text=eName, tags=False, open=False)
+                    tree.insert(parent=levelIid, iid=setName + "_" + eName + "_" + level, index=index, text=eName, tags=False, open=False)
+
+                self.customEncountersDict[setName + "_" + eName + "_" + level] = (setName, eName, level)
 
                 self.encounterSaveLabelVal.set("Saved " + datetime.now().strftime("%H:%M:%S"))
 
