@@ -380,12 +380,15 @@ try:
                 # Custom Icons
                 for icon in [icon for icon in e.encounterIcons if e.encounterIcons[icon]["position"][0].get() and e.encounterIcons[icon]["position"][1].get()]:
                     lookup = e.encounterIcons[icon]["lookup"] if e.encounterIcons[icon]["lookup"] in e.customIconsDict else e.encounterIcons[icon]["lookup"]
-                    if "image" not in e.customIconsDict[lookup]:
-                        fileFullPath = baseFolder + "\\lib\\dsbg_shuffle_custom_icon_images\\".replace("\\", pathSep) + e.customIconsDict[lookup]["file"]
-                        i, p = self.app.create_image(fileFullPath, e.customIconsDict[lookup]["size"], 99, pathProvided=True, extensionProvided=True)
-                        e.customIconsDict[lookup]["image"] = i
-                        e.customIconsDict[lookup]["photoImage"] = p
-                    image = e.customIconsDict[lookup]["image"] if lookup in e.customIconsDict else self.app.iconsForCustom[e.encounterIcons[icon]["lookup"]]["image"]
+                    if lookup in e.customIconsDict:
+                        if "image" not in e.customIconsDict[lookup]:
+                            fileFullPath = baseFolder + "\\lib\\dsbg_shuffle_custom_icon_images\\".replace("\\", pathSep) + e.customIconsDict[lookup]["file"]
+                            i, p = self.app.create_image(fileFullPath, e.customIconsDict[lookup]["size"], 99, pathProvided=True, extensionProvided=True)
+                            e.customIconsDict[lookup]["image"] = i
+                            e.customIconsDict[lookup]["photoImage"] = p
+                        image = e.customIconsDict[lookup]["image"] if lookup in e.customIconsDict else self.app.iconsForCustom[e.encounterIcons[icon]["lookup"]]["image"]
+                    else:
+                        image = self.app.iconsForCustom[e.encounterIcons[icon]["lookup"]]["image"]
                     box = (int(e.encounterIcons[icon]["position"][0].get()), int(e.encounterIcons[icon]["position"][1].get()))
                     self.app.displayImage.paste(im=image, box=box, mask=image)
 
@@ -510,6 +513,8 @@ try:
                     log("End of save_custom_encounter (not saved)")
                     return
                 
+                self.apply_changes()
+                
                 setName = " ".join(self.customEncounter["set"].strip().replace("\n", " ").split())
                 eName = " ".join(self.customEncounter["encounterName"].strip().replace("\n", " ").split())
                 level = str(self.customEncounter["level"])
@@ -537,19 +542,19 @@ try:
                 self.app.encounterTab.create_encounters_treeview()
                 
                 tree = self.treeviewCustomEncounters
-                setNames = sorted([tree.item(a)["text"].lower() for a in tree.get_children() if tree.get_children(a)])
+                setNames = sorted([tree.item(a)["text"] for a in tree.get_children() if tree.get_children(a)])
                 if setName not in set(setNames):
-                    index = bisect_left(setNames, setName.lower())
+                    index = bisect_left(setNames, setName)
                     tree.insert(parent="", iid=setName, index=index, text=setName, tags=False, open=False)
                 setIid = [a for a in tree.get_children() if tree.item(a)["text"].strip() == setName][0]
-                levelNames = sorted([tree.item(a)["text"].lower() for a in tree.get_children(setIid)])
+                levelNames = sorted([tree.item(a)["text"] for a in tree.get_children(setIid)])
                 if "Level " + level not in set(levelNames):
-                    index = bisect_left(levelNames, "level " + level.lower())
+                    index = bisect_left(levelNames, "level " + level)
                     tree.insert(parent=setIid, iid=setName + "_" + level, index=index, text=("Level " + level), tags=False, open=False)
                 levelIid = [a for a in tree.get_children(setIid) if tree.item(a)["text"].strip() == "Level " + level][0]
-                encounterNames = sorted([tree.item(a)["text"].lower() for a in tree.get_children(levelIid)])
+                encounterNames = sorted([tree.item(a)["text"] for a in tree.get_children(levelIid)])
                 if eName not in encounterNames:
-                    index = bisect_left(encounterNames, eName.lower())
+                    index = bisect_left(encounterNames, eName)
                     tree.insert(parent=levelIid, iid=setName + "_" + eName + "_" + level, index=index, text=eName, tags=False, open=False)
 
                 self.customEncountersDict[setName + "_" + eName + "_" + level] = (setName, eName, level)
@@ -649,15 +654,16 @@ try:
                     log("End of load_custom_encounter (invalid file)")
                     return
                 
-                for icon in self.customEncounter["icons"]:
+                for icon in [icon for icon in self.customEncounter["icons"] if type(self.customEncounter["icons"][icon]["lookup"]) == list]:
                     self.customEncounter["icons"][icon]["lookup"] = tuple(self.customEncounter["icons"][icon]["lookup"])
                 
                 # Check to make sure that this encounter's icons exist.
                 keysToDelete = []
                 for icon in self.customEncounter["icons"]:
                     lookup = self.customEncounter["icons"][icon]["lookup"]
-                    if (not path.isfile(baseFolder + "\\lib\\dsbg_shuffle_custom_icon_images\\".replace("\\", pathSep) + lookup[0])
-                        or lookup not in e.customIconsDict):
+                    if ((not path.isfile(baseFolder + "\\lib\\dsbg_shuffle_custom_icon_images\\".replace("\\", pathSep) + lookup[0])
+                                or lookup not in e.customIconsDict)
+                            and lookup not in self.app.iconsForCustom):
                         p = PopupWindow(self.root, labelText="Missing custom icon image " + lookup[0] + ".\nRemove custom icon and continue loading?", yesButton=True, noButton=True)
                         self.root.wait_window(p)
                         if not p.answer:
@@ -667,7 +673,10 @@ try:
                         keysToDelete.append(icon)
                         continue
 
-                    e.add_icon_to_encounter(selection=e.customIconsTreeviewDict[e.customIconsDict[lookup]["label"]]["iid"])
+                    if lookup in self.app.iconsForCustom:
+                        e.add_icon_to_encounter(selection=lookup)
+                    else:
+                        e.add_icon_to_encounter(selection=e.customIconsTreeviewDict[e.customIconsDict[lookup]["label"]]["iid"])
                 
                 self.encounterSaveLabelVal.set("")
 
@@ -1255,12 +1264,12 @@ try:
             
             # Conditions
             self.treeviewCustomIcons.insert(parent="", index="end", iid="Conditions", values=("Conditions", ""), tags=False, open=False)
-            self.treeviewCustomIcons.insert(parent="Conditions", index="end", iid="bleed", values=("   Bleed", "Text"), image=self.app.iconsForCustom["Bleed"]["treeviewImage"], tags=False, open=False)
-            self.treeviewCustomIcons.insert(parent="Conditions", index="end", iid="calamity", values=("   Calamity", "Text"), image=self.app.iconsForCustom["Calamity"]["treeviewImage"], tags=False, open=False)
-            self.treeviewCustomIcons.insert(parent="Conditions", index="end", iid="corrosion", values=("   Corrosion", "Text"), image=self.app.iconsForCustom["Corrosion"]["treeviewImage"], tags=False, open=False)
-            self.treeviewCustomIcons.insert(parent="Conditions", index="end", iid="frostbite", values=("   Frostbite", "Text"), image=self.app.iconsForCustom["Frostbite"]["treeviewImage"], tags=False, open=False)
-            self.treeviewCustomIcons.insert(parent="Conditions", index="end", iid="poison", values=("   Poison", "Text"), image=self.app.iconsForCustom["Poison"]["treeviewImage"], tags=False, open=False)
-            self.treeviewCustomIcons.insert(parent="Conditions", index="end", iid="stagger", values=("   Stagger", "Text"), image=self.app.iconsForCustom["Stagger"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Conditions", index="end", iid="Bleed", values=("   Bleed", "Text"), image=self.app.iconsForCustom["Bleed"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Conditions", index="end", iid="Calamity", values=("   Calamity", "Text"), image=self.app.iconsForCustom["Calamity"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Conditions", index="end", iid="Corrosion", values=("   Corrosion", "Text"), image=self.app.iconsForCustom["Corrosion"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Conditions", index="end", iid="Frostbite", values=("   Frostbite", "Text"), image=self.app.iconsForCustom["Frostbite"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Conditions", index="end", iid="Poison", values=("   Poison", "Text"), image=self.app.iconsForCustom["Poison"]["treeviewImage"], tags=False, open=False)
+            self.treeviewCustomIcons.insert(parent="Conditions", index="end", iid="Stagger", values=("   Stagger", "Text"), image=self.app.iconsForCustom["Stagger"]["treeviewImage"], tags=False, open=False)
             
             # Effects
             self.treeviewCustomIcons.insert(parent="", index="end", iid="Effects", values=("Effects", ""), tags=False, open=False)
@@ -1887,8 +1896,8 @@ try:
                         log("End of add_icon_to_encounter (invalid selection)")
                         return
                     
+                if not selection:
                     selection = tree.selection()[0]
-                    
                 parent = tree.parent(selection)
                 values = tree.item(selection)["values"]
 
@@ -1929,10 +1938,11 @@ try:
 
                 if id in self.encounterIcons:
                     lookup = self.encounterIcons[id]["lookup"]
-                    position = self.topFrame.customEncounter["icons"][str(id)]["position"]
-                    self.encounterIcons[id]["position"][0].set(position[0])
-                    self.encounterIcons[id]["position"][1].set(position[1])
-                    self.encounterIcons[id]["noteVal"].set(self.topFrame.customEncounter["icons"][str(id)]["note"])
+                    if str(id) in self.topFrame.customEncounter["icons"]:
+                        position = self.topFrame.customEncounter["icons"][str(id)]["position"]
+                        self.encounterIcons[id]["position"][0].set(position[0])
+                        self.encounterIcons[id]["position"][1].set(position[1])
+                        self.encounterIcons[id]["noteVal"].set(self.topFrame.customEncounter["icons"][str(id)]["note"])
 
                 self.encounterIcons[id]["view"].bind("<1>", lambda event: event.widget.focus_set())
                 self.encounterIcons[id]["xLabel"].bind("<1>", lambda event: event.widget.focus_set())
@@ -1976,12 +1986,13 @@ try:
                 self.encounterIcons[id]["lock"].destroy()
                 self.encounterIcons[id]["remove"].destroy()
 
-                self.iconsFrame4.grid_forget()
-                self.iconsFrame4.destroy()
-                self.iconsFrame4 = ttk.Frame(self.interior)
-                self.iconsFrame4.pack(side=tk.TOP, anchor=tk.W, padx=5, pady=5, fill="x")
-
                 del self.encounterIcons[id]
+
+                if not self.encounterIcons:
+                    self.iconsFrame4.grid_forget()
+                    self.iconsFrame4.destroy()
+                    self.iconsFrame4 = ttk.Frame(self.interior)
+                    self.iconsFrame4.pack(side=tk.TOP, anchor=tk.W, padx=5, pady=5, fill="x")
 
                 self.topFrame.apply_changes()
 
