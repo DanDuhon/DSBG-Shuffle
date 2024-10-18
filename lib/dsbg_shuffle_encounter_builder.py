@@ -1161,7 +1161,7 @@ try:
             
             self.treeviewCustomIcons.bind("<<TreeviewSelect>>", self.change_icon)
             
-            self.addToEncounterButton = ttk.Button(self.iconsFrame2, text="Add to Encounter", width=16, command=self.add_icon_to_encounter)
+            self.addToEncounterButton = ttk.Button(self.iconsFrame2, text="Add to Encounter", width=16, command=lambda: self.add_icon_to_encounter(buttonSource=True))
             self.addToEncounterButton.grid(column=2, row=0, padx=5, pady=5, sticky=tk.NW)
             self.deleteIconButton = ttk.Button(self.iconsFrame2, text="Delete Icon", width=16, command=self.delete_custom_icon)
             self.deleteIconButton.grid(column=2, row=1, padx=5, pady=5, sticky=tk.W)
@@ -1885,13 +1885,13 @@ try:
                 raise
 
 
-        def add_icon_to_encounter(self, event=None, selection=None):
+        def add_icon_to_encounter(self, event=None, selection=None, buttonSource=False):
             try:
                 log("Start of add_icon_to_encounter")
                 
                 tree = self.treeviewCustomIcons
 
-                if event:
+                if buttonSource:
                     if not tree.selection() or tree.get_children(tree.selection()[0]):
                         log("End of add_icon_to_encounter (invalid selection)")
                         return
@@ -1904,7 +1904,7 @@ try:
                 if not self.encounterIcons:
                     id = 0
                 else:
-                    id = max(self.encounterIcons.keys()) + 3
+                    id = max(self.encounterIcons.keys()) + 2
 
                 self.encounterIcons[id] = {}
 
@@ -1922,8 +1922,8 @@ try:
                     "view": tk.Label(self.iconsFrame4),
                     "viewImage": image,
                     "noteVal": tk.StringVar(),
-                    "xLabel": ttk.Label(self.iconsFrame4, text="x (0-400):"),
-                    "yLabel": ttk.Label(self.iconsFrame4, text="y (0-685):"),
+                    "xLabel": ttk.Label(self.iconsFrame4, text="x:"),
+                    "yLabel": ttk.Label(self.iconsFrame4, text="y:"),
                     "position": (tk.StringVar(), tk.StringVar()),
                     "lockVal": tk.IntVar(),
                     "remove": ttk.Button(self.iconsFrame4, text="Remove Icon", width=16, command=lambda: self.remove_icon_from_encounter(id))
@@ -1944,20 +1944,26 @@ try:
                         self.encounterIcons[id]["position"][1].set(position[1])
                         self.encounterIcons[id]["noteVal"].set(self.topFrame.customEncounter["icons"][str(id)]["note"])
 
+                if buttonSource:
+                    self.encounterIcons[id]["position"][0].set(200)
+                    self.encounterIcons[id]["position"][1].set(150)
+
                 self.encounterIcons[id]["view"].bind("<1>", lambda event: event.widget.focus_set())
                 self.encounterIcons[id]["xLabel"].bind("<1>", lambda event: event.widget.focus_set())
                 self.encounterIcons[id]["xEntry"].bind("<KeyRelease>", self.handle_wait)
                 self.encounterIcons[id]["yLabel"].bind("<1>", lambda event: event.widget.focus_set())
                 self.encounterIcons[id]["yEntry"].bind("<KeyRelease>", self.handle_wait)
                 self.encounterIcons[id]["lock"].bind("<1>", lambda event: self.toggle_position_switches(event=event, id=id))
-                self.encounterIcons[id]["view"].grid(column=0, row=id, padx=5, pady=(20, 5), sticky=tk.W, rowspan=2)
-                self.encounterIcons[id]["note"].grid(column=0, row=id+2, padx=5, pady=5, sticky=tk.W)
-                self.encounterIcons[id]["xLabel"].grid(column=1, row=id, padx=5, pady=(20, 6), sticky=tk.W)
-                self.encounterIcons[id]["xEntry"].grid(column=2, row=id, padx=5, pady=(20, 5), sticky=tk.W)
-                self.encounterIcons[id]["yLabel"].grid(column=1, row=id+1, padx=5, sticky=tk.W)
-                self.encounterIcons[id]["yEntry"].grid(column=2, row=id+1, padx=5, pady=(3, 0), sticky=tk.W)
-                self.encounterIcons[id]["lock"].grid(column=1, row=id+2, padx=5, pady=5, sticky=tk.W, columnspan=2)
-                self.encounterIcons[id]["remove"].grid(column=4, row=id, padx=11, pady=(20, 5), sticky=tk.E, rowspan=3)
+                self.encounterIcons[id]["note"].grid(column=0, row=id, padx=5, pady=(3, 0), sticky=tk.W, rowspan=2)
+                self.encounterIcons[id]["view"].grid(column=1, row=id, padx=5, pady=(14, 5), sticky=tk.W, rowspan=2)
+                self.encounterIcons[id]["xLabel"].grid(column=2, row=id, padx=5, pady=(4, 0), sticky=tk.W)
+                self.encounterIcons[id]["xEntry"].grid(column=3, row=id, padx=5, pady=(4, 0), sticky=tk.W)
+                self.encounterIcons[id]["yLabel"].grid(column=2, row=id+1, padx=5, sticky=tk.W)
+                self.encounterIcons[id]["yEntry"].grid(column=3, row=id+1, padx=5, sticky=tk.W)
+                self.encounterIcons[id]["lock"].grid(column=4, row=id, padx=5, pady=(12, 5), sticky=tk.W, rowspan=2)
+                self.encounterIcons[id]["remove"].grid(column=5, row=id, padx=11, pady=(9, 5), sticky=tk.E, rowspan=2)
+
+                self.topFrame.apply_changes()
 
                 log("End of add_icon_to_encounter")
             except Exception as e:
