@@ -1947,6 +1947,10 @@ try:
                 if buttonSource:
                     self.encounterIcons[id]["position"][0].set(200)
                     self.encounterIcons[id]["position"][1].set(150)
+                    if parent == "Custom":
+                        self.encounterIcons[id]["noteVal"].set(label)
+                    else:
+                        self.encounterIcons[id]["noteVal"].set(lookup)
 
                 self.encounterIcons[id]["view"].bind("<1>", lambda event: event.widget.focus_set())
                 self.encounterIcons[id]["xLabel"].bind("<1>", lambda event: event.widget.focus_set())
@@ -1963,7 +1967,8 @@ try:
                 self.encounterIcons[id]["lock"].grid(column=4, row=id, padx=5, pady=(12, 5), sticky=tk.W, rowspan=2)
                 self.encounterIcons[id]["remove"].grid(column=5, row=id, padx=11, pady=(9, 5), sticky=tk.E, rowspan=2)
 
-                self.topFrame.apply_changes()
+                if buttonSource:
+                    self.topFrame.apply_changes()
 
                 log("End of add_icon_to_encounter")
             except Exception as e:
@@ -1993,6 +1998,7 @@ try:
                 self.encounterIcons[id]["remove"].destroy()
 
                 del self.encounterIcons[id]
+                del self.topFrame.customEncounter["icons"][str(id)]
 
                 if not self.encounterIcons:
                     self.iconsFrame4.grid_forget()
