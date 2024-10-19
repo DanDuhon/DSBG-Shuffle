@@ -1559,6 +1559,7 @@ try:
                         self.tileSelections["2"]["startingNodes"]["widgets"]["Left"].grid_forget()
                         self.tileSelections["2"]["startingNodes"]["widgets"]["Right"].grid_forget()
                 elif int(tiles) == 1:
+                    self.tileSelections["2"]["enemiesLabel"].grid_forget()
                     self.tileSelections["2"]["1"]["enemies"]["1"]["widget"].grid_forget()
                     self.tileSelections["2"]["1"]["enemies"]["2"]["widget"].grid_forget()
                     self.tileSelections["2"]["1"]["enemies"]["3"]["widget"].grid_forget()
@@ -1603,6 +1604,7 @@ try:
                         self.tileSelections["3"]["startingNodes"]["widgets"]["Left"].grid_forget()
                         self.tileSelections["3"]["startingNodes"]["widgets"]["Right"].grid_forget()
                 else:
+                    self.tileSelections["3"]["enemiesLabel"].grid_forget()
                     self.tileSelections["3"]["1"]["enemies"]["1"]["widget"].grid_forget()
                     self.tileSelections["3"]["1"]["enemies"]["2"]["widget"].grid_forget()
                     self.tileSelections["3"]["1"]["enemies"]["3"]["widget"].grid_forget()
