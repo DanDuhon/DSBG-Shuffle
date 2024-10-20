@@ -195,7 +195,7 @@ try:
                 raise
 
             
-        def apply_changes(self, event=None):
+        def apply_changes(self, event=None, enemySource=False, terrainSource=False):
             try:
                 if not hasattr(self, "encounterBuilderScroll") or not hasattr(self.app, "encounterTab") or self.app.notebook.tab(self.app.notebook.select(), "text") != "Encounter Builder":
                     return
@@ -222,6 +222,11 @@ try:
                     return
 
                 imageWithText = ImageDraw.Draw(self.app.displayImage)
+
+                if event and enemySource:
+                    event.widget["values"] = e.eNames
+                elif event and terrainSource:
+                    event.widget["values"] = e.terrainNames
 
                 # Empty Set Icon
                 if e.emptySetIconVal.get() == 1:
@@ -1092,7 +1097,7 @@ try:
                         self.tileSelections[str(tile)][str(row)]["enemies"][str(x)]["widget"] = ttk.Combobox(frame, height=int(28 * (self.root.winfo_screenheight() / 1080)), width=23, values=self.eNames, textvariable=self.tileSelections[str(tile)][str(row)]["enemies"][str(x)]["value"])
                         self.tileSelections[str(tile)][str(row)]["enemies"][str(x)]["widget"].set("")
                         self.tileSelections[str(tile)][str(row)]["enemies"][str(x)]["widget"].bind("<KeyRelease>", self.search_enemy_combobox)
-                        self.tileSelections[str(tile)][str(row)]["enemies"][str(x)]["widget"].bind("<<ComboboxSelected>>", self.topFrame.apply_changes)
+                        self.tileSelections[str(tile)][str(row)]["enemies"][str(x)]["widget"].bind("<<ComboboxSelected>>", lambda event, x=True: self.topFrame.apply_changes(event=event, enemySource=x))
                         self.tileSelections[str(tile)][str(row)]["enemies"][str(x)]["widget"].unbind_class("TCombobox", "<MouseWheel>")
                         self.tileSelections[str(tile)][str(row)]["enemies"][str(x)]["widget"].unbind_class("TCombobox", "<ButtonPress-4>")
                         self.tileSelections[str(tile)][str(row)]["enemies"][str(x)]["widget"].unbind_class("TCombobox", "<ButtonPress-5>")
@@ -1100,7 +1105,7 @@ try:
                     self.tileSelections[str(tile)][str(row)]["terrain"]["widget"] = ttk.Combobox(frame, height=int(28 * (self.root.winfo_screenheight() / 1080)) if len(self.terrainNames) > int(28 * (self.root.winfo_screenheight() / 1080)) else len(self.terrainNames), width=23, values=self.terrainNames, textvariable=self.tileSelections[str(tile)][str(row)]["terrain"]["value"])
                     self.tileSelections[str(tile)][str(row)]["terrain"]["widget"].set("")
                     self.tileSelections[str(tile)][str(row)]["terrain"]["widget"].bind("<KeyRelease>", self.search_terrain_combobox)
-                    self.tileSelections[str(tile)][str(row)]["terrain"]["widget"].bind("<<ComboboxSelected>>", self.topFrame.apply_changes)
+                    self.tileSelections[str(tile)][str(row)]["terrain"]["widget"].bind("<<ComboboxSelected>>", lambda event, x=True: self.topFrame.apply_changes(event=event, terrainSource=x))
                     self.tileSelections[str(tile)][str(row)]["terrain"]["widget"].unbind_class("TCombobox", "<MouseWheel>")
                     self.tileSelections[str(tile)][str(row)]["terrain"]["widget"].unbind_class("TCombobox", "<ButtonPress-4>")
                     self.tileSelections[str(tile)][str(row)]["terrain"]["widget"].unbind_class("TCombobox", "<ButtonPress-5>")
@@ -1367,7 +1372,7 @@ try:
 
                 w = event.widget
                 val = w.get()
-                if val == "" or "--" in val:
+                if val == "" or "--" in val or val in set(self.eNames):
                     w["values"] = self.eNames
                 else:
                     w["values"] = sorted(list(set([e for e in self.eNames if val.lower() in e.lower() or (e in self.eNamesDict and val.lower() in self.eNamesDict[e].lower())])))
@@ -1384,7 +1389,7 @@ try:
 
                 w = event.widget
                 val = w.get()
-                if val == "":
+                if val == "" or val in set(self.terrainNames):
                     w["values"] = self.terrainNames
                 else:
                     w["values"] = [e for e in self.terrainNames if val.lower() in e.lower()]
@@ -1481,19 +1486,6 @@ try:
                         self.tileSelections["1"]["4"]["terrain"]["widget"].grid(column=0, row=10, padx=5, pady=5, sticky=tk.W)
                         self.tileSelections["1"]["startingNodes"]["widgets"]["toggle"].grid(column=1, row=7, padx=5, pady=5)
                         self.tileSelections["1"]["traps"]["widget"].grid(column=1, row=8, padx=(45, 5), pady=5, sticky=tk.W)
-
-                    if self.tileSelections["1"]["startingNodes"]["tileValue"].get() and not self.tileSelections["1"]["startingNodesLabel"].winfo_viewable():
-                        self.tileSelections["1"]["startingNodesLabel"].grid(column=2, row=7, padx=5, pady=4, sticky=tk.W)
-                        self.tileSelections["1"]["startingNodes"]["widgets"]["Up"].grid(column=2, row=8, padx=5, sticky=tk.W)
-                        self.tileSelections["1"]["startingNodes"]["widgets"]["Down"].grid(column=2, row=8, padx=(100, 5), sticky=tk.E)
-                        self.tileSelections["1"]["startingNodes"]["widgets"]["Left"].grid(column=2, row=9, padx=5, sticky=tk.W)
-                        self.tileSelections["1"]["startingNodes"]["widgets"]["Right"].grid(column=2, row=9, padx=(100, 8), sticky=tk.E)
-                    else:
-                        self.tileSelections["1"]["startingNodesLabel"].grid_forget()
-                        self.tileSelections["1"]["startingNodes"]["widgets"]["Up"].grid_forget()
-                        self.tileSelections["1"]["startingNodes"]["widgets"]["Down"].grid_forget()
-                        self.tileSelections["1"]["startingNodes"]["widgets"]["Left"].grid_forget()
-                        self.tileSelections["1"]["startingNodes"]["widgets"]["Right"].grid_forget()
                 else:
                     self.tileSelections["1"]["3"]["enemies"]["1"]["widget"].grid_forget()
                     self.tileSelections["1"]["3"]["enemies"]["2"]["widget"].grid_forget()
@@ -1513,24 +1505,6 @@ try:
                     self.tileSelections["1"]["2"]["terrain"]["widget"].grid(column=0, row=6, padx=5, pady=5, sticky=tk.W)
                     self.tileSelections["1"]["startingNodes"]["widgets"]["toggle"].grid(column=1, row=5, padx=5, pady=5)
                     self.tileSelections["1"]["traps"]["widget"].grid(column=1, row=6, padx=(45, 5), pady=5, sticky=tk.W)
-
-                    if self.tileSelections["1"]["startingNodes"]["tileValue"].get():
-                        self.tileSelections["1"]["startingNodesLabel"].grid_forget()
-                        self.tileSelections["1"]["startingNodes"]["widgets"]["Up"].grid_forget()
-                        self.tileSelections["1"]["startingNodes"]["widgets"]["Down"].grid_forget()
-                        self.tileSelections["1"]["startingNodes"]["widgets"]["Left"].grid_forget()
-                        self.tileSelections["1"]["startingNodes"]["widgets"]["Right"].grid_forget()
-                        self.tileSelections["1"]["startingNodesLabel"].grid(column=2, row=4, padx=5, pady=4, sticky=tk.W)
-                        self.tileSelections["1"]["startingNodes"]["widgets"]["Up"].grid(column=2, row=5, padx=5, sticky=tk.W)
-                        self.tileSelections["1"]["startingNodes"]["widgets"]["Down"].grid(column=2, row=5, padx=(100, 5), sticky=tk.E)
-                        self.tileSelections["1"]["startingNodes"]["widgets"]["Left"].grid(column=2, row=6, padx=5, sticky=tk.W)
-                        self.tileSelections["1"]["startingNodes"]["widgets"]["Right"].grid(column=2, row=6, padx=(100, 8), sticky=tk.E)
-                    else:
-                        self.tileSelections["1"]["startingNodesLabel"].grid_forget()
-                        self.tileSelections["1"]["startingNodes"]["widgets"]["Up"].grid_forget()
-                        self.tileSelections["1"]["startingNodes"]["widgets"]["Down"].grid_forget()
-                        self.tileSelections["1"]["startingNodes"]["widgets"]["Left"].grid_forget()
-                        self.tileSelections["1"]["startingNodes"]["widgets"]["Right"].grid_forget()
                     
                 if int(tiles) > 1 and not self.tileSelections["2"]["terrainLabel"].winfo_viewable():
                     self.tileSelections["2"]["enemiesLabel"].grid(column=0, row=1, padx=5, pady=5, sticky=tk.W)
@@ -1545,19 +1519,6 @@ try:
                     self.tileSelections["2"]["2"]["terrain"]["widget"].grid(column=0, row=6, padx=5, pady=5, sticky=tk.W)
                     self.tileSelections["2"]["startingNodes"]["widgets"]["toggle"].grid(column=1, row=5, padx=5, pady=5)
                     self.tileSelections["2"]["traps"]["widget"].grid(column=1, row=6, padx=(45, 5), pady=5, sticky=tk.W)
-
-                    if self.tileSelections["2"]["startingNodes"]["tileValue"].get():
-                        self.tileSelections["2"]["startingNodesLabel"].grid(column=2, row=4, padx=5, pady=4, sticky=tk.W)
-                        self.tileSelections["2"]["startingNodes"]["widgets"]["Up"].grid(column=2, row=5, padx=5, sticky=tk.W)
-                        self.tileSelections["2"]["startingNodes"]["widgets"]["Down"].grid(column=2, row=5, padx=(100, 5), sticky=tk.E)
-                        self.tileSelections["2"]["startingNodes"]["widgets"]["Left"].grid(column=2, row=6, padx=5, sticky=tk.W)
-                        self.tileSelections["2"]["startingNodes"]["widgets"]["Right"].grid(column=2, row=6, padx=(100, 8), sticky=tk.E)
-                    else:
-                        self.tileSelections["2"]["startingNodesLabel"].grid_forget()
-                        self.tileSelections["2"]["startingNodes"]["widgets"]["Up"].grid_forget()
-                        self.tileSelections["2"]["startingNodes"]["widgets"]["Down"].grid_forget()
-                        self.tileSelections["2"]["startingNodes"]["widgets"]["Left"].grid_forget()
-                        self.tileSelections["2"]["startingNodes"]["widgets"]["Right"].grid_forget()
                 elif int(tiles) == 1:
                     self.tileSelections["2"]["enemiesLabel"].grid_forget()
                     self.tileSelections["2"]["1"]["enemies"]["1"]["widget"].grid_forget()
@@ -1590,20 +1551,7 @@ try:
                     self.tileSelections["3"]["2"]["terrain"]["widget"].grid(column=0, row=6, padx=5, pady=5, sticky=tk.W)
                     self.tileSelections["3"]["startingNodes"]["widgets"]["toggle"].grid(column=1, row=5, padx=5, pady=5)
                     self.tileSelections["3"]["traps"]["widget"].grid(column=1, row=6, padx=(45, 5), pady=5, sticky=tk.W)
-
-                    if self.tileSelections["3"]["startingNodes"]["tileValue"].get():
-                        self.tileSelections["3"]["startingNodesLabel"].grid(column=2, row=4, padx=5, pady=4, sticky=tk.W)
-                        self.tileSelections["3"]["startingNodes"]["widgets"]["Up"].grid(column=2, row=5, padx=5, sticky=tk.W)
-                        self.tileSelections["3"]["startingNodes"]["widgets"]["Down"].grid(column=2, row=5, padx=(100, 5), sticky=tk.E)
-                        self.tileSelections["3"]["startingNodes"]["widgets"]["Left"].grid(column=2, row=6, padx=5, sticky=tk.W)
-                        self.tileSelections["3"]["startingNodes"]["widgets"]["Right"].grid(column=2, row=6, padx=(100, 8), sticky=tk.E)
-                    else:
-                        self.tileSelections["3"]["startingNodesLabel"].grid_forget()
-                        self.tileSelections["3"]["startingNodes"]["widgets"]["Up"].grid_forget()
-                        self.tileSelections["3"]["startingNodes"]["widgets"]["Down"].grid_forget()
-                        self.tileSelections["3"]["startingNodes"]["widgets"]["Left"].grid_forget()
-                        self.tileSelections["3"]["startingNodes"]["widgets"]["Right"].grid_forget()
-                else:
+                elif int(tiles) < 3:
                     self.tileSelections["3"]["enemiesLabel"].grid_forget()
                     self.tileSelections["3"]["1"]["enemies"]["1"]["widget"].grid_forget()
                     self.tileSelections["3"]["1"]["enemies"]["2"]["widget"].grid_forget()
@@ -1617,6 +1565,64 @@ try:
                     self.tileSelections["3"]["traps"]["widget"].grid_forget()
                     self.tileSelections["3"]["startingNodesLabel"].grid_forget()
                     self.tileSelections["3"]["startingNodes"]["widgets"]["toggle"].grid_forget()
+                    self.tileSelections["3"]["startingNodes"]["widgets"]["Up"].grid_forget()
+                    self.tileSelections["3"]["startingNodes"]["widgets"]["Down"].grid_forget()
+                    self.tileSelections["3"]["startingNodes"]["widgets"]["Left"].grid_forget()
+                    self.tileSelections["3"]["startingNodes"]["widgets"]["Right"].grid_forget()
+
+                if layout == "1 Tile 4x4":
+                    if self.tileSelections["1"]["startingNodes"]["tileValue"].get() and not self.tileSelections["1"]["startingNodesLabel"].winfo_viewable():
+                        self.tileSelections["1"]["startingNodesLabel"].grid(column=2, row=6, padx=5, pady=4, sticky=tk.W)
+                        self.tileSelections["1"]["startingNodes"]["widgets"]["Up"].grid(column=2, row=7, padx=5, sticky=tk.W)
+                        self.tileSelections["1"]["startingNodes"]["widgets"]["Down"].grid(column=2, row=7, padx=(100, 5), sticky=tk.E)
+                        self.tileSelections["1"]["startingNodes"]["widgets"]["Left"].grid(column=2, row=8, padx=5, sticky=tk.W)
+                        self.tileSelections["1"]["startingNodes"]["widgets"]["Right"].grid(column=2, row=8, padx=(100, 8), sticky=tk.E)
+                    else:
+                        self.tileSelections["1"]["startingNodesLabel"].grid_forget()
+                        self.tileSelections["1"]["startingNodes"]["widgets"]["Up"].grid_forget()
+                        self.tileSelections["1"]["startingNodes"]["widgets"]["Down"].grid_forget()
+                        self.tileSelections["1"]["startingNodes"]["widgets"]["Left"].grid_forget()
+                        self.tileSelections["1"]["startingNodes"]["widgets"]["Right"].grid_forget()
+                else:
+                    if self.tileSelections["1"]["startingNodes"]["tileValue"].get():
+                        self.tileSelections["1"]["startingNodesLabel"].grid_forget()
+                        self.tileSelections["1"]["startingNodes"]["widgets"]["Up"].grid_forget()
+                        self.tileSelections["1"]["startingNodes"]["widgets"]["Down"].grid_forget()
+                        self.tileSelections["1"]["startingNodes"]["widgets"]["Left"].grid_forget()
+                        self.tileSelections["1"]["startingNodes"]["widgets"]["Right"].grid_forget()
+                        self.tileSelections["1"]["startingNodesLabel"].grid(column=2, row=4, padx=5, pady=4, sticky=tk.W)
+                        self.tileSelections["1"]["startingNodes"]["widgets"]["Up"].grid(column=2, row=5, padx=5, sticky=tk.W)
+                        self.tileSelections["1"]["startingNodes"]["widgets"]["Down"].grid(column=2, row=5, padx=(100, 5), sticky=tk.E)
+                        self.tileSelections["1"]["startingNodes"]["widgets"]["Left"].grid(column=2, row=6, padx=5, sticky=tk.W)
+                        self.tileSelections["1"]["startingNodes"]["widgets"]["Right"].grid(column=2, row=6, padx=(100, 8), sticky=tk.E)
+                    else:
+                        self.tileSelections["1"]["startingNodesLabel"].grid_forget()
+                        self.tileSelections["1"]["startingNodes"]["widgets"]["Up"].grid_forget()
+                        self.tileSelections["1"]["startingNodes"]["widgets"]["Down"].grid_forget()
+                        self.tileSelections["1"]["startingNodes"]["widgets"]["Left"].grid_forget()
+                        self.tileSelections["1"]["startingNodes"]["widgets"]["Right"].grid_forget()
+
+                if self.tileSelections["2"]["startingNodes"]["tileValue"].get():
+                    self.tileSelections["2"]["startingNodesLabel"].grid(column=2, row=4, padx=5, pady=4, sticky=tk.W)
+                    self.tileSelections["2"]["startingNodes"]["widgets"]["Up"].grid(column=2, row=5, padx=5, sticky=tk.W)
+                    self.tileSelections["2"]["startingNodes"]["widgets"]["Down"].grid(column=2, row=5, padx=(100, 5), sticky=tk.E)
+                    self.tileSelections["2"]["startingNodes"]["widgets"]["Left"].grid(column=2, row=6, padx=5, sticky=tk.W)
+                    self.tileSelections["2"]["startingNodes"]["widgets"]["Right"].grid(column=2, row=6, padx=(100, 8), sticky=tk.E)
+                else:
+                    self.tileSelections["2"]["startingNodesLabel"].grid_forget()
+                    self.tileSelections["2"]["startingNodes"]["widgets"]["Up"].grid_forget()
+                    self.tileSelections["2"]["startingNodes"]["widgets"]["Down"].grid_forget()
+                    self.tileSelections["2"]["startingNodes"]["widgets"]["Left"].grid_forget()
+                    self.tileSelections["2"]["startingNodes"]["widgets"]["Right"].grid_forget()
+
+                if self.tileSelections["3"]["startingNodes"]["tileValue"].get():
+                    self.tileSelections["3"]["startingNodesLabel"].grid(column=2, row=4, padx=5, pady=4, sticky=tk.W)
+                    self.tileSelections["3"]["startingNodes"]["widgets"]["Up"].grid(column=2, row=5, padx=5, sticky=tk.W)
+                    self.tileSelections["3"]["startingNodes"]["widgets"]["Down"].grid(column=2, row=5, padx=(100, 5), sticky=tk.E)
+                    self.tileSelections["3"]["startingNodes"]["widgets"]["Left"].grid(column=2, row=6, padx=5, sticky=tk.W)
+                    self.tileSelections["3"]["startingNodes"]["widgets"]["Right"].grid(column=2, row=6, padx=(100, 8), sticky=tk.E)
+                else:
+                    self.tileSelections["3"]["startingNodesLabel"].grid_forget()
                     self.tileSelections["3"]["startingNodes"]["widgets"]["Up"].grid_forget()
                     self.tileSelections["3"]["startingNodes"]["widgets"]["Down"].grid_forget()
                     self.tileSelections["3"]["startingNodes"]["widgets"]["Left"].grid_forget()
