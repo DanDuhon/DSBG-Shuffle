@@ -53,7 +53,11 @@ try:
                 self.allEnemies = {enemy: {} for enemy in enemiesDict}
 
                 root.withdraw()
-                self.progress = PopupWindow(root, labelText="Starting up...", progressBar=True, progressMax=1050 + (len(list(enemiesDict.keys()) + list(bosses.keys()))*3) + len([t for t in treasures if not treasures[t]["character"] or treasures[t]["character"] in self.charactersActive]), loadingImage=True)
+                progressMax = len(list(enemiesDict.keys()) + list(bosses.keys())) * 3
+                progressMax += 1050
+                if self.settings["treasureSwapOption"] in {"Similar Soul Cost", "Tier Based"}:
+                    progressMax += len([t for t in treasures if not treasures[t]["character"] or treasures[t]["character"] in self.charactersActive])
+                self.progress = PopupWindow(root, labelText="Starting up...", progressBar=True, progressMax=progressMax, loadingImage=True)
 
                 # Delete images from staging
                 folder = baseFolder + "\\lib\\dsbg_shuffle_image_staging".replace("\\", pathSep)

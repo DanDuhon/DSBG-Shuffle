@@ -5,7 +5,7 @@ try:
     from json import load, dump
 
     from dsbg_shuffle_characters import soulCost
-    from dsbg_shuffle_utility import VerticalScrolledFrame, CreateToolTip, center, log, baseFolder, pathSep
+    from dsbg_shuffle_utility import VerticalScrolledFrame, center, log, baseFolder, pathSep
 
 
     class SettingsWindow(object):
@@ -268,21 +268,29 @@ try:
             try:
                 log("Start of create_treasure_swap_pane")
 
-                self.treasureSwapOptions = {
-                    "Similar Soul Cost\n    Rewards an item of the same type as the\n    original that also costs about the same\n    souls in leveling stats in order to equip it.": {"button": None, "value": tk.StringVar(value="Similar Soul Cost")},
-                    "Tier Based\n    Splits treasure into equal tiers based on\n    soul cost to equip and rewards an item\n    in the same tier as the original reward.": {"button": None, "value": tk.StringVar(value="Tier Based")},
-                    "Generic Treasure\n    Changes all specific item rewards to a\n    number of draws equal to the encounter\n    level.": {"button": None, "value": tk.StringVar(value="Generic Treasure")},
-                    "Original\n    Display the original reward on the card only.": {"button": None, "value": tk.StringVar(value="Original")}
+                treasureSwapText = {
+                    "Similar Soul Cost": "Similar Soul Cost\n    Rewards an item of the same type as the\n    original that also costs about the same\n    souls in leveling stats in order to equip it.",
+                    "Tier Based": "Tier Based\n    Splits treasure into equal tiers based on\n    soul cost to equip and rewards an item\n    in the same tier as the original reward.",
+                    "Generic Treasure": "Generic Treasure\n    Changes all specific item rewards to a\n    number of draws equal to the encounter\n    level.",
+                    "Original": "Original\n    Display the original reward on the card only."
                 }
 
-                self.treasureSwapOption = tk.StringVar(value=self.settings["treasureSwapOption"])
+                self.treasureSwapOptions = {
+                    "Similar Soul Cost": {"button": None, "value": tk.StringVar(value="Similar Soul Cost")},
+                    "Tier Based": {"button": None, "value": tk.StringVar(value="Tier Based")},
+                    "Generic Treasure": {"button": None, "value": tk.StringVar(value="Generic Treasure")},
+                    "Original": {"button": None, "value": tk.StringVar(value="Original")}
+                }
+
+                self.treasureSwapOption = tk.StringVar()
                 self.treasureSwapLabelFrame = ttk.LabelFrame(parent, text="Treasure Swap Options", padding=(20, 10))
                 self.treasureSwapLabelFrame.grid(row=1, column=4, padx=(20, 10), pady=(20, 10), sticky="nsew", rowspan=2)
                 self.treasureSwapFrame = ttk.Frame(self.treasureSwapLabelFrame)
                 self.treasureSwapFrame.pack(fill=tk.BOTH, expand=True)
                 for i, option in enumerate(self.treasureSwapOptions):
-                    self.treasureSwapOptions[option]["button"] = ttk.Radiobutton(self.treasureSwapFrame, text=option, variable=self.treasureSwapOption, value=option)
+                    self.treasureSwapOptions[option]["button"] = ttk.Radiobutton(self.treasureSwapFrame, text=treasureSwapText[option], variable=self.treasureSwapOption, value=option)
                     self.treasureSwapOptions[option]["button"].grid(row=i, column=0, padx=5, pady=10, sticky="nsew")
+                self.treasureSwapOption.set(self.settings["treasureSwapOption"])
 
                 log("End of create_treasure_swap_pane")
             except Exception as e:
