@@ -223,8 +223,6 @@ try:
             self.yPositionEntry.grid(column=4, row=4, padx=5, pady=5, sticky=tk.E)
             self.xPositionLabel = ttk.Label(self.iconsFrame, text="x: 0-400\ty: 0-685")
             self.xPositionLabel.grid(column=5, row=4, padx=5, pady=5, sticky=tk.W)
-            # self.iconView = tk.Label(self.iconsFrame, width=26, height=2)
-            # self.iconView.grid(column=6, row=4, pady=5, rowspan=2, sticky=tk.NSEW)
 
             self.eNames = [""] + enemyNames
             self.terrainNames = [
@@ -1102,8 +1100,6 @@ try:
                     errors.append("size")
 
                 if errors:
-                    # self.iconView.config(image="")
-                    # self.iconView.image=None
                     errorText = "Required:\n" + ", ".join(errors)
                     self.iconImageErrorsVal.set(errorText)
                     return
@@ -1139,9 +1135,6 @@ try:
                 self.currentIcon["file"] = file
                 self.currentIcon["image"] = i
                 self.currentIcon["photoImage"] = p
-
-                # self.iconView.config(image=p)
-                # self.iconView.image=p
 
                 log("\tEnd of choose_icon_image")
             except UnidentifiedImageError:
