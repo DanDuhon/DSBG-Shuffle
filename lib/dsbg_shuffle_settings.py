@@ -239,11 +239,81 @@ try:
                 self.invadersLabel = ttk.Label(self.invadersFrame, text="Max invaders allowed", justify="center", font=("-size", 12))
                 self.invadersLabel.grid(row=0, column=0, padx=5, pady=10, sticky="nsew")
                 
-                self.maxInvaders = {"scale": None, "value": tk.IntVar(), "tooltipText": "This many invaders can take the place of enemies."}
-                self.maxInvaders["scale"] = ttk.LabeledScale(self.invadersFrame, from_=0, to=5, variable=self.maxInvaders["value"])
-                self.maxInvaders["value"].set(self.settings["maxInvaders"])
-                self.maxInvaders["scale"].grid(row=1, column=0, padx=5, pady=10, sticky="nsew")
-                CreateToolTip(self.invadersLabel, self.maxInvaders["tooltipText"])
+                self.maxInvadersVals = {
+                    1: tk.IntVar(),
+                    2: tk.IntVar(),
+                    3: tk.IntVar(),
+                    4: tk.IntVar()
+                }
+                
+                self.maxInvadersVals[1].set(self.settings["maxInvaders"]["1"]),
+                self.maxInvadersVals[2].set(self.settings["maxInvaders"]["2"]),
+                self.maxInvadersVals[3].set(self.settings["maxInvaders"]["3"]),
+                self.maxInvadersVals[4].set(self.settings["maxInvaders"]["4"])
+                
+                self.level1Label = ttk.Label(self.invadersFrame, text="Level 1")
+                self.level1Label.grid(row=1, column=0)
+                self.maxInvadersLevel1Val = tk.IntVar()
+                self.maxInvadersLevel1Radio0 = ttk.Radiobutton(self.invadersFrame, text="0", variable=self.maxInvadersVals[1], value=0)
+                self.maxInvadersLevel1Radio0.grid(row=1, column=1)
+                self.maxInvadersLevel1Radio1 = ttk.Radiobutton(self.invadersFrame, text="1", variable=self.maxInvadersVals[1], value=1)
+                self.maxInvadersLevel1Radio1.grid(row=1, column=2)
+                self.maxInvadersLevel1Radio2 = ttk.Radiobutton(self.invadersFrame, text="2", variable=self.maxInvadersVals[1], value=2)
+                self.maxInvadersLevel1Radio2.grid(row=1, column=3)
+                self.maxInvadersLevel1Radio3 = ttk.Radiobutton(self.invadersFrame, text="3", variable=self.maxInvadersVals[1], value=3)
+                self.maxInvadersLevel1Radio3.grid(row=1, column=4)
+                self.maxInvadersLevel1Radio4 = ttk.Radiobutton(self.invadersFrame, text="4", variable=self.maxInvadersVals[1], value=4)
+                self.maxInvadersLevel1Radio4.grid(row=1, column=5)
+                self.maxInvadersLevel1Radio5 = ttk.Radiobutton(self.invadersFrame, text="5", variable=self.maxInvadersVals[1], value=5)
+                self.maxInvadersLevel1Radio5.grid(row=1, column=6)
+                
+                self.level2Label = ttk.Label(self.invadersFrame, text="Level 2")
+                self.level2Label.grid(row=2, column=0)
+                self.maxInvadersLevel2Val = tk.IntVar()
+                self.maxInvadersLevel2Radio0 = ttk.Radiobutton(self.invadersFrame, text="0", variable=self.maxInvadersVals[2], value=0)
+                self.maxInvadersLevel2Radio0.grid(row=2, column=1)
+                self.maxInvadersLevel2Radio1 = ttk.Radiobutton(self.invadersFrame, text="1", variable=self.maxInvadersVals[2], value=1)
+                self.maxInvadersLevel2Radio1.grid(row=2, column=2)
+                self.maxInvadersLevel2Radio2 = ttk.Radiobutton(self.invadersFrame, text="2", variable=self.maxInvadersVals[2], value=2)
+                self.maxInvadersLevel2Radio2.grid(row=2, column=3)
+                self.maxInvadersLevel2Radio3 = ttk.Radiobutton(self.invadersFrame, text="3", variable=self.maxInvadersVals[2], value=3)
+                self.maxInvadersLevel2Radio3.grid(row=2, column=4)
+                self.maxInvadersLevel2Radio4 = ttk.Radiobutton(self.invadersFrame, text="4", variable=self.maxInvadersVals[2], value=4)
+                self.maxInvadersLevel2Radio4.grid(row=2, column=5)
+                self.maxInvadersLevel2Radio5 = ttk.Radiobutton(self.invadersFrame, text="5", variable=self.maxInvadersVals[2], value=5)
+                self.maxInvadersLevel2Radio5.grid(row=2, column=6)
+                
+                self.level3Label = ttk.Label(self.invadersFrame, text="Level 3")
+                self.level3Label.grid(row=3, column=0)
+                self.maxInvadersLevel3Val = tk.IntVar()
+                self.maxInvadersLevel3Radio0 = ttk.Radiobutton(self.invadersFrame, text="0", variable=self.maxInvadersVals[3], value=0)
+                self.maxInvadersLevel3Radio0.grid(row=3, column=1)
+                self.maxInvadersLevel3Radio1 = ttk.Radiobutton(self.invadersFrame, text="1", variable=self.maxInvadersVals[3], value=1)
+                self.maxInvadersLevel3Radio1.grid(row=3, column=2)
+                self.maxInvadersLevel3Radio2 = ttk.Radiobutton(self.invadersFrame, text="2", variable=self.maxInvadersVals[3], value=2)
+                self.maxInvadersLevel3Radio2.grid(row=3, column=3)
+                self.maxInvadersLevel3Radio3 = ttk.Radiobutton(self.invadersFrame, text="3", variable=self.maxInvadersVals[3], value=3)
+                self.maxInvadersLevel3Radio3.grid(row=3, column=4)
+                self.maxInvadersLevel3Radio4 = ttk.Radiobutton(self.invadersFrame, text="4", variable=self.maxInvadersVals[3], value=4)
+                self.maxInvadersLevel3Radio4.grid(row=3, column=5)
+                self.maxInvadersLevel3Radio5 = ttk.Radiobutton(self.invadersFrame, text="5", variable=self.maxInvadersVals[3], value=5)
+                self.maxInvadersLevel3Radio5.grid(row=3, column=6)
+                
+                self.level4Label = ttk.Label(self.invadersFrame, text="Level 4")
+                self.level4Label.grid(row=4, column=0)
+                self.maxInvadersLevel4Val = tk.IntVar()
+                self.maxInvadersLevel4Radio0 = ttk.Radiobutton(self.invadersFrame, text="0", variable=self.maxInvadersVals[4], value=0)
+                self.maxInvadersLevel4Radio0.grid(row=4, column=1)
+                self.maxInvadersLevel4Radio1 = ttk.Radiobutton(self.invadersFrame, text="1", variable=self.maxInvadersVals[4], value=1)
+                self.maxInvadersLevel4Radio1.grid(row=4, column=2)
+                self.maxInvadersLevel4Radio2 = ttk.Radiobutton(self.invadersFrame, text="2", variable=self.maxInvadersVals[4], value=2)
+                self.maxInvadersLevel4Radio2.grid(row=4, column=3)
+                self.maxInvadersLevel4Radio3 = ttk.Radiobutton(self.invadersFrame, text="3", variable=self.maxInvadersVals[4], value=3)
+                self.maxInvadersLevel4Radio3.grid(row=4, column=4)
+                self.maxInvadersLevel4Radio4 = ttk.Radiobutton(self.invadersFrame, text="4", variable=self.maxInvadersVals[4], value=4)
+                self.maxInvadersLevel4Radio4.grid(row=4, column=5)
+                self.maxInvadersLevel4Radio5 = ttk.Radiobutton(self.invadersFrame, text="5", variable=self.maxInvadersVals[4], value=5)
+                self.maxInvadersLevel4Radio5.grid(row=4, column=6)
 
                 log("End of create_invaders_pane")
             except Exception as e:
@@ -491,7 +561,12 @@ try:
                     "charactersActive": list(charactersActive),
                     "treasureSwapOption": self.treasureSwapOption.get(),
                     "updateCheck": "on" if self.updateCheck["value"].get() == 1 else "off",
-                    "maxInvaders": self.maxInvaders["value"].get()
+                    "maxInvaders": {
+                        "1": self.maxInvadersVals[1].get(),
+                        "2": self.maxInvadersVals[2].get(),
+                        "3": self.maxInvadersVals[3].get(),
+                        "4": self.maxInvadersVals[4].get()
+                    }
                 }
 
                 if newSettings != self.settings:

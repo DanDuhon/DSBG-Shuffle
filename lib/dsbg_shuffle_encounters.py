@@ -451,7 +451,7 @@ try:
                 # Use only alternative enemies for expansions and enemies the user has activated in the settings.
                 for expansionCombo in alts["alternatives"]:
                     if set(expansionCombo.split(",")).issubset(self.app.availableExpansions):
-                        self.app.selected["alternatives"] += [alt for alt in alts["alternatives"][expansionCombo] if set(alt).issubset(self.app.enabledEnemies) and sum([1 for a in alt if enemyIds[a].expansions == set(["Phantoms"]) or enemyIds[a].name in {"Hungry Mimic", "Voracious Mimic"}]) <= self.app.settings["maxInvaders"]]
+                        self.app.selected["alternatives"] += [alt for alt in alts["alternatives"][expansionCombo] if set(alt).issubset(self.app.enabledEnemies) and sum([1 for a in alt if enemyIds[a].expansions == set(["Phantoms"]) or enemyIds[a].name in {"Hungry Mimic", "Voracious Mimic"}]) <= self.app.settings["maxInvaders"][str(self.app.selected["level"])]]
 
                 self.newTiles = dict()
 
