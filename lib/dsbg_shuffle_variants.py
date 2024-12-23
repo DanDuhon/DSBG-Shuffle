@@ -384,6 +384,11 @@ try:
                             self.variantPhotoImage = self.app.create_image(enemy + " - data.jpg", "enemyCard")
 
                             self.edit_variant_card_os(enemy=enemy, healthMod=healthMod if healthMod else {"Ornstein": 0, "Smough": 0}, fromDeck=fromDeck)
+                elif self.selectedVariant == "Executioner Chariot - Death Race":
+                    # Create and display the variant image.
+                    self.variantPhotoImage = self.app.create_image((self.selectedVariant[:self.selectedVariant.index("_")] + self.selectedVariant.replace(variant, "") if "_" in self.selectedVariant else self.selectedVariant) + ".jpg", "enemyCard")
+
+                    self.edit_variant_card_death_race(variant=self.selectedVariant, healthMod=healthMod, fromDeck=fromDeck)
                 else:
                     self.selectedVariant += " - data" if "-" not in self.selectedVariant else ""
                     
@@ -655,6 +660,9 @@ try:
                 diffKey = 1.0 + (float(self.entryText.get()) / 100)
                 diffKey = ceil((diffKey * 10)) / 10
                 start = tree.focus()
+                behavior = None
+                if " - " in start:
+                    behavior = start[start.index(" - ")+3:]
                 
                 progress = None
 
@@ -669,7 +677,7 @@ try:
                     diffKeyIndex -= 1 if diffKeyIndex > len(list(self.variants[startReal][self.app.numberOfCharacters].keys())) - 1 else 0
                     diffKeyReal = list(self.variants[startReal][self.app.numberOfCharacters].keys())[diffKeyIndex]
 
-                    if "defKey" not in self.currentVariants.get(startReal, {}):
+                    if "defKey" not in self.currentVariants.get(startReal, {}) or set(self.currentVariants.get(startReal, {}).keys()) == {"defKey", behavior}:
                         defKey = choice(list(self.variants[startReal][self.app.numberOfCharacters][diffKeyReal].keys()))
                         self.currentVariants[startReal] = {"defKey": list(defKey)}
                     else:
@@ -987,6 +995,33 @@ try:
                         self.app.displayImages[key][self.app.displayTopLeft]["activeTab"] = key if not fromDeck else "behaviorDeck"
 
                 log("End of edit_variant_card")
+            except Exception as e:
+                error_popup(self.root, e)
+                raise
+
+
+        def edit_variant_card_death_race(self, variant=None, lockedTree=False, event=None, deckDataCard=False, healthMod=0, fromDeck=False):
+            try:
+                log("Start of edit_variant_card_death_race, variant={}".format(str(variant)))
+                
+                self.edit_variant_card_behavior_death_race(variant=variant)
+
+                displayPhotoImage = ImageTk.PhotoImage(self.app.displayImage)
+
+                if fromDeck:
+                    key = "behaviorDeck"
+                elif lockedTree:
+                    key = "variantsLocked"
+                else:
+                    key = "variants"
+
+                self.app.displayTopLeft.image = displayPhotoImage
+                self.app.displayTopLeft.config(image=displayPhotoImage)
+                self.app.displayImages[key][self.app.displayTopLeft]["image"] = displayPhotoImage
+                self.app.displayImages[key][self.app.displayTopLeft]["name"] = self.selectedVariant
+                self.app.displayImages[key][self.app.displayTopLeft]["activeTab"] = key if not fromDeck else "behaviorDeck"
+
+                log("End of edit_variant_card_death_race")
             except Exception as e:
                 error_popup(self.root, e)
                 raise
@@ -1600,6 +1635,37 @@ try:
                 raise
 
 
+        def edit_variant_card_behavior_death_race(self, variant=None, event=None):
+            try:
+                log("Start of edit_variant_card_behavior_death_race, variant={}".format(str(variant)))
+
+                enemy = "Executioner Chariot"
+                behavior = "Death Race"
+
+                dodge = behaviorDetail[enemy][behavior]["dodge"]
+                repeat = 1
+                actions = {}
+                for position in ["left", "middle", "right"]:
+                    if position in behaviorDetail[enemy][behavior]:
+                        if "effect" in behaviorDetail[enemy][behavior][position]:
+                            actions[position] = {"effect": []}
+                            actions[position]["effect"] = [e for e in behaviorDetail[enemy][behavior][position]["effect"]]
+                        else:
+                            actions[position] = behaviorDetail[enemy][behavior][position].copy()
+
+                if variant:
+                    dodge, repeat, actions = self.apply_mods_to_actions(enemy, behavior, dodge, repeat, actions, variant)
+                elif enemy in self.currentVariants and ("" if behavior == "behavior" else behavior) in self.currentVariants[enemy]:
+                    dodge, repeat, actions = self.apply_mods_to_actions(enemy, behavior, dodge, repeat, actions)
+
+                self.add_components_to_variant_card_behavior_death_race(dodge, repeat, actions)#, addNodes)
+
+                log("End of edit_variant_card_behavior_death_race")
+            except Exception as e:
+                error_popup(self.root, e)
+                raise
+
+
         def add_components_to_variant_card_behavior(self, enemy, behavior, dodge, repeat, actions, event=None):
             try:
                 log("Start of add_components_to_variant_card_behavior, enemy={}, behavior={}, dodge={}, repeat={}, actions={}".format(str(enemy), str(behavior), str(dodge), str(repeat), str(actions)))
@@ -1649,29 +1715,38 @@ try:
                         log("Pasting repeat image onto variant at " + str((x, 300)) + ".")
                         self.app.displayImage.paste(im=image, box=(x, 300), mask=image)
                     elif "effect" in actions[position]:
+                        effectCnt = len(actions[position]["effect"])
                         for i, effect in enumerate(actions[position]["effect"]):
                             xOffset = 0
                             if effect == "bleed":
                                 image = self.app.bleed
                             elif effect == "frostbite":
                                 image = self.app.frostbite
-                                xOffset = -9
+                                xOffset = -4
                             elif effect == "poison":
                                 image = self.app.poison
                             elif effect == "stagger":
                                 image = self.app.stagger
-                                xOffset = -5
+                                xOffset = -2
                             elif effect == "corrosion":
                                 image = self.app.corrosion
-                                xOffset = -4
+                                xOffset = -2
                             elif effect == "calamity":
                                 image = self.app.calamity
-                                xOffset = -6
+                                xOffset = -3
                             else:
                                 continue
 
-                            x = (130 if position == "middle" else 240) + xOffset
-                            self.app.displayImage.paste(im=image, box=(x, 280 + (i * 50)), mask=image)
+                            if effectCnt == 1:
+                                x = (20 if position == "left" else 130 if position == "middle" else 240) + xOffset
+                                y = 330
+                            else:
+                                x = (65 if i == 0 else 48) + xOffset
+                                y = 375 if i == 0 else 395
+                            self.app.displayImage.paste(im=image, box=(x, y), mask=image)
+
+                            # x = (20 if position == "left" else 130 if position == "middle" else 240) + xOffset
+                            # self.app.displayImage.paste(im=image, box=(x, 280 + (i * 50)), mask=image)
                 
                 if enemy in {"Phalanx", "Phalanx Hollow", "Silver Knight Spearman"}:
                     x = 115 if "repeat" in actions["right"] else 209
@@ -1680,6 +1755,52 @@ try:
                     self.app.displayImage.paste(im=image, box=(x, 285), mask=image)
 
                 log("End of add_components_to_variant_card_behavior")
+            except Exception as e:
+                error_popup(self.root, e)
+                raise
+
+
+        def add_components_to_variant_card_behavior_death_race(self, dodge, repeat, actions, event=None):
+            try:
+                log("Start of add_components_to_variant_card_behavior_death_race, dodge={}, repeat={}, actions={}".format(str(dodge), str(repeat), str(actions)))
+
+                imageWithText = ImageDraw.Draw(self.app.displayImage)
+                imageWithText.text((158, 360), str(dodge), "black", font2)
+                                    
+                for position in ["left", "middle", "right"]:
+                    if position not in actions or not actions[position]:
+                        continue
+                    if "type" in actions[position] and (actions[position]["type"] == "physical" or actions[position]["type"] == "magic"):
+                        x = 0
+                        image = self.app.attack[actions[position]["type"]][actions[position]["damage"]]
+                        log("Pasting " + actions[position]["type"] + " attack image onto variant at " + str((x, 330)) + ".")
+                        self.app.displayImage.paste(im=image, box=(x, 330), mask=image)
+                    elif "effect" in actions[position]:
+                        effectCnt = len(actions[position]["effect"])
+                        for i, effect in enumerate(actions[position]["effect"]):
+                            xOffset = 0
+                            if effect == "bleed":
+                                image = self.app.bleed
+                            elif effect == "frostbite":
+                                image = self.app.frostbite
+                                xOffset = -4
+                            elif effect == "poison":
+                                image = self.app.poison
+                            elif effect == "stagger":
+                                image = self.app.stagger
+                                xOffset = -2
+                            else:
+                                continue
+
+                            if effectCnt == 1:
+                                x = 62 + xOffset
+                                y = 385
+                            else:
+                                x = (65 if i == 0 else 48) + xOffset
+                                y = 375 if i == 0 else 395
+                            self.app.displayImage.paste(im=image, box=(x, y), mask=image)
+
+                log("End of add_components_to_variant_card_behavior_death_race")
             except Exception as e:
                 error_popup(self.root, e)
                 raise
