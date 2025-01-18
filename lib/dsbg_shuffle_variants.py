@@ -40,7 +40,13 @@ try:
         21: "physical",
         22: "armor resist1",
         23: "damage health1",
-        24: "damage health2"
+        24: "damage health2",
+        25: "nodes1",
+        26: "nodes2",
+        27: "nodes3",
+        28: "nodes4",
+        29: "nodes5",
+        30: "nodes6"
         }
     
     dataCardMods = {m for m in modIdLookup if (
@@ -384,7 +390,7 @@ try:
                             self.variantPhotoImage = self.app.create_image(enemy + " - data.jpg", "enemyCard")
 
                             self.edit_variant_card_os(enemy=enemy, healthMod=healthMod if healthMod else {"Ornstein": 0, "Smough": 0}, fromDeck=fromDeck)
-                elif self.selectedVariant == "Executioner Chariot - Death Race":
+                elif "Executioner Chariot - Death Race" in self.selectedVariant:
                     # Create and display the variant image.
                     self.variantPhotoImage = self.app.create_image((self.selectedVariant[:self.selectedVariant.index("_")] + self.selectedVariant.replace(variant, "") if "_" in self.selectedVariant else self.selectedVariant) + ".jpg", "enemyCard")
 
@@ -1607,20 +1613,19 @@ try:
                 actions = {}
                 for position in ["left", "middle", "right"]:
                     if position in behaviorDetail[enemy][behavior]:
+                        actions[position] = behaviorDetail[enemy][behavior][position].copy()
+                        if (
+                            pursuer
+                            or (
+                                "Fire Beam" in behavior
+                                and "damage" in actions[position]
+                                and oldIronKing
+                                )
+                            ):
+                            actions[position]["damage"] += 1
+                        
                         if "effect" in behaviorDetail[enemy][behavior][position]:
-                            actions[position] = {"effect": []}
                             actions[position]["effect"] = [e for e in behaviorDetail[enemy][behavior][position]["effect"]]
-                        else:
-                            actions[position] = behaviorDetail[enemy][behavior][position].copy()
-                            if (
-                                pursuer
-                                or (
-                                    "Fire Beam" in behavior
-                                    and "damage" in actions[position]
-                                    and oldIronKing
-                                    )
-                                ):
-                                actions[position]["damage"] += 1
 
                 if variant:
                     dodge, repeat, actions = self.apply_mods_to_actions(enemy, behavior, dodge, repeat, actions, variant)
@@ -1640,18 +1645,16 @@ try:
                 log("Start of edit_variant_card_behavior_death_race, variant={}".format(str(variant)))
 
                 enemy = "Executioner Chariot"
-                behavior = "Death Race"
+                behavior = self.selectedVariant[self.selectedVariant.index(" - ")+3:]
 
                 dodge = behaviorDetail[enemy][behavior]["dodge"]
                 repeat = 1
                 actions = {}
                 for position in ["left", "middle", "right"]:
                     if position in behaviorDetail[enemy][behavior]:
+                        actions[position] = behaviorDetail[enemy][behavior][position].copy()
                         if "effect" in behaviorDetail[enemy][behavior][position]:
-                            actions[position] = {"effect": []}
                             actions[position]["effect"] = [e for e in behaviorDetail[enemy][behavior][position]["effect"]]
-                        else:
-                            actions[position] = behaviorDetail[enemy][behavior][position].copy()
 
                 if variant:
                     dodge, repeat, actions = self.apply_mods_to_actions(enemy, behavior, dodge, repeat, actions, variant)
@@ -1690,18 +1693,28 @@ try:
                             image = self.app.attack[actions[position]["type"]][actions[position]["damage"]]
                             log("Pasting " + actions[position]["type"] + " attack image onto variant at " + str((-13, 343)) + ".")
                             self.app.displayImage.paste(im=image, box=(-13, 343), mask=image)
-                        elif "effect" in actions[position]:
+                        
+                        if "effect" in actions[position]:
                             for i, effect in enumerate(actions[position]["effect"]):
                                 if effect == "bleed":
                                     image = self.app.bleed
                                 elif effect == "frostbite":
                                     image = self.app.frostbite
+                                    xOffset = -4
                                 elif effect == "poison":
                                     image = self.app.poison
                                 elif effect == "stagger":
                                     image = self.app.stagger
+                                    xOffset = -2
                                 else:
                                     continue
+
+                                if effectCnt == 1:
+                                    x = 62 + xOffset
+                                    y = 363
+                                else:
+                                    x = (65 if i == 0 else 48) + xOffset
+                                    y = 353 if i == 0 else 373
 
                                 self.app.displayImage.paste(im=image, box=(80 + (i * 50), 363), mask=image)
                     elif "type" in actions[position] and actions[position]["type"] == "push":
@@ -1714,7 +1727,8 @@ try:
                         image = self.app.repeat[actions[position]["repeat"]]
                         log("Pasting repeat image onto variant at " + str((x, 300)) + ".")
                         self.app.displayImage.paste(im=image, box=(x, 300), mask=image)
-                    elif "effect" in actions[position]:
+                    
+                    if "effect" in actions[position]:
                         effectCnt = len(actions[position]["effect"])
                         for i, effect in enumerate(actions[position]["effect"]):
                             xOffset = 0
@@ -1738,15 +1752,14 @@ try:
                                 continue
 
                             if effectCnt == 1:
-                                x = (20 if position == "left" else 130 if position == "middle" else 240) + xOffset
-                                y = 330
+                                x = (75 if position == "left" else 170 if position == "middle" else 280) + xOffset
+                                y = 335
                             else:
-                                x = (65 if i == 0 else 48) + xOffset
-                                y = 375 if i == 0 else 395
-                            self.app.displayImage.paste(im=image, box=(x, y), mask=image)
+                                x = ((78 if i == 0 else 61) if position == "left" else (173 if i == 0 else 156) if position == "middle" else (283 if i == 0 else 266))
+                                x += xOffset
+                                y = 325 if i == 0 else 345
 
-                            # x = (20 if position == "left" else 130 if position == "middle" else 240) + xOffset
-                            # self.app.displayImage.paste(im=image, box=(x, 280 + (i * 50)), mask=image)
+                            self.app.displayImage.paste(im=image, box=(x, y), mask=image)
                 
                 if enemy in {"Phalanx", "Phalanx Hollow", "Silver Knight Spearman"}:
                     x = 115 if "repeat" in actions["right"] else 209
@@ -1775,7 +1788,8 @@ try:
                         image = self.app.attack[actions[position]["type"]][actions[position]["damage"]]
                         log("Pasting " + actions[position]["type"] + " attack image onto variant at " + str((x, 330)) + ".")
                         self.app.displayImage.paste(im=image, box=(x, 330), mask=image)
-                    elif "effect" in actions[position]:
+                    
+                    if "effect" in actions[position]:
                         effectCnt = len(actions[position]["effect"])
                         for i, effect in enumerate(actions[position]["effect"]):
                             xOffset = 0
@@ -1826,13 +1840,14 @@ try:
                     newConditionAdded = False
 
                     # For behaviors that do not already cause a condition.
+                    # TODO add effects to attacks.
                     if (
                         mod in {"bleed", "frostbite", "poison", "stagger"}
                         and "effect" not in actions.get("middle", {})
                         and "effect" not in actions.get("right", {})
                         ):
-                        for position in ["middle", "right"]:
-                            if position in actions and not actions[position]:
+                        for position in ["left", "middle", "right"]:
+                            if position in actions and "damage" in actions[position]:
                                 actions[position]["effect"] = [mod]
                                 newConditionAdded = True
                                 break
@@ -1846,14 +1861,15 @@ try:
 
                     for position in ["left", "middle", "right"]:
                         if position in actions:
+                            # For behaviors that already cause a condition.
+                            if "effect" in actions[position] and mod in {"bleed", "frostbite", "poison", "stagger"} and mod not in actions[position]["effect"]:
+                                actions[position]["effect"].append(mod)
+                            
                             if "damage" in actions[position]:
                                 actions[position]["damage"] += int(mod[-1]) if "damage" in mod else 0
                                 actions[position]["type"] = mod if mod in {"physical", "magic"} and actions[position]["type"] != "push" else actions[position]["type"]
                             elif "repeat" in actions[position] and "repeat" in mod:
                                 actions[position]["repeat"] += 1
-                            # For behaviors that already cause a condition.
-                            elif "effect" in actions[position] and mod in {"bleed", "frostbite", "poison", "stagger"} and mod not in actions[position]["effect"]:
-                                actions[position]["effect"].append(mod)
                             elif actions[position]:
                                 continue
                             elif not actions[position] and "repeat" in mod and not repeatAdded:

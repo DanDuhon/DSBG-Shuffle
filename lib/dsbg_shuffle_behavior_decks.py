@@ -167,13 +167,7 @@ try:
 
                 lookupName = enemy if "(" not in enemy else enemy[:enemy.index(" (")]
 
-                behaviorsWithDupes = deepcopy(behaviors)
-                if enemy == "The Pursuer":
-                    behaviorsWithDupes["The Pursuer"].append("Stabbing Strike")
-                    behaviorsWithDupes["The Pursuer"].append("Wide Blade Swing")
-                    behaviorsWithDupes["The Pursuer"].append("Wide Blade Swing")
-
-                nonHeatupCards = [b for b in behaviorsWithDupes[enemy] if (
+                nonHeatupCards = [b for b in behaviors[enemy] if (
                     (
                         not behaviorDetail[lookupName][b].get("heatup", False)
                         or (lookupName == "The Four Kings" and behaviorDetail[lookupName][b].get("heatup", False) == 1)

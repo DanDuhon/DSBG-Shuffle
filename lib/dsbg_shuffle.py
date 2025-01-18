@@ -1142,6 +1142,7 @@ try:
                     height = 424
                         
                     fileName = imageFileName[:-4] if not extensionProvided else imageFileName
+                    fileName = fileName.replace(" 1", "").replace(" 2", "").replace(" 3", "")
                     fileName += ".jpg" if not extensionProvided else ""
 
                     if pathProvided:
