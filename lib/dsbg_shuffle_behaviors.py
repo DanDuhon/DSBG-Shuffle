@@ -92,8 +92,7 @@ try:
             "behavior": {
                 "dodge": 2,
                 "left": {"type": "push", "damage": 4},
-                "middle": {},
-                "right": {"repeat": 2}
+                "middle": {"repeat": 2}
             },
             "health": 1,
             "armor": 1,
@@ -113,8 +112,7 @@ try:
             "behavior": {
                 "dodge": 2,
                 "left": {"type": "push", "damage": 6},
-                "middle": {},
-                "right": {}
+                "middle": {}
             },
             "health": 5,
             "armor": 1,
@@ -196,8 +194,7 @@ try:
             "behavior": {
                 "dodge": 2,
                 "left": {"type": "push", "damage": 5, "effect": ["stagger"]},
-                "middle": {},
-                "right": {}
+                "middle": {}
             },
             "health": 5,
             "armor": 3,
@@ -207,8 +204,7 @@ try:
             "behavior": {
                 "dodge": 1,
                 "left": {"type": "push", "damage": 5},
-                "middle": {},
-                "right": {}
+                "middle": {}
             },
             "health": 5,
             "armor": 1,
@@ -228,8 +224,7 @@ try:
             "behavior": {
                 "dodge": 1,
                 "left": {"type": "push", "damage": 6, "effect": ["stagger"]},
-                "middle": {},
-                "right": {}
+                "middle": {}
             },
             "health": 10,
             "armor": 1,
@@ -249,7 +244,6 @@ try:
             "behavior": {
                 "dodge": 1,
                 "left": {"type": "physical", "damage": 5},
-                "middle": {},
                 "right": {}
             },
             "health": 5,
@@ -260,7 +254,6 @@ try:
             "behavior": {
                 "dodge": 1,
                 "left": {"type": "physical", "damage": 4},
-                "middle": {},
                 "right": {}
             },
             "health": 1,
@@ -311,7 +304,6 @@ try:
             "behavior": {
                 "dodge": 2,
                 "left": {"type": "physical", "damage": 6},
-                "middle": {},
                 "right": {}
             },
             "health": 1,
@@ -342,8 +334,8 @@ try:
             "behavior": {
                 "dodge": 2,
                 "left": {"type": "push", "damage": 4},
-                "middle": {},
-                "right": {"repeat": 2}
+                "middle": {"repeat": 2},
+                "right": {}
             },
             "health": 5,
             "armor": 2,
@@ -353,8 +345,7 @@ try:
             "behavior": {
                 "dodge": 1,
                 "left": {"type": "push", "damage": 2, "effect": ["bleed"]},
-                "middle": {},
-                "right": {}
+                "middle": {}
             },
             "health": 1,
             "armor": 2,

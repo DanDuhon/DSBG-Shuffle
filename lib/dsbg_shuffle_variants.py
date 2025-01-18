@@ -1834,26 +1834,13 @@ try:
                     log("End of apply_mods_to_actions (nothing to do)")
                     return dodge, repeat, actions
 
+                behaviorAttacks = [i for i, a in enumerate(actions) if a in {"left", "middle", "right"} and "damage" in actions[a]]
+                effectCount = mods.count("bleed") + mods.count("frostbite") + mods.count("poison") + mods.count("stagger")
+                effectsPerAttack = int(effectCount / len(behaviorAttacks))
+
                 for mod in mods:
                     dodge += int(mod[-1]) if "dodge" in mod else 0
                     repeat += 1 if "repeat" in mod else 0
-                    newConditionAdded = False
-
-                    # For behaviors that do not already cause a condition.
-                    # TODO add effects to attacks.
-                    if (
-                        mod in {"bleed", "frostbite", "poison", "stagger"}
-                        and "effect" not in actions.get("middle", {})
-                        and "effect" not in actions.get("right", {})
-                        ):
-                        for position in ["left", "middle", "right"]:
-                            if position in actions and "damage" in actions[position]:
-                                actions[position]["effect"] = [mod]
-                                newConditionAdded = True
-                                break
-
-                    if newConditionAdded:
-                        continue
 
                     repeatAdded = False if behavior == "" else True
                     if any(["repeat" in actions[position] for position in actions]):
@@ -1861,13 +1848,14 @@ try:
 
                     for position in ["left", "middle", "right"]:
                         if position in actions:
-                            # For behaviors that already cause a condition.
-                            if "effect" in actions[position] and mod in {"bleed", "frostbite", "poison", "stagger"} and mod not in actions[position]["effect"]:
-                                actions[position]["effect"].append(mod)
-                            
                             if "damage" in actions[position]:
                                 actions[position]["damage"] += int(mod[-1]) if "damage" in mod else 0
                                 actions[position]["type"] = mod if mod in {"physical", "magic"} and actions[position]["type"] != "push" else actions[position]["type"]
+                                if mod in {"bleed", "frostbite", "poison", "stagger"} and len(actions[position].get("effect", [])) < effectsPerAttack:
+                                    if "effect" in actions[position]:
+                                        actions[position]["effect"].append(mod)
+                                    else:
+                                        actions[position]["effect"] = [mod]
                             elif "repeat" in actions[position] and "repeat" in mod:
                                 actions[position]["repeat"] += 1
                             elif actions[position]:
