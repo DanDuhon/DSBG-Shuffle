@@ -1752,10 +1752,10 @@ try:
                                 continue
 
                             if effectCnt == 1:
-                                x = (75 if position == "left" else 170 if position == "middle" else 280) + xOffset
+                                x = (75 if position == "left" else 170 if position == "middle" else 265) + xOffset
                                 y = 335
                             else:
-                                x = ((78 if i == 0 else 61) if position == "left" else (173 if i == 0 else 156) if position == "middle" else (283 if i == 0 else 266))
+                                x = ((78 if i == 0 else 61) if position == "left" else (173 if i == 0 else 156) if position == "middle" else (268 if i == 0 else 251))
                                 x += xOffset
                                 y = 325 if i == 0 else 345
 
@@ -1846,16 +1846,20 @@ try:
                     if any(["repeat" in actions[position] for position in actions]):
                         repeatAdded = True
 
+                    if mod in {"bleed", "frostbite", "poison", "stagger"}:
+                        for position in ["left", "middle", "right"]:
+                            if len(actions[position].get("effect", [])) < effectsPerAttack:
+                                if "effect" in actions[position]:
+                                    actions[position]["effect"].append(mod)
+                                else:
+                                    actions[position]["effect"] = [mod]
+                                break
+
                     for position in ["left", "middle", "right"]:
                         if position in actions:
                             if "damage" in actions[position]:
                                 actions[position]["damage"] += int(mod[-1]) if "damage" in mod else 0
                                 actions[position]["type"] = mod if mod in {"physical", "magic"} and actions[position]["type"] != "push" else actions[position]["type"]
-                                if mod in {"bleed", "frostbite", "poison", "stagger"} and len(actions[position].get("effect", [])) < effectsPerAttack:
-                                    if "effect" in actions[position]:
-                                        actions[position]["effect"].append(mod)
-                                    else:
-                                        actions[position]["effect"] = [mod]
                             elif "repeat" in actions[position] and "repeat" in mod:
                                 actions[position]["repeat"] += 1
                             elif actions[position]:
