@@ -244,6 +244,7 @@ try:
             "behavior": {
                 "dodge": 1,
                 "left": {"type": "physical", "damage": 5},
+                "middle": {},
                 "right": {}
             },
             "health": 5,
@@ -254,6 +255,7 @@ try:
             "behavior": {
                 "dodge": 1,
                 "left": {"type": "physical", "damage": 4},
+                "middle": {},
                 "right": {}
             },
             "health": 1,
@@ -304,6 +306,7 @@ try:
             "behavior": {
                 "dodge": 2,
                 "left": {"type": "physical", "damage": 6},
+                "middle": {},
                 "right": {}
             },
             "health": 1,
