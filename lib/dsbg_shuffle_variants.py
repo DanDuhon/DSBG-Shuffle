@@ -884,6 +884,8 @@ try:
                 self.currentVariants[start] = {"defKey": list(defKey)}
 
                 for behavior in variants[diffKeyReal][defKey]:
+                    if "Death Race" in behavior:
+                        pass
                     self.pick_enemy_variants_behavior(start, behavior, diffKeyReal, defKey, variants)
                 
                 log("End of pick_enemy_variants_enemy")
@@ -1683,12 +1685,8 @@ try:
                 for position in ["left", "middle", "right"]:
                     if position not in actions or not actions[position]:
                         continue
-                    if "type" in actions[position] and (actions[position]["type"] == "physical" or actions[position]["type"] == "magic") and "Cage Grasp Inferno" not in behavior:
-                        x = 12 if position == "left" else 107 if position == "middle" else 202
-                        image = self.app.attack[actions[position]["type"]][actions[position]["damage"]]
-                        log("Pasting " + actions[position]["type"] + " attack image onto variant at " + str((x, 280)) + ".")
-                        self.app.displayImage.paste(im=image, box=(x, 280), mask=image)
-                    elif "Cage Grasp Inferno" in behavior:
+                    
+                    if "Cage Grasp Inferno" in behavior:
                         if "type" in actions[position]:
                             image = self.app.attack[actions[position]["type"]][actions[position]["damage"]]
                             log("Pasting " + actions[position]["type"] + " attack image onto variant at " + str((-13, 343)) + ".")
@@ -1717,6 +1715,11 @@ try:
                                     y = 353 if i == 0 else 373
 
                                 self.app.displayImage.paste(im=image, box=(80 + (i * 50), 363), mask=image)
+                    elif "type" in actions[position] and (actions[position]["type"] == "physical" or actions[position]["type"] == "magic"):
+                        x = 12 if position == "left" else 107 if position == "middle" else 202
+                        image = self.app.attack[actions[position]["type"]][actions[position]["damage"]]
+                        log("Pasting " + actions[position]["type"] + " attack image onto variant at " + str((x, 280)) + ".")
+                        self.app.displayImage.paste(im=image, box=(x, 280), mask=image)
                     elif "type" in actions[position] and actions[position]["type"] == "push":
                         x = 15 if position == "left" else 110 if position == "middle" else 206
                         image = self.app.attack[actions[position]["type"]][actions[position]["damage"]]
@@ -1753,11 +1756,11 @@ try:
 
                             if effectCnt == 1:
                                 x = (75 if position == "left" else 170 if position == "middle" else 265) + xOffset
-                                y = 335
+                                y = 340
                             else:
-                                x = ((78 if i == 0 else 61) if position == "left" else (173 if i == 0 else 156) if position == "middle" else (268 if i == 0 else 251))
+                                x = ((80 if i == 0 else 63) if position == "left" else (173 if i == 0 else 156) if position == "middle" else (268 if i == 0 else 251))
                                 x += xOffset
-                                y = 325 if i == 0 else 345
+                                y = 330 if i == 0 else 350
 
                             self.app.displayImage.paste(im=image, box=(x, y), mask=image)
                 
@@ -1848,6 +1851,8 @@ try:
 
                     if mod in {"bleed", "frostbite", "poison", "stagger"}:
                         for position in ["left", "middle", "right"]:
+                            if position not in behaviorDetail[enemy].get(behavior, behaviorDetail[enemy].get("behavior", {})):
+                                continue
                             if len(actions[position].get("effect", [])) < effectsPerAttack:
                                 if "effect" in actions[position]:
                                     actions[position]["effect"].append(mod)

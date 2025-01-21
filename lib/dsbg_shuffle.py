@@ -1260,17 +1260,17 @@ try:
                     elif imageType == "push":
                         image = Image.open(imagePath).resize((26, 32), Image.Resampling.LANCZOS)
                     elif imageType == "bleed":
-                        image = Image.open(imagePath).resize((22, 25), Image.Resampling.LANCZOS)
+                        image = Image.open(imagePath).resize((18, 20), Image.Resampling.LANCZOS)
                     elif imageType == "frostbite":
-                        image = Image.open(imagePath).resize((27, 28), Image.Resampling.LANCZOS)
+                        image = Image.open(imagePath).resize((20, 20), Image.Resampling.LANCZOS)
                     elif imageType == "poison":
-                        image = Image.open(imagePath).resize((18, 25), Image.Resampling.LANCZOS)
+                        image = Image.open(imagePath).resize((15, 20), Image.Resampling.LANCZOS)
                     elif imageType == "stagger":
-                        image = Image.open(imagePath).resize((21, 28), Image.Resampling.LANCZOS)
+                        image = Image.open(imagePath).resize((19, 20), Image.Resampling.LANCZOS)
                     elif imageType == "calamity":
-                        image = Image.open(imagePath).resize((25, 25), Image.Resampling.LANCZOS)
+                        image = Image.open(imagePath).resize((20, 20), Image.Resampling.LANCZOS)
                     elif imageType == "corrosion":
-                        image = Image.open(imagePath).resize((24, 25), Image.Resampling.LANCZOS)
+                        image = Image.open(imagePath).resize((20, 20), Image.Resampling.LANCZOS)
                     elif imageType == "barrage":
                         image = Image.open(imagePath).resize((41, 13), Image.Resampling.LANCZOS)
                     elif imageType == "bitterCold":

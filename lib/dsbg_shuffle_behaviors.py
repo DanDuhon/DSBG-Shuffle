@@ -34,9 +34,9 @@ try:
         "Smelter Demon": ["Double Sweep", "Fiery Blast", "Fiery Explosion", "Flame Wave", "Flaming Double Sweep", "Flaming Impalement Strike", "Flaming Lunging Strike", "Flaming Overhead Chop", "Flaming Sweeping Slash", "Leaping Impalement Strike", "Lunging Strike", "Overhead Chop", "Sweeping Slash"],
         "The Pursuer": ["Back Dash", "Cursed Impale", "Dark Magic", "Forward Dash", "Overhead Cleave", "Rising Blade Swing", "Shield Bash", "Shield Smash", "Stabbing Strike 1", "Stabbing Strike 2", "Wide Blade Swing 1", "Wide Blade Swing 2", "Wide Blade Swing 3"],
         "Black Dragon Kalameet": ["Conflagration", "Consuming Blaze", "Evasive Tail Whip", "Flame Feint", "Head Strike", "Hellfire Barrage", "Hellfire Blast", "Mark of Calamity", "Rising Inferno", "Rush Strike", "Sweeping Flame", "Swooping Charge", "Tail Sweep"],
-        "Executioner Chariot": ["Advancing Back Kick", "Back Kick", "Charging Breath", "Charging Ram", "Deadly Breath", "Death Race 1", "Death Race 2", "Death Race 3", "Death Race 4", "Engulfing Darkness", "Headbutt", "Merciless Charge", "Rearing Charge", "Roiling Darkness", "Stomp Rush", "Trampling Charge"],
+        "Executioner Chariot": ["Advancing Back Kick", "Back Kick", "Charging Breath", "Charging Ram", "Deadly Breath", "Death Race", "Engulfing Darkness", "Headbutt", "Merciless Charge", "Rearing Charge", "Roiling Darkness", "Stomp Rush", "Trampling Charge"],
         "Gaping Dragon": ["Claw Swipe", "Corrosive Ooze (Front)", "Corrosive Ooze (Front Left)", "Corrosive Ooze (Front Right)", "Corrosive Ooze (Front Right Left)", "Crawling Charge", "Flying Smash", "Gorge", "Right Hook", "Stomach Slam", "Stomp Slam", "Tail Whip", "Triple Stomp"],
-        "Guardian Dragon": ["Bite", "Cage Grasp Inferno", "Charging Flame", "Fire Breath", "Fire Sweep", "Fireball", "Leaping Breath", "Left Stomp", "Right Stomp", "Tail Sweep"],
+        "Guardian Dragon": ["Bite", "Cage Grasp Inferno", "Charging Flame", "Fiery Breath", "Fire Breath", "Fire Sweep", "Fireball", "Leaping Breath", "Left Stomp", "Right Stomp", "Tail Sweep"],
         "Manus, Father of the Abyss": ["Abyss Cage", "Abyss Rain", "Back Swipe", "Catalyst Smash", "Catalyst Strike", "Crushing Palm", "Dark Orb Barrage", "Descending Darkness", "Diving Slam", "Extended Sweep", "Frenzied Attacks", "Ground Slam", "Ring of Darkfire", "Sweeping Strike"],
         "Old Iron King": ["Bash", "Double Fist Pound", "Double Swipe", "Fire Beam (Front)", "Fire Beam (Left)", "Fire Beam (Right)", "Firestorm", "Fist Pound", "Magma Blast", "Searing Blast", "Shockwave", "Swipe"],
         "Stray Demon": ["Crushing Leaps", "Delayed Hammer Drive", "Ground Pound", "Hammer Blast", "Hammer Drive", "Leaping Hammer Smash", "Lumbering Swings", "Mighty Hammer Smash", "Retreating Sweep", "Shockwave", "Sidestep Left Sweep", "Sidestep Right Sweep", "Sweeping Strikes"],
@@ -327,7 +327,7 @@ try:
             "behavior": {
                 "dodge": 1,
                 "left": {"type": "physical", "damage": 4},
-                "middle": {}
+                "right": {}
             },
             "health": 1,
             "armor": 1,
@@ -2441,6 +2441,10 @@ try:
             "heatup": 28,
             "armor": 3,
             "resist": 3,
+            "Fiery Breath": {
+                "dodge": 1,
+                "left": {"type": "magic", "damage": 5}
+            },
             "Fire Breath": {
                 "dodge": 1,
                 "repeat": 2,
@@ -2835,33 +2839,13 @@ try:
             }
         },
         "Executioner Chariot": {
-            "Death Race 1": {
-                "dodge": 1,
-                "left": {"type": "physical", "damage": 7},
-                "middle": {},
-                "right": {}
-            },
-            "Death Race 2": {
-                "dodge": 1,
-                "left": {"type": "physical", "damage": 7},
-                "middle": {},
-                "right": {}
-            },
-            "Death Race 3": {
-                "dodge": 1,
-                "left": {"type": "physical", "damage": 7},
-                "middle": {},
-                "right": {}
-            },
-            "Death Race 4": {
-                "dodge": 1,
-                "left": {"type": "physical", "damage": 7},
-                "middle": {},
-                "right": {}
-            },
             "health": 24,
             "armor": 3,
             "resist": 3,
+            "Death Race": {
+                "dodge": 1,
+                "left": {"type": "physical", "damage": 7}
+            },
             "Charging Ram": {
                 "dodge": 2,
                 "middle": {"type": "physical", "damage": 6},
