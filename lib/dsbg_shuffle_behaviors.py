@@ -1154,8 +1154,8 @@ try:
             "Hacking Slash": {
                 "dodge": 2,
                 "left": {"type": "physical", "damage": 5, "effect": ["stagger"]},
-                "middle": {},
-                "right": {"type": "push", "damage": 4},
+                "middle": {"type": "push", "damage": 4},
+                "right": {},
                 "heatup": True
             },
             "Charge": {

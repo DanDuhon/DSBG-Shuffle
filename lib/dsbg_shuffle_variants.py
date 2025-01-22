@@ -1838,7 +1838,7 @@ try:
                     return dodge, repeat, actions
 
                 behaviorAttacks = [i for i, a in enumerate(actions) if a in {"left", "middle", "right"} and "damage" in actions[a]]
-                effectCount = mods.count("bleed") + mods.count("frostbite") + mods.count("poison") + mods.count("stagger")
+                effectCount = max([len(actions[position].get("effect", [])) for position in actions]) + mods.count("bleed") + mods.count("frostbite") + mods.count("poison") + mods.count("stagger")
                 effectsPerAttack = int(effectCount / len(behaviorAttacks))
 
                 for mod in mods:
