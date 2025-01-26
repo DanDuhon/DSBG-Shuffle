@@ -1839,7 +1839,7 @@ try:
 
                 behaviorAttacks = [i for i, a in enumerate(actions) if a in {"left", "middle", "right"} and "damage" in actions[a]]
                 effectCount = max([len(actions[position].get("effect", [])) for position in actions]) + mods.count("bleed") + mods.count("frostbite") + mods.count("poison") + mods.count("stagger")
-                effectsPerAttack = int(effectCount / len(behaviorAttacks))
+                effectsPerAttack = ceil(effectCount / len(behaviorAttacks))
 
                 for mod in mods:
                     dodge += int(mod[-1]) if "dodge" in mod else 0
