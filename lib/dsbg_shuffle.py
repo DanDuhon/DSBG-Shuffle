@@ -110,6 +110,8 @@ try:
                 for x in range(2, 14):
                     for y in ["physical", "magic", "push"]:
                         self.attack[y][x] = self.create_image("attack_" + y + "_" + str(x) + ".png", y if y == "push" else "attack")
+                self.aoeNode = self.create_image("aoe_node.png", "aoeNode")
+                self.destinationNode = self.create_image("destination_node.png", "destinationNode")
                 self.bleed = self.create_image("bleed.png", "bleed")
                 self.frostbite = self.create_image("frostbite.png", "frostbite")
                 self.poison = self.create_image("poison.png", "poison")
@@ -1142,7 +1144,8 @@ try:
                     height = 424
                         
                     fileName = imageFileName[:-4] if not extensionProvided else imageFileName
-                    fileName = fileName.replace(" 1", "").replace(" 2", "").replace(" 3", "").replace(" 4", "")
+                    if "Death Race" not in fileName:
+                        fileName = fileName.replace(" 1", "").replace(" 2", "").replace(" 3", "").replace(" 4", "")
                     fileName += ".jpg" if not extensionProvided else ""
 
                     if pathProvided:
@@ -1180,6 +1183,8 @@ try:
                         }:
                             subfolder = "enemies\\"
                         elif imageType in {
+                            "aoeNode",
+                            "destinationNode",
                             "enemyNode",
                             "attack",
                             "repeat",
@@ -1249,6 +1254,10 @@ try:
                             image = Image.open(imagePath).resize((32, 32), Image.Resampling.LANCZOS)
                     elif imageType == "enemyNew":
                         image = Image.open(imagePath).resize((22, 22), Image.Resampling.LANCZOS)
+                    elif imageType == "aoeNode":
+                        image = Image.open(imagePath).resize((90, 90), Image.Resampling.LANCZOS)
+                    elif imageType == "destinationNode":
+                        image = Image.open(imagePath).resize((44, 44), Image.Resampling.LANCZOS)
                     elif imageType == "enemyNode":
                         image = Image.open(imagePath).resize((12, 12), Image.Resampling.LANCZOS)
                     elif imageType == "attack":

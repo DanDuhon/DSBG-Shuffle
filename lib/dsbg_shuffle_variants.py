@@ -7,7 +7,7 @@ try:
     from json import dump, load
     from math import ceil
     from PIL import ImageDraw, ImageTk
-    from random import choice
+    from random import choice, shuffle
     from statistics import mean
     from tkinter import filedialog, ttk
 
@@ -48,6 +48,34 @@ try:
         29: "nodes5",
         30: "nodes6"
         }
+
+    nodes = [
+        (0,0),
+        (0,2),
+        (0,4),
+        (0,6),
+        (1,1),
+        (1,3),
+        (1,5),
+        (2,0),
+        (2,2),
+        (2,4),
+        (2,6),
+        (3,1),
+        (3,3),
+        (3,5),
+        (4,0),
+        (4,2),
+        (4,4),
+        (4,6),
+        (5,1),
+        (5,3),
+        (5,5),
+        (6,0),
+        (6,2),
+        (6,4),
+        (6,6)
+    ]
     
     dataCardMods = {m for m in modIdLookup if (
         "armor" in modIdLookup[m]
@@ -96,6 +124,9 @@ try:
                 i += 3
                 self.app.progress.progressVar.set(i)
                 root.update_idletasks()
+
+                if enemy not in {"Old Iron King",}:
+                    continue
                 
                 with open(baseFolder + "\\lib\\dsbg_shuffle_difficulty\\dsbg_shuffle_difficulty_" + enemy + ".json", "r") as f:
                     enemyDifficulty = load(f)
@@ -255,7 +286,7 @@ try:
                     if enemy in enemiesDict and not enemiesDict[enemy].expansions & self.app.availableExpansions:
                         continue
                     for behavior in behaviors[enemy]:
-                        self.treeviewVariantsList.insert(parent=enemy, index="end", iid=enemy + " - " + behavior, values=("            " + behavior, 0), tags=True)
+                        self.treeviewVariantsList.insert(parent="Executioner Chariot" if enemy == "Skeletal Horse" else enemy, index="end", iid=enemy + " - " + behavior, values=("            " + behavior, 0), tags=True)
 
                 self.treeviewVariantsList.selection_set("All")
                 self.treeviewVariantsList.focus_set()
@@ -392,18 +423,61 @@ try:
                             self.edit_variant_card_os(enemy=enemy, healthMod=healthMod if healthMod else {"Ornstein": 0, "Smough": 0}, fromDeck=fromDeck)
                 elif "Executioner Chariot - Death Race" in self.selectedVariant:
                     # Create and display the variant image.
-                    self.variantPhotoImage = self.app.create_image((self.selectedVariant[:self.selectedVariant.index("_")] + self.selectedVariant.replace(variant, "") if "_" in self.selectedVariant else self.selectedVariant) + ".jpg", "enemyCard")
+                    self.variantPhotoImage = self.app.create_image(self.selectedVariant + ".jpg", "enemyCard")
 
-                    self.edit_variant_card_death_race(variant=self.selectedVariant, healthMod=healthMod, fromDeck=fromDeck)
-                else:
-                    self.selectedVariant += " - data" if "-" not in self.selectedVariant else ""
+                    self.edit_variant_card_death_race(variant=self.selectedVariant, fromDeck=fromDeck)
+                elif self.selectedVariant in {"Black Dragon Kalameet - Hellfire Blast", "Black Dragon Kalameet - Hellfire Barrage"}:
+                    self.variantPhotoImage = self.app.create_image((self.selectedVariant[:self.selectedVariant.index("_")] + self.selectedVariant.replace(variant, "") if "_" in self.selectedVariant else self.selectedVariant) + ".jpg", "enemyCard")
+                    self.edit_variant_card(variant=self.selectedVariant, bottomLeftDisplay=bottomLeftDisplay, bottomRightDisplay=bottomRightDisplay, lockedTree=fromLocked, healthMod=healthMod, fromDeck=fromDeck, deckDataCard=False)
                     
-                    # Create and display the variant image.
+                    self.aoePhotoImage = self.app.create_image("Black Dragon Kalameet - Fiery Ruin.jpg", "enemyCard")
+                    self.edit_variant_card_fiery_ruin(variant="Black Dragon Kalameet - Fiery Ruin", fromDeck=fromDeck)
+                elif "Old Iron King - Fire Beam" in self.selectedVariant:
                     self.variantPhotoImage = self.app.create_image((self.selectedVariant[:self.selectedVariant.index("_")] + self.selectedVariant.replace(variant, "") if "_" in self.selectedVariant else self.selectedVariant) + ".jpg", "enemyCard")
+                    self.edit_variant_card(variant=self.selectedVariant, bottomLeftDisplay=bottomLeftDisplay, bottomRightDisplay=bottomRightDisplay, lockedTree=fromLocked, healthMod=healthMod, fromDeck=fromDeck, deckDataCard=False)
+                    
+                    self.aoePhotoImage = self.app.create_image("Old Iron King - Blasted Nodes.jpg", "enemyCard")
+                    self.edit_variant_card_blasted_nodes(variant="Old Iron King - Blasted Nodes.jpg", fromDeck=fromDeck)
+                elif self.selectedVariant in {"Guardian Dragon - Cage Grasp Inferno",}:
+                    self.variantPhotoImage = self.app.create_image((self.selectedVariant[:self.selectedVariant.index("_")] + self.selectedVariant.replace(variant, "") if "_" in self.selectedVariant else self.selectedVariant) + ".jpg", "enemyCard")
+                    self.edit_variant_card(variant=self.selectedVariant, bottomLeftDisplay=bottomLeftDisplay, bottomRightDisplay=bottomRightDisplay, lockedTree=fromLocked, healthMod=healthMod, fromDeck=fromDeck, deckDataCard=False)
+                    
+                    self.aoePhotoImage = self.app.create_image("Guardian Dragon - Fiery Breath.jpg", "enemyCard")
+                    self.edit_variant_card_fiery_breath(variant="Guardian Dragon - Fiery Breath", fromDeck=fromDeck)
+                else:
+                    if self.selectedVariant in {"Executioner Chariot - Executioner Chariot",}:
+                        self.selectedVariant = self.selectedVariant
+                    elif "Executioner Chariot" in self.selectedVariant and "-" not in self.selectedVariant:
+                        self.selectedVariant += " - Skeletal Horse"
+                    elif "Executioner Chariot" in self.selectedVariant:
+                        self.selectedVariant = self.selectedVariant.replace("data", "Skeletal Horse")
+                    else:
+                        self.selectedVariant += " - data" if "-" not in self.selectedVariant else ""
 
-                    self.edit_variant_card(variant=self.selectedVariant, bottomLeftDisplay=bottomLeftDisplay, bottomRightDisplay=bottomRightDisplay, lockedTree=fromLocked, armorerDennis=armorerDennis, oldIronKing=oldIronKing, pursuer=pursuer, healthMod=healthMod, fromDeck=fromDeck)
+                    if (
+                        "data" not in self.selectedVariant
+                        and (("Black Dragon Kalameet" in self.selectedVariant
+                                and "Hellfire" not in self.selectedVariant)
+                            or ("Old Iron King" in self.selectedVariant
+                                and "Fire Beam" not in self.selectedVariant)
+                            or ("Guardian Dragon" in self.selectedVariant
+                                and "Cage" not in self.selectedVariant))
+                        ):
+                            self.app.displayBottomLeft.config(image="")
+                            self.app.displayBottomLeft.image=None
+                            self.app.displayImages["variants"][self.app.displayBottomLeft]["image"] = None
+                            self.app.displayImages["variants"][self.app.displayBottomLeft]["name"] = None
+                            self.app.displayImages["variants"][self.app.displayBottomLeft]["activeTab"] = None
+                            self.app.displayImages["variantsLocked"][self.app.displayBottomLeft]["image"] = None
+                            self.app.displayImages["variantsLocked"][self.app.displayBottomLeft]["name"] = None
+                            self.app.displayImages["variantsLocked"][self.app.displayBottomLeft]["activeTab"] = None
+                    
+                    self.variantPhotoImage = self.app.create_image((self.selectedVariant[:self.selectedVariant.index("_")] + self.selectedVariant.replace(variant, "") if "_" in self.selectedVariant else self.selectedVariant) + ".jpg", "enemyCard")
+                    self.edit_variant_card(variant=self.selectedVariant, bottomLeftDisplay=bottomLeftDisplay, bottomRightDisplay=bottomRightDisplay, lockedTree=fromLocked, armorerDennis=armorerDennis, oldIronKing=oldIronKing, pursuer=pursuer, healthMod=healthMod, fromDeck=fromDeck, deckDataCard=True if variant == "Executioner Chariot - Executioner Chariot" else False)
 
-                if "data" not in self.selectedVariant and self.app.displayImages[variants][self.app.displayTopRight]["name"] != self.selectedVariant and "The Four Kings" not in self.selectedVariant and not forPrinting:
+                if "Death Race" in self.selectedVariant:
+                    self.load_variant_card(variant="Executioner Chariot - Executioner Chariot", fromLocked=fromLocked, selfCall=originalSelection, deckDataCard=deckDataCard, fromDeck=fromDeck)
+                elif "data" not in self.selectedVariant and "Skeletal Horse" not in self.selectedVariant and self.app.displayImages[variants][self.app.displayTopRight]["name"] != self.selectedVariant and "The Four Kings" not in self.selectedVariant and not forPrinting:
                     self.load_variant_card(variant=self.selectedVariant[:self.selectedVariant.index(" - ")] + " - data", fromLocked=fromLocked, selfCall=originalSelection, armorerDennis=armorerDennis, oldIronKing=oldIronKing, pursuer=pursuer, deckDataCard=deckDataCard, healthMod=healthMod, fromDeck=fromDeck)
 
                 if not selfCall:
@@ -884,8 +958,6 @@ try:
                 self.currentVariants[start] = {"defKey": list(defKey)}
 
                 for behavior in variants[diffKeyReal][defKey]:
-                    if "Death Race" in behavior:
-                        pass
                     self.pick_enemy_variants_behavior(start, behavior, diffKeyReal, defKey, variants)
                 
                 log("End of pick_enemy_variants_enemy")
@@ -955,10 +1027,10 @@ try:
                 enemy = enemy[:enemy.index("_")] if "_" in enemy else enemy
                 behavior = self.selectedVariant[self.selectedVariant.index(" - ")+3:] if " - " in self.selectedVariant else None
 
-                if behavior == "data":
+                if behavior in {"data", "Executioner Chariot", "Skeletal Horse"}:
                     self.edit_variant_card_data(enemy, variant=variant, healthMod=healthMod)
                 
-                if behavior != "data" or "behavior" in behaviorDetail[enemy]:
+                if behavior not in {"data", "Executioner Chariot", "Skeletal Horse"} or "behavior" in behaviorDetail[enemy]:
                     self.edit_variant_card_behavior(variant=variant, armorerDennis=armorerDennis, oldIronKing=oldIronKing, pursuer=pursuer)
 
                 displayPhotoImage = ImageTk.PhotoImage(self.app.displayImage)
@@ -989,7 +1061,7 @@ try:
                     self.app.displayImages[key][self.app.displayTopRight]["name"] = self.selectedVariant
                     self.app.displayImages[key][self.app.displayTopRight]["activeTab"] = key if not fromDeck else "behaviorDeck"
                 else:
-                    if behavior == "data":
+                    if behavior in {"data", "Skeletal Horse"}:
                         self.app.displayTopRight.image = displayPhotoImage
                         self.app.displayTopRight.config(image=displayPhotoImage)
                         self.app.displayImages[key][self.app.displayTopRight]["image"] = displayPhotoImage
@@ -1008,7 +1080,7 @@ try:
                 raise
 
 
-        def edit_variant_card_death_race(self, variant=None, lockedTree=False, event=None, deckDataCard=False, healthMod=0, fromDeck=False):
+        def edit_variant_card_death_race(self, variant=None, lockedTree=False, event=None, fromDeck=False):
             try:
                 log("Start of edit_variant_card_death_race, variant={}".format(str(variant)))
                 
@@ -1030,6 +1102,87 @@ try:
                 self.app.displayImages[key][self.app.displayTopLeft]["activeTab"] = key if not fromDeck else "behaviorDeck"
 
                 log("End of edit_variant_card_death_race")
+            except Exception as e:
+                error_popup(self.root, e)
+                raise
+
+
+        def edit_variant_card_fiery_ruin(self, variant=None, lockedTree=False, event=None, fromDeck=False):
+            try:
+                log("Start of edit_variant_card_fiery_ruin, variant={}".format(str(variant)))
+                
+                self.edit_variant_card_behavior_fiery_ruin(variant=variant)
+
+                displayPhotoImage = ImageTk.PhotoImage(self.app.displayImage)
+
+                if fromDeck:
+                    key = "behaviorDeck"
+                elif lockedTree:
+                    key = "variantsLocked"
+                else:
+                    key = "variants"
+
+                self.app.displayBottomLeft.image = displayPhotoImage
+                self.app.displayBottomLeft.config(image=displayPhotoImage)
+                self.app.displayImages[key][self.app.displayBottomLeft]["image"] = displayPhotoImage
+                self.app.displayImages[key][self.app.displayBottomLeft]["name"] = self.selectedVariant
+                self.app.displayImages[key][self.app.displayBottomLeft]["activeTab"] = key if not fromDeck else "behaviorDeck"
+
+                log("End of edit_variant_card_fiery_ruin")
+            except Exception as e:
+                error_popup(self.root, e)
+                raise
+
+
+        def edit_variant_card_blasted_nodes(self, variant=None, lockedTree=False, event=None, fromDeck=False):
+            try:
+                log("Start of edit_variant_card_blasted_nodes, variant={}".format(str(variant)))
+                
+                self.edit_variant_card_behavior_blasted_nodes(variant=variant)
+
+                displayPhotoImage = ImageTk.PhotoImage(self.app.displayImage)
+
+                if fromDeck:
+                    key = "behaviorDeck"
+                elif lockedTree:
+                    key = "variantsLocked"
+                else:
+                    key = "variants"
+
+                self.app.displayBottomLeft.image = displayPhotoImage
+                self.app.displayBottomLeft.config(image=displayPhotoImage)
+                self.app.displayImages[key][self.app.displayBottomLeft]["image"] = displayPhotoImage
+                self.app.displayImages[key][self.app.displayBottomLeft]["name"] = self.selectedVariant
+                self.app.displayImages[key][self.app.displayBottomLeft]["activeTab"] = key if not fromDeck else "behaviorDeck"
+
+                log("End of edit_variant_card_blasted_nodes")
+            except Exception as e:
+                error_popup(self.root, e)
+                raise
+
+
+        def edit_variant_card_fiery_breath(self, variant=None, lockedTree=False, event=None, fromDeck=False):
+            try:
+                log("Start of edit_variant_card_fiery_breath, variant={}".format(str(variant)))
+                
+                self.edit_variant_card_behavior_fiery_breath(variant=variant)
+
+                displayPhotoImage = ImageTk.PhotoImage(self.app.displayImage)
+
+                if fromDeck:
+                    key = "behaviorDeck"
+                elif lockedTree:
+                    key = "variantsLocked"
+                else:
+                    key = "variants"
+
+                self.app.displayBottomLeft.image = displayPhotoImage
+                self.app.displayBottomLeft.config(image=displayPhotoImage)
+                self.app.displayImages[key][self.app.displayBottomLeft]["image"] = displayPhotoImage
+                self.app.displayImages[key][self.app.displayBottomLeft]["name"] = self.selectedVariant
+                self.app.displayImages[key][self.app.displayBottomLeft]["activeTab"] = key if not fromDeck else "behaviorDeck"
+
+                log("End of edit_variant_card_fiery_breath")
             except Exception as e:
                 error_popup(self.root, e)
                 raise
@@ -1571,17 +1724,18 @@ try:
                 elif enemy == "Paladin Leeroy":
                     imageWithText.text((184, 340), str(2 + healthAddition), "black", font)
 
-                if healthMod and health + healthMod >= 0:
+                if type(health) == int and healthMod and health + healthMod >= 0:
                     health += healthMod
 
-                imageWithText.text((251 + (
-                    7 if health == 1 else
-                    4 if health == 0 else
-                    1 if 49 < health < 60 else
-                    5 if 1 < health < 10 else
-                    3 if health < 20 else 0), 35), str(health), "white", font2)
-                imageWithText.text((130, 245 - (10 if "behavior" in behaviorDetail[enemy] else 0)), str(armor), "white", font3)
-                imageWithText.text((154, 245 - (10 if "behavior" in behaviorDetail[enemy] else 0)), str(resist), "black", font3)
+                if variant != "Executioner Chariot - Executioner Chariot":
+                    imageWithText.text((251 + (
+                        7 if health == 1 else
+                        4 if health == 0 else
+                        1 if 49 < health < 60 else
+                        5 if 1 < health < 10 else
+                        3 if health < 20 else 0), 35), str(health), "white", font2)
+                    imageWithText.text((130, 245 - (10 if "behavior" in behaviorDetail[enemy] else 0)), str(armor), "white", font3)
+                    imageWithText.text((154, 245 - (10 if "behavior" in behaviorDetail[enemy] else 0)), str(resist), "black", font3)
 
                 if heatup:
                     if enemy == "Vordt of the Boreal Valley":
@@ -1630,9 +1784,9 @@ try:
                             actions[position]["effect"] = [e for e in behaviorDetail[enemy][behavior][position]["effect"]]
 
                 if variant:
-                    dodge, repeat, actions = self.apply_mods_to_actions(enemy, behavior, dodge, repeat, actions, variant)
+                    dodge, repeat, actions, addNodes = self.apply_mods_to_actions(enemy, behavior, dodge, repeat, actions, variant)
                 elif enemy in self.currentVariants and ("" if behavior == "behavior" else behavior) in self.currentVariants[enemy]:
-                    dodge, repeat, actions = self.apply_mods_to_actions(enemy, behavior, dodge, repeat, actions)
+                    dodge, repeat, actions, addNodes = self.apply_mods_to_actions(enemy, behavior, dodge, repeat, actions)
 
                 self.add_components_to_variant_card_behavior(enemy, behavior, dodge, repeat, actions)
 
@@ -1659,13 +1813,82 @@ try:
                             actions[position]["effect"] = [e for e in behaviorDetail[enemy][behavior][position]["effect"]]
 
                 if variant:
-                    dodge, repeat, actions = self.apply_mods_to_actions(enemy, behavior, dodge, repeat, actions, variant)
+                    dodge, repeat, actions, addNodes = self.apply_mods_to_actions(enemy, behavior, dodge, repeat, actions, variant)
                 elif enemy in self.currentVariants and ("" if behavior == "behavior" else behavior) in self.currentVariants[enemy]:
-                    dodge, repeat, actions = self.apply_mods_to_actions(enemy, behavior, dodge, repeat, actions)
+                    dodge, repeat, actions, addNodes = self.apply_mods_to_actions(enemy, behavior, dodge, repeat, actions)
 
-                self.add_components_to_variant_card_behavior_death_race(dodge, repeat, actions)#, addNodes)
+                self.add_components_to_variant_card_behavior_death_race(dodge, repeat, actions, addNodes, int(behavior[-1]))
 
                 log("End of edit_variant_card_behavior_death_race")
+            except Exception as e:
+                error_popup(self.root, e)
+                raise
+
+
+        def edit_variant_card_behavior_fiery_ruin(self, variant=None, event=None):
+            try:
+                log("Start of edit_variant_card_behavior_fiery_ruin, variant={}".format(str(variant)))
+
+                enemy = "Black Dragon Kalameet"
+                behavior = "Fiery Ruin"
+
+                if variant:
+                    dodge, repeat, actions, addNodes = self.apply_mods_to_actions(enemy, behavior, 1, 1, {}, variant)
+                elif enemy in self.currentVariants and ("" if behavior == "behavior" else behavior) in self.currentVariants[enemy]:
+                    dodge, repeat, actions, addNodes = self.apply_mods_to_actions(enemy, behavior, 1, 1, {})
+
+                self.add_components_to_variant_card_behavior_fiery_ruin(dodge, repeat, actions, addNodes)
+
+                log("End of edit_variant_card_behavior_fiery_ruin")
+            except Exception as e:
+                error_popup(self.root, e)
+                raise
+
+
+        def edit_variant_card_behavior_blasted_nodes(self, variant=None, event=None):
+            try:
+                log("Start of edit_variant_card_behavior_blasted_nodes, variant={}".format(str(variant)))
+
+                enemy = "Black Dragon Kalameet"
+                behavior = "Fiery Ruin"
+
+                if variant:
+                    dodge, repeat, actions, addNodes = self.apply_mods_to_actions(enemy, behavior, 1, 1, {}, variant)
+                elif enemy in self.currentVariants and ("" if behavior == "behavior" else behavior) in self.currentVariants[enemy]:
+                    dodge, repeat, actions, addNodes = self.apply_mods_to_actions(enemy, behavior, 1, 1, {})
+
+                self.add_components_to_variant_card_behavior_blasted_nodes(dodge, repeat, actions, addNodes)
+
+                log("End of edit_variant_card_behavior_blasted_nodes")
+            except Exception as e:
+                error_popup(self.root, e)
+                raise
+
+
+        def edit_variant_card_behavior_fiery_breath(self, variant=None, event=None):
+            try:
+                log("Start of edit_variant_card_behavior_fiery_breath, variant={}".format(str(variant)))
+
+                enemy = "Guardian Dragon"
+                behavior = "Fiery Breath"
+
+                dodge = behaviorDetail[enemy][behavior]["dodge"]
+                repeat = 1
+                actions = {}
+                for position in ["left", "middle", "right"]:
+                    if position in behaviorDetail[enemy][behavior]:
+                        actions[position] = behaviorDetail[enemy][behavior][position].copy()
+                        if "effect" in behaviorDetail[enemy][behavior][position]:
+                            actions[position]["effect"] = [e for e in behaviorDetail[enemy][behavior][position]["effect"]]
+
+                if variant:
+                    dodge, repeat, actions, addNodes = self.apply_mods_to_actions(enemy, behavior, dodge, repeat, actions, variant)
+                elif enemy in self.currentVariants and ("" if behavior == "behavior" else behavior) in self.currentVariants[enemy]:
+                    dodge, repeat, actions, addNodes = self.apply_mods_to_actions(enemy, behavior, dodge, repeat, actions)
+
+                self.add_components_to_variant_card_behavior_fiery_breath(dodge, repeat, actions, addNodes)
+
+                log("End of edit_variant_card_behavior_fiery_breath")
             except Exception as e:
                 error_popup(self.root, e)
                 raise
@@ -1686,36 +1909,7 @@ try:
                     if position not in actions or not actions[position]:
                         continue
                     
-                    if "Cage Grasp Inferno" in behavior:
-                        if "type" in actions[position]:
-                            image = self.app.attack[actions[position]["type"]][actions[position]["damage"]]
-                            log("Pasting " + actions[position]["type"] + " attack image onto variant at " + str((-13, 343)) + ".")
-                            self.app.displayImage.paste(im=image, box=(-13, 343), mask=image)
-                        
-                        if "effect" in actions[position]:
-                            for i, effect in enumerate(actions[position]["effect"]):
-                                if effect == "bleed":
-                                    image = self.app.bleed
-                                elif effect == "frostbite":
-                                    image = self.app.frostbite
-                                    xOffset = -4
-                                elif effect == "poison":
-                                    image = self.app.poison
-                                elif effect == "stagger":
-                                    image = self.app.stagger
-                                    xOffset = -2
-                                else:
-                                    continue
-
-                                if effectCnt == 1:
-                                    x = 62 + xOffset
-                                    y = 363
-                                else:
-                                    x = (65 if i == 0 else 48) + xOffset
-                                    y = 353 if i == 0 else 373
-
-                                self.app.displayImage.paste(im=image, box=(80 + (i * 50), 363), mask=image)
-                    elif "type" in actions[position] and (actions[position]["type"] == "physical" or actions[position]["type"] == "magic"):
+                    if "type" in actions[position] and (actions[position]["type"] == "physical" or actions[position]["type"] == "magic"):
                         x = 12 if position == "left" else 107 if position == "middle" else 202
                         image = self.app.attack[actions[position]["type"]][actions[position]["damage"]]
                         log("Pasting " + actions[position]["type"] + " attack image onto variant at " + str((x, 280)) + ".")
@@ -1776,12 +1970,39 @@ try:
                 raise
 
 
-        def add_components_to_variant_card_behavior_death_race(self, dodge, repeat, actions, event=None):
+        def add_components_to_variant_card_behavior_death_race(self, dodge, repeat, actions, addNodes, deathRaceNum, event=None):
             try:
                 log("Start of add_components_to_variant_card_behavior_death_race, dodge={}, repeat={}, actions={}".format(str(dodge), str(repeat), str(actions)))
 
                 imageWithText = ImageDraw.Draw(self.app.displayImage)
                 imageWithText.text((158, 360), str(dodge), "black", font2)
+
+                if deathRaceNum == 1:
+                    highlightNodes = [(2,0), (4,0), (1,1), (3,1), (5,1)]
+                    availableNodes = [(0,0), (6,0), (0,2), (2,2), (4,2), (6,2)]
+                elif deathRaceNum == 2:
+                    highlightNodes = [(1,1), (0,2), (1,3), (0,4), (1,5)]
+                    availableNodes = [(0,0), (0,6), (2,0), (2,2), (2,4), (2,6)]
+                elif deathRaceNum == 3:
+                    highlightNodes = [(1,5), (2,6), (3,5), (4,6), (5,5)]
+                    availableNodes = [(0,6), (6,6), (0,4), (2,4), (4,4), (6,4)]
+                elif deathRaceNum == 4:
+                    highlightNodes = [(5,1), (6,2), (5,3), (6,4), (5,5)]
+                    availableNodes = [(6,0), (6,6), (4,0), (4,2), (4,4), (4,6)]
+                shuffle(availableNodes)
+                highlightNodes += availableNodes[:addNodes]
+                for node in highlightNodes:
+                    image = self.app.aoeNode
+                    x = -12 + (40 * node[0])
+                    y = 25 + (42 * node[1])
+                    log("Pasting AoE highlight node image onto card at " + str((x, y)) + ".")
+                    self.app.displayImage.paste(im=image, box=(x, y), mask=image)
+
+                image = self.app.destinationNode
+                x = 51 if deathRaceNum < 3 else 211
+                y = 90 if deathRaceNum in {1, 4} else 258
+                log("Pasting destination node image onto card at " + str((x, y)) + ".")
+                self.app.displayImage.paste(im=image, box=(x, y), mask=image)
                                     
                 for position in ["left", "middle", "right"]:
                     if position not in actions or not actions[position]:
@@ -1823,11 +2044,187 @@ try:
                 raise
 
 
+        def add_components_to_variant_card_behavior_fiery_ruin(self, dodge, repeat, actions, addNodes, event=None):
+            try:
+                log("Start of add_components_to_variant_card_behavior_fiery_ruin, dodge={}, repeat={}, actions={}".format(str(dodge), str(repeat), str(actions)))
+
+                nodeCnt = choice([10, 10, 10, 10, 11, 11, 15, 15]) + addNodes
+                landingNode = choice([(1,1), (3,1), (5,1), (2,2), (4,2), (1,3), (3,3), (5,3), (2,4), (4,4), (1,5), (3,5), (5,5)])
+                image = self.app.aoeNode
+                x = -12 + (40 * landingNode[0])
+                y = 25 + (42 * landingNode[1])
+                log("Pasting AoE highlight node image onto card at " + str((x, y)) + ".")
+                self.app.displayImage.paste(im=image, box=(x, y), mask=image)
+                
+                image = self.app.destinationNode
+                x = 11 + (40 * landingNode[0])
+                y = 48 + (42 * landingNode[1])
+                log("Pasting destination node image onto card at " + str((x, y)) + ".")
+                self.app.displayImage.paste(im=image, box=(x, y), mask=image)
+
+                highlightNodes = {landingNode,}
+
+                # Adjacent nodes can be found by taking the absolute difference between
+                # the corresponding coordinates of the start and destination nodes
+                # adding those values together, and only allowing those that are less than 4
+
+                for _ in range(nodeCnt - 1): # -1 because we already have the destination node picked
+                    for x in range(4, -1, -1):
+                        validNodes = set([n for n in nodes if [abs(n[0] - h[0]) + abs(n[1] - h[1]) < 4 for h in highlightNodes].count(True) > x]) - highlightNodes
+                        if validNodes:
+                            break
+                    nodeToHighlight = choice(list(validNodes))
+                    highlightNodes.add(nodeToHighlight)
+                    
+                    image = self.app.aoeNode
+                    x = -12 + (40 * nodeToHighlight[0])
+                    y = 25 + (42 * nodeToHighlight[1])
+                    log("Pasting AoE highlight node image onto card at " + str((x, y)) + ".")
+                    self.app.displayImage.paste(im=image, box=(x, y), mask=image)
+
+                log("End of add_components_to_variant_card_behavior_fiery_ruin")
+            except Exception as e:
+                error_popup(self.root, e)
+                raise
+
+
+        def add_components_to_variant_card_behavior_blasted_nodes(self, dodge, repeat, actions, addNodes, event=None):
+            try:
+                log("Start of add_components_to_variant_card_behavior_blasted_nodes, dodge={}, repeat={}, actions={}".format(str(dodge), str(repeat), str(actions)))
+
+                oikNodes = [n for n in nodes if n not in {(2,0), (4,0), (0,2), (6,2), (0,4), (6,4)}]
+
+                nodeCnt = choice([8, 8, 8, 8, 9, 9]) + addNodes
+                landingNode = choice([(3,1), (1,3), (5,3)])
+                image = self.app.aoeNode
+                x = -12 + (40 * landingNode[0])
+                y = 25 + (42 * landingNode[1])
+                log("Pasting AoE highlight node image onto card at " + str((x, y)) + ".")
+                self.app.displayImage.paste(im=image, box=(x, y), mask=image)
+                
+                image = self.app.destinationNode
+                x = 11 + (40 * landingNode[0])
+                y = 48 + (42 * landingNode[1])
+                log("Pasting destination node image onto card at " + str((x, y)) + ".")
+                self.app.displayImage.paste(im=image, box=(x, y), mask=image)
+
+                highlightNodes = {landingNode,}
+
+                # Adjacent nodes can be found by taking the absolute difference between
+                # the corresponding coordinates of the start and destination nodes
+                # adding those values together, and only allowing those that are less than 4
+
+                # These are complicated rules but they work to get a more beam-type line of nodes.
+                for _ in range(nodeCnt - 1): # -1 because we already have the destination node picked
+                    validNodes = set([n for n in oikNodes if [abs(n[0] - h[0]) + abs(n[1] - h[1]) < 2 for h in highlightNodes].count(True) == 2]) - highlightNodes
+                    if not validNodes:
+                        validNodes = set([n for n in oikNodes if [abs(n[0] - h[0]) + abs(n[1] - h[1]) < 4 for h in highlightNodes if n[0] in ({1, 3, 5} if h[0] in {0, 2, 4, 6} else {0, 2, 4, 6})].count(True) == 1]) - highlightNodes
+                    if not validNodes:
+                        validNodes = set([n for n in oikNodes if [abs(n[0] - h[0]) + abs(n[1] - h[1]) < 4 for h in highlightNodes].count(True) == 3]) - highlightNodes
+                    if not validNodes:
+                        validNodes = set([n for n in oikNodes if [abs(n[0] - h[0]) + abs(n[1] - h[1]) < 4 for h in highlightNodes if n[0] in ({1, 3, 5} if h[0] in {0, 2, 4, 6} else {0, 2, 4, 6})].count(True) == 0]) - highlightNodes
+                    nodeToHighlight = choice(list(validNodes))
+                    highlightNodes.add(nodeToHighlight)
+                    
+                    image = self.app.aoeNode
+                    x = -12 + (40 * nodeToHighlight[0])
+                    y = 25 + (42 * nodeToHighlight[1])
+                    log("Pasting AoE highlight node image onto card at " + str((x, y)) + ".")
+                    self.app.displayImage.paste(im=image, box=(x, y), mask=image)
+
+                log("End of add_components_to_variant_card_behavior_blasted_nodes")
+            except Exception as e:
+                error_popup(self.root, e)
+                raise
+
+
+        def add_components_to_variant_card_behavior_fiery_breath(self, dodge, repeat, actions, addNodes, event=None):
+            try:
+                log("Start of add_components_to_variant_card_behavior_fiery_breath, dodge={}, repeat={}, actions={}".format(str(dodge), str(repeat), str(actions)))
+
+                imageWithText = ImageDraw.Draw(self.app.displayImage)
+                imageWithText.text((158, 360), str(dodge), "black", font2)
+                                    
+                for position in ["left", "middle", "right"]:
+                    if position not in actions or not actions[position]:
+                        continue
+                    if "type" in actions[position] and (actions[position]["type"] == "physical" or actions[position]["type"] == "magic"):
+                        x = 0
+                        image = self.app.attack[actions[position]["type"]][actions[position]["damage"]]
+                        log("Pasting " + actions[position]["type"] + " attack image onto variant at " + str((x, 330)) + ".")
+                        self.app.displayImage.paste(im=image, box=(x, 330), mask=image)
+                    
+                    if "effect" in actions[position]:
+                        effectCnt = len(actions[position]["effect"])
+                        for i, effect in enumerate(actions[position]["effect"]):
+                            xOffset = 0
+                            if effect == "bleed":
+                                image = self.app.bleed
+                            elif effect == "frostbite":
+                                image = self.app.frostbite
+                                xOffset = -4
+                            elif effect == "poison":
+                                image = self.app.poison
+                            elif effect == "stagger":
+                                image = self.app.stagger
+                                xOffset = -2
+                            else:
+                                continue
+
+                            if effectCnt == 1:
+                                x = 62 + xOffset
+                                y = 385
+                            else:
+                                x = (65 if i == 0 else 48) + xOffset
+                                y = 375 if i == 0 else 395
+                            self.app.displayImage.paste(im=image, box=(x, y), mask=image)
+
+                landingNode = choice([(0,0), (6,0), (0,6), (6,6)])
+                image = self.app.destinationNode
+                x = 11 + (40 * landingNode[0])
+                y = 48 + (42 * landingNode[1])
+                log("Pasting destination node image onto card at " + str((x, y)) + ".")
+                self.app.displayImage.paste(im=image, box=(x, y), mask=image)
+                
+                firstNode = (1,1) if landingNode == (0,0) else (5,1) if landingNode == (6,0) else (1,5) if landingNode == (0,6) else (5,5)
+                image = self.app.aoeNode
+                x = -12 + (40 * firstNode[0])
+                y = 25 + (42 * firstNode[1])
+                log("Pasting AoE highlight node image onto card at " + str((x, y)) + ".")
+                self.app.displayImage.paste(im=image, box=(x, y), mask=image)
+
+                highlightNodes = {firstNode,}
+
+                # Adjacent nodes can be found by taking the absolute difference between
+                # the corresponding coordinates of the start and destination nodes
+                # adding those values together, and only allowing those that are less than 4
+
+                for _ in range(7 + addNodes - 1): # -1 because we already have the first node picked
+                    for x in range(4, -1, -1):
+                        validNodes = set([n for n in nodes if [abs(n[0] - h[0]) + abs(n[1] - h[1]) < 4 for h in highlightNodes].count(True) > x]) - highlightNodes - {landingNode,}
+                        if validNodes:
+                            break
+                    nodeToHighlight = choice(list(validNodes))
+                    highlightNodes.add(nodeToHighlight)
+                    
+                    image = self.app.aoeNode
+                    x = -12 + (40 * nodeToHighlight[0])
+                    y = 25 + (42 * nodeToHighlight[1])
+                    log("Pasting AoE highlight node image onto card at " + str((x, y)) + ".")
+                    self.app.displayImage.paste(im=image, box=(x, y), mask=image)
+
+                log("End of add_components_to_variant_card_behavior_fiery_breath")
+            except Exception as e:
+                error_popup(self.root, e)
+                raise
+
+
         def apply_mods_to_actions(self, enemy, behavior, dodge, repeat, actions, variant=None, event=None):
             try:
                 log("Start of apply_mods_to_actions, enemy={}, behavior={}, dodge={}, repeat={}, actions={}, variant={}".format(str(enemy), str(behavior), str(dodge), str(repeat), str(actions), str(variant)))
 
                 behavior = "" if behavior == "behavior" else behavior
+                addNodes = 0
 
                 if type(variant) == list:
                     mods = variant
@@ -1835,13 +2232,14 @@ try:
                     mods = sorted([modIdLookup[m] for m in list(self.currentVariants[enemy][behavior])], key=lambda x: 1 if x == "repeat" else 0)
                 else:
                     log("End of apply_mods_to_actions (nothing to do)")
-                    return dodge, repeat, actions
+                    return dodge, repeat, actions, addNodes
 
                 behaviorAttacks = [i for i, a in enumerate(actions) if a in {"left", "middle", "right"} and "damage" in actions[a]]
                 effectCount = max([len(actions[position].get("effect", [])) for position in actions]) + mods.count("bleed") + mods.count("frostbite") + mods.count("poison") + mods.count("stagger")
                 effectsPerAttack = ceil(effectCount / len(behaviorAttacks))
 
                 for mod in mods:
+                    addNodes += int(mod[-1]) if "nodes" in mod else 0
                     dodge += int(mod[-1]) if "dodge" in mod else 0
                     repeat += 1 if "repeat" in mod else 0
 
@@ -1878,7 +2276,7 @@ try:
 
                 log("End of apply_mods_to_actions")
 
-                return dodge, repeat, actions
+                return dodge, repeat, actions, addNodes
             except Exception as e:
                 error_popup(self.root, e)
                 raise

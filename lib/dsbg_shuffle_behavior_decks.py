@@ -38,6 +38,33 @@ try:
             self.heatupButton = ttk.Button(self.deckTabButtonsFrame2, text="Remove Trackers", width=16, command=self.remove_all_health_trackers)
             self.heatupButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
 
+            self.nonHeatupCards = {}
+            for enemy in behaviors:
+                lookupName = enemy if "(" not in enemy else enemy[:enemy.index(" (")]
+
+                self.nonHeatupCards[enemy] = [b for b in behaviors[enemy] if (
+                    (
+                        not behaviorDetail[lookupName][b].get("heatup", False)
+                        or (lookupName == "The Four Kings" and behaviorDetail[lookupName][b].get("heatup", False) == 1)
+                    )
+                    and b not in {
+                        "Mark of Calamity",
+                        "Hellfire Blast",
+                        "Mega Boss Setup",
+                        "Death Race 1",
+                        "Death Race 2",
+                        "Death Race 3",
+                        "Death Race 4",
+                        "Stomach Slam",
+                        "Crawling Charge",
+                        "Fire Beam (Left)",
+                        "Fire Beam (Right)",
+                        "Fire Beam (Front)",
+                        "Falling Slam",
+                        "Limping Strike"
+                    })
+                    ]
+
             self.decks = (
                 {k: {} for k in enemiesDict}
                 | {k: {} for k in bosses if "Vordt" not in k}
@@ -167,40 +194,21 @@ try:
 
                 lookupName = enemy if "(" not in enemy else enemy[:enemy.index(" (")]
 
-                nonHeatupCards = [b for b in behaviors[enemy] if (
-                    (
-                        not behaviorDetail[lookupName][b].get("heatup", False)
-                        or (lookupName == "The Four Kings" and behaviorDetail[lookupName][b].get("heatup", False) == 1)
-                    )
-                    and b not in {
-                        "Mark of Calamity",
-                        "Hellfire Blast",
-                        "Death Race",
-                        "Stomach Slam",
-                        "Crawling Charge",
-                        "Fire Beam (Left)",
-                        "Fire Beam (Right)",
-                        "Fire Beam (Front)",
-                        "Falling Slam",
-                        "Limping Strike"
-                    })
-                    ]
-
                 if enemy in enemiesDict:
-                    deck = sample(nonHeatupCards, enemiesDict[enemy].cards)
+                    deck = sample(self.nonHeatupCards[enemy], enemiesDict[enemy].cards)
                 elif "(move)" in enemy: # Vordt
-                    deck = sample(nonHeatupCards, 4)
+                    deck = sample(self.nonHeatupCards[enemy], 4)
                 elif "(attack)" in enemy: # Vordt
-                    deck = sample(nonHeatupCards, 3)
+                    deck = sample(self.nonHeatupCards[enemy], 3)
                 elif enemy == "Black Dragon Kalameet":
-                    deck = sample(nonHeatupCards, 4) + ["Hellfire Blast", "Mark of Calamity"]
+                    deck = sample(self.nonHeatupCards[enemy], 4) + ["Hellfire Blast", "Mark of Calamity"]
                 elif enemy == "Executioner Chariot":
-                    deck = sample(nonHeatupCards, 4) + [choice([b for b in behaviors[enemy] if behaviorDetail[lookupName][b].get("heatup", False)])]
+                    deck = ["Death Race 1", "Death Race 2", "Death Race 3", "Death Race 4"]
                 elif enemy == "Gaping Dragon":
-                    deck = sample(nonHeatupCards, 3)
+                    deck = sample(self.nonHeatupCards[enemy], 3)
                     deck += ["Stomach Slam", "Stomach Slam", choice([b for b in behaviors[enemy] if behaviorDetail[lookupName][b].get("heatup", False)])]
                 elif enemy == "Old Iron King":
-                    deck = sample(nonHeatupCards, 3) + ["Fire Beam (Front)", "Fire Beam (Left)", "Fire Beam (Right)"]
+                    deck = sample(self.nonHeatupCards[enemy], 3) + ["Fire Beam (Front)", "Fire Beam (Left)", "Fire Beam (Right)"]
                 elif enemy == "The Last Giant":
                     normalCards = [b for b in behaviors[enemy] if (
                         not behaviorDetail[lookupName][b].get("heatup", False)
@@ -210,9 +218,10 @@ try:
                     armCards = [b for b in behaviors[enemy] if behaviorDetail[lookupName][b].get("arm", False)]
                     deck = sample(normalCards, 3) + sample(armCards, 3)
                 else:
-                    deck = sample(nonHeatupCards, bosses[enemy]["cards"])
+                    deck = sample(self.nonHeatupCards[enemy], bosses[enemy]["cards"])
 
-                shuffle(deck)
+                if enemy != "Executioner Chariot":
+                    shuffle(deck)
 
                 log("End of load_deck")
                 return deck
@@ -295,6 +304,8 @@ try:
                         shuffle(self.decks[selection]["heatupCards"][4])
                     elif selection == "The Last Giant":
                         self.decks[selection]["heatupCards"] = sample([b for b in behaviors[selection] if behaviorDetail[selection][b].get("heatup", False)], 3) + ["Falling Slam"]
+                    elif selection == "Executioner Chariot":
+                        self.decks[selection]["heatupCards"] = sample(self.nonHeatupCards["Executioner Chariot"], 4) + [choice([b for b in behaviors["Executioner Chariot"] if behaviorDetail["Executioner Chariot"][b].get("heatup", False)])]
                     else:
                         if "Vordt" in selection:
                             enemyName = selection[:selection.index(" (")]
@@ -448,6 +459,10 @@ try:
                     if selection == "Ornstein & Smough":
                         self.app.variantsTab.load_variant_card_locked(variant="Ornstein - data", deckDataCard=True, healthMod=self.decks[self.treeviewDecks.selection()[0]]["healthMod"], fromDeck=True)
                         self.app.variantsTab.load_variant_card_locked(variant="Smough - data", deckDataCard=True, healthMod=self.decks[self.treeviewDecks.selection()[0]]["healthMod"], fromDeck=True)
+                    elif selection == "Executioner Chariot" and not self.decks["Executioner Chariot"]["heatup"]:
+                        self.app.variantsTab.load_variant_card_locked(variant="Executioner Chariot - Executioner Chariot", deckDataCard=True, fromDeck=True)
+                    elif selection == "Executioner Chariot" and self.decks["Executioner Chariot"]["heatup"]:
+                        self.app.variantsTab.load_variant_card_locked(variant="Executioner Chariot - Skeletal Horse", deckDataCard=True, fromDeck=True)
                     else:
                         selection = selection[:selection.index(" (")] if "Vordt" in selection else selection
                         self.app.variantsTab.load_variant_card_locked(variant=selection + ("_" + ",".join([str(m) for m in self.decks[self.treeviewDecks.selection()[0]]["mods"]])), deckDataCard=True, healthMod=0 if selection == "The Four Kings" or self.treeviewDecks.parent(self.treeviewDecks.selection()[0]) == "Enemies" else self.decks[self.treeviewDecks.selection()[0]]["healthMod"], fromDeck=True)
@@ -687,7 +702,6 @@ try:
                     not selection
                     or selection not in self.decks
                     or self.treeviewDecks.parent(selection) == "Enemies"
-                    or selection == "Executioner Chariot"
                     or (selection == "Old Dragonslayer" and self.decks[selection]["heatup"] > 2)
                     or (selection == "The Four Kings" and self.decks[selection]["heatup"] > 3)
                     or ("Vordt" in selection and self.decks[selection]["heatup"] > 1)
@@ -810,6 +824,10 @@ try:
                     self.decks[vordtSelection]["deck"] += self.decks[vordtSelection]["heatupCards"]
                     self.decks[vordtSelection]["heatup"] += 1
                     self.decks[selection]["heatup"] += 1
+                elif "Chariot" in selection:
+                    self.app.variantsTab.load_variant_card_locked(variant="Executioner Chariot - Skeletal Horse", deckDataCard=True, fromDeck=True)
+                    self.decks[selection]["deck"] = self.decks[selection]["heatupCards"]
+                    self.decks[selection]["heatup"] = True
                 else:
                     self.decks[selection]["deck"] += self.decks[selection]["heatupCards"]
                     self.decks[selection]["heatup"] = True
