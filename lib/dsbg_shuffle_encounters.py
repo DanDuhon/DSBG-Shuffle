@@ -1,4 +1,5 @@
 try:
+    import errno
     import tkinter as tk
     from collections import Counter
     from json import load
@@ -378,11 +379,33 @@ try:
                 if not encounterList:
                     encounterList = self.encounterList
 
-                self.load_encounter(encounter=choice([encounter for encounter in encounterList if (
+                pickList = [encounter for encounter in encounterList if (
                     self.app.encounters[encounter]["level"] == level
+                    and encounter not in set([e["name"] for e in self.app.campaignTab.campaign])
                     and encounter != "Mega Boss Setup"
+                    and encounter != "Gravelord Nito Setup"
                     and (self.app.encounters[encounter]["expansion"] in self.expansionsForRandomEncounters
-                        or self.app.encounters[encounter]["level"] == 4))]))
+                        or self.app.encounters[encounter]["level"] == 4))]
+                
+                if not pickList:
+                    pickList = [encounter for encounter in encounterList if (
+                        self.app.encounters[encounter]["level"] == level
+                        and encounter != "Mega Boss Setup"
+                        and encounter != "Gravelord Nito Setup"
+                        and (self.app.encounters[encounter]["expansion"] in self.expansionsForRandomEncounters
+                            or self.app.encounters[encounter]["level"] == 4))]
+                
+                # If you don't have any valid alternatives for a level 4 encounter,
+                # per official rules you should do another level 3.
+                if not pickList and level == 4:
+                    pickList = [encounter for encounter in encounterList if (
+                        self.app.encounters[encounter]["level"] == 3
+                        and encounter != "Mega Boss Setup"
+                        and encounter != "Gravelord Nito Setup"
+                        and (self.app.encounters[encounter]["expansion"] in self.expansionsForRandomEncounters
+                            or self.app.encounters[encounter]["level"] == 3))]
+
+                self.load_encounter(encounter=choice(pickList))
 
                 log("\tEnd of random_encounter")
             except Exception as e:
@@ -449,10 +472,8 @@ try:
                 self.newEnemies = []
 
                 # Use only alternative enemies for expansions and enemies the user has activated in the settings.
-                for expansionCombo in alts["alternatives"]:
-                    if set(expansionCombo.split(",")).issubset(self.app.availableExpansions):
-                        self.app.selected["alternatives"] += [alt for alt in alts["alternatives"][expansionCombo] if set(alt).issubset(self.app.enabledEnemies) and sum([1 for a in alt if enemyIds[a].expansions == set(["Phantoms"]) or enemyIds[a].name in {"Hungry Mimic", "Voracious Mimic"}]) <= self.app.settings["maxInvaders"][str(self.app.selected["level"])]]
-
+                for expansionCombo in [a for a in alts["alternatives"] if set(a.split(",")).issubset(self.app.availableExpansions)]:
+                    self.app.selected["alternatives"] += [alt for alt in alts["alternatives"][expansionCombo] if set(alt).issubset(self.app.enabledEnemies) and sum([1 for a in alt if enemyIds[a].expansions == set(["Phantoms"]) or enemyIds[a].name in {"Hungry Mimic", "Voracious Mimic"}]) <= self.app.settings["maxInvaders"][str(self.app.selected["level"])]]
                 self.newTiles = dict()
 
                 if not customEnemyListCheck:
@@ -461,6 +482,12 @@ try:
                     set_display_bindings_by_tab(self.app)
 
                 log("\tEnd of load_encounter")
+            except EnvironmentError as err:
+                if "Custom - " in encounterName and err.errno == errno.ENOENT: # ENOENT -> "no entity" -> "file not found"
+                    # Handling for this occurred in create_image.
+                    return
+                else:
+                    raise
             except Exception as e:
                 error_popup(self.root, e)
                 raise
@@ -487,7 +514,7 @@ try:
                     log("\tEnd of show_original")
                     return
 
-                if "Custom - " + self.app.selected["name"] in self.app.encounters:
+                if "Custom - " + self.app.selected["name"] in self.app.encounters and self.app.selected["expansion"] in set([e[0] for e in self.app.customEncounters]):
                     log("\tCustom encounter - nothing to do")
                     log("\tEnd of show_original")
                     return
@@ -527,7 +554,7 @@ try:
 
                 self.rewardTreasure = None
 
-                if customEncounter or "Custom - " + self.app.selected["name"] in self.app.encounters:
+                if customEncounter and "Custom - " + self.app.selected["name"] in self.app.encounters:
                     self.newEnemies = []
                 else:
                     # Make sure a new set of enemies is chosen each time, otherwise it
@@ -539,9 +566,15 @@ try:
                         while self.newEnemies == oldEnemies:
                             self.newEnemies = choice(self.app.selected["alternatives"])
 
-                self.edit_encounter_card(self.app.selected["name"], self.app.selected["expansion"], self.app.selected["level"], self.app.selected["enemySlots"], customEncounter=customEncounter or "Custom - " + self.app.selected["name"] in self.app.encounters)
+                self.edit_encounter_card(self.app.selected["name"], self.app.selected["expansion"], self.app.selected["level"], self.app.selected["enemySlots"], customEncounter=customEncounter and "Custom - " + self.app.selected["name"] in self.app.encounters)
 
                 log("\tEnd of shuffle_enemies")
+            except EnvironmentError as err:
+                if customEncounter and err.errno == errno.ENOENT: # ENOENT -> "no entity" -> "file not found"
+                    # Handling for this occurred in create_image.
+                    return
+                else:
+                    raise
             except Exception as e:
                 error_popup(self.root, e)
                 raise
@@ -576,160 +609,161 @@ try:
 
                 displayPhotoImage = self.app.create_image(name + ".jpg", "encounter", level, expansion, customEncounter=customEncounter)
 
-                self.newTiles = {
-                    1: [[], [], [], []],
-                    2: [[], []],
-                    3: [[], []]
-                    }
-
-                log("New enemies: " + str(self.newEnemies))
-
-                # Determine where enemies should be placed determined by whether this is an old or new style encounter,
-                # the level of the encounter, and where on the original encounter card enemies were found.
-                s = 0
-                for slotNum, slot in enumerate(enemySlots):
-                    # These are the slot numbers for spawns. Skip over these enemies.
-                    if slotNum in {4, 7, 10}:
-                        s += slot
-                        continue
-                    for e in range(slot):
-                        self.newTiles[1 if slotNum < 4 else 2 if slotNum < 7 else 3][slotNum - (0 if slotNum < 4 else 5 if slotNum < 7 else 8)].append(enemyIds[self.newEnemies[s]].name)
-                        if level == 4:
-                            x = 116 + (43 * e) - (1 if "Phantoms" in enemyIds[self.newEnemies[s]].expansions else 0)
-                            y = 78 + (47 * slotNum) - ((1 * (2 - slotNum)) if "Phantoms" in enemyIds[self.newEnemies[s]].expansions else 0)
-                            imageType = "imageOldLevel4"
-                        elif expansion in {"Dark Souls The Board Game", "Iron Keep", "Darkroot", "Explorers", "Executioner Chariot"}:
-                            x = 67 + (40 * e)
-                            y = 66 + (46 * slotNum)
-                            imageType = "imageOld"
-                        else:
-                            x = 300 + (29 * e)
-                            y = 323 + (29 * (slotNum - (0 if slotNum < 4 else 5 if slotNum < 7 else 8))) + (((1 if slotNum < 4 else 2 if slotNum < 7 else 3) - 1) * 122)
-                            imageType = "imageNew"
-                            
-                        image = self.app.allEnemies[enemyIds[self.newEnemies[s]].name][imageType]
-
-                        log("Pasting " + enemyIds[self.newEnemies[s]].name + " image onto encounter at " + str((x, y)) + ".")
-                        self.app.displayImage.paste(im=image, box=(x, y), mask=image)
-                        s += 1
-
                 self.apply_keyword_tooltips(name, expansion, right=right)
 
-                # These are new encounters that have text referencing specific enemies.
-                if name == "Abandoned and Forgotten":
-                    self.abandoned_and_forgotten()
-                elif name == "Aged Sentinel":
-                    self.aged_sentinel(right=right)
-                elif name == "Castle Break In":
-                    self.castle_break_in(original=original)
-                elif (name == "Central Plaza" or name == "Central Plaza (TSC)") and expansion == "The Sunless City":
-                    self.central_plaza(right=right)
-                elif name == "Cloak and Feathers":
-                    self.cloak_and_feathers(right=right)
-                elif name == "Cold Snap":
-                    self.cold_snap(right=right)
-                elif name == "Corvian Host":
-                    self.corvian_host(right=right, original=original)
-                elif name == "Corrupted Hovel":
-                    self.corrupted_hovel(right=right)
-                elif name == "Dark Alleyway":
-                    self.dark_alleyway(right=right)
-                elif name == "Dark Resurrection":
-                    self.dark_resurrection(original=original)
-                elif name == "Deathly Freeze":
-                    self.deathly_freeze(level, right=right)
-                elif name == "Deathly Magic":
-                    self.deathly_magic(level, right=right)
-                elif name == "Deathly Tolls":
-                    self.deathly_tolls(right=right, original=original)
-                elif name == "Depths of the Cathedral":
-                    self.depths_of_the_cathedral(right=right, original=original)
-                elif name == "Distant Tower":
-                    self.distant_tower(right=right, original=original)
-                elif name == "Eye of the Storm":
-                    self.eye_of_the_storm(right=right)
-                elif name == "Flooded Fortress":
-                    self.flooded_fortress(right=right, original=original)
-                elif name == "Frozen Revolutions":
-                    self.frozen_revolutions(right=right)
-                elif name == "Giant's Coffin":
-                    self.giants_coffin(right=right, original=original)
-                elif name == "Gleaming Silver":
-                    self.gleaming_silver(level, right=right)
-                elif name == "Gnashing Beaks":
-                    self.gnashing_beaks(right=right)
-                elif name == "Grave Matters":
-                    self.grave_matters(original=original)
-                elif name == "Grim Reunion":
-                    self.grim_reunion(right=right)
-                elif name == "Hanging Rafters":
-                    self.hanging_rafters(original=original)
-                elif name == "In Deep Water":
-                    self.in_deep_water(right=right, original=original)
-                elif name == "Inhospitable Ground":
-                    self.inhospitable_ground(original=original)
-                elif name == "Lakeview Refuge":
-                    self.lakeview_refuge(right=right)
-                elif name == "Monstrous Maw":
-                    self.monstrous_maw(right=right, original=original)
-                elif name == "No Safe Haven":
-                    self.no_safe_haven(right=right, original=original)
-                elif name == "Painted Passage":
-                    self.painted_passage(original=original)
-                elif name == "Parish Church":
-                    self.parish_church(right=right)
-                elif name == "Parish Gates":
-                    self.parish_gates(right=right)
-                elif name == "Pitch Black":
-                    self.pitch_black(level, right=right)
-                elif name == "Puppet Master":
-                    self.puppet_master(right=right, original=original)
-                elif name == "Rain of Filth":
-                    self.rain_of_filth(original=original)
-                elif name == "Shattered Keep":
-                    self.shattered_keep(right=right, original=original)
-                elif name == "Skeletal Spokes":
-                    self.skeletal_spokes(right=right)
-                elif name == "Skeleton Overlord":
-                    self.skeleton_overlord(right=right)
-                elif name == "Tempting Maw":
-                    self.tempting_maw(right=right)
-                elif name == "The Abandoned Chest":
-                    self.the_abandoned_chest(right=right, original=original)
-                elif name == "The Beast From the Depths":
-                    self.the_beast_from_the_depths(right=right, original=original)
-                elif name == "The Bell Tower":
-                    self.the_bell_tower(right=right)
-                elif name == "The First Bastion":
-                    self.the_first_bastion(level, right=right)
-                elif name == "The Fountainhead":
-                    self.the_fountainhead(right=right, original=original)
-                elif name == "The Grand Hall":
-                    self.the_grand_hall(right=right)
-                elif name == "The Iron Golem":
-                    self.the_iron_golem(right=right, original=original)
-                elif name == "The Last Bastion":
-                    self.the_last_bastion(level, right=right)
-                elif name == "The Locked Grave":
-                    self.the_locked_grave(right=right, original=original)
-                elif name == "The Shine of Gold":
-                    self.the_shine_of_gold(right=right)
-                elif name == "The Skeleton Ball":
-                    self.the_skeleton_ball(right=right, original=original)
-                elif name == "Trecherous Tower":
-                    self.trecherous_tower()
-                elif name == "Trophy Room":
-                    self.trophy_room(right=right, original=original)
-                elif name == "Twilight Falls":
-                    self.twilight_falls(right=right, original=original)
-                elif name == "Undead Sanctum":
-                    self.undead_sanctum(right=right, original=original)
-                elif name == "Unseen Scurrying":
-                    self.unseen_scurrying(original=original)
-                elif name == "Urns of the Fallen":
-                    self.urns_of_the_fallen(original=original)
-                elif name == "Velka's Chosen":
-                    self.velkas_chosen(level, right=right, original=original)
+                if not customEncounter:
+                    self.newTiles = {
+                        1: [[], [], [], []],
+                        2: [[], []],
+                        3: [[], []]
+                        }
+
+                    log("New enemies: " + str(self.newEnemies))
+
+                    # Determine where enemies should be placed determined by whether this is an old or new style encounter,
+                    # the level of the encounter, and where on the original encounter card enemies were found.
+                    s = 0
+                    for slotNum, slot in enumerate(enemySlots):
+                        # These are the slot numbers for spawns. Skip over these enemies.
+                        if slotNum in {4, 7, 10}:
+                            s += slot
+                            continue
+                        for e in range(slot):
+                            self.newTiles[1 if slotNum < 4 else 2 if slotNum < 7 else 3][slotNum - (0 if slotNum < 4 else 5 if slotNum < 7 else 8)].append(enemyIds[self.newEnemies[s]].name)
+                            if level == 4:
+                                x = 116 + (43 * e) - (1 if "Phantoms" in enemyIds[self.newEnemies[s]].expansions else 0)
+                                y = 78 + (47 * slotNum) - ((1 * (2 - slotNum)) if "Phantoms" in enemyIds[self.newEnemies[s]].expansions else 0)
+                                imageType = "imageOldLevel4"
+                            elif expansion in {"Dark Souls The Board Game", "Iron Keep", "Darkroot", "Explorers", "Executioner Chariot"}:
+                                x = 67 + (40 * e)
+                                y = 66 + (46 * slotNum)
+                                imageType = "imageOld"
+                            else:
+                                x = 300 + (29 * e)
+                                y = 323 + (29 * (slotNum - (0 if slotNum < 4 else 5 if slotNum < 7 else 8))) + (((1 if slotNum < 4 else 2 if slotNum < 7 else 3) - 1) * 122)
+                                imageType = "imageNew"
+                                
+                            image = self.app.allEnemies[enemyIds[self.newEnemies[s]].name][imageType]
+
+                            log("Pasting " + enemyIds[self.newEnemies[s]].name + " image onto encounter at " + str((x, y)) + ".")
+                            self.app.displayImage.paste(im=image, box=(x, y), mask=image)
+                            s += 1
+
+                    # These are new encounters that have text referencing specific enemies.
+                    if name == "Abandoned and Forgotten":
+                        self.abandoned_and_forgotten()
+                    elif name == "Aged Sentinel":
+                        self.aged_sentinel(right=right)
+                    elif name == "Castle Break In":
+                        self.castle_break_in(original=original)
+                    elif (name == "Central Plaza" or name == "Central Plaza (TSC)") and expansion == "The Sunless City":
+                        self.central_plaza(right=right)
+                    elif name == "Cloak and Feathers":
+                        self.cloak_and_feathers(right=right)
+                    elif name == "Cold Snap":
+                        self.cold_snap(right=right)
+                    elif name == "Corvian Host":
+                        self.corvian_host(right=right, original=original)
+                    elif name == "Corrupted Hovel":
+                        self.corrupted_hovel(right=right)
+                    elif name == "Dark Alleyway":
+                        self.dark_alleyway(right=right)
+                    elif name == "Dark Resurrection":
+                        self.dark_resurrection(original=original)
+                    elif name == "Deathly Freeze":
+                        self.deathly_freeze(level, right=right)
+                    elif name == "Deathly Magic":
+                        self.deathly_magic(level, right=right)
+                    elif name == "Deathly Tolls":
+                        self.deathly_tolls(right=right, original=original)
+                    elif name == "Depths of the Cathedral":
+                        self.depths_of_the_cathedral(right=right, original=original)
+                    elif name == "Distant Tower":
+                        self.distant_tower(right=right, original=original)
+                    elif name == "Eye of the Storm":
+                        self.eye_of_the_storm(right=right)
+                    elif name == "Flooded Fortress":
+                        self.flooded_fortress(right=right, original=original)
+                    elif name == "Frozen Revolutions":
+                        self.frozen_revolutions(right=right)
+                    elif name == "Giant's Coffin":
+                        self.giants_coffin(right=right, original=original)
+                    elif name == "Gleaming Silver":
+                        self.gleaming_silver(level, right=right)
+                    elif name == "Gnashing Beaks":
+                        self.gnashing_beaks(right=right)
+                    elif name == "Grave Matters":
+                        self.grave_matters(original=original)
+                    elif name == "Grim Reunion":
+                        self.grim_reunion(right=right)
+                    elif name == "Hanging Rafters":
+                        self.hanging_rafters(original=original)
+                    elif name == "In Deep Water":
+                        self.in_deep_water(right=right, original=original)
+                    elif name == "Inhospitable Ground":
+                        self.inhospitable_ground(original=original)
+                    elif name == "Lakeview Refuge":
+                        self.lakeview_refuge(right=right)
+                    elif name == "Monstrous Maw":
+                        self.monstrous_maw(right=right, original=original)
+                    elif name == "No Safe Haven":
+                        self.no_safe_haven(right=right, original=original)
+                    elif name == "Painted Passage":
+                        self.painted_passage(original=original)
+                    elif name == "Parish Church":
+                        self.parish_church(right=right)
+                    elif name == "Parish Gates":
+                        self.parish_gates(right=right)
+                    elif name == "Pitch Black":
+                        self.pitch_black(level, right=right)
+                    elif name == "Puppet Master":
+                        self.puppet_master(right=right, original=original)
+                    elif name == "Rain of Filth":
+                        self.rain_of_filth(original=original)
+                    elif name == "Shattered Keep":
+                        self.shattered_keep(right=right, original=original)
+                    elif name == "Skeletal Spokes":
+                        self.skeletal_spokes(right=right)
+                    elif name == "Skeleton Overlord":
+                        self.skeleton_overlord(right=right)
+                    elif name == "Tempting Maw":
+                        self.tempting_maw(right=right)
+                    elif name == "The Abandoned Chest":
+                        self.the_abandoned_chest(right=right, original=original)
+                    elif name == "The Beast From the Depths":
+                        self.the_beast_from_the_depths(right=right, original=original)
+                    elif name == "The Bell Tower":
+                        self.the_bell_tower(right=right)
+                    elif name == "The First Bastion":
+                        self.the_first_bastion(level, right=right)
+                    elif name == "The Fountainhead":
+                        self.the_fountainhead(right=right, original=original)
+                    elif name == "The Grand Hall":
+                        self.the_grand_hall(right=right)
+                    elif name == "The Iron Golem":
+                        self.the_iron_golem(right=right, original=original)
+                    elif name == "The Last Bastion":
+                        self.the_last_bastion(level, right=right)
+                    elif name == "The Locked Grave":
+                        self.the_locked_grave(right=right, original=original)
+                    elif name == "The Shine of Gold":
+                        self.the_shine_of_gold(right=right)
+                    elif name == "The Skeleton Ball":
+                        self.the_skeleton_ball(right=right, original=original)
+                    elif name == "Trecherous Tower":
+                        self.trecherous_tower()
+                    elif name == "Trophy Room":
+                        self.trophy_room(right=right, original=original)
+                    elif name == "Twilight Falls":
+                        self.twilight_falls(right=right, original=original)
+                    elif name == "Undead Sanctum":
+                        self.undead_sanctum(right=right, original=original)
+                    elif name == "Unseen Scurrying":
+                        self.unseen_scurrying(original=original)
+                    elif name == "Urns of the Fallen":
+                        self.urns_of_the_fallen(original=original)
+                    elif name == "Velka's Chosen":
+                        self.velkas_chosen(level, right=right, original=original)
 
                 displayPhotoImage = ImageTk.PhotoImage(self.app.displayImage)
 
@@ -758,8 +792,13 @@ try:
 
                 set_display_bindings_by_tab(self.app)
 
-
                 log("\tEnd of edit_encounter_card")
+            except EnvironmentError as err:
+                if customEncounter and err.errno == errno.ENOENT: # ENOENT -> "no entity" -> "file not found"
+                    # Handling for this occurred in create_image.
+                    return
+                else:
+                    raise
             except Exception as e:
                 error_popup(self.root, e)
                 raise

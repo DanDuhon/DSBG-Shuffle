@@ -5,7 +5,7 @@ try:
     from json import load, dump
 
     from dsbg_shuffle_characters import soulCost
-    from dsbg_shuffle_utility import VerticalScrolledFrame, CreateToolTip, center, log, baseFolder, pathSep
+    from dsbg_shuffle_utility import VerticalScrolledFrame, center, log, baseFolder, pathSep
 
 
     class SettingsWindow(object):
@@ -28,6 +28,7 @@ try:
 
                 self.availableExpansions = set(self.settings["availableExpansions"])
                 self.enabledEnemies = self.settings["enabledEnemies"]
+                self.enabledBossOptions = self.settings.get("enabledBossOptions", [])
                 self.coreSets = coreSets
 
                 self.notebook = ttk.Notebook(top)
@@ -35,6 +36,7 @@ try:
 
                 self.create_expansion_tab()
                 self.create_enemies_tab()
+                self.create_boss_options_tab()
                 self.create_characters_pane(top)
                 self.create_invaders_pane(top)
                 self.create_treasure_swap_pane(top)
@@ -200,6 +202,34 @@ try:
                 raise
 
 
+        def create_boss_options_tab(self):
+            try:
+                log("Start of create_boss_options_tab")
+
+                self.bossOptions = {
+                    "Kalameet": {"button": None, "value": tk.IntVar(), "displayName": "Black Dragon Kalameet\nConsistent 8 card Fiery Ruin deck,\ngenerated on deck reset."},
+                    "Chariot": {"button": None, "value": tk.IntVar(), "displayName": "Executioner Chariot\nConsistent 4 card Death Race deck,\ngenerated on deck reset."},
+                    "Guardian Dragon": {"button": None, "value": tk.IntVar(), "displayName": "Guardian Dragon\nConsistent 4 card Fiery Breath deck,\ngenerated on deck reset."},
+                    "Old Iron King": {"button": None, "value": tk.IntVar(), "displayName": "Old Iron King\nConsistent 6 card Blasted Nodes deck,\ngenerated on deck reset."}
+                }
+
+                self.bossOptionsTab = VerticalScrolledFrame(self.notebook)
+                self.bossOptionsTab.grid_propagate(False)
+                self.notebook.add(self.bossOptionsTab, text="Boss Options")
+                
+                for i, option in enumerate(self.bossOptions):
+                    self.bossOptions[option]["button"] = ttk.Checkbutton(self.bossOptionsTab.interior, text=self.bossOptions[option]["displayName"], variable=self.bossOptions[option]["value"])
+                    self.bossOptions[option]["button"].grid(row=i, column=0, padx=5, pady=1, sticky="nsew")
+
+                for option in self.enabledBossOptions:
+                    self.bossOptions[option]["value"].set(1)
+
+                log("End of create_boss_options_tab")
+            except Exception as e:
+                log(e, exception=True)
+                raise
+
+
         def create_characters_pane(self, parent):
             try:
                 log("Start of create_characters_pane")
@@ -217,9 +247,13 @@ try:
                     "Warrior": {"button": None, "value": tk.IntVar()}
                 }
 
-                self.characterFrame = ttk.LabelFrame(parent, text="Characters Being Played (up to 4)", padding=(20, 10))
-                self.characterFrame.grid(row=0, column=3, padx=(20, 10), pady=(20, 10), sticky="nsew", rowspan=3)
-                for i, character in enumerate(self.charactersActive):
+                self.characterLabelFrame = ttk.LabelFrame(parent, text="Characters Being Played (up to 4)", padding=(20, 10))
+                self.characterLabelFrame.grid(row=0, column=3, padx=(20, 10), pady=(20, 10), sticky="nsew", rowspan=3)
+                self.characterFrame = ttk.Frame(self.characterLabelFrame)
+                self.characterFrame.pack(fill=tk.BOTH, expand=True)
+                self.characterLabel = ttk.Label(self.characterFrame, text="The number of characters\nselected affect enemy swapping\nand the characters selected\naffect treasure swapping.", justify=tk.CENTER)
+                self.characterLabel.grid(row=0, column=0, padx=5, pady=10)
+                for i, character in enumerate(self.charactersActive, 1):
                     self.charactersActive[character]["value"].set(1 if character in self.settings["charactersActive"] else 0)
                     self.charactersActive[character]["button"] = ttk.Checkbutton(self.characterFrame, text=character, variable=self.charactersActive[character]["value"], command=self.check_max_characters)
                     self.charactersActive[character]["button"].grid(row=i, column=0, padx=5, pady=10, sticky="nsew")
@@ -236,8 +270,9 @@ try:
 
                 self.invadersFrame = ttk.LabelFrame(parent, text="Include Invaders", padding=(20, 10))
                 self.invadersFrame.grid(row=0, column=4, padx=(20, 10), pady=(20, 10), sticky="nsew")
-                self.invadersLabel = ttk.Label(self.invadersFrame, text="Max invaders allowed", justify="center", font=("-size", 12))
-                self.invadersLabel.grid(row=0, column=0, padx=5, pady=10, sticky="nsew")
+
+                self.invadersLabel = ttk.Label(self.invadersFrame, text="Number of invaders allowed to take the place of an\nequal number of enemies in an encounter.", justify=tk.CENTER)
+                self.invadersLabel.grid(row=0, column=0, padx=5, pady=10, columnspan=6)
                 
                 self.maxInvadersVals = {
                     1: tk.IntVar(),
@@ -325,20 +360,29 @@ try:
             try:
                 log("Start of create_treasure_swap_pane")
 
-                self.treasureSwapOptions = {
-                    "Similar Soul Cost": {"button": None, "value": tk.StringVar(value="Similar Soul Cost"), "tooltipText": "Rewards an item of the same type as the original that also costs about the same souls in leveling stats in order to equip it"},
-                    "Tier Based": {"button": None, "value": tk.StringVar(value="Tier Based"), "tooltipText": "Splits treasure into equal tiers based on soul cost to equip and rewards an item in the same tier as the original reward."},
-                    "Generic Treasure": {"button": None, "value": tk.StringVar(value="Generic Treasure"), "tooltipText": "Changes all specific item rewards to a number of draws equal to the encounter level."},
-                    "Original": {"button": None, "value": tk.StringVar(value="Original"), "tooltipText": "Display the original reward on the card only."}
+                treasureSwapText = {
+                    "Similar Soul Cost": "Similar Soul Cost\n    Rewards an item of the same type as the\n    original that also costs about the same\n    souls in leveling stats in order to equip it.",
+                    "Tier Based": "Tier Based\n    Splits treasure into equal tiers based on\n    soul cost to equip and rewards an item\n    in the same tier as the original reward.",
+                    "Generic Treasure": "Generic Treasure\n    Changes all specific item rewards to a\n    number of draws equal to the encounter\n    level.",
+                    "Original": "Original\n    Display the original reward on the card only."
                 }
 
-                self.treasureSwapOption = tk.StringVar(value=self.settings["treasureSwapOption"])
-                self.treasureSwapFrame = ttk.LabelFrame(parent, text="Treasure Swap Options", padding=(20, 10))
-                self.treasureSwapFrame.grid(row=1, column=4, padx=(20, 10), pady=(20, 10), sticky="nsew", rowspan=2)
+                self.treasureSwapOptions = {
+                    "Similar Soul Cost": {"button": None, "value": tk.StringVar(value="Similar Soul Cost")},
+                    "Tier Based": {"button": None, "value": tk.StringVar(value="Tier Based")},
+                    "Generic Treasure": {"button": None, "value": tk.StringVar(value="Generic Treasure")},
+                    "Original": {"button": None, "value": tk.StringVar(value="Original")}
+                }
+
+                self.treasureSwapOption = tk.StringVar()
+                self.treasureSwapLabelFrame = ttk.LabelFrame(parent, text="Treasure Swap Options", padding=(20, 10))
+                self.treasureSwapLabelFrame.grid(row=1, column=4, padx=(20, 10), pady=(20, 10), sticky="nsew", rowspan=2)
+                self.treasureSwapFrame = ttk.Frame(self.treasureSwapLabelFrame)
+                self.treasureSwapFrame.pack(fill=tk.BOTH, expand=True)
                 for i, option in enumerate(self.treasureSwapOptions):
-                    self.treasureSwapOptions[option]["button"] = ttk.Radiobutton(self.treasureSwapFrame, text=option, variable=self.treasureSwapOption, value=option)
+                    self.treasureSwapOptions[option]["button"] = ttk.Radiobutton(self.treasureSwapFrame, text=treasureSwapText[option], variable=self.treasureSwapOption, value=option)
                     self.treasureSwapOptions[option]["button"].grid(row=i, column=0, padx=5, pady=10, sticky="nsew")
-                    CreateToolTip(self.treasureSwapOptions[option]["button"], self.treasureSwapOptions[option]["tooltipText"])
+                self.treasureSwapOption.set(self.settings["treasureSwapOption"])
 
                 log("End of create_treasure_swap_pane")
             except Exception as e:
@@ -356,14 +400,16 @@ try:
                     "level4": {"button": None, "value": tk.IntVar()}
                 }
 
-                self.shownEncounterFrame = ttk.LabelFrame(parent, text="Encounters Shown", padding=(20, 10))
-                self.shownEncounterFrame.grid(row=0, column=5, padx=(20, 10), pady=(20, 10), sticky="nsew")
+                self.shownEncountersLabelFrame = ttk.LabelFrame(parent, text="Encounters Shown", padding=(20, 10))
+                self.shownEncountersLabelFrame.grid(row=0, column=5, padx=(20, 10), pady=(20, 10), sticky="nsew")
+                self.shownEncountersFrame = ttk.Frame(self.shownEncountersLabelFrame)
+                self.shownEncountersFrame.pack(fill=tk.BOTH, expand=True)
                 self.shownEncounters["v1"]["value"].set(1 if "v1" in self.settings["encounterTypes"] else 0)
                 self.shownEncounters["v2"]["value"].set(1 if "v2" in self.settings["encounterTypes"] else 0)
                 self.shownEncounters["level4"]["value"].set(1 if "level4" in self.settings["encounterTypes"] else 0)
-                self.shownEncounters["v1"]["button"] = ttk.Checkbutton(self.shownEncounterFrame, text="V1 Encounters", variable=self.shownEncounters["v1"]["value"])
-                self.shownEncounters["v2"]["button"] = ttk.Checkbutton(self.shownEncounterFrame, text="V2 Encounters", variable=self.shownEncounters["v2"]["value"])
-                self.shownEncounters["level4"]["button"] = ttk.Checkbutton(self.shownEncounterFrame, text="Level 4 Encounters", variable=self.shownEncounters["level4"]["value"])
+                self.shownEncounters["v1"]["button"] = ttk.Checkbutton(self.shownEncountersFrame, text="V1 Encounters", variable=self.shownEncounters["v1"]["value"])
+                self.shownEncounters["v2"]["button"] = ttk.Checkbutton(self.shownEncountersFrame, text="V2 Encounters", variable=self.shownEncounters["v2"]["value"])
+                self.shownEncounters["level4"]["button"] = ttk.Checkbutton(self.shownEncountersFrame, text="Level 4 Encounters", variable=self.shownEncounters["level4"]["value"])
                 self.shownEncounters["v1"]["button"].grid(row=0, column=0, padx=5, pady=10, sticky="nsew")
                 self.shownEncounters["v2"]["button"].grid(row=1, column=0, padx=5, pady=10, sticky="nsew")
                 self.shownEncounters["level4"]["button"].grid(row=2, column=0, padx=5, pady=10, sticky="nsew")
@@ -378,13 +424,16 @@ try:
             try:
                 log("Start of create_update_check_pane")
 
-                self.updateCheck = {"button": None, "value": tk.IntVar(), "tooltipText": "If enabled, makes an API call to Github once a month when the app is opened to check for a new version.\n\nThe app won't download anything or update itself but will let you know if there's a new version."}
-                self.updateCheckFrame = ttk.LabelFrame(parent, text="Check For Updates", padding=(20, 10))
-                self.updateCheckFrame.grid(row=1, column=5, padx=(20, 10), pady=(20, 10), sticky="nsew", rowspan=2)
+                self.updateCheck = {"button": None, "value": tk.IntVar()}
+                self.updateCheckLabelFrame = ttk.LabelFrame(parent, text="Check For Updates", padding=(20, 10))
+                self.updateCheckLabelFrame.grid(row=1, column=5, padx=(20, 10), pady=(20, 10), sticky="nsew", rowspan=2)
+                self.updateCheckFrame = ttk.Frame(self.updateCheckLabelFrame)
+                self.updateCheckFrame.pack(fill=tk.BOTH, expand=True)
                 self.updateCheck["value"].set(1 if "on" in self.settings["updateCheck"] else 0)
                 self.updateCheck["button"] = ttk.Checkbutton(self.updateCheckFrame, text="Check for updates", variable=self.updateCheck["value"])
                 self.updateCheck["button"].grid(row=0, column=0, padx=5, pady=10, sticky="nsew")
-                CreateToolTip(self.updateCheck["button"], self.updateCheck["tooltipText"])
+                self.updateLabel = ttk.Label(self.updateCheckFrame, text="If enabled, makes an\nAPI call to Github once\na month when the\napp is opened to check\nfor a new version.\n\nThe app won't\ndownload anything or\nupdate itself but will\nlet you know if\nthere's a new version.")
+                self.updateLabel.grid(row=1, column=0, padx=5, pady=10)
 
                 log("End of create_update_check_pane")
             except Exception as e:
@@ -550,16 +599,19 @@ try:
                 else:
                     customEnemyList = []
 
+                enabledBossOptions = [s for s in self.bossOptions if self.bossOptions[s]["value"].get() == 1]
+
                 encounterTypes = set([s for s in self.shownEncounters if self.shownEncounters[s]["value"].get() == 1])
                 charactersActive = set([s for s in self.charactersActive if self.charactersActive[s]["value"].get() == 1])
 
                 newSettings = {
                     "availableExpansions": list(expansionsActive),
                     "enabledEnemies": list(enabledEnemies),
+                    "enabledBossOptions": list(enabledBossOptions),
                     "customEnemyList": customEnemyList,
                     "encounterTypes": list(encounterTypes),
                     "charactersActive": list(charactersActive),
-                    "treasureSwapOption": self.treasureSwapOption.get(),
+                    "treasureSwapOption": self.treasureSwapOptions[self.treasureSwapOption.get()]["value"].get(),
                     "updateCheck": "on" if self.updateCheck["value"].get() == 1 else "off",
                     "maxInvaders": {
                         "1": self.maxInvadersVals[1].get(),

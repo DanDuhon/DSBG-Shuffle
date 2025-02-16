@@ -254,6 +254,14 @@ try:
                     self.set_decks(enemy="Vordt of the Boreal Valley (attack)", skipClear=True)
                     log("End of set_decks")
                     return
+                elif selection == "Black Dragon Kalameet" and "Kalameet" in self.app.settings["enabledBossOptions"]:
+                    self.app.variantsTab.generate_fiery_ruin_patterns()
+                elif selection == "Executioner Chariot" and "Chariot" in self.app.settings["enabledBossOptions"]:
+                    self.app.variantsTab.generate_death_race_patterns()
+                elif selection == "Guardian Dragon" and "Guardian Dragon" in self.app.settings["enabledBossOptions"]:
+                    self.app.variantsTab.generate_fiery_breath_patterns()
+                elif selection == "Old Iron King" and "Old Iron King" in self.app.settings["enabledBossOptions"]:
+                    self.app.variantsTab.generate_blasted_nodes_patterns()
 
                 if not skipClear:
                     # Remove keyword tooltips from the previous image shown, if there are any.
@@ -275,6 +283,16 @@ try:
                     self.app.displayImages["variantsLocked"][self.app.displayTopLeft]["image"] = None
                     self.app.displayImages["variantsLocked"][self.app.displayTopLeft]["name"] = None
                     self.app.displayImages["variantsLocked"][self.app.displayTopLeft]["activeTab"] = None
+                
+                    self.app.displayBottomLeft.config(image="")
+                    self.app.displayBottomLeft.image=None
+                    self.app.displayImages["variants"][self.app.displayBottomLeft]["image"] = None
+                    self.app.displayImages["variants"][self.app.displayBottomLeft]["name"] = None
+                    self.app.displayImages["variants"][self.app.displayBottomLeft]["activeTab"] = None
+                    self.app.displayImages["variantsLocked"][self.app.displayBottomLeft]["image"] = None
+                    self.app.displayImages["variantsLocked"][self.app.displayBottomLeft]["name"] = None
+                    self.app.displayImages["variantsLocked"][self.app.displayBottomLeft]["activeTab"] = None
+
                     self.decks[selection]["lastCardDrawn"] = None
 
                 self.decks[selection]["deck"] = self.load_deck(selection)
@@ -341,6 +359,10 @@ try:
                 else:
                     self.decks[selection]["defKey"] = {"",}
                     self.decks[selection]["mods"] = []
+
+                for boss in self.app.variantsTab.nodePatterns:
+                    self.app.variantsTab.nodePatterns[boss]["patterns"] = []
+                    self.app.variantsTab.nodePatterns[boss]["index"] = 0
 
                 self.remove_all_health_trackers(selection)
 

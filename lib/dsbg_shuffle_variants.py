@@ -114,6 +114,24 @@ try:
             self.selectedVariant = None
             self.currentVariants = {}
             self.lockedVariants = {}
+            self.nodePatterns = {
+                "Black Dragon Kalameet": {
+                    "index": 0,
+                    "patterns": []
+                },
+                "Executioner Chariot": {
+                    "index": 0,
+                    "patterns": []
+                },
+                "Guardian Dragon": {
+                    "index": 0,
+                    "patterns": []
+                },
+                "Old Iron King": {
+                    "index": 0,
+                    "patterns": []
+                }
+            }
 
             self.app.progress.label.config(text = "Loading variants... ")
 
@@ -124,9 +142,6 @@ try:
                 i += 3
                 self.app.progress.progressVar.set(i)
                 root.update_idletasks()
-
-                if enemy not in {"Old Iron King",}:
-                    continue
                 
                 with open(baseFolder + "\\lib\\dsbg_shuffle_difficulty\\dsbg_shuffle_difficulty_" + enemy + ".json", "r") as f:
                     enemyDifficulty = load(f)
@@ -973,7 +988,7 @@ try:
             try:
                 log("Start of pick_enemy_variants_behavior (start={}, behavior={}, diffKey={}, defKey={})".format(start, behavior, str(diffKey), str(defKey)))
 
-                if behavior in {"Back Dash", "Forward Dash"}:
+                if behavior in {"Back Dash", "Forward Dash", "Fiery Breath"}:
                     log("End of pick_enemy_variants_behavior (nothing done)")
                     return
                 
@@ -1784,9 +1799,9 @@ try:
                             actions[position]["effect"] = [e for e in behaviorDetail[enemy][behavior][position]["effect"]]
 
                 if variant:
-                    dodge, repeat, actions, addNodes = self.apply_mods_to_actions(enemy, behavior, dodge, repeat, actions, variant)
+                    dodge, repeat, actions, _ = self.apply_mods_to_actions(enemy, behavior, dodge, repeat, actions, variant)
                 elif enemy in self.currentVariants and ("" if behavior == "behavior" else behavior) in self.currentVariants[enemy]:
-                    dodge, repeat, actions, addNodes = self.apply_mods_to_actions(enemy, behavior, dodge, repeat, actions)
+                    dodge, repeat, actions, _ = self.apply_mods_to_actions(enemy, behavior, dodge, repeat, actions)
 
                 self.add_components_to_variant_card_behavior(enemy, behavior, dodge, repeat, actions)
 
@@ -1837,7 +1852,14 @@ try:
                 elif enemy in self.currentVariants and ("" if behavior == "behavior" else behavior) in self.currentVariants[enemy]:
                     dodge, repeat, actions, addNodes = self.apply_mods_to_actions(enemy, behavior, 1, 1, {})
 
-                self.add_components_to_variant_card_behavior_fiery_ruin(dodge, repeat, actions, addNodes)
+                patterns = self.nodePatterns["Black Dragon Kalameet"]
+
+                self.add_components_to_variant_card_behavior_fiery_ruin(
+                    dodge,
+                    repeat,
+                    actions,
+                    addNodes,
+                    patterns["patterns"][patterns["index"]] if patterns["patterns"] else None)
 
                 log("End of edit_variant_card_behavior_fiery_ruin")
             except Exception as e:
@@ -1849,8 +1871,8 @@ try:
             try:
                 log("Start of edit_variant_card_behavior_blasted_nodes, variant={}".format(str(variant)))
 
-                enemy = "Black Dragon Kalameet"
-                behavior = "Fiery Ruin"
+                enemy = "Old Iron King"
+                behavior = "Blasted Nodes"
 
                 if variant:
                     dodge, repeat, actions, addNodes = self.apply_mods_to_actions(enemy, behavior, 1, 1, {}, variant)
@@ -1899,7 +1921,9 @@ try:
                 log("Start of add_components_to_variant_card_behavior, enemy={}, behavior={}, dodge={}, repeat={}, actions={}".format(str(enemy), str(behavior), str(dodge), str(repeat), str(actions)))
 
                 imageWithText = ImageDraw.Draw(self.app.displayImage)
-                imageWithText.text((267, 233), str(dodge), "black", font2)
+
+                if behavior != "Cage Grasp Inferno":
+                    imageWithText.text((267, 233), str(dodge), "black", font2)
 
                 if repeat > 1 and behavior != "behavior":
                     image = self.app.repeat[repeat]
@@ -1970,39 +1994,34 @@ try:
                 raise
 
 
-        def add_components_to_variant_card_behavior_death_race(self, dodge, repeat, actions, addNodes, deathRaceNum, event=None):
+        def add_components_to_variant_card_behavior_death_race(self, dodge, repeat, actions, addNodes, deathRaceNum, nodePattern=None, event=None):
             try:
                 log("Start of add_components_to_variant_card_behavior_death_race, dodge={}, repeat={}, actions={}".format(str(dodge), str(repeat), str(actions)))
 
+                if nodePattern:
+                    highlightNodes = nodePattern["highlightNodes"]
+                    if self.nodePatterns["Executioner Chariot"]["index"] == 3:
+                        self.nodePatterns["Executioner Chariot"]["index"] = 0
+                    else:
+                        self.nodePatterns["Executioner Chariot"]["index"] += 1
+                else:
+                    if deathRaceNum == 1:
+                        highlightNodes = [(2,0), (4,0), (1,1), (3,1), (5,1)]
+                        availableNodes = [(0,0), (6,0), (0,2), (2,2), (4,2), (6,2)]
+                    elif deathRaceNum == 2:
+                        highlightNodes = [(1,1), (0,2), (1,3), (0,4), (1,5)]
+                        availableNodes = [(0,0), (0,6), (2,0), (2,2), (2,4), (2,6)]
+                    elif deathRaceNum == 3:
+                        highlightNodes = [(1,5), (2,6), (3,5), (4,6), (5,5)]
+                        availableNodes = [(0,6), (6,6), (0,4), (2,4), (4,4), (6,4)]
+                    elif deathRaceNum == 4:
+                        highlightNodes = [(5,1), (6,2), (5,3), (6,4), (5,5)]
+                        availableNodes = [(6,0), (6,6), (4,0), (4,2), (4,4), (4,6)]
+                    shuffle(availableNodes)
+                    highlightNodes += availableNodes[:addNodes]
+
                 imageWithText = ImageDraw.Draw(self.app.displayImage)
                 imageWithText.text((158, 360), str(dodge), "black", font2)
-
-                if deathRaceNum == 1:
-                    highlightNodes = [(2,0), (4,0), (1,1), (3,1), (5,1)]
-                    availableNodes = [(0,0), (6,0), (0,2), (2,2), (4,2), (6,2)]
-                elif deathRaceNum == 2:
-                    highlightNodes = [(1,1), (0,2), (1,3), (0,4), (1,5)]
-                    availableNodes = [(0,0), (0,6), (2,0), (2,2), (2,4), (2,6)]
-                elif deathRaceNum == 3:
-                    highlightNodes = [(1,5), (2,6), (3,5), (4,6), (5,5)]
-                    availableNodes = [(0,6), (6,6), (0,4), (2,4), (4,4), (6,4)]
-                elif deathRaceNum == 4:
-                    highlightNodes = [(5,1), (6,2), (5,3), (6,4), (5,5)]
-                    availableNodes = [(6,0), (6,6), (4,0), (4,2), (4,4), (4,6)]
-                shuffle(availableNodes)
-                highlightNodes += availableNodes[:addNodes]
-                for node in highlightNodes:
-                    image = self.app.aoeNode
-                    x = -12 + (40 * node[0])
-                    y = 25 + (42 * node[1])
-                    log("Pasting AoE highlight node image onto card at " + str((x, y)) + ".")
-                    self.app.displayImage.paste(im=image, box=(x, y), mask=image)
-
-                image = self.app.destinationNode
-                x = 51 if deathRaceNum < 3 else 211
-                y = 90 if deathRaceNum in {1, 4} else 258
-                log("Pasting destination node image onto card at " + str((x, y)) + ".")
-                self.app.displayImage.paste(im=image, box=(x, y), mask=image)
                                     
                 for position in ["left", "middle", "right"]:
                     if position not in actions or not actions[position]:
@@ -2038,49 +2057,88 @@ try:
                                 y = 375 if i == 0 else 395
                             self.app.displayImage.paste(im=image, box=(x, y), mask=image)
 
+                for node in highlightNodes:
+                    image = self.app.aoeNode
+                    x = -12 + (40 * node[0])
+                    y = 25 + (42 * node[1])
+                    log("Pasting AoE highlight node image onto card at " + str((x, y)) + ".")
+                    self.app.displayImage.paste(im=image, box=(x, y), mask=image)
+
+                image = self.app.destinationNode
+                x = 51 if deathRaceNum < 3 else 211
+                y = 90 if deathRaceNum in {1, 4} else 258
+                log("Pasting destination node image onto card at " + str((x, y)) + ".")
+                self.app.displayImage.paste(im=image, box=(x, y), mask=image)
+
                 log("End of add_components_to_variant_card_behavior_death_race")
             except Exception as e:
                 error_popup(self.root, e)
                 raise
 
 
-        def add_components_to_variant_card_behavior_fiery_ruin(self, dodge, repeat, actions, addNodes, event=None):
+        def add_components_to_variant_card_behavior_fiery_ruin(self, dodge, repeat, actions, addNodes, nodePattern=None, event=None):
             try:
                 log("Start of add_components_to_variant_card_behavior_fiery_ruin, dodge={}, repeat={}, actions={}".format(str(dodge), str(repeat), str(actions)))
 
-                nodeCnt = choice([10, 10, 10, 10, 11, 11, 15, 15]) + addNodes
-                landingNode = choice([(1,1), (3,1), (5,1), (2,2), (4,2), (1,3), (3,3), (5,3), (2,4), (4,4), (1,5), (3,5), (5,5)])
-                image = self.app.aoeNode
-                x = -12 + (40 * landingNode[0])
-                y = 25 + (42 * landingNode[1])
-                log("Pasting AoE highlight node image onto card at " + str((x, y)) + ".")
-                self.app.displayImage.paste(im=image, box=(x, y), mask=image)
-                
-                image = self.app.destinationNode
-                x = 11 + (40 * landingNode[0])
-                y = 48 + (42 * landingNode[1])
-                log("Pasting destination node image onto card at " + str((x, y)) + ".")
-                self.app.displayImage.paste(im=image, box=(x, y), mask=image)
+                if nodePattern:
+                    highlightNodes = nodePattern["highlightNodes"]
+                    landingNode = nodePattern["landingNode"]
+                    if self.nodePatterns["Black Dragon Kalameet"]["index"] == 7:
+                        self.nodePatterns["Black Dragon Kalameet"]["index"] = 0
+                    else:
+                        self.nodePatterns["Black Dragon Kalameet"]["index"] += 1
 
-                highlightNodes = {landingNode,}
+                    nodeCnt = len(highlightNodes)
+                else:
+                    nodeCnt = choice([10, 10, 10, 10, 11, 11, 15, 15]) + addNodes
+
+                    highlightNodes = choice([
+                        {(0,0), (1,1), (2,2), (3,3), (4,4), (5,5), (6,6)},
+                        {(6,0), (5,1), (4,2), (3,3), (2,4), (1,5), (0,6)},
+                        {(2,0), (2,2), (2,4), (2,6)},
+                        {(4,0), (4,2), (4,4), (4,6)},
+                        {(0,2), (2,2), (4,2), (6,2)},
+                        {(0,4), (2,4), (4,4), (6,4)},
+                        {(3,1), (3,3), (3,5)},
+                        {(1,3), (3,3), (5,3)}
+                        ])
+
+                    originalNodes = deepcopy(highlightNodes)
+                    validLandingNodes = {(1,1), (3,1), (5,1), (2,2), (4,2), (1,3), (3,3), (5,3), (2,4), (4,4), (1,5), (3,5), (5,5)}
 
                 # Adjacent nodes can be found by taking the absolute difference between
                 # the corresponding coordinates of the start and destination nodes
                 # adding those values together, and only allowing those that are less than 4
 
-                for _ in range(nodeCnt - 1): # -1 because we already have the destination node picked
-                    for x in range(4, -1, -1):
-                        validNodes = set([n for n in nodes if [abs(n[0] - h[0]) + abs(n[1] - h[1]) < 4 for h in highlightNodes].count(True) > x]) - highlightNodes
-                        if validNodes:
-                            break
+                for _ in range(nodeCnt - len(highlightNodes)):
+                    validNodes = set([n for n in nodes if [abs(n[0] - h[0]) + abs(n[1] - h[1]) < 4 for h in originalNodes].count(True) == 2]) - highlightNodes
+                    if not validNodes:
+                        validNodes = set([n for n in nodes if [abs(n[0] - h[0]) + abs(n[1] - h[1]) < 4 for h in highlightNodes].count(True) == 4]) - highlightNodes
+                    if not validNodes:
+                        validNodes = set([n for n in nodes if [abs(n[0] - h[0]) + abs(n[1] - h[1]) < 4 for h in highlightNodes].count(True) == 3]) - highlightNodes
+                    if not validNodes:
+                        validNodes = set([n for n in nodes if [abs(n[0] - h[0]) + abs(n[1] - h[1]) < 4 for h in highlightNodes].count(True) == 5]) - highlightNodes
+                    if not validNodes:
+                        validNodes = set([n for n in nodes if [abs(n[0] - h[0]) + abs(n[1] - h[1]) < 4 for h in highlightNodes].count(True) == 2]) - highlightNodes
+                    
                     nodeToHighlight = choice(list(validNodes))
                     highlightNodes.add(nodeToHighlight)
+
+                if not nodePattern:
+                    landingNode = choice(list(highlightNodes & validLandingNodes))
                     
+                for nodeToHighlight in list(highlightNodes):
                     image = self.app.aoeNode
                     x = -12 + (40 * nodeToHighlight[0])
                     y = 25 + (42 * nodeToHighlight[1])
                     log("Pasting AoE highlight node image onto card at " + str((x, y)) + ".")
                     self.app.displayImage.paste(im=image, box=(x, y), mask=image)
+
+                image = self.app.destinationNode
+                x = 11 + (40 * landingNode[0])
+                y = 48 + (42 * landingNode[1])
+                log("Pasting destination node image onto card at " + str((x, y)) + ".")
+                self.app.displayImage.paste(im=image, box=(x, y), mask=image)
 
                 log("End of add_components_to_variant_card_behavior_fiery_ruin")
             except Exception as e:
@@ -2088,25 +2146,254 @@ try:
                 raise
 
 
-        def add_components_to_variant_card_behavior_blasted_nodes(self, dodge, repeat, actions, addNodes, event=None):
+        def add_components_to_variant_card_behavior_blasted_nodes(self, dodge, repeat, actions, addNodes, nodePattern=None, event=None):
             try:
                 log("Start of add_components_to_variant_card_behavior_blasted_nodes, dodge={}, repeat={}, actions={}".format(str(dodge), str(repeat), str(actions)))
 
-                oikNodes = [n for n in nodes if n not in {(2,0), (4,0), (0,2), (6,2), (0,4), (6,4)}]
+                if nodePattern:
+                    highlightNodes = nodePattern["highlightNodes"]
+                    landingNode = nodePattern["landingNode"]
+                    if self.nodePatterns["Old Iron King"]["index"] == 5:
+                        self.nodePatterns["Old Iron King"]["index"] = 0
+                    else:
+                        self.nodePatterns["Old Iron King"]["index"] += 1
 
-                nodeCnt = choice([8, 8, 8, 8, 9, 9]) + addNodes
-                landingNode = choice([(3,1), (1,3), (5,3)])
+                    nodeCnt = len(highlightNodes)
+                else:
+                    oikNodes = [n for n in nodes if n not in {(2,0), (4,0), (0,2), (6,2), (0,4), (6,4)}]
+
+                    nodeCnt = choice([8, 8, 8, 8, 9, 9]) + addNodes
+                    landingNode = choice([(3,1), (1,3), (5,3)])
+
+                    highlightNodes = {landingNode,}
+
+                    # Adjacent nodes can be found by taking the absolute difference between
+                    # the corresponding coordinates of the start and destination nodes
+                    # adding those values together, and only allowing those that are less than 4
+
+                    # These are complicated rules but they work to get a more beam-type line of nodes.
+                    for _ in range(nodeCnt - 1): # -1 because we already have the destination node picked
+                        validNodes = set([n for n in oikNodes if [abs(n[0] - h[0]) + abs(n[1] - h[1]) < 2 for h in highlightNodes].count(True) == 2]) - highlightNodes
+                        if not validNodes:
+                            validNodes = set([n for n in oikNodes if [abs(n[0] - h[0]) + abs(n[1] - h[1]) < 4 for h in highlightNodes if n[0] in ({1, 3, 5} if h[0] in {0, 2, 4, 6} else {0, 2, 4, 6})].count(True) == 1]) - highlightNodes
+                        if not validNodes:
+                            validNodes = set([n for n in oikNodes if [abs(n[0] - h[0]) + abs(n[1] - h[1]) < 4 for h in highlightNodes].count(True) == 3]) - highlightNodes
+                        if not validNodes:
+                            validNodes = set([n for n in oikNodes if [abs(n[0] - h[0]) + abs(n[1] - h[1]) < 4 for h in highlightNodes if n[0] in ({1, 3, 5} if h[0] in {0, 2, 4, 6} else {0, 2, 4, 6})].count(True) == 0]) - highlightNodes
+                        nodeToHighlight = choice(list(validNodes))
+                        highlightNodes.add(nodeToHighlight)
+                    
                 image = self.app.aoeNode
-                x = -12 + (40 * landingNode[0])
-                y = 25 + (42 * landingNode[1])
-                log("Pasting AoE highlight node image onto card at " + str((x, y)) + ".")
-                self.app.displayImage.paste(im=image, box=(x, y), mask=image)
+                for nodeToHighlight in list(highlightNodes):
+                    x = -12 + (40 * nodeToHighlight[0])
+                    y = 25 + (42 * nodeToHighlight[1])
+                    log("Pasting AoE highlight node image onto card at " + str((x, y)) + ".")
+                    self.app.displayImage.paste(im=image, box=(x, y), mask=image)
                 
                 image = self.app.destinationNode
                 x = 11 + (40 * landingNode[0])
                 y = 48 + (42 * landingNode[1])
                 log("Pasting destination node image onto card at " + str((x, y)) + ".")
                 self.app.displayImage.paste(im=image, box=(x, y), mask=image)
+
+                log("End of add_components_to_variant_card_behavior_blasted_nodes")
+            except Exception as e:
+                error_popup(self.root, e)
+                raise
+
+
+        def add_components_to_variant_card_behavior_fiery_breath(self, dodge, repeat, actions, addNodes, nodePattern=None, event=None):
+            try:
+                log("Start of add_components_to_variant_card_behavior_fiery_breath, dodge={}, repeat={}, actions={}".format(str(dodge), str(repeat), str(actions)))
+
+                if nodePattern:
+                    highlightNodes = nodePattern["highlightNodes"]
+                    landingNode = nodePattern["landingNode"]
+                    if self.nodePatterns["Old Iron King"]["index"] == 5:
+                        self.nodePatterns["Old Iron King"]["index"] = 0
+                    else:
+                        self.nodePatterns["Old Iron King"]["index"] += 1
+                else:
+                    landingNode = choice([(0,0), (6,0), (0,6), (6,6)])
+                    firstNode = (1,1) if landingNode == (0,0) else (5,1) if landingNode == (6,0) else (1,5) if landingNode == (0,6) else (5,5)
+                    highlightNodes = {firstNode,}
+
+                    # Adjacent nodes can be found by taking the absolute difference between
+                    # the corresponding coordinates of the start and destination nodes
+                    # adding those values together, and only allowing those that are less than 4
+
+                    for _ in range(7 + addNodes - 1): # -1 because we already have the first node picked
+                        for x in range(4, -1, -1):
+                            validNodes = set([n for n in nodes if [abs(n[0] - h[0]) + abs(n[1] - h[1]) < 4 for h in highlightNodes].count(True) > x]) - highlightNodes - {landingNode,}
+                            if validNodes:
+                                break
+                        nodeToHighlight = choice(list(validNodes))
+                        highlightNodes.add(nodeToHighlight)
+
+                imageWithText = ImageDraw.Draw(self.app.displayImage)
+                imageWithText.text((158, 360), str(dodge), "black", font2)
+                                    
+                for position in ["left", "middle", "right"]:
+                    if position not in actions or not actions[position]:
+                        continue
+                    if "type" in actions[position] and (actions[position]["type"] == "physical" or actions[position]["type"] == "magic"):
+                        x = 0
+                        image = self.app.attack[actions[position]["type"]][actions[position]["damage"]]
+                        log("Pasting " + actions[position]["type"] + " attack image onto variant at " + str((x, 330)) + ".")
+                        self.app.displayImage.paste(im=image, box=(x, 330), mask=image)
+                    
+                    if "effect" in actions[position]:
+                        effectCnt = len(actions[position]["effect"])
+                        for i, effect in enumerate(actions[position]["effect"]):
+                            xOffset = 0
+                            if effect == "bleed":
+                                image = self.app.bleed
+                            elif effect == "frostbite":
+                                image = self.app.frostbite
+                                xOffset = -4
+                            elif effect == "poison":
+                                image = self.app.poison
+                            elif effect == "stagger":
+                                image = self.app.stagger
+                                xOffset = -2
+                            else:
+                                continue
+
+                            if effectCnt == 1:
+                                x = 62 + xOffset
+                                y = 385
+                            else:
+                                x = (65 if i == 0 else 48) + xOffset
+                                y = 375 if i == 0 else 395
+                            self.app.displayImage.paste(im=image, box=(x, y), mask=image)
+
+                image = self.app.destinationNode
+                x = 11 + (40 * landingNode[0])
+                y = 48 + (42 * landingNode[1])
+                log("Pasting destination node image onto card at " + str((x, y)) + ".")
+                self.app.displayImage.paste(im=image, box=(x, y), mask=image)
+                    
+                for nodeToHighlight in highlightNodes:
+                    image = self.app.aoeNode
+                    x = -12 + (40 * nodeToHighlight[0])
+                    y = 25 + (42 * nodeToHighlight[1])
+                    log("Pasting AoE highlight node image onto card at " + str((x, y)) + ".")
+                    self.app.displayImage.paste(im=image, box=(x, y), mask=image)
+
+                log("End of add_components_to_variant_card_behavior_fiery_breath")
+            except Exception as e:
+                error_popup(self.root, e)
+                raise
+
+
+        def generate_fiery_ruin_patterns(self, event=None):
+            try:
+                log("Start of generate_fiery_ruin_patterns")
+
+                for nodeCnt in [10, 10, 10, 10, 11, 11, 15, 15]:
+                    highlightNodes = choice([
+                        {(0,0), (1,1), (2,2), (3,3), (4,4), (5,5), (6,6)},
+                        {(6,0), (5,1), (4,2), (3,3), (2,4), (1,5), (0,6)},
+                        {(2,0), (2,2), (2,4), (2,6)},
+                        {(4,0), (4,2), (4,4), (4,6)},
+                        {(0,2), (2,2), (4,2), (6,2)},
+                        {(0,4), (2,4), (4,4), (6,4)},
+                        {(3,1), (3,3), (3,5)},
+                        {(1,3), (3,3), (5,3)}
+                        ])
+
+                    originalNodes = deepcopy(highlightNodes)
+                    validLandingNodes = {(1,1), (3,1), (5,1), (2,2), (4,2), (1,3), (3,3), (5,3), (2,4), (4,4), (1,5), (3,5), (5,5)}
+
+                    # Adjacent nodes can be found by taking the absolute difference between
+                    # the corresponding coordinates of the start and destination nodes
+                    # adding those values together, and only allowing those that are less than 4
+
+                    for _ in range(nodeCnt - len(highlightNodes)):
+                        validNodes = set([n for n in nodes if [abs(n[0] - h[0]) + abs(n[1] - h[1]) < 4 for h in originalNodes].count(True) == 2]) - highlightNodes
+                        if not validNodes:
+                            validNodes = set([n for n in nodes if [abs(n[0] - h[0]) + abs(n[1] - h[1]) < 4 for h in highlightNodes].count(True) == 4]) - highlightNodes
+                        if not validNodes:
+                            validNodes = set([n for n in nodes if [abs(n[0] - h[0]) + abs(n[1] - h[1]) < 4 for h in highlightNodes].count(True) == 3]) - highlightNodes
+                        if not validNodes:
+                            validNodes = set([n for n in nodes if [abs(n[0] - h[0]) + abs(n[1] - h[1]) < 4 for h in highlightNodes].count(True) == 5]) - highlightNodes
+                        if not validNodes:
+                            validNodes = set([n for n in nodes if [abs(n[0] - h[0]) + abs(n[1] - h[1]) < 4 for h in highlightNodes].count(True) == 2]) - highlightNodes
+                        
+                        nodeToHighlight = choice(list(validNodes))
+                        highlightNodes.add(nodeToHighlight)
+
+                    self.nodePatterns["Black Dragon Kalameet"]["patterns"].append({"landingNode": choice(list(highlightNodes & validLandingNodes)), "highlightNodes": highlightNodes})
+
+                log("End of generate_fiery_ruin_patterns")
+            except Exception as e:
+                error_popup(self.root, e)
+                raise
+
+
+        def generate_death_race_patterns(self, deathRaceNum, addNodes, event=None):
+            try:
+                log("Start of generate_death_race_patterns")
+                
+                if deathRaceNum == 1:
+                    highlightNodes = [(2,0), (4,0), (1,1), (3,1), (5,1)]
+                    availableNodes = [(0,0), (6,0), (0,2), (2,2), (4,2), (6,2)]
+                elif deathRaceNum == 2:
+                    highlightNodes = [(1,1), (0,2), (1,3), (0,4), (1,5)]
+                    availableNodes = [(0,0), (0,6), (2,0), (2,2), (2,4), (2,6)]
+                elif deathRaceNum == 3:
+                    highlightNodes = [(1,5), (2,6), (3,5), (4,6), (5,5)]
+                    availableNodes = [(0,6), (6,6), (0,4), (2,4), (4,4), (6,4)]
+                elif deathRaceNum == 4:
+                    highlightNodes = [(5,1), (6,2), (5,3), (6,4), (5,5)]
+                    availableNodes = [(6,0), (6,6), (4,0), (4,2), (4,4), (4,6)]
+                shuffle(availableNodes)
+                highlightNodes += availableNodes[:addNodes]
+
+                self.nodePatterns["Executioner Chariot"]["patterns"].append({"highlightNodes": highlightNodes})
+
+                log("End of generate_death_race_patterns")
+            except Exception as e:
+                error_popup(self.root, e)
+                raise
+
+
+        def generate_fiery_breath_patterns(self, deathRaceNum, addNodes, event=None):
+            try:
+                log("Start of generate_fiery_breath_patterns")
+                
+                landingNode = choice([(0,0), (6,0), (0,6), (6,6)])
+                firstNode = (1,1) if landingNode == (0,0) else (5,1) if landingNode == (6,0) else (1,5) if landingNode == (0,6) else (5,5)
+                highlightNodes = {firstNode,}
+
+                # Adjacent nodes can be found by taking the absolute difference between
+                # the corresponding coordinates of the start and destination nodes
+                # adding those values together, and only allowing those that are less than 4
+
+                for _ in range(7 + addNodes - 1): # -1 because we already have the first node picked
+                    for x in range(4, -1, -1):
+                        validNodes = set([n for n in nodes if [abs(n[0] - h[0]) + abs(n[1] - h[1]) < 4 for h in highlightNodes].count(True) > x]) - highlightNodes - {landingNode,}
+                        if validNodes:
+                            break
+                    nodeToHighlight = choice(list(validNodes))
+                    highlightNodes.add(nodeToHighlight)
+
+                self.nodePatterns["Guardian Dragon"]["patterns"].append({"landingNode": landingNode, "highlightNodes": highlightNodes})
+
+                log("End of generate_fiery_breath_patterns")
+            except Exception as e:
+                error_popup(self.root, e)
+                raise
+
+
+        def generate_blasted_nodes_patterns(self, addNodes, event=None):
+            try:
+                log("Start of generate_blasted_nodes_patterns")
+                
+                oikNodes = [n for n in nodes if n not in {(2,0), (4,0), (0,2), (6,2), (0,4), (6,4)}]
+
+                nodeCnt = choice([8, 8, 8, 8, 9, 9]) + addNodes
+                landingNode = choice([(3,1), (1,3), (5,3)])
 
                 highlightNodes = {landingNode,}
 
@@ -2125,95 +2412,10 @@ try:
                         validNodes = set([n for n in oikNodes if [abs(n[0] - h[0]) + abs(n[1] - h[1]) < 4 for h in highlightNodes if n[0] in ({1, 3, 5} if h[0] in {0, 2, 4, 6} else {0, 2, 4, 6})].count(True) == 0]) - highlightNodes
                     nodeToHighlight = choice(list(validNodes))
                     highlightNodes.add(nodeToHighlight)
-                    
-                    image = self.app.aoeNode
-                    x = -12 + (40 * nodeToHighlight[0])
-                    y = 25 + (42 * nodeToHighlight[1])
-                    log("Pasting AoE highlight node image onto card at " + str((x, y)) + ".")
-                    self.app.displayImage.paste(im=image, box=(x, y), mask=image)
 
-                log("End of add_components_to_variant_card_behavior_blasted_nodes")
-            except Exception as e:
-                error_popup(self.root, e)
-                raise
+                self.nodePatterns["Old Iron King"]["patterns"].append({"landingNode": landingNode, "highlightNodes": highlightNodes})
 
-
-        def add_components_to_variant_card_behavior_fiery_breath(self, dodge, repeat, actions, addNodes, event=None):
-            try:
-                log("Start of add_components_to_variant_card_behavior_fiery_breath, dodge={}, repeat={}, actions={}".format(str(dodge), str(repeat), str(actions)))
-
-                imageWithText = ImageDraw.Draw(self.app.displayImage)
-                imageWithText.text((158, 360), str(dodge), "black", font2)
-                                    
-                for position in ["left", "middle", "right"]:
-                    if position not in actions or not actions[position]:
-                        continue
-                    if "type" in actions[position] and (actions[position]["type"] == "physical" or actions[position]["type"] == "magic"):
-                        x = 0
-                        image = self.app.attack[actions[position]["type"]][actions[position]["damage"]]
-                        log("Pasting " + actions[position]["type"] + " attack image onto variant at " + str((x, 330)) + ".")
-                        self.app.displayImage.paste(im=image, box=(x, 330), mask=image)
-                    
-                    if "effect" in actions[position]:
-                        effectCnt = len(actions[position]["effect"])
-                        for i, effect in enumerate(actions[position]["effect"]):
-                            xOffset = 0
-                            if effect == "bleed":
-                                image = self.app.bleed
-                            elif effect == "frostbite":
-                                image = self.app.frostbite
-                                xOffset = -4
-                            elif effect == "poison":
-                                image = self.app.poison
-                            elif effect == "stagger":
-                                image = self.app.stagger
-                                xOffset = -2
-                            else:
-                                continue
-
-                            if effectCnt == 1:
-                                x = 62 + xOffset
-                                y = 385
-                            else:
-                                x = (65 if i == 0 else 48) + xOffset
-                                y = 375 if i == 0 else 395
-                            self.app.displayImage.paste(im=image, box=(x, y), mask=image)
-
-                landingNode = choice([(0,0), (6,0), (0,6), (6,6)])
-                image = self.app.destinationNode
-                x = 11 + (40 * landingNode[0])
-                y = 48 + (42 * landingNode[1])
-                log("Pasting destination node image onto card at " + str((x, y)) + ".")
-                self.app.displayImage.paste(im=image, box=(x, y), mask=image)
-                
-                firstNode = (1,1) if landingNode == (0,0) else (5,1) if landingNode == (6,0) else (1,5) if landingNode == (0,6) else (5,5)
-                image = self.app.aoeNode
-                x = -12 + (40 * firstNode[0])
-                y = 25 + (42 * firstNode[1])
-                log("Pasting AoE highlight node image onto card at " + str((x, y)) + ".")
-                self.app.displayImage.paste(im=image, box=(x, y), mask=image)
-
-                highlightNodes = {firstNode,}
-
-                # Adjacent nodes can be found by taking the absolute difference between
-                # the corresponding coordinates of the start and destination nodes
-                # adding those values together, and only allowing those that are less than 4
-
-                for _ in range(7 + addNodes - 1): # -1 because we already have the first node picked
-                    for x in range(4, -1, -1):
-                        validNodes = set([n for n in nodes if [abs(n[0] - h[0]) + abs(n[1] - h[1]) < 4 for h in highlightNodes].count(True) > x]) - highlightNodes - {landingNode,}
-                        if validNodes:
-                            break
-                    nodeToHighlight = choice(list(validNodes))
-                    highlightNodes.add(nodeToHighlight)
-                    
-                    image = self.app.aoeNode
-                    x = -12 + (40 * nodeToHighlight[0])
-                    y = 25 + (42 * nodeToHighlight[1])
-                    log("Pasting AoE highlight node image onto card at " + str((x, y)) + ".")
-                    self.app.displayImage.paste(im=image, box=(x, y), mask=image)
-
-                log("End of add_components_to_variant_card_behavior_fiery_breath")
+                log("End of generate_blasted_nodes_patterns")
             except Exception as e:
                 error_popup(self.root, e)
                 raise
@@ -2223,7 +2425,11 @@ try:
             try:
                 log("Start of apply_mods_to_actions, enemy={}, behavior={}, dodge={}, repeat={}, actions={}, variant={}".format(str(enemy), str(behavior), str(dodge), str(repeat), str(actions), str(variant)))
 
-                behavior = "" if behavior == "behavior" else behavior
+                if behavior == "Cage Grasp Inferno":
+                    log("End of apply_mods_to_actions (nothing to do for Cage Grasp Inferno)")
+                    return dodge, repeat, actions, 0
+
+                behavior = "" if behavior == "behavior" else "Cage Grasp Inferno" if behavior == "Fiery Breath" else behavior
                 addNodes = 0
 
                 if type(variant) == list:
