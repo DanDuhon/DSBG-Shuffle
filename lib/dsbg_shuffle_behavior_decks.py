@@ -254,14 +254,47 @@ try:
                     self.set_decks(enemy="Vordt of the Boreal Valley (attack)", skipClear=True)
                     log("End of set_decks")
                     return
-                elif selection == "Black Dragon Kalameet" and "Kalameet" in self.app.settings["enabledBossOptions"]:
-                    self.app.variantsTab.generate_fiery_ruin_patterns()
+                elif any([
+                        selection == "Black Dragon Kalameet" and "Kalameet" in self.app.settings["enabledBossOptions"],
+                        selection == "Guardian Dragon" and "Guardian Dragon" in self.app.settings["enabledBossOptions"],
+                        selection == "Old Iron King" and "Old Iron King" in self.app.settings["enabledBossOptions"]
+                        ]):
+                    if selection in set([v[:v.index("_")] for v in self.app.variantsTab.lockedVariants]):
+                        variant = choice([v for v in self.app.variantsTab.lockedVariants if "-" not in v])
+                        mods = [int(modIdLookup[m][-1:]) for m in self.app.variantsTab.lockedVariants[variant]["mods"] if "nodes" in modIdLookup[m]]
+                        addNodes = mods[0] if mods else 0
+                    elif selection in self.app.variantsTab.currentVariants:
+                        variant = self.app.variantsTab.currentVariants[selection]["defKey"]
+                        mods = [int(modIdLookup[m][-1:]) for m in variant if "nodes" in modIdLookup[m]]
+                        addNodes = mods[0] if mods else 0
+                    else:
+                        addNodes = 0
+
+                    self.app.variantsTab.nodePatterns[selection]["patterns"] = []
+                    self.app.variantsTab.nodePatterns[selection]["index"] = 0
+
+                    if selection == "Black Dragon Kalameet":
+                        self.app.variantsTab.generate_fiery_ruin_patterns(addNodes=addNodes)
+                    elif selection == "Guardian Dragon":
+                        self.app.variantsTab.generate_fiery_breath_patterns(addNodes=addNodes)
+                    elif selection == "Old Iron King":
+                        self.app.variantsTab.generate_blasted_nodes_patterns(addNodes=addNodes)
                 elif selection == "Executioner Chariot" and "Chariot" in self.app.settings["enabledBossOptions"]:
-                    self.app.variantsTab.generate_death_race_patterns()
-                elif selection == "Guardian Dragon" and "Guardian Dragon" in self.app.settings["enabledBossOptions"]:
-                    self.app.variantsTab.generate_fiery_breath_patterns()
-                elif selection == "Old Iron King" and "Old Iron King" in self.app.settings["enabledBossOptions"]:
-                    self.app.variantsTab.generate_blasted_nodes_patterns()
+                    self.app.variantsTab.nodePatterns[selection]["patterns"] = []
+                    self.app.variantsTab.nodePatterns[selection]["index"] = 0
+                    
+                    for x in range(1, 5):
+                        if selection in set([v[:v.index("_")] for v in self.app.variantsTab.lockedVariants]):
+                            variant = choice([v for v in self.app.variantsTab.lockedVariants if "-" not in v])
+                            mods = [int(modIdLookup[m][-1:]) for m in self.app.variantsTab.lockedVariants[variant]["mods"] if "nodes" in modIdLookup[m]]
+                            addNodes = mods[0] if mods else 0
+                        elif selection in self.app.variantsTab.currentVariants:
+                            variant = self.app.variantsTab.currentVariants[selection]["Death Race " + str(x)]
+                            mods = [int(modIdLookup[m][-1:]) for m in variant if "nodes" in modIdLookup[m]]
+                            addNodes = mods[0] if mods else 0
+                        else:
+                            addNodes = 0
+                        self.app.variantsTab.generate_death_race_patterns(deathRaceNum=x, addNodes=addNodes)
 
                 if not skipClear:
                     # Remove keyword tooltips from the previous image shown, if there are any.
@@ -359,10 +392,6 @@ try:
                 else:
                     self.decks[selection]["defKey"] = {"",}
                     self.decks[selection]["mods"] = []
-
-                for boss in self.app.variantsTab.nodePatterns:
-                    self.app.variantsTab.nodePatterns[boss]["patterns"] = []
-                    self.app.variantsTab.nodePatterns[boss]["index"] = 0
 
                 self.remove_all_health_trackers(selection)
 

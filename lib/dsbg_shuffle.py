@@ -106,6 +106,8 @@ try:
                     self.repeat[x] = self.create_image("repeat_" + str(x) + ".png", "repeat", progress=True)
                 self.sksMove = self.create_image("sks_move.png", "move", progress=True)
                 self.phalanxMove = self.create_image("phalanx_move.png", "move", progress=True)
+                self.aoeNode = self.create_image("aoe_node.png", "aoeNode", progress=True)
+                self.destinationNode = self.create_image("destination_node.png", "destinationNode", progress=True)
 
                 # Keywords
                 self.barrage = self.create_image("barrage.png", "barrage", progress=True)

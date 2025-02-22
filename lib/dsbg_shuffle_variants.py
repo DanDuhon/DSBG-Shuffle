@@ -351,6 +351,11 @@ try:
             try:
                 log("Start of load_variant_card, variant={}, selfCall={}, forPrinting={}, armorerDennis={}, oldIronKing={}, pursuer={}, deckDataCard={}, healthMod={}, fromDeck={}".format(str(variant), str(selfCall), str(forPrinting), str(armorerDennis), str(oldIronKing), str(pursuer), str(deckDataCard), str(healthMod), str(fromDeck)))
 
+                if variant in {"All", "Enemies", "Mini Bosses", "Main Bosses", "Mega Bosses"}:
+                    log("\tNo variant selected")
+                    log("\tEnd of load_variant_card")
+                    return
+
                 self.treeviewVariantsList.unbind("<<TreeviewSelect>>")
                 self.treeviewVariantsLocked.unbind("<<TreeviewSelect>>")
 
@@ -436,8 +441,8 @@ try:
                             self.variantPhotoImage = self.app.create_image(enemy + " - data.jpg", "enemyCard")
 
                             self.edit_variant_card_os(enemy=enemy, healthMod=healthMod if healthMod else {"Ornstein": 0, "Smough": 0}, fromDeck=fromDeck)
+                # Create and display the variant image.
                 elif "Executioner Chariot - Death Race" in self.selectedVariant:
-                    # Create and display the variant image.
                     self.variantPhotoImage = self.app.create_image(self.selectedVariant + ".jpg", "enemyCard")
 
                     self.edit_variant_card_death_race(variant=self.selectedVariant, fromDeck=fromDeck)
@@ -549,14 +554,22 @@ try:
                         mods = [modIdLookup[m] for m in list(self.lockedVariants[tree.selection()[0]]["mods"]) if m]
 
                     self.selectedVariant = (
-                        name
-                        + (" - data" if tree.parent(tree.selection()[0]) in {
-                            "Enemies",
-                            "Invaders & Explorers Mimics",
-                            "Mini Bosses",
-                            "Main Bosses",
-                            "Mega Bosses"
-                            } else ""))
+                            name
+                            + (" - data" if tree.parent(tree.selection()[0]) in {
+                                "Enemies",
+                                "Invaders & Explorers Mimics",
+                                "Mini Bosses",
+                                "Main Bosses",
+                                "Mega Bosses"
+                                } else ""))
+                    
+                    if self.selectedVariant in {"Executioner Chariot - Executioner Chariot",}:
+                        self.selectedVariant = self.selectedVariant
+                    elif "Executioner Chariot" in self.selectedVariant and "-" not in self.selectedVariant:
+                        self.selectedVariant += " - Skeletal Horse"
+                    elif "Executioner Chariot" in self.selectedVariant:
+                        self.selectedVariant = self.selectedVariant.replace("data", "Skeletal Horse")
+                        
                 elif variant in self.lockedVariants:
                     name = variant[:variant.index("_")]
 
@@ -606,7 +619,7 @@ try:
                         name = variant[:variant.index(" - ")]
                     else:
                         name = variant
-
+                        
                     self.selectedVariant = (
                         name
                         + (" - data" if self.treeviewVariantsLocked.parent(selection) in {
@@ -686,10 +699,60 @@ try:
                             self.variantPhotoImage = self.app.create_image(enemy + " - data.jpg", "enemyCard")
 
                             self.edit_variant_card_os(variant=mods, lockedTree=True, enemy=enemy, healthMod=healthMod if healthMod else {"Ornstein": 0, "Smough": 0}, fromDeck=fromDeck)
-                else:
-                    # Create and display the variant image.
+                # Create and display the variant image.
+                elif "Executioner Chariot - Death Race" in self.selectedVariant:
                     self.variantPhotoImage = self.app.create_image(self.selectedVariant + ".jpg", "enemyCard")
 
+                    self.edit_variant_card_death_race(variant=self.selectedVariant, lockedTree=True, fromDeck=fromDeck)
+                elif self.selectedVariant in {"Black Dragon Kalameet - Hellfire Blast", "Black Dragon Kalameet - Hellfire Barrage"}:
+                    self.variantPhotoImage = self.app.create_image((self.selectedVariant[:self.selectedVariant.index("_")] + self.selectedVariant.replace(variant, "") if "_" in self.selectedVariant else self.selectedVariant) + ".jpg", "enemyCard")
+                    self.edit_variant_card(variant=self.selectedVariant, lockedTree=True, bottomLeftDisplay=bottomLeftDisplay, bottomRightDisplay=bottomRightDisplay, healthMod=healthMod, fromDeck=fromDeck, deckDataCard=False)
+                    
+                    self.aoePhotoImage = self.app.create_image("Black Dragon Kalameet - Fiery Ruin.jpg", "enemyCard")
+                    self.edit_variant_card_fiery_ruin(variant="Black Dragon Kalameet - Fiery Ruin", lockedTree=True, fromDeck=fromDeck)
+                elif "Old Iron King - Fire Beam" in self.selectedVariant:
+                    self.variantPhotoImage = self.app.create_image((self.selectedVariant[:self.selectedVariant.index("_")] + self.selectedVariant.replace(variant, "") if "_" in self.selectedVariant else self.selectedVariant) + ".jpg", "enemyCard")
+                    self.edit_variant_card(variant=self.selectedVariant, lockedTree=True, bottomLeftDisplay=bottomLeftDisplay, bottomRightDisplay=bottomRightDisplay, healthMod=healthMod, fromDeck=fromDeck, deckDataCard=False)
+                    
+                    self.aoePhotoImage = self.app.create_image("Old Iron King - Blasted Nodes.jpg", "enemyCard")
+                    self.edit_variant_card_blasted_nodes(variant="Old Iron King - Blasted Nodes.jpg", lockedTree=True, fromDeck=fromDeck)
+                elif self.selectedVariant in {"Guardian Dragon - Cage Grasp Inferno",}:
+                    self.variantPhotoImage = self.app.create_image((self.selectedVariant[:self.selectedVariant.index("_")] + self.selectedVariant.replace(variant, "") if "_" in self.selectedVariant else self.selectedVariant) + ".jpg", "enemyCard")
+                    self.edit_variant_card(variant=self.selectedVariant, lockedTree=True, bottomLeftDisplay=bottomLeftDisplay, bottomRightDisplay=bottomRightDisplay, healthMod=healthMod, fromDeck=fromDeck, deckDataCard=False)
+                    
+                    self.aoePhotoImage = self.app.create_image("Guardian Dragon - Fiery Breath.jpg", "enemyCard")
+                    self.edit_variant_card_fiery_breath(variant="Guardian Dragon - Fiery Breath", lockedTree=True, fromDeck=fromDeck)
+                else:
+                    if self.selectedVariant in {"Executioner Chariot - Executioner Chariot",}:
+                        self.selectedVariant = self.selectedVariant
+                    elif "Executioner Chariot" in self.selectedVariant and "-" not in self.selectedVariant:
+                        self.selectedVariant += " - Skeletal Horse"
+                    elif "Executioner Chariot" in self.selectedVariant:
+                        self.selectedVariant = self.selectedVariant.replace("data", "Skeletal Horse")
+                    else:
+                        self.selectedVariant += " - data" if "-" not in self.selectedVariant else ""
+
+                    if (
+                        "data" not in self.selectedVariant
+                        and (("Black Dragon Kalameet" in self.selectedVariant
+                                and "Hellfire" not in self.selectedVariant)
+                            or ("Old Iron King" in self.selectedVariant
+                                and "Fire Beam" not in self.selectedVariant)
+                            or ("Guardian Dragon" in self.selectedVariant
+                                and "Cage" not in self.selectedVariant))
+                        ):
+                            self.app.displayBottomLeft.config(image="")
+                            self.app.displayBottomLeft.image=None
+                            self.app.displayImages["variants"][self.app.displayBottomLeft]["image"] = None
+                            self.app.displayImages["variants"][self.app.displayBottomLeft]["name"] = None
+                            self.app.displayImages["variants"][self.app.displayBottomLeft]["activeTab"] = None
+                            self.app.displayImages["variantsLocked"][self.app.displayBottomLeft]["image"] = None
+                            self.app.displayImages["variantsLocked"][self.app.displayBottomLeft]["name"] = None
+                            self.app.displayImages["variantsLocked"][self.app.displayBottomLeft]["activeTab"] = None
+                    
+
+                    # Create and display the variant image.
+                    self.variantPhotoImage = self.app.create_image(self.selectedVariant + ".jpg", "enemyCard")
                     self.edit_variant_card(variant=mods, lockedTree=True, armorerDennis=armorerDennis, oldIronKing=oldIronKing, pursuer=pursuer, healthMod=healthMod, fromDeck=fromDeck, bottomLeftDisplay=bottomLeftDisplay, bottomRightDisplay=bottomRightDisplay)
 
                 if "data" not in self.selectedVariant and self.app.displayImages["variantsLocked"][self.app.displayTopRight]["name"] != self.selectedVariant and "The Four Kings" not in self.selectedVariant and not forPrinting:
@@ -1832,7 +1895,15 @@ try:
                 elif enemy in self.currentVariants and ("" if behavior == "behavior" else behavior) in self.currentVariants[enemy]:
                     dodge, repeat, actions, addNodes = self.apply_mods_to_actions(enemy, behavior, dodge, repeat, actions)
 
-                self.add_components_to_variant_card_behavior_death_race(dodge, repeat, actions, addNodes, int(behavior[-1]))
+                patterns = self.nodePatterns["Executioner Chariot"]
+
+                self.add_components_to_variant_card_behavior_death_race(
+                    dodge,
+                    repeat,
+                    actions,
+                    addNodes,
+                    int(behavior[-1]),
+                    patterns["patterns"][patterns["index"]] if patterns["patterns"] else None)
 
                 log("End of edit_variant_card_behavior_death_race")
             except Exception as e:
@@ -1879,7 +1950,14 @@ try:
                 elif enemy in self.currentVariants and ("" if behavior == "behavior" else behavior) in self.currentVariants[enemy]:
                     dodge, repeat, actions, addNodes = self.apply_mods_to_actions(enemy, behavior, 1, 1, {})
 
-                self.add_components_to_variant_card_behavior_blasted_nodes(dodge, repeat, actions, addNodes)
+                patterns = self.nodePatterns["Old Iron King"]
+
+                self.add_components_to_variant_card_behavior_blasted_nodes(
+                    dodge,
+                    repeat,
+                    actions,
+                    addNodes,
+                    patterns["patterns"][patterns["index"]] if patterns["patterns"] else None)
 
                 log("End of edit_variant_card_behavior_blasted_nodes")
             except Exception as e:
@@ -1903,12 +1981,19 @@ try:
                         if "effect" in behaviorDetail[enemy][behavior][position]:
                             actions[position]["effect"] = [e for e in behaviorDetail[enemy][behavior][position]["effect"]]
 
+                patterns = self.nodePatterns["Guardian Dragon"]
+
                 if variant:
                     dodge, repeat, actions, addNodes = self.apply_mods_to_actions(enemy, behavior, dodge, repeat, actions, variant)
                 elif enemy in self.currentVariants and ("" if behavior == "behavior" else behavior) in self.currentVariants[enemy]:
                     dodge, repeat, actions, addNodes = self.apply_mods_to_actions(enemy, behavior, dodge, repeat, actions)
 
-                self.add_components_to_variant_card_behavior_fiery_breath(dodge, repeat, actions, addNodes)
+                self.add_components_to_variant_card_behavior_fiery_breath(
+                    dodge,
+                    repeat,
+                    actions,
+                    addNodes,
+                    patterns["patterns"][patterns["index"]] if patterns["patterns"] else None)
 
                 log("End of edit_variant_card_behavior_fiery_breath")
             except Exception as e:
@@ -2209,10 +2294,10 @@ try:
                 if nodePattern:
                     highlightNodes = nodePattern["highlightNodes"]
                     landingNode = nodePattern["landingNode"]
-                    if self.nodePatterns["Old Iron King"]["index"] == 5:
-                        self.nodePatterns["Old Iron King"]["index"] = 0
+                    if self.nodePatterns["Guardian Dragon"]["index"] == 3:
+                        self.nodePatterns["Guardian Dragon"]["index"] = 0
                     else:
-                        self.nodePatterns["Old Iron King"]["index"] += 1
+                        self.nodePatterns["Guardian Dragon"]["index"] += 1
                 else:
                     landingNode = choice([(0,0), (6,0), (0,6), (6,6)])
                     firstNode = (1,1) if landingNode == (0,0) else (5,1) if landingNode == (6,0) else (1,5) if landingNode == (0,6) else (5,5)
@@ -2286,7 +2371,7 @@ try:
                 raise
 
 
-        def generate_fiery_ruin_patterns(self, event=None):
+        def generate_fiery_ruin_patterns(self, addNodes, event=None):
             try:
                 log("Start of generate_fiery_ruin_patterns")
 
@@ -2309,7 +2394,7 @@ try:
                     # the corresponding coordinates of the start and destination nodes
                     # adding those values together, and only allowing those that are less than 4
 
-                    for _ in range(nodeCnt - len(highlightNodes)):
+                    for _ in range(nodeCnt + addNodes - len(highlightNodes)):
                         validNodes = set([n for n in nodes if [abs(n[0] - h[0]) + abs(n[1] - h[1]) < 4 for h in originalNodes].count(True) == 2]) - highlightNodes
                         if not validNodes:
                             validNodes = set([n for n in nodes if [abs(n[0] - h[0]) + abs(n[1] - h[1]) < 4 for h in highlightNodes].count(True) == 4]) - highlightNodes
@@ -2358,27 +2443,27 @@ try:
                 raise
 
 
-        def generate_fiery_breath_patterns(self, deathRaceNum, addNodes, event=None):
+        def generate_fiery_breath_patterns(self, addNodes, event=None):
             try:
                 log("Start of generate_fiery_breath_patterns")
                 
-                landingNode = choice([(0,0), (6,0), (0,6), (6,6)])
-                firstNode = (1,1) if landingNode == (0,0) else (5,1) if landingNode == (6,0) else (1,5) if landingNode == (0,6) else (5,5)
-                highlightNodes = {firstNode,}
+                for landingNode in [(0,0), (6,0), (0,6), (6,6)]:
+                    firstNode = (1,1) if landingNode == (0,0) else (5,1) if landingNode == (6,0) else (1,5) if landingNode == (0,6) else (5,5)
+                    highlightNodes = {firstNode,}
 
-                # Adjacent nodes can be found by taking the absolute difference between
-                # the corresponding coordinates of the start and destination nodes
-                # adding those values together, and only allowing those that are less than 4
+                    # Adjacent nodes can be found by taking the absolute difference between
+                    # the corresponding coordinates of the start and destination nodes
+                    # adding those values together, and only allowing those that are less than 4
 
-                for _ in range(7 + addNodes - 1): # -1 because we already have the first node picked
-                    for x in range(4, -1, -1):
-                        validNodes = set([n for n in nodes if [abs(n[0] - h[0]) + abs(n[1] - h[1]) < 4 for h in highlightNodes].count(True) > x]) - highlightNodes - {landingNode,}
-                        if validNodes:
-                            break
-                    nodeToHighlight = choice(list(validNodes))
-                    highlightNodes.add(nodeToHighlight)
+                    for _ in range(7 + addNodes - 1): # -1 because we already have the first node picked
+                        for x in range(4, -1, -1):
+                            validNodes = set([n for n in nodes if [abs(n[0] - h[0]) + abs(n[1] - h[1]) < 4 for h in highlightNodes].count(True) > x]) - highlightNodes - {landingNode,}
+                            if validNodes:
+                                break
+                        nodeToHighlight = choice(list(validNodes))
+                        highlightNodes.add(nodeToHighlight)
 
-                self.nodePatterns["Guardian Dragon"]["patterns"].append({"landingNode": landingNode, "highlightNodes": highlightNodes})
+                    self.nodePatterns["Guardian Dragon"]["patterns"].append({"landingNode": landingNode, "highlightNodes": highlightNodes})
 
                 log("End of generate_fiery_breath_patterns")
             except Exception as e:
@@ -2392,28 +2477,28 @@ try:
                 
                 oikNodes = [n for n in nodes if n not in {(2,0), (4,0), (0,2), (6,2), (0,4), (6,4)}]
 
-                nodeCnt = choice([8, 8, 8, 8, 9, 9]) + addNodes
-                landingNode = choice([(3,1), (1,3), (5,3)])
+                for nodeCnt in [8, 8, 8, 8, 9, 9]:
+                    landingNode = choice([(3,1), (1,3), (5,3)])
 
-                highlightNodes = {landingNode,}
+                    highlightNodes = {landingNode,}
 
-                # Adjacent nodes can be found by taking the absolute difference between
-                # the corresponding coordinates of the start and destination nodes
-                # adding those values together, and only allowing those that are less than 4
+                    # Adjacent nodes can be found by taking the absolute difference between
+                    # the corresponding coordinates of the start and destination nodes
+                    # adding those values together, and only allowing those that are less than 4
 
-                # These are complicated rules but they work to get a more beam-type line of nodes.
-                for _ in range(nodeCnt - 1): # -1 because we already have the destination node picked
-                    validNodes = set([n for n in oikNodes if [abs(n[0] - h[0]) + abs(n[1] - h[1]) < 2 for h in highlightNodes].count(True) == 2]) - highlightNodes
-                    if not validNodes:
-                        validNodes = set([n for n in oikNodes if [abs(n[0] - h[0]) + abs(n[1] - h[1]) < 4 for h in highlightNodes if n[0] in ({1, 3, 5} if h[0] in {0, 2, 4, 6} else {0, 2, 4, 6})].count(True) == 1]) - highlightNodes
-                    if not validNodes:
-                        validNodes = set([n for n in oikNodes if [abs(n[0] - h[0]) + abs(n[1] - h[1]) < 4 for h in highlightNodes].count(True) == 3]) - highlightNodes
-                    if not validNodes:
-                        validNodes = set([n for n in oikNodes if [abs(n[0] - h[0]) + abs(n[1] - h[1]) < 4 for h in highlightNodes if n[0] in ({1, 3, 5} if h[0] in {0, 2, 4, 6} else {0, 2, 4, 6})].count(True) == 0]) - highlightNodes
-                    nodeToHighlight = choice(list(validNodes))
-                    highlightNodes.add(nodeToHighlight)
+                    # These are complicated rules but they work to get a more beam-type line of nodes.
+                    for _ in range(nodeCnt + addNodes - 1): # -1 because we already have the destination node picked
+                        validNodes = set([n for n in oikNodes if [abs(n[0] - h[0]) + abs(n[1] - h[1]) < 2 for h in highlightNodes].count(True) == 2]) - highlightNodes
+                        if not validNodes:
+                            validNodes = set([n for n in oikNodes if [abs(n[0] - h[0]) + abs(n[1] - h[1]) < 4 for h in highlightNodes if n[0] in ({1, 3, 5} if h[0] in {0, 2, 4, 6} else {0, 2, 4, 6})].count(True) == 1]) - highlightNodes
+                        if not validNodes:
+                            validNodes = set([n for n in oikNodes if [abs(n[0] - h[0]) + abs(n[1] - h[1]) < 4 for h in highlightNodes].count(True) == 3]) - highlightNodes
+                        if not validNodes:
+                            validNodes = set([n for n in oikNodes if [abs(n[0] - h[0]) + abs(n[1] - h[1]) < 4 for h in highlightNodes if n[0] in ({1, 3, 5} if h[0] in {0, 2, 4, 6} else {0, 2, 4, 6})].count(True) == 0]) - highlightNodes
+                        nodeToHighlight = choice(list(validNodes))
+                        highlightNodes.add(nodeToHighlight)
 
-                self.nodePatterns["Old Iron King"]["patterns"].append({"landingNode": landingNode, "highlightNodes": highlightNodes})
+                    self.nodePatterns["Old Iron King"]["patterns"].append({"landingNode": landingNode, "highlightNodes": highlightNodes})
 
                 log("End of generate_blasted_nodes_patterns")
             except Exception as e:
