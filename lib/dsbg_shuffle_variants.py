@@ -756,7 +756,7 @@ try:
                     self.edit_variant_card(variant=mods, lockedTree=True, armorerDennis=armorerDennis, oldIronKing=oldIronKing, pursuer=pursuer, healthMod=healthMod, fromDeck=fromDeck, bottomLeftDisplay=bottomLeftDisplay, bottomRightDisplay=bottomRightDisplay)
 
                 if "data" not in self.selectedVariant and self.app.displayImages["variantsLocked"][self.app.displayTopRight]["name"] != self.selectedVariant and "The Four Kings" not in self.selectedVariant and not forPrinting:
-                    modString = ",".join([str(x) for x in sorted([n for n in modIdLookup if modIdLookup[n] in set(mods[0] if mods and type(mods[0]) == list else mods) & set([modIdLookup[m] for m in dataCardMods])])])
+                    modString = ",".join([str(x) for x in [n for n in modIdLookup if modIdLookup[n] in set(mods[0] if mods and type(mods[0]) == list else mods) & set([modIdLookup[m] for m in dataCardMods])]])
                     self.load_variant_card_locked(variant=self.selectedVariant[:self.selectedVariant.index(" - ")] + "_" + modString, selfCall=True, armorerDennis=armorerDennis, oldIronKing=oldIronKing, pursuer=pursuer, deckDataCard=deckDataCard, healthMod=healthMod, fromDeck=fromDeck)
 
                 if not selfCall:
@@ -1295,8 +1295,8 @@ try:
                         if child not in self.currentVariants:
                             continue
                         v = tree.item(child)["values"]
-                        modList = sorted([v for v in self.currentVariants[child][[k for k in list(self.currentVariants[child].keys()) if k != "defKey"][0]]])
-                        iidChild = child + "_" + ",".join([str(m) for m in sorted(modList)])
+                        modList = [v for v in self.currentVariants[child][[k for k in list(self.currentVariants[child].keys()) if k != "defKey"][0]]]
+                        iidChild = child + "_" + ",".join([str(m) for m in modList])
 
                         if iidChild in self.lockedVariants:
                             continue
@@ -1321,8 +1321,8 @@ try:
                         if e not in self.currentVariants:
                             continue
                         v = tree.item(e)["values"]
-                        modList = sorted(list(self.currentVariants[e]["defKey"]))
-                        iid = e + "_" + ",".join([str(m) for m in sorted(modList)])
+                        modList = list(self.currentVariants[e]["defKey"])
+                        iid = e + "_" + ",".join([str(m) for m in modList])
                         iidForAvg = iid
 
                         if iid in self.lockedVariants:
@@ -1351,12 +1351,12 @@ try:
                             v = tree.item(child)["values"]
                         
                             if enemy == "Ornstein & Smough" and "&" in behavior:
-                                modList1 = sorted([v for v in self.currentVariants[enemy][behavior][behavior[:behavior.index(" & ")]]])
-                                modList2 = sorted([v for v in self.currentVariants[enemy][behavior][behavior[behavior.index(" & ")+3:]]])
-                                iidChild = child + "_" + ",".join([str(m) for m in sorted(modList1)]) + "_" + ",".join([str(m) for m in sorted(modList2)])
+                                modList1 = [v for v in self.currentVariants[enemy][behavior][behavior[:behavior.index(" & ")]]]
+                                modList2 = [v for v in self.currentVariants[enemy][behavior][behavior[behavior.index(" & ")+3:]]]
+                                iidChild = child + "_" + ",".join([str(m) for m in modList1]) + "_" + ",".join([str(m) for m in modList2])
                             else:
-                                modList = sorted([v for v in self.currentVariants[enemy][behavior]])
-                                iidChild = child + "_" + ",".join([str(m) for m in sorted(modList)])
+                                modList = [v for v in self.currentVariants[enemy][behavior]]
+                                iidChild = child + "_" + ",".join([str(m) for m in modList])
 
                             if iidChild in self.lockedVariants:
                                 continue
@@ -1390,15 +1390,15 @@ try:
                         for e in tree.get_children(cat):
                             v = tree.item(e)["values"]
                             if cat == "Enemies":
-                                modList = sorted([v for v in self.currentVariants[e][[k for k in list(self.currentVariants[e].keys()) if k != "defKey"][0]]])
+                                modList = [v for v in self.currentVariants[e][[k for k in list(self.currentVariants[e].keys()) if k != "defKey"][0]]]
                                 i += 1
                                 progress.progressVar.set(i)
                                 self.root.update_idletasks()
                             elif e in self.currentVariants:
-                                modList = sorted(list(self.currentVariants[e]["defKey"]))
+                                modList = list(self.currentVariants[e]["defKey"])
                             else:
                                 continue
-                            iid = e + "_" + ",".join([str(m) for m in sorted(modList)])
+                            iid = e + "_" + ",".join([str(m) for m in modList])
 
                             if iid in self.lockedVariants:
                                 log("End of lock_variant_card (nothing done)")
@@ -1426,12 +1426,12 @@ try:
                                 v = tree.item(child)["values"]
                         
                                 if enemy == "Ornstein & Smough" and "&" in behavior:
-                                    modList1 = sorted([v for v in self.currentVariants[enemy][behavior][behavior[:behavior.index(" & ")]]])
-                                    modList2 = sorted([v for v in self.currentVariants[enemy][behavior][behavior[behavior.index(" & ")+3:]]])
-                                    iidChild = child + "_" + ",".join([str(m) for m in sorted(modList1)]) + "_" + ",".join([str(m) for m in sorted(modList2)])
+                                    modList1 = [v for v in self.currentVariants[enemy][behavior][behavior[:behavior.index(" & ")]]]
+                                    modList2 = [v for v in self.currentVariants[enemy][behavior][behavior[behavior.index(" & ")+3:]]]
+                                    iidChild = child + "_" + ",".join([str(m) for m in modList1]) + "_" + ",".join([str(m) for m in modList2])
                                 else:
-                                    modList = sorted([v for v in self.currentVariants[enemy][behavior]])
-                                    iidChild = child + "_" + ",".join([str(m) for m in sorted(modList)])
+                                    modList = [v for v in self.currentVariants[enemy][behavior]]
+                                    iidChild = child + "_" + ",".join([str(m) for m in modList])
 
                                 if iidChild in self.lockedVariants:
                                     continue
@@ -1459,8 +1459,8 @@ try:
                     else:
                         focus = tree.focus()
 
-                    modList = sorted(list(self.currentVariants[focus]["defKey"]))
-                    iid = focus + "_" + ",".join([str(m) for m in sorted(modList)])
+                    modList = list(self.currentVariants[focus]["defKey"])
+                    iid = focus + "_" + ",".join([str(m) for m in modList])
                     iidForAvg = iid
 
                     if iid not in self.lockedVariants:
@@ -1482,14 +1482,14 @@ try:
                         v = tree.item(child)["values"]
                         
                         if enemy == "Ornstein & Smough" and "&" in behavior:
-                            modList1 = sorted([v for v in self.currentVariants[enemy][behavior][behavior[:behavior.index(" & ")]]])
-                            modList2 = sorted([v for v in self.currentVariants[enemy][behavior][behavior[behavior.index(" & ")+3:]]])
-                            iidChild = child + "_" + ",".join([str(m) for m in sorted(modList1)]) + "_" + ",".join([str(m) for m in sorted(modList2)])
+                            modList1 = [v for v in self.currentVariants[enemy][behavior][behavior[:behavior.index(" & ")]]]
+                            modList2 = [v for v in self.currentVariants[enemy][behavior][behavior[behavior.index(" & ")+3:]]]
+                            iidChild = child + "_" + ",".join([str(m) for m in modList1]) + "_" + ",".join([str(m) for m in modList2])
                         elif behavior not in self.currentVariants[enemy]:
                             continue
                         else:
-                            modList = sorted([v for v in self.currentVariants[enemy][behavior]])
-                            iidChild = child + "_" + ",".join([str(m) for m in sorted(modList)])
+                            modList = [v for v in self.currentVariants[enemy][behavior]]
+                            iidChild = child + "_" + ",".join([str(m) for m in modList])
 
                         if iidChild in self.lockedVariants:
                             continue
@@ -1514,8 +1514,8 @@ try:
                     else:
                         self.app.behaviorDeckTab.set_decks(enemy=focus, skipClear=True)
                 else:
-                    modList = sorted([v for v in self.currentVariants[tree.focus()][[k for k in list(self.currentVariants[tree.focus()].keys()) if k != "defKey"][0]]])
-                    iid = tree.focus() + "_" + ",".join([str(m) for m in sorted(modList)])
+                    modList = [v for v in self.currentVariants[tree.focus()][[k for k in list(self.currentVariants[tree.focus()].keys()) if k != "defKey"][0]]]
+                    iid = tree.focus() + "_" + ",".join([str(m) for m in modList])
                     iidForAvg = iid
 
                     if iid in self.lockedVariants:
@@ -2520,7 +2520,9 @@ try:
                 if type(variant) == list:
                     mods = variant
                 elif enemy in self.currentVariants and behavior in self.currentVariants[enemy]:
-                    mods = sorted([modIdLookup[m] for m in list(self.currentVariants[enemy][behavior])], key=lambda x: 1 if x == "repeat" else 0)
+                    mods = [modIdLookup[m] for m in list(self.currentVariants[enemy][behavior]) if modIdLookup[m] != "repeat"] + [modIdLookup[m] for m in list(self.currentVariants[enemy][behavior]) if modIdLookup[m] == "repeat"]
+                    if mods.count("bleed") == 2 and mods.count("poison") == 2:
+                        pass
                 else:
                     log("End of apply_mods_to_actions (nothing to do)")
                     return dodge, repeat, actions, addNodes
