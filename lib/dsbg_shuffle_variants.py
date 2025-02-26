@@ -138,22 +138,9 @@ try:
             # Load the enemy variants files.
             self.variants = {}
             i = self.app.progress.progressVar.get()
-            for enemy in list(enemiesDict.keys()) + list(bosses.keys()):
-                i += 3
-                self.app.progress.progressVar.set(i)
-                root.update_idletasks()
-                
-                with open(baseFolder + "\\lib\\dsbg_shuffle_difficulty\\dsbg_shuffle_difficulty_" + enemy + ".json", "r") as f:
-                    enemyDifficulty = load(f)
 
-                self.variants[enemy] = {1: {}, 2: {}, 3: {}, 4: {}}
-                for x in range(1, 5):
-                    for diffInc in enemyDifficulty[str(x)]:
-                        self.variants[enemy][x][float(diffInc)] = {}
-                        for defKey in enemyDifficulty[str(x)][diffInc]:
-                            self.variants[enemy][x][float(diffInc)][frozenset([""] if not defKey else [int(k) for k in defKey.split(",")])] = enemyDifficulty[str(x)][diffInc][defKey]
-
-                    self.variants[enemy][x] = {k: self.variants[enemy][x][k] for k in sorted(self.variants[enemy][x])}
+            if self.app.settings["variantEnable"] == "on":
+                self.load_enemy_variants(root=root, i=i)
 
             self.variantsTabButtonsFrame = ttk.Frame(self)
             self.variantsTabButtonsFrame.pack()
@@ -243,6 +230,31 @@ try:
             self.imagesPdfButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
 
             self.create_variants_treeview()
+
+
+        def load_enemy_variants(self, root, i, fromSettings=False):
+            if fromSettings:
+                self.app.progress = PopupWindow(root, labelText="Loading variants... ", progressBar=True, progressMax=len(list(enemiesDict.keys()) + list(bosses.keys())) * 12, loadingImage=True)
+
+            for enemy in list(enemiesDict.keys()) + list(bosses.keys()):
+                with open(baseFolder + "\\lib\\dsbg_shuffle_difficulty\\dsbg_shuffle_difficulty_" + enemy + ".json", "r") as f:
+                    enemyDifficulty = load(f)
+
+                self.variants[enemy] = {1: {}, 2: {}, 3: {}, 4: {}}
+                for x in range(1, 5):
+                    for diffInc in enemyDifficulty[str(x)]:
+                        self.variants[enemy][x][float(diffInc)] = {}
+                        for defKey in enemyDifficulty[str(x)][diffInc]:
+                            self.variants[enemy][x][float(diffInc)][frozenset([""] if not defKey else [int(k) for k in defKey.split(",")])] = enemyDifficulty[str(x)][diffInc][defKey]
+
+                    self.variants[enemy][x] = {k: self.variants[enemy][x][k] for k in sorted(self.variants[enemy][x])}
+                    
+                    i += 3
+                    self.app.progress.progressVar.set(i)
+                    root.update_idletasks()
+
+            if fromSettings:
+                self.app.progress.destroy()
 
 
         def reset_treeview(self):
@@ -2066,8 +2078,7 @@ try:
                                 x = (75 if position == "left" else 170 if position == "middle" else 265) + xOffset
                                 y = 340
                             else:
-                                x = ((80 if i == 0 else 63) if position == "left" else (173 if i == 0 else 156) if position == "middle" else (268 if i == 0 else 251))
-                                x += xOffset
+                                x = ((80 if i == 0 else 63) if position == "left" else (173 if i == 0 else 156) if position == "middle" else (268 if i == 0 else 251)) + xOffset
                                 y = 330 if i == 0 else 350
 
                             self.app.displayImage.paste(im=image, box=(x, y), mask=image)
@@ -2706,10 +2717,10 @@ try:
 
                 if repeat > 1 and id == 0:
                     image = self.app.repeat[repeat]
-                    self.app.displayImage.paste(im=image, box=(17, 145), mask=image)
+                    self.app.displayImage.paste(im=image, box=(17, 83), mask=image)
                 elif repeat > 1:
                     image = self.app.repeat[repeat]
-                    self.app.displayImage.paste(im=image, box=(240, 310), mask=image)
+                    self.app.displayImage.paste(im=image, box=(240, 261), mask=image)
                                     
                 for position in ["left", "right"]:
                     if position not in actions or not actions[position]:
@@ -2729,6 +2740,46 @@ try:
                         image = self.app.attack[actions[position]["type"]][actions[position]["damage"]]
                         log("Pasting " + actions[position]["type"] + " attack image onto variant at " + str((x, 244)) + ".")
                         self.app.displayImage.paste(im=image, box=(x, 244), mask=image)
+                    
+                    if "effect" in actions[position]:
+                        effectCnt = len(actions[position]["effect"])
+                        for i, effect in enumerate(actions[position]["effect"]):
+                            xOffset = 0
+                            if effect == "bleed":
+                                image = self.app.bleed
+                            elif effect == "frostbite":
+                                image = self.app.frostbite
+                                xOffset = -4
+                            elif effect == "poison":
+                                image = self.app.poison
+                            elif effect == "stagger":
+                                image = self.app.stagger
+                                xOffset = -2
+                            elif effect == "corrosion":
+                                image = self.app.corrosion
+                                xOffset = -2
+                            elif effect == "calamity":
+                                image = self.app.calamity
+                                xOffset = -3
+                            else:
+                                continue
+
+                            if effectCnt == 1:
+                                if id == 0:
+                                    x = (170 if position == "left" else 265) + xOffset
+                                    y = 125
+                                else:
+                                    x = (75 if position == "left" else 170) + xOffset
+                                    y = 301
+                            else:
+                                if id == 0:
+                                    x = ((178 if i == 0 else 161) if position == "left" else (273 if i == 0 else 256)) + xOffset
+                                    y = 115 if i == 0 else 135
+                                else:
+                                    x = ((85 if i == 0 else 68) if position == "left" else (178 if i == 0 else 161)) + xOffset
+                                    y = 291 if i == 0 else 311
+
+                            self.app.displayImage.paste(im=image, box=(x, y), mask=image)
 
                 log("End of add_components_to_variant_card_behavior")
             except Exception as e:
@@ -2745,22 +2796,31 @@ try:
                 else:
                     mods = [modIdLookup[m] for m in list(self.currentVariants[enemy][behavior][b])]
 
+                behaviorAttacks = [i for i, a in enumerate(actions) if a in {"left", "middle", "right"} and "damage" in actions[a]]
+                effectCount = max([len(actions[position].get("effect", [])) for position in actions]) + mods.count("bleed") + mods.count("frostbite") + mods.count("poison") + mods.count("stagger")
+                effectsPerAttack = ceil(effectCount / len(behaviorAttacks))
+
                 for mod in mods:
                     dodge += int(mod[-1]) if "dodge" in mod else 0
                     repeat += 1 if "repeat" in mod else 0
-                    newConditionAdded = False
 
                     # For behaviors that do not already cause a condition.
-                    if (
-                        mod in {"bleed", "frostbite", "poison", "stagger"}
-                        and "effect" not in actions.get("right", {})
-                        ):
-                        if "right" in actions and not actions["right"]:
-                            actions[position]["effect"] = [mod]
-                            newConditionAdded = True
+                    if mod in {"bleed", "frostbite", "poison", "stagger"}:
+                        for position in ["left", "middle", "right"]:
+                            if position not in behaviorDetail[enemy].get(behavior, behaviorDetail[enemy].get("behavior", {})).get(b, {}):
+                                continue
+                            if len(actions[position].get("effect", [])) < effectsPerAttack:
+                                if "effect" in actions[position]:
+                                    actions[position]["effect"].append(mod)
+                                else:
+                                    actions[position]["effect"] = [mod]
+                                break
+                        # if "right" in actions and not actions["right"]:
+                        #     actions[position]["effect"] = [mod]
+                        #     newConditionAdded = True
 
-                    if newConditionAdded:
-                        continue
+                    # if newConditionAdded:
+                    #     continue
 
                     for position in ["left", "right"]:
                         if position in actions:
@@ -2768,9 +2828,6 @@ try:
                                 actions[position]["damage"] += int(mod[-1]) if "damage" in mod else 0
                             if "type" in actions[position]:
                                 actions[position]["type"] = mod if mod in {"physical", "magic"} else actions[position]["type"]
-                            # For behaviors that already cause a condition.
-                            elif "effect" in actions[position] and mod in {"bleed", "frostbite", "poison", "stagger"} and mod not in actions[position]["effect"]:
-                                actions[position]["effect"].append(mod)
 
                 log("End of apply_mods_to_actions_os")
 

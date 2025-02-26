@@ -53,10 +53,14 @@ try:
                 self.allEnemies = {enemy: {} for enemy in enemiesDict}
 
                 root.withdraw()
-                progressMax = len(list(enemiesDict.keys()) + list(bosses.keys())) * 3
-                progressMax += 1050
+
+                progressMax = 1052
+                # Variants
+                if self.settings["variantEnable"] == "on":
+                    progressMax += len(list(enemiesDict.keys()) + list(bosses.keys())) * 12
                 if self.settings["treasureSwapOption"] in {"Similar Soul Cost", "Tier Based"}:
                     progressMax += len([t for t in treasures if not treasures[t]["character"] or treasures[t]["character"] in self.charactersActive])
+                print(progressMax)
                 self.progress = PopupWindow(root, labelText="Starting up...", progressBar=True, progressMax=progressMax, loadingImage=True)
 
                 # Delete images from staging
@@ -710,7 +714,9 @@ try:
                 self.progress.label.config(text="Loading treasure...")
                 if self.settings["treasureSwapOption"] in {"Similar Soul Cost", "Tier Based"}:
                     generate_treasure_soul_cost(self.availableExpansions, self.charactersActive, root, self.progress)
-                i = len([t for t in treasures if not treasures[t]["character"] or treasures[t]["character"] in self.charactersActive])
+
+                self.progress.label.config(text="Praising the Sun...")
+                
                 if self.settings["treasureSwapOption"] == "Tier Based":
                     populate_treasure_tiers(self.availableExpansions, self.charactersActive)
 
@@ -785,7 +791,8 @@ try:
 
                 self.variantsTab = VariantsFrame(root=root, app=self)
                 self.variantsTab.bind("<1>", lambda event: event.widget.focus_set())
-                self.notebook.add(self.variantsTab, text="Behavior Variants")
+                if self.settings["variantEnable"] == "on":
+                    self.notebook.add(self.variantsTab, text="Behavior Variants")
 
                 self.behaviorDeckTab = BehaviorDeckFrame(root=root, app=self)
                 self.behaviorDeckTab.bind("<1>", lambda event: event.widget.focus_set())
@@ -1175,6 +1182,7 @@ try:
                 oldSettings = {k:v for k, v in self.settings.items()}
                 oldTreasureSwapOption = self.settings["treasureSwapOption"]
                 oldCustomEnemyList = self.settings["customEnemyList"]
+                oldVariantEnable = self.settings["variantEnable"]
 
                 s = SettingsWindow(app, root, self.coreSets)
 
@@ -1268,6 +1276,17 @@ try:
                             if self.settings["treasureSwapOption"] == "Tier Based":
                                 populate_treasure_tiers(self.availableExpansions, self.charactersActive)
                         progress.destroy()
+                        
+                    if self.settings["variantEnable"] == "on" and self.settings["variantEnable"] != oldVariantEnable:
+                        if not self.variantsTab.variants:
+                            self.variantsTab.load_enemy_variants(root=root, i=0, fromSettings=True)
+                        self.notebook.insert(3, self.variantsTab, text="Behavior Variants")
+                    elif self.settings["variantEnable"] == "off":
+                        self.notebook.forget(self.variantsTab)
+                        self.notebook.select(0)
+                        self.variantsTab.currentVariants = {}
+                        self.variantsTab.lockedVariants = {}
+                        self.variantsTab.selectedVariant = None
                     
                     if oldCustomEnemyList != self.settings["customEnemyList"] and self.settings["customEnemyList"]:
                         i = 0

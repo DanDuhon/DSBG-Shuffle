@@ -41,6 +41,7 @@ try:
                 self.create_invaders_pane(top)
                 self.create_treasure_swap_pane(top)
                 self.create_shown_encounters_pane(top)
+                self.create_variant_enable_pane(top)
                 self.create_update_check_pane(top)
                 self.create_buttons(top)
 
@@ -420,13 +421,34 @@ try:
                 raise
 
 
+        def create_variant_enable_pane(self, parent):
+            try:
+                log("Start of create_variant_enable_pane")
+
+                self.variantEnable = {"button": None, "value": tk.IntVar()}
+                self.variantEnableLabelFrame = ttk.LabelFrame(parent, text="Enable Variants Tab", padding=(20, 10))
+                self.variantEnableLabelFrame.grid(row=1, column=5, padx=(20, 10), pady=(20, 10), sticky="nsew")
+                self.variantEnableFrame = ttk.Frame(self.variantEnableLabelFrame)
+                self.variantEnableFrame.pack(fill=tk.BOTH, expand=True)
+                self.variantEnable["value"].set(1 if "on" in self.settings["variantEnable"] else 0)
+                self.variantEnable["button"] = ttk.Checkbutton(self.variantEnableFrame, text="Enable Variants Tab", variable=self.variantEnable["value"])
+                self.variantEnable["button"].grid(row=0, column=0, padx=5, pady=10, sticky="nsew")
+                self.variantEnableLabel = ttk.Label(self.variantEnableFrame, text="If disabled, the Behavior\nVariants tab will be\nunavailable.\n\nIf you don't use behavior\nvariants, disabling this will\nmake the app load faster.")
+                self.variantEnableLabel.grid(row=1, column=0, padx=5, pady=10)
+
+                log("End of create_variant_enable_pane")
+            except Exception as e:
+                log(e, exception=True)
+                raise
+
+
         def create_update_check_pane(self, parent):
             try:
                 log("Start of create_update_check_pane")
 
                 self.updateCheck = {"button": None, "value": tk.IntVar()}
                 self.updateCheckLabelFrame = ttk.LabelFrame(parent, text="Check For Updates", padding=(20, 10))
-                self.updateCheckLabelFrame.grid(row=1, column=5, padx=(20, 10), pady=(20, 10), sticky="nsew", rowspan=2)
+                self.updateCheckLabelFrame.grid(row=2, column=5, padx=(20, 10), pady=(20, 10), sticky="nsew")
                 self.updateCheckFrame = ttk.Frame(self.updateCheckLabelFrame)
                 self.updateCheckFrame.pack(fill=tk.BOTH, expand=True)
                 self.updateCheck["value"].set(1 if "on" in self.settings["updateCheck"] else 0)
@@ -613,6 +635,7 @@ try:
                     "charactersActive": list(charactersActive),
                     "treasureSwapOption": self.treasureSwapOptions[self.treasureSwapOption.get()]["value"].get(),
                     "updateCheck": "on" if self.updateCheck["value"].get() == 1 else "off",
+                    "variantEnable": "on" if self.variantEnable["value"].get() == 1 else "off",
                     "maxInvaders": {
                         "1": self.maxInvadersVals[1].get(),
                         "2": self.maxInvadersVals[2].get(),
