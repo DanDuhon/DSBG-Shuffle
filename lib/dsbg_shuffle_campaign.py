@@ -262,6 +262,9 @@ try:
                 if selectedBoss == "Executioner Chariot":
                     self.app.encounterTab.load_encounter(encounter="Mega Boss Setup")
                     self.add_card_to_campaign()
+                elif selectedBoss == "Gravelord Nito":
+                    self.app.encounterTab.load_encounter(encounter="Gravelord Nito Setup")
+                    self.add_card_to_campaign()
 
                 # Multiples need a different iid in the treeview, so append a number.
                 if selectedBoss + "_0" not in self.treeviewCampaign.get_children():
@@ -722,6 +725,7 @@ try:
                 
                 encounterList = [encounter for encounter in self.app.encounters if (
                     all([
+                        encounter not in {"Gravelord Nito Setup", "Mega Boss Setup"},
                         any([frozenset(expCombo).issubset(self.app.availableExpansions) for expCombo in self.app.encounters[encounter]["expansionCombos"]["1"]]),
                         any([frozenset(expCombo).issubset(self.app.availableExpansions) for expCombo in self.app.encounters[encounter]["expansionCombos"]["2"]]),
                         True if "3" not in self.app.encounters[encounter]["expansionCombos"] else any([frozenset(expCombo).issubset(self.app.availableExpansions) for expCombo in self.app.encounters[encounter]["expansionCombos"]["3"]]),
@@ -732,41 +736,50 @@ try:
                 self.add_random_boss_to_campaign(level="Main Boss")
                 self.add_random_boss_to_campaign(level="Mega Boss")
 
-                if len(self.campaign) >= 3:
+                countMod = 0
+                if any([c["name"] == "Gravelord Nito" for c in self.campaign]):
+                    countMod += 1
+
+                if len(self.campaign) >= 3 + countMod:
                     mega = True
 
                 for level in bosses[self.campaign[0]["name"]]["encounters"]:
                     self.app.encounterTab.random_encounter(level=level, encounterList=encounterList)
                     self.add_card_to_campaign()
 
-                for level in bosses[self.campaign[1]["name"]]["encounters"]:
+                for level in bosses[self.campaign[2 if self.campaign[1]["name"] == "Gravelord Nito Setup" else 1]["name"]]["encounters"]:
                     self.app.encounterTab.random_encounter(level=level, encounterList=encounterList)
                     self.add_card_to_campaign()
 
                 if mega:
-                    if self.campaign[3]["name"] == "Executioner Chariot":
+                    if self.campaign[3 + countMod]["name"] == "Executioner Chariot":
                         chariot = True
+                        countMod += 1
 
-                    for level in bosses[self.campaign[2 + (1 if chariot else 0)]["name"]]["encounters"]:
+                    for level in bosses[self.campaign[2 + countMod]["name"]]["encounters"]:
                         self.app.encounterTab.random_encounter(level=level, encounterList=encounterList)
                         self.add_card_to_campaign()
 
                     if chariot:
                         bossSetup = ("Mega Boss Setup_0",)
-                        boss3 = (self.campaign[3]["name"] + "_0",)
                         for _ in range(10):
                             self.move_down(leaves=bossSetup)
-                    else:
-                        boss3 = (self.campaign[2]["name"] + "_0",)
+                            
+                    boss3 = (self.campaign[2 + countMod - (1 if chariot else 0)]["name"] + "_0",)
 
-                    for _ in range(9 + (1 if chariot else 0)):
+                    for _ in range(9 + countMod):
                         self.move_down(leaves=boss3)
 
                 boss1 = (self.campaign[0]["name"] + "_0",)
-                boss2 = (self.campaign[1]["name"] + "_0",)
+                boss2 = (self.campaign[2 if self.campaign[1]["name"] == "Gravelord Nito Setup" else 1]["name"] + "_0",)
 
-                for _ in range(8):
-                    self.move_down(leaves=boss2)
+                if self.campaign[1]["name"] == "Gravelord Nito Setup":
+                    for _ in range(8):
+                        self.move_down(leaves=boss2)
+                        self.move_down(leaves=("Gravelord Nito Setup_0",))
+                else:
+                    for _ in range(8):
+                        self.move_down(leaves=boss2)
 
                 for _ in range(4):
                     self.move_down(leaves=boss1)
@@ -829,6 +842,14 @@ try:
                 
                 if not [e for e in self.campaign if e["level"] == "Main Boss"]:
                     self.add_random_boss_to_campaign(level="Main Boss")
+                    return
+                    
+                if "Gravelord Nito" in set([e["name"] for e in self.campaign]) and "Gravelord Nito Setup" not in set([e["name"] for e in self.campaign]):
+                    self.app.encounterTab.load_encounter(encounter="Gravelord Nito Setup")
+                    self.add_card_to_campaign()
+                    addedRow = self.treeviewCampaign.get_children()[-1]
+                    self.treeviewCampaign.focus(addedRow)
+                    self.treeviewCampaign.selection_set(addedRow)
                     return
 
                 if mega:
@@ -969,11 +990,10 @@ try:
                 log("Start of v2_campaign_add_encounters")
                 
                 while len(self.v2Campaign[level]) < (encCnt if len([e for e in self.campaign if e["level"] == level]) < levelCnt else 2):
-                    self.app.encounterTab.random_encounter(level=level, encounterList=encounterList)
-                    # Make sure we don't get two of the same name
+                    # Make sure we don't get two of the same name, unless there aren't enough available
+                    encounterListNoDupes = [e for e in encounterList if e not in set([c["name"] for c in self.v2Campaign[level]])]
+                    self.app.encounterTab.random_encounter(level=level, encounterList=encounterListNoDupes if len(encounterListNoDupes) >= encCnt - len(self.v2Campaign[level]) else encounterList)
                     name = self.app.selected["name"] + (" (TSC)" if self.app.selected["expansion"] == "The Sunless City" and self.app.selected["name"] in set(["Broken Passageway", "Central Plaza"]) else "")
-                    if name in set([c["name"] for c in self.v2Campaign[level]]) or name in set([e["name"] for e in self.campaign]):
-                        continue
                     self.v2Campaign[level].append(self.add_card_to_v2_campaign_list(name))
 
                 log("End of v2_campaign_add_encounters")

@@ -191,18 +191,17 @@ try:
                 elif campaign:
                     eventSelected = treeviewCampaign.selection()[0]
                 else:
-                    if not self.currentEvent:
-                        log("End of load_event (nothing done)")
-                        return
                     eventSelected = self.currentEvent
 
-                self.currentEvent = eventSelected
+                if not eventSelected:
+                    log("End of load_event (no event selected)")
+                    return
 
                 if "_" in eventSelected:
                     eventSelected = eventSelected[:eventSelected.index("_")]
 
                 if eventSelected not in events:
-                    log("End of load_event (core set selected)")
+                    log("End of load_event (no event selected)")
                     return
 
                 # Remove keyword tooltips from the previous image shown, if there are any.

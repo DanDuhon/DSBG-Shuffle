@@ -371,7 +371,7 @@ try:
     }
 
 
-    def generate_treasure_soul_cost(setsAvailable, charactersActive, root, progress):
+    def generate_treasure_soul_cost(setsAvailable, charactersActive, root, progress, praiseTheSun=False):
         try:
             log("Start of generate_treasure_soul_cost")
 
@@ -382,8 +382,12 @@ try:
 
             i = progress.progressVar.get()
 
-            for t in [t for t in treasures if not treasures[t]["character"] or treasures[t]["character"] in charactersActive]:
+            listLen = len([t for t in treasures if not treasures[t]["character"] or treasures[t]["character"] in charactersActive]) - 50
+
+            for e, t in enumerate([t for t in treasures if not treasures[t]["character"] or treasures[t]["character"] in charactersActive]):
                 if progress:
+                    if praiseTheSun and e == listLen:
+                        progress.label.config(text="Praising the Sun... ")
                     i += 1
                     progress.progressVar.set(i)
                     root.update_idletasks()

@@ -53,8 +53,11 @@ try:
                 self.allEnemies = {enemy: {} for enemy in enemiesDict}
 
                 root.withdraw()
-                progressMax = len(list(enemiesDict.keys()) + list(bosses.keys())) * 3
-                progressMax += 1050
+
+                progressMax = 1052
+                # Variants
+                if self.settings["variantEnable"] == "on":
+                    progressMax += len(list(enemiesDict.keys()) + list(bosses.keys())) * 12
                 if self.settings["treasureSwapOption"] in {"Similar Soul Cost", "Tier Based"}:
                     progressMax += len([t for t in treasures if not treasures[t]["character"] or treasures[t]["character"] in self.charactersActive])
                 self.progress = PopupWindow(root, labelText="Starting up...", progressBar=True, progressMax=progressMax, loadingImage=True)
@@ -106,6 +109,8 @@ try:
                     self.repeat[x] = self.create_image("repeat_" + str(x) + ".png", "repeat", progress=True)
                 self.sksMove = self.create_image("sks_move.png", "move", progress=True)
                 self.phalanxMove = self.create_image("phalanx_move.png", "move", progress=True)
+                self.aoeNode = self.create_image("aoe_node.png", "aoeNode", progress=True)
+                self.destinationNode = self.create_image("destination_node.png", "destinationNode", progress=True)
 
                 # Keywords
                 self.barrage = self.create_image("barrage.png", "barrage", progress=True)
@@ -704,13 +709,11 @@ try:
                             }
                         }
                 }
-
-                #print(self.progress.progressVar.get())
                 
                 self.progress.label.config(text="Loading treasure...")
                 if self.settings["treasureSwapOption"] in {"Similar Soul Cost", "Tier Based"}:
-                    generate_treasure_soul_cost(self.availableExpansions, self.charactersActive, root, self.progress)
-                i = len([t for t in treasures if not treasures[t]["character"] or treasures[t]["character"] in self.charactersActive])
+                    generate_treasure_soul_cost(self.availableExpansions, self.charactersActive, root, self.progress, self.settings["variantEnable"] == "off")
+                
                 if self.settings["treasureSwapOption"] == "Tier Based":
                     populate_treasure_tiers(self.availableExpansions, self.charactersActive)
 
@@ -785,7 +788,8 @@ try:
 
                 self.variantsTab = VariantsFrame(root=root, app=self)
                 self.variantsTab.bind("<1>", lambda event: event.widget.focus_set())
-                self.notebook.add(self.variantsTab, text="Behavior Variants")
+                if self.settings["variantEnable"] == "on":
+                    self.notebook.add(self.variantsTab, text="Behavior Variants")
 
                 self.behaviorDeckTab = BehaviorDeckFrame(root=root, app=self)
                 self.behaviorDeckTab.bind("<1>", lambda event: event.widget.focus_set())
@@ -1175,6 +1179,7 @@ try:
                 oldSettings = {k:v for k, v in self.settings.items()}
                 oldTreasureSwapOption = self.settings["treasureSwapOption"]
                 oldCustomEnemyList = self.settings["customEnemyList"]
+                oldVariantEnable = self.settings["variantEnable"]
 
                 s = SettingsWindow(app, root, self.coreSets)
 
@@ -1268,6 +1273,17 @@ try:
                             if self.settings["treasureSwapOption"] == "Tier Based":
                                 populate_treasure_tiers(self.availableExpansions, self.charactersActive)
                         progress.destroy()
+                        
+                    if self.settings["variantEnable"] == "on" and self.settings["variantEnable"] != oldVariantEnable:
+                        if not self.variantsTab.variants:
+                            self.variantsTab.load_enemy_variants(root=root, i=0, fromSettings=True)
+                        self.notebook.insert(3, self.variantsTab, text="Behavior Variants")
+                    elif self.settings["variantEnable"] == "off":
+                        self.notebook.forget(self.variantsTab)
+                        self.notebook.select(0)
+                        self.variantsTab.currentVariants = {}
+                        self.variantsTab.lockedVariants = {}
+                        self.variantsTab.selectedVariant = None
                     
                     if oldCustomEnemyList != self.settings["customEnemyList"] and self.settings["customEnemyList"]:
                         i = 0
@@ -1307,6 +1323,16 @@ try:
                     self.encounterTab.l1["state"] = "enabled"
                     self.encounterTab.l2["state"] = "enabled"
                     self.encounterTab.l3["state"] = "enabled"
+
+                # Reset all behavior decks
+                for enemy in self.behaviorDeckTab.decks:
+                    if (
+                        ((enemy[:enemy.index(" (")] if "Vordt" in enemy else enemy) in bosses
+                            and bosses[(enemy[:enemy.index(" (")] if "Vordt" in enemy else enemy)]["expansions"] & self.availableExpansions)
+                        or (enemy in enemiesDict
+                            and enemiesDict[enemy].expansions & self.availableExpansions)
+                        ):
+                        self.behaviorDeckTab.set_decks(enemy, skipClear=True)
 
                 log("End of settings_window")
             except Exception as e:
@@ -1392,6 +1418,8 @@ try:
                     height = 424
                         
                     fileName = imageFileName[:-4] if not extensionProvided else imageFileName
+                    if "Death Race" not in fileName:
+                        fileName = fileName.replace(" 1", "").replace(" 2", "").replace(" 3", "").replace(" 4", "")
                     fileName += ".jpg" if not extensionProvided else ""
 
                     if pathProvided:
@@ -1430,6 +1458,8 @@ try:
                         }:
                             subfolder = "enemies\\"
                         elif imageType in {
+                            "aoeNode",
+                            "destinationNode",
                             "enemyNode",
                             "attack",
                             "repeat",
@@ -1504,6 +1534,10 @@ try:
                             image = Image.open(imagePath).resize((32, 32), Image.Resampling.LANCZOS)
                     elif imageType == "enemyNew":
                         image = Image.open(imagePath).resize((22, 22), Image.Resampling.LANCZOS)
+                    elif imageType == "aoeNode":
+                        image = Image.open(imagePath).resize((90, 90), Image.Resampling.LANCZOS)
+                    elif imageType == "destinationNode":
+                        image = Image.open(imagePath).resize((44, 44), Image.Resampling.LANCZOS)
                     elif imageType == "enemyNode":
                         image = Image.open(imagePath).resize((12, 12), Image.Resampling.LANCZOS)
                     elif imageType == "attack":
@@ -1515,17 +1549,17 @@ try:
                     elif imageType == "push":
                         image = Image.open(imagePath).resize((26, 32), Image.Resampling.LANCZOS)
                     elif imageType == "bleed":
-                        image = Image.open(imagePath).resize((44, 50), Image.Resampling.LANCZOS)
+                        image = Image.open(imagePath).resize((18, 20), Image.Resampling.LANCZOS)
                     elif imageType == "frostbite":
-                        image = Image.open(imagePath).resize((55, 56), Image.Resampling.LANCZOS)
+                        image = Image.open(imagePath).resize((20, 20), Image.Resampling.LANCZOS)
                     elif imageType == "poison":
-                        image = Image.open(imagePath).resize((37, 50), Image.Resampling.LANCZOS)
+                        image = Image.open(imagePath).resize((15, 20), Image.Resampling.LANCZOS)
                     elif imageType == "stagger":
-                        image = Image.open(imagePath).resize((52, 56), Image.Resampling.LANCZOS)
+                        image = Image.open(imagePath).resize((19, 20), Image.Resampling.LANCZOS)
                     elif imageType == "calamity":
-                        image = Image.open(imagePath).resize((51, 50), Image.Resampling.LANCZOS)
+                        image = Image.open(imagePath).resize((20, 20), Image.Resampling.LANCZOS)
                     elif imageType == "corrosion":
-                        image = Image.open(imagePath).resize((49, 50), Image.Resampling.LANCZOS)
+                        image = Image.open(imagePath).resize((20, 20), Image.Resampling.LANCZOS)
                     elif imageType == "barrage":
                         image = Image.open(imagePath).resize((41, 13), Image.Resampling.LANCZOS)
                     elif imageType == "bitterCold":

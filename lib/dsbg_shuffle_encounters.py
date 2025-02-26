@@ -379,11 +379,33 @@ try:
                 if not encounterList:
                     encounterList = self.encounterList
 
-                self.load_encounter(encounter=choice([encounter for encounter in encounterList if (
+                pickList = [encounter for encounter in encounterList if (
                     self.app.encounters[encounter]["level"] == level
+                    and encounter not in set([e["name"] for e in self.app.campaignTab.campaign])
                     and encounter != "Mega Boss Setup"
+                    and encounter != "Gravelord Nito Setup"
                     and (self.app.encounters[encounter]["expansion"] in self.expansionsForRandomEncounters
-                        or self.app.encounters[encounter]["level"] == 4))]))
+                        or self.app.encounters[encounter]["level"] == 4))]
+                
+                if not pickList:
+                    pickList = [encounter for encounter in encounterList if (
+                        self.app.encounters[encounter]["level"] == level
+                        and encounter != "Mega Boss Setup"
+                        and encounter != "Gravelord Nito Setup"
+                        and (self.app.encounters[encounter]["expansion"] in self.expansionsForRandomEncounters
+                            or self.app.encounters[encounter]["level"] == 4))]
+                
+                # If you don't have any valid alternatives for a level 4 encounter,
+                # per official rules you should do another level 3.
+                if not pickList and level == 4:
+                    pickList = [encounter for encounter in encounterList if (
+                        self.app.encounters[encounter]["level"] == 3
+                        and encounter != "Mega Boss Setup"
+                        and encounter != "Gravelord Nito Setup"
+                        and (self.app.encounters[encounter]["expansion"] in self.expansionsForRandomEncounters
+                            or self.app.encounters[encounter]["level"] == 3))]
+
+                self.load_encounter(encounter=choice(pickList))
 
                 log("\tEnd of random_encounter")
             except Exception as e:
@@ -450,10 +472,8 @@ try:
                 self.newEnemies = []
 
                 # Use only alternative enemies for expansions and enemies the user has activated in the settings.
-                for expansionCombo in alts["alternatives"]:
-                    if set(expansionCombo.split(",")).issubset(self.app.availableExpansions):
-                        self.app.selected["alternatives"] += [alt for alt in alts["alternatives"][expansionCombo] if set(alt).issubset(self.app.enabledEnemies) and sum([1 for a in alt if enemyIds[a].expansions == set(["Phantoms"]) or enemyIds[a].name in {"Hungry Mimic", "Voracious Mimic"}]) <= self.app.settings["maxInvaders"]]
-
+                for expansionCombo in [a for a in alts["alternatives"] if set(a.split(",")).issubset(self.app.availableExpansions)]:
+                    self.app.selected["alternatives"] += [alt for alt in alts["alternatives"][expansionCombo] if set(alt).issubset(self.app.enabledEnemies) and sum([1 for a in alt if enemyIds[a].expansions == set(["Phantoms"]) or enemyIds[a].name in {"Hungry Mimic", "Voracious Mimic"}]) <= self.app.settings["maxInvaders"][str(self.app.selected["level"])]]
                 self.newTiles = dict()
 
                 if not customEnemyListCheck:
