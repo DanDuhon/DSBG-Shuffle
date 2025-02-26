@@ -18,8 +18,6 @@ It also contains ways to build campaigns, event card management, and enemy behav
 ## Roadmap
 Future official expansions.
 
-Custom encounter builder.
-
 
 ## FAQ
 ### Are you going to support future expansions/core sets?
@@ -28,11 +26,11 @@ Yes, as time allows.  The lion's share of work is done, but new enemies will hav
 
 ### Are you going to support fan-made content?
 
-I'm willing, but only if there's interest in it.  If you know of some great fan-made content you want to see added, [please open an issue](https://github.com/DanDuhon/DSBG-Shuffle/issues) and I'll work on it!
+I'm willing, but only if there's interest in it.  If you know of some great fan-made content you want to see added, [please open an issue](https://github.com/DanDuhon/DSBG-Shuffle/issues) or contact me on Discord (.dduhon) and I'll work on it!
 
 ### Can we add custom enemies/encounters ourselves?
 
-I may create a way to build your own encounters, but they wouldn't be able to have their enemies shuffled.  But shuffle-able encounters and custom enemies?  No (unless you branch the code and do it yourself), and I don't intend to support that.  Calculating enemy strength and generating enemy combinations for an encounter can take hours depending on your machine and the size of the encounter.
+You can to build your own encounters (including custom enemies that are just the icons), but they wouldn't be able to have their enemies shuffled.  But shuffle-able encounters and custom enemies?  No (unless you branch the code and do it yourself), and I don't intend to support that.  Calculating enemy strength and generating enemy combinations for an encounter can take hours depending on your machine and the size of the encounter.
 
 ### I found a bug!
 
