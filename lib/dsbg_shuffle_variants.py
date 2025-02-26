@@ -497,7 +497,7 @@ try:
 
                 if "Death Race" in self.selectedVariant:
                     self.load_variant_card(variant="Executioner Chariot - Executioner Chariot", fromLocked=fromLocked, selfCall=originalSelection, deckDataCard=deckDataCard, fromDeck=fromDeck)
-                elif "data" not in self.selectedVariant and "Skeletal Horse" not in self.selectedVariant and self.app.displayImages[variants][self.app.displayTopRight]["name"] != self.selectedVariant and "The Four Kings" not in self.selectedVariant and not forPrinting:
+                elif "data" not in self.selectedVariant and "Skeletal Horse" not in self.selectedVariant and self.selectedVariant != "Executioner Chariot - Executioner Chariot" and self.app.displayImages[variants][self.app.displayTopRight]["name"] != self.selectedVariant and "The Four Kings" not in self.selectedVariant and not forPrinting:
                     self.load_variant_card(variant=self.selectedVariant[:self.selectedVariant.index(" - ")] + " - data", fromLocked=fromLocked, selfCall=originalSelection, armorerDennis=armorerDennis, oldIronKing=oldIronKing, pursuer=pursuer, deckDataCard=deckDataCard, healthMod=healthMod, fromDeck=fromDeck)
 
                 if not selfCall:
@@ -615,6 +615,8 @@ try:
 
                     if "_" in variant:
                         name = variant[:variant.index("_")]
+                    elif variant == "Executioner Chariot - Executioner Chariot":
+                        name = variant
                     elif "-" in variant:
                         name = variant[:variant.index(" - ")]
                     else:
@@ -622,7 +624,7 @@ try:
                         
                     self.selectedVariant = (
                         name
-                        + (" - data" if self.treeviewVariantsLocked.parent(selection) in {
+                        + (" - data" if name != "Executioner Chariot - Executioner Chariot" and self.treeviewVariantsLocked.parent(selection) in {
                             "Enemies",
                             "Invaders & Explorers Mimics",
                             "Mini Bosses",
@@ -666,7 +668,7 @@ try:
                     variants,
                     name=self.selectedVariant[:self.selectedVariant.index(" - ")] if " - " in self.selectedVariant else self.selectedVariant[:self.selectedVariant.index("_")] if "_" in self.selectedVariant else self.selectedVariant)
                     
-                if not selfCall and "data" in self.selectedVariant and self.app.displayTopLeft.image == self.app.displayImages["variants"][self.app.displayTopLeft]["image"]:
+                if not selfCall and ("data" in self.selectedVariant or self.selectedVariant == "Executioner Chariot - Executioner Chariot") and self.app.displayTopLeft.image == self.app.displayImages["variants"][self.app.displayTopLeft]["image"]:
                     self.app.displayTopLeft.config(image="")
                     self.app.displayTopLeft.image=None
                     self.app.displayImages["variants"][self.app.displayTopLeft]["image"] = None
@@ -755,7 +757,7 @@ try:
                     self.variantPhotoImage = self.app.create_image(self.selectedVariant + ".jpg", "enemyCard")
                     self.edit_variant_card(variant=mods, lockedTree=True, armorerDennis=armorerDennis, oldIronKing=oldIronKing, pursuer=pursuer, healthMod=healthMod, fromDeck=fromDeck, bottomLeftDisplay=bottomLeftDisplay, bottomRightDisplay=bottomRightDisplay)
 
-                if "data" not in self.selectedVariant and self.app.displayImages["variantsLocked"][self.app.displayTopRight]["name"] != self.selectedVariant and "The Four Kings" not in self.selectedVariant and not forPrinting:
+                if "data" not in self.selectedVariant and "Skeletal Horse" not in self.selectedVariant and self.selectedVariant != "Executioner Chariot - Executioner Chariot" and self.app.displayImages["variantsLocked"][self.app.displayTopRight]["name"] != self.selectedVariant and "The Four Kings" not in self.selectedVariant and not forPrinting:
                     modString = ",".join([str(x) for x in [n for n in modIdLookup if modIdLookup[n] in set(mods[0] if mods and type(mods[0]) == list else mods) & set([modIdLookup[m] for m in dataCardMods])]])
                     self.load_variant_card_locked(variant=self.selectedVariant[:self.selectedVariant.index(" - ")] + "_" + modString, selfCall=True, armorerDennis=armorerDennis, oldIronKing=oldIronKing, pursuer=pursuer, deckDataCard=deckDataCard, healthMod=healthMod, fromDeck=fromDeck)
 
@@ -1105,7 +1107,7 @@ try:
                 enemy = enemy[:enemy.index("_")] if "_" in enemy else enemy
                 behavior = self.selectedVariant[self.selectedVariant.index(" - ")+3:] if " - " in self.selectedVariant else None
 
-                if behavior in {"data", "Executioner Chariot", "Skeletal Horse"}:
+                if behavior in {"data", "Skeletal Horse"}:
                     self.edit_variant_card_data(enemy, variant=variant, healthMod=healthMod)
                 
                 if behavior not in {"data", "Executioner Chariot", "Skeletal Horse"} or "behavior" in behaviorDetail[enemy]:
@@ -1139,7 +1141,7 @@ try:
                     self.app.displayImages[key][self.app.displayTopRight]["name"] = self.selectedVariant
                     self.app.displayImages[key][self.app.displayTopRight]["activeTab"] = key if not fromDeck else "behaviorDeck"
                 else:
-                    if behavior in {"data", "Skeletal Horse"}:
+                    if behavior in {"data", "Skeletal Horse", "Executioner Chariot"}:
                         self.app.displayTopRight.image = displayPhotoImage
                         self.app.displayTopRight.config(image=displayPhotoImage)
                         self.app.displayImages[key][self.app.displayTopRight]["image"] = displayPhotoImage
@@ -1379,10 +1381,13 @@ try:
                 elif tree.focus() == "All":
                     progressMax = 0
                     for child in tree.get_children("All"):
+                        if child == "Enemies":
+                            progressMax += len(tree.get_children(child))
+                            continue
                         for subChild in tree.get_children(child):
                             progressMax += len(tree.get_children(subChild))
 
-                    progress = PopupWindow(self.root, labelText="Locking variants...", progressBar=True, progressMax=len(list(self.currentVariants.keys())), loadingImage=True)
+                    progress = PopupWindow(self.root, labelText="Locking variants...", progressBar=True, progressMax=progressMax, loadingImage=True)
 
                     i = 0
                     iidForAvg = "All"

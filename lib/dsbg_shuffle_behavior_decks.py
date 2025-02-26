@@ -260,11 +260,21 @@ try:
                         selection == "Old Iron King" and "Old Iron King" in self.app.settings["enabledBossOptions"]
                         ]):
                     if selection in set([v[:v.index("_")] for v in self.app.variantsTab.lockedVariants]):
-                        variant = choice([v for v in self.app.variantsTab.lockedVariants if "-" not in v])
+                        if selection == "Black Dragon Kalameet":
+                            variant = choice([v for v in self.app.variantsTab.lockedVariants if "Black Dragon Kalameet - Hellfire Blast" in v])
+                        elif selection == "Guardian Dragon":
+                            variant = choice([v for v in self.app.variantsTab.lockedVariants if "Guardian Dragon - Cage Grasp Inferno" in v])
+                        elif selection == "Old Iron King":
+                            variant = choice([v for v in self.app.variantsTab.lockedVariants if "Old Iron King - Fire Beam" in v])
                         mods = [int(modIdLookup[m][-1:]) for m in self.app.variantsTab.lockedVariants[variant]["mods"] if "nodes" in modIdLookup[m]]
                         addNodes = mods[0] if mods else 0
                     elif selection in self.app.variantsTab.currentVariants:
-                        variant = self.app.variantsTab.currentVariants[selection]["defKey"]
+                        if selection == "Black Dragon Kalameet":
+                            variant = self.app.variantsTab.currentVariants[selection]["Hellfire Blast"]
+                        elif selection == "Guardian Dragon":
+                            variant = self.app.variantsTab.currentVariants[selection]["Cage Grasp Inferno"]
+                        elif selection == "Old Iron King":
+                            variant = self.app.variantsTab.currentVariants[selection]["Fire Beam (Front)"]
                         mods = [int(modIdLookup[m][-1:]) for m in variant if "nodes" in modIdLookup[m]]
                         addNodes = mods[0] if mods else 0
                     else:
@@ -285,7 +295,7 @@ try:
                     
                     for x in range(1, 5):
                         if selection in set([v[:v.index("_")] for v in self.app.variantsTab.lockedVariants]):
-                            variant = choice([v for v in self.app.variantsTab.lockedVariants if "-" not in v])
+                            variant = choice([v for v in self.app.variantsTab.lockedVariants if "Executioner Chariot - Death Race " + str(x) in v])
                             mods = [int(modIdLookup[m][-1:]) for m in self.app.variantsTab.lockedVariants[variant]["mods"] if "nodes" in modIdLookup[m]]
                             addNodes = mods[0] if mods else 0
                         elif selection in self.app.variantsTab.currentVariants:
@@ -383,7 +393,7 @@ try:
                     ""))
 
                 if (selection[:selection.index(" (")] if "Vordt" in selection else selection) in set([v[:v.index("_")] for v in self.app.variantsTab.lockedVariants]):
-                    variant = choice([v for v in self.app.variantsTab.lockedVariants if "-" not in v])
+                    variant = choice([v for v in self.app.variantsTab.lockedVariants if (selection[:selection.index(" (")] if "Vordt" in selection else selection) in v and "-" not in v])
                     self.decks[selection]["defKey"] = self.app.variantsTab.lockedVariants[variant]["defKey"]
                     self.decks[selection]["mods"] = self.app.variantsTab.lockedVariants[variant]["mods"]
                 elif (selection[:selection.index(" (")] if "Vordt" in selection else selection) in self.app.variantsTab.currentVariants:
