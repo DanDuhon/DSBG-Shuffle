@@ -325,7 +325,7 @@ try:
                 x = 0
                 for e in self.encountersSorted:
                     if self.app.encounters[e]["expansion"] not in [t[2] for t in tvData]:
-                        tvData.append(("", x, self.app.encounters[e]["expansion"], False))
+                        tvData.append(("", x, self.app.encounters[e]["expansion"], None, False))
                         tvParents[self.app.encounters[e]["expansion"]] = {"exp": tvData[-1][1]}
                         x += 1
 
@@ -339,15 +339,15 @@ try:
                         continue
 
                     if self.app.encounters[e]["level"] not in tvParents[self.app.encounters[e]["expansion"]]:
-                        tvData.append((tvParents[self.app.encounters[e]["expansion"]]["exp"], x, "Level " + str(self.app.encounters[e]["level"]), False))
+                        tvData.append((tvParents[self.app.encounters[e]["expansion"]]["exp"], x, "Level " + str(self.app.encounters[e]["level"]), None, False))
                         tvParents[self.app.encounters[e]["expansion"]][self.app.encounters[e]["level"]] = tvData[-1][1]
                         x += 1
 
-                    tvData.append((tvParents[self.app.encounters[e]["expansion"]][self.app.encounters[e]["level"]], x, e, True))
+                    tvData.append((tvParents[self.app.encounters[e]["expansion"]][self.app.encounters[e]["level"]], x, e, (e[:e.index(" (")] if "Custom - " in e else None), True))
                     x += 1
 
                 for item in tvData:
-                    self.treeviewEncounters.insert(parent=item[0], index="end", iid=item[1], text=item[2], tags=item[3])
+                    self.treeviewEncounters.insert(parent=item[0], index="end", iid=item[1], text=item[3] if item[3] else item[2], tags=item[4])
 
                     if item[0] == "":
                         self.treeviewEncounters.item(item[1], open=True)
@@ -445,7 +445,11 @@ try:
                         return
                     encounterName = tree.item(tree.selection())["text"]
                 else:
+                    tree = self.treeviewEncounters
                     encounterName = encounter
+                    
+                    if "Custom - " in encounterName:
+                        encounterName += " (" + tree.item(tree.parent(tree.parent(tree.selection())))["text"] + ")"
 
                     # If the encounter clicked on is already displayed, no need to load it again,
                     # just shuffle the enemies.
@@ -455,6 +459,9 @@ try:
                         set_display_bindings_by_tab(self.app)
                         log("\tEnd of load_encounter")
                         return
+                    
+                if "Custom - " in encounterName and " (" not in encounterName:
+                    encounterName += " (" + tree.item(tree.parent(tree.parent(tree.selection())))["text"] + ")"
 
                 self.app.selected = self.app.encounters[encounterName]
 
@@ -514,7 +521,7 @@ try:
                     log("\tEnd of show_original")
                     return
 
-                if "Custom - " + self.app.selected["name"] in self.app.encounters and self.app.selected["expansion"] in set([e[0] for e in self.app.customEncounters]):
+                if self.app.selected["name"] in self.app.encounters and self.app.selected["expansion"] in set([e[0] for e in self.app.customEncounters]):
                     log("\tCustom encounter - nothing to do")
                     log("\tEnd of show_original")
                     return
@@ -551,10 +558,13 @@ try:
                     log("\tNo encounter loaded - nothing to shuffle")
                     log("\tEnd of shuffle_enemies")
                     return
+                
+                if "Custom - " in self.app.selected["name"]:
+                    customEncounter = True
 
                 self.rewardTreasure = None
 
-                if customEncounter and "Custom - " + self.app.selected["name"] in self.app.encounters:
+                if customEncounter and self.app.selected["name"] in self.app.encounters:
                     self.newEnemies = []
                 else:
                     # Make sure a new set of enemies is chosen each time, otherwise it
@@ -566,7 +576,7 @@ try:
                         while self.newEnemies == oldEnemies:
                             self.newEnemies = choice(self.app.selected["alternatives"])
 
-                self.edit_encounter_card(self.app.selected["name"], self.app.selected["expansion"], self.app.selected["level"], self.app.selected["enemySlots"], customEncounter=customEncounter and "Custom - " + self.app.selected["name"] in self.app.encounters)
+                self.edit_encounter_card(self.app.selected["name"], self.app.selected["expansion"], self.app.selected["level"], self.app.selected["enemySlots"], customEncounter=customEncounter)
 
                 log("\tEnd of shuffle_enemies")
             except EnvironmentError as err:
@@ -607,7 +617,7 @@ try:
             try:
                 log("Start of edit_encounter_card, name={}, expansion={}, level={}, enemySlots={}, right={}".format(str(name), str(expansion), str(level), str(enemySlots), str(right)))
 
-                displayPhotoImage = self.app.create_image(name + ".jpg", "encounter", level, expansion, customEncounter=customEncounter)
+                displayPhotoImage = self.app.create_image(name + (".png" if customEncounter else ".jpg"), "encounter", level, expansion, customEncounter=customEncounter)
 
                 self.apply_keyword_tooltips(name, expansion, right=right)
 

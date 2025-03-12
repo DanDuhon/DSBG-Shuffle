@@ -534,7 +534,7 @@ try:
                 with open(file + ".json", "w") as encounterFile:
                     dump(saveEncounter, encounterFile)
 
-                self.customEncounter["image"].save(file + ".jpg")
+                self.customEncounter["image"].save(file + ".png")
                 
                 self.app.add_custom_encounters()
                 self.app.allExpansions = set([self.app.encounters[encounter]["expansion"] for encounter in self.app.encounters]) | set(["Phantoms"])

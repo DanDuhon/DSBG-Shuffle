@@ -19,9 +19,11 @@ try:
                 self.root = root
                 self.app = app
                 top = self.top = tk.Toplevel(root)
-                top.attributes('-alpha', 0.0)
+                top.attributes("-alpha", 0.0)
                 top.wait_visibility()
                 top.grab_set_global()
+                canvas = tk.Canvas(top)
+                canvas.grid(row=0, column=0, sticky="nsew", columnspan=3)
 
                 with open(baseFolder + "\\lib\\dsbg_shuffle_settings.json".replace("\\", pathSep)) as settingsFile:
                     self.settings = load(settingsFile)
@@ -31,22 +33,25 @@ try:
                 self.enabledBossOptions = self.settings.get("enabledBossOptions", [])
                 self.coreSets = coreSets
 
-                self.notebook = ttk.Notebook(top)
+                self.notebook = ttk.Notebook(canvas)
                 self.notebook.grid(row=0, column=0, padx=(20, 10), pady=(20, 10), sticky="nsew", rowspan=4, columnspan=2)
 
+                self.create_characters_tab()
                 self.create_expansion_tab()
                 self.create_enemies_tab()
                 self.create_boss_options_tab()
-                self.create_characters_pane(top)
-                self.create_invaders_pane(top)
-                self.create_treasure_swap_pane(top)
-                self.create_shown_encounters_pane(top)
-                self.create_variant_enable_pane(top)
-                self.create_update_check_pane(top)
+                self.create_invaders_tab()
+                self.create_treasure_swap_tab()
+                self.create_encounters_tab()
+                self.create_variant_tab()
+                self.create_update_tab()
                 self.create_buttons(top)
 
-                self.errLabel = ttk.Label(self.top, text="")
-                self.errLabel.grid(column=0, row=4, padx=18, columnspan=8)
+                self.errLabel = ttk.Label(top, text="")
+                self.errLabel.grid(column=0, row=4, padx=18, columnspan=8, sticky="w")
+
+                canvas.rowconfigure(0, weight=1)
+                canvas.columnconfigure(0, weight=1)
 
                 center(top)
                 top.attributes('-alpha', 1.0)
@@ -231,9 +236,9 @@ try:
                 raise
 
 
-        def create_characters_pane(self, parent):
+        def create_characters_tab(self):
             try:
-                log("Start of create_characters_pane")
+                log("Start of create_characters_tab")
 
                 self.charactersActive = {
                     "Assassin": {"button": None, "value": tk.IntVar()},
@@ -247,32 +252,32 @@ try:
                     "Thief": {"button": None, "value": tk.IntVar()},
                     "Warrior": {"button": None, "value": tk.IntVar()}
                 }
-
-                self.characterLabelFrame = ttk.LabelFrame(parent, text="Characters Being Played (up to 4)", padding=(20, 10))
-                self.characterLabelFrame.grid(row=0, column=3, padx=(20, 10), pady=(20, 10), sticky="nsew", rowspan=3)
-                self.characterFrame = ttk.Frame(self.characterLabelFrame)
-                self.characterFrame.pack(fill=tk.BOTH, expand=True)
-                self.characterLabel = ttk.Label(self.characterFrame, text="The number of characters\nselected affect enemy swapping\nand the characters selected\naffect treasure swapping.", justify=tk.CENTER)
-                self.characterLabel.grid(row=0, column=0, padx=5, pady=10)
+                
+                self.characterTab = ttk.Frame(self.notebook)
+                self.characterTab.grid_propagate(False)
+                self.notebook.add(self.characterTab, text="Characters")
+                self.characterLabel = ttk.Label(self.characterTab, text="The number of characters\nselected affects enemy swapping\nand the characters selected\naffects treasure swapping.", justify=tk.LEFT)
+                self.characterLabel.pack(side=tk.TOP, anchor=tk.W, fill=tk.X, expand=True)
                 for i, character in enumerate(self.charactersActive, 1):
                     self.charactersActive[character]["value"].set(1 if character in self.settings["charactersActive"] else 0)
-                    self.charactersActive[character]["button"] = ttk.Checkbutton(self.characterFrame, text=character, variable=self.charactersActive[character]["value"], command=self.check_max_characters)
-                    self.charactersActive[character]["button"].grid(row=i, column=0, padx=5, pady=10, sticky="nsew")
+                    self.charactersActive[character]["button"] = ttk.Checkbutton(self.characterTab, text=character, variable=self.charactersActive[character]["value"], command=self.check_max_characters)
+                    self.charactersActive[character]["button"].pack(side=tk.TOP, anchor=tk.W, fill=tk.X, expand=True)
 
-                log("End of create_characters_pane")
+                log("End of create_characters_tab")
             except Exception as e:
                 log(e, exception=True)
                 raise
 
 
-        def create_invaders_pane(self, parent):
+        def create_invaders_tab(self):
             try:
-                log("Start of create_invaders_pane")
+                log("Start of create_invaders_tab")
 
-                self.invadersFrame = ttk.LabelFrame(parent, text="Include Invaders", padding=(20, 10))
-                self.invadersFrame.grid(row=0, column=4, padx=(20, 10), pady=(20, 10), sticky="nsew")
+                self.invaderTab = ttk.Frame(self.notebook)
+                self.invaderTab.grid_propagate(False)
+                self.notebook.add(self.invaderTab, text="Invaders")
 
-                self.invadersLabel = ttk.Label(self.invadersFrame, text="Number of invaders allowed to take the place of an\nequal number of enemies in an encounter.", justify=tk.CENTER)
+                self.invadersLabel = ttk.Label(self.invaderTab, text="Number of invaders allowed to take the place of an\nequal number of enemies in an encounter.", justify=tk.LEFT)
                 self.invadersLabel.grid(row=0, column=0, padx=5, pady=10, columnspan=6)
                 
                 self.maxInvadersVals = {
@@ -287,79 +292,79 @@ try:
                 self.maxInvadersVals[3].set(self.settings["maxInvaders"]["3"]),
                 self.maxInvadersVals[4].set(self.settings["maxInvaders"]["4"])
                 
-                self.level1Label = ttk.Label(self.invadersFrame, text="Level 1")
+                self.level1Label = ttk.Label(self.invaderTab, text="Level 1")
                 self.level1Label.grid(row=1, column=0)
                 self.maxInvadersLevel1Val = tk.IntVar()
-                self.maxInvadersLevel1Radio0 = ttk.Radiobutton(self.invadersFrame, text="0", variable=self.maxInvadersVals[1], value=0)
+                self.maxInvadersLevel1Radio0 = ttk.Radiobutton(self.invaderTab, text="0", variable=self.maxInvadersVals[1], value=0)
                 self.maxInvadersLevel1Radio0.grid(row=1, column=1)
-                self.maxInvadersLevel1Radio1 = ttk.Radiobutton(self.invadersFrame, text="1", variable=self.maxInvadersVals[1], value=1)
+                self.maxInvadersLevel1Radio1 = ttk.Radiobutton(self.invaderTab, text="1", variable=self.maxInvadersVals[1], value=1)
                 self.maxInvadersLevel1Radio1.grid(row=1, column=2)
-                self.maxInvadersLevel1Radio2 = ttk.Radiobutton(self.invadersFrame, text="2", variable=self.maxInvadersVals[1], value=2)
+                self.maxInvadersLevel1Radio2 = ttk.Radiobutton(self.invaderTab, text="2", variable=self.maxInvadersVals[1], value=2)
                 self.maxInvadersLevel1Radio2.grid(row=1, column=3)
-                self.maxInvadersLevel1Radio3 = ttk.Radiobutton(self.invadersFrame, text="3", variable=self.maxInvadersVals[1], value=3)
+                self.maxInvadersLevel1Radio3 = ttk.Radiobutton(self.invaderTab, text="3", variable=self.maxInvadersVals[1], value=3)
                 self.maxInvadersLevel1Radio3.grid(row=1, column=4)
-                self.maxInvadersLevel1Radio4 = ttk.Radiobutton(self.invadersFrame, text="4", variable=self.maxInvadersVals[1], value=4)
+                self.maxInvadersLevel1Radio4 = ttk.Radiobutton(self.invaderTab, text="4", variable=self.maxInvadersVals[1], value=4)
                 self.maxInvadersLevel1Radio4.grid(row=1, column=5)
-                self.maxInvadersLevel1Radio5 = ttk.Radiobutton(self.invadersFrame, text="5", variable=self.maxInvadersVals[1], value=5)
+                self.maxInvadersLevel1Radio5 = ttk.Radiobutton(self.invaderTab, text="5", variable=self.maxInvadersVals[1], value=5)
                 self.maxInvadersLevel1Radio5.grid(row=1, column=6)
                 
-                self.level2Label = ttk.Label(self.invadersFrame, text="Level 2")
+                self.level2Label = ttk.Label(self.invaderTab, text="Level 2")
                 self.level2Label.grid(row=2, column=0)
                 self.maxInvadersLevel2Val = tk.IntVar()
-                self.maxInvadersLevel2Radio0 = ttk.Radiobutton(self.invadersFrame, text="0", variable=self.maxInvadersVals[2], value=0)
+                self.maxInvadersLevel2Radio0 = ttk.Radiobutton(self.invaderTab, text="0", variable=self.maxInvadersVals[2], value=0)
                 self.maxInvadersLevel2Radio0.grid(row=2, column=1)
-                self.maxInvadersLevel2Radio1 = ttk.Radiobutton(self.invadersFrame, text="1", variable=self.maxInvadersVals[2], value=1)
+                self.maxInvadersLevel2Radio1 = ttk.Radiobutton(self.invaderTab, text="1", variable=self.maxInvadersVals[2], value=1)
                 self.maxInvadersLevel2Radio1.grid(row=2, column=2)
-                self.maxInvadersLevel2Radio2 = ttk.Radiobutton(self.invadersFrame, text="2", variable=self.maxInvadersVals[2], value=2)
+                self.maxInvadersLevel2Radio2 = ttk.Radiobutton(self.invaderTab, text="2", variable=self.maxInvadersVals[2], value=2)
                 self.maxInvadersLevel2Radio2.grid(row=2, column=3)
-                self.maxInvadersLevel2Radio3 = ttk.Radiobutton(self.invadersFrame, text="3", variable=self.maxInvadersVals[2], value=3)
+                self.maxInvadersLevel2Radio3 = ttk.Radiobutton(self.invaderTab, text="3", variable=self.maxInvadersVals[2], value=3)
                 self.maxInvadersLevel2Radio3.grid(row=2, column=4)
-                self.maxInvadersLevel2Radio4 = ttk.Radiobutton(self.invadersFrame, text="4", variable=self.maxInvadersVals[2], value=4)
+                self.maxInvadersLevel2Radio4 = ttk.Radiobutton(self.invaderTab, text="4", variable=self.maxInvadersVals[2], value=4)
                 self.maxInvadersLevel2Radio4.grid(row=2, column=5)
-                self.maxInvadersLevel2Radio5 = ttk.Radiobutton(self.invadersFrame, text="5", variable=self.maxInvadersVals[2], value=5)
+                self.maxInvadersLevel2Radio5 = ttk.Radiobutton(self.invaderTab, text="5", variable=self.maxInvadersVals[2], value=5)
                 self.maxInvadersLevel2Radio5.grid(row=2, column=6)
                 
-                self.level3Label = ttk.Label(self.invadersFrame, text="Level 3")
+                self.level3Label = ttk.Label(self.invaderTab, text="Level 3")
                 self.level3Label.grid(row=3, column=0)
                 self.maxInvadersLevel3Val = tk.IntVar()
-                self.maxInvadersLevel3Radio0 = ttk.Radiobutton(self.invadersFrame, text="0", variable=self.maxInvadersVals[3], value=0)
+                self.maxInvadersLevel3Radio0 = ttk.Radiobutton(self.invaderTab, text="0", variable=self.maxInvadersVals[3], value=0)
                 self.maxInvadersLevel3Radio0.grid(row=3, column=1)
-                self.maxInvadersLevel3Radio1 = ttk.Radiobutton(self.invadersFrame, text="1", variable=self.maxInvadersVals[3], value=1)
+                self.maxInvadersLevel3Radio1 = ttk.Radiobutton(self.invaderTab, text="1", variable=self.maxInvadersVals[3], value=1)
                 self.maxInvadersLevel3Radio1.grid(row=3, column=2)
-                self.maxInvadersLevel3Radio2 = ttk.Radiobutton(self.invadersFrame, text="2", variable=self.maxInvadersVals[3], value=2)
+                self.maxInvadersLevel3Radio2 = ttk.Radiobutton(self.invaderTab, text="2", variable=self.maxInvadersVals[3], value=2)
                 self.maxInvadersLevel3Radio2.grid(row=3, column=3)
-                self.maxInvadersLevel3Radio3 = ttk.Radiobutton(self.invadersFrame, text="3", variable=self.maxInvadersVals[3], value=3)
+                self.maxInvadersLevel3Radio3 = ttk.Radiobutton(self.invaderTab, text="3", variable=self.maxInvadersVals[3], value=3)
                 self.maxInvadersLevel3Radio3.grid(row=3, column=4)
-                self.maxInvadersLevel3Radio4 = ttk.Radiobutton(self.invadersFrame, text="4", variable=self.maxInvadersVals[3], value=4)
+                self.maxInvadersLevel3Radio4 = ttk.Radiobutton(self.invaderTab, text="4", variable=self.maxInvadersVals[3], value=4)
                 self.maxInvadersLevel3Radio4.grid(row=3, column=5)
-                self.maxInvadersLevel3Radio5 = ttk.Radiobutton(self.invadersFrame, text="5", variable=self.maxInvadersVals[3], value=5)
+                self.maxInvadersLevel3Radio5 = ttk.Radiobutton(self.invaderTab, text="5", variable=self.maxInvadersVals[3], value=5)
                 self.maxInvadersLevel3Radio5.grid(row=3, column=6)
                 
-                self.level4Label = ttk.Label(self.invadersFrame, text="Level 4")
+                self.level4Label = ttk.Label(self.invaderTab, text="Level 4")
                 self.level4Label.grid(row=4, column=0)
                 self.maxInvadersLevel4Val = tk.IntVar()
-                self.maxInvadersLevel4Radio0 = ttk.Radiobutton(self.invadersFrame, text="0", variable=self.maxInvadersVals[4], value=0)
+                self.maxInvadersLevel4Radio0 = ttk.Radiobutton(self.invaderTab, text="0", variable=self.maxInvadersVals[4], value=0)
                 self.maxInvadersLevel4Radio0.grid(row=4, column=1)
-                self.maxInvadersLevel4Radio1 = ttk.Radiobutton(self.invadersFrame, text="1", variable=self.maxInvadersVals[4], value=1)
+                self.maxInvadersLevel4Radio1 = ttk.Radiobutton(self.invaderTab, text="1", variable=self.maxInvadersVals[4], value=1)
                 self.maxInvadersLevel4Radio1.grid(row=4, column=2)
-                self.maxInvadersLevel4Radio2 = ttk.Radiobutton(self.invadersFrame, text="2", variable=self.maxInvadersVals[4], value=2)
+                self.maxInvadersLevel4Radio2 = ttk.Radiobutton(self.invaderTab, text="2", variable=self.maxInvadersVals[4], value=2)
                 self.maxInvadersLevel4Radio2.grid(row=4, column=3)
-                self.maxInvadersLevel4Radio3 = ttk.Radiobutton(self.invadersFrame, text="3", variable=self.maxInvadersVals[4], value=3)
+                self.maxInvadersLevel4Radio3 = ttk.Radiobutton(self.invaderTab, text="3", variable=self.maxInvadersVals[4], value=3)
                 self.maxInvadersLevel4Radio3.grid(row=4, column=4)
-                self.maxInvadersLevel4Radio4 = ttk.Radiobutton(self.invadersFrame, text="4", variable=self.maxInvadersVals[4], value=4)
+                self.maxInvadersLevel4Radio4 = ttk.Radiobutton(self.invaderTab, text="4", variable=self.maxInvadersVals[4], value=4)
                 self.maxInvadersLevel4Radio4.grid(row=4, column=5)
-                self.maxInvadersLevel4Radio5 = ttk.Radiobutton(self.invadersFrame, text="5", variable=self.maxInvadersVals[4], value=5)
+                self.maxInvadersLevel4Radio5 = ttk.Radiobutton(self.invaderTab, text="5", variable=self.maxInvadersVals[4], value=5)
                 self.maxInvadersLevel4Radio5.grid(row=4, column=6)
 
-                log("End of create_invaders_pane")
+                log("End of create_invaders_tab")
             except Exception as e:
                 log(e, exception=True)
                 raise
 
 
-        def create_treasure_swap_pane(self, parent):
+        def create_treasure_swap_tab(self):
             try:
-                log("Start of create_treasure_swap_pane")
+                log("Start of create_treasure_swap_tab")
 
                 treasureSwapText = {
                     "Similar Soul Cost": "Similar Soul Cost\n    Rewards an item of the same type as the\n    original that also costs about the same\n    souls in leveling stats in order to equip it.",
@@ -375,89 +380,91 @@ try:
                     "Original": {"button": None, "value": tk.StringVar(value="Original")}
                 }
 
+                self.treasureTab = ttk.Frame(self.notebook)
+                self.treasureTab.grid_propagate(False)
+                self.notebook.add(self.treasureTab, text="Treasure")
+
                 self.treasureSwapOption = tk.StringVar()
-                self.treasureSwapLabelFrame = ttk.LabelFrame(parent, text="Treasure Swap Options", padding=(20, 10))
-                self.treasureSwapLabelFrame.grid(row=1, column=4, padx=(20, 10), pady=(20, 10), sticky="nsew", rowspan=2)
-                self.treasureSwapFrame = ttk.Frame(self.treasureSwapLabelFrame)
-                self.treasureSwapFrame.pack(fill=tk.BOTH, expand=True)
                 for i, option in enumerate(self.treasureSwapOptions):
-                    self.treasureSwapOptions[option]["button"] = ttk.Radiobutton(self.treasureSwapFrame, text=treasureSwapText[option], variable=self.treasureSwapOption, value=option)
+                    self.treasureSwapOptions[option]["button"] = ttk.Radiobutton(self.treasureTab, text=treasureSwapText[option], variable=self.treasureSwapOption, value=option)
                     self.treasureSwapOptions[option]["button"].grid(row=i, column=0, padx=5, pady=10, sticky="nsew")
                 self.treasureSwapOption.set(self.settings["treasureSwapOption"])
 
-                log("End of create_treasure_swap_pane")
+                log("End of create_treasure_swap_tab")
             except Exception as e:
                 log(e, exception=True)
                 raise
 
 
-        def create_shown_encounters_pane(self, parent):
+        def create_encounters_tab(self):
             try:
-                log("Start of create_shown_encounters_pane")
+                log("Start of create_encounters_tab")
 
-                self.shownEncounters = {
+                self.encounters = {
                     "v1": {"button": None, "value": tk.IntVar()},
                     "v2": {"button": None, "value": tk.IntVar()},
                     "level4": {"button": None, "value": tk.IntVar()}
                 }
 
-                self.shownEncountersLabelFrame = ttk.LabelFrame(parent, text="Encounters Shown", padding=(20, 10))
-                self.shownEncountersLabelFrame.grid(row=0, column=5, padx=(20, 10), pady=(20, 10), sticky="nsew")
-                self.shownEncountersFrame = ttk.Frame(self.shownEncountersLabelFrame)
-                self.shownEncountersFrame.pack(fill=tk.BOTH, expand=True)
-                self.shownEncounters["v1"]["value"].set(1 if "v1" in self.settings["encounterTypes"] else 0)
-                self.shownEncounters["v2"]["value"].set(1 if "v2" in self.settings["encounterTypes"] else 0)
-                self.shownEncounters["level4"]["value"].set(1 if "level4" in self.settings["encounterTypes"] else 0)
-                self.shownEncounters["v1"]["button"] = ttk.Checkbutton(self.shownEncountersFrame, text="V1 Encounters", variable=self.shownEncounters["v1"]["value"])
-                self.shownEncounters["v2"]["button"] = ttk.Checkbutton(self.shownEncountersFrame, text="V2 Encounters", variable=self.shownEncounters["v2"]["value"])
-                self.shownEncounters["level4"]["button"] = ttk.Checkbutton(self.shownEncountersFrame, text="Level 4 Encounters", variable=self.shownEncounters["level4"]["value"])
-                self.shownEncounters["v1"]["button"].grid(row=0, column=0, padx=5, pady=10, sticky="nsew")
-                self.shownEncounters["v2"]["button"].grid(row=1, column=0, padx=5, pady=10, sticky="nsew")
-                self.shownEncounters["level4"]["button"].grid(row=2, column=0, padx=5, pady=10, sticky="nsew")
+                self.encountersTab = ttk.Frame(self.notebook)
+                self.encountersTab.grid_propagate(False)
+                self.notebook.add(self.encountersTab, text="Encounters")
 
-                log("End of create_shown_encounters_pane")
+                self.encountersLabel = ttk.Label(self.encountersTab, text="Determines which encounters are shown in the main encounter list.")
+                self.encountersLabel.grid(row=0, column=0, padx=5, pady=10)
+                self.encounters["v1"]["value"].set(1 if "v1" in self.settings["encounterTypes"] else 0)
+                self.encounters["v2"]["value"].set(1 if "v2" in self.settings["encounterTypes"] else 0)
+                self.encounters["level4"]["value"].set(1 if "level4" in self.settings["encounterTypes"] else 0)
+                self.encounters["v1"]["button"] = ttk.Checkbutton(self.encountersTab, text="V1 Encounters", variable=self.encounters["v1"]["value"])
+                self.encounters["v2"]["button"] = ttk.Checkbutton(self.encountersTab, text="V2 Encounters", variable=self.encounters["v2"]["value"])
+                self.encounters["level4"]["button"] = ttk.Checkbutton(self.encountersTab, text="Level 4 Encounters", variable=self.encounters["level4"]["value"])
+                self.encounters["v1"]["button"].grid(row=1, column=0, padx=5, pady=10, sticky="nsew")
+                self.encounters["v2"]["button"].grid(row=2, column=0, padx=5, pady=10, sticky="nsew")
+                self.encounters["level4"]["button"].grid(row=3, column=0, padx=5, pady=10, sticky="nsew")
+
+                log("End of create_encounters_tab")
             except Exception as e:
                 log(e, exception=True)
                 raise
 
 
-        def create_variant_enable_pane(self, parent):
+        def create_variant_tab(self):
             try:
-                log("Start of create_variant_enable_pane")
+                log("Start of create_variant_tab")
+
+                self.variantTab = ttk.Frame(self.notebook)
+                self.variantTab.grid_propagate(False)
+                self.notebook.add(self.variantTab, text="Variants")
 
                 self.variantEnable = {"button": None, "value": tk.IntVar()}
-                self.variantEnableLabelFrame = ttk.LabelFrame(parent, text="Enable Variants Tab", padding=(20, 10))
-                self.variantEnableLabelFrame.grid(row=1, column=5, padx=(20, 10), pady=(20, 10), sticky="nsew")
-                self.variantEnableFrame = ttk.Frame(self.variantEnableLabelFrame)
-                self.variantEnableFrame.pack(fill=tk.BOTH, expand=True)
                 self.variantEnable["value"].set(1 if "on" in self.settings["variantEnable"] else 0)
-                self.variantEnable["button"] = ttk.Checkbutton(self.variantEnableFrame, text="Enable Variants Tab", variable=self.variantEnable["value"])
+                self.variantEnable["button"] = ttk.Checkbutton(self.variantTab, text="Enable Variants Tab", variable=self.variantEnable["value"])
                 self.variantEnable["button"].grid(row=0, column=0, padx=5, pady=10, sticky="nsew")
-                self.variantEnableLabel = ttk.Label(self.variantEnableFrame, text="If disabled, the Behavior\nVariants tab will be\nunavailable.\n\nIf you don't use behavior\nvariants, disabling this will\nmake the app load faster.")
+                self.variantEnableLabel = ttk.Label(self.variantTab, text="If disabled, the Behavior\nVariants tab will do\nnothing if clicked on.\n\nIf you don't use behavior\nvariants, disabling this will\nmake the app load faster.")
                 self.variantEnableLabel.grid(row=1, column=0, padx=5, pady=10)
 
-                log("End of create_variant_enable_pane")
+                log("End of create_variant_tab")
             except Exception as e:
                 log(e, exception=True)
                 raise
 
 
-        def create_update_check_pane(self, parent):
+        def create_update_tab(self):
             try:
-                log("Start of create_update_check_pane")
+                log("Start of create_update_tab")
+
+                self.updateTab = ttk.Frame(self.notebook)
+                self.updateTab.grid_propagate(False)
+                self.notebook.add(self.updateTab, text="Updates")
 
                 self.updateCheck = {"button": None, "value": tk.IntVar()}
-                self.updateCheckLabelFrame = ttk.LabelFrame(parent, text="Check For Updates", padding=(20, 10))
-                self.updateCheckLabelFrame.grid(row=2, column=5, padx=(20, 10), pady=(20, 10), sticky="nsew")
-                self.updateCheckFrame = ttk.Frame(self.updateCheckLabelFrame)
-                self.updateCheckFrame.pack(fill=tk.BOTH, expand=True)
                 self.updateCheck["value"].set(1 if "on" in self.settings["updateCheck"] else 0)
-                self.updateCheck["button"] = ttk.Checkbutton(self.updateCheckFrame, text="Check for updates", variable=self.updateCheck["value"])
+                self.updateCheck["button"] = ttk.Checkbutton(self.updateTab, text="Check for updates", variable=self.updateCheck["value"])
                 self.updateCheck["button"].grid(row=0, column=0, padx=5, pady=10, sticky="nsew")
-                self.updateLabel = ttk.Label(self.updateCheckFrame, text="If enabled, makes an\nAPI call to Github once\na month when the\napp is opened to check\nfor a new version.\n\nThe app won't\ndownload anything or\nupdate itself but will\nlet you know if\nthere's a new version.")
+                self.updateLabel = ttk.Label(self.updateTab, text="If enabled, makes an\nAPI call to Github once\na month when the\napp is opened to check\nfor a new version.\n\nThe app won't\ndownload anything or\nupdate itself but will\nlet you know if\nthere's a new version.")
                 self.updateLabel.grid(row=1, column=0, padx=5, pady=10)
 
-                log("End of create_update_check_pane")
+                log("End of create_update_tab")
             except Exception as e:
                 log(e, exception=True)
                 raise
@@ -477,7 +484,7 @@ try:
                 self.cancelButton.grid(column=1, row=0, padx=5)
 
                 self.wikiButtonFrame = ttk.Frame(parent, padding=(0, 0, 0, 10))
-                self.wikiButtonFrame.grid(row=5, column=5, padx=15, pady=(10, 0), sticky="e", columnspan=2)
+                self.wikiButtonFrame.grid(row=5, column=2, padx=15, pady=(10, 0), sticky="e")
                 self.wikiButtonFrame.columnconfigure(index=0, weight=1)
                 
                 # Link to the wiki
@@ -593,13 +600,13 @@ try:
                     log("End of quit_with_save")
                     return
 
-                if all([self.shownEncounters[i]["value"].get() == 0 for i in self.shownEncounters]):
+                if all([self.encounters[i]["value"].get() == 0 for i in self.encounters]):
                     self.errLabel.config(text="You need to check at least one box in the \"Encounters Shown\" section!")
                     log("End of quit_with_save")
                     return
 
-                if len([i for i in self.charactersActive if self.charactersActive[i]["value"].get() == 1]) < 1 and self.treasureSwapOption.get() in set(["Similar Soul Cost", "Tier Based"]):
-                    self.errLabel.config(text="You need to select at least 1 character if using the Similar Soul Cost or Tier Based treasure swap options!")
+                if len([i for i in self.charactersActive if self.charactersActive[i]["value"].get() == 1]) < 1:
+                    self.errLabel.config(text="You need to select at least 1 character!")
                     log("End of quit_with_save")
                     return
 
@@ -623,7 +630,7 @@ try:
 
                 enabledBossOptions = [s for s in self.bossOptions if self.bossOptions[s]["value"].get() == 1]
 
-                encounterTypes = set([s for s in self.shownEncounters if self.shownEncounters[s]["value"].get() == 1])
+                encounterTypes = set([s for s in self.encounters if self.encounters[s]["value"].get() == 1])
                 charactersActive = set([s for s in self.charactersActive if self.charactersActive[s]["value"].get() == 1])
 
                 newSettings = {
