@@ -3,22 +3,20 @@ A program to shuffle the enemies in an encounter.  Allows new combinations of en
 
 The idea behind this program is to provide backwards and forwards compatibility for Dark Souls The Board Game.  When the new core sets came out, they made no references to the older content. The encounter design of the new core sets are much more interesting than the old design, and I believe people should be able to use their existing enemies in this new design (or bring new enemies into the older encounters as well).  That's what I aim to accomplish here.  Users should be able to select which core sets/expansions that contain enemies.  This will inform which encounters are available (more on that later).
 
+It also contains ways to build campaigns, event card management, and enemy behavior variants.
+
+[Link to the wiki!](https://github.com/DanDuhon/DSBG-Shuffle/wiki/About-DSBG%E2%80%90Shuffle)
+
 
 
 ## How to run/Installation
 1. Go to [Releases](https://github.com/DanDuhon/DSBG-Shuffle/releases) and click on "Source code (zip)" or "Source code (tar.gz)", whichever archive format is your preference.
-2. Inside the archive file is a folder called "DSBG-Shuffle-main".  Unzip this folder anywhere you want.
+2. Inside the archive file is a folder.  Unzip this folder anywhere you want.
 3. Open the folder, and run "DSBG-Shuffle.exe" inside it.  There isn't an installer (mostly because it would be too big for GitHub), you just run the .exe.  If you're not running Windows, see the FAQ for workarounds for Mac/Linux.
 
 
 ## Roadmap
 Future official expansions.
-
-Continued refinement of enemy difficulty scores.
-
-Enemy/boss changes for NG+ runs or just increasing challenge level.
-
-Maybe a v2 campaign generator.
 
 
 ## FAQ
@@ -28,11 +26,11 @@ Yes, as time allows.  The lion's share of work is done, but new enemies will hav
 
 ### Are you going to support fan-made content?
 
-I'm willing, but only if there's interest in it.  If you know of some great fan-made content you want to see added, [please open an issue](https://github.com/DanDuhon/DSBG-Shuffle/issues) and I'll work on it!
+I'm willing, but only if there's interest in it.  If you know of some great fan-made content you want to see added, [please open an issue](https://github.com/DanDuhon/DSBG-Shuffle/issues) or contact me on Discord (.dduhon) and I'll work on it!
 
 ### Can we add custom enemies/encounters ourselves?
 
-No (unless you branch the code and do it yourself), and I don't intend to support that.  Calculating enemy strength and generating enemy combinations for an encounter can take hours depending on your machine and the size of the encounter.
+You can to build your own encounters (including custom enemies that are just the icons), but they wouldn't be able to have their enemies shuffled.  But shuffle-able encounters and custom enemies?  No (unless you branch the code and do it yourself), and I don't intend to support that.  Calculating enemy strength and generating enemy combinations for an encounter can take hours depending on your machine and the size of the encounter.
 
 ### I found a bug!
 
@@ -45,7 +43,7 @@ There are a couple workaround options for Mac/Linux.
 - The "might work" way:
   1. Install [Python 3](https://www.python.org/downloads/) (requires Python 3.1 or higher).
   2. Install [pip](https://pip.pypa.io/en/stable/installation/).
-  3. Install the following modules using pip: [Pillow](https://pillow.readthedocs.io/en/stable/installation.html#basic-installation), [fpdf](https://pypi.org/project/fpdf/), [requests](https://pypi.org/project/requests/).  All other modules used should come bundled with Python 3, but here they are in case you're missing some: collections, datetime, inspect, json, logging, math, os, platform, random, requests, statistics, sys, tkinter, webbrowser.
+  3. Install the following modules using pip: [Pillow](https://pillow.readthedocs.io/en/stable/installation.html#basic-installation), [fpdf](https://pypi.org/project/fpdf/), [requests](https://pypi.org/project/requests/).  All other modules used should come bundled with Python 3, but here they are in case you're missing some: bisect, collections, copy, datetime, inspect, json, logging, math, os, platform, random, requests, statistics, sys, tkinter, webbrowser.
   4. Create a directory to install the font: `mkdir /usr/local/share/fonts/truetype`
   5. Copy the font from the repo's lib directory to the one just created: `cp "[path to lib dir]/Adobe Caslon Pro Semibold.ttf" /usr/local/share/fonts/truetype/`
   6. Refresh the system font cache: `fc-cache -fv` (you might need to install fc-cache with `apt install fontconfig`)

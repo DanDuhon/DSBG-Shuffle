@@ -166,6 +166,8 @@ try:
                 e.shortcut.state(["!selected"])
                 e.levelRadioVal.set(1)
                 e.numberOfTilesRadioVal.set(1)
+                e.rewardSoulsPerPlayerVal.set(0)
+                e.shortcutVal.set(0)
 
                 for tile in range(1, 4):
                     e.tileSelections[str(tile)]["traps"]["value"].set(0)
@@ -534,7 +536,7 @@ try:
                 with open(file + ".json", "w") as encounterFile:
                     dump(saveEncounter, encounterFile)
 
-                self.customEncounter["image"].save(file + ".jpg")
+                self.customEncounter["image"].save(file + ".png")
                 
                 self.app.add_custom_encounters()
                 self.app.allExpansions = set([self.app.encounters[encounter]["expansion"] for encounter in self.app.encounters]) | set(["Phantoms"])
@@ -1767,7 +1769,7 @@ try:
                     self.treeviewCustomIcons.item(self.customIconsDict[newKey]["iid"], values=("   " + icon, sizeDisplay))
                 else:
                     contents = [(self.treeviewCustomIcons.item(child)["values"][1], self.treeviewCustomIcons.item(child)["values"][0]) for child in self.treeviewCustomIcons.get_children("Custom")]
-                    iid = str(len(contents))
+                    iid = str(max([int(iid) for iid in self.treeviewCustomIcons.get_children("Custom")]) + 1)
                     c = (sizeDisplay, self.customIconsDict[newKey]["label"])
                     if icon not in set([c[1].strip() for c in contents]):
                         self.customIconsTreeviewDict[c[1]] = {

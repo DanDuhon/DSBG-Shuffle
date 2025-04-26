@@ -195,23 +195,24 @@ try:
                         return
 
                     # Multiples need a different iid in the treeview, so append a number.
-                    if self.app.selected["name"] + "_0" not in self.treeviewCampaign.get_children():
-                        self.treeviewCampaign.insert(parent="", iid=self.app.selected["name"] + "_0", values=(self.app.selected["name"], "Encounter", self.app.selected["level"]), index="end")
+                    name = self.app.selected["name"][:self.app.selected["name"].index(" (")] if "Custom - " in self.app.selected["name"] else self.app.selected["name"]
+                    if name + "_0" not in self.treeviewCampaign.get_children():
+                        self.treeviewCampaign.insert(parent="", iid=name + "_0", values=(name, "Encounter", self.app.selected["level"]), index="end")
                         iidSuffix = "_0"
                     else:
-                        i = max([int(item[item.rindex("_") + 1:]) for item in self.treeviewCampaign.get_children() if item[:item.rindex("_")] == self.app.selected["name"]])
-                        self.treeviewCampaign.insert(parent="", iid=self.app.selected["name"] + "_" + str(i+1), values=(self.app.selected["name"], "Encounter", self.app.selected["level"]), index="end")
+                        i = max([int(item[item.rindex("_") + 1:]) for item in self.treeviewCampaign.get_children() if item[:item.rindex("_")] == name])
+                        self.treeviewCampaign.insert(parent="", iid=name + "_" + str(i+1), values=(name, "Encounter", self.app.selected["level"]), index="end")
                         iidSuffix = "_" + str(i+1)
 
                     # Build the dictionary that will be saved to JSON if this campaign is saved.
                     card = {
                         "type": "encounter",
-                        "name": self.app.selected["name"] + (" (TSC)" if self.app.selected["expansion"] == "The Sunless City" and self.app.selected["name"] in set(["Broken Passageway", "Central Plaza"]) else ""),
+                        "name": name + (" (TSC)" if self.app.selected["expansion"] == "The Sunless City" and name in set(["Broken Passageway", "Central Plaza"]) else ""),
                         "expansion": self.app.selected["expansion"],
                         "level": self.app.selected["level"],
                         "enemies": self.app.encounterTab.newEnemies,
                         "rewardTreasure": self.app.encounterTab.rewardTreasure,
-                        "iid": self.app.selected["name"] + iidSuffix
+                        "iid": name + iidSuffix
                     }
 
                     self.campaign.append(card)
@@ -420,7 +421,7 @@ try:
 
                 # Check to see if there are any invalid names or levels in the JSON file.
                 # This is about as sure as I can be that you can't load random JSON into the app.
-                if any([(item["name"] not in self.app.encounters and "Custom - " + item["name"] not in self.app.encounters and item["name"] not in bosses and item["name"] not in events) or item["type"] not in set(["encounter", "boss", "event"]) or item["level"] not in set([1, 2, 3, 4, "Mini Boss", "Main Boss", "Mega Boss", " "]) for item in self.campaign]):
+                if any([(item["name"] not in self.app.encounters and item["name"] + " (" + item["expansion"] + ")" not in self.app.encounters and item["name"] not in bosses and item["name"] not in events) or item["type"] not in set(["encounter", "boss", "event"]) or item["level"] not in set([1, 2, 3, 4, "Mini Boss", "Main Boss", "Mega Boss", " "]) for item in self.campaign]):
                     self.app.set_bindings_buttons_menus(False)
                     PopupWindow(self.root, labelText="Invalid DSBG-Shuffle campaign file.", firstButton="Ok")
                     self.app.set_bindings_buttons_menus(True)
@@ -514,9 +515,9 @@ try:
                 campaignCard = [e for e in self.campaign if e["iid"] == tree.selection()[0]][0]
 
                 if campaignCard["type"] == "encounter":
-                    if "Custom - " + campaignCard["name"] in self.app.encounters:
+                    if campaignCard["name"] + " (" + campaignCard["expansion"] + ")" in self.app.encounters:
                         self.app.encounterTab.newEnemies = []
-                        self.app.encounterTab.edit_encounter_card(campaignCard["name"], campaignCard["expansion"], campaignCard["level"], [], customEncounter=True)
+                        self.app.encounterTab.edit_encounter_card(campaignCard["name"] + " (" + campaignCard["expansion"] + ")", campaignCard["expansion"], campaignCard["level"], [], customEncounter=True)
                     else:
                         self.app.encounterTab.rewardTreasure = campaignCard.get("rewardTreasure")
 
@@ -640,17 +641,22 @@ try:
 
                         for i, encounter in enumerate(page):
                             # Get the encounter.
-                            campaignEncounter = [e for e in self.campaign if e["name"] == encounter["name"]]
-                            self.app.encounterTab.rewardTreasure = campaignEncounter[0].get("rewardTreasure")
-
-                            log("\tOpening " + baseFolder + "\\lib\\dsbg_shuffle_encounters\\".replace("\\", pathSep) + campaignEncounter[0]["name"] + str(self.app.numberOfCharacters) + ".json")
-                            # Get the enemy slots for this encounter.
-                            with open(baseFolder + "\\lib\\dsbg_shuffle_encounters\\".replace("\\", pathSep) + campaignEncounter[0]["name"] + str(self.app.numberOfCharacters) + ".json") as alternativesFile:
-                                alts = load(alternativesFile)
-
+                            campaignEncounter = [e for e in self.campaign if e["name"] == encounter["name"]][0]
+                            self.app.encounterTab.rewardTreasure = campaignEncounter.get("rewardTreasure")
+                            
+                            if "Custom - " not in encounter["name"]:
+                                log("\tOpening " + baseFolder + "\\lib\\dsbg_shuffle_encounters\\".replace("\\", pathSep) + campaignEncounter["name"] + str(self.app.numberOfCharacters) + ".json")
+                                # Get the enemy slots for this encounter.
+                                with open(baseFolder + "\\lib\\dsbg_shuffle_encounters\\".replace("\\", pathSep) + campaignEncounter["name"] + str(self.app.numberOfCharacters) + ".json") as alternativesFile:
+                                    alts = load(alternativesFile)
+                                name = campaignEncounter["name"]
+                            else:
+                                alts = {"enemySlots": []}
+                                name = campaignEncounter["name"] + " (" + campaignEncounter["expansion"] + ")"
+                            
                             # Create the encounter card with saved enemies and tooltips.
-                            self.app.encounterTab.newEnemies = campaignEncounter[0]["enemies"]
-                            self.app.encounterTab.edit_encounter_card(campaignEncounter[0]["name"], campaignEncounter[0]["expansion"], campaignEncounter[0]["level"], alts["enemySlots"])
+                            self.app.encounterTab.newEnemies = campaignEncounter["enemies"]
+                            self.app.encounterTab.edit_encounter_card(name, campaignEncounter["expansion"], campaignEncounter["level"], alts["enemySlots"], customEncounter="Custom - " in encounter["name"])
 
                             # Stage the encounter image
                             log("\tStaging " + encounter["name"] + ", level " + str(encounter["level"]) + " from " + encounter["expansion"])

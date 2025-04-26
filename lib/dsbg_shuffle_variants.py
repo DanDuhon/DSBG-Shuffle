@@ -237,6 +237,9 @@ try:
                 self.app.progress = PopupWindow(root, labelText="Loading variants... ", progressBar=True, progressMax=len(list(enemiesDict.keys()) + list(bosses.keys())) * 12, loadingImage=True)
 
             for enemy in list(enemiesDict.keys()) + list(bosses.keys()):
+                if not fromSettings and enemy == "The Last Giant":
+                    self.app.progress.label.config(text="Praising the Sun... ")
+                    
                 with open(baseFolder + "\\lib\\dsbg_shuffle_difficulty\\dsbg_shuffle_difficulty_" + enemy + ".json", "r") as f:
                     enemyDifficulty = load(f)
 

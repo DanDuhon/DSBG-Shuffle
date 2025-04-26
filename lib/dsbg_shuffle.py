@@ -60,7 +60,6 @@ try:
                     progressMax += len(list(enemiesDict.keys()) + list(bosses.keys())) * 12
                 if self.settings["treasureSwapOption"] in {"Similar Soul Cost", "Tier Based"}:
                     progressMax += len([t for t in treasures if not treasures[t]["character"] or treasures[t]["character"] in self.charactersActive])
-                print(progressMax)
                 self.progress = PopupWindow(root, labelText="Starting up...", progressBar=True, progressMax=progressMax, loadingImage=True)
 
                 # Delete images from staging
@@ -346,6 +345,9 @@ try:
                 self.iconsForCustom["Xanthous King Jeremiah"]["image"], self.iconsForCustom["Xanthous King Jeremiah"]["photoImage"], self.iconsForCustom["Xanthous King Jeremiah"]["photoImageBg1"], self.iconsForCustom["Xanthous King Jeremiah"]["photoImageBg2"], self.iconsForCustom["Xanthous King Jeremiah"]["treeviewImage"] = self.create_image("Xanthous King Jeremiah.png", "iconForCustomEnemy", 99, extensionProvided=True, progress=True)
                 self.iconsForCustom["Hungry Mimic"]["image"], self.iconsForCustom["Hungry Mimic"]["photoImage"], self.iconsForCustom["Hungry Mimic"]["photoImageBg1"], self.iconsForCustom["Hungry Mimic"]["photoImageBg2"], self.iconsForCustom["Hungry Mimic"]["treeviewImage"] = self.create_image("Hungry Mimic.png", "iconForCustomEnemy", 99, extensionProvided=True, progress=True)
                 self.iconsForCustom["Voracious Mimic"]["image"], self.iconsForCustom["Voracious Mimic"]["photoImage"], self.iconsForCustom["Voracious Mimic"]["photoImageBg1"], self.iconsForCustom["Voracious Mimic"]["photoImageBg2"], self.iconsForCustom["Voracious Mimic"]["treeviewImage"] = self.create_image("Voracious Mimic.png", "iconForCustomEnemy", 99, extensionProvided=True, progress=True)
+
+                if self.settings["variantEnable"] == "off" and self.settings["treasureSwapOption"] not in {"Similar Soul Cost", "Tier Based"}:
+                    self.progress.label.config(text="Praising the Sun... ")
 
                 self.tileNumbers = {}
                 for x in range(1, 4):
@@ -713,9 +715,7 @@ try:
                 
                 self.progress.label.config(text="Loading treasure...")
                 if self.settings["treasureSwapOption"] in {"Similar Soul Cost", "Tier Based"}:
-                    generate_treasure_soul_cost(self.availableExpansions, self.charactersActive, root, self.progress)
-
-                self.progress.label.config(text="Praising the Sun...")
+                    generate_treasure_soul_cost(self.availableExpansions, self.charactersActive, root, self.progress, self.settings["variantEnable"] == "off")
                 
                 if self.settings["treasureSwapOption"] == "Tier Based":
                     populate_treasure_tiers(self.availableExpansions, self.charactersActive)
@@ -791,8 +791,9 @@ try:
 
                 self.variantsTab = VariantsFrame(root=root, app=self)
                 self.variantsTab.bind("<1>", lambda event: event.widget.focus_set())
-                if self.settings["variantEnable"] == "on":
-                    self.notebook.add(self.variantsTab, text="Behavior Variants")
+                self.notebook.add(self.variantsTab, text="Behavior Variants")
+                if self.settings["variantEnable"] == "off":
+                    self.notebook.tab(2, state=tk.DISABLED)
 
                 self.behaviorDeckTab = BehaviorDeckFrame(root=root, app=self)
                 self.behaviorDeckTab.bind("<1>", lambda event: event.widget.focus_set())
@@ -982,11 +983,13 @@ try:
             try:
                 log("Start of add_custom_encounters")
                     
-                self.customEncounters = [e.split("_") for e in set([os.path.splitext(f)[0] for f in os.listdir(baseFolder + "\\lib\\dsbg_shuffle_custom_encounters".replace("\\", pathSep)) if f.count("_") == 2 and ".jpg" in f])]
-                
-                for enc in [enc for enc in self.customEncounters if "Custom - " + enc[1] not in self.encounters]:
-                    self.encounters["Custom - " + enc[1]] = {
-                        "name": enc[1],
+                self.customEncounters = {tuple(e.split("_")) for e in set([os.path.splitext(f)[0] for f in os.listdir(baseFolder + "\\lib\\dsbg_shuffle_custom_encounters".replace("\\", pathSep)) if f.count("_") == 2 and ".jpg" in f])}
+                self.customEncounters = self.customEncounters | {tuple(e.split("_")) for e in set([os.path.splitext(f)[0] for f in os.listdir(baseFolder + "\\lib\\dsbg_shuffle_custom_encounters".replace("\\", pathSep)) if f.count("_") == 2 and ".png" in f])}
+                self.customEncounters = list(self.customEncounters)
+
+                for enc in [enc for enc in self.customEncounters if "Custom - " + enc[1] + " (" + enc[0] + ")" not in self.encounters]:
+                    self.encounters["Custom - " + enc[1] + " (" + enc[0] + ")"] = {
+                        "name": "Custom - " + enc[1] + " (" + enc[0] + ")",
                         "expansion": enc[0],
                         "level": int(enc[2]),
                         "expansionCombos": {
@@ -1280,9 +1283,9 @@ try:
                     if self.settings["variantEnable"] == "on" and self.settings["variantEnable"] != oldVariantEnable:
                         if not self.variantsTab.variants:
                             self.variantsTab.load_enemy_variants(root=root, i=0, fromSettings=True)
-                        self.notebook.insert(3, self.variantsTab, text="Behavior Variants")
+                        self.notebook.tab(3, state=tk.NORMAL)
                     elif self.settings["variantEnable"] == "off":
-                        self.notebook.forget(self.variantsTab)
+                        self.notebook.tab(3, state=tk.DISABLED)
                         self.notebook.select(0)
                         self.variantsTab.currentVariants = {}
                         self.variantsTab.lockedVariants = {}
@@ -1393,8 +1396,13 @@ try:
                     if pathProvided:
                         imagePath = fileName
                     elif customEncounter:
-                        key = "Custom - " + fileName[:-4]
-                        imagePath = baseFolder + "\\lib\\dsbg_shuffle_custom_encounters\\".replace("\\", pathSep) + self.encounters[key]["expansion"] + "_" + fileName[:-4] + "_" + str(self.encounters[key]["level"]) + ".jpg"
+                        key = fileName[:-4]
+                        fileNameCustom = fileName[:fileName.index(" (")].replace("Custom - ", "")
+                        imagePath = baseFolder + "\\lib\\dsbg_shuffle_custom_encounters\\".replace("\\", pathSep) + self.encounters[key]["expansion"] + "_" + fileNameCustom + "_" + str(self.encounters[key]["level"]) + ".png"
+                        if not os.path.exists(imagePath) and os.path.exists(imagePath.replace(".png", ".jpg")):
+                            p = PopupWindow(root, "PNG format not found, but JPG was found.\nPlease re-save this encounter in the encounter builder,\na recent update improved image quality!", firstButton="Ok")
+                            root.wait_window(p)
+                            imagePath = imagePath.replace(".png", ".jpg")
                     elif "custom_encounter_" in fileName:
                         imagePath = baseFolder + "\\lib\\dsbg_shuffle_images\\custom_encounters\\".replace("\\", pathSep) + fileName
                     else:
