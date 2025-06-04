@@ -19,7 +19,7 @@ try:
     from dsbg_shuffle_settings import SettingsWindow
     from dsbg_shuffle_tooltip_reference import tooltipText
     from dsbg_shuffle_treasure import generate_treasure_soul_cost, populate_treasure_tiers, treasures
-    from dsbg_shuffle_utility import CreateToolTip, PopupWindow, center, do_nothing, enable_binding, error_popup, log, set_display_bindings_by_tab, baseFolder, pathSep
+    from dsbg_shuffle_utility import CreateToolTip, DoubleScrolledFrame, PopupWindow, center, do_nothing, enable_binding, error_popup, log, set_display_bindings_by_tab, baseFolder, pathSep
     from dsbg_shuffle_variants import VariantsFrame
 
 
@@ -73,8 +73,8 @@ try:
                 ttk.Frame.__init__(self)
                 self.grid_rowconfigure(index=1, weight=1)
                 self.grid_rowconfigure(index=2, weight=0)
-                self.displayScrollbar = ttk.Scrollbar(root)
-                self.displayScrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+                # self.displayScrollbar = ttk.Scrollbar(root)
+                # self.displayScrollbar.pack(side=tk.RIGHT, fill=tk.Y)
                 
                 self.bind("<1>", lambda event: event.widget.focus_set())
 
@@ -864,12 +864,14 @@ try:
             try:
                 log("Start of create_display_frame")
 
-                self.displayCanvas = tk.Canvas(self, width=820, yscrollcommand=self.displayScrollbar.set)
+                self.displayFrameOuter = DoubleScrolledFrame(self, width=self.winfo_screenwidth()-660)
+                self.displayFrameOuter.grid(row=0, column=4, padx=10, pady=(10, 0), sticky="nsew", rowspan=2)
+                self.displayCanvas = tk.Canvas(self.displayFrameOuter, height=self.winfo_screenheight() * 0.89)#, yscrollcommand=self.displayScrollbar.set)
                 self.displayFrame = ttk.Frame(self.displayCanvas)
-                self.displayFrame.columnconfigure(index=0, weight=1, minsize=410)
-                self.displayCanvas.grid(row=0, column=4, padx=10, pady=(10, 0), sticky="nsew", rowspan=2)
+                self.displayFrame.columnconfigure(index=0, weight=1)
+                self.displayCanvas.pack(fill="both", expand=True)
                 self.displayCanvas.create_window((0,0), window=self.displayFrame, anchor=tk.NW)
-                self.displayScrollbar.config(command=self.displayCanvas.yview)
+                #self.displayScrollbar.config(command=self.displayCanvas.yview)
                 self.displayFrame.bind("<Enter>", self._bound_to_mousewheel)
                 self.displayFrame.bind("<Leave>", self._unbound_to_mousewheel)
                 self.displayFrame.bind("<Configure>", lambda event, canvas=self.displayCanvas: self.on_frame_configure(canvas))
