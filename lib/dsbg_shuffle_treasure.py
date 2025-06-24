@@ -393,13 +393,20 @@ try:
                     root.update_idletasks()
 
                 # Don't attempt to calculate soul cost for items that can't be equipped by anyone in the party.
-                if any([
-                    treasures[t]["strength"] > maxStr,
-                    treasures[t]["dexterity"] > maxDex,
-                    treasures[t]["intelligence"] > maxInt,
-                    treasures[t]["faith"] > maxFai
-                    ]):
+                keep = False
+                for char in charactersActive:
+                    if all([
+                        treasures[t]["strength"] <= len(soulCost[char]["strength"]),
+                        treasures[t]["dexterity"] <= len(soulCost[char]["dexterity"]),
+                        treasures[t]["intelligence"] <= len(soulCost[char]["intelligence"]),
+                        treasures[t]["faith"] <= len(soulCost[char]["faith"])
+                        ]):
+                        keep = True
+                        break
+
+                if not keep:
                     continue
+
                 treasures[t]["soulCost"] = mean_soul_cost(treasures[t], setsAvailable, charactersActive)
 
             log("End of generate_treasure_soul_cost")

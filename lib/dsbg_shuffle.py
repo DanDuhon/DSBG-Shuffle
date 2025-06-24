@@ -1186,6 +1186,8 @@ try:
                 oldTreasureSwapOption = self.settings["treasureSwapOption"]
                 oldCustomEnemyList = self.settings["customEnemyList"]
                 oldVariantEnable = self.settings["variantEnable"]
+                oldCharactersActive = self.settings["charactersActive"]
+                oldAvailableExpansions = self.settings["availableExpansions"]
 
                 s = SettingsWindow(app, root, self.coreSets)
 
@@ -1271,13 +1273,16 @@ try:
                     self.campaignTab.selectedBoss.set("Select Boss")
 
                     # Recalculate the average soul cost of treasure.
-                    if (oldTreasureSwapOption != self.settings["treasureSwapOption"] and self.settings["treasureSwapOption"] in {"Similar Soul Cost", "Tier Based"}) or (oldCustomEnemyList != self.settings["customEnemyList"] and self.settings["customEnemyList"]):
+                    if (self.settings["treasureSwapOption"] in {"Similar Soul Cost", "Tier Based"}
+                        and (oldTreasureSwapOption != self.settings["treasureSwapOption"]
+                            or oldCharactersActive != self.settings["charactersActive"]
+                            or oldAvailableExpansions != self.settings["availableExpansions"])
+                        ):
                         i = 0
                         progress = PopupWindow(root, labelText="Reloading treasure...", progressBar=True, progressMax=len([t for t in treasures if not treasures[t]["character"] or treasures[t]["character"] in self.charactersActive]), loadingImage=True)
-                        if oldTreasureSwapOption != self.settings["treasureSwapOption"] and self.settings["treasureSwapOption"] in {"Similar Soul Cost", "Tier Based"}:
-                            i = generate_treasure_soul_cost(self.availableExpansions, self.charactersActive, root, progress)
-                            if self.settings["treasureSwapOption"] == "Tier Based":
-                                populate_treasure_tiers(self.availableExpansions, self.charactersActive)
+                        i = generate_treasure_soul_cost(self.availableExpansions, self.charactersActive, root, progress)
+                        if self.settings["treasureSwapOption"] == "Tier Based":
+                            populate_treasure_tiers(self.availableExpansions, self.charactersActive)
                         progress.destroy()
                         
                     if self.settings["variantEnable"] == "on" and self.settings["variantEnable"] != oldVariantEnable:
