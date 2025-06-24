@@ -375,11 +375,6 @@ try:
         try:
             log("Start of generate_treasure_soul_cost")
 
-            charStr = [len(soulCost[c]["strength"]) for c in charactersActive]
-            charDex = [len(soulCost[c]["dexterity"]) for c in charactersActive]
-            charInt = [len(soulCost[c]["intelligence"]) for c in charactersActive]
-            charFai = [len(soulCost[c]["faith"]) for c in charactersActive]
-
             i = progress.progressVar.get()
 
             listLen = len([t for t in treasures if not treasures[t]["character"] or treasures[t]["character"] in charactersActive]) - 50
