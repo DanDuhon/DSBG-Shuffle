@@ -1,2 +1,2 @@
-DSBG-Shuffle 1.7.1
+DSBG-Shuffle 1.7.2
 6
