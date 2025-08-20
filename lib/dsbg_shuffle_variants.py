@@ -767,7 +767,6 @@ try:
                             self.app.displayImages["variantsLocked"][self.app.displayBottomLeft]["name"] = None
                             self.app.displayImages["variantsLocked"][self.app.displayBottomLeft]["activeTab"] = None
                     
-
                     # Create and display the variant image.
                     self.variantPhotoImage = self.app.create_image(self.selectedVariant + ".jpg", "enemyCard")
                     self.edit_variant_card(variant=mods, lockedTree=True, armorerDennis=armorerDennis, oldIronKing=oldIronKing, pursuer=pursuer, healthMod=healthMod, fromDeck=fromDeck, bottomLeftDisplay=bottomLeftDisplay, bottomRightDisplay=bottomRightDisplay)

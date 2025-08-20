@@ -485,6 +485,14 @@ try:
                 if selection == "Dancer of the Boreal Valley" and behaviorDetail["Dancer of the Boreal Valley"][self.decks[selection]["deck"][self.decks[selection]["curIndex"]]].get("heatup", False):
                     self.decks[selection]["curIndex"] = 0
                     shuffle(self.decks[selection]["deck"])
+                elif "Giant" in selection:
+                    self.app.create_image("weak_arcs_.jpg", "weakArcs")
+                    displayPhotoImage = ImageTk.PhotoImage(self.app.displayImage)
+                    self.app.displayBottomRight.image = displayPhotoImage
+                    self.app.displayBottomRight.config(image=displayPhotoImage)
+                    self.app.displayImages["behaviorDeck"][self.app.displayBottomRight]["image"] = displayPhotoImage
+                    self.app.displayImages["behaviorDeck"][self.app.displayBottomRight]["name"] = "weakArcs"
+                    self.app.displayImages["behaviorDeck"][self.app.displayBottomRight]["activeTab"] = "behaviorDeck"
                 else:
                     self.decks[selection]["curIndex"] += 1
 
@@ -745,6 +753,15 @@ try:
                     self.app.variantsTab.load_variant_card_locked(variant=self.decks[selection]["lastCardDrawn"], oldIronKing=True, fromDeck=True)
                 else:
                     self.app.variantsTab.load_variant_card_locked(variant=self.decks[selection]["lastCardDrawn"], fromDeck=True)
+                    
+                if "Giant" in selection:
+                    self.app.create_image("weak_arcs_.jpg", "weakArcs")
+                    displayPhotoImage = ImageTk.PhotoImage(self.app.displayImage)
+                    self.app.displayBottomRight.image = displayPhotoImage
+                    self.app.displayBottomRight.config(image=displayPhotoImage)
+                    self.app.displayImages["behaviorDeck"][self.app.displayBottomRight]["image"] = displayPhotoImage
+                    self.app.displayImages["behaviorDeck"][self.app.displayBottomRight]["name"] = "weakArcs"
+                    self.app.displayImages["behaviorDeck"][self.app.displayBottomRight]["activeTab"] = "behaviorDeck"
 
                 log("End of draw_behavior_card")
             except Exception as e:
