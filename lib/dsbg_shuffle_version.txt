@@ -1,7 +1,2 @@
-<<<<<<< HEAD
 DSBG-Shuffle 1.7.2
 8
-=======
-DSBG-Shuffle 1.7.1
-3
->>>>>>> parent of 5a6246b (Added horizontal scrollbar to display frame.)

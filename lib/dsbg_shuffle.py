@@ -1462,7 +1462,7 @@ try:
                 elif imageType == "weakArcs":
                     imagePath = baseFolder + "\\lib\\dsbg_shuffle_images\\icons\\".replace("\\", pathSep) + imageFileName
                     log("\tOpening " + imagePath)
-                    self.displayImage = Image.open(imagePath)
+                    self.displayImage = Image.open(imagePath).resize((300, 252), Image.Resampling.LANCZOS)
                     image = ImageTk.PhotoImage(self.displayImage)
                 else:
                     if pathProvided:

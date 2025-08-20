@@ -485,8 +485,8 @@ try:
                 if selection == "Dancer of the Boreal Valley" and behaviorDetail["Dancer of the Boreal Valley"][self.decks[selection]["deck"][self.decks[selection]["curIndex"]]].get("heatup", False):
                     self.decks[selection]["curIndex"] = 0
                     shuffle(self.decks[selection]["deck"])
-                elif "Giant" in selection:
-                    self.app.create_image("weak_arcs_.jpg", "weakArcs")
+                elif "Gael" in selection:
+                    self.app.create_image("weak_arcs_.png", "weakArcs")
                     displayPhotoImage = ImageTk.PhotoImage(self.app.displayImage)
                     self.app.displayBottomRight.image = displayPhotoImage
                     self.app.displayBottomRight.config(image=displayPhotoImage)
