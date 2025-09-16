@@ -26,7 +26,7 @@ try:
     class Application(ttk.Frame):
         def __init__(self, parent):
             try:
-                log("Initiating application")
+                log("Initiating application with version " + version[0].replace("\n", ""))
 
                 with open(baseFolder + "\\lib\\dsbg_shuffle_settings.json".replace("\\", pathSep)) as settingsFile:
                     self.settings = load(settingsFile)
@@ -1782,7 +1782,6 @@ try:
     root.withdraw()
     root.attributes("-alpha", 0.0)
         
-    root.title("DSBG-Shuffle")
     root.tk.call("source", baseFolder + "\\Azure-ttk-theme-main\\azure.tcl".replace("\\", pathSep))
     root.tk.call("set_theme", "dark")
     root.iconphoto(True, tk.PhotoImage(file=os.path.join(baseFolder, "bonfire.png")))
@@ -1807,6 +1806,7 @@ try:
 
     s = ttk.Style()
 
+    root.title(version[0].replace("\n", ""))
     app = Application(root)
     app.pack(fill="both", expand=True)
 
