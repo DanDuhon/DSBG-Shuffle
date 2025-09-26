@@ -684,10 +684,11 @@ try:
                 else:
                     variants = "variantsLocked"
 
-                clear_other_tab_images(
-                    self.app,
-                    variants,
-                    variants,
+                if type(miniDisplayNum) != int:
+                    clear_other_tab_images(
+                        self.app,
+                        variants,
+                        variants,
                     name=self.selectedVariant[:self.selectedVariant.index(" - ")] if " - " in self.selectedVariant else self.selectedVariant[:self.selectedVariant.index("_")] if "_" in self.selectedVariant else self.selectedVariant)
                     
                 if not selfCall and ("data" in self.selectedVariant or self.selectedVariant == "Executioner Chariot - Executioner Chariot") and self.app.displayTopLeft.image == self.app.displayImages["variants"][self.app.displayTopLeft]["image"]:
@@ -777,7 +778,10 @@ try:
 
                     # Create and display the variant image.
                     self.variantPhotoImage = self.app.create_image(self.selectedVariant + ".jpg", "enemyCard")
-                    self.edit_variant_card(variant=mods, lockedTree=True, armorerDennis=armorerDennis, oldIronKing=oldIronKing, pursuer=pursuer, healthMod=healthMod, fromDeck=fromDeck, bottomLeftDisplay=bottomLeftDisplay, bottomRightDisplay=bottomRightDisplay)
+                    if type(miniDisplayNum) == int:
+                        self.edit_variant_card(variant=mods, miniDisplayNum=miniDisplayNum, lockedTree=True)
+                    else:
+                        self.edit_variant_card(variant=mods, lockedTree=True, armorerDennis=armorerDennis, oldIronKing=oldIronKing, pursuer=pursuer, healthMod=healthMod, fromDeck=fromDeck, bottomLeftDisplay=bottomLeftDisplay, bottomRightDisplay=bottomRightDisplay)
 
                 if "data" not in self.selectedVariant and "Skeletal Horse" not in self.selectedVariant and self.selectedVariant != "Executioner Chariot - Executioner Chariot" and self.app.displayImages["variantsLocked"][self.app.displayTopRight]["name"] != self.selectedVariant and "The Four Kings" not in self.selectedVariant and not forPrinting:
                     modString = ",".join([str(x) for x in [n for n in modIdLookup if modIdLookup[n] in set(mods[0] if mods and type(mods[0]) == list else mods) & set([modIdLookup[m] for m in dataCardMods])]])

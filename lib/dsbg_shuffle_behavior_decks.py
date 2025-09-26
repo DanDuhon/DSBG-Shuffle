@@ -80,9 +80,6 @@ try:
                     "mods": []
                     }
                 
-                if enemy not in behaviors and enemiesDict[enemy].id in self.app.enabledEnemies:
-                    self.decks[enemy]["healthMod"] = {0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0}
-                
                 if enemy == "Ornstein & Smough":
                     self.decks[enemy]["healthMod"] = {"Ornstein": 0, "Smough": 0}
                 elif enemy == "The Four Kings":
@@ -379,7 +376,7 @@ try:
                         "Old Dragonslayer",
                         "Vordt of the Boreal Valley (move)",
                         "Vordt of the Boreal Valley (attack)"} else 1 if selection == "The Four Kings" else False
-                self.decks[selection]["healthMod"] = {"Ornstein": 0, "Smough": 0} if selection == "Ornstein & Smough" else {1: 0, 2: 0, 3: 0, 4: 0} if selection == "The Four Kings" else {0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0} if selection not in behaviors and enemiesDict[selection].id in self.app.enabledEnemies else 0
+                self.decks[selection]["healthMod"] = {"Ornstein": 0, "Smough": 0} if selection == "Ornstein & Smough" else {1: 0, 2: 0, 3: 0, 4: 0} if selection == "The Four Kings" else 0
                 self.decks[selection]["curIndex"] = 0
                 self.decks[selection]["lastCardDrawn"] = None
                 self.treeviewDecks.item(selection, values=(
