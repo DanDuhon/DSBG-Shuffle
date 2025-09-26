@@ -427,6 +427,14 @@ def clear_other_tab_images(app, lookupTab, activeTab, name=None, onlyDisplay=Non
     if not getattr(app, "displayTopLeft", None):
         return
 
+    for x in app.displayMiniEnemy:
+        app.displayMiniEnemy[x]["label"].grid_forget()
+        app.displayMiniEnemy[x]["display"] = False
+    
+    app.displayTopLeft.grid(column=0, row=0, sticky="nsew")
+    app.displayBottomLeft.grid(column=0, row=1, sticky="nsew")
+    app.displayBottomRight.grid(column=1, row=1, sticky="nsew", columnspan=2)
+
     app.displayKing1.grid_forget()
     app.displayKing2.grid_forget()
     app.displayKing3.grid_forget()

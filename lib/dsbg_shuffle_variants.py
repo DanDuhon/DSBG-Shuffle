@@ -5,8 +5,8 @@ try:
     from copy import deepcopy
     from fpdf import FPDF
     from json import dump, load
-    from math import ceil
-    from PIL import ImageDraw, ImageTk
+    from math import ceil, floor
+    from PIL import Image, ImageDraw, ImageTk
     from random import choice, shuffle
     from statistics import mean
     from tkinter import filedialog, ttk
@@ -359,12 +359,12 @@ try:
                 raise
 
 
-        def load_variant_card(self, event=None, variant=None, fromLocked=False, bottomLeftDisplay=False, bottomRightDisplay=False, selfCall=None, forPrinting=False, armorerDennis=False, oldIronKing=False, pursuer=False, deckDataCard=False, healthMod=None, fromDeck=False):
+        def load_variant_card(self, event=None, variant=None, fromLocked=False, miniDisplayNum=None, bottomLeftDisplay=False, bottomRightDisplay=False, selfCall=None, forPrinting=False, armorerDennis=False, oldIronKing=False, pursuer=False, deckDataCard=False, healthMod=None, fromDeck=False):
             """
             Load a variant card that was selected (or passed in).
             """
             try:
-                log("Start of load_variant_card, variant={}, selfCall={}, forPrinting={}, armorerDennis={}, oldIronKing={}, pursuer={}, deckDataCard={}, healthMod={}, fromDeck={}".format(str(variant), str(selfCall), str(forPrinting), str(armorerDennis), str(oldIronKing), str(pursuer), str(deckDataCard), str(healthMod), str(fromDeck)))
+                log("Start of load_variant_card, variant={}, selfCall={}, forPrinting={}, armorerDennis={}, oldIronKing={}, pursuer={}, deckDataCard={}, healthMod={}, fromDeck={}, miniDisplayNum={}".format(str(variant), str(selfCall), str(forPrinting), str(armorerDennis), str(oldIronKing), str(pursuer), str(deckDataCard), str(healthMod), str(fromDeck), str(miniDisplayNum)))
 
                 if variant in {"All", "Enemies", "Mini Bosses", "Main Bosses", "Mega Bosses"}:
                     log("\tNo variant selected")
@@ -374,7 +374,9 @@ try:
                 self.treeviewVariantsList.unbind("<<TreeviewSelect>>")
                 self.treeviewVariantsLocked.unbind("<<TreeviewSelect>>")
 
-                if fromDeck:
+                if type(miniDisplayNum) == int:
+                    variants = "encounters"
+                elif fromDeck:
                     variants = "behaviorDeck"
                 elif fromLocked:
                     variants = "variantsLocked"
@@ -424,11 +426,12 @@ try:
                 if self.selectedVariant[-1] == "_":
                     self.selectedVariant = self.selectedVariant.replace("_", "")
 
-                clear_other_tab_images(
-                    self.app,
-                    variants,
-                    variants,
-                    name=self.selectedVariant[:self.selectedVariant.index(" - ")] if " - " in self.selectedVariant else self.selectedVariant[:self.selectedVariant.index("_")] if "_" in self.selectedVariant else self.selectedVariant)
+                if type(miniDisplayNum) != int:
+                    clear_other_tab_images(
+                        self.app,
+                        variants,
+                        variants,
+                        name=self.selectedVariant[:self.selectedVariant.index(" - ")] if " - " in self.selectedVariant else self.selectedVariant[:self.selectedVariant.index("_")] if "_" in self.selectedVariant else self.selectedVariant)
                     
                 if "Smough" not in self.selectedVariant and "Gaping Dragon" not in self.selectedVariant and "Vordt" not in self.selectedVariant and self.app.displayImages["variants"][self.app.displayBottomRight]["image"]:
                     self.app.displayBottomRight.config(image="")
@@ -441,8 +444,9 @@ try:
                     originalSelection = deepcopy(self.selectedVariant)
 
                 # Remove keyword tooltips from the previous image shown, if there are any.
-                for tooltip in self.app.tooltips:
-                    tooltip.destroy()
+                if type(miniDisplayNum) != int:
+                    for tooltip in self.app.tooltips:
+                        tooltip.destroy()
 
                 if ("Ornstein" in self.selectedVariant or "Smough" in self.selectedVariant) and (self.selectedVariant.count("&") == 2 or "data" in self.selectedVariant):
                     if "data" not in self.selectedVariant:
@@ -508,7 +512,10 @@ try:
                             self.app.displayImages["variantsLocked"][self.app.displayBottomLeft]["activeTab"] = None
                     
                     self.variantPhotoImage = self.app.create_image((self.selectedVariant[:self.selectedVariant.index("_")] + self.selectedVariant.replace(variant, "") if "_" in self.selectedVariant else self.selectedVariant) + ".jpg", "enemyCard")
-                    self.edit_variant_card(variant=self.selectedVariant, bottomLeftDisplay=bottomLeftDisplay, bottomRightDisplay=bottomRightDisplay, lockedTree=fromLocked, armorerDennis=armorerDennis, oldIronKing=oldIronKing, pursuer=pursuer, healthMod=healthMod, fromDeck=fromDeck, deckDataCard=True if variant == "Executioner Chariot - Executioner Chariot" else False)
+                    if type(miniDisplayNum) == int:
+                        self.edit_variant_card(variant=self.selectedVariant, miniDisplayNum=miniDisplayNum, lockedTree=fromLocked)
+                    else:
+                        self.edit_variant_card(variant=self.selectedVariant, bottomLeftDisplay=bottomLeftDisplay, bottomRightDisplay=bottomRightDisplay, lockedTree=fromLocked, armorerDennis=armorerDennis, oldIronKing=oldIronKing, pursuer=pursuer, healthMod=healthMod, fromDeck=fromDeck, deckDataCard=True if variant == "Executioner Chariot - Executioner Chariot" else False)
 
                 if "Death Race" in self.selectedVariant:
                     self.load_variant_card(variant="Executioner Chariot - Executioner Chariot", fromLocked=fromLocked, selfCall=originalSelection, deckDataCard=deckDataCard, fromDeck=fromDeck)
@@ -529,9 +536,9 @@ try:
                 raise
 
 
-        def load_variant_card_locked(self, event=None, variant=None, selfCall=None, bottomLeftDisplay=False, bottomRightDisplay=False, forPrinting=False, armorerDennis=False, oldIronKing=False, pursuer=False, deckDataCard=False, healthMod=None, fromDeck=False):
+        def load_variant_card_locked(self, event=None, variant=None, selfCall=None, bottomLeftDisplay=False, bottomRightDisplay=False, forPrinting=False, armorerDennis=False, oldIronKing=False, pursuer=False, deckDataCard=False, healthMod=None, fromDeck=False, miniDisplayNum=None):
             try:
-                log("Start of load_variant_card_locked, variant={}, selfCall={}, forPrinting={}, armorerDennis={}, oldIronKing={}, pursuer={}, deckDataCard={}, healthMod={}, fromDeck={}".format(str(variant), str(selfCall), str(forPrinting), str(armorerDennis), str(oldIronKing), str(pursuer), str(deckDataCard), str(healthMod), str(fromDeck)))
+                log("Start of load_variant_card_locked, variant={}, selfCall={}, forPrinting={}, armorerDennis={}, oldIronKing={}, pursuer={}, deckDataCard={}, healthMod={}, fromDeck={}, miniDisplayNum={}".format(str(variant), str(selfCall), str(forPrinting), str(armorerDennis), str(oldIronKing), str(pursuer), str(deckDataCard), str(healthMod), str(fromDeck), str(miniDisplayNum)))
                     
                 self.treeviewVariantsList.unbind("<<TreeviewSelect>>")
                 self.treeviewVariantsLocked.unbind("<<TreeviewSelect>>")
@@ -647,7 +654,7 @@ try:
                             "Mega Bosses"
                             } else ""))
                 elif variant not in self.lockedVariants:
-                    self.load_variant_card(variant=variant, fromLocked=True, armorerDennis=armorerDennis, oldIronKing=oldIronKing, pursuer=pursuer, deckDataCard=deckDataCard, healthMod=healthMod, fromDeck=fromDeck, selfCall=selfCall, bottomLeftDisplay=bottomLeftDisplay, bottomRightDisplay=bottomRightDisplay)
+                    self.load_variant_card(variant=variant, fromLocked=True, armorerDennis=armorerDennis, oldIronKing=oldIronKing, pursuer=pursuer, deckDataCard=deckDataCard, healthMod=healthMod, fromDeck=fromDeck, selfCall=selfCall, bottomLeftDisplay=bottomLeftDisplay, bottomRightDisplay=bottomRightDisplay, miniDisplayNum=miniDisplayNum)
                     log("End of load_variant_card_locked")
                     return
                 else:
@@ -1114,7 +1121,7 @@ try:
                 raise
 
 
-        def edit_variant_card(self, variant=None, lockedTree=False, event=None, bottomLeftDisplay=False, bottomRightDisplay=False, armorerDennis=False, oldIronKing=False, pursuer=False, deckDataCard=False, healthMod=0, fromDeck=False):
+        def edit_variant_card(self, variant=None, lockedTree=False, miniDisplayNum=None, event=None, bottomLeftDisplay=False, bottomRightDisplay=False, armorerDennis=False, oldIronKing=False, pursuer=False, deckDataCard=False, healthMod=0, fromDeck=False):
             try:
                 log("Start of edit_variant_card, variant={}".format(str(variant)))
 
@@ -1128,6 +1135,10 @@ try:
                 if behavior not in {"data", "Executioner Chariot", "Skeletal Horse"} or "behavior" in behaviorDetail[enemy]:
                     self.edit_variant_card_behavior(variant=variant, armorerDennis=armorerDennis, oldIronKing=oldIronKing, pursuer=pursuer)
 
+                if type(miniDisplayNum) == int:
+                    self.app.displayMiniEnemy[miniDisplayNum]["image"] = deepcopy(self.app.displayImage)
+                    self.app.displayImage = self.app.displayImage.resize((102, 139), Image.Resampling.LANCZOS)
+                
                 displayPhotoImage = ImageTk.PhotoImage(self.app.displayImage)
 
                 if fromDeck:
@@ -1155,6 +1166,14 @@ try:
                     self.app.displayImages[key][self.app.displayTopRight]["image"] = displayPhotoImage
                     self.app.displayImages[key][self.app.displayTopRight]["name"] = self.selectedVariant
                     self.app.displayImages[key][self.app.displayTopRight]["activeTab"] = key if not fromDeck else "behaviorDeck"
+                elif type(miniDisplayNum) == int:
+                    self.app.displayMiniEnemy[miniDisplayNum]["label"].image = displayPhotoImage
+                    self.app.displayMiniEnemy[miniDisplayNum]["label"].config(image=displayPhotoImage)
+                    r = floor(miniDisplayNum/3)
+                    c = 1 + miniDisplayNum % 3
+                    self.app.displayMiniEnemy[miniDisplayNum]["label"].grid(column=c, row=r, sticky="nw")
+                    self.app.displayMiniEnemy[miniDisplayNum]["display"] = True
+                    self.app.displayMiniEnemy[miniDisplayNum]["enemy"] = enemy
                 else:
                     if behavior in {"data", "Skeletal Horse", "Executioner Chariot"}:
                         self.app.displayTopRight.image = displayPhotoImage

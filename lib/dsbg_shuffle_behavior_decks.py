@@ -33,11 +33,6 @@ try:
             self.resetButton = ttk.Button(self.deckTabButtonsFrame, text="Reset Deck", width=16, command=self.set_decks)
             self.resetButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
 
-            self.drawButton = ttk.Button(self.deckTabButtonsFrame2, text="Add Tracker", width=16, command=lambda add=True: self.health_tracker(add))
-            self.drawButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-            self.heatupButton = ttk.Button(self.deckTabButtonsFrame2, text="Remove Trackers", width=16, command=self.remove_all_health_trackers)
-            self.heatupButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-
             self.nonHeatupCards = {}
             for enemy in behaviors:
                 lookupName = enemy if "(" not in enemy else enemy[:enemy.index(" (")]
@@ -403,8 +398,6 @@ try:
                     self.decks[selection]["defKey"] = {"",}
                     self.decks[selection]["mods"] = []
 
-                self.remove_all_health_trackers(selection)
-
                 if not skipClear and self.treeviewDecks.selection() and not enemy:
                     self.display_deck_cards()
 
@@ -544,8 +537,6 @@ try:
                     if selection == "The Four Kings":
                         for x in range(1, 5):
                             self.four_kings_health_track(king=x, healthMod=self.decks["The Four Kings"]["healthMod"][x])
-                    elif self.treeviewDecks.parent(self.treeviewDecks.selection()[0]) == "Enemies":
-                        self.health_tracker()
 
                     set_display_bindings_by_tab(self.app, selection == "Ornstein & Smough")
 
@@ -593,124 +584,6 @@ try:
                 display.grid(row=king, column=1, sticky="nsew")
 
                 log("End of four_kings_health_track")
-            except Exception as e:
-                error_popup(self.root, e)
-                raise
-
-
-        def health_tracker(self, add=False, labelIndex=-1):
-            try:
-                log("Start of health_tracker")
-
-                if not self.treeviewDecks.selection() or self.treeviewDecks.parent(self.treeviewDecks.selection()[0]) != "Enemies":
-                    log("End of health_tracker (regular enemy not selected)")
-                    return
-
-                if self.app.displayTopRight.image != self.app.displayImages["behaviorDeck"][self.app.displayTopRight]["image"]:
-                    log("End of health_tracker (came from other tab - displaying cards first)")
-                    self.display_deck_cards()
-                
-                enemy = self.treeviewDecks.selection()[0]
-
-                if add:
-                    display = None
-                    spot = 0
-
-                    for s, d in enumerate(self.decks[enemy]["healthTrackers"]):
-                        if not d.image:
-                            display = d
-                            spot = s
-                            healthMod = self.decks[enemy]["healthMod"][s]
-                            break
-
-                    if not display:
-                        log("End of health_tracker (no spots available)")
-                        return
-
-                    self.app.create_image("Health track " + enemy + ".jpg", "healthTracker")
-
-                    imageWithText = ImageDraw.Draw(self.app.displayImage)
-
-                    health = behaviorDetail[enemy]["health"]
-
-                    mods = [modIdLookup[m] for m in list(self.decks[enemy]["defKey"]) if m]
-                    healthAddition = get_health_bonus(health, mods)
-                    health += healthAddition
-
-                    if healthMod and health + healthMod >= 0:
-                        health += healthMod
-
-                    imageWithText.text((67 + (
-                        2 if health == 0 else
-                        4 if health == 1 else
-                        3 if health < 10 else 0), 17), str(health), "white", font2)
-
-                    displayPhotoImage = ImageTk.PhotoImage(self.app.displayImage)
-
-                    display.image = displayPhotoImage
-                    display.config(image=displayPhotoImage)
-                    display.grid(row=1+int(spot/2), column=1+(spot%2), sticky="nsew")
-                elif labelIndex > -1:
-                    self.app.create_image("Health track " + enemy + ".jpg", "healthTracker")
-
-                    imageWithText = ImageDraw.Draw(self.app.displayImage)
-
-                    health = behaviorDetail[enemy]["health"]
-                    healthMod = self.decks[enemy]["healthMod"][labelIndex]
-
-                    mods = [modIdLookup[m] for m in list(self.decks[enemy]["defKey"]) if m]
-                    healthAddition = get_health_bonus(health, mods)
-                    health += healthAddition
-
-                    if healthMod and health + healthMod >= 0:
-                        health += healthMod
-
-                    imageWithText.text((67 + (
-                        2 if health == 0 else
-                        4 if health == 1 else
-                        3 if health < 10 else 0), 17), str(health), "white", font2)
-
-                    displayPhotoImage = ImageTk.PhotoImage(self.app.displayImage)
-
-                    display = self.decks[enemy]["healthTrackers"][labelIndex]
-                    display.image = displayPhotoImage
-                    display.config(image=displayPhotoImage)
-                    display.grid(row=1+int(labelIndex/2), column=1+(labelIndex%2), sticky="nsew")
-                else:
-                    for s, d in enumerate(self.decks[enemy]["healthTrackers"]):
-                        if d.image:
-                            d.grid(row=1+int(s/2), column=1+(s%2), sticky="nsew")
-
-                log("End of health_tracker")
-            except Exception as e:
-                error_popup(self.root, e)
-                raise
-
-
-        def remove_all_health_trackers(self, enemy=None):
-            try:
-                log("Start of remove_all_health_trackers")
-
-                if not self.treeviewDecks.selection():
-                    log("End of remove_all_health_trackers (nothing done)")
-                    return
-
-                if not enemy:
-                    enemy = self.treeviewDecks.selection()[0]
-
-                if (
-                    enemy not in self.decks
-                    or "healthTrackers" not in self.decks[enemy]):
-                    log("End of remove_all_health_trackers (nothing done)")
-                    return
-
-                self.decks[enemy]["healthMod"] = {0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0}
-
-                for d in self.decks[enemy]["healthTrackers"]:
-                    d.image = None
-                    d.config(image="")
-
-                log("End of remove_all_health_trackers")
             except Exception as e:
                 error_popup(self.root, e)
                 raise
@@ -1121,84 +994,6 @@ try:
                 self.four_kings_health_track(king, healthMod=self.decks[selection]["healthMod"][king])
 
                 log("End of raise_health_king")
-            except Exception as e:
-                error_popup(self.root, e)
-                raise
-                
-
-        def lower_health_regular(self, amount, event=None):
-            try:
-                log("Start of lower_health_regular")
-
-                if self.app.notebook.tab(self.app.notebook.select(), "text") != "Behavior Decks":
-                    log("End of lower_health_regular (wrong tab)")
-                    return
-
-                selection = self.treeviewDecks.selection()[0]
-
-                if self.treeviewDecks.parent(selection) != "Enemies":
-                    log("End of lower_health_regular (nothing done)")
-                    return
-                
-                eventLabel = event.widget
-                labelIndex = self.decks[selection]["healthTrackers"].index(eventLabel)
-                
-                modSelection = self.decks[selection]["defKey"] if self.decks[selection]["defKey"] else selection
-
-                startingHealth = (
-                    behaviorDetail[selection]["health"]
-                    + get_health_bonus(behaviorDetail[selection]["health"], [] if modSelection == selection else modSelection)
-                    + self.decks[selection]["healthMod"][labelIndex]
-                    )
-
-                if startingHealth == 0:
-                    log("End of lower_health_regular (nothing done)")
-                    return
-                
-                if startingHealth - amount < 0:
-                    amount = startingHealth
-
-                self.decks[selection]["healthMod"][labelIndex] -= amount
-
-                self.health_tracker(labelIndex=labelIndex)
-
-                log("End of lower_health_regular")
-            except Exception as e:
-                error_popup(self.root, e)
-                raise
-                
-
-        def raise_health_regular(self, amount, event=None):
-            try:
-                log("Start of raise_health_regular")
-
-                if self.app.notebook.tab(self.app.notebook.select(), "text") != "Behavior Decks":
-                    log("End of raise_health_regular (wrong tab)")
-                    return
-
-                selection = self.treeviewDecks.selection()[0]
-
-                if self.treeviewDecks.parent(selection) != "Enemies":
-                    log("End of raise_health_regular (nothing done)")
-                    return
-                
-                eventLabel = event.widget
-                labelIndex = self.decks[selection]["healthTrackers"].index(eventLabel)
-
-                if (
-                    self.treeviewDecks.parent(selection) != "Enemies"
-                    or self.decks[selection]["healthMod"][labelIndex] == 0
-                    ):
-                    log("End of raise_health_regular (nothing done)")
-                    return
-                elif self.decks[selection]["healthMod"][labelIndex] + amount > 0:
-                    amount = -(self.decks[selection]["healthMod"][labelIndex])
-
-                self.decks[selection]["healthMod"][labelIndex] += amount
-
-                self.health_tracker(labelIndex=labelIndex)
-
-                log("End of raise_health_regular")
             except Exception as e:
                 error_popup(self.root, e)
                 raise

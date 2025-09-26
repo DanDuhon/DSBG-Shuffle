@@ -7,6 +7,7 @@ try:
     import tkinter as tk
     import webbrowser
     from json import load
+    from math import floor
     from PIL import Image, ImageTk, UnidentifiedImageError
     from tkinter import ttk
 
@@ -857,6 +858,69 @@ try:
                 raise
 
 
+        def enlarge_image(self, event):
+            """
+            Resize a mini enemy card that's being hovered on.
+            """
+            try:
+                log("Start of create_display_frame")
+
+                label = event.widget
+
+                miniEnemy = self.displayMiniEnemy[self.displayMiniEnemyLookup[label]]
+                image = miniEnemy["image"]
+                enemy = miniEnemy["enemy"]
+                
+                photoImage = ImageTk.PhotoImage(image)
+
+                for x in self.displayMiniEnemy:
+                    if self.displayMiniEnemy[x]["label"] == label:
+                        self.displayMiniEnemy[x]["label"].grid(column=1, row=0, sticky="nw", columnspan=3)
+                        continue
+                    self.displayMiniEnemy[x]["label"].grid_forget()
+
+                label.image = photoImage
+                label.config(image=photoImage)
+
+                label.bind("<Button 1>", self.shrink_image)
+
+                log("End of tab_change")
+            except Exception as e:
+                error_popup(root, e)
+                raise
+
+
+        def shrink_image(self, event):
+            """
+            Restore the mini enemy card's original size.
+            """
+            try:
+                log("Start of create_display_frame")
+
+                label = event.widget
+
+                miniEnemy = self.displayMiniEnemy[self.displayMiniEnemyLookup[label]]
+                image = miniEnemy["image"]
+                enemy = miniEnemy["enemy"]
+                
+                photoImage = ImageTk.PhotoImage(image.resize((102, 139), Image.Resampling.LANCZOS))
+
+                for x in [x for x in self.displayMiniEnemy if self.displayMiniEnemy[x]["display"]]:
+                    r = floor(x/3)
+                    c = 1 + x % 3
+                    self.displayMiniEnemy[x]["label"].grid(column=c, row=r, sticky="nw", columnspan=1)
+
+                label.image = photoImage
+                label.config(image=photoImage)
+
+                label.bind("<Button 1>", self.enlarge_image)
+
+                log("End of tab_change")
+            except Exception as e:
+                error_popup(root, e)
+                raise
+
+
         def create_display_frame(self):
             """
             Create the frame in which cards will be displayed.
@@ -886,6 +950,26 @@ try:
                 self.displayBottomRight = ttk.Label(self.displayFrame)
                 self.displayBottomRight.image = None
                 self.displayBottomRight.grid(column=1, row=1, sticky="nsew", columnspan=2)
+
+                # Labels for mini enemy cards
+                self.displayMiniEnemy = {}
+                self.displayMiniEnemyLookup = {}
+                for x in range(16):
+                    self.displayMiniEnemy[x] = {"enemy": None, "label": None, "image": None, "display": False}
+                    self.displayMiniEnemy[x]["label"] = ttk.Label(self.displayFrame)
+                    self.displayMiniEnemy[x]["label"].image = None
+                    self.displayMiniEnemy[x]["label"].bind("<Button 1>", self.enlarge_image)
+                    self.displayMiniEnemyLookup[self.displayMiniEnemy[x]["label"]] = x
+
+                # Frames for encounter enemy health trackers
+                self.displayKing1 = ttk.Label(self.displayFrame)
+                self.displayKing1.image = None
+                self.displayKing2 = ttk.Label(self.displayFrame)
+                self.displayKing2.image = None
+                self.displayKing3 = ttk.Label(self.displayFrame)
+                self.displayKing3.image = None
+                self.displayKing4 = ttk.Label(self.displayFrame)
+                self.displayKing4.image = None
 
                 # Frames for health trackers
                 self.displayKing1 = ttk.Label(self.displayFrame)
@@ -924,19 +1008,7 @@ try:
                 self.displayKing4.bind("<Shift-Button 3>", lambda event, x=5: app.behaviorDeckTab.raise_health_king(event=event, king=4, amount=x))
                 self.displayKing4.bind("<Control-1>", lambda event, x=1: app.behaviorDeckTab.raise_health_king(event=event, king=4, amount=x))
                 self.displayKing4.bind("<Shift-Control-1>", lambda event, x=5: app.behaviorDeckTab.raise_health_king(event=event, king=4, amount=x))
-
-                for enemy in [e for e in self.enabledEnemies if "Phantoms" not in enemyIds[e].expansions and enemyIds[e].name not in {"Hungry Mimic", "Voracious Mimic"}]:
-                    self.behaviorDeckTab.decks[enemyIds[enemy].name]["healthTrackers"] = []
-                    for _ in range(8):
-                        self.behaviorDeckTab.decks[enemyIds[enemy].name]["healthTrackers"].append(ttk.Label(self.displayFrame))
-                        self.behaviorDeckTab.decks[enemyIds[enemy].name]["healthTrackers"][-1].image = None
-                        self.behaviorDeckTab.decks[enemyIds[enemy].name]["healthTrackers"][-1].bind("<Button 1>", lambda event, x=1: app.behaviorDeckTab.lower_health_regular(event=event, amount=x))
-                        self.behaviorDeckTab.decks[enemyIds[enemy].name]["healthTrackers"][-1].bind("<Shift-Button 1>", lambda event, x=5: app.behaviorDeckTab.lower_health_regular(event=event, amount=x))
-                        self.behaviorDeckTab.decks[enemyIds[enemy].name]["healthTrackers"][-1].bind("<Button 3>", lambda event, x=1: app.behaviorDeckTab.raise_health_regular(event=event, amount=x))
-                        self.behaviorDeckTab.decks[enemyIds[enemy].name]["healthTrackers"][-1].bind("<Shift-Button 3>", lambda event, x=5: app.behaviorDeckTab.raise_health_regular(event=event, amount=x))
-                        self.behaviorDeckTab.decks[enemyIds[enemy].name]["healthTrackers"][-1].bind("<Control-1>", lambda event, x=1: app.behaviorDeckTab.raise_health_regular(event=event, amount=x))
-                        self.behaviorDeckTab.decks[enemyIds[enemy].name]["healthTrackers"][-1].bind("<Shift-Control-1>", lambda event, x=5: app.behaviorDeckTab.raise_health_regular(event=event, amount=x))
-
+                
                 self.displayImages = {
                     "encounters": {
                         self.displayTopLeft: {"name": None, "image": None, "activeTab": None},

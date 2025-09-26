@@ -90,10 +90,10 @@ try:
 
             self.randomMiniBossButton = ttk.Button(self.campaignTabButtonsFrame4, text="Add Mini Boss", width=16, command=lambda x="Mini Boss": self.add_random_boss_to_campaign(level=x))
             self.randomMiniBossButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-            self.randomMiniBossButton = ttk.Button(self.campaignTabButtonsFrame4, text="Add Main Boss", width=16, command=lambda x="Main Boss": self.add_random_boss_to_campaign(level=x))
-            self.randomMiniBossButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
-            self.randomMiniBossButton = ttk.Button(self.campaignTabButtonsFrame4, text="Add Mega Boss", width=16, command=lambda x="Mega Boss": self.add_random_boss_to_campaign(level=x))
-            self.randomMiniBossButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+            self.randomMainBossButton = ttk.Button(self.campaignTabButtonsFrame4, text="Add Main Boss", width=16, command=lambda x="Main Boss": self.add_random_boss_to_campaign(level=x))
+            self.randomMainBossButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
+            self.randomMegaBossButton = ttk.Button(self.campaignTabButtonsFrame4, text="Add Mega Boss", width=16, command=lambda x="Mega Boss": self.add_random_boss_to_campaign(level=x))
+            self.randomMegaBossButton.pack(side=tk.LEFT, anchor=tk.CENTER, padx=5, pady=5)
 
             self.bossMenu = ttk.Combobox(self.campaignTabButtonsFrame5, state="readonly", values=self.bossMenuItems, textvariable=self.selectedBoss)
             self.bossMenu.current(0)
@@ -531,6 +531,10 @@ try:
                         self.app.encounterTab.newEnemies = campaignCard["enemies"]
                         self.app.encounterTab.edit_encounter_card(campaignCard["name"], campaignCard["expansion"], campaignCard["level"], alts["enemySlots"])
                 elif campaignCard["type"] == "boss":
+                    self.app.displayTopLeft.grid(column=0, row=0, sticky="nsew", rowspan=1)
+                    self.app.displayBottomLeft.grid(column=0, row=1, sticky="nsew")
+                    self.app.displayBottomRight.grid(column=1, row=1, sticky="nsew", columnspan=2)
+
                     # Create and display the boss image.
                     self.app.create_image(campaignCard["name"] + ".jpg", "encounter", 4)
                     self.app.displayImages["encounters"][self.app.displayTopLeft]["image"] = ImageTk.PhotoImage(self.app.displayImage)
@@ -894,8 +898,12 @@ try:
                 leftEncounter = self.v2Campaign[level].pop()
                 rightEncounter = self.v2Campaign[level].pop()
 
-                self.load_v2_campaign_card(leftEncounter)
-                self.load_v2_campaign_card(rightEncounter, True)
+                self.load_v2_campaign_card(leftEncounter, miniCards=False)
+                self.load_v2_campaign_card(rightEncounter, True, miniCards=False)
+                
+                self.app.displayTopLeft.grid(column=0, row=0, sticky="nsew", rowspan=1)
+                self.app.displayBottomLeft.grid(column=0, row=1, sticky="nsew")
+                self.app.displayBottomRight.grid(column=1, row=1, sticky="nsew", columnspan=2)
             
                 p = PopupWindow(self.master, labelText="Which encounter do you want to play?", rightButton=True, leftButton=True)
                 self.root.wait_window(p)
@@ -903,9 +911,9 @@ try:
                 clear_other_tab_images(self.app, "encounters", "campaign", self.app.displayTopRight)
 
                 if p.answer:
-                    self.load_v2_campaign_card(leftEncounter)
+                    self.load_v2_campaign_card(leftEncounter, miniCards=True)
                 else:
-                    self.load_v2_campaign_card(rightEncounter)
+                    self.load_v2_campaign_card(rightEncounter, miniCards=True)
 
                 self.add_card_to_campaign()
                 
@@ -998,7 +1006,7 @@ try:
                 while len(self.v2Campaign[level]) < (encCnt if len([e for e in self.campaign if e["level"] == level]) < levelCnt else 2):
                     # Make sure we don't get two of the same name, unless there aren't enough available
                     encounterListNoDupes = [e for e in encounterList if e not in set([c["name"] for c in self.v2Campaign[level]])]
-                    self.app.encounterTab.random_encounter(level=level, encounterList=encounterListNoDupes if len(encounterListNoDupes) >= encCnt - len(self.v2Campaign[level]) else encounterList)
+                    self.app.encounterTab.random_encounter(level=level, encounterList=encounterListNoDupes if len(encounterListNoDupes) >= encCnt - len(self.v2Campaign[level]) else encounterList, miniCards=False)
                     name = self.app.selected["name"] + (" (TSC)" if self.app.selected["expansion"] == "The Sunless City" and self.app.selected["name"] in set(["Broken Passageway", "Central Plaza"]) else "")
                     self.v2Campaign[level].append(self.add_card_to_v2_campaign_list(name))
 
@@ -1008,7 +1016,7 @@ try:
                 raise
 
 
-        def load_v2_campaign_card(self, card, right=False):
+        def load_v2_campaign_card(self, card, right=False, miniCards=True):
             """
             Display pre-generated v2 encounter card.
             """
@@ -1034,7 +1042,7 @@ try:
 
                     # Create the encounter card with saved enemies and tooltips.
                     self.app.encounterTab.newEnemies = card["enemies"]
-                    self.app.encounterTab.edit_encounter_card(card["name"], card["expansion"], card["level"], alts["enemySlots"], right=right, campaignGen=True)
+                    self.app.encounterTab.edit_encounter_card(card["name"], card["expansion"], card["level"], alts["enemySlots"], right=right, campaignGen=True, miniCards=miniCards)
 
                 log("End of load_v2_campaign_card")
             except Exception as e:
@@ -1069,7 +1077,7 @@ try:
                 
                 encounter = self.v2Campaign[level].pop()
 
-                self.load_v2_campaign_card(encounter)
+                self.load_v2_campaign_card(encounter, miniCards=False)
             
                 p = PopupWindow(self.master, labelText="Keep or discard this encounter card?", keepButton=True, discardButton=True)
                 self.root.wait_window(p)

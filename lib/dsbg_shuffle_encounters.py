@@ -3,6 +3,7 @@ try:
     import tkinter as tk
     from collections import Counter
     from json import load
+    from math import ceil, floor
     from PIL import ImageTk, ImageDraw
     from random import choice
     from tkinter import ttk
@@ -19,6 +20,7 @@ try:
             self.root = root
             
             self.encountersToPrint = []
+            self.healthTrackers = {}
 
             self.expansionsForRandomEncounters = ((self.app.v1Expansions if "v1" in self.app.settings["encounterTypes"] else set()) | (self.app.v2Expansions if "v2" in self.app.settings["encounterTypes"] else set()) | (self.app.level4Expansions if "Level 4 encounters" in self.app.settings["availableExpansions"] else set())) & self.app.allExpansions
             self.set_encounter_list()
@@ -360,7 +362,7 @@ try:
                 raise
 
 
-        def random_encounter(self, event=None, level=None, encounterList=None):
+        def random_encounter(self, event=None, level=None, encounterList=None, miniCards=True):
             """
             Picks a random encounter from the list of available encounters and displays it.
 
@@ -405,7 +407,7 @@ try:
                         and (self.app.encounters[encounter]["expansion"] in self.expansionsForRandomEncounters
                             or self.app.encounters[encounter]["level"] == 3))]
 
-                self.load_encounter(encounter=choice(pickList))
+                self.load_encounter(encounter=choice(pickList), miniCards=miniCards)
 
                 log("\tEnd of random_encounter")
             except Exception as e:
@@ -413,7 +415,7 @@ try:
                 raise
 
 
-        def load_encounter(self, event=None, encounter=None, customEnemyListCheck=False):
+        def load_encounter(self, event=None, encounter=None, customEnemyListCheck=False, miniCards=True):
             """
             Loads an encounter from file data for display.
 
@@ -438,6 +440,9 @@ try:
                 if event:
                     tree = event.widget
                     if not tree.item(tree.selection())["tags"][0]:
+                        self.app.displayTopLeft.grid(column=0, row=0, sticky="nsew", rowspan=1)
+                        self.app.displayBottomLeft.grid(column=0, row=1, sticky="nsew")
+                        self.app.displayBottomRight.grid(column=1, row=1, sticky="nsew", columnspan=2)
                         log("\tNo encounter selected")
                         self.treeviewEncounters.bind("<<TreeviewSelect>>", self.load_encounter)
                         set_display_bindings_by_tab(self.app)
@@ -484,7 +489,7 @@ try:
                 self.newTiles = dict()
 
                 if not customEnemyListCheck:
-                    self.shuffle_enemies(customEncounter="Custom - " in encounterName)
+                    self.shuffle_enemies(customEncounter="Custom - " in encounterName, miniCards=miniCards)
                     self.treeviewEncounters.bind("<<TreeviewSelect>>", self.load_encounter)
                     set_display_bindings_by_tab(self.app)
 
@@ -538,7 +543,7 @@ try:
                 raise
 
 
-        def shuffle_enemies(self, event=None, customEncounter=False):
+        def shuffle_enemies(self, event=None, customEncounter=False, miniCards=True):
             """
             Pick a new set of enemies to display in the encounter.
 
@@ -576,7 +581,7 @@ try:
                         while self.newEnemies == oldEnemies:
                             self.newEnemies = choice(self.app.selected["alternatives"])
 
-                self.edit_encounter_card(self.app.selected["name"], self.app.selected["expansion"], self.app.selected["level"], self.app.selected["enemySlots"], customEncounter=customEncounter)
+                self.edit_encounter_card(self.app.selected["name"], self.app.selected["expansion"], self.app.selected["level"], self.app.selected["enemySlots"], customEncounter=customEncounter, miniCards=miniCards)
 
                 log("\tEnd of shuffle_enemies")
             except EnvironmentError as err:
@@ -590,7 +595,7 @@ try:
                 raise
 
 
-        def edit_encounter_card(self, name, expansion, level, enemySlots, campaignGen=False, right=False, original=False, customEncounter=False):
+        def edit_encounter_card(self, name, expansion, level, enemySlots, campaignGen=False, right=False, original=False, customEncounter=False, miniCards=True):
             """
             Modify the encounter card image with the new enemies and treasure reward, if applicable.
 
@@ -791,6 +796,11 @@ try:
                     self.app.displayTopLeft.config(image=displayPhotoImage)
 
                 if not self.app.forPrinting and not campaignGen:
+                    # Adjust rowspans of the display frames so they display correctly
+                    # with the mini enemy cards
+                    self.app.displayTopLeft.grid(column=0, row=0, sticky="nsew", rowspan=100)
+                    self.app.displayBottomLeft.grid(column=0, row=101, sticky="nsew")
+                    self.app.displayBottomRight.grid(column=1, row=101, sticky="nsew", columnspan=2)
                     self.app.displayImages["encounters"][self.app.displayTopLeft]["name"] = name
                     self.app.displayImages["encounters"][self.app.displayTopLeft]["image"] = displayPhotoImage
                     self.app.displayImages["encounters"][self.app.displayTopLeft]["activeTab"] = "encounters"
@@ -800,6 +810,9 @@ try:
                     self.app.displayTopRight.image=None
                     self.app.displayBottomRight.image=None
 
+                    if miniCards:
+                        self.display_mini_enemy_cards()
+                        
                 set_display_bindings_by_tab(self.app)
 
                 log("\tEnd of edit_encounter_card")
@@ -809,6 +822,24 @@ try:
                     return
                 else:
                     raise
+            except Exception as e:
+                error_popup(self.root, e)
+                raise
+
+
+        def display_mini_enemy_cards(self):
+            try:
+                log("Start of display_mini_enemy_cards")
+
+                for x in self.app.displayMiniEnemy:
+                    self.app.displayMiniEnemy[x]["label"].grid_forget()
+                    self.app.displayMiniEnemy[x]["display"] = False
+
+                for i, enemy in enumerate(sorted([e for e in set(self.newEnemies)], key=lambda x: enemyIds[x].threat, reverse=True)):
+                    selection = enemyIds[enemy].name
+                    decks = self.app.behaviorDeckTab.decks
+                    self.app.variantsTab.load_variant_card_locked(miniDisplayNum=i, variant=selection + ("_" + ",".join([str(m) for m in decks[selection]["mods"]])), deckDataCard=True, healthMod=decks[selection]["healthMod"])
+
             except Exception as e:
                 error_popup(self.root, e)
                 raise
