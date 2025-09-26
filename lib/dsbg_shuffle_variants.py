@@ -2108,12 +2108,6 @@ try:
                                 y = 330 if i == 0 else 350
 
                             self.app.displayImage.paste(im=image, box=(x, y), mask=image)
-                
-                if enemy in {"Phalanx", "Phalanx Hollow", "Silver Knight Spearman"}:
-                    x = 115 if "repeat" in actions["right"] else 209
-                    image = self.app.sksMove if enemy == "Silver Knight Spearman" else self.app.phalanxMove
-                    log("Pasting move image onto variant at " + str((x, 285)) + ".")
-                    self.app.displayImage.paste(im=image, box=(x, 285), mask=image)
 
                 log("End of add_components_to_variant_card_behavior")
             except Exception as e:
