@@ -1,9 +1,11 @@
+import sys
+import traceback
+
 try:
     import datetime
     import errno
     import os
     import requests
-    import sys
     import tkinter as tk
     import webbrowser
     from json import load
@@ -15,7 +17,7 @@ try:
     from dsbg_shuffle_campaign import CampaignFrame
     from dsbg_shuffle_encounters import EncountersFrame
     from dsbg_shuffle_encounter_builder import EncounterBuilderFrame
-    from dsbg_shuffle_enemies import enemyIds, enemiesDict, bosses
+    from dsbg_shuffle_enemies import enemiesDict, bosses
     from dsbg_shuffle_events import EventsFrame
     from dsbg_shuffle_settings import SettingsWindow
     from dsbg_shuffle_tooltip_reference import tooltipText
@@ -46,6 +48,10 @@ try:
                 self.availableExpansions = set(self.settings["availableExpansions"])
                 self.v1Expansions = {"Dark Souls The Board Game", "Darkroot", "Executioner Chariot", "Explorers", "Iron Keep"}
                 self.v2Expansions = (self.allExpansions - self.v1Expansions - self.level4Expansions)
+                self.expansionsForRandomEncounters = self.allExpansions & (
+                    (self.v1Expansions if "v1" in self.settings["encounterTypes"] else set())
+                    | (self.v2Expansions if "v2" in self.settings["encounterTypes"] else set())
+                    | (self.level4Expansions if "level4" in self.settings["encounterTypes"] else set()))
                 self.enabledEnemies = set([enemiesDict[enemy.replace(" (V1)", "")].id for enemy in self.settings["enabledEnemies"] if enemy not in self.allExpansions])
                 self.charactersActive = set(self.settings["charactersActive"])
                 self.numberOfCharacters = len(self.charactersActive)
@@ -1316,8 +1322,16 @@ try:
                     self.encounterTab.treeviewEncounters.pack_forget()
                     self.encounterTab.treeviewEncounters.destroy()
                     self.availableExpansions = set(self.settings["availableExpansions"])
+                    if (set(self.settings["availableExpansions"]) != set(oldSettings["availableExpansions"])
+                            or set(self.settings["enabledEnemies"]) != set(oldSettings["enabledEnemies"])
+                            or self.settings["maxInvaders"] != oldSettings["maxInvaders"]
+                            or len(self.settings["charactersActive"]) != len(oldSettings["charactersActive"])):
+                        self.campaignTab.v2Campaign = {1: [], 2: [], 3: [], 4: []}
                     self.availableCoreSets = self.coreSets & self.availableExpansions
-                    self.expansionsForRandomEncounters = self.allExpansions & ((self.v1Expansions if "v1" in self.settings["encounterTypes"] else set()) | (self.v2Expansions if "v2" in self.settings["encounterTypes"] else set()))
+                    self.expansionsForRandomEncounters = self.allExpansions & (
+                        (self.v1Expansions if "v1" in self.settings["encounterTypes"] else set())
+                        | (self.v2Expansions if "v2" in self.settings["encounterTypes"] else set())
+                        | (self.level4Expansions if "level4" in self.settings["encounterTypes"] else set()))
                     self.charactersActive = set(self.settings["charactersActive"])
                     self.numberOfCharacters = len(self.charactersActive)
                     self.encounterTab.set_encounter_list()
@@ -1892,7 +1906,10 @@ try:
     root.destroy()
 
 except Exception as e:
-    error = str(sys.exc_info())
+    error = traceback.format_exc()
     if "application has been destroyed" not in error:
-        log(error, exception=True)
+        try:
+            log(error, exception=True)
+        except NameError:
+            sys.stderr.write(error)
         raise

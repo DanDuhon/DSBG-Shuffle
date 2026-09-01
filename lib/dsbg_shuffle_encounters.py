@@ -3,12 +3,11 @@ try:
     import tkinter as tk
     from collections import Counter
     from json import load
-    from math import ceil, floor
     from PIL import ImageTk, ImageDraw
     from random import choice
     from tkinter import ttk
 
-    from dsbg_shuffle_enemies import enemiesDict, enemyIds
+    from dsbg_shuffle_enemies import enemiesDict, enemyIds, invaderIds
     from dsbg_shuffle_treasure import pick_treasure, treasureSwapEncounters
     from dsbg_shuffle_utility import PopupWindow, clear_other_tab_images, error_popup, log, set_display_bindings_by_tab, baseFolder, font, pathSep
 
@@ -22,7 +21,6 @@ try:
             self.encountersToPrint = []
             self.healthTrackers = {}
 
-            self.expansionsForRandomEncounters = ((self.app.v1Expansions if "v1" in self.app.settings["encounterTypes"] else set()) | (self.app.v2Expansions if "v2" in self.app.settings["encounterTypes"] else set()) | (self.app.level4Expansions if "Level 4 encounters" in self.app.settings["availableExpansions"] else set())) & self.app.allExpansions
             self.set_encounter_list()
 
             # If specific enemies (rather than just expansions) are toggled on or off, do extra work
@@ -244,7 +242,7 @@ try:
                 ("Trecherous Tower", "Painted World of Ariamis"): [
                     {"image": self.app.snowstorm, "photo image": ImageTk.PhotoImage(self.app.snowstorm), "imageName": "snowstorm"},
                     {"image": self.app.bitterCold, "photo image": ImageTk.PhotoImage(self.app.bitterCold), "imageName": "bitterCold"},
-                    {"image": self.app.onslaught, "photo image": ImageTk.PhotoImage(self.app.eerie), "imageName": "eerie"}
+                    {"image": self.app.eerie, "photo image": ImageTk.PhotoImage(self.app.eerie), "imageName": "eerie"}
                     ],
                 ("Twilight Falls", "The Sunless City"): [
                     {"image": self.app.illusion, "photo image": ImageTk.PhotoImage(self.app.illusion), "imageName": "illusion"}
@@ -258,6 +256,7 @@ try:
             }
 
             self.newEnemies = []
+            self.multipleAlternatives = False
             self.newTiles = dict()
             self.rewardTreasure = None
 
@@ -269,15 +268,39 @@ try:
             """
             try:
                 log("Start of set_encounter_list")
+                
+                allowed_expansions = set()
+                if "v1" in self.app.settings["encounterTypes"]:
+                    allowed_expansions |= self.app.v1Expansions
+                if "v2" in self.app.settings["encounterTypes"]:
+                    allowed_expansions |= self.app.v2Expansions
+                if "level4" in self.app.settings["encounterTypes"]:
+                    allowed_expansions |= self.app.level4Expansions
 
-                # Set the list of encounters based on available expansions.
-                self.encounterList = [encounter for encounter in self.app.encounters if (
-                    all([
-                        any([frozenset(expCombo).issubset(self.app.availableExpansions) for expCombo in self.app.encounters[encounter]["expansionCombos"]["1"]]),
-                        any([frozenset(expCombo).issubset(self.app.availableExpansions) for expCombo in self.app.encounters[encounter]["expansionCombos"]["2"]]),
-                        True if "3" not in self.app.encounters[encounter]["expansionCombos"] else any([frozenset(expCombo).issubset(self.app.availableExpansions) for expCombo in self.app.encounters[encounter]["expansionCombos"]["3"]]),
-                        self.app.encounters[encounter]["expansion"] in ((self.app.v1Expansions if "v1" in self.app.settings["encounterTypes"] else set()) | (self.app.v2Expansions if "v2" in self.app.settings["encounterTypes"] else set()) | (self.app.level4Expansions if "level4" in self.app.settings["encounterTypes"] else set()))
-                            ]))]
+                self.encounterList = []
+
+                for encounter, data in self.app.encounters.items():
+                    if data["expansion"] not in allowed_expansions:
+                        continue
+
+                    valid = True
+                    for level in ["1", "2", "3"]:
+                        if level in data["expansionCombos"]:
+                            if not any(set(combo).issubset(self.app.availableExpansions) for combo in data["expansionCombos"][level]):
+                                valid = False
+                                break
+                    
+                    if valid:
+                        self.encounterList.append(encounter)
+
+                # # Set the list of encounters based on available expansions.
+                # self.encounterList = [encounter for encounter in self.app.encounters if (
+                #     all([
+                #         any([frozenset(expCombo).issubset(self.app.availableExpansions) for expCombo in self.app.encounters[encounter]["expansionCombos"]["1"]]),
+                #         any([frozenset(expCombo).issubset(self.app.availableExpansions) for expCombo in self.app.encounters[encounter]["expansionCombos"]["2"]]),
+                #         True if "3" not in self.app.encounters[encounter]["expansionCombos"] else any([frozenset(expCombo).issubset(self.app.availableExpansions) for expCombo in self.app.encounters[encounter]["expansionCombos"]["3"]]),
+                #         self.app.encounters[encounter]["expansion"] in ((self.app.v1Expansions if "v1" in self.app.settings["encounterTypes"] else set()) | (self.app.v2Expansions if "v2" in self.app.settings["encounterTypes"] else set()) | (self.app.level4Expansions if "level4" in self.app.settings["encounterTypes"] else set()))
+                #             ]))]
 
                 log("End of set_encounter_list")
             except Exception as e:
@@ -386,7 +409,7 @@ try:
                     and encounter not in set([e["name"] for e in self.app.campaignTab.campaign])
                     and encounter != "Mega Boss Setup"
                     and encounter != "Gravelord Nito Setup"
-                    and (self.app.encounters[encounter]["expansion"] in self.expansionsForRandomEncounters
+                    and (self.app.encounters[encounter]["expansion"] in self.app.expansionsForRandomEncounters
                         or self.app.encounters[encounter]["level"] == 4))]
                 
                 if not pickList:
@@ -394,7 +417,7 @@ try:
                         self.app.encounters[encounter]["level"] == level
                         and encounter != "Mega Boss Setup"
                         and encounter != "Gravelord Nito Setup"
-                        and (self.app.encounters[encounter]["expansion"] in self.expansionsForRandomEncounters
+                        and (self.app.encounters[encounter]["expansion"] in self.app.expansionsForRandomEncounters
                             or self.app.encounters[encounter]["level"] == 4))]
                 
                 # If you don't have any valid alternatives for a level 4 encounter,
@@ -404,8 +427,7 @@ try:
                         self.app.encounters[encounter]["level"] == 3
                         and encounter != "Mega Boss Setup"
                         and encounter != "Gravelord Nito Setup"
-                        and (self.app.encounters[encounter]["expansion"] in self.expansionsForRandomEncounters
-                            or self.app.encounters[encounter]["level"] == 3))]
+                        and self.app.encounters[encounter]["expansion"] in self.app.expansionsForRandomEncounters)]
 
                 self.load_encounter(encounter=choice(pickList), miniCards=miniCards)
 
@@ -431,6 +453,14 @@ try:
             try:
                 log("Start of load_encounter, event={}, encounter={}, customEnemyListCheck={}".format(str(event), str(encounter), str(customEnemyListCheck)))
 
+                # Check if the clicked on item is an encounter
+                if event:
+                    tree = event.widget
+                    if not tree.item(tree.selection())["tags"][0]:
+                        log("\tNo encounter selected")
+                        log("\tEnd of load_encounter")
+                        return
+
                 clear_other_tab_images(self.app, "encounters", "encounters")
 
                 if not customEnemyListCheck:
@@ -439,15 +469,6 @@ try:
                 # If this encounter was clicked on, get that information.
                 if event:
                     tree = event.widget
-                    if not tree.item(tree.selection())["tags"][0]:
-                        self.app.displayTopLeft.grid(column=0, row=0, sticky="nsew", rowspan=1)
-                        self.app.displayBottomLeft.grid(column=0, row=1, sticky="nsew")
-                        self.app.displayBottomRight.grid(column=1, row=1, sticky="nsew", columnspan=2)
-                        log("\tNo encounter selected")
-                        self.treeviewEncounters.bind("<<TreeviewSelect>>", self.load_encounter)
-                        set_display_bindings_by_tab(self.app)
-                        log("\tEnd of load_encounter")
-                        return
                     encounterName = tree.item(tree.selection())["text"]
                 else:
                     tree = self.treeviewEncounters
@@ -468,6 +489,10 @@ try:
                 if "Custom - " in encounterName and " (" not in encounterName:
                     encounterName += " (" + tree.item(tree.parent(tree.parent(tree.selection())))["text"] + ")"
 
+                # Don't keep a previous encounter in elf.app.encounters.
+                if self.app.selected and self.app.selected is not self.app.encounters[encounterName]:
+                    self.app.selected["alternatives"] = []
+
                 self.app.selected = self.app.encounters[encounterName]
 
                 if "Custom - " in encounterName:
@@ -484,8 +509,22 @@ try:
                 self.newEnemies = []
 
                 # Use only alternative enemies for expansions and enemies the user has activated in the settings.
-                for expansionCombo in [a for a in alts["alternatives"] if set(a.split(",")).issubset(self.app.availableExpansions)]:
-                    self.app.selected["alternatives"] += [alt for alt in alts["alternatives"][expansionCombo] if set(alt).issubset(self.app.enabledEnemies) and sum([1 for a in alt if enemyIds[a].expansions == set(["Phantoms"]) or enemyIds[a].name in {"Hungry Mimic", "Voracious Mimic"}]) <= self.app.settings["maxInvaders"][str(self.app.selected["level"])]]
+                enabled = self.app.enabledEnemies
+                maxInvaders = self.app.settings["maxInvaders"][str(self.app.selected["level"])]
+                newAlternatives = []
+
+                for expansionCombo, group in alts["alternatives"].items():
+                    if not set(expansionCombo.split(",")).issubset(self.app.availableExpansions):
+                        continue
+                    newAlternatives.extend([alt for alt in group
+                                            if enabled.issuperset(alt)
+                                            and sum(a in invaderIds for a in alt) <= maxInvaders])
+
+                self.app.selected["alternatives"] = newAlternatives
+
+                firstAlt = newAlternatives[0] if newAlternatives else None
+                self.multipleAlternatives = any(alt != firstAlt for alt in newAlternatives)
+
                 self.newTiles = dict()
 
                 if not customEnemyListCheck:
@@ -571,13 +610,14 @@ try:
 
                 if customEncounter and self.app.selected["name"] in self.app.encounters:
                     self.newEnemies = []
+                    self.multipleAlternatives = False
                 else:
                     # Make sure a new set of enemies is chosen each time, otherwise it
                     # feels like the program isn't doing anything.
                     oldEnemies = [e for e in self.newEnemies]
                     self.newEnemies = choice(self.app.selected["alternatives"])
                     # Check to see if there are multiple alternatives.
-                    if len(set([tuple(a) for a in self.app.selected["alternatives"]])) > 1:
+                    if self.multipleAlternatives:
                         while self.newEnemies == oldEnemies:
                             self.newEnemies = choice(self.app.selected["alternatives"])
 
@@ -665,120 +705,73 @@ try:
                             s += 1
 
                     # These are new encounters that have text referencing specific enemies.
-                    if name == "Abandoned and Forgotten":
-                        self.abandoned_and_forgotten()
-                    elif name == "Aged Sentinel":
-                        self.aged_sentinel(right=right)
-                    elif name == "Castle Break In":
-                        self.castle_break_in(original=original)
-                    elif (name == "Central Plaza" or name == "Central Plaza (TSC)") and expansion == "The Sunless City":
-                        self.central_plaza(right=right)
-                    elif name == "Cloak and Feathers":
-                        self.cloak_and_feathers(right=right)
-                    elif name == "Cold Snap":
-                        self.cold_snap(right=right)
-                    elif name == "Corvian Host":
-                        self.corvian_host(right=right, original=original)
-                    elif name == "Corrupted Hovel":
-                        self.corrupted_hovel(right=right)
-                    elif name == "Dark Alleyway":
-                        self.dark_alleyway(right=right)
-                    elif name == "Dark Resurrection":
-                        self.dark_resurrection(original=original)
-                    elif name == "Deathly Freeze":
-                        self.deathly_freeze(level, right=right)
-                    elif name == "Deathly Magic":
-                        self.deathly_magic(level, right=right)
-                    elif name == "Deathly Tolls":
-                        self.deathly_tolls(right=right, original=original)
-                    elif name == "Depths of the Cathedral":
-                        self.depths_of_the_cathedral(right=right, original=original)
-                    elif name == "Distant Tower":
-                        self.distant_tower(right=right, original=original)
-                    elif name == "Eye of the Storm":
-                        self.eye_of_the_storm(right=right)
-                    elif name == "Flooded Fortress":
-                        self.flooded_fortress(right=right, original=original)
-                    elif name == "Frozen Revolutions":
-                        self.frozen_revolutions(right=right)
-                    elif name == "Giant's Coffin":
-                        self.giants_coffin(right=right, original=original)
-                    elif name == "Gleaming Silver":
-                        self.gleaming_silver(level, right=right)
-                    elif name == "Gnashing Beaks":
-                        self.gnashing_beaks(right=right)
-                    elif name == "Grave Matters":
-                        self.grave_matters(original=original)
-                    elif name == "Grim Reunion":
-                        self.grim_reunion(right=right)
-                    elif name == "Hanging Rafters":
-                        self.hanging_rafters(original=original)
-                    elif name == "In Deep Water":
-                        self.in_deep_water(right=right, original=original)
-                    elif name == "Inhospitable Ground":
-                        self.inhospitable_ground(original=original)
-                    elif name == "Lakeview Refuge":
-                        self.lakeview_refuge(right=right)
-                    elif name == "Monstrous Maw":
-                        self.monstrous_maw(right=right, original=original)
-                    elif name == "No Safe Haven":
-                        self.no_safe_haven(right=right, original=original)
-                    elif name == "Painted Passage":
-                        self.painted_passage(original=original)
-                    elif name == "Parish Church":
-                        self.parish_church(right=right)
-                    elif name == "Parish Gates":
-                        self.parish_gates(right=right)
-                    elif name == "Pitch Black":
-                        self.pitch_black(level, right=right)
-                    elif name == "Puppet Master":
-                        self.puppet_master(right=right, original=original)
-                    elif name == "Rain of Filth":
-                        self.rain_of_filth(original=original)
-                    elif name == "Shattered Keep":
-                        self.shattered_keep(right=right, original=original)
-                    elif name == "Skeletal Spokes":
-                        self.skeletal_spokes(right=right)
-                    elif name == "Skeleton Overlord":
-                        self.skeleton_overlord(right=right)
-                    elif name == "Tempting Maw":
-                        self.tempting_maw(right=right)
-                    elif name == "The Abandoned Chest":
-                        self.the_abandoned_chest(right=right, original=original)
-                    elif name == "The Beast From the Depths":
-                        self.the_beast_from_the_depths(right=right, original=original)
-                    elif name == "The Bell Tower":
-                        self.the_bell_tower(right=right)
-                    elif name == "The First Bastion":
-                        self.the_first_bastion(level, right=right)
-                    elif name == "The Fountainhead":
-                        self.the_fountainhead(right=right, original=original)
-                    elif name == "The Grand Hall":
-                        self.the_grand_hall(right=right)
-                    elif name == "The Iron Golem":
-                        self.the_iron_golem(right=right, original=original)
-                    elif name == "The Last Bastion":
-                        self.the_last_bastion(level, right=right)
-                    elif name == "The Locked Grave":
-                        self.the_locked_grave(right=right, original=original)
-                    elif name == "The Shine of Gold":
-                        self.the_shine_of_gold(right=right)
-                    elif name == "The Skeleton Ball":
-                        self.the_skeleton_ball(right=right, original=original)
-                    elif name == "Trecherous Tower":
-                        self.trecherous_tower()
-                    elif name == "Trophy Room":
-                        self.trophy_room(right=right, original=original)
-                    elif name == "Twilight Falls":
-                        self.twilight_falls(right=right, original=original)
-                    elif name == "Undead Sanctum":
-                        self.undead_sanctum(right=right, original=original)
-                    elif name == "Unseen Scurrying":
-                        self.unseen_scurrying(original=original)
-                    elif name == "Urns of the Fallen":
-                        self.urns_of_the_fallen(original=original)
-                    elif name == "Velka's Chosen":
-                        self.velkas_chosen(level, right=right, original=original)
+                    dispatch = {
+                        "Abandoned and Forgotten": lambda: self.abandoned_and_forgotten(),
+                        "Aged Sentinel": lambda: self.aged_sentinel(right=right),
+                        "Castle Break In": lambda: self.castle_break_in(original=original),
+                        "Central Plaza": lambda: self.central_plaza(right=right),
+                        "Cloak and Feathers": lambda: self.cloak_and_feathers(right=right),
+                        "Cold Snap": lambda: self.cold_snap(right=right),
+                        "Corvian Host": lambda: self.corvian_host(right=right, original=original),
+                        "Corrupted Hovel": lambda: self.corrupted_hovel(right=right),
+                        "Dark Alleyway": lambda: self.dark_alleyway(right=right),
+                        "Dark Resurrection": lambda: self.dark_resurrection(original=original),
+                        "Deathly Freeze": lambda: self.deathly_freeze(level, right=right),
+                        "Deathly Magic": lambda: self.deathly_magic(level, right=right),
+                        "Deathly Tolls": lambda: self.deathly_tolls(right=right, original=original),
+                        "Depths of the Cathedral": lambda: self.depths_of_the_cathedral(right=right, original=original),
+                        "Distant Tower": lambda: self.distant_tower(right=right, original=original),
+                        "Eye of the Storm": lambda: self.eye_of_the_storm(right=right),
+                        "Flooded Fortress": lambda: self.flooded_fortress(right=right, original=original),
+                        "Frozen Revolutions": lambda: self.frozen_revolutions(right=right),
+                        "Giant's Coffin": lambda: self.giants_coffin(right=right, original=original),
+                        "Gleaming Silver": lambda: self.gleaming_silver(level, right=right),
+                        "Gnashing Beaks": lambda: self.gnashing_beaks(right=right),
+                        "Grave Matters": lambda: self.grave_matters(original=original),
+                        "Grim Reunion": lambda: self.grim_reunion(right=right),
+                        "Hanging Rafters": lambda: self.hanging_rafters(original=original),
+                        "In Deep Water": lambda: self.in_deep_water(right=right, original=original),
+                        "Inhospitable Ground": lambda: self.inhospitable_ground(original=original),
+                        "Lakeview Refuge": lambda: self.lakeview_refuge(right=right),
+                        "Monstrous Maw": lambda: self.monstrous_maw(right=right, original=original),
+                        "No Safe Haven": lambda: self.no_safe_haven(right=right, original=original),
+                        "Painted Passage": lambda: self.painted_passage(original=original),
+                        "Parish Church": lambda: self.parish_church(right=right),
+                        "Parish Gates": lambda: self.parish_gates(right=right),
+                        "Pitch Black": lambda: self.pitch_black(level, right=right),
+                        "Puppet Master": lambda: self.puppet_master(right=right, original=original),
+                        "Rain of Filth": lambda: self.rain_of_filth(original=original),
+                        "Shattered Keep": lambda: self.shattered_keep(right=right, original=original),
+                        "Skeletal Spokes": lambda: self.skeletal_spokes(right=right),
+                        "Skeleton Overlord": lambda: self.skeleton_overlord(right=right),
+                        "Tempting Maw": lambda: self.tempting_maw(right=right),
+                        "The Abandoned Chest": lambda: self.the_abandoned_chest(right=right, original=original),
+                        "The Beast From the Depths": lambda: self.the_beast_from_the_depths(right=right, original=original),
+                        "The Bell Tower": lambda: self.the_bell_tower(right=right),
+                        "The First Bastion": lambda: self.the_first_bastion(level, right=right),
+                        "The Fountainhead": lambda: self.the_fountainhead(right=right, original=original),
+                        "The Grand Hall": lambda: self.the_grand_hall(right=right),
+                        "The Iron Golem": lambda: self.the_iron_golem(right=right, original=original),
+                        "The Last Bastion": lambda: self.the_last_bastion(level, right=right),
+                        "The Locked Grave": lambda: self.the_locked_grave(right=right, original=original),
+                        "The Shine of Gold": lambda: self.the_shine_of_gold(right=right),
+                        "The Skeleton Ball": lambda: self.the_skeleton_ball(right=right, original=original),
+                        "Trecherous Tower": lambda: self.trecherous_tower(),
+                        "Trophy Room": lambda: self.trophy_room(right=right, original=original),
+                        "Twilight Falls": lambda: self.twilight_falls(right=right, original=original),
+                        "Undead Sanctum": lambda: self.undead_sanctum(right=right, original=original),
+                        "Unseen Scurrying": lambda: self.unseen_scurrying(original=original),
+                        "Urns of the Fallen": lambda: self.urns_of_the_fallen(original=original),
+                        "Velka's Chosen": lambda: self.velkas_chosen(level, right=right, original=original),
+                    }
+
+                    if name in ("Central Plaza", "Central Plaza (TSC)") and expansion == "The Sunless City":
+                        lookup_name = "Central Plaza"
+                    else:
+                        lookup_name = name
+
+                    if lookup_name in dispatch:
+                        dispatch[lookup_name]()
 
                 displayPhotoImage = ImageTk.PhotoImage(self.app.displayImage)
 

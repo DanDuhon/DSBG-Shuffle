@@ -115,6 +115,8 @@ try:
 
     enemyNames = sorted([e.name for e in enemies], key=lambda x: (1 if enemiesDict[x].cards == 1 else 2, enemiesDict[x].expansions if enemiesDict[x].cards > 1 else {"a",}, enemiesDict[x].name))
 
+    invaderIds = frozenset(e.id for e in enemies if e.expansions == {"Phantoms"} or e.name in {"Hungry Mimic", "Voracious Mimic"})
+
 except Exception as e:
     log(e, exception=True)
     raise

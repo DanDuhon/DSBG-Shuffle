@@ -557,7 +557,7 @@ try:
             try:
                 log("Start of print_encounters")
 
-                self.forPrinting = True
+                self.app.forPrinting = True
                 self.encountersToPrint = []
                 campaignEncounters = [e for e in self.campaign if e["type"] == "encounter"]
 
@@ -705,12 +705,12 @@ try:
 
                 progress.destroy()
 
-                self.forPrinting = False
-
                 log("End of print_encounters")
             except Exception as e:
                 error_popup(self.root, e)
                 raise
+            finally:
+                self.app.forPrinting = False
 
 
         def v1_campaign(self, event=None):

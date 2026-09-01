@@ -216,7 +216,8 @@ try:
                     "Kalameet": {"button": None, "value": tk.IntVar(), "displayName": "Black Dragon Kalameet\nConsistent 8 card Fiery Ruin deck,\ngenerated on deck reset."},
                     "Chariot": {"button": None, "value": tk.IntVar(), "displayName": "Executioner Chariot\nConsistent 4 card Death Race deck,\ngenerated on deck reset."},
                     "Guardian Dragon": {"button": None, "value": tk.IntVar(), "displayName": "Guardian Dragon\nConsistent 4 card Fiery Breath deck,\ngenerated on deck reset."},
-                    "Old Iron King": {"button": None, "value": tk.IntVar(), "displayName": "Old Iron King\nConsistent 6 card Blasted Nodes deck,\ngenerated on deck reset."}
+                    "Old Iron King": {"button": None, "value": tk.IntVar(), "displayName": "Old Iron King\nConsistent 6 card Blasted Nodes deck,\ngenerated on deck reset."},
+                    "Standard Patterns": {"button": None, "value": tk.IntVar(), "displayName": "Use Standard Boss AoE Patterns\nInstead of randomizing the node patterns\nfor Mega Boss AoE attacks, use the official patterns.\nThis overwrites other settings."}
                 }
 
                 self.bossOptionsTab = VerticalScrolledFrame(self.notebook)

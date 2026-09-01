@@ -375,12 +375,11 @@ try:
         try:
             log("Start of generate_treasure_soul_cost")
 
-            maxStr = max([len(soulCost[c]["strength"]) for c in charactersActive])
-            maxDex = max([len(soulCost[c]["dexterity"]) for c in charactersActive])
-            maxInt = max([len(soulCost[c]["intelligence"]) for c in charactersActive])
-            maxFai = max([len(soulCost[c]["faith"]) for c in charactersActive])
-
             i = progress.progressVar.get()
+
+            for t in [t for t in treasures if treasures[t]["character"] not in charactersActive]:
+                if "soulCost" in treasures[t]:
+                    del treasures[t]["soulCost"]
 
             listLen = len([t for t in treasures if not treasures[t]["character"] or treasures[t]["character"] in charactersActive]) - 50
 
@@ -463,8 +462,10 @@ try:
                     treasures[treasure]["tier"] = 1
                 elif any([treasure in set(tiers["armor"][2]), treasure in set(tiers["weapon"][2]), treasure in set(tiers["upgrade"][2])]):
                     treasures[treasure]["tier"] = 2
-                else:
+                elif any([treasure in set(tiers["armor"][3]), treasure in set(tiers["weapon"][3]), treasure in set(tiers["upgrade"][3])]):
                     treasures[treasure]["tier"] = 3
+                else:
+                    treasures[treasure]["tier"] = None
 
             log("End of populate_treasure_tiers")
         except Exception as e:
@@ -486,6 +487,7 @@ try:
 
                 # If there are fewer than 2 alternatives, increase the threshold until there are at least 2.
                 while len(alts) < 2:
+                    alts = []
                     characterSoulCost = treasures[swapTreasure]["soulCost"]
                     modifier = 1 + extraMod if characterSoulCost * 0.1 + (extraMod / 10) < 1 else characterSoulCost * 0.1 + (extraMod / 10)
                     lower = characterSoulCost - modifier

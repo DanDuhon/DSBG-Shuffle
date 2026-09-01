@@ -16,6 +16,40 @@ try:
     from dsbg_shuffle_utility import PopupWindow, clear_other_tab_images, error_popup, log, set_display_bindings_by_tab, baseFolder, font, font2, font3, pathSep
 
 
+    standardBlastedNodes = [
+        {"landingNode": (1, 3), "highlightNodes": [(6, 0), (5, 1), (3, 1), (2, 2), (4, 2), (1, 3), (3, 3), (2, 4)]},
+        {"landingNode": (1, 3), "highlightNodes": [(2, 2), (1, 3), (3, 3), (2, 4), (4, 4), (3, 5), (5, 5), (4, 6), (6, 6)]},
+        {"landingNode": (5, 3), "highlightNodes": [(0, 0), (1, 1), (2, 2), (4, 2), (3, 1), (3, 3), (5, 3), (4, 4)]},
+        {"landingNode": (5, 3), "highlightNodes": [(4, 2), (3, 3), (5, 3), (2, 4), (4, 4), (1, 5), (3, 5), (0, 6), (2, 6)]},
+        {"landingNode": (3, 1), "highlightNodes": [(3, 1), (2, 2), (4, 2), (3, 3), (5, 3), (4, 4), (5, 5), (6, 6)]},
+        {"landingNode": (3, 1), "highlightNodes": [(3, 1), (2, 2), (4, 2), (1, 3), (3, 3), (2, 4), (1, 5), (0, 6)]}
+    ]
+
+    standardDeathRace = {
+        1: {"highlightNodes": [(1, 1), (2, 0), (4, 0), (3, 1), (5, 1)]},
+        2: {"highlightNodes": [(1, 1), (0, 2), (1, 3), (0, 4), (1, 5)]},
+        3: {"highlightNodes": [(1, 5), (2, 6), (3, 5), (4, 6), (5, 5)]},
+        4: {"highlightNodes": [(5, 1), (6, 2), (5, 3), (6, 4), (5, 5)]}
+    }
+
+    standardFieryBreath = [
+        {"landingNode": (0, 0), "highlightNodes": [(2, 0), (1, 1), (0, 2), (1, 3), (2, 2), (3, 1), (3, 3)]},
+        {"landingNode": (6, 0), "highlightNodes": [(4, 0), (3, 1), (5, 1), (4, 2), (6, 2), (3, 3), (5, 3)]},
+        {"landingNode": (6, 6), "highlightNodes": [(4, 6), (3, 5), (5, 5), (4, 4), (6, 4), (3, 3), (5, 3)]},
+        {"landingNode": (0, 6), "highlightNodes": [(2, 6), (1, 5), (3, 5), (0, 4), (2, 4), (1, 3), (3, 3)]}
+    ]
+
+    standardFieryRuin = [
+        {"landingNode": (2, 4), "highlightNodes": [(0, 0), (0, 2), (0, 4), (1, 1), (1, 3), (1, 5), (2, 2), (2, 4), (2, 6), (3, 3), (3, 5), (4, 4), (4, 6), (5, 5), (6, 6)]},
+        {"landingNode": (4, 2), "highlightNodes": [(0, 0), (1, 1), (2, 0), (2, 2), (3, 1), (3, 3), (4, 0), (4, 2), (4, 4), (5, 1), (5, 3), (5, 5), (6, 2), (6, 4), (6, 6)]},
+        {"landingNode": (1, 1), "highlightNodes": [(1, 1), (1, 3), (1, 5), (2, 0), (2, 2), (2, 4), (2, 6), (3, 1), (3, 3), (3, 5)]},
+        {"landingNode": (3, 3), "highlightNodes": [(2, 0), (2, 2), (2, 4), (2, 6), (3, 1), (3, 3), (3, 5), (4, 0), (4, 2), (4, 4), (4, 6)]},
+        {"landingNode": (5, 5), "highlightNodes": [(3, 1), (3, 3), (3, 5), (4, 0), (4, 2), (4, 4), (4, 6), (5, 1), (5, 3), (5, 5)]},
+        {"landingNode": (1, 3), "highlightNodes": [(0, 2), (1, 1), (1, 3), (2, 2), (3, 1), (3, 3), (4, 2), (5, 1), (5, 3), (6, 2)]},
+        {"landingNode": (3, 3), "highlightNodes": [(0, 2), (0, 4), (1, 3), (2, 2), (2, 4), (3, 3), (4, 2), (4, 4), (5, 3), (6, 2), (6, 4)]},
+        {"landingNode": (5, 3), "highlightNodes": [(0, 4), (1, 3), (1, 5), (2, 4), (3, 3), (3, 5), (4, 4), (5, 3), (5, 5), (6, 4)]}
+    ]
+
     modIdLookup = {
         1: "dodge1",
         2: "dodge2",
@@ -999,11 +1033,12 @@ try:
 
 
         def get_variant_difficulty_dict(self, start, k, modsRequired, modsBanned):
-            return {
-                d: self.get_variant_behavior_dict(start, k, d, modsRequired, modsBanned)
-                for d in self.variants[start][self.app.numberOfCharacters][k] if (
-                    self.get_variant_behavior_dict(start, k, d, modsRequired, modsBanned))
-                }
+            out = {}
+            for d in self.variants[start][self.app.numberOfCharacters][k]:
+                value = self.get_variant_behavior_dict(start, k, d, modsRequired, modsBanned)
+                if value:
+                    out[d] = value
+            return out
 
 
         def get_variant_behavior_dict(self, start, k, d, modsRequired, modsBanned):
@@ -1057,9 +1092,10 @@ try:
                     log("End of pick_enemy_variants_enemy")
                     return
 
-                diffKeyIndex = bisect_left(list(variants.keys()), diffKey)
-                diffKeyIndex -= 1 if diffKeyIndex > len(list(variants.keys())) - 1 else 0
-                diffKeyReal = list(variants.keys())[diffKeyIndex]
+                diffKeyList = list(variants.keys())
+                diffKeyIndex = bisect_left(diffKeyList, diffKey)
+                diffKeyIndex -= 1 if diffKeyIndex > len(diffKeyList) - 1 else 0
+                diffKeyReal = diffKeyList[diffKeyIndex]
                 defKey = choice(list(variants[diffKeyReal].keys()))
                 self.currentVariants[start] = {"defKey": list(defKey)}
 
@@ -1093,7 +1129,7 @@ try:
                     behaviorS = behavior[behavior.index(" & ")+3:]
 
                     if frozenset(defKey) not in variants[diffKey]:
-                        p = PopupWindow(self.root, "The difficulty modifier you chose is incompatible with the\ndifficulty modifiers on other behaviors.\n\nPlease try a different difficulty modifier or change the difficulty\nmodifier at the {} level.".format(start, start), firstButton="Ok")
+                        p = PopupWindow(self.root, "The difficulty modifier you chose is incompatible with the\ndifficulty modifiers on other behaviors.\n\nPlease try a different difficulty modifier or change the difficulty\nmodifier at the {} level.".format(start), firstButton="Ok")
                         self.root.wait_window(p)
                         return
 
@@ -1103,19 +1139,24 @@ try:
                     }
                 else:
                     if frozenset(defKey) not in variants[diffKey]:
-                        p = PopupWindow(self.root, "The difficulty modifier you chose is incompatible with the\ndifficulty modifiers on other behaviors.\n\nPlease try a different difficulty modifier or change the difficulty\nmodifier at the {} level.".format(start, start), firstButton="Ok")
+                        p = PopupWindow(self.root, "The difficulty modifier you chose is incompatible with the\ndifficulty modifiers on other behaviors.\n\nPlease try a different difficulty modifier or change the difficulty\nmodifier at the {} level.".format(start), firstButton="Ok")
                         self.root.wait_window(p)
                         return
 
-                    while (
-                        len(self.currentVariants[start].get(behavior, [])) == 0
-                        or (
-                            behavior in self.currentVariants[start]
-                            and len(variants[diffKey][frozenset(defKey)][behavior]) > 1
-                            and curVariant == self.currentVariants[start][behavior]
-                            )
-                        ):
-                        self.currentVariants[start][behavior] = choice(variants[diffKey][frozenset(defKey)][behavior])
+                    options = variants[diffKey][frozenset(defKey)][behavior]
+                    current = self.currentVariants[start].get(behavior)
+                    alternatives = [v for v in options if v != current]
+                    self.currentVariants[start][behavior] = choice(alternatives) if alternatives else choice(options)
+
+                    # while (
+                    #     len(self.currentVariants[start].get(behavior, [])) == 0
+                    #     or (
+                    #         behavior in self.currentVariants[start]
+                    #         and len(variants[diffKey][frozenset(defKey)][behavior]) > 1
+                    #         and curVariant == self.currentVariants[start][behavior]
+                    #         )
+                    #     ):
+                    #     self.currentVariants[start][behavior] = choice(variants[diffKey][frozenset(defKey)][behavior])
                     
                 self.treeviewVariantsList.item(start + (" - " + behavior if behavior else ""), values=(self.treeviewVariantsList.item(start + (" - " + behavior if behavior else ""))["values"][0], int(round((diffKey - 1.0) * 100, -1))))
                 
@@ -1891,7 +1932,7 @@ try:
                 for position in ["left", "middle", "right"]:
                     if position in behaviorDetail[enemy][behavior]:
                         actions[position] = behaviorDetail[enemy][behavior][position].copy()
-                        if (
+                        if "damage" in actions[position] and (
                             pursuer
                             or (
                                 "Fire Beam" in behavior
@@ -2411,40 +2452,48 @@ try:
             try:
                 log("Start of generate_fiery_ruin_patterns")
 
-                for nodeCnt in [10, 10, 10, 10, 11, 11, 15, 15]:
-                    highlightNodes = choice([
-                        {(0,0), (1,1), (2,2), (3,3), (4,4), (5,5), (6,6)},
-                        {(6,0), (5,1), (4,2), (3,3), (2,4), (1,5), (0,6)},
-                        {(2,0), (2,2), (2,4), (2,6)},
-                        {(4,0), (4,2), (4,4), (4,6)},
-                        {(0,2), (2,2), (4,2), (6,2)},
-                        {(0,4), (2,4), (4,4), (6,4)},
-                        {(3,1), (3,3), (3,5)},
-                        {(1,3), (3,3), (5,3)}
-                        ])
-
-                    originalNodes = deepcopy(highlightNodes)
+                if "Standard Patterns" in self.app.settings.get("enabledBossOptions", []):
+                    shuffle(standardFieryRuin)
+                    for pattern in standardFieryRuin:
+                        highlightNodes = set(pattern["highlightNodes"])
+                        landingNode = pattern["landingNode"]
+                        self.nodePatterns["Black Dragon Kalameet"]["patterns"].append({"landingNode": landingNode, "highlightNodes": highlightNodes})
+                else:
                     validLandingNodes = {(1,1), (3,1), (5,1), (2,2), (4,2), (1,3), (3,3), (5,3), (2,4), (4,4), (1,5), (3,5), (5,5)}
+                    
+                    for nodeCnt in [10, 10, 10, 10, 11, 11, 15, 15]:
+                        highlightNodes = choice([
+                            {(0,0), (1,1), (2,2), (3,3), (4,4), (5,5), (6,6)},
+                            {(6,0), (5,1), (4,2), (3,3), (2,4), (1,5), (0,6)},
+                            {(2,0), (2,2), (2,4), (2,6)},
+                            {(4,0), (4,2), (4,4), (4,6)},
+                            {(0,2), (2,2), (4,2), (6,2)},
+                            {(0,4), (2,4), (4,4), (6,4)},
+                            {(3,1), (3,3), (3,5)},
+                            {(1,3), (3,3), (5,3)}
+                            ])
 
-                    # Adjacent nodes can be found by taking the absolute difference between
-                    # the corresponding coordinates of the start and destination nodes
-                    # adding those values together, and only allowing those that are less than 4
+                        originalNodes = deepcopy(highlightNodes)
 
-                    for _ in range(nodeCnt + addNodes - len(highlightNodes)):
-                        validNodes = set([n for n in nodes if [abs(n[0] - h[0]) + abs(n[1] - h[1]) < 4 for h in originalNodes].count(True) == 2]) - highlightNodes
-                        if not validNodes:
-                            validNodes = set([n for n in nodes if [abs(n[0] - h[0]) + abs(n[1] - h[1]) < 4 for h in highlightNodes].count(True) == 4]) - highlightNodes
-                        if not validNodes:
-                            validNodes = set([n for n in nodes if [abs(n[0] - h[0]) + abs(n[1] - h[1]) < 4 for h in highlightNodes].count(True) == 3]) - highlightNodes
-                        if not validNodes:
-                            validNodes = set([n for n in nodes if [abs(n[0] - h[0]) + abs(n[1] - h[1]) < 4 for h in highlightNodes].count(True) == 5]) - highlightNodes
-                        if not validNodes:
-                            validNodes = set([n for n in nodes if [abs(n[0] - h[0]) + abs(n[1] - h[1]) < 4 for h in highlightNodes].count(True) == 2]) - highlightNodes
-                        
-                        nodeToHighlight = choice(list(validNodes))
-                        highlightNodes.add(nodeToHighlight)
+                        # Adjacent nodes can be found by taking the absolute difference between
+                        # the corresponding coordinates of the start and destination nodes
+                        # adding those values together, and only allowing those that are less than 4
 
-                    self.nodePatterns["Black Dragon Kalameet"]["patterns"].append({"landingNode": choice(list(highlightNodes & validLandingNodes)), "highlightNodes": highlightNodes})
+                        for _ in range(nodeCnt + addNodes - len(highlightNodes)):
+                            validNodes = set([n for n in nodes if [abs(n[0] - h[0]) + abs(n[1] - h[1]) < 4 for h in originalNodes].count(True) == 2]) - highlightNodes
+                            if not validNodes:
+                                validNodes = set([n for n in nodes if [abs(n[0] - h[0]) + abs(n[1] - h[1]) < 4 for h in highlightNodes].count(True) == 4]) - highlightNodes
+                            if not validNodes:
+                                validNodes = set([n for n in nodes if [abs(n[0] - h[0]) + abs(n[1] - h[1]) < 4 for h in highlightNodes].count(True) == 3]) - highlightNodes
+                            if not validNodes:
+                                validNodes = set([n for n in nodes if [abs(n[0] - h[0]) + abs(n[1] - h[1]) < 4 for h in highlightNodes].count(True) == 5]) - highlightNodes
+                            if not validNodes:
+                                validNodes = set([n for n in nodes if [abs(n[0] - h[0]) + abs(n[1] - h[1]) < 4 for h in highlightNodes].count(True) == 2]) - highlightNodes
+                            
+                            nodeToHighlight = choice(list(validNodes))
+                            highlightNodes.add(nodeToHighlight)
+                    landingNode = choice(list(highlightNodes & validLandingNodes))
+                    self.nodePatterns["Black Dragon Kalameet"]["patterns"].append({"landingNode": landingNode, "highlightNodes": highlightNodes})
 
                 log("End of generate_fiery_ruin_patterns")
             except Exception as e:
@@ -2455,21 +2504,24 @@ try:
         def generate_death_race_patterns(self, deathRaceNum, addNodes, event=None):
             try:
                 log("Start of generate_death_race_patterns")
-                
-                if deathRaceNum == 1:
-                    highlightNodes = [(2,0), (4,0), (1,1), (3,1), (5,1)]
-                    availableNodes = [(0,0), (6,0), (0,2), (2,2), (4,2), (6,2)]
-                elif deathRaceNum == 2:
-                    highlightNodes = [(1,1), (0,2), (1,3), (0,4), (1,5)]
-                    availableNodes = [(0,0), (0,6), (2,0), (2,2), (2,4), (2,6)]
-                elif deathRaceNum == 3:
-                    highlightNodes = [(1,5), (2,6), (3,5), (4,6), (5,5)]
-                    availableNodes = [(0,6), (6,6), (0,4), (2,4), (4,4), (6,4)]
-                elif deathRaceNum == 4:
-                    highlightNodes = [(5,1), (6,2), (5,3), (6,4), (5,5)]
-                    availableNodes = [(6,0), (6,6), (4,0), (4,2), (4,4), (4,6)]
-                shuffle(availableNodes)
-                highlightNodes += availableNodes[:addNodes]
+
+                if "Standard Patterns" in self.app.settings.get("enabledBossOptions", []):
+                    highlightNodes = list(standardDeathRace[deathRaceNum]["highlightNodes"])
+                else:
+                    if deathRaceNum == 1:
+                        highlightNodes = [(2,0), (4,0), (1,1), (3,1), (5,1)]
+                        availableNodes = [(0,0), (6,0), (0,2), (2,2), (4,2), (6,2)]
+                    elif deathRaceNum == 2:
+                        highlightNodes = [(1,1), (0,2), (1,3), (0,4), (1,5)]
+                        availableNodes = [(0,0), (0,6), (2,0), (2,2), (2,4), (2,6)]
+                    elif deathRaceNum == 3:
+                        highlightNodes = [(1,5), (2,6), (3,5), (4,6), (5,5)]
+                        availableNodes = [(0,6), (6,6), (0,4), (2,4), (4,4), (6,4)]
+                    elif deathRaceNum == 4:
+                        highlightNodes = [(5,1), (6,2), (5,3), (6,4), (5,5)]
+                        availableNodes = [(6,0), (6,6), (4,0), (4,2), (4,4), (4,6)]
+                    shuffle(availableNodes)
+                    highlightNodes += availableNodes[:addNodes]
 
                 self.nodePatterns["Executioner Chariot"]["patterns"].append({"highlightNodes": highlightNodes})
 
@@ -2482,24 +2534,31 @@ try:
         def generate_fiery_breath_patterns(self, addNodes, event=None):
             try:
                 log("Start of generate_fiery_breath_patterns")
-                
-                for landingNode in [(0,0), (6,0), (0,6), (6,6)]:
-                    firstNode = (1,1) if landingNode == (0,0) else (5,1) if landingNode == (6,0) else (1,5) if landingNode == (0,6) else (5,5)
-                    highlightNodes = {firstNode,}
 
-                    # Adjacent nodes can be found by taking the absolute difference between
-                    # the corresponding coordinates of the start and destination nodes
-                    # adding those values together, and only allowing those that are less than 4
+                if "Standard Patterns" in self.app.settings.get("enabledBossOptions", []):
+                    shuffle(standardFieryBreath)
+                    for pattern in standardFieryBreath:
+                        highlightNodes = set(pattern["highlightNodes"])
+                        landingNode = pattern["landingNode"]
+                        self.nodePatterns["Guardian Dragon"]["patterns"].append({"landingNode": landingNode, "highlightNodes": highlightNodes})
+                else:
+                    for landingNode in [(0,0), (6,0), (0,6), (6,6)]:
+                        firstNode = (1,1) if landingNode == (0,0) else (5,1) if landingNode == (6,0) else (1,5) if landingNode == (0,6) else (5,5)
+                        highlightNodes = {firstNode,}
 
-                    for _ in range(7 + addNodes - 1): # -1 because we already have the first node picked
-                        for x in range(4, -1, -1):
-                            validNodes = set([n for n in nodes if [abs(n[0] - h[0]) + abs(n[1] - h[1]) < 4 for h in highlightNodes].count(True) > x]) - highlightNodes - {landingNode,}
-                            if validNodes:
-                                break
-                        nodeToHighlight = choice(list(validNodes))
-                        highlightNodes.add(nodeToHighlight)
+                        # Adjacent nodes can be found by taking the absolute difference between
+                        # the corresponding coordinates of the start and destination nodes
+                        # adding those values together, and only allowing those that are less than 4
 
-                    self.nodePatterns["Guardian Dragon"]["patterns"].append({"landingNode": landingNode, "highlightNodes": highlightNodes})
+                        for _ in range(7 + addNodes - 1): # -1 because we already have the first node picked
+                            for x in range(4, -1, -1):
+                                validNodes = set([n for n in nodes if [abs(n[0] - h[0]) + abs(n[1] - h[1]) < 4 for h in highlightNodes].count(True) > x]) - highlightNodes - {landingNode,}
+                                if validNodes:
+                                    break
+                            nodeToHighlight = choice(list(validNodes))
+                            highlightNodes.add(nodeToHighlight)
+
+                        self.nodePatterns["Guardian Dragon"]["patterns"].append({"landingNode": landingNode, "highlightNodes": highlightNodes})
 
                 log("End of generate_fiery_breath_patterns")
             except Exception as e:
@@ -2510,31 +2569,38 @@ try:
         def generate_blasted_nodes_patterns(self, addNodes, event=None):
             try:
                 log("Start of generate_blasted_nodes_patterns")
-                
-                oikNodes = [n for n in nodes if n not in {(2,0), (4,0), (0,2), (6,2), (0,4), (6,4)}]
 
-                for nodeCnt in [8, 8, 8, 8, 9, 9]:
-                    landingNode = choice([(3,1), (1,3), (5,3)])
+                if "Standard Patterns" in self.app.settings.get("enabledBossOptions", []):
+                    shuffle(standardBlastedNodes)
+                    for pattern in standardBlastedNodes:
+                        highlightNodes = set(pattern["highlightNodes"])
+                        landingNode = pattern["landingNode"]
+                        self.nodePatterns["Old Iron King"]["patterns"].append({"landingNode": landingNode, "highlightNodes": highlightNodes})
+                else:
+                    oikNodes = [n for n in nodes if n not in {(2,0), (4,0), (0,2), (6,2), (0,4), (6,4)}]
 
-                    highlightNodes = {landingNode,}
+                    for nodeCnt in [8, 8, 8, 8, 9, 9]:
+                        landingNode = choice([(3,1), (1,3), (5,3)])
 
-                    # Adjacent nodes can be found by taking the absolute difference between
-                    # the corresponding coordinates of the start and destination nodes
-                    # adding those values together, and only allowing those that are less than 4
+                        highlightNodes = {landingNode,}
 
-                    # These are complicated rules but they work to get a more beam-type line of nodes.
-                    for _ in range(nodeCnt + addNodes - 1): # -1 because we already have the destination node picked
-                        validNodes = set([n for n in oikNodes if [abs(n[0] - h[0]) + abs(n[1] - h[1]) < 2 for h in highlightNodes].count(True) == 2]) - highlightNodes
-                        if not validNodes:
-                            validNodes = set([n for n in oikNodes if [abs(n[0] - h[0]) + abs(n[1] - h[1]) < 4 for h in highlightNodes if n[0] in ({1, 3, 5} if h[0] in {0, 2, 4, 6} else {0, 2, 4, 6})].count(True) == 1]) - highlightNodes
-                        if not validNodes:
-                            validNodes = set([n for n in oikNodes if [abs(n[0] - h[0]) + abs(n[1] - h[1]) < 4 for h in highlightNodes].count(True) == 3]) - highlightNodes
-                        if not validNodes:
-                            validNodes = set([n for n in oikNodes if [abs(n[0] - h[0]) + abs(n[1] - h[1]) < 4 for h in highlightNodes if n[0] in ({1, 3, 5} if h[0] in {0, 2, 4, 6} else {0, 2, 4, 6})].count(True) == 0]) - highlightNodes
-                        nodeToHighlight = choice(list(validNodes))
-                        highlightNodes.add(nodeToHighlight)
+                        # Adjacent nodes can be found by taking the absolute difference between
+                        # the corresponding coordinates of the start and destination nodes
+                        # adding those values together, and only allowing those that are less than 4
 
-                    self.nodePatterns["Old Iron King"]["patterns"].append({"landingNode": landingNode, "highlightNodes": highlightNodes})
+                        # These are complicated rules but they work to get a more beam-type line of nodes.
+                        for _ in range(nodeCnt + addNodes - 1): # -1 because we already have the destination node picked
+                            validNodes = set([n for n in oikNodes if [abs(n[0] - h[0]) + abs(n[1] - h[1]) < 2 for h in highlightNodes].count(True) == 2]) - highlightNodes
+                            if not validNodes:
+                                validNodes = set([n for n in oikNodes if [abs(n[0] - h[0]) + abs(n[1] - h[1]) < 4 for h in highlightNodes if n[0] in ({1, 3, 5} if h[0] in {0, 2, 4, 6} else {0, 2, 4, 6})].count(True) == 1]) - highlightNodes
+                            if not validNodes:
+                                validNodes = set([n for n in oikNodes if [abs(n[0] - h[0]) + abs(n[1] - h[1]) < 4 for h in highlightNodes].count(True) == 3]) - highlightNodes
+                            if not validNodes:
+                                validNodes = set([n for n in oikNodes if [abs(n[0] - h[0]) + abs(n[1] - h[1]) < 4 for h in highlightNodes if n[0] in ({1, 3, 5} if h[0] in {0, 2, 4, 6} else {0, 2, 4, 6})].count(True) == 0]) - highlightNodes
+                            nodeToHighlight = choice(list(validNodes))
+                            highlightNodes.add(nodeToHighlight)
+
+                        self.nodePatterns["Old Iron King"]["patterns"].append({"landingNode": landingNode, "highlightNodes": highlightNodes})
 
                 log("End of generate_blasted_nodes_patterns")
             except Exception as e:
@@ -2614,6 +2680,9 @@ try:
         def edit_variant_card_os(self, enemy=None, variant=None, lockedTree=False, event=None, healthMod={"Ornstein": 0, "Smough": 0}, fromDeck=False):
             try:
                 log("Start of edit_variant_card_os, enemy={}, variant={}".format(str(enemy), str(variant)))
+
+                if healthMod is None:
+                    healthMod = {"Ornstein": 0, "Smough": 0}
 
                 if "data" in self.selectedVariant:
                     self.edit_variant_card_data_os(variant=variant, enemy=enemy, healthMod=healthMod)

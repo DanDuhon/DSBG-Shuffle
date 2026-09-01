@@ -1,1 +1,9 @@
 dsbg_shuffle_custom_icons.json
+lib/*.pyd
+lib/*.dll
+lib/base_library.zip
+base_library.zip
+dist/
+build/
+PIL/
+charset_normalizer/
