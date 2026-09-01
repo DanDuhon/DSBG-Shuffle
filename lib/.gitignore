@@ -9,3 +9,7 @@ PIL/
 charset_normalizer/
 __pycache__/
 *.pyc
+*.pyd
+*.dll
+dsbg_shuffle_log.txt
+lib/dsbg_shuffle_log.txt
