@@ -10,8 +10,8 @@ It also contains ways to build campaigns, event card management, and enemy behav
 
 
 ## How to run/Installation
-1. Go to [Releases](https://github.com/DanDuhon/DSBG-Shuffle/releases) and click on "Source code (zip)" or "Source code (tar.gz)", whichever archive format is your preference.
-2. Inside the archive file is a folder.  Unzip this folder anywhere you want.
+1. Go to [Releases](https://github.com/DanDuhon/DSBG-Shuffle/releases) and download DSBG-Shuffle-1.x.x.zip from the latest release (not "Source code").
+2. Unzip it anywhere you want.
 3. Open the folder, and run "DSBG-Shuffle.exe" inside it.  There isn't an installer (mostly because it would be too big for GitHub), you just run the .exe.  If you're not running Windows, see the FAQ for workarounds for Mac/Linux.
 
 
@@ -34,7 +34,7 @@ You can to build your own encounters (including custom enemies that are just the
 
 ### I found a bug!
 
-Great!  If you can, reproduce it then find the log.txt file in the same folder as the .exe file.  Then [please open an issue](https://github.com/DanDuhon/DSBG-Shuffle/issues) and attach or paste in the log so I can investigate.
+Great!  If you can, reproduce it then find the log file: _internal\dsbg_shuffle_log.txt.  Then [please open an issue](https://github.com/DanDuhon/DSBG-Shuffle/issues) and attach or paste in the log so I can investigate.
 
 ### Are you going to create a version for Mac/Linux/Android/iPhone/web?
 
@@ -51,9 +51,7 @@ There are a couple workaround options for Mac/Linux.
 
 In my testing, the "might work" way has some awful graphical glitches.  That may just be because I was using a Linux subsystem on Windows, but maybe not.
 
-As for mobile, I'd like to, but I don't have any of experience with that sort of thing, and my brief looks into Android development left me confused.  So.. eventually, maybe?  Feel free to contribute or reach out if you'd like to collaborate!
-
-For web, I'd really like to get this up as a web app, since then I wouldn't have to maintain different versions.  However, I also know nothing about web development.  So again, eventually maybe, but please reach out if you'd like to help with that!
+For mobile/web, there is a version that's still beta, but most of the functionality (plus some more!) is there: https://dsbg-shuffle.streamlit.app/
 
 ### Why are some encounters missing from the list?
 
