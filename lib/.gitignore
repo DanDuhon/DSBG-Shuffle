@@ -7,4 +7,4 @@ dist/
 build/
 PIL/
 charset_normalizer/
-lib/__pycache__
+lib/__pycache__/
