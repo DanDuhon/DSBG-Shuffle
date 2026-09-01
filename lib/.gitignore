@@ -13,3 +13,12 @@ __pycache__/
 *.dll
 dsbg_shuffle_log.txt
 lib/dsbg_shuffle_log.txt
+lib/numpy/
+lib/certifi/
+lib/psutil/
+lib/markupsafe/
+lib/tcl/
+lib/tcl8/
+lib/tk/
+lib/lib/
+lib/*.dist-info/
